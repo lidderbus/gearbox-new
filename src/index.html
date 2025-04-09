@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0056b3" />
+    <meta name="description" content="船用齿轮箱选型系统 - 自动选型、报价和合同生成" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- 添加中文字体支持 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- 预加载关键资源 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- 移动设备兼容性设置 -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
+    <title>船用齿轮箱选型系统</title>
+    
+    <style>
+      /* 加载动画样式 */
+      .app-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #f5f7fa;
+        z-index: 9999;
+      }
+      
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(0, 86, 179, 0.2);
+        border-radius: 50%;
+        border-top-color: #0056b3;
+        animation: spin 1s ease-in-out infinite;
+      }
+      
+      .loading-text {
+        margin-top: 20px;
+        font-family: 'Noto Sans SC', sans-serif;
+        color: #0056b3;
+      }
+      
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      
+      /* 防止FOUC (Flash of Unstyled Content) */
+      body {
+        visibility: hidden;
+      }
+      
+      .js-enabled body {
+        visibility: visible;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <div style="font-family: 'Noto Sans SC', sans-serif; text-align: center; padding: 20px;">
+        您需要启用 JavaScript 才能运行此应用程序。
+      </div>
+    </noscript>
+    
+    <!-- 应用加载动画 -->
+    <div id="app-loading" class="app-loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">正在加载应用...</div>
+    </div>
+    
+    <div id="root"></div>
+    
+    <script>
+      // 添加 JS 启用标记
+      document.documentElement.className += ' js-enabled';
+      
+      // 移除加载动画
+      window.addEventListener('load', function() {
+        var loadingElement = document.getElementById('app-loading');
+        if (loadingElement) {
+          loadingElement.style.opacity = '0';
+          loadingElement.style.transition = 'opacity 0.5s ease';
+          setTimeout(function() {
+            loadingElement.style.display = 'none';
+          }, 500);
+        }
+      });
+      
+      // 注册 Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('%PUBLIC_URL%/service-worker.js').then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+      
+      // 禁用双击缩放功能
+      document.addEventListener('dblclick', function(event) {
+        event.preventDefault();
+      }, { passive: false });
+      
+      // 修复 iOS 滚动问题
+      document.addEventListener('touchmove', function() {}, { passive: true });
+    </script>
+  </body>
+</html>
