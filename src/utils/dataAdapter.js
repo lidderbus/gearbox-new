@@ -1,262 +1,251 @@
 // src/utils/dataAdapter.js
-// 数据适配器
+import { safeParseFloat } from './dataHelpers';
+import { getDiscountRate, calculateFactoryPrice, calculateMarketPrice } from './priceManager';
 
-// 导入辅助函数
-import { safeParseFloat, ensureRangeArray, ensureArrayOfNumbers } from './dataHelpers';
-import { getDiscountRate, calculateFactoryPrice, calculatePackagePrice, calculateMarketPrice } from '../data/priceDiscount';
-
-// 多项式拟合函数
-function polyFit(x, y, degree = 2) {
-  // 简单的多项式拟合实现
-  // 注: 实际生产环境中建议使用专业的数学库如mathjs
+export function adaptBasicData(rawData) {
+  if (!rawData) return createEmptyData();
   
-  // 构建矩阵
-  const matrix = [];
-  for (let i = 0; i <= degree; i++) {
-    const row = [];
-    for (let j = 0; j <= degree; j++) {
-      let sum = 0;
-      for (let k = 0; k < x.length; k++) {
-        sum += Math.pow(x[k], i + j);
-      }
-      row.push(sum);
-    }
-    matrix.push(row);
-  }
+  const adapted = { ...rawData };
   
-  // 构建右侧向量
-  const vector = [];
-  for (let i = 0; i <= degree; i++) {
-    let sum = 0;
-    for (let k = 0; k < x.length; k++) {
-      sum += y[k] * Math.pow(x[k], i);
-    }
-    vector.push(sum);
-  }
-  
-  // 解线性方程组 (简化版高斯消元法)
-  const coefficients = new Array(degree + 1).fill(0);
-  
-  // 前向消元
-  for (let i = 0; i < degree; i++) {
-    for (let j = i + 1; j <= degree; j++) {
-      const factor = matrix[j][i] / matrix[i][i];
-      for (let k = i; k <= degree; k++) {
-        matrix[j][k] -= factor * matrix[i][k];
-      }
-      vector[j] -= factor * vector[i];
-    }
-  }
-  
-  // 回代
-  for (let i = degree; i >= 0; i--) {
-    let sum = vector[i];
-    for (let j = i + 1; j <= degree; j++) {
-      sum -= matrix[i][j] * coefficients[j];
-    }
-    coefficients[i] = sum / matrix[i][i];
-  }
-  
-  return coefficients;
-}
-
-// 多项式求值函数
-function polyEval(coefficients, x) {
-  return coefficients.reduce((sum, coef, i) => sum + coef * Math.pow(x, i), 0);
-}
-
-// 主要适配函数
-export function adaptEnhancedData(rawData) {
-  if (!rawData) return initializeEmptyCollections({});
-
-  // 确保所有集合存在，即使为空
-  const data = initializeEmptyCollections(rawData);
-
-  // 处理各类数据
-  const gearboxTypes = ['hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes', 'hcqGearboxes', 'gcGearboxes'];
-  gearboxTypes.forEach(type => {
-    data[type] = adaptItems(data[type] || [], adaptGearboxItem);
-  });
-
-  data.flexibleCouplings = adaptItems(data.flexibleCouplings || [], adaptCouplingItem);
-  data.standbyPumps = adaptItems(data.standbyPumps || [], adaptPumpItem);
-
-  console.log("数据适配完成。");
-  return data;
-}
-
-// 初始化空集合
-function initializeEmptyCollections(data) {
-  const collections = [
+  // 处理齿轮箱集合
+  const gearboxCollections = [
     'hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes',
-    'hcqGearboxes', 'gcGearboxes', 'flexibleCouplings', 'standbyPumps'
+    'hcqGearboxes', 'gcGearboxes', 'hcxGearboxes', 'hcaGearboxes',
+    'hcvGearboxes', 'mvGearboxes', 'otherGearboxes'
   ];
-  const initializedData = { ...data };
-  collections.forEach(col => {
-    if (!initializedData[col] || !Array.isArray(initializedData[col])) {
-      initializedData[col] = [];
+  
+  gearboxCollections.forEach(key => {
+    if (Array.isArray(adapted[key])) {
+      adapted[key] = adapted[key].map(adaptGearboxItem).filter(Boolean);
+    } else {
+      adapted[key] = [];
     }
   });
-  return initializedData;
-}
-
-// 适配项目函数
-function adaptItems(items, adapterFn) {
-  if (!Array.isArray(items)) return [];
-  return items.map(item => adapterFn(item)).filter(Boolean); // 过滤掉null
-}
-
-// 齿轮箱适配函数
-function adaptGearboxItem(gearbox) {
-  if (!gearbox || !gearbox.model) return null; // 基本验证
-
-  const adapted = { ...gearbox }; // 复制原始数据
-
-  // 确保基本字段类型
-  adapted.model = String(adapted.model).trim();
-  adapted.inputSpeedRange = ensureRangeArray(adapted.inputSpeedRange, [1000, 2500]);
-  adapted.ratios = ensureArrayOfNumbers(adapted.ratios);
-  adapted.transferCapacity = ensureArrayOfNumbers(adapted.transferCapacity);
   
-  // 处理 transferCapacity 数组长度与 ratios 数组长度不匹配的情况
-  if (adapted.transferCapacity.length === 1 && adapted.ratios.length > 1) {
-    // 如果只有一个传递能力值，复制到所有减速比
-    const singleValue = adapted.transferCapacity[0];
-    adapted.transferCapacity = new Array(adapted.ratios.length).fill(singleValue);
-  } 
-  // 如果 transferCapacity 长度大于1但与 ratios 长度不匹配
-  else if (adapted.transferCapacity.length > 1 && adapted.transferCapacity.length !== adapted.ratios.length) {
-    console.log(`正在标准化 ${adapted.model} 的传递能力数组...`);
-    
-    // 创建一个新数组，长度与 ratios 相同
-    const normalizedCapacity = new Array(adapted.ratios.length);
-    
-    // 使用多项式拟合进行插值
-    if (adapted.transferCapacity.length >= 2) {
-      try {
-        // 创建x轴坐标数组 (基于减速比索引的归一化坐标)
-        const xOriginal = adapted.ratios.map((_, index) => 
-          index / (adapted.ratios.length - 1)
-        );
-        const xKnown = adapted.transferCapacity.map((_, index) => 
-          index / (adapted.transferCapacity.length - 1)
-        );
-        
-        // 获取已知y值
-        const yKnown = adapted.transferCapacity;
-        
-        // 使用多项式拟合 (如果点数小于3使用线性拟合，否则使用二次拟合)
-        const degree = adapted.transferCapacity.length < 3 ? 1 : 2;
-        const coefficients = polyFit(xKnown, yKnown, degree);
-        
-        // 使用拟合曲线生成完整的传递能力数组
-        for (let i = 0; i < adapted.ratios.length; i++) {
-          normalizedCapacity[i] = polyEval(coefficients, xOriginal[i]);
-          // 确保值为正
-          if (normalizedCapacity[i] <= 0) {
-            normalizedCapacity[i] = Math.max(...yKnown) * 0.5; // 防止出现负值或零
-          }
-        }
-      } catch (e) {
-        console.error(`拟合传递能力数组失败:`, e);
-        // 回退到简单复制
-        const fillValue = adapted.transferCapacity[0] || 0;
-        normalizedCapacity.fill(fillValue);
-      }
-    } else {
-      // 如果只有一个值或没有值，填充相同的值
-      const defaultValue = adapted.transferCapacity[0] || 0;
-      normalizedCapacity.fill(defaultValue);
-    }
-    
-    adapted.transferCapacity = normalizedCapacity;
-    console.log(`${adapted.model}的传递能力数组已标准化: [${adapted.transferCapacity.join(', ')}]`);
+  // 处理配件
+  if (Array.isArray(adapted.flexibleCouplings)) {
+    adapted.flexibleCouplings = adapted.flexibleCouplings.map(adaptCouplingItem).filter(Boolean);
+  } else {
+    adapted.flexibleCouplings = [];
   }
-
-  adapted.thrust = safeParseFloat(adapted.thrust);
-  adapted.centerDistance = safeParseFloat(adapted.centerDistance);
-  adapted.weight = safeParseFloat(adapted.weight);
-  adapted.dimensions = String(adapted.dimensions || '-').trim();
-  adapted.controlType = String(adapted.controlType || '推拉软轴').trim();
-
-  // 价格计算和适配
-  adapted.basePrice = safeParseFloat(adapted.basePrice || adapted.price);
-  adapted.price = adapted.basePrice; // 保持一致
-  adapted.discountRate = adapted.discountRate !== undefined ? safeParseFloat(adapted.discountRate) : getDiscountRate(adapted.model);
-  adapted.factoryPrice = safeParseFloat(adapted.factoryPrice) || calculateFactoryPrice(adapted);
-
-  // 计算打包价
-  const currentPackagePrice = safeParseFloat(adapted.packagePrice);
-  adapted.packagePrice = (currentPackagePrice > 0 && !adapted.recalculatePackagePrice)
-                         ? currentPackagePrice
-                         : calculatePackagePrice(adapted, null, null);
-
-  // 计算市场价
-  const currentMarketPrice = safeParseFloat(adapted.marketPrice);
-  adapted.marketPrice = (currentMarketPrice > 0 && !adapted.recalculateMarketPrice)
-                        ? currentMarketPrice
-                        : calculateMarketPrice(adapted, adapted.packagePrice);
-
-  // 移除临时标记
-  delete adapted.recalculatePackagePrice;
-  delete adapted.recalculateMarketPrice;
-
+  
+  if (Array.isArray(adapted.standbyPumps)) {
+    adapted.standbyPumps = adapted.standbyPumps.map(adaptPumpItem).filter(Boolean);
+  } else {
+    adapted.standbyPumps = [];
+  }
+  
   return adapted;
 }
 
-// 联轴器适配函数
-function adaptCouplingItem(coupling) {
-  if (!coupling || !coupling.model) return null;
-
-  const adapted = { ...coupling };
-
-  adapted.model = String(adapted.model).trim();
-  adapted.torque = safeParseFloat(adapted.torque);
-  adapted.maxSpeed = safeParseFloat(adapted.maxSpeed);
-  adapted.weight = safeParseFloat(adapted.weight);
-
-  // 价格处理
-  adapted.basePrice = safeParseFloat(adapted.basePrice || adapted.price);
-  adapted.price = adapted.basePrice;
-  adapted.discountRate = adapted.discountRate !== undefined ? safeParseFloat(adapted.discountRate) : getDiscountRate(adapted.model);
-  adapted.factoryPrice = safeParseFloat(adapted.factoryPrice) || calculateFactoryPrice(adapted);
+function adaptGearboxItem(item) {
+  if (!item || !item.model) return null;
   
-  // 市场价
-  const currentMarketPrice = safeParseFloat(adapted.marketPrice);
-  adapted.marketPrice = (currentMarketPrice > 0 && !adapted.recalculateMarketPrice)
-                       ? currentMarketPrice
-                       : Math.round(adapted.basePrice * 1.1);
-
-  delete adapted.recalculateMarketPrice;
-
+  const adapted = { ...item };
+  
+  // 确保基础字段存在
+  adapted.model = String(adapted.model).trim();
+  adapted.inputSpeedRange = ensureValidSpeedRange(adapted.inputSpeedRange);
+  adapted.ratios = ensureValidRatios(adapted.ratios);
+  adapted.transferCapacity = ensureMatchingCapacityArray(adapted.transferCapacity, adapted.ratios);
+  
+  // 确保其他技术参数
+  adapted.thrust = safeParseFloat(adapted.thrust) || 0;
+  adapted.centerDistance = safeParseFloat(adapted.centerDistance) || 0;
+  adapted.weight = safeParseFloat(adapted.weight) || 0;
+  adapted.efficiency = safeParseFloat(adapted.efficiency) || 0.97;
+  adapted.controlType = adapted.controlType || "推拉软轴";
+  
+  // 确保价格字段
+  adaptPriceFields(adapted);
+  
   return adapted;
 }
 
-// 备用泵适配函数
-function adaptPumpItem(pump) {
-  if (!pump || !pump.model) return null;
-
-  const adapted = { ...pump };
-
-  adapted.model = String(adapted.model).trim();
-  adapted.flow = safeParseFloat(adapted.flow);
-  adapted.pressure = safeParseFloat(adapted.pressure);
-  adapted.motorPower = safeParseFloat(adapted.motorPower);
-  adapted.weight = safeParseFloat(adapted.weight);
-
-  // 价格处理
-  adapted.basePrice = safeParseFloat(adapted.basePrice || adapted.price);
-  adapted.price = adapted.basePrice;
-  adapted.discountRate = adapted.discountRate !== undefined ? safeParseFloat(adapted.discountRate) : getDiscountRate(adapted.model);
-  adapted.factoryPrice = safeParseFloat(adapted.factoryPrice) || calculateFactoryPrice(adapted);
+function adaptCouplingItem(item) {
+  if (!item || !item.model) return null;
   
-  // 市场价
-  const currentMarketPrice = safeParseFloat(adapted.marketPrice);
-  adapted.marketPrice = (currentMarketPrice > 0 && !adapted.recalculateMarketPrice)
-                       ? currentMarketPrice
-                       : Math.round(adapted.basePrice * 1.1);
-
-  delete adapted.recalculateMarketPrice;
-
+  const adapted = { ...item };
+  
+  // 确保基础字段
+  adapted.model = String(adapted.model).trim();
+  
+  // 处理扭矩字段（统一为kN·m）
+  adapted.torque = convertTorqueToKNm(adapted);
+  adapted.maxTorque = safeParseFloat(adapted.maxTorque) || (adapted.torque * 2.5);
+  adapted.maxSpeed = safeParseFloat(adapted.maxSpeed) || 3000;
+  adapted.weight = safeParseFloat(adapted.weight) || 50;
+  
+  // 确保价格字段
+  adaptPriceFields(adapted);
+  
   return adapted;
+}
+
+function adaptPumpItem(item) {
+  if (!item || !item.model) return null;
+  
+  const adapted = { ...item };
+  
+  // 确保基础字段
+  adapted.model = String(adapted.model).trim();
+  adapted.flow = safeParseFloat(adapted.flow) || 10.0;
+  adapted.pressure = safeParseFloat(adapted.pressure) || 2.5;
+  adapted.motorPower = safeParseFloat(adapted.motorPower) || 2.0;
+  adapted.weight = safeParseFloat(adapted.weight) || 30;
+  
+  // 确保价格字段
+  adaptPriceFields(adapted);
+  
+  return adapted;
+}
+
+function ensureValidSpeedRange(range) {
+  if (Array.isArray(range) && range.length === 2) {
+    return [
+      safeParseFloat(range[0]) || 1000,
+      safeParseFloat(range[1]) || 2500
+    ];
+  }
+  return [1000, 2500]; // 默认转速范围
+}
+
+function ensureValidRatios(ratios) {
+  if (Array.isArray(ratios)) {
+    return ratios.map(r => safeParseFloat(r)).filter(r => r > 0);
+  }
+  return [];
+}
+
+function ensureMatchingCapacityArray(capacity, ratios) {
+  if (!Array.isArray(ratios) || ratios.length === 0) {
+    return [];
+  }
+  
+  if (!Array.isArray(capacity) || capacity.length === 0) {
+    // 如果没有传递能力数据，填充默认值
+    return new Array(ratios.length).fill(0.1);
+  }
+  
+  // 确保长度匹配
+  if (capacity.length === ratios.length) {
+    return capacity.map(c => safeParseFloat(c) || 0.1);
+  }
+  
+  // 调整长度
+  const result = [];
+  for (let i = 0; i < ratios.length; i++) {
+    result.push(safeParseFloat(capacity[i % capacity.length]) || 0.1);
+  }
+  return result;
+}
+
+function convertTorqueToKNm(item) {
+  let torque = safeParseFloat(item.torque);
+  
+  if (torque && item.torqueUnit) {
+    const unit = item.torqueUnit.toLowerCase();
+    if (unit.includes('nm') || unit.includes('n·m')) {
+      torque = torque / 1000; // 转换为kN·m
+    }
+  } else if (torque > 1000) {
+    // 大于1000可能是N·m，转换
+    torque = torque / 1000;
+  }
+  
+  return torque || 5.0; // 默认值
+}
+
+function adaptPriceFields(item) {
+  item.basePrice = safeParseFloat(item.basePrice || item.price) || 10000;
+  item.price = item.basePrice;
+  item.discountRate = safeParseFloat(item.discountRate) || getDiscountRate(item.model);
+  
+  // 如果折扣率是百分比格式，转换为小数
+  if (item.discountRate > 1) {
+    item.discountRate = item.discountRate / 100;
+  }
+  
+  item.factoryPrice = calculateFactoryPrice(item);
+  item.marketPrice = calculateMarketPrice(item, item.factoryPrice);
+  item.packagePrice = item.factoryPrice;
+}
+
+function createEmptyData() {
+  return {
+    hcGearboxes: [],
+    gwGearboxes: [],
+    hcmGearboxes: [],
+    dtGearboxes: [],
+    hcqGearboxes: [],
+    gcGearboxes: [],
+    hcxGearboxes: [],
+    hcaGearboxes: [],
+    hcvGearboxes: [],
+    mvGearboxes: [],
+    otherGearboxes: [],
+    flexibleCouplings: [],
+    standbyPumps: [],
+    _error: null
+  };
+}
+
+// 添加缺失的adaptEnhancedData函数
+export function adaptEnhancedData(rawData) {
+  console.log("adaptEnhancedData: 开始数据适配...");
+  
+  if (!rawData) {
+    console.warn("adaptEnhancedData: 输入数据为空，返回空集合");
+    return createEmptyData();
+  }
+  
+  console.log("adaptEnhancedData: 输入数据内容:", Object.keys(rawData).map(key => ({
+    key,
+    type: typeof rawData[key],
+    isArray: Array.isArray(rawData[key]),
+    length: Array.isArray(rawData[key]) ? rawData[key].length : 'not array'
+  })));
+  
+  // 确保所有集合存在
+  const data = { ...rawData };
+  
+  // 处理齿轮箱集合
+  const gearboxCollections = [
+    'hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes',
+    'hcqGearboxes', 'gcGearboxes', 'hcxGearboxes', 'hcaGearboxes',
+    'hcvGearboxes', 'mvGearboxes', 'otherGearboxes'
+  ];
+  
+  console.log("adaptEnhancedData: 开始处理齿轮箱数据...");
+  gearboxCollections.forEach(key => {
+    console.log(`adaptEnhancedData: 处理 ${key}...`);
+    const originalLength = Array.isArray(data[key]) ? data[key].length : 0;
+    if (Array.isArray(data[key])) {
+      data[key] = data[key].map(adaptGearboxItem).filter(Boolean);
+    } else {
+      data[key] = [];
+    }
+    console.log(`adaptEnhancedData: ${key} 处理完成，原始长度: ${originalLength}, 处理后长度: ${data[key].length}`);
+  });
+  
+  console.log("adaptEnhancedData: 开始处理联轴器数据...");
+  const originalCouplingLength = Array.isArray(data.flexibleCouplings) ? data.flexibleCouplings.length : 0;
+  if (Array.isArray(data.flexibleCouplings)) {
+    data.flexibleCouplings = data.flexibleCouplings.map(adaptCouplingItem).filter(Boolean);
+  } else {
+    data.flexibleCouplings = [];
+  }
+  console.log(`adaptEnhancedData: 联轴器处理完成，原始长度: ${originalCouplingLength}, 处理后长度: ${data.flexibleCouplings.length}`);
+  
+  console.log("adaptEnhancedData: 开始处理备用泵数据...");
+  const originalPumpLength = Array.isArray(data.standbyPumps) ? data.standbyPumps.length : 0;
+  if (Array.isArray(data.standbyPumps)) {
+    data.standbyPumps = data.standbyPumps.map(adaptPumpItem).filter(Boolean);
+  } else {
+    data.standbyPumps = [];
+  }
+  console.log(`adaptEnhancedData: 备用泵处理完成，原始长度: ${originalPumpLength}, 处理后长度: ${data.standbyPumps.length}`);
+  
+  console.log("adaptEnhancedData: 数据适配完成。");
+  return data;
 }

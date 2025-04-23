@@ -1,130 +1,100 @@
 // src/utils/dataHelpers.js
 
 /**
- * 安全地将值转换为浮点数
- * @param {any} value - 要转换的值
- * @return {number} 转换后的浮点数，如果转换失败则返回0
+ * 格式化日期为本地日期字符串
+ * @param {Date} date 日期对象
+ * @returns {string} 格式化后的日期字符串
+ */
+export const formatDate = (date) => {
+  if (!date) return '';
+  
+  try {
+    // 确保date是Date对象
+    const dateObj = date instanceof Date ? date : new Date(date);
+    return dateObj.toLocaleString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  } catch (e) {
+    console.error('日期格式化错误:', e);
+    return String(date);
+  }
+};
+
+/**
+ * 格式化为仅日期字符串
+ * @param {Date} date 日期对象
+ * @returns {string} 格式化后的日期字符串
+ */
+export const formatDateOnly = (date) => {
+  if (!date) return '';
+  
+  try {
+    const dateObj = date instanceof Date ? date : new Date(date);
+    return dateObj.toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+  } catch (e) {
+    console.error('日期格式化错误:', e);
+    return String(date);
+  }
+};
+
+/**
+ * 计算两个日期之间的差异（天数）
+ * @param {Date|string} date1 第一个日期
+ * @param {Date|string} date2 第二个日期
+ * @returns {number} 天数差异
+ */
+export const dateDiffInDays = (date1, date2) => {
+  try {
+    const d1 = date1 instanceof Date ? date1 : new Date(date1);
+    const d2 = date2 instanceof Date ? date2 : new Date(date2);
+    
+    // 转换为时间戳并计算天数差
+    const diffTime = Math.abs(d2 - d1);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    return diffDays;
+  } catch (e) {
+    console.error('计算日期差异错误:', e);
+    return 0;
+  }
+};
+
+/**
+ * 安全解析浮点数
+ * @param {any} value 要解析的值
+ * @returns {number|undefined} 解析后的数字或undefined
  */
 export const safeParseFloat = (value) => {
-  if (value === undefined || value === null) return 0;
-  if (typeof value === 'number' && !isNaN(value)) return value;
-  if (typeof value === 'string') {
-    const parsed = parseFloat(value);
-    return isNaN(parsed) ? 0 : parsed;
-  }
-  return 0;
+  if (value === undefined || value === null) return undefined;
+  const num = parseFloat(value);
+  return isNaN(num) ? undefined : num;
 };
 
 /**
- * 确保值是数字数组
- * @param {any} arr - 要转换的值
- * @return {number[]} 转换后的数字数组
+ * 确保范围数组
+ * @param {any} value 输入值
+ * @returns {Array} 有效的范围数组
+ */
+export const ensureRangeArray = (value) => {
+  if (Array.isArray(value) && value.length === 2) return value;
+  return [0, 0]; // 默认范围
+};
+
+/**
+ * 确保数字数组
+ * @param {Array} arr 输入数组
+ * @returns {Array} 只包含有效数字的数组
  */
 export const ensureArrayOfNumbers = (arr) => {
-  if (!arr) return [0];
-  if (!Array.isArray(arr)) return [safeParseFloat(arr)];
-  return arr.map(v => safeParseFloat(v));
-};
-
-/**
- * 确保值是范围数组 [min, max]
- * @param {any} range - 要转换的值
- * @param {number[]} defaultRange - 默认范围
- * @return {number[]} 转换后的范围数组
- */
-export const ensureRangeArray = (range, defaultRange = [0, 0]) => {
-  if (!range) return defaultRange;
-  if (Array.isArray(range) && range.length >= 2) {
-    return [safeParseFloat(range[0]), safeParseFloat(range[1])];
-  }
-  if (typeof range === 'string') {
-    const parts = range.split('-').map(p => safeParseFloat(p));
-    if (parts.length >= 2) return [parts[0], parts[1]];
-  }
-  return defaultRange;
-};
-
-/**
- * 计算减速比偏差值
- * @param {number} targetRatio - 目标减速比
- * @param {number} actualRatio - 实际减速比
- * @param {string} method - 计算方法 ('absolute'|'percentage')
- * @return {number} 偏差值
- */
-export const calculateRatioDeviation = (targetRatio, actualRatio, method = 'absolute') => {
-  if (targetRatio <= 0 || actualRatio <= 0) return Infinity;
-  
-  if (method === 'percentage') {
-    return Math.abs((actualRatio - targetRatio) / targetRatio * 100);
-  }
-  
-  return Math.abs(actualRatio - targetRatio);
-};
-
-/**
- * 查找最接近目标减速比的数组元素索引
- * @param {number[]} ratios - 减速比数组
- * @param {number} targetRatio - 目标减速比
- * @return {number} 最接近的数组索引
- */
-export const findClosestRatioIndex = (ratios, targetRatio) => {
-  if (!Array.isArray(ratios) || ratios.length === 0) return -1;
-  
-  let minDeviation = Infinity;
-  let closestIndex = -1;
-  
-  ratios.forEach((ratio, index) => {
-    const deviation = calculateRatioDeviation(targetRatio, ratio);
-    if (deviation < minDeviation) {
-      minDeviation = deviation;
-      closestIndex = index;
-    }
-  });
-  
-  return closestIndex;
-};
-
-/**
- * 获取齿轮箱相关属性
- * @param {Object} gearbox - 齿轮箱对象
- * @param {number} ratioIndex - 减速比索引
- * @param {string} property - 要获取的属性名
- * @return {any} 属性值
- */
-export const getGearboxProperty = (gearbox, ratioIndex, property) => {
-  if (!gearbox || !property) return null;
-  
-  // 直接属性
-  if (typeof gearbox[property] !== 'undefined' && !Array.isArray(gearbox[property])) {
-    return gearbox[property];
-  }
-  
-  // 数组属性
-  if (Array.isArray(gearbox[property])) {
-    if (ratioIndex >= 0 && ratioIndex < gearbox[property].length) {
-      return gearbox[property][ratioIndex];
-    }
-    if (gearbox[property].length === 1) {
-      return gearbox[property][0]; // 单值数组
-    }
-  }
-  
-  return null;
-};
-
-/**
- * 格式化价格显示
- * @param {number} price - 价格
- * @param {boolean} includeCurrency - 是否包含货币符号
- * @return {string} 格式化后的价格字符串
- */
-export const formatPrice = (price, includeCurrency = true) => {
-  if (typeof price !== 'number' || isNaN(price)) return includeCurrency ? '¥0.00' : '0.00';
-  
-  const formattedPrice = price.toLocaleString('zh-CN', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-  
-  return includeCurrency ? `¥${formattedPrice}` : formattedPrice;
+  if (!Array.isArray(arr)) return [];
+  return arr.map(v => safeParseFloat(v)).filter(v => v !== undefined);
 };

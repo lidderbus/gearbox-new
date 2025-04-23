@@ -1,5 +1,5 @@
 // src/contexts/AuthContext.js
-import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback, useRef } from 'react';
 import { userRoles } from '../auth/roles';
 
 // 创建认证上下文
@@ -21,102 +21,95 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
+  
+  // 使用ref标记初始化状态，避免重复清除数据
+  const initialized = useRef(false);
 
-  // 在组件挂载时，从本地存储中恢复用户会话
+  // 在组件挂载时，从本地存储中恢复用户会话 - 使用useEffect和ref避免重复执行
   useEffect(() => {
-    const loadUserSession = () => {
-      setError(null);
-      try {
-        const savedUser = localStorage.getItem('user');
-        if (savedUser) {
+    if (initialized.current) return;
+    initialized.current = true;
+    
+    try {
+      // 清除所有可能的旧存储数据，确保没有冲突
+      localStorage.removeItem('gearbox_users');
+      sessionStorage.removeItem('current_user');
+      
+      const savedUser = localStorage.getItem('user');
+      
+      if (savedUser) {
+        try {
           const parsedUser = JSON.parse(savedUser);
           if (validateUserData(parsedUser)) {
             setUser(parsedUser);
             setIsAuthenticated(true);
-            console.log('User session restored successfully');
           } else {
-            throw new Error('Invalid user data format');
+            localStorage.removeItem('user');
           }
+        } catch (e) {
+          localStorage.removeItem('user');
         }
-      } catch (error) {
-        console.error('Failed to restore user session:', error);
-        setError('会话恢复失败，请重新登录');
-        // 出错时清除本地存储和状态
-        localStorage.removeItem('user');
-        setUser(null);
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
       }
-    };
-
-    loadUserSession();
+    } catch (error) {
+      localStorage.removeItem('user');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  // 登录函数 - 验证用户名和密码
+  // 登录函数 - 同步版本，不使用Promise和延迟
   const login = useCallback((username, password) => {
-    setError(null);
-    return new Promise((resolve, reject) => {
-      // 模拟API延迟
-      setTimeout(() => {
-        try {
-          if (!username || !password) {
-            throw new Error('用户名和密码不能为空');
-          }
+    // 清除所有本地存储数据
+    localStorage.removeItem('user');
+    localStorage.removeItem('gearbox_users');
+    sessionStorage.removeItem('current_user');
+    
+    // 验证用户名和密码
+    if (!username || !password) {
+      throw new Error('用户名和密码不能为空');
+    }
 
-          let userData = null;
+    // 验证凭据
+    let userData = null;
+    
+    if (username === 'admin' && password === 'Gbox@2024!') {
+      userData = {
+        id: 1,
+        username: 'admin',
+        name: '管理员',
+        role: userRoles.ADMIN
+      };
+    } else if (username === 'user' && password === 'User@2024!') {
+      userData = {
+        id: 2,
+        username: 'user',
+        name: '普通用户',
+        role: userRoles.USER
+      };
+    } else {
+      throw new Error('用户名或密码错误');
+    }
 
-          if (username === 'admin' && password === 'admin') {
-            userData = {
-              id: 1,
-              username: 'admin',
-              name: '管理员',
-              role: userRoles.ADMIN
-            };
-          } else if (username === 'user' && password === 'user') {
-            userData = {
-              id: 2,
-              username: 'user',
-              name: '普通用户',
-              role: userRoles.USER
-            };
-          } else {
-            throw new Error('用户名或密码错误');
-          }
-
-          if (!validateUserData(userData)) {
-            throw new Error('用户数据格式无效');
-          }
-          
-          // 保存用户数据到状态和本地存储
-          setUser(userData);
-          setIsAuthenticated(true);
-          localStorage.setItem('user', JSON.stringify(userData));
-          
-          console.log('Login successful:', userData.username);
-          resolve({ success: true, user: userData });
-        } catch (error) {
-          console.error('Login failed:', error);
-          setError(error.message);
-          reject({ success: false, message: error.message });
-        }
-      }, 500);
-    });
+    // 保存用户数据
+    setUser(userData);
+    setIsAuthenticated(true);
+    try {
+      localStorage.setItem('user', JSON.stringify(userData));
+    } catch (e) {
+      console.warn('无法保存用户信息到本地存储');
+    }
+    
+    return { success: true, user: userData };
   }, []);
 
   // 退出登录函数
   const logout = useCallback(() => {
-    try {
-      setUser(null);
-      setIsAuthenticated(false);
-      setError(null);
-      localStorage.removeItem('user');
-      console.log('Logout successful');
-    } catch (error) {
-      console.error('Logout failed:', error);
-      setError('退出登录失败');
-    }
+    setUser(null);
+    setIsAuthenticated(false);
+    localStorage.removeItem('user');
+    localStorage.removeItem('gearbox_users');
+    sessionStorage.removeItem('current_user');
   }, []);
 
   // 检查用户是否具有特定角色
@@ -140,7 +133,8 @@ export const AuthProvider = ({ children }) => {
     error,
     login,
     logout,
-    hasRole
+    hasRole,
+    currentUser: user // 添加currentUser属性，保持与LoginPage组件兼容
   };
 
   return (
@@ -154,7 +148,7 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth必须在AuthProvider内部使用');
   }
   return context;
 };

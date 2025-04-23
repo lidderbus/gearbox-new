@@ -6,7 +6,7 @@ import { Card, Button, Table, Row, Col, Badge } from 'react-bootstrap';
  * Component for displaying the generated quotation
  * @param {Object} props - Component props
  * @param {Object} props.quotation - The quotation data
- * @param {Function} props.onExport - Function to export the quotation
+ * @param {Function} props.onExport - Function(format) to export the quotation
  * @param {Function} props.onGenerateAgreement - Function to generate a technical agreement
  * @param {Object} props.colors - Theme colors object
  * @param {string} props.theme - Current theme ('light' or 'dark')
@@ -50,7 +50,7 @@ const QuotationView = ({
             <Button 
               variant="outline-primary" 
               className="me-2" 
-              onClick={() => onExport('excel')}
+              onClick={() => onExport && onExport('excel')}
               style={{
                 borderColor: colors.primary,
                 color: colors.primary
@@ -60,7 +60,7 @@ const QuotationView = ({
             </Button>
             <Button 
               variant="outline-danger" 
-              onClick={() => onExport('pdf')}
+              onClick={() => onExport && onExport('pdf')}
               style={{
                 borderColor: theme === 'light' ? '#dc3545' : '#e53e3e',
                 color: theme === 'light' ? '#dc3545' : '#e53e3e'

@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>船用齿轮箱数据更新工具</title>
+  <style>
+    :root {
+      --primary-color: #2c6ea5;
+      --primary-hover: #1c5a8f;
+      --secondary-color: #607d8b;
+      --success-color: #4caf50;
+      --warning-color: #ff9800;
+      --danger-color: #f44336;
+      --light-gray: #f5f5f5;
+      --border-color: #ddd;
+      --text-color: #333;
+      --radius: 4px;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: #f9f9f9;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 20px 0;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    
+    h1, h2, h3 {
+      font-weight: 500;
+    }
+    
+    header h1 {
+      margin-bottom: 5px;
+    }
+    
+    header p {
+      opacity: 0.8;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      margin-bottom: 25px;
+    }
+    
+    .card-title {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      color: var(--primary-color);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+    }
+    
+    .card-title .icon {
+      margin-right: 10px;
+      font-size: 1.2em;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .file-input-group {
+      display: flex;
+    }
+    
+    .file-input-group input[type="text"] {
+      flex: 1;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: none;
+    }
+    
+    .file-input-group .btn-browse {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    
+    input[type="text"],
+    input[type="file"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      background-color: white;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+    
+    input[type="file"] {
+      padding: 8px;
+    }
+    
+    textarea {
+      min-height: 200px;
+      resize: vertical;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+    
+    .textarea-container {
+      position: relative;
+    }
+    
+    .textarea-actions {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      display: flex;
+      gap: 5px;
+    }
+    
+    .textarea-actions button {
+      padding: 5px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+    
+    .textarea-actions button:hover {
+      background-color: var(--light-gray);
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      text-align: center;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+    
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+    
+    .btn:active {
+      transform: translateY(1px);
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary-color);
+    }
+    
+    .btn-success {
+      background-color: var(--success-color);
+    }
+    
+    .btn-warning {
+      background-color: var(--warning-color);
+    }
+    
+    .btn-danger {
+      background-color: var(--danger-color);
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .alert {
+      padding: 15px;
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .alert .icon {
+      margin-right: 10px;
+      font-size: 1.2em;
+    }
+    
+    .alert-success {
+      background-color: rgba(76, 175, 80, 0.1);
+      border: 1px solid var(--success-color);
+      color: var(--success-color);
+    }
+    
+    .alert-warning {
+      background-color: rgba(255, 152, 0, 0.1);
+      border: 1px solid var(--warning-color);
+      color: var(--warning-color);
+    }
+    
+    .alert-danger {
+      background-color: rgba(244, 67, 54, 0.1);
+      border: 1px solid var(--danger-color);
+      color: var(--danger-color);
+    }
+    
+    .progress {
+      height: 10px;
+      background-color: var(--light-gray);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 5px;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background-color: var(--primary-color);
+      width: 0;
+      transition: width 0.3s;
+    }
+    
+    .tabs {
+      display: flex;
+      list-style: none;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+    
+    .tab-item {
+      padding: 10px 20px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      border-bottom: none;
+      border-radius: var(--radius) var(--radius) 0 0;
+      margin-right: 5px;
+      margin-bottom: -1px;
+      background-color: var(--light-gray);
+      transition: all 0.2s;
+    }
+    
+    .tab-item.active {
+      background-color: white;
+      border-color: var(--border-color);
+      position: relative;
+    }
+    
+    .tab-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: white;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .data-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .summary-card {
+      background-color: white;
+      border-radius: var(--radius);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      border-left: 4px solid var(--primary-color);
+    }
+    
+    .summary-card h4 {
+      margin-top: 0;
+      margin-bottom: 5px;
+      color: var(--primary-color);
+    }
+    
+    .summary-card .count {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .summary-card .count-changed {
+      color: var(--warning-color);
+      font-weight: bold;
+    }
+    
+    .summary-card p {
+      margin: 5px 0 0;
+      font-size: 0.9rem;
+      color: var(--secondary-color);
+    }
+    
+    .table-responsive {
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    table th, table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    table th {
+      background-color: var(--light-gray);
+      font-weight: 500;
+    }
+    
+    table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    
+    table tr:hover {
+      background-color: #f1f1f1;
+    }
+    
+    .changed {
+      background-color: rgba(255, 152, 0, 0.1);
+    }
+    
+    .added {
+      background-color: rgba(76, 175, 80, 0.1);
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 50px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+      color: var(--secondary-color);
+    }
+    
+    @media (max-width: 768px) {
+      .data-summary {
+        grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+      }
+      
+      .btn-group {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+    
+    /* 加载动画 */
+    .loader {
+      display: none;
+      text-align: center;
+      padding: 30px 0;
+    }
+    
+    .loader-spinner {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>船用齿轮箱数据更新工具</h1>
+      <p>将齿轮箱价格表数据导入并更新到系统中</p>
+    </div>
+  </header>
+  
+  <div class="container">
+    <div id="alerts"></div>
+    
+    <div class="card">
+      <h2 class="card-title">
+        <span class="icon">📁</span>数据导入
+      </h2>
+      
+      <ul class="tabs">
+        <li class="tab-item active" data-tab="file">文件导入</li>
+        <li class="tab-item" data-tab="text">文本导入</li>
+      </ul>
+      
+      <div class="tab-content active" id="file-tab">
+        <div class="form-group">
+          <label for="target-file">目标文件 (现有系统数据):</label>
+          <div class="file-input-group">
+            <input type="text" id="target-file-path" placeholder="选择或输入文件路径" readonly>
+            <button class="btn btn-browse" id="target-file-browse">浏览</button>
+            <input type="file" id="target-file" accept=".js" style="display: none;">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="source-file">源文件 (新的价格数据):</label>
+          <div class="file-input-group">
+            <input type="text" id="source-file-path" placeholder="选择或输入文件路径" readonly>
+            <button class="btn btn-browse" id="source-file-browse">浏览</button>
+            <input type="file" id="source-file" accept=".js,.txt" style="display: none;">
+          </div>
+        </div>
+        
+        <div class="btn-group">
+          <button class="btn" id="import-file-btn">导入数据</button>
+          <button class="btn btn-secondary" id="reset-file-btn">重置</button>
+        </div>
+      </div>
+      
+      <div class="tab-content" id="text-tab">
+        <div class="form-group">
+          <label for="target-text">目标文本 (现有系统数据):</label>
+          <div class="textarea-container">
+            <textarea id="target-text" placeholder="粘贴现有的 embeddedData.js 内容"></textarea>
+            <div class="textarea-actions">
+              <button title="清空" id="clear-target-text">🗑️</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="source-text">源文本 (新的价格数据):</label>
+          <div class="textarea-container">
+            <textarea id="source-text" placeholder="粘贴新的 embeddednew.js 内容或 OCR 处理后的价格表"></textarea>
+            <div class="textarea-actions">
+              <button title="清空" id="clear-source-text">🗑️</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="btn-group">
+          <button class="btn" id="import-text-btn">导入数据</button>
+          <button class="btn btn-secondary" id="reset-text-btn">重置</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card" id="result-card" style="display: none;">
+      <h2 class="card-title">
+        <span class="icon">📊</span>数据合并结果
+      </h2>
+      
+      <div id="data-summary" class="data-summary">
+        <!-- 数据摘要将在这里动态生成 -->
+      </div>
+      
+      <div class="form-group">
+        <label for="merged-code">合并后的代码:</label>
+        <div class="textarea-container">
+          <textarea id="merged-code" readonly></textarea>
+          <div class="textarea-actions">
+            <button title="复制" id="copy-merged-code">📋</button>
+            <button title="下载" id="download-merged-code">💾</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn btn-success" id="apply-btn">应用到系统</button>
+        <button class="btn btn-secondary" id="back-btn">返回编辑</button>
+      </div>
+    </div>
+    
+    <div class="loader" id="loader">
+      <div class="loader-spinner"></div>
+      <p>正在处理数据，请稍候...</p>
+    </div>
+    
+    <div class="footer">
+      <p>船用齿轮箱选型系统 &copy; 2025 - 数据更新工具</p>
+    </div>
+  </div>
+
+  <script>
+    // 工具函数 - 从字符串中提取JavaScript对象
+    function extractObjectFromString(content, objectName) {
+      try {
+        // 寻找对象定义的起始位置
+        const startPattern = new RegExp(`(export\\s+)?const\\s+${objectName}\\s*=\\s*\\{`);
+        const match = content.match(startPattern);
+        
+        if (!match) {
+          console.error(`找不到对象定义: ${objectName}`);
+          return null;
+        }
+        
+        const startPos = match.index;
+        let braceCount = 1;
+        let endPos = startPos + match[0].length;
+        
+        // 查找匹配的大括号以确定对象结束位置
+        while (braceCount > 0 && endPos < content.length) {
+          const char = content[endPos];
+          if (char === '{') braceCount++;
+          else if (char === '}') braceCount--;
+          endPos++;
+        }
+        
+        if (braceCount !== 0) {
+          console.error('无法找到对象的结束位置');
+          return null;
+        }
+        
+        // 提取完整的对象定义
+        const objectCode = content.substring(startPos, endPos);
+        
+        // 准备执行代码 - 将export替换为let，以便在函数中使用
+        const execCode = objectCode.replace(/export\s+const/, 'const');
+        
+        // 使用Function构造器执行代码并返回对象
+        const extractFn = new Function(`
+          ${execCode}
+          return ${objectName};
+        `);
+        
+        return extractFn();
+      } catch (error) {
+        console.error('从字符串中提取对象时出错:', error);
+        return null;
+      }
+    }
+
+    // 工具函数 - 合并齿轮箱数据
+    function mergeGearboxData(targetData, sourceData) {
+      if (!targetData) return sourceData;
+      if (!sourceData) return targetData;
+      
+      // 创建目标数据的深拷贝
+      const result = JSON.parse(JSON.stringify(targetData));
+      
+      // 跟踪更改
+      const changes = {
+        updated: [],
+        added: [],
+        categories: {}
+      };
+      
+      // 更新元数据
+      if (sourceData._version) result._version = sourceData._version;
+      if (sourceData._lastFixed) result._lastFixed = sourceData._lastFixed;
+      
+      // 处理每个齿轮箱类别 (hcGearboxes, gwGearboxes, etc.)
+      Object.keys(sourceData).forEach(category => {
+        // 跳过非数组属性
+        if (!Array.isArray(sourceData[category])) {
+          if (!['_version', '_lastFixed'].includes(category)) {
+            result[category] = sourceData[category];
+          }
+          return;
+        }
+        
+        // 确保目标中有相应类别数组
+        if (!Array.isArray(result[category])) {
+          result[category] = [];
+        }
+        
+        // 初始化类别更改计数
+        changes.categories[category] = {
+          total: result[category].length,
+          updated: 0,
+          added: 0
+        };
+        
+        // 为目标类别创建型号映射，便于快速查找
+        const modelMap = new Map(
+          result[category].map(item => [item.model, item])
+        );
+        
+        // 处理源数据中的每一项
+        sourceData[category].forEach(sourceItem => {
+          if (!sourceItem.model) return; // 跳过无效项
+          
+          const existingItem = modelMap.get(sourceItem.model);
+          
+          if (existingItem) {
+            // 更新现有项
+            let isUpdated = false;
+            
+            Object.keys(sourceItem).forEach(key => {
+              // 对于价格相关字段，优先使用源数据
+              if (['basePrice', 'price', 'discountRate', 'factoryPrice', 
+                   'packagePrice', 'marketPrice', 'notes'].includes(key)) {
+                if (existingItem[key] !== sourceItem[key]) {
+                  existingItem[key] = sourceItem[key];
+                  isUpdated = true;
+                }
+              }
+              // 对于其他关键技术参数，当现有数据字段为空或0时更新
+              else if (existingItem[key] === null || existingItem[key] === undefined || 
+                      existingItem[key] === 0 || existingItem[key] === '' || 
+                      existingItem[key] === '-') {
+                existingItem[key] = sourceItem[key];
+                isUpdated = true;
+              }
+            });
+            
+            if (isUpdated) {
+              changes.updated.push({
+                category,
+                model: sourceItem.model
+              });
+              changes.categories[category].updated++;
+            }
+          } else {
+            // 添加新项
+            result[category].push(JSON.parse(JSON.stringify(sourceItem)));
+            modelMap.set(sourceItem.model, result[category][result[category].length - 1]);
+            
+            changes.added.push({
+              category,
+              model: sourceItem.model
+            });
+            changes.categories[category].added++;
+          }
+        });
+        
+        // 更新总数
+        changes.categories[category].total = result[category].length;
+      });
+      
+      return { data: result, changes };
+    }
+
+    // 工具函数 - 将数据对象转换为JavaScript代码字符串
+    function convertToJsCode(data, includeFunction = true) {
+      const now = new Date();
+      const dateStr = now.toISOString().split('T')[0];
+      
+      let code = `// src/data/embeddedData.js
+// 船用齿轮箱内置数据 - 自动更新于 ${dateStr}
+// 数据来源：
+// - OCR价格表及其他更新来源
+// - embeddednew.js价格及参数数据
+//
+// 更新逻辑：
+// - 保留现有数据结构和非价格参数字段
+// - 专注于更新价格相关字段(basePrice, price, discountRate, factoryPrice, packagePrice, marketPrice)
+// - 当现有技术参数字段为空或0时，使用新数据替换
+
+/**
+ * 嵌入式齿轮箱数据集
+ * key 为分类，value 为对应数组
+ */
+export const embeddedGearboxData = ${JSON.stringify(data, null, 2)};
+`;
+
+      if (includeFunction) {
+        code += `
+
+/**
+ * 根据外部价格表更新齿轮箱价格
+ * @param {object} data 嵌入式数据
+ * @param {Array<{model:string,basePrice:number,discountRate:number,discountedPrice:number}>} priceList 外部价格列表
+ * @returns {object} 更新后的数据
+ */
+export function applyPriceUpdates(data, priceList) {
+  const priceMap = new Map();
+  priceList.forEach((item) => {
+    const key = item.model.trim();
+    priceMap.set(key, item);
+  });
+
+  const updated = JSON.parse(JSON.stringify(data));
+  Object.values(updated).forEach((arr) => {
+    if (!Array.isArray(arr)) return;
+    arr.forEach((g) => {
+      const p = priceMap.get(g.model);
+      if (p) {
+        g.basePrice = p.basePrice;
+        g.price = p.basePrice;
+        g.discountRate = p.discountRate;
+        g.factoryPrice = p.discountedPrice;
+        g.packagePrice = p.discountedPrice;
+        g.marketPrice = g.factoryPrice
+          ? parseFloat((g.factoryPrice / (1 - 0.12)).toFixed(2))
+          : 0;
+        g.priceWarning = false;
+      }
+    });
+  });
+  return updated;
+}`;
+      }
+      
+      return code;
+    }
+    
+    // 工具函数 - 获取类别显示名称
+    function getCategoryDisplayName(category) {
+      const displayNames = {
+        'hcGearboxes': 'HC系列齿轮箱',
+        'gwGearboxes': 'GW系列齿轮箱',
+        'gcGearboxes': 'GC系列齿轮箱',
+        'dtGearboxes': 'DT系列齿轮箱',
+        'hcqGearboxes': 'HCQ系列齿轮箱',
+        'hcmGearboxes': 'HCM系列齿轮箱',
+        'standbyPumps': '备用泵',
+        'flexibleCouplings': '高弹性联轴器',
+        'clutches': '离合器'
+      };
+      
+      return displayNames[category] || category;
+    }
+    
+    // 工具函数 - 显示提示信息
+    function showAlert(type, message) {
+      const alertsContainer = document.getElementById('alerts');
+      const alertElement = document.createElement('div');
+      alertElement.className = `alert alert-${type}`;
+      
+      let icon = '❓';
+      if (type === 'success') icon = '✅';
+      if (type === 'warning') icon = '⚠️';
+      if (type === 'danger') icon = '❌';
+      
+      alertElement.innerHTML = `
+        <span class="icon">${icon}</span>
+        <div>${message}</div>
+      `;
+      
+      alertsContainer.appendChild(alertElement);
+      
+      // 自动关闭（成功和警告提示）
+      if (type === 'success' || type === 'warning') {
+        setTimeout(() => {
+          alertElement.remove();
+        }, 5000);
+      }
+    }
+    
+    // 工具函数 - 清除所有提示信息
+    function clearAlerts() {
+      const alertsContainer = document.getElementById('alerts');
+      alertsContainer.innerHTML = '';
+    }
+    
+    // 工具函数 - 显示/隐藏加载动画
+    function toggleLoader(show) {
+      const loader = document.getElementById('loader');
+      loader.style.display = show ? 'block' : 'none';
+    }
+    
+    // 工具函数 - 下载文本为文件
+    function downloadTextAsFile(text, filename) {
+      const blob = new Blob([text], { type: 'text/javascript' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+    
+    // 工具函数 - 复制文本到剪贴板
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showAlert('success', '已复制到剪贴板');
+      }).catch(err => {
+        console.error('复制失败:', err);
+        showAlert('danger', '复制失败，请手动复制');
+      });
+    }
+    
+    // 工具函数 - 更新数据摘要显示
+    function updateDataSummary(changes) {
+      const summaryContainer = document.getElementById('data-summary');
+      summaryContainer.innerHTML = '';
+      
+      Object.keys(changes.categories).forEach(category => {
+        const data = changes.categories[category];
+        const displayName = getCategoryDisplayName(category);
+        
+        const card = document.createElement('div');
+        card.className = 'summary-card';
+        
+        let hasChanges = data.updated > 0 || data.added > 0;
+        
+        card.innerHTML = `
+          <h4>${displayName}</h4>
+          <div class="count ${hasChanges ? 'count-changed' : ''}">
+            ${data.total} 项
+          </div>
+          <p>
+            ${data.updated > 0 ? `更新: <strong>${data.updated}</strong>` : ''}
+            ${data.updated > 0 && data.added > 0 ? ' | ' : ''}
+            ${data.added > 0 ? `新增: <strong>${data.added}</strong>` : ''}
+            ${data.updated === 0 && data.added === 0 ? '无变更' : ''}
+          </p>
+        `;
+        
+        summaryContainer.appendChild(card);
+      });
+    }
+    
+    // 主函数 - 处理数据合并
+    function processDataMerge(targetContent, sourceContent) {
+      clearAlerts();
+      toggleLoader(true);
+      
+      setTimeout(() => {
+        try {
+          // 尝试从目标内容中提取数据
+          const targetData = extractObjectFromString(targetContent, 'embeddedGearboxData');
+          
+          if (!targetData) {
+            showAlert('danger', '无法从目标内容中提取 embeddedGearboxData 对象。请确保内容格式正确。');
+            toggleLoader(false);
+            return;
+          }
+          
+          // 尝试从源内容中提取数据
+          const sourceData = extractObjectFromString(sourceContent, 'embeddedGearboxData');
+          
+          if (!sourceData) {
+            showAlert('danger', '无法从源内容中提取 embeddedGearboxData 对象。请确保内容格式正确。');
+            toggleLoader(false);
+            return;
+          }
+          
+          // 合并数据
+          const { data: mergedData, changes } = mergeGearboxData(targetData, sourceData);
+          
+          // 将合并后的数据转换为代码
+          const mergedCode = convertToJsCode(mergedData);
+          
+          // 显示合并结果
+          document.getElementById('merged-code').value = mergedCode;
+          updateDataSummary(changes);
+          
+          // 隐藏数据导入卡片，显示结果卡片
+          document.getElementById('result-card').style.display = 'block';
+          
+          // 滚动到结果卡片
+          document.getElementById('result-card').scrollIntoView({ behavior: 'smooth' });
+          
+          showAlert('success', `数据合并成功！共更新了 ${changes.updated.length} 项，新增了 ${changes.added.length} 项。`);
+        } catch (error) {
+          console.error('处理数据时出错:', error);
+          showAlert('danger', `处理数据时出错: ${error.message}`);
+        } finally {
+          toggleLoader(false);
+        }
+      }, 500); // 添加短暂延迟，使加载动画可见
+    }
+    
+    // DOM加载完成后执行
+    document.addEventListener('DOMContentLoaded', () => {
+      // 标签切换
+      document.querySelectorAll('.tab-item').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const tabId = tab.getAttribute('data-tab');
+          
+          // 更新标签状态
+          document.querySelectorAll('.tab-item').forEach(t => {
+            t.classList.toggle('active', t === tab);
+          });
+          
+          // 更新内容状态
+          document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.toggle('active', content.id === `${tabId}-tab`);
+          });
+        });
+      });
+      
+      // 文件浏览按钮
+      document.getElementById('target-file-browse').addEventListener('click', () => {
+        document.getElementById('target-file').click();
+      });
+      
+      document.getElementById('source-file-browse').addEventListener('click', () => {
+        document.getElementById('source-file').click();
+      });
+      
+      // 文件选择事件
+      document.getElementById('target-file').addEventListener('change', event => {
+        const file = event.target.files[0];
+        if (file) {
+          document.getElementById('target-file-path').value = file.name;
+        }
+      });
+      
+      document.getElementById('source-file').addEventListener('change', event => {
+        const file = event.target.files[0];
+        if (file) {
+          document.getElementById('source-file-path').value = file.name;
+        }
+      });
+      
+      // 文本清空按钮
+      document.getElementById('clear-target-text').addEventListener('click', () => {
+        document.getElementById('target-text').value = '';
+      });
+      
+      document.getElementById('clear-source-text').addEventListener('click', () => {
+        document.getElementById('source-text').value = '';
+      });
+      
+      // 文件导入按钮
+      document.getElementById('import-file-btn').addEventListener('click', () => {
+        const targetFile = document.getElementById('target-file').files[0];
+        const sourceFile = document.getElementById('source-file').files[0];
+        
+        if (!targetFile) {
+          showAlert('warning', '请选择目标文件');
+          return;
+        }
+        
+        if (!sourceFile) {
+          showAlert('warning', '请选择源文件');
+          return;
+        }
+        
+        // 读取文件内容
+        const targetReader = new FileReader();
+        const sourceReader = new FileReader();
+        
+        targetReader.onload = targetEvent => {
+          const targetContent = targetEvent.target.result;
+          
+          sourceReader.onload = sourceEvent => {
+            const sourceContent = sourceEvent.target.result;
+            
+            // 处理数据合并
+            processDataMerge(targetContent, sourceContent);
+          };
+          
+          sourceReader.onerror = () => {
+            showAlert('danger', '读取源文件失败');
+          };
+          
+          sourceReader.readAsText(sourceFile);
+        };
+        
+        targetReader.onerror = () => {
+          showAlert('danger', '读取目标文件失败');
+        };
+        
+        targetReader.readAsText(targetFile);
+      });
+      
+      // 文件重置按钮
+      document.getElementById('reset-file-btn').addEventListener('click', () => {
+        document.getElementById('target-file').value = '';
+        document.getElementById('source-file').value = '';
+        document.getElementById('target-file-path').value = '';
+        document.getElementById('source-file-path').value = '';
+        clearAlerts();
+      });
+      
+      // 文本导入按钮
+      document.getElementById('import-text-btn').addEventListener('click', () => {
+        const targetContent = document.getElementById('target-text').value;
+        const sourceContent = document.getElementById('source-text').value;
+        
+        if (!targetContent) {
+          showAlert('warning', '请输入目标文本');
+          return;
+        }
+        
+        if (!sourceContent) {
+          showAlert('warning', '请输入源文本');
+          return;
+        }
+        
+        // 处理数据合并
+        processDataMerge(targetContent, sourceContent);
+      });
+      
+      // 文本重置按钮
+      document.getElementById('reset-text-btn').addEventListener('click', () => {
+        document.getElementById('target-text').value = '';
+        document.getElementById('source-text').value = '';
+        clearAlerts();
+      });
+      
+      // 复制合并代码按钮
+      document.getElementById('copy-merged-code').addEventListener('click', () => {
+        const mergedCode = document.getElementById('merged-code').value;
+        
+        if (!mergedCode) {
+          showAlert('warning', '没有可复制的代码');
+          return;
+        }
+        
+        copyToClipboard(mergedCode);
+      });
+      
+      // 下载合并代码按钮
+      document.getElementById('download-merged-code').addEventListener('click', () => {
+        const mergedCode = document.getElementById('merged-code').value;
+        
+        if (!mergedCode) {
+          showAlert('warning', '没有可下载的代码');
+          return;
+        }
+        
+        downloadTextAsFile(mergedCode, 'embeddedData.js');
+      });
+      
+      // 应用按钮
+      document.getElementById('apply-btn').addEventListener('click', () => {
+        showAlert('success', '数据已成功更新！请将生成的代码替换到系统中的 src/data/embeddedData.js 文件。');
+      });
+      
+      // 返回编辑按钮
+      document.getElementById('back-btn').addEventListener('click', () => {
+        document.getElementById('result-card').style.display = 'none';
+        clearAlerts();
+      });
+    });
+  </script>
+</body>
+</html>

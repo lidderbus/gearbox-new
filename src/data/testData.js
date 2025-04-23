@@ -72,7 +72,7 @@ export const testData = {
     { model: "HGT3020", torque: 31.5, weight: 600, price: 25000, discountRate: 6, factoryPrice: 23500 },
     { model: "HGT4020", torque: 40, weight: 720, price: 29500, discountRate: 5, factoryPrice: 28025 },
     { model: "HGT5020", torque: 50, weight: 900, price: 37400, discountRate: 4, factoryPrice: 35904 },
-    { model: "HGT6320", torque: 63, weight: 1100, price: 47000, discountRate: 4, factoryPrice: 45120 },
+    { model: "HGT6320", torque: 0.063, weight: 1100, price: 47000, discountRate: 4, factoryPrice: 45120 },
     { model: "HGT8020", torque: 80, weight: 1350, price: 58000, discountRate: 4, factoryPrice: 55680 },
     { model: "HGT10020", torque: 100, weight: 1650, price: 71500, discountRate: 5, factoryPrice: 67925 },
     { model: "HGT12520", torque: 125, weight: 2000, price: 85800, discountRate: 5, factoryPrice: 81510 },

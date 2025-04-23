@@ -13,6 +13,9 @@ import { adaptEnhancedData } from '../utils/dataAdapter'; // 可能需要适配�
 // 导入新的齿轮箱数据导入组件
 import GearboxDataImporter from './GearboxDataImporter';
 
+// 导入价格维护工具组件
+import PriceMaintenanceTool from './PriceMaintenanceTool';
+
 /**
  * DatabaseManagementView组件 - 数据库管理界面
  *
@@ -23,6 +26,7 @@ import GearboxDataImporter from './GearboxDataImporter';
  * - 数据导出：将数据库导出为JSON或Excel格式
  * - 数据导入：从文件导入数据
  * - 齿轮箱专业导入：专门用于前进牌齿轮箱数据导入
+ * - 价格管理：维护和更新价格数据
  */
 const DatabaseManagementView = ({ appData = {}, setAppData = () => {} }) => {
   // 状态变量
@@ -53,6 +57,7 @@ const DatabaseManagementView = ({ appData = {}, setAppData = () => {} }) => {
   const [isImporting, setIsImporting] = useState(false); // 用于禁用按钮
   const [importErrorCount, setImportErrorCount] = useState(0); // 跟踪导入错误数量的状态
   const [importHistory, setImportHistory] = useState([]); // 导入历史记录
+  const [theme, setTheme] = useState('light'); // 添加主题状态，默认为亮色主题
 
   // 文件输入引用
   const fileInputRef = useRef(null);
@@ -68,6 +73,18 @@ const DatabaseManagementView = ({ appData = {}, setAppData = () => {} }) => {
     { key: 'flexibleCouplings', name: '高弹性联轴器', icon: 'link', color: '#673AB7' },
     { key: 'standbyPumps', name: '备用泵', icon: 'water-pump', color: '#03A9F4' }
   ];
+
+  // 为价格管理组件定义颜色配置
+  const colors = {
+    card: theme === 'light' ? '#ffffff' : '#1a202c',
+    border: theme === 'light' ? '#dee2e6' : '#4a5568',
+    headerBg: theme === 'light' ? '#f8f9fa' : '#2d3748',
+    headerText: theme === 'light' ? '#212529' : '#e2e8f0',
+    text: theme === 'light' ? '#212529' : '#e2e8f0',
+    muted: theme === 'light' ? '#6c757d' : '#a0aec0',
+    inputBg: theme === 'light' ? '#ffffff' : '#2d3748',
+    inputBorder: theme === 'light' ? '#ced4da' : '#4a5568'
+  };
 
   // 验证数据库中所有数据的有效性
   const handleValidateData = () => {
@@ -761,6 +778,27 @@ const handleImportData = async () => {
                     <p className="mt-2 text-success">所有数据已是最优状态，无需修正，或未执行修正操作</p>
                   </div>
                 )}
+              </Card.Body>
+            </Card>
+          )}
+        </Tab>
+        
+        {/* 添加价格管理标签页 */}
+        <Tab eventKey="priceManagement" title={<span><i className="bi bi-currency-yen me-1"></i>价格管理</span>}>
+          {appData ? (
+            <PriceMaintenanceTool 
+              appData={appData} 
+              setAppData={setAppData}
+              theme={theme}
+              colors={colors}
+            />
+          ) : (
+            <Card className="shadow-sm">
+              <Card.Body>
+                <Alert variant="warning">
+                  <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                  数据未加载，无法管理价格。请确保系统数据已正确加载。
+                </Alert>
               </Card.Body>
             </Card>
           )}

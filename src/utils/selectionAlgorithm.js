@@ -1,246 +1,43 @@
 // src/utils/selectionAlgorithm.js
 
-// 导入映射表
-import { 
-  getRecommendedCouplingInfo, 
-  couplingWorkFactorMap, 
-  getTemperatureFactor, 
-  getRecommendedPump 
+// 导入映射表和辅助函数
+import {
+  getRecommendedCouplingInfo,
+  couplingWorkFactorMap,
+  getTemperatureFactor,
+  getRecommendedPump,
+  getCouplingSpecifications, // 导入联轴器规格映射
+  couplingSpecificationsMap  // 直接导入映射表
 } from '../data/gearboxMatchingMaps';
-import { calculateFactoryPrice, getDiscountRate } from '../data/priceDiscount';
+import {
+    calculateFactoryPrice,
+    calculateMarketPrice, // Import calculateMarketPrice
+    getDiscountRate
+} from './priceManager'; // Import price calculation functions
+import { safeParseFloat } from './dataHelpers';
+// Import selection helper functions from couplingSelection.js
+import { selectFlexibleCoupling, selectStandbyPump, fixCouplingTorque } from './couplingSelection';
 
-// 定义联轴器罩壳映射
+
+// 定义联轴器罩壳映射（如果需要） - 用于特定型号的罩壳变体
+// NOTE: This map might be better placed in gearboxMatchingMaps or a dedicated config if used elsewhere.
 const couplingWithCoverMap = {
   'HGTHB5': 'HGTHJB5',
-  'HGTHB6.3A': 'HGTHJB6.3A'
+  'HGTHB6.3A': 'HGTHJB6.3A',
+  // 添加其他标准型号和其对应的带罩壳型号映射
 };
 
-// 备用泵选择函数 - 确保在顶层
-export const selectStandbyPump = (gearboxModel, pumpsData) => {
-  const pumps = pumpsData; 
-  if (!pumps || pumps.length === 0) {
-    return { success: false, message: "没有找到备用泵数据" };
-  }
-  console.log(`选择备用泵，齿轮箱型号: ${gearboxModel}`);
-
-  const recommendedPumpModel = getRecommendedPump(gearboxModel);
-  console.log(`模型 ${gearboxModel} 的推荐泵型号: ${recommendedPumpModel}`);
-
-  let matchedPump = null;
-  if (recommendedPumpModel) {
-    matchedPump = pumps.find(p => p && p.model === recommendedPumpModel);
-  }
-
-  if (matchedPump) {
-    console.log(`找到完全匹配的备用泵: ${matchedPump.model}`);
-    const basePrice = matchedPump.basePrice || matchedPump.price || 0;
-    const discountRate = matchedPump.discountRate ?? getDiscountRate(matchedPump.model);
-    const factoryPrice = matchedPump.factoryPrice || calculateFactoryPrice({ ...matchedPump, basePrice });
-
-    return {
-      success: true,
-      ...matchedPump,
-      basePrice,
-      discountRate,
-      factoryPrice,
-      flow: matchedPump.flow || 0,
-      pressure: matchedPump.pressure || 0,
-      motorPower: matchedPump.motorPower || 0,
-      weight: matchedPump.weight || 0
-    };
-  } else {
-    console.warn(`推荐泵型号 (${recommendedPumpModel}) 在数据中未找到，或无推荐型号。将选择流量最接近的泵。`);
-    if (pumps.length > 0) {
-      console.log(`选择第一个可用泵作为备用: ${pumps[0].model}`);
-      const fallbackPump = pumps[0];
-      const basePrice = fallbackPump.basePrice || fallbackPump.price || 0;
-      const discountRate = fallbackPump.discountRate ?? getDiscountRate(fallbackPump.model);
-      const factoryPrice = fallbackPump.factoryPrice || calculateFactoryPrice({ ...fallbackPump, basePrice });
-      return {
-        success: true,
-        message: `未找到推荐型号 ${recommendedPumpModel}, 已选择备用 ${fallbackPump.model}`,
-        ...fallbackPump,
-        basePrice,
-        discountRate,
-        factoryPrice,
-        flow: fallbackPump.flow || 0,
-        pressure: fallbackPump.pressure || 0,
-        motorPower: fallbackPump.motorPower || 0,
-        weight: fallbackPump.weight || 0
-      };
+// 增加一个调试选项，可在生产环境中关闭
+const DEBUG_MODE = true;
+const DEBUG_LOG = (message, data) => {
+  if (DEBUG_MODE) {
+    if (data) {
+      console.log(message, data);
     } else {
-      return { success: false, message: `未找到推荐泵 (${recommendedPumpModel}) 且无备用泵可选` };
+      console.log(message);
     }
   }
 };
-
-export const selectFlexibleCoupling = (
-    engineTorque,
-    gearboxModel,
-    couplingsData,
-    workCondition = "III类:扭矩变化中等",
-    temperature = 30,
-    hasCover = false
-) => {
-    console.log("开始联轴器选择:", { engineTorque, gearboxModel, workCondition, temperature, hasCover, couplingsCount: couplingsData?.length });
-
-    if (!engineTorque || engineTorque <= 0) {
-        return { success: false, message: "无效的主机扭矩", recommendations: [] };
-    }
-    // Ensure couplingsData is an array
-    if (!Array.isArray(couplingsData) || couplingsData.length === 0) {
-        console.warn("couplingsData is not a valid array in selectFlexibleCoupling");
-        return { success: false, message: "联轴器数据无效或缺失", recommendations: [] };
-    }
-
-    // 1. 确定工况系数和温度系数
-    const kFactor = couplingWorkFactorMap[workCondition] || couplingWorkFactorMap.default;
-    const stFactor = getTemperatureFactor(temperature);
-    const requiredCouplingTorque = engineTorque * kFactor * stFactor / 1000; // Convert N·m to kN·m and apply factors
-    console.log(`Required Coupling Torque (kN·m): ${requiredCouplingTorque.toFixed(3)} (Engine: ${engineTorque.toFixed(2)} N·m, K: ${kFactor}, St: ${stFactor})`);
-
-    // 2. 获取齿轮箱推荐的联轴器信息
-    const {
-       prefix: recommendedPrefix,
-       specific: recommendedModel
-    } = getRecommendedCouplingInfo(gearboxModel, hasCover);
-    console.log(`Recommended coupling for ${gearboxModel}: Specific=${recommendedModel || 'N/A'}, Prefix=${recommendedPrefix || 'N/A'}`);
-
-    // 3. 筛选并打分联轴器
-    const eligibleCouplings = [];
-    couplingsData.forEach(coupling => {
-        // Basic validation for each coupling object
-        if (!coupling || typeof coupling !== 'object' || !coupling.model || typeof coupling.torque !== 'number' || coupling.torque <= 0) {
-             console.warn(`Skipping invalid coupling data:`, coupling);
-            return;
-        }
-
-        // 扭矩检查
-        if (coupling.torque >= requiredCouplingTorque) {
-            const torqueMargin = ((coupling.torque / requiredCouplingTorque) - 1) * 100;
-
-            // 评分逻辑
-            let score = 0;
-
-            // 扭矩余量评分 (50分) - 优先选择10-30%余量
-            if (torqueMargin >= 10 && torqueMargin <= 30) {
-                score += 50; // 最佳余量范围(10-30%)
-            } else if (torqueMargin > 30 && torqueMargin <= 50) {
-                score += 40; // 余量偏大(30-50%)
-            } else if (torqueMargin > 50) {
-                score += 30; // 余量过大(>50%)
-            } else { // 0 <= torqueMargin < 10
-                score += 35; // 余量偏小但满足要求(0-10%)
-            }
-
-            // 推荐匹配评分 (30分)
-            if (recommendedModel && coupling.model === recommendedModel) score += 30; // 完全匹配
-            else if (recommendedPrefix && coupling.model.startsWith(recommendedPrefix)) score += 20; // 前缀匹配
-            else score += 5; // 无匹配
-
-            // 转速匹配评分 (10分) - 假设与发动机转速匹配，需要 engineSpeed
-            // If engineSpeed is not available here, we might need to pass it or use a default
-            // const engineSpeed = ???; // Need engine speed for this check
-            // For now, assume speed is met or use a simplified check
-            if (coupling.maxSpeed) { // Check if maxSpeed exists
-                // Simplified: Give points if maxSpeed is reasonable (e.g., > 1000)
-                 if (coupling.maxSpeed >= 1800) score += 10;
-                 else if (coupling.maxSpeed >= 1200) score += 5;
-            } else {
-                 score += 2; // No speed info, low score
-            }
-            // A better implementation would pass engineSpeed to this function
-
-
-            // 重量评分 (5分) - 越轻越好 (Normalized)
-            const maxWeight = 2500; // Assume max coupling weight for normalization
-            const weightScore = Math.max(0, 5 * (1 - (coupling.weight || maxWeight) / maxWeight));
-            score += weightScore;
-
-            // 价格评分 (5分) - 越便宜越好 (Normalized)
-            const maxPrice = 300000; // Assume max coupling price for normalization
-            const priceScore = Math.max(0, 5 * (1 - (coupling.price || maxPrice) / maxPrice));
-            score += priceScore;
-
-
-            // 确保分数在0-100范围内
-            score = Math.max(0, Math.min(100, Math.round(score)));
-
-            // 确保价格相关字段存在
-            const basePrice = coupling.basePrice || coupling.price || 0;
-            const discountRateValue = coupling.discountRate; // Keep original or undefined
-            const factoryPrice = coupling.factoryPrice || calculateFactoryPrice({
-                ...coupling,
-                basePrice
-            });
-
-            eligibleCouplings.push({
-                ...coupling,
-                torqueMargin,
-                score,
-                basePrice,
-                discountRate: discountRateValue,
-                factoryPrice,
-                requiredTorque: requiredCouplingTorque, // Store required torque for reference
-                 // speedMet: coupling.maxSpeed >= engineSpeed // Add this if engineSpeed is available
-            });
-        }
-    });
-
-    // 4. 排序
-    eligibleCouplings.sort((a, b) => b.score - a.score);
-
-    // 5. 添加警告信息
-    let warning = null;
-    if (eligibleCouplings.length > 0) {
-        const topRec = eligibleCouplings[0];
-        if (topRec.torqueMargin < 5) {
-            warning = `警告: 首选推荐联轴器(${topRec.model})的扭矩余量(${topRec.torqueMargin.toFixed(1)}%)非常低(<5%)。`;
-        } else if (topRec.torqueMargin < 10) {
-            warning = `注意: 首选推荐联轴器(${topRec.model})的扭矩余量(${topRec.torqueMargin.toFixed(1)}%)较低(<10%)。`;
-        } else if (topRec.torqueMargin > 50) {
-            warning = `注意: 首选推荐联轴器(${topRec.model})的扭矩余量(${topRec.torqueMargin.toFixed(1)}%)较高(>50%)，可能过度选型。`;
-        }
-
-        if (topRec.score < 60) {
-            const scoreWarn = `首选推荐联轴器(${topRec.model})综合评分(${topRec.score})较低(<60)。`;
-            warning = warning ? `${warning} ${scoreWarn}` : `警告: ${scoreWarn}`;
-        }
-
-        if (recommendedModel && topRec.model !== recommendedModel &&
-            (!recommendedPrefix || !topRec.model.startsWith(recommendedPrefix))) {
-            const matchWarn = `首选推荐联轴器(${topRec.model})与齿轮箱(${gearboxModel})的建议匹配(${recommendedModel || recommendedPrefix+'*'})不同。`;
-            warning = warning ? `${warning} ${matchWarn}` : `注意: ${matchWarn}`;
-        }
-
-        // 如果需要带罩壳但选用的不是罩壳型号
-         // Use the couplingWithCoverMap to find the corresponding covered model
-         const coveredModelKey = Object.keys(couplingWithCoverMap).find(key => couplingWithCoverMap[key] === topRec.model);
-         const standardModelForCover = Object.keys(couplingWithCoverMap).find(key => couplingWithCoverMap[key] === recommendedModel);
-
-        if (hasCover && !topRec.model.includes('JB') && !(coveredModelKey || standardModelForCover) && (recommendedModel === 'HGTHB5' || recommendedModel === 'HGTHB6.3A')) {
-           // Only warn if a cover is requested AND the recommended/selected model IS one that *has* a cover option but the non-covered version was chosen.
-           const expectedCoverModel = couplingWithCoverMap[topRec.model] || `HGTHJ${topRec.model.substring(4)}`; // Attempt to construct expected name
-           const coverWarn = `已选择带罩壳配置，但推荐的联轴器(${topRec.model})不是罩壳型号，建议使用${expectedCoverModel}。`;
-           warning = warning ? `${warning} ${coverWarn}` : `注意: ${coverWarn}`;
-        }
-    }
-
-    console.log(`Coupling selection finished. Found ${eligibleCouplings.length} eligible couplings.`);
-
-    // 6. 返回结果
-    const bestMatch = eligibleCouplings.length > 0 ? eligibleCouplings[0] : null;
-
-    return {
-        success: !!bestMatch,
-        message: bestMatch ? `找到最匹配的联轴器: ${bestMatch.model}` : "没有找到合适的联轴器",
-        ...(bestMatch), // Expand best match properties (model, torque, score, prices, etc.)
-        recommendations: eligibleCouplings.slice(0, 5), // Return top 5 recommendations
-        requiredCouplingTorque: requiredCouplingTorque,
-        warning: warning
-    };
-};
-
 
 // --- selectGearbox 函数 ---
 // Now receives options object containing coupling parameters
@@ -251,9 +48,15 @@ export const selectGearbox = (
     thrustRequirement = 0,
     gearboxType = 'HC', // Expecting a single type like 'HC', 'GW', etc.
     data,
-    options = {} // Receive workCondition, temperature, hasCover, application
+    options = {} // Receive workCondition, temperature, hasCover, application, etc.
 ) => {
     console.log(`开始 ${gearboxType} 系列齿轮箱选型:`, { enginePower, engineSpeed, targetRatio, thrustRequirement, options });
+    
+    // 日志记录：检查高弹数据是否正确加载
+    console.log("flexibleCouplings 数据:", data?.flexibleCouplings?.length || 0, "条记录");
+    if (data?.flexibleCouplings?.length > 0) {
+        console.log("flexibleCouplings 示例:", data.flexibleCouplings[0]);
+    }
 
     // --- Parameter validation ---
     if (!enginePower || enginePower <= 0) return { success: false, message: '发动机功率必须大于0' };
@@ -263,7 +66,7 @@ export const selectGearbox = (
 
     // --- Get specific gearbox data ---
     const gearboxTypeName = `${gearboxType.toLowerCase()}Gearboxes`;
-    const gearboxes = data[gearboxTypeName];
+    let gearboxes = data[gearboxTypeName];
 
     if (!Array.isArray(gearboxes) || gearboxes.length === 0) {
         console.error(`${gearboxType} 系列数据无效或缺失`);
@@ -272,8 +75,27 @@ export const selectGearbox = (
 
     // --- Calculate required capacity and torque ---
     const requiredTransferCapacity = enginePower / engineSpeed;
-    const engineTorque = (enginePower * 9550) / engineSpeed; // N·m
-    console.log(`计算参数: Required Capacity=${requiredTransferCapacity.toFixed(6)} kW/rpm, Engine Torque=${engineTorque.toFixed(2)} N·m`);
+    const engineTorque_Nm = (enginePower * 9550) / engineSpeed; // N·m
+    console.log(`计算参数: Required Capacity=${requiredTransferCapacity.toFixed(6)} kW/rpm, Engine Torque=${engineTorque_Nm.toFixed(2)} N·m`);
+
+    // --- 创建失败原因收集器，帮助诊断 ---
+    const rejectionReasons = {
+        speedRange: 0,
+        ratioOutOfRange: 0,
+        capacityTooLow: 0, 
+        capacityTooHigh: 0,
+        thrustInsufficient: 0
+    };
+    
+    // --- 宽松参数设置 ---
+    // 放宽减速比偏差百分比限制 (从15%提高到25%)
+    const MAX_RATIO_DIFF_PERCENT = 25;  
+    
+    // 放宽容量余量上限 (从30%提高到50%)
+    const MAX_CAPACITY_MARGIN = 50;
+    
+    // 提供额外信息记录满足部分条件的近似匹配
+    let nearMatches = [];
 
     // --- Filter and score gearboxes ---
     const matchingGearboxes = [];
@@ -283,32 +105,76 @@ export const selectGearbox = (
             continue;
         }
 
+        let failureReason = null;
+
         // Check speed range
         if (Array.isArray(gearbox.inputSpeedRange) && gearbox.inputSpeedRange.length === 2) {
             const [minSpeed, maxSpeed] = gearbox.inputSpeedRange;
-            if (engineSpeed < minSpeed || engineSpeed > maxSpeed) continue;
+            if (engineSpeed < minSpeed || engineSpeed > maxSpeed) {
+                 DEBUG_LOG(`Skipping ${gearbox.model}: Speed ${engineSpeed} outside range [${minSpeed}, ${maxSpeed}]`);
+                 rejectionReasons.speedRange++;
+                 failureReason = `转速 ${engineSpeed} 超出范围 [${minSpeed}, ${maxSpeed}]`;
+                continue;
+            }
         } else {
              console.warn(`Gearbox ${gearbox.model} has invalid inputSpeedRange. Skipping range check.`);
         }
 
-
         // Check ratios and find best match
-        if (!Array.isArray(gearbox.ratios) || gearbox.ratios.length === 0) continue;
+        if (!Array.isArray(gearbox.ratios) || gearbox.ratios.length === 0) {
+             console.warn(`Gearbox ${gearbox.model} has no ratios.`);
+            continue;
+        }
 
         let bestRatioIndex = -1;
         let minRatioDiff = Infinity;
+        let bestRatioDiffPercent = Infinity;
+        
         gearbox.ratios.forEach((ratio, index) => {
-            if (typeof ratio !== 'number') return; // Skip invalid ratios
+            if (typeof ratio !== 'number' || isNaN(ratio) || ratio <= 0) {
+                 console.warn(`Gearbox ${gearbox.model} has invalid ratio value at index ${index}: ${ratio}`);
+                return; // Skip invalid ratios
+            }
             const diff = Math.abs(ratio - targetRatio);
-            if (diff < minRatioDiff) {
+            // 计算比例偏差百分比
+            const ratioDiffPercent = (diff / targetRatio) * 100;
+
+            // 使用放宽后的条件 (MAX_RATIO_DIFF_PERCENT 替代固定值 15%)
+            if (ratioDiffPercent <= MAX_RATIO_DIFF_PERCENT && diff < minRatioDiff) {
                 minRatioDiff = diff;
                 bestRatioIndex = index;
+                bestRatioDiffPercent = ratioDiffPercent;
             }
         });
 
-        if (bestRatioIndex === -1) continue; // No valid ratio found
-        // Relax ratio difference check slightly for broader matching initially
-        // if (minRatioDiff > 1.0) continue; // Allow up to 1.0 difference
+        if (bestRatioIndex === -1) {
+            DEBUG_LOG(`Skipping ${gearbox.model}: No ratio within ${MAX_RATIO_DIFF_PERCENT}% of target ${targetRatio}`);
+            rejectionReasons.ratioOutOfRange++;
+            failureReason = `没有减速比在目标值 ${targetRatio} 的 ${MAX_RATIO_DIFF_PERCENT}% 偏差范围内`;
+            
+            // 如果有很接近的比例，也记录下来作为近似匹配
+            const closestRatioIndex = gearbox.ratios.reduce((closest, ratio, index) => {
+                const diff = Math.abs(ratio - targetRatio);
+                const diffPercent = (diff / targetRatio) * 100;
+                if (diffPercent < closest.diffPercent) {
+                    return { index, diffPercent, ratio };
+                }
+                return closest;
+            }, { index: -1, diffPercent: Infinity, ratio: 0 });
+            
+            if (closestRatioIndex.index !== -1 && closestRatioIndex.diffPercent <= 35) {
+                // 记录接近但不完全符合条件的齿轮箱
+                const nearMatch = {
+                    ...gearbox,
+                    selectedRatio: closestRatioIndex.ratio,
+                    ratioDiffPercent: closestRatioIndex.diffPercent,
+                    failureReason
+                };
+                nearMatches.push(nearMatch);
+            }
+            
+            continue; // 没有找到符合条件的比例
+        }
 
         // Get capacity for the best ratio
         let capacity;
@@ -325,160 +191,357 @@ export const selectGearbox = (
             continue; // Skip if capacity data is unusable
         }
 
-
         // Calculate capacity margin
-        if (capacity <= 0) continue; // Skip if capacity is not positive
+        if (capacity <= 0) {
+             console.warn(`Skipping ${gearbox.model}: Capacity is not positive (${capacity})`);
+            continue; // Skip if capacity is not positive
+        }
         const capacityMargin = ((capacity - requiredTransferCapacity) / requiredTransferCapacity) * 100;
 
-        // Check capacity requirement (margin must be non-negative)
-        if (capacity < requiredTransferCapacity) continue;
+        // 检查容量余量要求 (使用放宽后的参数)
+        if (capacity < requiredTransferCapacity) {
+            DEBUG_LOG(`Skipping ${gearbox.model}: Capacity ${capacity} too low (Required ${requiredTransferCapacity})`);
+            rejectionReasons.capacityTooLow++;
+            failureReason = `传递能力 ${capacity} 不足以满足需求 ${requiredTransferCapacity.toFixed(6)}`;
+            
+            // 容量接近的情况保存为近似匹配
+            if (capacity >= requiredTransferCapacity * 0.85) {
+                const nearMatch = {
+                    ...gearbox,
+                    selectedRatio: gearbox.ratios[bestRatioIndex],
+                    selectedCapacity: capacity,
+                    capacityMargin: ((capacity - requiredTransferCapacity) / requiredTransferCapacity) * 100,
+                    ratioDiffPercent: bestRatioDiffPercent,
+                    failureReason
+                };
+                nearMatches.push(nearMatch);
+            }
+            
+            continue;
+        }
+        
+        if (capacityMargin > MAX_CAPACITY_MARGIN) {
+            DEBUG_LOG(`Skipping ${gearbox.model}: Capacity margin ${capacityMargin.toFixed(1)}% too high (Max ${MAX_CAPACITY_MARGIN}%)`);
+            rejectionReasons.capacityTooHigh++;
+            failureReason = `传递能力余量 ${capacityMargin.toFixed(1)}% 超过上限 ${MAX_CAPACITY_MARGIN}%`;
+            
+            // 余量接近的情况保存为近似匹配
+            if (capacityMargin <= MAX_CAPACITY_MARGIN * 1.3) {
+                const nearMatch = {
+                    ...gearbox,
+                    selectedRatio: gearbox.ratios[bestRatioIndex],
+                    selectedCapacity: capacity,
+                    capacityMargin: capacityMargin,
+                    ratioDiffPercent: bestRatioDiffPercent,
+                    failureReason
+                };
+                nearMatches.push(nearMatch);
+            }
+            
+            continue;
+        }
 
          // Check thrust requirement (if specified)
          let thrustMet = true; // Assume met if not specified or no data
          if (thrustRequirement > 0) {
-             if (typeof gearbox.thrust === 'number') {
+             if (typeof gearbox.thrust === 'number' && !isNaN(gearbox.thrust)) {
                  thrustMet = gearbox.thrust >= thrustRequirement;
                  if (!thrustMet) {
-                    console.log(`Gearbox ${gearbox.model} thrust ${gearbox.thrust}kN does not meet requirement ${thrustRequirement}kN`);
-                    // Don't filter out immediately, let scoring handle it or decide later
-                    // continue; // Optionally filter out here
+                    DEBUG_LOG(`Gearbox ${gearbox.model} thrust ${gearbox.thrust}kN does not meet requirement ${thrustRequirement}kN`);
+                    rejectionReasons.thrustInsufficient++;
+                    failureReason = `推力 ${gearbox.thrust}kN 不满足需求 ${thrustRequirement}kN`;
+                    
+                    // 推力接近的情况保存为近似匹配
+                    if (gearbox.thrust >= thrustRequirement * 0.8) {
+                        const nearMatch = {
+                            ...gearbox,
+                            selectedRatio: gearbox.ratios[bestRatioIndex],
+                            selectedCapacity: capacity,
+                            capacityMargin: capacityMargin,
+                            ratioDiffPercent: bestRatioDiffPercent,
+                            thrustMet: false,
+                            failureReason
+                        };
+                        nearMatches.push(nearMatch);
+                    }
+                    
+                    continue; // 如果推力要求不满足，则跳过
                  }
              } else {
                  // Thrust required but gearbox has no thrust data - assume not met or handle based on policy
                  thrustMet = false;
                  console.log(`Gearbox ${gearbox.model} has no thrust data, requirement ${thrustRequirement}kN cannot be verified.`);
-                 // continue; // Optionally filter out here
+                 continue; // 如果没有推力数据，则跳过
              }
          }
 
+        // Calculate减速比偏差百分比 for sorting and display
+        const ratioSelected = gearbox.ratios[bestRatioIndex];
+        const ratioDiffPercent = (Math.abs(ratioSelected - targetRatio) / targetRatio) * 100;
+
+
+        // Calculate safety factor (Actual Capacity / Required Capacity)
+        const safetyFactor = capacity / requiredTransferCapacity;
+
+        // Ensure price fields are calculated/present
+         const gbBasePrice = gearbox.basePrice || gearbox.price || 0;
+         const gbDiscountRate = gearbox.discountRate ?? getDiscountRate(gearbox.model);
+         const gbFactoryPrice = gearbox.factoryPrice || calculateFactoryPrice({ ...gearbox, basePrice: gbBasePrice, discountRate: gbDiscountRate });
+
+
         matchingGearboxes.push({
             ...gearbox,
-            selectedRatio: gearbox.ratios[bestRatioIndex],
+            selectedRatio: ratioSelected,
             selectedCapacity: capacity,
             capacityMargin: capacityMargin,
             thrustMet: thrustMet, // Record if thrust requirement is met
-            ratio: gearbox.ratios[bestRatioIndex], // Ensure ratio field exists
-            engineTorque: engineTorque // Add engine torque for reference
+            ratio: ratioSelected, // Ensure ratio field exists for convenience
+            engineTorque: engineTorque_Nm, // Add engine torque for reference (N·m)
+            ratioDiffPercent: ratioDiffPercent, // 记录减速比偏差百分比
+            safetyFactor: safetyFactor,
+            // Ensure price fields are consistent
+            basePrice: gbBasePrice,
+            price: gbBasePrice, // Ensure price matches basePrice
+            discountRate: gbDiscountRate,
+            factoryPrice: gbFactoryPrice,
+            packagePrice: gbFactoryPrice, // Package price defaults to factory price
+            marketPrice: calculateMarketPrice({factoryPrice: gbFactoryPrice}), // Calculate market price
         });
     }
 
     console.log(`${gearboxType} 系列找到 ${matchingGearboxes.length} 个初步匹配的齿轮箱`);
-
+    
+    // 如果没有匹配的齿轮箱，但有近似匹配，提供这些选项和失败原因
     if (matchingGearboxes.length === 0) {
-        return { success: false, message: `没有找到符合条件的 ${gearboxType} 系列齿轮箱`, recommendations: [], gearboxTypeUsed: gearboxType };
+        // 记录失败统计
+        console.log(`匹配失败原因统计:`, rejectionReasons);
+        
+        // 如果有近似匹配，按照匹配程度排序
+        if (nearMatches.length > 0) {
+            // 对近似匹配进行评分和排序
+            nearMatches.forEach(match => {
+                let score = 0;
+                
+                // 按减速比偏差评分
+                if (match.ratioDiffPercent <= MAX_RATIO_DIFF_PERCENT) {
+                    score += 100 - match.ratioDiffPercent * 2; // 偏差越小，得分越高
+                } else {
+                    score += 50 - match.ratioDiffPercent; // 超出范围的，分数较低
+                }
+                
+                // 按容量余量评分
+                if (match.capacityMargin !== undefined) {
+                    if (match.capacityMargin >= 0 && match.capacityMargin <= MAX_CAPACITY_MARGIN) {
+                        score += 100 - Math.abs(match.capacityMargin - 15) * 2; // 最佳余量15%左右
+                    } else if (match.capacityMargin < 0) {
+                        score += 50 + match.capacityMargin; // 容量不足的，分数较低
+                    } else {
+                        score += 50 - (match.capacityMargin - MAX_CAPACITY_MARGIN) / 2; // 余量过高的，分数较低
+                    }
+                }
+                
+                // 按推力要求评分
+                if (thrustRequirement > 0) {
+                    if (match.thrustMet === true) {
+                        score += 100;
+                    } else if (match.thrust !== undefined) {
+                        score += 50 * (match.thrust / thrustRequirement); // 部分满足
+                    }
+                }
+                
+                match.score = score / 3; // 平均分
+            });
+            
+            // 排序
+            nearMatches.sort((a, b) => b.score - a.score);
+            
+            // 限制返回数量
+            nearMatches = nearMatches.slice(0, 5);
+            
+            const mainReason = Object.entries(rejectionReasons)
+                .sort((a, b) => b[1] - a[1])
+                .filter(entry => entry[1] > 0)
+                .map(([reason, count]) => {
+                    switch(reason) {
+                        case 'speedRange': return '转速超出范围';
+                        case 'ratioOutOfRange': return '减速比偏差过大';
+                        case 'capacityTooLow': return '传递能力不足';
+                        case 'capacityTooHigh': return '传递能力余量过大';
+                        case 'thrustInsufficient': return '推力要求不满足';
+                        default: return reason;
+                    }
+                })
+                .join('、');
+            
+            return {
+                success: false,
+                message: `没有找到符合所有条件的 ${gearboxType} 系列齿轮箱，主要原因: ${mainReason}`,
+                recommendations: nearMatches,
+                gearboxTypeUsed: gearboxType,
+                rejectionReasons,
+                engineTorque: engineTorque_Nm,
+                requiredTransferCapacity,
+                warning: "找到一些接近条件的齿轮箱，但它们不满足全部选型要求。请考虑调整输入参数。"
+            };
+        }
+        
+        return { 
+            success: false, 
+            message: `没有找到符合条件的 ${gearboxType} 系列齿轮箱`, 
+            recommendations: [], 
+            gearboxTypeUsed: gearboxType,
+            rejectionReasons
+        };
     }
 
     // --- Score the matching gearboxes ---
     const scoredGearboxes = matchingGearboxes.map(gearbox => {
         let score = 0;
 
-        // 1. Capacity Margin Score (40 points) - Using the refined logic
+        // 1. Capacity Margin Score (40 points) - Prioritize 5-20% margin
         if (gearbox.capacityMargin >= 5 && gearbox.capacityMargin <= 20) score += 40;
-        else if (gearbox.capacityMargin > 20 && gearbox.capacityMargin <= 35) score += 35;
-        else if (gearbox.capacityMargin > 35 && gearbox.capacityMargin <= 70) score += 25;
-        else if (gearbox.capacityMargin > 70) score += 15;
-        else if (gearbox.capacityMargin >= 0 && gearbox.capacityMargin < 5) score += 30; // Margin >= 0 but < 5
+        else if (gearbox.capacityMargin > 20 && gearbox.capacityMargin <= 30) score += 30; // Up to 30% is acceptable
+        else if (gearbox.capacityMargin > 30 && gearbox.capacityMargin <= MAX_CAPACITY_MARGIN) score += 20; // 放宽的标准
+        else if (gearbox.capacityMargin >= 0 && gearbox.capacityMargin < 5) score += 25; // Small margin
 
-        // 2. Ratio Match Score (20 points)
-        const ratioDiff = Math.abs(gearbox.selectedRatio - targetRatio);
-        if (ratioDiff <= 0.1) score += 20;
-        else if (ratioDiff <= 0.3) score += 15;
-        else if (ratioDiff <= 0.5) score += 10;
-        else score += 5; // Give some points even for larger diff if capacity is met
+        // 2. Ratio Match Score (30 points) - More points for closer match
+        if (gearbox.ratioDiffPercent <= 3) score += 30; // Very close match
+        else if (gearbox.ratioDiffPercent <= 7) score += 25; // Good match
+        else if (gearbox.ratioDiffPercent <= 12) score += 20; // Acceptable match
+        else if (gearbox.ratioDiffPercent <= 18) score += 15; // Wider match after adjustment
+        else if (gearbox.ratioDiffPercent <= 25) score += 10; // Borderline match after adjustment
 
-        // 3. Cost-Effectiveness Score (30 points) - Price vs Capacity
+        // 3. Cost-Effectiveness Score (20 points) - Price vs Capacity (Lower is better)
         const basePrice = gearbox.basePrice || gearbox.price || 0;
-        if (basePrice > 0 && gearbox.selectedCapacity > 0) {
-            const pricePerCapacity = basePrice / gearbox.selectedCapacity;
-            // Find min/max pricePerCapacity among *all* matching for normalization
-            let minPPC = Infinity, maxPPC = 0;
-            matchingGearboxes.forEach(g => {
-                const gBasePrice = g.basePrice || g.price || 0;
-                if (gBasePrice > 0 && g.selectedCapacity > 0) {
-                    const ppc = gBasePrice / g.selectedCapacity;
-                    if (ppc < minPPC) minPPC = ppc;
-                    if (ppc > maxPPC) maxPPC = ppc;
-                }
-            });
-            const rangePPC = maxPPC - minPPC;
-            let normalizedPriceScore = 0.5; // Default if range is 0 or only one item
-            if (rangePPC > 0) {
-                normalizedPriceScore = 1 - ((pricePerCapacity - minPPC) / rangePPC);
-            }
-            score += Math.round(normalizedPriceScore * 30);
-        } else {
-            score += 15; // Add medium score if price/capacity unavailable
-        }
+        let normalizedPriceScore = 0; // Calculate later after finding min/max pricePerCapacity
 
         // 4. Thrust Match Score (10 points)
         if (thrustRequirement > 0) {
             score += gearbox.thrustMet ? 10 : 0;
+             if (!gearbox.thrustMet) console.warn(`Gearbox ${gearbox.model} thrust ${gearbox.thrust} < required ${thrustRequirement}`);
         } else {
-            score += 5; // Add some points if thrust wasn't required
+            score += 5; // Add some points if thrust wasn't required, as having thrust is a feature
         }
 
+        // Initial score before normalization
+        gearbox.score = score;
 
-        // Calculate safety factor (Actual Capacity / Required Capacity)
-        const safetyFactor = gearbox.selectedCapacity / requiredTransferCapacity;
+        // Add price per capacity for normalization later
+         if (basePrice > 0 && gearbox.selectedCapacity > 0) {
+             gearbox._pricePerCapacity = basePrice / gearbox.selectedCapacity;
+         } else {
+             gearbox._pricePerCapacity = Infinity; // Mark as very expensive if price/capacity is zero/invalid
+         }
 
-        // Calculate derived prices
-         const gbBasePrice = gearbox.basePrice || gearbox.price || 0;
-         const gbFactoryPrice = gearbox.factoryPrice || calculateFactoryPrice({ ...gearbox, basePrice: gbBasePrice });
-
-
-        return {
-            ...gearbox,
-            score: Math.max(0, Math.min(100, Math.round(score))), // Ensure score is 0-100
-            ratioDiff: ratioDiff,
-            safetyFactor: safetyFactor,
-            // Ensure price fields are consistent
-            basePrice: gbBasePrice,
-            factoryPrice: gbFactoryPrice,
-            discountRate: gearbox.discountRate ?? getDiscountRate(gearbox.model) // Use existing or calculate
-        };
+        return gearbox; // Return modified gearbox for normalization
     });
+
+     // Normalize Price Score after all matching gearboxes are identified
+     if (scoredGearboxes.length > 1) {
+        let minPPC = Infinity, maxPPC = 0;
+        scoredGearboxes.forEach(g => {
+            if (g._pricePerCapacity !== Infinity) {
+                 if (g._pricePerCapacity < minPPC) minPPC = g._pricePerCapacity;
+                 if (g._pricePerCapacity > maxPPC) maxPPC = g._pricePerCapacity;
+            }
+        });
+
+        const priceRange = maxPPC - minPPC;
+
+        scoredGearboxes.forEach(g => {
+             let priceScore = 0;
+             if (g._pricePerCapacity !== Infinity) {
+                if (priceRange > 0) {
+                    priceScore = 20 * (1 - (g._pricePerCapacity - minPPC) / priceRange); // Lower pricePerCapacity is better (max 20 points)
+                } else { // Single item or zero range
+                    priceScore = 20;
+                }
+             } else { // No valid price/capacity
+                 priceScore = 0; // No points if price is missing
+             }
+
+             g.score = Math.max(0, Math.min(100, Math.round(g.score + priceScore))); // Add normalized price score
+             delete g._pricePerCapacity; // Clean up temporary field
+        });
+     } else if (scoredGearboxes.length === 1) {
+        // For a single eligible gearbox, add a fixed price score if price data exists
+         if ((scoredGearboxes[0].basePrice || scoredGearboxes[0].price) > 0) {
+             scoredGearboxes[0].score = Math.max(0, Math.min(100, Math.round(scoredGearboxes[0].score + 20))); // Add full price score
+         } else {
+              scoredGearboxes[0].score = Math.max(0, Math.min(100, Math.round(scoredGearboxes[0].score + 5))); // Add minimal price score if no price
+         }
+     }
+
 
     // --- Sort scored gearboxes ---
     scoredGearboxes.sort((a, b) => {
         // Primary sort: score (descending)
-        if (Math.abs(b.score - a.score) > 5) { // Only use score if difference is significant
-            return b.score - a.score;
-        }
-        // Secondary sort: prefer ideal capacity margin (10-20%)
-        const aIdealMargin = a.capacityMargin >= 10 && a.capacityMargin <= 20;
-        const bIdealMargin = b.capacityMargin >= 10 && b.capacityMargin <= 20;
-        if (aIdealMargin && !bIdealMargin) return -1;
-        if (!aIdealMargin && bIdealMargin) return 1;
-        // Tertiary sort: closeness to 15% margin
+        if (b.score !== a.score) return b.score - a.score;
+        // Secondary sort: prefer closer capacity margin to 15%
         return Math.abs(a.capacityMargin - 15) - Math.abs(b.capacityMargin - 15);
-        // Quaternary sort: price (ascending) - if needed
-        // return (a.basePrice || Infinity) - (b.basePrice || Infinity);
+        // Tertiary sort: prefer closer ratio match
+        // if (a.ratioDiffPercent !== b.ratioDiffPercent) return a.ratioDiffPercent - b.ratioDiffPercent;
+        // Quaternary sort: lower price (if score and margin are similar)
+        const aPrice = a.factoryPrice || calculateFactoryPrice(a);
+        const bPrice = b.factoryPrice || calculateFactoryPrice(b);
+        return aPrice - bPrice;
     });
 
-
     // --- Prepare result ---
-    const selectedGearbox = scoredGearboxes[0]; // The top recommendation after sorting
+    // The recommendations array contains all matched gearboxes with scores
+    const recommendations = scoredGearboxes;
 
-    // --- Select accessories for the top recommendation ---
-    // Pass the engineSpeed for coupling speed check if possible
-    const couplingResult = selectFlexibleCoupling(
-        engineTorque,
-        selectedGearbox.model,
-        data.flexibleCouplings,
-        options.workCondition,
-        options.temperature,
-        options.hasCover
-        // Pass engineSpeed here if available/needed: options.engineSpeed || engineSpeed
-    );
-    const pumpResult = selectStandbyPump(selectedGearbox.model, data.standbyPumps);
+    // Select accessories for the *top* recommendation based on the final sorting
+    const topRecommendation = recommendations.length > 0 ? recommendations[0] : null;
+
+    let finalCouplingResult = null;
+    let finalPumpResult = null;
+    let couplingWarning = null;
+    let pumpWarning = null;
+
+    if (topRecommendation) {
+        // Select accessories passing engineSpeed
+        console.log("开始为齿轮箱选择联轴器...");
+        console.log("flexibleCouplings数据:", data.flexibleCouplings?.length || 0, "条");
+        if (data.flexibleCouplings?.length > 0) {
+            console.log("联轴器示例:", {
+                model: data.flexibleCouplings[0].model,
+                torque: data.flexibleCouplings[0].torque,
+                maxTorque: data.flexibleCouplings[0].maxTorque,
+                maxSpeed: data.flexibleCouplings[0].maxSpeed
+            });
+        }
+        
+        // 修改这里：使用couplingSpecificationsMap而不是getCouplingSpecifications
+        const couplingRes = selectFlexibleCoupling(
+            engineTorque_Nm, // Pass engine torque in N·m
+            topRecommendation.model,
+            data.flexibleCouplings,
+            couplingSpecificationsMap, // 使用映射表而不是函数
+            options.workCondition,
+            options.temperature,
+            options.hasCover,
+            engineSpeed // Pass engine speed
+        );
+        
+        finalCouplingResult = couplingRes.success ? couplingRes : null; // Only keep if selection was successful
+        couplingWarning = couplingRes.warning; // Keep coupling specific warning
+
+        const pumpRes = selectStandbyPump(topRecommendation.model, data.standbyPumps);
+        finalPumpResult = pumpRes.success ? pumpRes : null; // Only keep if selection was successful
+         pumpWarning = pumpRes.warning; // Keep pump specific warning
+    }
+
 
     const result = {
-        success: true,
-        message: `找到 ${scoredGearboxes.length} 个符合条件的 ${gearboxType} 齿轮箱`,
-        recommendations: scoredGearboxes.map(g => ({ ...g, power: enginePower, speed: engineSpeed })), // Include all recommendations
-        flexibleCoupling: couplingResult, // Accessories selected for the *top* recommendation
-        standbyPump: pumpResult,
-        engineTorque: engineTorque,
+        success: recommendations.length > 0, // Success if at least one gearbox found
+        message: recommendations.length > 0
+                   ? `在 ${gearboxType} 系列中找到 ${recommendations.length} 个符合条件的齿轮箱`
+                   : `在 ${gearboxType} 系列中没有找到符合条件的齿轮箱`,
+        recommendations: recommendations.map(g => ({ ...g, power: enginePower, speed: engineSpeed })), // Include all recommendations with derived info
+        flexibleCoupling: finalCouplingResult, // Accessories selected for the *top* recommendation
+        standbyPump: finalPumpResult,
+        engineTorque: engineTorque_Nm, // Engine torque in N·m for reference
         requiredTransferCapacity: requiredTransferCapacity,
         gearboxTypeUsed: gearboxType, // Identify the type searched
         // Include original requirements for reference
@@ -489,29 +552,49 @@ export const selectGearbox = (
         options: options // Store options used
     };
 
-    // --- Add final warning based on the top recommendation ---
-    let warning = null;
-    if (selectedGearbox.capacityMargin < 5) warning = `警告：${gearboxType}首选齿轮箱(${selectedGearbox.model})功率余量(${selectedGearbox.capacityMargin.toFixed(1)}%)过低`;
-    else if (selectedGearbox.capacityMargin > 70) warning = `注意：${gearboxType}首选齿轮箱(${selectedGearbox.model})功率余量(${selectedGearbox.capacityMargin.toFixed(1)}%)过高`;
-    if (thrustRequirement > 0 && !selectedGearbox.thrustMet) {
-         const thrustWarn = `警告：${gearboxType}首选齿轮箱(${selectedGearbox.model})推力不满足要求(${thrustRequirement}kN)`;
-          warning = warning ? `${warning}; ${thrustWarn}` : thrustWarn;
-    }
-    if (couplingResult?.warning) warning = warning ? `${warning}; ${couplingResult.warning}` : couplingResult.warning;
-    if (pumpResult?.warning) warning = warning ? `${warning}; ${pumpResult.warning}` : pumpResult.warning;
+    // --- Add consolidated warning ---
+    let consolidatedWarning = null;
+    if (result.success && topRecommendation) {
+        if (topRecommendation.capacityMargin < 5) consolidatedWarning = `警告：首选齿轮箱(${topRecommendation.model})功率余量(${topRecommendation.capacityMargin.toFixed(1)}%)过低`;
+        if (thrustRequirement > 0 && !topRecommendation.thrustMet) {
+             const thrustWarn = `警告：首选齿轮箱(${topRecommendation.model})推力不满足要求(${thrustRequirement}kN)`;
+              consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${thrustWarn}` : thrustWarn;
+        }
+        if (topRecommendation.ratioDiffPercent > 10) {
+            const ratioWarning = `注意: 首选齿轮箱(${topRecommendation.model})的减速比(${topRecommendation.selectedRatio.toFixed(2)})与目标值(${targetRatio.toFixed(2)})偏差达${topRecommendation.ratioDiffPercent.toFixed(1)}%。`;
+            consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${ratioWarning}` : ratioWarning;
+        }
 
-    if (warning) {
-        result.warning = warning;
+        // Add accessory warnings
+        if (couplingWarning) consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${couplingWarning}` : couplingWarning;
+        if (pumpWarning) consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${pumpWarning}` : pumpWarning;
+
+    } else if (!result.success) {
+        // If no gearboxes were found, the main message is sufficient, but could add detail
+         consolidatedWarning = result.message;
     }
+
+
+    if (consolidatedWarning) {
+        result.warning = consolidatedWarning;
+    }
+
+    console.log(`${gearboxType} 系列选型最终结果:`, result);
 
     return result;
 };
 
 
-// --- autoSelectGearbox 函数 ---
+// --- autoSelectGearbox 函数 (与修改版本一致，包含放宽标准) ---
 export const autoSelectGearbox = (requirements, data) => {
     console.log('开始自动选型 (autoSelectGearbox)...', requirements);
     const { motorPower, motorSpeed, targetRatio, thrust, ...options } = requirements;
+    
+    // 日志记录：检查高弹数据是否正确加载
+    console.log("flexibleCouplings 数据:", data?.flexibleCouplings?.length || 0, "条记录");
+    if (data?.flexibleCouplings?.length > 0) {
+        console.log("flexibleCouplings 示例:", data.flexibleCouplings[0]);
+    }
 
     // Define types to check, ensure corresponding data keys exist (e.g., hcGearboxes)
     const availableTypes = [
@@ -526,7 +609,7 @@ export const autoSelectGearbox = (requirements, data) => {
     console.log('将搜索以下齿轮箱类型:', availableTypes);
 
     let allRecommendations = [];
-    // let allResults = []; // Optional: store full results per type for debugging
+    let allResults = []; // 存储所有系列的选型结果，用于分析
 
     // 1. Run selection for each available type
     availableTypes.forEach(type => {
@@ -540,7 +623,9 @@ export const autoSelectGearbox = (requirements, data) => {
             data,
             options // Pass options (workCondition, temp, cover, etc.)
         );
-        // allResults.push(result);
+        
+        allResults.push(result); // 保存完整结果
+        
         if (result.success && result.recommendations.length > 0) {
             console.log(`${type} 系列找到 ${result.recommendations.length} 个推荐`);
             // Add original type info to each recommendation
@@ -553,23 +638,87 @@ export const autoSelectGearbox = (requirements, data) => {
             });
             allRecommendations.push(...result.recommendations);
         } else {
-            console.log(`${type} 系列没有找到合适的齿轮箱: ${result.message}`);
+            console.log(`${type} 系列没有找到完全符合条件的齿轮箱: ${result.message}`);
+            
+            // 如果有近似匹配的推荐，也加入总推荐列表，但降低评分
+            if (result.recommendations && result.recommendations.length > 0) {
+                console.log(`${type} 系列找到 ${result.recommendations.length} 个近似推荐`);
+                result.recommendations.forEach(rec => {
+                    rec.originalType = type;
+                    rec.isPartialMatch = true; // 标记为部分匹配
+                    
+                    // 降低近似匹配的评分
+                    if (rec.score) {
+                        rec.score = rec.score * 0.85; // 降低15%
+                    }
+                    
+                    // 添加失败原因
+                    rec.failureReason = rec.failureReason || "不满足部分选型条件";
+                });
+                
+                // 只添加评分较高的近似匹配
+                const topPartialMatches = result.recommendations
+                    .filter(rec => rec.score > 60)
+                    .slice(0, 2); // 每个系列最多添加2个近似匹配
+                    
+                if (topPartialMatches.length > 0) {
+                    allRecommendations.push(...topPartialMatches);
+                }
+            }
         }
     });
 
     console.log(`总共找到 ${allRecommendations.length} 个来自不同系列的推荐`);
 
+    // 如果没有找到任何推荐，尝试返回近似匹配
     if (allRecommendations.length === 0) {
+        // 查找所有结果中的近似匹配
+        const allNearMatches = allResults
+            .filter(r => r.recommendations && r.recommendations.length > 0)
+            .flatMap(r => r.recommendations.map(rec => ({
+                ...rec,
+                originalType: r.gearboxTypeUsed
+            })));
+            
+        if (allNearMatches.length > 0) {
+            // 对近似匹配进行评分
+            allNearMatches.forEach(match => {
+                let score = 0;
+                // 基于之前的评分逻辑，可能会更复杂
+                match.score = match.score || 50; // 默认分数
+            });
+            
+            // 排序并限制数量
+            allNearMatches.sort((a, b) => b.score - a.score);
+            const bestNearMatches = allNearMatches.slice(0, 5);
+            
+            return {
+                success: false,
+                message: '在所有相关系列中均未找到完全符合条件的齿轮箱，但有一些近似匹配',
+                recommendations: bestNearMatches,
+                engineTorque: motorPower * 9550 / motorSpeed,
+                requiredTransferCapacity: motorPower / motorSpeed,
+                warning: "以下是部分符合条件的齿轮箱，请评估是否可以调整需求或选择其他参数。",
+                allResults // 包含所有系列的选型结果
+            };
+        }
+        
         return {
             success: false,
-            message: '在所有相关系列中均未找到符合条件的齿轮箱'
+            message: '在所有相关系列中均未找到符合条件的齿轮箱',
+            allResults // 包含所有系列的选型结果，帮助诊断
         };
     }
 
     // 2. Sort all combined recommendations globally
     allRecommendations.sort((a, b) => {
+        // 首先区分完全匹配和部分匹配
+        if (a.isPartialMatch !== b.isPartialMatch) {
+            return a.isPartialMatch ? 1 : -1; // 完全匹配优先
+        }
+        
         // Primary sort: score (descending), apply only if difference > 5
-        if (Math.abs(b.score - a.score) > 5) {
+        if (Math.abs(b.score - a.score) > 5) { // Only use score if difference is significant
             return b.score - a.score;
         }
         // Secondary sort: prefer ideal capacity margin (10-20%)
@@ -577,10 +726,10 @@ export const autoSelectGearbox = (requirements, data) => {
         const bIdealMargin = b.capacityMargin >= 10 && b.capacityMargin <= 20;
         if (aIdealMargin && !bIdealMargin) return -1;
         if (!aIdealMargin && bIdealMargin) return 1;
-        // Tertiary sort: closeness to 15% margin
+        // Tertiary sort: closeness to ideal 15% margin
         return Math.abs(a.capacityMargin - 15) - Math.abs(b.capacityMargin - 15);
-         // Quaternary sort: price (ascending) - uncomment if needed
-        // return (a.basePrice || Infinity) - (b.basePrice || Infinity);
+        // Quaternary sort: closer ratio match
+        // return a.ratioDiffPercent - b.ratioDiffPercent;
     });
 
     // 3. Select the best overall gearbox
@@ -589,16 +738,24 @@ export const autoSelectGearbox = (requirements, data) => {
     console.log(`自动选型最终推荐: ${bestOverallGearbox.model} (来自 ${bestType} 系列), 评分: ${bestOverallGearbox.score}`);
 
     // 4. Re-select accessories specifically for the chosen best gearbox
-    const engineTorque = bestOverallGearbox.engineTorque || (motorPower * 9550) / motorSpeed;
+    const engineTorque_Nm = bestOverallGearbox.engineTorque || (motorPower * 9550) / motorSpeed;
+    
+    // 修改这里：使用couplingSpecificationsMap而不是getCouplingSpecifications
+    console.log("开始选择高弹联轴器...");
     const finalCouplingResult = selectFlexibleCoupling(
-        engineTorque,
+        engineTorque_Nm, // Pass engine torque in N·m
         bestOverallGearbox.model,
         data.flexibleCouplings,
+        couplingSpecificationsMap, // 使用映射表而不是函数
         options.workCondition,
         options.temperature,
-        options.hasCover
-        // Pass engineSpeed if needed: options.engineSpeed || motorSpeed
+        options.hasCover,
+        motorSpeed // Pass engine speed
     );
+    
+    console.log("联轴器选择结果:", finalCouplingResult?.success ? "成功" : "失败", 
+                 finalCouplingResult?.model || "(无匹配型号)");
+    
     const finalPumpResult = selectStandbyPump(bestOverallGearbox.model, data.standbyPumps);
 
     // 5. Build the final result object
@@ -608,7 +765,7 @@ export const autoSelectGearbox = (requirements, data) => {
         recommendations: allRecommendations, // Return all sorted recommendations from all types
         flexibleCoupling: finalCouplingResult,
         standbyPump: finalPumpResult,
-        engineTorque: engineTorque,
+        engineTorque: engineTorque_Nm, // Engine torque in N·m for reference
         requiredTransferCapacity: motorPower / motorSpeed,
         recommendedType: bestType, // Indicate the type of the top recommendation
         gearboxTypeUsed: 'auto',   // Indicate this was an auto selection
@@ -617,32 +774,44 @@ export const autoSelectGearbox = (requirements, data) => {
         engineSpeed: motorSpeed,
         targetRatio: targetRatio,
         thrustRequirement: thrust,
-        options: options // Store options used for this selection
+        options: options, // Store options used
+        partialMatchCount: allRecommendations.filter(r => r.isPartialMatch).length // 统计部分匹配的数量
     };
 
     // 6. Generate final consolidated warning
-    let finalWarning = null;
-    if (bestOverallGearbox.capacityMargin < 5) finalWarning = `警告：最终推荐齿轮箱(${bestOverallGearbox.model})功率余量(${bestOverallGearbox.capacityMargin.toFixed(1)}%)过低`;
-    else if (bestOverallGearbox.capacityMargin > 70) finalWarning = `注意：最终推荐齿轮箱(${bestOverallGearbox.model})功率余量(${bestOverallGearbox.capacityMargin.toFixed(1)}%)过高`;
-     if (thrust > 0 && !bestOverallGearbox.thrustMet) {
-         const thrustWarn = `警告：最终推荐齿轮箱(${bestOverallGearbox.model})推力不满足要求(${thrust}kN)`;
-          finalWarning = finalWarning ? `${finalWarning}; ${thrustWarn}` : thrustWarn;
-    }
-    if (finalCouplingResult?.warning) finalWarning = finalWarning ? `${finalWarning}; ${finalCouplingResult.warning}` : finalCouplingResult.warning;
-    if (finalPumpResult?.warning) finalWarning = finalWarning ? `${finalWarning}; ${finalPumpResult.warning}` : finalPumpResult.warning;
+    let consolidatedWarning = null;
+    if (finalResult.success && bestOverallGearbox) {
+        if (bestOverallGearbox.isPartialMatch) {
+            consolidatedWarning = `警告：最终推荐的齿轮箱(${bestOverallGearbox.model})是部分匹配结果，${bestOverallGearbox.failureReason || '不完全满足所有要求'}`;
+        }
+        
+        if (bestOverallGearbox.capacityMargin < 5) {
+            const capacityWarning = `警告：最终推荐齿轮箱(${bestOverallGearbox.model})功率余量(${bestOverallGearbox.capacityMargin.toFixed(1)}%)过低`;
+            consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${capacityWarning}` : capacityWarning;
+        }
+        
+        if (thrust > 0 && !bestOverallGearbox.thrustMet) {
+             const thrustWarn = `警告：最终推荐齿轮箱(${bestOverallGearbox.model})推力不满足要求(${thrust}kN)`;
+              consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${thrustWarn}` : thrustWarn;
+        }
+        
+        if (bestOverallGearbox.ratioDiffPercent > 10) {
+            const ratioWarning = `注意: 最终推荐齿轮箱(${bestOverallGearbox.model})的减速比(${bestOverallGearbox.selectedRatio.toFixed(2)})与目标值(${targetRatio.toFixed(2)})偏差达${bestOverallGearbox.ratioDiffPercent.toFixed(1)}%。`;
+            consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${ratioWarning}` : ratioWarning;
+        }
 
-    // Example type-based warning
-    if (motorPower < 150 && bestType === 'GW') {
-        const typeWarning = `注意: 发动机功率较低(${motorPower}kW)，但自动选择了大功率GW系列(${bestOverallGearbox.model})。请确认是否适用。`;
-        finalWarning = finalWarning ? `${finalWarning}; ${typeWarning}` : typeWarning;
-    }
-     if (motorSpeed < 1000 && bestType === 'HCM') {
-        const typeWarning = `注意: 发动机转速较低(${motorSpeed}rpm)，但自动选择了高速HCM系列(${bestOverallGearbox.model})。请确认是否适用。`;
-        finalWarning = finalWarning ? `${finalWarning}; ${typeWarning}` : typeWarning;
+        // Add accessory warnings
+        if (finalCouplingResult?.warning) consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${finalCouplingResult.warning}` : finalCouplingResult.warning;
+        if (finalPumpResult?.warning) consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${finalPumpResult.warning}` : finalPumpResult.warning;
+
+    } else if (!finalResult.success) {
+        // If no gearboxes were found, the main message is sufficient, but could add detail
+         consolidatedWarning = finalResult.message;
     }
 
-    if (finalWarning) {
-        finalResult.warning = finalWarning;
+
+    if (consolidatedWarning) {
+        finalResult.warning = consolidatedWarning;
     }
 
     console.log("Auto Select Final Result:", finalResult);

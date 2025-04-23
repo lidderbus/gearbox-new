@@ -1,347 +1,133 @@
 // src/utils/dataCorrector.js
-import { getDiscountRate, calculateFactoryPrice } from '../data/priceDiscount';
-import { safeParseFloat, ensureRangeArray, ensureArrayOfNumbers } from './dataHelpers';
+// 数据修正工具
+
+// Assuming priceDiscount.js exists for price calculations (Note: processPriceData handles this now)
+// import { getDiscountRate, calculateFactoryPrice, calculateMarketPrice } from './priceDiscount';
+// Assuming dataHelpers.js exists for safeParseFloat
+import { safeParseFloat } from './dataHelpers'; // Ensure import path is correct
+// Assuming capacityEstimator.js exists (Note: fixGearboxCapacityArrays uses this)
+// import { estimateTransferCapacityArray } from './capacityEstimator';
+// Assuming gearboxMatchingMaps.js exists for couplingSpecificationsMap (Note: fixAccessories uses this)
+// import { couplingSpecificationsMap } from '../data/gearboxMatchingMaps';
+
+// Import specific repair functions from fixData.js
+import { fixSpecialGearboxData, fixGearboxCapacityArrays } from './fixData'; // Ensure import path is correct
+// Import accessory fixing function
+import { fixAccessories, ensureGearboxNumericFields } from './fixAccessories'; // <--- IMPORT NEW FIX FUNCTIONS
+
+// Import price management tools
+import { processPriceData, correctPriceData, fixSpecificModelPrices } from './priceManager'; // Ensure import path is correct
+
+// 这些函数现在主要由 processPriceData 处理，保留是为了向后兼容或特定用途
+/**
+ * 修正单个齿轮箱的价格数据 (重命名并使用 correctPriceData)
+ * @param {Object} gearbox 齿轮箱对象
+ * @returns {Object} 修正后的齿轮箱对象
+ */
+export const correctGearboxPrices = (gearbox) => {
+  const correctedData = correctPriceData(gearbox);
+  return correctedData;
+};
 
 /**
- * 数据修正模块
- * 用于自动修复常见的数据问题并计算缺失的派生字段
+ * 修正单个联轴器的价格数据 (重命名并使用 correctPriceData)
+ * @param {Object} coupling 联轴器对象
+ * @returns {Object} 修正后的联轴器对象
  */
-
-// 修正齿轮箱数据
-export const correctGearbox = (gearbox) => {
-  if (!gearbox) return { data: null, corrections: ['项目为空'], hadCorrections: false };
-  
-  const corrected = { ...gearbox };
-  const corrections = [];
-  
-  // 修复model字段
-  if (!corrected.model) {
-    corrected.model = `Unknown_${Date.now()}`;
-    corrections.push('添加了临时型号名称');
-  } else if (typeof corrected.model !== 'string') {
-    corrected.model = String(corrected.model);
-    corrections.push('将型号转换为字符串');
-  }
-  
-  // 修复ratios字段
-  if (!Array.isArray(corrected.ratios) || corrected.ratios.length === 0) {
-    // 如果有单一ratio字段，使用它
-    if (corrected.ratio && typeof corrected.ratio === 'number' && !isNaN(corrected.ratio)) {
-      corrected.ratios = [corrected.ratio];
-      corrections.push('将单一ratio值转换为ratios数组');
-    } else {
-      corrected.ratios = [];
-      corrections.push('创建了空的ratios数组');
-    }
-  }
-  
-  // 修复inputSpeedRange字段
-  if (!Array.isArray(corrected.inputSpeedRange) || corrected.inputSpeedRange.length !== 2) {
-    corrected.inputSpeedRange = ensureRangeArray(corrected.inputSpeedRange, [1000, 2500]);
-    corrections.push('修正了输入转速范围');
-  }
-  
-  // 修复transferCapacity字段
-  if (!Array.isArray(corrected.transferCapacity) && typeof corrected.transferCapacity !== 'number') {
-    corrected.transferCapacity = 0;
-    corrections.push('设置了默认传递能力为0');
-  } else if (typeof corrected.transferCapacity === 'number') {
-    // 如果是单一值，转换为数组
-    corrected.transferCapacity = [corrected.transferCapacity];
-    corrections.push('将单一传递能力值转换为数组');
-  } else if (Array.isArray(corrected.transferCapacity) && corrected.transferCapacity.length === 0) {
-    // 如果是空数组，添加默认值
-    corrected.transferCapacity = [0];
-    corrections.push('添加了默认传递能力值');
-  }
-  
-  // 修复thrust字段
-  if (typeof corrected.thrust !== 'number' || isNaN(corrected.thrust)) {
-    corrected.thrust = 0;
-    corrections.push('设置了默认推力为0');
-  }
-  
-  // 修复weight字段
-  if (typeof corrected.weight !== 'number' || isNaN(corrected.weight)) {
-    corrected.weight = 0;
-    corrections.push('设置了默认重量为0');
-  }
-  
-  // 修复价格相关字段
-  if (!corrected.basePrice && corrected.price) {
-    corrected.basePrice = corrected.price;
-    corrections.push('使用price作为basePrice');
-  } else if (!corrected.basePrice) {
-    corrected.basePrice = 0;
-    corrections.push('设置了默认basePrice为0');
-  }
-  
-  if (!corrected.price) {
-    corrected.price = corrected.basePrice;
-    corrections.push('使用basePrice作为price');
-  }
-  
-  // 确保折扣率存在
-  if (typeof corrected.discountRate !== 'number' || isNaN(corrected.discountRate)) {
-    corrected.discountRate = getDiscountRate(corrected.model);
-    corrections.push(`基于模型设置了折扣率: ${corrected.discountRate}`);
-  }
-  
-  // 计算工厂价格（如果缺失）
-  if (!corrected.factoryPrice || isNaN(corrected.factoryPrice)) {
-    corrected.factoryPrice = calculateFactoryPrice(corrected);
-    corrections.push(`计算了工厂价格: ${corrected.factoryPrice}`);
-  }
-  
-  // 处理其他可能缺失的字段
-  if (!corrected.dimensions) {
-    corrected.dimensions = '-';
-    corrections.push('添加了默认尺寸占位符');
-  }
-  
-  if (!corrected.controlType) {
-    corrected.controlType = '推拉软轴';
-    corrections.push('设置了默认控制类型');
-  }
-  
-  // 返回修正后的数据和修正记录
-  return {
-    data: corrected,
-    corrections,
-    hadCorrections: corrections.length > 0
-  };
+export const correctCouplingPrices = (coupling) => {
+  const correctedData = correctPriceData(coupling);
+  return correctedData;
 };
 
-// 修正联轴器数据
-export const correctCoupling = (coupling) => {
-  if (!coupling) return { data: null, corrections: ['联轴器为空'], hadCorrections: false };
-  
-  const corrected = { ...coupling };
-  const corrections = [];
-  
-  // 修复model字段
-  if (!corrected.model) {
-    corrected.model = `Unknown_Coupling_${Date.now()}`;
-    corrections.push('添加了临时联轴器型号名称');
-  } else if (typeof corrected.model !== 'string') {
-    corrected.model = String(corrected.model);
-    corrections.push('将联轴器型号转换为字符串');
-  }
-  
-  // 修复torque字段
-  if (typeof corrected.torque !== 'number' || isNaN(corrected.torque)) {
-    corrected.torque = 0;
-    corrections.push('设置了默认扭矩为0');
-  }
-  
-  // 修复maxSpeed字段（如果存在）
-  if (corrected.maxSpeed !== undefined && (typeof corrected.maxSpeed !== 'number' || isNaN(corrected.maxSpeed))) {
-    corrected.maxSpeed = 0;
-    corrections.push('设置了默认最大转速为0');
-  }
-  
-  // 修复weight字段
-  if (typeof corrected.weight !== 'number' || isNaN(corrected.weight)) {
-    corrected.weight = 0;
-    corrections.push('设置了默认重量为0');
-  }
-  
-  // 修复价格相关字段
-  if (!corrected.basePrice && corrected.price) {
-    corrected.basePrice = corrected.price;
-    corrections.push('使用price作为basePrice');
-  } else if (!corrected.basePrice) {
-    corrected.basePrice = 0;
-    corrections.push('设置了默认basePrice为0');
-  }
-  
-  if (!corrected.price) {
-    corrected.price = corrected.basePrice;
-    corrections.push('使用basePrice作为price');
-  }
-  
-  // 确保折扣率存在
-  if (typeof corrected.discountRate !== 'number' || isNaN(corrected.discountRate)) {
-    corrected.discountRate = getDiscountRate(corrected.model);
-    corrections.push(`基于模型设置了折扣率: ${corrected.discountRate}`);
-  }
-  
-  // 计算工厂价格（如果缺失）
-  if (!corrected.factoryPrice || isNaN(corrected.factoryPrice)) {
-    corrected.factoryPrice = calculateFactoryPrice(corrected);
-    corrections.push(`计算了工厂价格: ${corrected.factoryPrice}`);
-  }
-  
-  // 返回修正后的数据和修正记录
-  return {
-    data: corrected,
-    corrections,
-    hadCorrections: corrections.length > 0
-  };
+/**
+ * 修正单个泵的价格数据 (重命名并使用 correctPriceData)
+ * @param {Object} pump 泵对象
+ * @returns {Object} 修正后的泵对象
+ */
+export const correctPumpPrices = (pump) => {
+  const correctedData = correctPriceData(pump);
+  return correctedData;
 };
 
-// 修正泵数据
-export const correctPump = (pump) => {
-  if (!pump) return { data: null, corrections: ['泵为空'], hadCorrections: false };
-  
-  const corrected = { ...pump };
-  const corrections = [];
-  
-  // 修复model字段
-  if (!corrected.model) {
-    corrected.model = `Unknown_Pump_${Date.now()}`;
-    corrections.push('添加了临时泵型号名称');
-  } else if (typeof corrected.model !== 'string') {
-    corrected.model = String(corrected.model);
-    corrections.push('将泵型号转换为字符串');
-  }
-  
-  // 修复flow字段
-  if (typeof corrected.flow !== 'number' || isNaN(corrected.flow)) {
-    corrected.flow = 0;
-    corrections.push('设置了默认流量为0');
-  }
-  
-  // 修复pressure字段
-  if (typeof corrected.pressure !== 'number' || isNaN(corrected.pressure)) {
-    corrected.pressure = 0;
-    corrections.push('设置了默认压力为0');
-  }
-  
-  // 修复motorPower字段（如果存在）
-  if (corrected.motorPower !== undefined && (typeof corrected.motorPower !== 'number' || isNaN(corrected.motorPower))) {
-    corrected.motorPower = 0;
-    corrections.push('设置了默认电机功率为0');
-  }
-  
-  // 修复weight字段（如果存在）
-  if (corrected.weight !== undefined && (typeof corrected.weight !== 'number' || isNaN(corrected.weight))) {
-    corrected.weight = 0;
-    corrections.push('设置了默认重量为0');
-  }
-  
-  // 修复价格相关字段
-  if (!corrected.basePrice && corrected.price) {
-    corrected.basePrice = corrected.price;
-    corrections.push('使用price作为basePrice');
-  } else if (!corrected.basePrice) {
-    corrected.basePrice = 0;
-    corrections.push('设置了默认basePrice为0');
-  }
-  
-  if (!corrected.price) {
-    corrected.price = corrected.basePrice;
-    corrections.push('使用basePrice作为price');
-  }
-  
-  // 确保折扣率存在
-  if (typeof corrected.discountRate !== 'number' || isNaN(corrected.discountRate)) {
-    corrected.discountRate = getDiscountRate(corrected.model);
-    corrections.push(`基于模型设置了折扣率: ${corrected.discountRate}`);
-  }
-  
-  // 计算工厂价格（如果缺失）
-  if (!corrected.factoryPrice || isNaN(corrected.factoryPrice)) {
-    corrected.factoryPrice = calculateFactoryPrice(corrected);
-    corrections.push(`计算了工厂价格: ${corrected.factoryPrice}`);
-  }
-  
-  // 返回修正后的数据和修正记录
-  return {
-    data: corrected,
-    corrections,
-    hadCorrections: corrections.length > 0
-  };
-};
 
-// 批量修正数据库
+/**
+ * 修正整个数据库 (应用所有可用的修复步骤)
+ * 此函数用于在数据导入或需要整体修正时调用。
+ * @param {Object} data 数据库对象
+ * @returns {Object} 修正结果，包含修正后的数据、警告和错误信息
+ */
 export const correctDatabase = (data) => {
-  if (!data) {
-    return {
-      data: {},
-      results: {
-        corrected: 0,
-        unchanged: 0,
-        details: []
-      }
-    };
-  }
-  
-  // 创建数据副本
-  const correctedData = { ...data };
-  
-  // 汇总结果
-  const results = {
-    corrected: 0,
-    unchanged: 0,
-    details: []
-  };
-  
-  // 处理齿轮箱集合
-  const gearboxTypes = ['hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes', 'hcqGearboxes', 'gcGearboxes'];
-  gearboxTypes.forEach(type => {
-    if (Array.isArray(correctedData[type])) {
-      correctedData[type] = correctedData[type].map(item => {
-        const correction = correctGearbox(item);
-        
-        if (correction.hadCorrections) {
-          results.corrected++;
-          results.details.push({
-            type,
-            model: correction.data.model,
-            corrections: correction.corrections
-          });
-        } else {
-          results.unchanged++;
-        }
-        
-        return correction.data;
-      });
+    console.log('dataCorrector.js: Starting database correction...');
+    let workingData = data ? JSON.parse(JSON.stringify(data)) : {}; // Create a mutable copy
+    const allWarnings = [];
+    const allErrors = []; // Collect errors from critical fixes
+
+    // Step 1: Apply specific gearbox fixes (like 2GWH, Hybrid markers/basic structure)
+    workingData = fixSpecialGearboxData(workingData);
+    console.log("dataCorrector.js: Applied special gearbox fixes.");
+
+    // Step 2: Fix gearbox capacity array lengths and basic validity (depends on ratios)
+    const capacityFixResult = fixGearboxCapacityArrays(workingData);
+    workingData = capacityFixResult.data;
+    if (capacityFixResult.warnings && capacityFixResult.warnings.length > 0) {
+        allWarnings.push(...capacityFixResult.warnings);
+        console.warn("dataCorrector.js: Warnings during capacity array fixing:", capacityFixResult.warnings);
     }
-  });
-  
-  // 处理联轴器数据
-  if (Array.isArray(correctedData.flexibleCouplings)) {
-    correctedData.flexibleCouplings = correctedData.flexibleCouplings.map(item => {
-      const correction = correctCoupling(item);
-      
-      if (correction.hadCorrections) {
-        results.corrected++;
-        results.details.push({
-          type: 'flexibleCouplings',
-          model: correction.data.model,
-          corrections: correction.corrections
-        });
-      } else {
-        results.unchanged++;
-      }
-      
-      return correction.data;
-    });
-  }
-  
-  // 处理泵数据
-  if (Array.isArray(correctedData.standbyPumps)) {
-    correctedData.standbyPumps = correctedData.standbyPumps.map(item => {
-      const correction = correctPump(item);
-      
-      if (correction.hadCorrections) {
-        results.corrected++;
-        results.details.push({
-          type: 'standbyPumps',
-          model: correction.data.model,
-          corrections: correction.corrections
-        });
-      } else {
-        results.unchanged++;
-      }
-      
-      return correction.data;
-    });
-  }
-  
-  return {
-    data: correctedData,
-    results
-  };
+    console.log(`dataCorrector.js: Applied capacity array fixes (patched ${capacityFixResult.patched} items).`);
+
+
+     // Step 3: Ensure core numeric fields for gearboxes have valid numbers/defaults
+     const gearboxNumericFixResult = ensureGearboxNumericFields(workingData); // <--- CALL NEW FIX FUNCTION
+     workingData = gearboxNumericFixResult.data;
+     if (gearboxNumericFixResult.warnings && gearboxNumericFixResult.warnings.length > 0) {
+        allWarnings.push(...gearboxNumericFixResult.warnings);
+         console.warn("dataCorrector.js: Warnings during gearbox numeric field fixing:", gearboxNumericFixResult.warnings);
+     }
+      console.log(`dataCorrector.js: Ensured gearbox numeric fields (patched ${gearboxNumericFixResult.patched} items).`);
+
+
+    // Step 4: Fix Accessories data (Couplings torque/speed/weight, Pumps flow/pressure/power/weight)
+    // This is crucial for accessory selection later. Needs to be before price processing if price depends on corrected values.
+    const accessoryFixResult = fixAccessories(workingData); // <--- CALL NEW FIX FUNCTION
+    workingData = accessoryFixResult.data;
+    if (accessoryFixResult.warnings && accessoryFixResult.warnings.length > 0) {
+        allWarnings.push(...accessoryFixResult.warnings);
+        console.warn("dataCorrector.js: Warnings during accessory fixing:", accessoryFixResult.warnings);
+    }
+     if (accessoryFixResult.errors && accessoryFixResult.errors.length > 0) {
+         allErrors.push(...accessoryFixResult.errors);
+         console.error("dataCorrector.js: Errors during accessory fixing:", accessoryFixResult.errors);
+     }
+    console.log(`dataCorrector.js: Applied accessory fixes (patched ${accessoryFixResult.summary?.totalPatched} items), errors: ${accessoryFixResult.errors?.length}`);
+
+
+    // Step 5: Process and fix price data (calculates factory/market prices, ensures consistency)
+    // This should run after all other data fields relevant to price calculation (like basePrice, discountRate) are fixed/present.
+    const priceFixResult = processPriceData(workingData);
+    workingData = priceFixResult.data;
+     // processPriceData itself might report issues via its results property, decide if you want to merge them
+    // allWarnings.push(...(priceFixResult.results?.warnings || [])); // Assuming processPriceData results has a warnings array
+    console.log(`dataCorrector.js: Applied general price data processing (corrected ${priceFixResult.results?.corrected || 0} items).`);
+
+
+    // Step 6: Apply specific model price overrides (these are hardcoded values)
+    // This runs last among price fixes to ensure these specific prices take precedence.
+    workingData = fixSpecificModelPrices(workingData);
+    console.log("dataCorrector.js: Applied specific model price overrides.");
+
+    console.log('dataCorrector.js: Database correction complete.');
+
+    return {
+        data: workingData,
+        summary: {
+            totalPatchedItems: (capacityFixResult.patched || 0) + (gearboxNumericFixResult.patched || 0) + (accessoryFixResult.summary?.totalPatched || 0) + (priceFixResult.results?.corrected || 0),
+            totalWarnings: allWarnings.length,
+            totalErrors: allErrors.length,
+        },
+        warnings: allWarnings,
+        errors: allErrors, // Return collected critical errors
+    };
 };
+
+// Export the main correction function
+// export { correctDatabase }; // Already exported above

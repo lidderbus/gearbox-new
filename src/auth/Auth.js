@@ -1,14 +1,14 @@
 // src/auth/Auth.js
 import { SHA256 } from 'crypto-js';
-import { userRoles, permissions, hasPermission as checkPermission } from './roles';
+import { userRoles, hasPermission as checkPermission } from './roles';
 
 // 内存中的用户数组
 let users = [
   {
     id: 1,
     username: 'admin',
-    // 默认密码: admin123
-    passwordHash: '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9',
+    // 新密码: Gbox@2024!
+    passwordHash: '95e02caa27467e7f0cef1173f4c9ec3c2ca1248c51fce9ea9c79ecd5a73e841f',
     role: userRoles.ADMIN,
     name: '系统管理员',
     department: '技术部',
@@ -19,9 +19,9 @@ let users = [
   {
     id: 2,
     username: 'user',
-    // 默认密码: user123
-    passwordHash: 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3',
-    role: userRoles.VIEWER,
+    // 新密码: User@2024!
+    passwordHash: '0e6d3ce3e3bebc9c80eb62711b0bdf12b21590b4b447fb85a8b1c1079aed4867',
+    role: userRoles.USER,
     name: '普通用户',
     department: '销售部',
     lastLogin: null,

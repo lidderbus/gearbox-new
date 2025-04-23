@@ -1,10 +1,37 @@
-// App.js - Main Application Component
+// src/App.js - Main Application Component
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Container, Row, Col, Form, Button, Card, Table, Tab, Tabs, Alert, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card, Table, Tab, Tabs, Alert, Spinner, Modal, Badge, ListGroup } from 'react-bootstrap';
 import { Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { userRoles, permissions } from './auth/roles';
 import './styles/global.css';
+// import { ThemeProvider, createTheme } from '@mui/material/styles'; // Material UI not used directly here
+// import { initialData } from './data/initialData'; // initialData is handled in repair.js now
+// import { adaptEnhancedData } from './utils/dataAdapter'; // adaptEnhancedData is used in repair.js
+
+// 导入数据修复工具
+import { correctDatabase } from './utils/dataCorrector'; // correctDatabase is still used in DatabaseManagementView
+
+// 导入选型结果组件
+import GearboxSelectionResult from './components/GearboxSelectionResult';
+
+// 价格模块相关工具
+import {
+  validatePriceData,
+  correctPriceData,
+  calculateFactoryPrice,
+  calculateMarketPrice,
+  calculatePackagePrice,
+  processPriceData,
+  fixSpecificModelPrices,
+  getStandardDiscountRate
+} from './utils/priceManager';
+
+import { validateDatabase, validateGearbox, validateCoupling, validatePump } from './utils/dataValidator';
+import { savePriceHistory, compareAndTrackChanges, getPriceHistory, clearPriceHistory } from './utils/priceHistoryTracker';
+import { parseTextPriceTable, calculateDiscountRates } from './utils/officialPriceParser';
+import PriceCalculator from './components/PriceCalculator';
+import BatchPriceAdjustment from './components/BatchPriceAdjustment';
 
 // Custom Components
 import LoginPage from './components/LoginPage';
@@ -14,100 +41,76 @@ import QuotationView from './components/QuotationView';
 import AgreementView from './components/AgreementView';
 import ContractView from './components/ContractView';
 import GearboxComparisonView from './components/GearboxComparisonView';
-import PriceCalculator from './components/PriceCalculator';
-import BatchPriceAdjustment from './components/BatchPriceAdjustment';
 import DataQuery from './components/DataQuery';
-import ProtectedRoute from './components/ProtectedRoute';
+// import ProtectedRoute from './components/ProtectedRoute'; // ProtectedRoute is handled in AppContent now
+import DiagnosticPanel from './components/DiagnosticPanel'; // 引入诊断面板组件
 
 // Utils and API functions
-import { selectGearbox, selectFlexibleCoupling, selectStandbyPump, autoSelectGearbox } from './utils/selectionAlgorithm';
+import { selectGearbox, autoSelectGearbox } from './utils/selectionAlgorithm';
+import { selectFlexibleCoupling, selectStandbyPump } from './utils/couplingSelection';
 import { generateQuotation, exportQuotationToExcel, exportQuotationToPDF } from './utils/quotationGenerator';
 import { generateAgreement, exportAgreementToWord, exportAgreementToPDFFormat } from './utils/agreementGenerator';
 import { generateContract, exportContractToWord, exportContractToPDF } from './utils/contractGenerator';
-import { calculateFactoryPrice, calculatePackagePrice, getDiscountRate, calculateMarketPrice } from './utils/priceDiscount';
-import { adaptEnhancedData } from './utils/dataAdapter';
+import { getCouplingSpecifications } from './data/gearboxMatchingMaps';
 
-// Ensure all gearbox data collections exist
-const ensureDataCollections = (data) => {
-  const collections = [
-    'hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes',
-    'hcqGearboxes', 'gcGearboxes', 'flexibleCouplings', 'standbyPumps'
-  ];
+// 数据持久化键名 (Still relevant for history/user settings)
+const STORAGE_KEY = 'gearbox_app_data';
 
-  const updatedData = { ...data };
+const forceReset = () => {
+  try {
+    console.log("开始强制重置数据...");
+    localStorage.clear();
+    console.log("localStorage已清除");
 
-  collections.forEach(collection => {
-    if (!updatedData[collection] || !Array.isArray(updatedData[collection])) {
-      updatedData[collection] = [];
-      console.log(`初始化空数组: ${collection}`);
+    sessionStorage.clear();
+    console.log("sessionStorage已清除");
+
+    if (window.indexedDB) {
+        indexedDB.databases().then(dbs => {
+            dbs.forEach(db => {
+                console.log(`尝试删除indexedDB数据库 ${db.name}`);
+                indexedDB.deleteDatabase(db.name).onsuccess = () => console.log(`indexedDB数据库 ${db.name} 已删除`);
+                indexedDB.deleteDatabase(db.name).onerror = (event) => console.error(`删除indexedDB数据库 ${db.name} 失败`, event.target.error);
+            });
+        }).catch(err => console.error("枚举indexedDB数据库失败:", err));
     }
-  });
 
-  // Add default data if collections are empty (Example - adjust as needed)
-  if (updatedData.hcGearboxes && updatedData.hcGearboxes.length === 0) {
-      updatedData.hcGearboxes = [{ model: "HC138", inputSpeedRange: [750, 2500], ratios: [2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0], transferCapacity: [0.06, 0.06, 0.06, 0.06, 0.055, 0.05, 0.045, 0.04, 0.035, 0.03, 0.025], thrust: 12, centerDistance: 138, weight: 95, price: 15000 }];
-      console.log('添加默认HC齿轮箱数据');
-  }
-  if (updatedData.flexibleCouplings && updatedData.flexibleCouplings.length === 0) {
-      // Use data from flexibleCouplings.js if available, otherwise provide defaults
-      updatedData.flexibleCouplings = [{ model: "HGTHT4", torque: 4.0, maxSpeed: 2400, weight: 90, price: 16500 }];
-      console.log('添加默认联轴器数据');
-  }
-   if (updatedData.standbyPumps && updatedData.standbyPumps.length === 0) {
-      updatedData.standbyPumps = [{ model: "2CY7.5/2.5D", flow: 7.5, pressure: 2.5, weight: 50, price: 8000 }];
-      console.log('添加默认备用泵数据');
-  }
-  // Add default data for other types if needed...
-  if (updatedData.hcqGearboxes.length === 0) {
-    updatedData.hcqGearboxes = [{
-      model: "HCQ400",
-      inputSpeedRange: [1200, 2500],
-      ratios: [4.0, 4.5, 5.0],
-      transferCapacity: [0.14, 0.13, 0.12],
-      thrust: 55,
-      centerDistance: 400,
-      weight: 650,
-      price: 65000,
-      controlType: "电控"
-    }];
-    console.log('添加默认HCQ齿轮箱数据');
-  }
+    document.cookie.split(";").forEach(c => {
+      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+    console.log("Cookies已清除");
 
-  if (updatedData.gcGearboxes.length === 0) {
-    updatedData.gcGearboxes = [{
-      model: "GC500",
-      inputSpeedRange: [1000, 2200],
-      ratios: [4.5, 5.0, 5.5],
-      transferCapacity: [0.18, 0.17, 0.16],
-      thrust: 70,
-      centerDistance: 500,
-      weight: 950,
-      price: 85000,
-      controlType: "气控/电控"
-    }];
-    console.log('添加默认GC齿轮箱数据');
-  }
+    alert("所有本地数据和设置已清除，页面将在3秒后重新加载...");
 
-  return updatedData;
+    setTimeout(() => {
+      window.location.href = window.location.pathname + "?reset=" + new Date().getTime();
+    }, 3000);
+  } catch (error) {
+    console.error("重置过程出错:", error);
+    alert("重置过程出错: " + error.message + "。尝试手动刷新页面。");
+    window.location.reload();
+  }
 };
 
-// Main App Component
 function App({ appData: initialAppData, setAppData }) {
-  // Auth context for user authentication
   const { user, isAuthenticated, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  
-  // State management with useCallback for handlers
-  const [appData, setAppDataState] = useState(() => ensureDataCollections(initialAppData || {}));
+
+  const [appDataState, setAppDataState] = useState(initialAppData);
+
+  const [dataFixed, setDataFixed] = useState(false);
+
+  const [dataChecked, setDataChecked] = useState(false);
+
   const [engineData, setEngineData] = useState({ power: '', speed: '' });
   const [requirementData, setRequirementData] = useState({
     targetRatio: '',
     thrustRequirement: '',
-    workCondition: "III类:扭矩变化中等", // Default coupling work condition
-    temperature: "30",             // Default coupling temperature
-    hasCover: false,               // Default coupling cover state
-    application: 'propulsion'      // Default application scenario
+    workCondition: "III类:扭矩变化中等",
+    temperature: "30",
+    hasCover: false,
+    application: 'propulsion'
   });
   const [projectInfo, setProjectInfo] = useState({
     projectName: '',
@@ -118,38 +121,55 @@ function App({ appData: initialAppData, setAppData }) {
     contactEmail: '',
     engineModel: ''
   });
-  const [gearboxType, setGearboxType] = useState('auto'); // Default to auto selection
+  const [gearboxType, setGearboxType] = useState('auto');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [selectionResult, setSelectionResult] = useState(null); // Stores the complete result object from selection algorithm
+  const [success, setSuccess] = useState(''); // 添加成功消息状态
+  const [selectionResult, setSelectionResult] = useState(null);
   const [quotation, setQuotation] = useState(null);
   const [agreement, setAgreement] = useState(null);
   const [contract, setContract] = useState(null);
   const [activeTab, setActiveTab] = useState('input');
   const [selectionHistory, setSelectionHistory] = useState([]);
   const [theme, setTheme] = useState('light');
-  const [selectedGearboxIndex, setSelectedGearboxIndex] = useState(0); // Index within recommendations array
-  const [selectedComponents, setSelectedComponents] = useState({ // Holds the *currently displayed* components after selection/adjustment
+  const [selectedGearboxIndex, setSelectedGearboxIndex] = useState(0);
+  const [selectedComponents, setSelectedComponents] = useState({
     gearbox: null,
     coupling: null,
     pump: null
   });
-  const [packagePrice, setPackagePrice] = useState(0); // Calculated cost price
-  const [marketPrice, setMarketPrice] = useState(0); // Calculated selling price (might be adjustable)
-  const [totalMarketPrice, setTotalMarketPrice] = useState(0); // Final market price including extras (potentially same as marketPrice)
+
+  const [packagePrice, setPackagePrice] = useState(0);
+  const [marketPrice, setMarketPrice] = useState(0);
+  const [totalMarketPrice, setTotalMarketPrice] = useState(0);
   const [showBatchPriceAdjustment, setShowBatchPriceAdjustment] = useState(false);
 
-  // Check if user is authenticated, if not redirect to login
+  const [showDiagnosticPanel, setShowDiagnosticPanel] = useState(false);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
   useEffect(() => {
     if (!isAuthenticated && location.pathname !== '/login') {
-      navigate('/login', { state: { from: location }, replace: true });
+      console.log(`Redirecting to login from ${location.pathname}`);
+      navigate('/login', { state: { from: location.pathname }, replace: true });
+    } else if (isAuthenticated && location.pathname === '/login') {
+      const redirectPath = location.state?.from || '/';
+       console.log(`Authenticated, redirecting from login to ${redirectPath}`);
+      navigate(redirectPath, { replace: true });
     }
   }, [isAuthenticated, location, navigate]);
 
-  // Check if user is admin
   const isAdmin = user && (user.role === userRoles.ADMIN || user.role === userRoles.SUPER_ADMIN);
 
-  // Work condition options for coupling selection
   const workConditionOptions = useMemo(() => [
     'I类:扭矩变化很小',
     'II类:扭矩变化小',
@@ -158,7 +178,6 @@ function App({ appData: initialAppData, setAppData }) {
     'V类:扭矩变化很大'
   ], []);
 
-  // Application scenario options
   const applicationOptions = useMemo(() => [
     { value: 'propulsion', label: '主推进' },
     { value: 'auxiliary', label: '辅助推进' },
@@ -166,32 +185,50 @@ function App({ appData: initialAppData, setAppData }) {
     { value: 'other', label: '其他' }
   ], []);
 
-  // Function to update both local and parent state
-  const updateAppData = (newData) => {
+  const updateAppDataAndPersist = useCallback((newData) => {
     let dataToUpdate;
     if (typeof newData === 'function') {
-      dataToUpdate = newData(appData);
+      dataToUpdate = newData(appDataState);
     } else {
       dataToUpdate = newData;
     }
-    
-    const adaptedData = adaptEnhancedData(ensureDataCollections(dataToUpdate)); // Ensure structure and adapt
-    setAppDataState(adaptedData);
-    if (setAppData && typeof setAppData === 'function') {
-      setAppData(adaptedData); // Call the setter passed from AppWrapper
-    }
-    // Save to localStorage after update
-    try {
-      localStorage.setItem('appData', JSON.stringify(adaptedData));
-      console.log('App data saved to localStorage after update.');
-    } catch (e) {
-      console.warn('Failed to save app data to localStorage:', e);
-    }
-    
-    return adaptedData;
-  };
 
-  // Memoized theme colors
+    try {
+        const collectionsToTrack = [
+            'hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes',
+            'hcqGearboxes', 'gcGearboxes', 'flexibleCouplings', 'standbyPumps'
+        ];
+        let allChanges = [];
+
+        collectionsToTrack.forEach(type => {
+            const oldCollection = Array.isArray(appDataState?.[type]) ? appDataState[type] : [];
+            const newCollection = Array.isArray(dataToUpdate?.[type]) ? dataToUpdate[type] : [];
+             const oldCleaned = oldCollection.filter(item => item && item.model);
+             const newCleaned = newCollection.filter(item => item && item.model);
+
+            const changes = compareAndTrackChanges(oldCleaned, newCleaned);
+            allChanges = [...allChanges, ...changes];
+        });
+
+        if (allChanges.length > 0) {
+            savePriceHistory(allChanges, '数据更新（通过UI修改或导入）');
+            console.log(`已记录${allChanges.length}项价格变更到历史记录 (updateAppDataAndPersist)`);
+        }
+    } catch (e) {
+        console.warn('记录价格历史变更失败 (in updateAppDataAndPersist):', e);
+    }
+
+    setAppDataState(dataToUpdate);
+
+    if (setAppData && typeof setAppData === 'function') {
+        setAppData(dataToUpdate);
+    } else {
+       console.warn("App Component: setAppData prop is not a function. Data changes won't be persisted to parent.");
+    }
+
+    return dataToUpdate;
+  }, [appDataState, setAppData]);
+
   const colors = useMemo(() => {
     const light = {
       bg: '#f0f7f0', card: '#ffffff', text: '#263238', border: '#d0e0d0',
@@ -208,7 +245,6 @@ function App({ appData: initialAppData, setAppData }) {
     return theme === 'light' ? light : dark;
   }, [theme]);
 
-  // Update CSS variables for theme
   useEffect(() => {
     const root = document.documentElement;
     Object.entries(colors).forEach(([key, value]) => {
@@ -216,21 +252,23 @@ function App({ appData: initialAppData, setAppData }) {
     });
   }, [colors]);
 
-  // Callbacks for event handlers
+  useEffect(() => {
+      console.log("App Component received new initialAppData prop. Updating internal state.");
+      setAppDataState(initialAppData);
+  }, [initialAppData]);
+
   const handleEngineDataChange = useCallback((data) => {
     setEngineData(prevData => ({ ...prevData, ...data }));
     setError('');
   }, []);
 
   const handleRequirementDataChange = useCallback((data) => {
-    // Ensure temperature is stored as string for input control
     if (data.temperature !== undefined) {
         data.temperature = String(data.temperature);
     }
     setRequirementData(prevData => ({ ...prevData, ...data }));
     setError('');
   }, []);
-
 
   const handleProjectInfoChange = useCallback((data) => {
     setProjectInfo(prevData => ({ ...prevData, ...data }));
@@ -246,62 +284,27 @@ function App({ appData: initialAppData, setAppData }) {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
   }, []);
 
-  // Safe number formatting function
   const safeNumberFormat = useCallback((value, decimals = 2) => {
-    const num = parseFloat(value); // Try parsing first
+    const num = parseFloat(value);
     if (typeof num !== 'number' || isNaN(num)) {
-      return '-'; // Return dash for non-numbers or NaN
+      return '-';
     }
     return num.toFixed(decimals);
   }, []);
 
-
-   // Load data on mount - Uses data passed from AppWrapper
-   useEffect(() => {
-       console.log("App Component Mounted. Received appData keys:", Object.keys(initialAppData || {}));
-       // Ensure data structure on initial load within the component as well
-       const dataToUse = ensureDataCollections(initialAppData || {});
-       // Adapt data if needed (might be redundant if AppWrapper adapted, but safe)
-       const adaptedData = adaptEnhancedData(dataToUse);
-       setAppDataState(adaptedData);
-       // No need to call setAppData here, it was set in the wrapper
-   }, [initialAppData]); // Depend only on the prop from wrapper
-
-   // Initialize components and prices when selection result changes
-   useEffect(() => {
+  useEffect(() => {
     if (selectionResult && selectionResult.success && Array.isArray(selectionResult.recommendations) && selectionResult.recommendations.length > 0) {
       console.log("New selection result received, updating components...");
-      // Always select the first recommendation initially when a new result comes in
       setSelectedGearboxIndex(0);
-      const firstGearbox = selectionResult.recommendations[0]; // Gearbox from the top recommendation
-      const firstCouplingResult = selectionResult.flexibleCoupling; // Coupling result object (contains success flag, etc.)
-      const firstPumpResult = selectionResult.standbyPump; // Pump result object
+      const firstGearbox = { ...selectionResult.recommendations[0] };
+      const firstCouplingResult = selectionResult.flexibleCoupling;
+      const firstPumpResult = selectionResult.standbyPump;
 
-      // Ensure selected components have calculated prices
-      // Create copies to avoid mutating the selectionResult state directly
-      const currentGearbox = { ...firstGearbox };
-      if (!currentGearbox.basePrice && currentGearbox.price) currentGearbox.basePrice = currentGearbox.price;
-      if (!currentGearbox.discountRate) currentGearbox.discountRate = getDiscountRate(currentGearbox.model);
-      currentGearbox.factoryPrice = calculateFactoryPrice(currentGearbox);
-      // Use the more flexible market price calculation initially
-      currentGearbox.marketPrice = calculateMarketPrice(currentGearbox, calculatePackagePrice(currentGearbox, null, null));
+      const currentGearbox = correctPriceData(firstGearbox);
 
+      const currentCoupling = firstCouplingResult?.success ? correctPriceData({ ...firstCouplingResult }) : null;
 
-      const currentCoupling = firstCouplingResult?.success ? { ...firstCouplingResult } : null;
-      if (currentCoupling) {
-        if (!currentCoupling.basePrice && currentCoupling.price) currentCoupling.basePrice = currentCoupling.price;
-         if (!currentCoupling.discountRate) currentCoupling.discountRate = getDiscountRate(currentCoupling.model);
-        currentCoupling.factoryPrice = calculateFactoryPrice(currentCoupling);
-        currentCoupling.marketPrice = calculateMarketPrice(currentCoupling, currentCoupling.factoryPrice); // Calculate market price for coupling
-      }
-
-      const currentPump = firstPumpResult?.success ? { ...firstPumpResult } : null;
-       if (currentPump) {
-        if (!currentPump.basePrice && currentPump.price) currentPump.basePrice = currentPump.price;
-         if (!currentPump.discountRate) currentPump.discountRate = getDiscountRate(currentPump.model);
-        currentPump.factoryPrice = calculateFactoryPrice(currentPump);
-        currentPump.marketPrice = calculateMarketPrice(currentPump, currentPump.factoryPrice); // Calculate market price for pump
-      }
+      const currentPump = firstPumpResult?.success ? correctPriceData({ ...firstPumpResult }) : null;
 
       setSelectedComponents({
         gearbox: currentGearbox,
@@ -309,33 +312,33 @@ function App({ appData: initialAppData, setAppData }) {
         pump: currentPump
       });
 
-      // Recalculate prices based on the newly selected components
       const calcPackagePrice = calculatePackagePrice(currentGearbox, currentCoupling, currentPump);
       setPackagePrice(calcPackagePrice);
 
-      // Use the calculated market price for the gearbox as the main display price
-      const initialMarketPrice = currentGearbox.marketPrice;
+      const initialMarketPrice = calculateMarketPrice(currentGearbox, calcPackagePrice);
       setMarketPrice(initialMarketPrice);
-      setTotalMarketPrice(initialMarketPrice); // Start total market price with this
+      setTotalMarketPrice(initialMarketPrice);
 
-      console.log("Selected Components Updated:", { gearbox: currentGearbox.model, coupling: currentCoupling?.model, pump: currentPump?.model });
-      console.log("Prices Updated:", { packagePrice: calcPackagePrice, marketPrice: initialMarketPrice });
-
-
+      console.log("Selected Components Updated:", {
+        gearbox: currentGearbox?.model,
+        coupling: currentCoupling?.model,
+        pump: currentPump?.model
+      });
+      console.log("Prices Updated:", {
+        packagePrice: calcPackagePrice,
+        marketPrice: initialMarketPrice,
+        totalMarketPrice: initialMarketPrice
+      });
     } else if (selectionResult && !selectionResult.success) {
-        console.log("Selection failed, clearing components and prices.");
-        // Clear selections if selection failed
-        setSelectedGearboxIndex(0);
-        setSelectedComponents({ gearbox: null, coupling: null, pump: null });
-        setPackagePrice(0);
-        setMarketPrice(0);
-        setTotalMarketPrice(0);
+      console.log("Selection failed, clearing components and prices.");
+      setSelectedGearboxIndex(0);
+      setSelectedComponents({ gearbox: null, coupling: null, pump: null });
+      setPackagePrice(0);
+      setMarketPrice(0);
+      setTotalMarketPrice(0);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [selectionResult]); // Rerun only when selectionResult object changes
+  }, [selectionResult]);
 
-
-  // Load selection history from localStorage
   useEffect(() => {
     const storedHistory = localStorage.getItem('selectionHistory');
     if (storedHistory) {
@@ -355,395 +358,331 @@ function App({ appData: initialAppData, setAppData }) {
     }
   }, []);
 
-  // Handler functions
+  const handlePriceChange = useCallback((component, field, value) => {
+    if (value === '') {
+      setSelectedComponents(prev => ({
+        ...prev,
+        [component]: { ...prev[component], [field]: undefined }
+      }));
+       if (field === 'basePrice' || field === 'factoryPrice' || field === 'marketPrice' || field === 'discountRate') {
+       }
+      return;
+    }
 
-  // Main selection handler - Uses autoSelectGearbox or selectGearbox
-  const handleSelection = useCallback(() => {
-    setLoading(true);
-    setError('正在执行选型...');
-    setSelectionResult(null); // Clear previous results
-    setQuotation(null);
-    setAgreement(null);
-    setContract(null);
-    setActiveTab('input'); // Stay on input tab until results are ready
-
-    // Use setTimeout to allow UI update before blocking calculation
-    setTimeout(() => {
-        try {
-          // Debugging log
-          console.log('开始选型，当前状态:', {
-            engineData,
-            requirementData, // Includes workCondition, temperature, hasCover
-            gearboxType,
-            appDataKeys: Object.keys(appData)
-          });
-
-          const powerValue = parseFloat(engineData.power) || 0;
-          const speedValue = parseFloat(engineData.speed) || 0;
-          const ratioValue = parseFloat(requirementData.targetRatio) || 0;
-          const thrustValue = parseFloat(requirementData.thrustRequirement) || 0;
-
-          // Extract coupling parameters and application from requirementData
-          const workCondition = requirementData.workCondition || "III类:扭矩变化中等";
-          const temperature = parseFloat(requirementData.temperature) || 30;
-          const hasCover = !!requirementData.hasCover;
-          const application = requirementData.application || 'propulsion';
-
-          if (powerValue <= 0) throw new Error('主机功率必须大于0');
-          if (speedValue <= 0) throw new Error('主机转速必须大于0');
-          if (ratioValue <= 0) throw new Error('目标减速比必须大于0');
-          if (thrustValue < 0) throw new Error('推力要求不能为负数');
-           if (isNaN(temperature)) throw new Error('工作温度输入无效');
-
-
-          console.log('执行选型算法，参数:', {
-            powerValue, speedValue, ratioValue, thrustValue, gearboxType,
-            workCondition, temperature, hasCover, application,
-            appDataSize: Object.keys(appData).length
-          });
-
-          let result;
-          const selectionOptions = { workCondition, temperature, hasCover, application }; // Bundle options
-
-          // Decide which selection function to use
-          if (gearboxType === 'auto') {
-            // Use the comprehensive auto-selection algorithm
-             const requirements = {
-              motorPower: powerValue,
-              motorSpeed: speedValue,
-              targetRatio: ratioValue,
-              thrust: thrustValue,
-              ...selectionOptions // Pass all options
-            };
-             console.log('调用 autoSelectGearbox, requirements:', requirements);
-             result = autoSelectGearbox(requirements, appData);
-          } else {
-            // Use the specific gearbox type selection, passing options
-            console.log('调用 selectGearbox for type:', gearboxType, 'with options:', selectionOptions);
-            result = selectGearbox(
-              powerValue,
-              speedValue,
-              ratioValue,
-              thrustValue,
-              gearboxType, // Pass the specific type ('HC', 'GW', etc.)
-              appData,
-              selectionOptions // Pass coupling and other options
-            );
-          }
-
-
-          console.log('选型算法返回结果:', result);
-          setSelectionResult(result); // Update state with the complete result object
-
-          if (result.success) {
-            setActiveTab('result'); // Switch tab only on success
-            setError(result.warning ?
-              `选型成功，但有警告: ${result.warning}` :
-              '选型成功'
-            );
-
-            // Save to history
-             const historyEntry = {
-                id: Date.now(),
-                timestamp: new Date().toISOString(),
-                projectInfo: { ...projectInfo },
-                engineData: { ...engineData },
-                requirementData: { ...requirementData }, // Capture current requirements
-                selectionResult: { ...result },          // Save the full result object
-                // Selected components are derived from selectionResult in useEffect
-             };
-
-             setSelectionHistory(prev => {
-                const updatedHistory = [historyEntry, ...prev].slice(0, 50); // Keep latest 50
-                try {
-                    localStorage.setItem('selectionHistory', JSON.stringify(updatedHistory));
-                } catch (lsError) {
-                    console.error("无法保存历史记录到LocalStorage:", lsError);
-                     setError(prevError => prevError + " (无法保存历史记录)");
-                }
-                return updatedHistory;
-             });
-
-          } else {
-            setError(`选型失败${result.message ? ': ' + result.message : ''}`);
-            setActiveTab('input'); // Remain on input tab if failed
-          }
-        } catch (err) {
-          console.error("选型过程出错:", err);
-          setError('选型过程出错: ' + err.message);
-          setActiveTab('input'); // Remain on input tab on error
-        } finally {
-          setLoading(false);
-        }
-    }, 50); // Short delay
-  // Dependencies for useCallback
-  }, [engineData, requirementData, gearboxType, appData, projectInfo]); // Removed setAppData
-
-
-  // Handler when user selects a different gearbox from the recommendations list
-  const handleGearboxSelection = useCallback((index) => {
-    if (!selectionResult || !selectionResult.success || !Array.isArray(selectionResult.recommendations) || !selectionResult.recommendations[index]) {
-        console.error("Cannot select gearbox, invalid state or index:", index, selectionResult);
-        setError("无法选择齿轮箱，内部状态错误。");
+    const parsedValue = parseFloat(value);
+    if (field === 'discountRate' && (isNaN(parsedValue) || parsedValue < 0 || parsedValue > 100)) {
+        console.warn(`Invalid input for discountRate: ${value}`);
+        return;
+    } else if (field !== 'discountRate' && isNaN(parsedValue)) {
+        console.warn(`Invalid number input for ${field}: ${value}`);
         return;
     }
 
-    setSelectedGearboxIndex(index);
-    const selectedGearbox = { ...selectionResult.recommendations[index] }; // Get the newly chosen gearbox
-    console.log(`User selected gearbox at index ${index}:`, selectedGearbox.model);
-
-    // Ensure price fields are calculated for the newly selected gearbox
-    if (!selectedGearbox.basePrice && selectedGearbox.price) selectedGearbox.basePrice = selectedGearbox.price;
-    if (selectedGearbox.discountRate === undefined) selectedGearbox.discountRate = getDiscountRate(selectedGearbox.model);
-    selectedGearbox.factoryPrice = calculateFactoryPrice(selectedGearbox);
-    // Recalculate market price based on its own merits
-    selectedGearbox.marketPrice = calculateMarketPrice(selectedGearbox, calculatePackagePrice(selectedGearbox));
-
-
-    // Re-select coupling and pump based on the *newly selected* gearbox and *current requirementData*
-    const engineTorque = selectionResult.engineTorque; // From the original selection run
-
-    console.log(`Re-selecting accessories for gearbox ${selectedGearbox.model} using requirements:`, requirementData);
-
-    const updatedCouplingResult = selectFlexibleCoupling(
-      engineTorque,
-      selectedGearbox.model,
-      appData.flexibleCouplings,
-      requirementData.workCondition, // Use current state
-      parseFloat(requirementData.temperature) || 30,
-      requirementData.hasCover
-    );
-    console.log("New coupling result:", updatedCouplingResult);
-
-
-    const updatedPumpResult = selectStandbyPump(
-      selectedGearbox.model,
-      appData.standbyPumps
-    );
-     console.log("New pump result:", updatedPumpResult);
-
-    // Update selected components state with the new selections
-    const currentCoupling = updatedCouplingResult?.success ? { ...updatedCouplingResult } : null;
-     if (currentCoupling) { // Calculate prices for new coupling
-       if (!currentCoupling.basePrice && currentCoupling.price) currentCoupling.basePrice = currentCoupling.price;
-        if (currentCoupling.discountRate === undefined) currentCoupling.discountRate = getDiscountRate(currentCoupling.model);
-       currentCoupling.factoryPrice = calculateFactoryPrice(currentCoupling);
-       currentCoupling.marketPrice = calculateMarketPrice(currentCoupling, currentCoupling.factoryPrice);
-     }
-
-    const currentPump = updatedPumpResult?.success ? { ...updatedPumpResult } : null;
-     if (currentPump) { // Calculate prices for new pump
-       if (!currentPump.basePrice && currentPump.price) currentPump.basePrice = currentPump.price;
-       if (currentPump.discountRate === undefined) currentPump.discountRate = getDiscountRate(currentPump.model);
-       currentPump.factoryPrice = calculateFactoryPrice(currentPump);
-       currentPump.marketPrice = calculateMarketPrice(currentPump, currentPump.factoryPrice);
-     }
-
-    setSelectedComponents({
-      gearbox: selectedGearbox,
-      coupling: currentCoupling,
-      pump: currentPump
-    });
-
-    // Recalculate total prices based on the new combination
-    const newPackagePrice = calculatePackagePrice(selectedGearbox, currentCoupling, currentPump);
-    setPackagePrice(newPackagePrice);
-
-    // Use the *selected gearbox's* market price as the primary market price display
-    const newMarketPrice = selectedGearbox.marketPrice;
-    setMarketPrice(newMarketPrice);
-    setTotalMarketPrice(newMarketPrice); // Update the total as well
-
-    console.log("Selected Components Updated after re-selection:", { gearbox: selectedGearbox.model, coupling: currentCoupling?.model, pump: currentPump?.model });
-    console.log("Prices Updated after re-selection:", { packagePrice: newPackagePrice, marketPrice: newMarketPrice });
-
-
-    // Clear downstream generated documents as the core selection changed
-    setQuotation(null);
-    setAgreement(null);
-    setContract(null);
-    setActiveTab('result'); // Ensure we stay on the result tab
-
-  // Dependencies for useCallback
-  }, [selectionResult, appData, requirementData]); // Depend on requirementData for coupling re-selection
-
-
-  // Price change handler - Handles user input in PriceCalculator
-  const handlePriceChange = useCallback((component, field, value) => {
-    const parsedValue = parseFloat(value);
-    if (isNaN(parsedValue)) return; // Ignore invalid input
-
-    console.log(`Price Change: Component=${component}, Field=${field}, Value=${parsedValue}`);
+    console.log(`价格变更: 组件=${component}, 字段=${field}, 值=${value} (parsed=${parsedValue})`);
 
     setSelectedComponents(prev => {
       if (!prev[component]) {
-           console.warn(`Component ${component} not found in selectedComponents`);
-           return prev;
+         console.warn(`组件 ${component} 在selectedComponents中未找到`);
+         return prev;
       }
 
-      // Create a mutable copy of the specific component
       const updatedComponent = { ...prev[component] };
-      updatedComponent[field] = parsedValue; // Update the field
 
-      // --- Recalculate derived prices based on the change ---
-      let needsPackageRecalc = false;
-      let needsMarketRecalc = false;
+       if (field === 'discountRate') {
+            updatedComponent[field] = parsedValue / 100;
+       } else {
+            updatedComponent[field] = parsedValue;
+       }
 
-      if (field === 'basePrice') {
-        updatedComponent.factoryPrice = calculateFactoryPrice(updatedComponent);
-        needsPackageRecalc = true;
-        needsMarketRecalc = true; // Market price usually depends on factory/package price
-      } else if (field === 'discountRate') {
-        // Assuming discountRate is stored as percentage (e.g., 10 for 10%)
-        // If getDiscountRate returns fraction (0.10), adjust calculateFactoryPrice accordingly
-        updatedComponent.factoryPrice = calculateFactoryPrice(updatedComponent); // Pass the object with updated rate
-        needsPackageRecalc = true;
-        needsMarketRecalc = true;
-      } else if (field === 'factoryPrice') {
-        // If factory price is manually set, package price changes
-        needsPackageRecalc = true;
-        needsMarketRecalc = true; // Market price might also change
-      } else if (field === 'marketPrice') {
-        // Market price set directly, no other prices need recalculation based on this
-        // Total market price will be updated outside this function
-      } else if (field === 'price') {
-          // If 'price' field exists and is changed (might be base or something else)
-          // Assume it behaves like basePrice for recalculation purposes
-          updatedComponent.basePrice = parsedValue; // Sync basePrice if 'price' is used
-          updatedComponent.factoryPrice = calculateFactoryPrice(updatedComponent);
-          needsPackageRecalc = true;
-          needsMarketRecalc = true;
+
+      if (field === 'basePrice' || field === 'discountRate') {
+         if (updatedComponent.basePrice !== undefined && updatedComponent.discountRate !== undefined) {
+            updatedComponent.factoryPrice = calculateFactoryPrice(updatedComponent);
+         } else {
+             updatedComponent.factoryPrice = undefined;
+         }
       }
 
-      // Create the new components state
       const newComponents = { ...prev, [component]: updatedComponent };
 
-      // Recalculate total package price if needed
-      if (needsPackageRecalc) {
-        setPackagePrice(calculatePackagePrice(newComponents.gearbox, newComponents.coupling, newComponents.pump));
+      const newPackagePrice = calculatePackagePrice(newComponents.gearbox, newComponents.coupling, newComponents.pump);
+      setPackagePrice(newPackagePrice);
+
+      let newMarketPrice;
+      if (component === 'gearbox' && (field === 'basePrice' || field === 'discountRate' || field === 'factoryPrice' || field === 'marketPrice')) {
+           newMarketPrice = calculateMarketPrice(newComponents.gearbox, newPackagePrice);
+           setMarketPrice(newMarketPrice);
+           setTotalMarketPrice(newMarketPrice);
+      } else {
+             const updatedGearbox = newComponents.gearbox ? correctPriceData(newComponents.gearbox) : null;
+             const updatedCoupling = newComponents.coupling ? correctPriceData(newComponents.coupling) : null;
+             const updatedPump = newComponents.pump ? correctPriceData(newComponents.pump) : null;
+
+             setMarketPrice(updatedGearbox?.marketPrice || 0);
+             setTotalMarketPrice((updatedGearbox?.marketPrice || 0) + (updatedCoupling?.marketPrice || 0) + (updatedPump?.marketPrice || 0));
       }
 
-      // Recalculate or set the main market price (usually driven by gearbox)
-      if (component === 'gearbox' && field === 'marketPrice') {
-        setMarketPrice(parsedValue); // Use direct input if gearbox market price was changed
-        setTotalMarketPrice(parsedValue); // Keep total aligned with main market price
-      } else if (needsMarketRecalc) {
-        // Recalculate based on potentially new package price
-        const newMarketPrice = calculateMarketPrice(
-          newComponents.gearbox, 
-          calculatePackagePrice(newComponents.gearbox, newComponents.coupling, newComponents.pump)
-        );
-        setMarketPrice(newMarketPrice);
-        setTotalMarketPrice(newMarketPrice);
-      }
-
-      console.log("Updated components after price change:", newComponents);
-      return newComponents; // Return the new state for setSelectedComponents
+      console.log("价格变更后更新组件:", newComponents);
+      return newComponents;
     });
 
-    // Clear downstream documents after price change
     setQuotation(null);
     setAgreement(null);
     setContract(null);
-  }, []); // No dependencies needed as it uses state updater form
+  }, []);
 
-
-  // Batch Price Adjustment handler - Updated
   const handleBatchPriceAdjustment = useCallback((adjustmentInfo) => {
-    const { category, field, type, value } = adjustmentInfo;
+    const { category, field, type, value, reason } = adjustmentInfo;
+
+     if (!appDataState || Object.keys(appDataState).length === 0) {
+      setError("应用数据未加载，无法进行批量调整。");
+      return;
+    }
     if (!field || !type || value === undefined || value === null) {
-        setError("批量调整参数无效。");
-        return;
+      setError("批量调整参数无效。");
+      return;
     }
     let totalAdjustedCount = 0;
     setLoading(true);
     setError('正在应用批量价格调整...');
 
-    updateAppData(prevData => {
-      const newData = JSON.parse(JSON.stringify(prevData)); // Deep copy
+    updateAppDataAndPersist(prevData => {
+      const newData = JSON.parse(JSON.stringify(prevData));
 
       const updateItemPrice = (item) => {
-          // Ensure field exists and is a number
-          if (!item || typeof item[field] !== 'number') {
-              return false;
+        if (!item || typeof item !== 'object') return false;
+        if (!item.model) {
+            console.warn("Skipping item without model in batch update:", item);
+            return false;
+        }
+
+        if (field !== 'discountRate' && (item[field] === undefined || item[field] === null || typeof item[field] !== 'number')) {
+             if (field !== 'discountRate') return false;
+        }
+
+        let originalValue = item[field];
+         if (field === 'discountRate' && (originalValue === undefined || originalValue === null)) {
+             originalValue = getStandardDiscountRate(item.model);
+         }
+
+
+        let newValue = originalValue;
+        let appliedAdjustment = false;
+
+        try {
+          const adjustmentValue = parseFloat(value);
+          if (isNaN(adjustmentValue)) throw new Error("调整值不是数字");
+
+          const method = type; // 定义局部变量method，值为type参数
+          if (method === 'percentage') {
+            if (field === 'discountRate') {
+                 const currentRate = originalValue;
+                 const adjustmentFactor = adjustmentValue / 100;
+                 let newRate = currentRate + adjustmentFactor;
+                 newRate = Math.max(0, Math.min(1, newRate));
+                 newValue = parseFloat(newRate.toFixed(4));
+            } else {
+                const current = originalValue || 0;
+                const factor = 1 + adjustmentValue / 100;
+                newValue = current * factor;
+                newValue = Math.max(0, parseFloat(newValue.toFixed(2)));
+            }
+          } else if (method === 'amount') {
+            if (field === 'discountRate') {
+                const currentRate = originalValue;
+                 const adjustmentDecimal = adjustmentValue / 100;
+                 let newRate = currentRate + adjustmentDecimal;
+                 newRate = Math.max(0, Math.min(1, newRate));
+                 newValue = parseFloat(newRate.toFixed(4));
+            } else {
+                const current = originalValue || 0;
+                newValue = current + adjustmentValue;
+                newValue = Math.max(0, parseFloat(newValue.toFixed(2)));
+            }
+          } else {
+            throw new Error(`无效的调整类型: ${type}`);
           }
 
-          let originalValue = item[field];
-          let newValue;
-           try {
-              const adjustmentValue = parseFloat(value); // Ensure value is number
-              if (isNaN(adjustmentValue)) throw new Error("Adjustment value is not a number");
+          if (newValue !== originalValue) {
+             item[field] = newValue;
+             appliedAdjustment = true;
 
-              if (type === 'percent') {
-                newValue = Math.round(originalValue * (1 + adjustmentValue / 100));
-              } else if (type === 'amount') {
-                newValue = Math.round(originalValue + adjustmentValue);
-              } else {
-                  throw new Error(`Invalid adjustment type: ${type}`);
-              }
-              newValue = Math.max(0, newValue); // Prevent negative prices
+             let itemNeedsRecalc = false;
+             if (field === 'basePrice' || field === 'discountRate' || field === 'factoryPrice') {
+                  itemNeedsRecalc = true;
+             }
 
-              if (newValue !== originalValue) {
-                  item[field] = newValue;
-                  // Mark for recalculation by adapter (safer than direct calc here)
-                  item.recalculatePrices = true; // Generic flag for adapter
-                  // If basePrice changed, ensure price field is synced if it exists
-                  if (field === 'basePrice' && item.price !== undefined) item.price = newValue;
-                  return true; // Item adjusted
-              }
-            } catch (e) {
-              console.error(`调整价格失败 for item ${item?.model}:`, e);
-            }
-          return false; // Item not adjusted
+             if (itemNeedsRecalc) {
+                  const correctedItem = correctPriceData(item);
+                  item.basePrice = correctedItem.basePrice;
+                  item.price = correctedItem.price;
+                  item.discountRate = correctedItem.discountRate;
+                  item.factoryPrice = correctedItem.factoryPrice;
+                  item.packagePrice = correctedItem.packagePrice;
+                  item.marketPrice = correctedItem.marketPrice;
+             }
+          }
+
+        } catch (e) {
+          console.error(`批量调整价格失败，项目 ${item?.model}:`, e);
+        }
+        return appliedAdjustment;
       };
 
       const updateCategory = (catKey) => {
         if (newData[catKey] && Array.isArray(newData[catKey])) {
           let adjustedCountInCategory = 0;
           newData[catKey].forEach(item => {
-             if (updateItemPrice(item)) {
-                 adjustedCountInCategory++;
-             }
+            if (updateItemPrice(item)) {
+              adjustedCountInCategory++;
+            }
           });
           totalAdjustedCount += adjustedCountInCategory;
-          console.log(`Category ${catKey}: ${adjustedCountInCategory} items updated.`);
+          console.log(`类别 ${catKey}: ${adjustedCountInCategory} 项已更新。`);
         } else {
-            console.warn(`Category ${catKey} not found or not an array in data.`);
+          console.warn(`类别 ${catKey} 在数据中未找到或不是数组。`);
         }
       };
 
-      const gearboxCategories = ['hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes', 'hcqGearboxes', 'gcGearboxes'];
-      const otherCategories = ['flexibleCouplings', 'standbyPumps'];
+      const allCollections = ['hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes', 'hcqGearboxes', 'gcGearboxes', 'flexibleCouplings', 'standbyPumps'];
+      const gearboxCollections = allCollections.filter(key => key.endsWith('Gearboxes'));
+      const accessoryCollections = ['flexibleCouplings', 'standbyPumps'];
+
 
       if (category === 'all') {
-          [...gearboxCategories, ...otherCategories].forEach(updateCategory);
+        allCollections.forEach(updateCategory);
       } else if (category === 'allGearboxes') {
-          gearboxCategories.forEach(updateCategory);
-      } else if (newData[category]) {
-          updateCategory(category);
+        gearboxCollections.forEach(updateCategory);
+      } else if (category === 'allAccessories') {
+         accessoryCollections.forEach(updateCategory);
+      }
+       else if (allCollections.includes(category) && newData[category]) {
+        updateCategory(category);
       } else {
-          console.warn(`Invalid category specified for batch adjustment: ${category}`);
-          setError(`无效的调整类别: ${category}`);
-          return prevData; // Return original data if category is invalid
+        console.warn(`批量调整指定了无效的类别: ${category}`);
+        setError(`无效的调整类别: ${category}`);
+        return prevData;
       }
 
-      console.log(`Batch adjustment applied. Total ${totalAdjustedCount} items updated.`);
-      // adaptEnhancedData will be called by updateAppData which will handle recalculations based on the flag
+      console.log(`批量调整已应用。共 ${totalAdjustedCount} 项已更新。`);
+
       return newData;
     });
 
-    setError(`批量价格调整已应用 (${totalAdjustedCount} 项已更新)。数据将在下次加载或适配时重新计算衍生价格。如果当前选型受影响，请重新生成报价/协议。`);
+    const adjustmentDesc = type === 'percentage' ?
+        `${value > 0 ? '增加' : '减少'}${Math.abs(value)}%` :
+        `${value > 0 ? '增加' : '减少'}${Math.abs(value)}元`;
+
+    setSuccess(`批量价格调整已应用 (${totalAdjustedCount} 项已更新${reason ? '，原因: ' + reason : ''})。请在数据库管理界面保存更改。`);
+    setError('');
+
     setLoading(false);
     setShowBatchPriceAdjustment(false);
 
-    // Clear downstream documents as base data has changed
     setQuotation(null);
     setAgreement(null);
     setContract(null);
-  }, [updateAppData]); // Dependency on updateAppData
+
+  }, [appDataState, updateAppDataAndPersist]);
+
+  // 修改后的 handleGearboxSelection 函数
+  const handleGearboxSelection = useCallback((index) => {
+    if (!selectionResult || !Array.isArray(selectionResult.recommendations) || !selectionResult.recommendations[index]) {
+        console.error("Cannot select gearbox, invalid state or index:", index, selectionResult);
+        setError("无法选择齿轮箱，内部状态错误。");
+        return;
+    }
+
+    setSelectedGearboxIndex(index);
+    const selectedGearbox = { ...selectionResult.recommendations[index] };
+    console.log(`User selected gearbox at index ${index}:`, selectedGearbox.model);
+
+    // 如果是部分匹配的齿轮箱，显示警告
+    if (selectedGearbox.isPartialMatch) {
+        setSuccess(''); // 清除成功消息
+        setError(`注意: 选择的齿轮箱 ${selectedGearbox.model} 是部分匹配结果，${selectedGearbox.failureReason || '不完全满足所有要求'}`);
+    } else {
+        setError(''); // 清除错误消息
+    }
+
+    // 修正价格和其他数据
+    const correctedGearbox = correctPriceData(selectedGearbox);
+
+    const engineTorque = selectionResult.engineTorque;
+
+     if (!appDataState || !Array.isArray(appDataState.flexibleCouplings) || !Array.isArray(appDataState.standbyPumps)) {
+       setError("数据加载不完整，无法选择配件。");
+       console.error("Missing data for coupling/pump selection:", appDataState);
+       return;
+     }
+
+    // 获取或重新选择联轴器和备用泵
+    let updatedCouplingResult, updatedPumpResult;
+    
+    // 如果选型结果中已经有配件信息，优先使用
+    if (index === 0 && selectionResult.flexibleCoupling) {
+        updatedCouplingResult = selectionResult.flexibleCoupling;
+    } else {
+        // 为选定齿轮箱重新选择联轴器
+        updatedCouplingResult = selectFlexibleCoupling(
+          engineTorque,
+          correctedGearbox.model,
+          appDataState.flexibleCouplings,
+          getCouplingSpecifications,
+          requirementData.workCondition,
+          parseFloat(requirementData.temperature) || 30,
+          requirementData.hasCover,
+          selectionResult.engineSpeed || parseFloat(engineData.speed)
+        );
+    }
+
+    if (index === 0 && selectionResult.standbyPump) {
+        updatedPumpResult = selectionResult.standbyPump;
+    } else {
+        updatedPumpResult = selectStandbyPump(
+          correctedGearbox.model,
+          appDataState.standbyPumps
+        );
+    }
+
+    const currentCoupling = updatedCouplingResult?.success ? correctPriceData({ ...updatedCouplingResult }) : null;
+
+    const currentPump = updatedPumpResult?.success ? correctPriceData({ ...updatedPumpResult }) : null;
+
+    setSelectedComponents({
+      gearbox: correctedGearbox,
+      coupling: currentCoupling,
+      pump: currentPump
+    });
+
+    const newPackagePrice = calculatePackagePrice(correctedGearbox, currentCoupling, currentPump);
+    setPackagePrice(newPackagePrice);
+
+    const newMarketPrice = calculateMarketPrice(correctedGearbox, newPackagePrice);
+    setMarketPrice(newMarketPrice);
+
+     const totalMarket = (correctedGearbox?.marketPrice || 0) + (currentCoupling?.marketPrice || 0) + (currentPump?.marketPrice || 0);
+     setTotalMarketPrice(totalMarket);
 
 
-  // Generate Quotation handler - Updated
+    console.log("Selected Components Updated:", {
+        gearbox: correctedGearbox?.model,
+        coupling: currentCoupling?.model,
+        pump: currentPump?.model
+      });
+      console.log("Prices Updated:", {
+        packagePrice: newPackagePrice,
+        marketPrice: newMarketPrice,
+        totalMarketPrice: totalMarket
+      });
+
+
+    setQuotation(null);
+    setAgreement(null);
+    setContract(null);
+    setActiveTab('result');
+  }, [selectionResult, appDataState, requirementData, engineData, setActiveTab]);
+
   const handleGenerateQuotation = useCallback(() => {
     if (!selectedComponents.gearbox) {
       setError('请先完成选型，确保有选中的齿轮箱');
@@ -752,36 +691,32 @@ function App({ appData: initialAppData, setAppData }) {
     }
      if (!selectionResult || !selectionResult.success) {
       setError('当前的选型结果无效，无法生成报价单。');
-      setActiveTab('input');
       return;
     }
 
-
     setLoading(true);
-    setError('正在生成报价单...');
+    setError('');
+    setSuccess('正在生成报价单...');
 
     try {
-      // Use the components currently in state (reflecting user selections/adjustments)
-      const finalComponents = { ...selectedComponents };
-
-      // Ensure prices in finalComponents are up-to-date before passing
-      // It's better if PriceCalculator directly updates factory/market prices in selectedComponents state
-      // Let's assume selectedComponents already has the correct prices from handlePriceChange or initial selection
+      const finalComponents = {
+          gearbox: selectedComponents.gearbox ? correctPriceData(selectedComponents.gearbox) : null,
+          coupling: selectedComponents.coupling ? correctPriceData(selectedComponents.coupling) : null,
+          pump: selectedComponents.pump ? correctPriceData(selectedComponents.pump) : null,
+      };
 
       const currentPackagePrice = calculatePackagePrice(finalComponents.gearbox, finalComponents.coupling, finalComponents.pump);
-      // Use the market price currently displayed, which reflects adjustments
-      const currentMarketPrice = marketPrice;
-
+      const currentMarketPrice = calculateMarketPrice(finalComponents.gearbox, currentPackagePrice);
+      const currentTotalMarketPrice = (finalComponents.gearbox?.marketPrice || 0) + (finalComponents.coupling?.marketPrice || 0) + (finalComponents.pump?.marketPrice || 0);
 
       const quotationData = generateQuotation(
-        selectionResult, // Pass the original full selection result for technical details
+        selectionResult,
         projectInfo,
-        finalComponents, // Pass the currently selected components with potentially adjusted prices
+        finalComponents,
         {
-          packagePrice: currentPackagePrice, // Pass the current calculated package price
-          marketPrice: currentMarketPrice,   // Pass the current displayed/adjusted market price
-          totalMarketPrice: totalMarketPrice, // Pass the current total market price
-          // Provide component prices explicitly for the generator
+          packagePrice: currentPackagePrice,
+          marketPrice: currentMarketPrice,
+          totalMarketPrice: currentTotalMarketPrice,
           componentPrices: {
              gearbox: finalComponents.gearbox ? {
                 factoryPrice: finalComponents.gearbox.factoryPrice,
@@ -804,16 +739,15 @@ function App({ appData: initialAppData, setAppData }) {
 
       setQuotation(quotationData);
       setActiveTab('quotation');
-      setError('报价单生成成功');
+      setError('');
+      setSuccess('报价单生成成功');
     } catch (error) {
        console.error("生成报价单错误:", error);
       setError('生成报价单失败: ' + error.message);
     } finally {
       setLoading(false);
     }
-  // Depend on selectedComponents and prices states
-  }, [selectedComponents, selectionResult, projectInfo, packagePrice, marketPrice, totalMarketPrice]);
-
+  }, [selectedComponents, selectionResult, projectInfo]);
 
   const handleExportQuotation = useCallback((format) => {
     if (!quotation) {
@@ -821,15 +755,18 @@ function App({ appData: initialAppData, setAppData }) {
       return;
     }
     setLoading(true);
-    setError(`正在导出报价单为 ${format.toUpperCase()}...`);
+    setError('');
+    setSuccess(`正在导出报价单为 ${format.toUpperCase()}...`);
     try {
       const filename = `${projectInfo.projectName || '未命名项目'}-报价单`;
       if (format === 'excel') {
         exportQuotationToExcel(quotation, filename);
-        setError('报价单已导出为Excel格式');
+        setSuccess('报价单已导出为Excel格式');
       } else if (format === 'pdf') {
         exportQuotationToPDF(quotation, filename);
-        setError('报价单已导出为PDF格式');
+        setSuccess('报价单已导出为PDF格式');
+      } else {
+          setError('不支持的导出格式');
       }
     } catch (error) {
       console.error("导出报价单错误:", error);
@@ -839,23 +776,19 @@ function App({ appData: initialAppData, setAppData }) {
     }
   }, [quotation, projectInfo.projectName]);
 
-  // Generate Agreement handler
   const handleGenerateAgreement = useCallback(() => {
      if (!selectedComponents.gearbox) {
       setError('请先完成选型，确保有选中的齿轮箱');
-      setActiveTab('input');
       return;
     }
      if (!selectionResult || !selectionResult.success) {
       setError('当前的选型结果无效，无法生成技术协议。');
-      setActiveTab('input');
       return;
     }
     setLoading(true);
-    setError('正在生成技术协议...');
+    setError('');
+    setSuccess('正在生成技术协议...');
     try {
-       // Pass the full original selection result for technical data
-       // and the current components for model numbers etc.
       const agreementData = generateAgreement(
         selectionResult,
         projectInfo,
@@ -863,7 +796,7 @@ function App({ appData: initialAppData, setAppData }) {
       );
       setAgreement(agreementData);
       setActiveTab('agreement');
-      setError('技术协议生成成功');
+      setSuccess('技术协议生成成功');
     } catch (error) {
        console.error("生成技术协议错误:", error);
       setError('生成技术协议失败: ' + error.message);
@@ -878,24 +811,28 @@ function App({ appData: initialAppData, setAppData }) {
       return;
     }
     setLoading(true);
-    setError(`正在导出技术协议为 ${format.toUpperCase()}...`);
+    setError('');
+    setSuccess(`正在导出技术协议为 ${format.toUpperCase()}...`);
     try {
       const filename = `${projectInfo.projectName || '未命名项目'}-技术协议`;
       if (format === 'word') {
         exportAgreementToWord(agreement, filename);
-        setError('技术协议已导出为Word格式');
+        setSuccess('技术协议已导出为Word格式');
       } else if (format === 'pdf') {
         exportAgreementToPDFFormat(agreement, filename);
-        setError('技术协议已导出为PDF格式');
+        setSuccess('技术协议已导出为PDF格式');
       } else if (format === 'copy') {
-        // Adjust content to copy based on actual agreement structure
         const contentToCopy = agreement?.details || JSON.stringify(agreement, null, 2);
         navigator.clipboard.writeText(contentToCopy)
-          .then(() => setError('技术协议内容已复制到剪贴板'))
+          .then(() => setSuccess('技术协议内容已复制到剪贴板'))
           .catch(err => {
                console.error("复制失败:", err);
                setError('复制技术协议失败: ' + err.message);
-           });
+           })
+           .finally(() => setLoading(false));
+           return;
+      } else {
+           setError('不支持的导出格式');
       }
     } catch (error) {
       console.error("导出技术协议错误:", error);
@@ -905,70 +842,75 @@ function App({ appData: initialAppData, setAppData }) {
     }
   }, [agreement, projectInfo.projectName]);
 
-  // Generate Contract handler - Updated
+  // 添加缺失的合同生成函数
   const handleGenerateContract = useCallback(() => {
-     if (!selectedComponents.gearbox) {
+    if (!selectedComponents.gearbox) {
       setError('请先完成选型，确保有选中的齿轮箱');
-       setActiveTab('input');
       return;
     }
-     if (!quotation) {
+    if (!quotation) {
       setError('请先生成报价单，合同需要报价信息');
       setActiveTab('quotation');
       return;
     }
-     if (!selectionResult || !selectionResult.success) {
+    if (!selectionResult || !selectionResult.success) {
       setError('当前的选型结果无效，无法生成合同。');
-       setActiveTab('input');
       return;
     }
+    
     setLoading(true);
-    setError('正在生成销售合同...');
+    setError('');
+    setSuccess('正在生成销售合同...');
+    
     try {
-       // Use the prices from the *quotation* object for consistency in the contract
-       const contractPackagePrice = quotation?.summary?.packagePrice || packagePrice;
-       const contractMarketPrice = quotation?.summary?.marketPrice || marketPrice;
-       const contractTotalMarketPrice = quotation?.summary?.totalMarketPrice || totalMarketPrice;
+      const contractPackagePrice = quotation?.summary?.packagePrice ?? packagePrice;
+      const contractMarketPrice = quotation?.summary?.marketPrice ?? marketPrice;
+      const contractTotalMarketPrice = quotation?.summary?.totalMarketPrice ?? totalMarketPrice;
 
-
-       const contractData = generateContract(
-        selectionResult, // Original selection result for technical data
+      const contractData = generateContract(
+        selectionResult,
         projectInfo,
-        selectedComponents, // Currently selected components for model numbers
+        selectedComponents,
         {
-          packagePrice: contractPackagePrice, // Use prices from quotation
+          packagePrice: contractPackagePrice,
           marketPrice: contractMarketPrice,
           totalMarketPrice: contractTotalMarketPrice,
-          quotationDetails: quotation // Pass the whole quotation object
+          quotationDetails: quotation
         }
       );
+      
       setContract(contractData);
       setActiveTab('contract');
-      setError('销售合同生成成功');
+      setSuccess('销售合同生成成功');
     } catch (error) {
       console.error("生成销售合同错误:", error);
       setError('生成销售合同失败: ' + error.message);
     } finally {
       setLoading(false);
     }
-  }, [selectedComponents, selectionResult, projectInfo, quotation, packagePrice, marketPrice, totalMarketPrice]); // Added quotation dependency
+  }, [selectedComponents, selectionResult, projectInfo, quotation, packagePrice, marketPrice, totalMarketPrice, setActiveTab, setContract, setError, setLoading, setSuccess]);
 
-
-  const handleExportContract = useCallback((format) => {
+  // 添加缺失的合同导出函数
+  const handleExportContract = useCallback(async (format) => {
     if (!contract) {
       setError('请先生成销售合同');
       return;
     }
+    
     setLoading(true);
-    setError(`正在导出销售合同为 ${format.toUpperCase()}...`);
+    setError('');
+    setSuccess(`正在导出销售合同为 ${format.toUpperCase()}...`);
+    
     try {
       const filename = `${projectInfo.projectName || '未命名项目'}-销售合同`;
       if (format === 'word') {
         exportContractToWord(contract, filename);
-        setError('销售合同已导出为Word格式');
+        setSuccess('销售合同已导出为Word格式');
       } else if (format === 'pdf') {
-        exportContractToPDF(contract, filename);
-        setError('销售合同已导出为PDF格式');
+        await exportContractToPDF(contract, filename);
+        setSuccess('销售合同已导出为PDF格式');
+      } else {
+        setError('不支持的导出格式');
       }
     } catch (error) {
       console.error("导出销售合同错误:", error);
@@ -976,98 +918,342 @@ function App({ appData: initialAppData, setAppData }) {
     } finally {
       setLoading(false);
     }
-  }, [contract, projectInfo.projectName]);
+  }, [contract, projectInfo.projectName, setError, setLoading, setSuccess]);
 
-  // Load History Entry handler - Updated
+  // 添加缺失的历史记录加载函数
   const handleLoadHistoryEntry = useCallback((historyId) => {
     const entry = selectionHistory.find(item => item.id === historyId);
-
-    if (entry && entry.selectionResult) { // Ensure selectionResult exists
+    
+    if (entry && entry.selectionResult) {
       setLoading(true);
-      setError('正在加载历史记录...');
-
-      // Restore state from the history entry
+      setError('');
+      setSuccess('正在加载历史记录...');
+      
       setProjectInfo(entry.projectInfo || { projectName: '', customerName: '', projectNumber: '', contactPerson: '', contactPhone: '', contactEmail: '', engineModel: '' });
       setEngineData(entry.engineData || { power: '', speed: '' });
-      // Restore requirementData including coupling params
       setRequirementData(entry.requirementData || { targetRatio: '', thrustRequirement: '', workCondition: "III类:扭矩变化中等", temperature: "30", hasCover: false, application: 'propulsion' });
-
-      // Determine gearbox type used (if stored, otherwise default)
-      // Use the type stored in the result itself
+      
       const historyGearboxType = entry.selectionResult?.gearboxTypeUsed || 'auto';
       setGearboxType(historyGearboxType);
-
-      // Set the selectionResult - this will trigger the useEffect to update components and prices
-      setSelectionResult(entry.selectionResult); // Restore the full result object
-
-      // Clear any previously generated documents
+      
+      setSelectionResult(entry.selectionResult);
+      
       setQuotation(null);
       setAgreement(null);
       setContract(null);
-
-      setActiveTab('result'); // Go to result tab
+      
+      setActiveTab('result');
       setLoading(false);
-      setError(`已成功加载历史选型数据 (ID: ${historyId})`);
+      setSuccess(`已成功加载历史选型数据 (ID: ${historyId})`);
     } else {
       setError('未找到指定的历史记录或历史记录无效');
       console.error("Failed to load history entry:", entry);
       setLoading(false);
     }
-  }, [selectionHistory]); // Dependency on history
+  }, [selectionHistory, setActiveTab, setAgreement, setContract, setEngineData, setError, setGearboxType, setLoading, setProjectInfo, setQuotation, setRequirementData, setSelectionResult, setSuccess]);
 
-
+  // 添加缺失的历史记录删除函数
   const handleDeleteHistoryEntry = useCallback((historyId) => {
-    setSelectionHistory(prev => {
-      const filtered = prev.filter(entry => entry.id !== historyId);
-       try {
-           localStorage.setItem('selectionHistory', JSON.stringify(filtered));
-           setError('历史记录已成功删除');
-       } catch (lsError) {
-           console.error("无法更新LocalStorage中的历史记录:", lsError);
-           setError('历史记录删除失败 (无法更新存储)');
-       }
-      return filtered;
-    });
-  }, []); // No dependency needed
+    if (window.confirm("确定要删除此历史记录吗？")) {
+      setSelectionHistory(prev => {
+        const filtered = prev.filter(entry => entry.id !== historyId);
+        try {
+          localStorage.setItem('selectionHistory', JSON.stringify(filtered));
+          setSuccess('历史记录已成功删除');
+          setError('');
+        } catch (lsError) {
+          console.error("无法更新LocalStorage中的历史记录:", lsError);
+          setError('历史记录删除失败 (无法更新存储)');
+        }
+        return filtered;
+      });
+    }
+  }, [setError, setSelectionHistory, setSuccess]);
 
-  // Check if form is valid
+  // 增强的表单验证函数
   const isFormValid = useCallback(() => {
-    const powerValid = !!engineData.power && !isNaN(parseFloat(engineData.power)) && parseFloat(engineData.power) > 0;
-    const speedValid = !!engineData.speed && !isNaN(parseFloat(engineData.speed)) && parseFloat(engineData.speed) > 0;
-    const ratioValid = !!requirementData.targetRatio && !isNaN(parseFloat(requirementData.targetRatio)) && parseFloat(requirementData.targetRatio) > 0;
+    // 基本验证：检查必填字段是否有值且为合法数字
+    const powerValid = engineData.power !== '' && !isNaN(parseFloat(engineData.power)) && parseFloat(engineData.power) > 0;
+    const speedValid = engineData.speed !== '' && !isNaN(parseFloat(engineData.speed)) && parseFloat(engineData.speed) > 0;
+    const ratioValid = requirementData.targetRatio !== '' && !isNaN(parseFloat(requirementData.targetRatio)) && parseFloat(requirementData.targetRatio) > 0;
     const thrustValid = requirementData.thrustRequirement === '' || (!isNaN(parseFloat(requirementData.thrustRequirement)) && parseFloat(requirementData.thrustRequirement) >= 0);
-    // Add checks for coupling params if needed (e.g., temperature range)
-    const tempValid = !isNaN(parseFloat(requirementData.temperature));
+    const tempValid = requirementData.temperature === '' || !isNaN(parseFloat(requirementData.temperature));
 
-    return powerValid && speedValid && ratioValid && thrustValid && tempValid;
+    // 增强验证：检查数值范围是否合理
+    let validationErrors = [];
+    if (powerValid && parseFloat(engineData.power) > 10000) {
+        validationErrors.push('主机功率超过 10000kW，请确认是否正确');
+    }
+    
+    if (speedValid && parseFloat(engineData.speed) > 3500) {
+        validationErrors.push('主机转速超过 3500rpm，请确认是否正确');
+    }
+    
+    if (ratioValid && parseFloat(requirementData.targetRatio) > 20) {
+        validationErrors.push('目标减速比超过 20，请确认是否正确');
+    }
+    
+    if (thrustValid && requirementData.thrustRequirement !== '' && parseFloat(requirementData.thrustRequirement) > 1000) {
+        validationErrors.push('推力要求超过 1000kN，请确认是否正确');
+    }
+    
+    if (tempValid && requirementData.temperature !== '' && (parseFloat(requirementData.temperature) < -20 || parseFloat(requirementData.temperature) > 80)) {
+        validationErrors.push('工作温度超出正常范围 (-20°C ~ 80°C)，请确认是否正确');
+    }
+    
+    return {
+      isValid: powerValid && speedValid && ratioValid && thrustValid && tempValid,
+      validationErrors
+    };
   }, [engineData.power, engineData.speed, requirementData.targetRatio, requirementData.thrustRequirement, requirementData.temperature]);
 
-  // Form input styles
+  // 使用useMemo存储表单验证结果，避免在渲染过程中调用函数
+  const formValidation = useMemo(() => isFormValid(), [isFormValid]);
+  
+  // 在effect中处理错误消息
+  useEffect(() => {
+    if (formValidation.validationErrors.length > 0 && formValidation.isValid) {
+      setError('警告: ' + formValidation.validationErrors.join('; ') + '。如确认无误，仍可进行选型。');
+    } else if (formValidation.isValid) {
+      setError(''); // 如果表单有效且没有警告，清除错误消息
+    }
+  }, [formValidation]);
+
+  // 字段验证状态函数
+  const getFieldValidationState = (fieldName, value) => {
+    if (value === '') return null; // 未填写的字段不显示验证状态
+    
+    switch (fieldName) {
+        case 'enginePower':
+            return !isNaN(parseFloat(value)) && parseFloat(value) > 0 
+                ? (parseFloat(value) <= 10000 ? 'valid' : 'warning') 
+                : 'invalid';
+        
+        case 'engineSpeed':
+            return !isNaN(parseFloat(value)) && parseFloat(value) > 0 
+                ? (parseFloat(value) <= 3500 ? 'valid' : 'warning') 
+                : 'invalid';
+        
+        case 'targetRatio':
+            return !isNaN(parseFloat(value)) && parseFloat(value) > 0 
+                ? (parseFloat(value) <= 20 ? 'valid' : 'warning') 
+                : 'invalid';
+        
+        case 'thrustRequirement':
+            return value === '' || (!isNaN(parseFloat(value)) && parseFloat(value) >= 0)
+                ? (value === '' || parseFloat(value) <= 1000 ? 'valid' : 'warning')
+                : 'invalid';
+        
+        case 'temperature':
+            return value === '' || !isNaN(parseFloat(value))
+                ? (value === '' || (parseFloat(value) >= -20 && parseFloat(value) <= 80) ? 'valid' : 'warning')
+                : 'invalid';
+        
+        default:
+            return 'valid';
+    }
+  };
+
+  // 获取验证状态对应的样式类名
+  const getValidationClassName = (state) => {
+    if (!state) return '';
+    switch (state) {
+        case 'valid': return 'is-valid';
+        case 'invalid': return 'is-invalid';
+        case 'warning': return 'is-warning'; // 需要在CSS中定义此类
+        default: return '';
+    }
+  };
+
+  // 获取验证状态对应的反馈信息
+  const getValidationFeedback = (fieldName, value) => {
+    if (value === '') return '';
+    const state = getFieldValidationState(fieldName, value);
+    
+    if (state === 'invalid') {
+        switch (fieldName) {
+            case 'enginePower':
+                return '请输入有效的主机功率（大于0）';
+            case 'engineSpeed':
+                return '请输入有效的主机转速（大于0）';
+            case 'targetRatio':
+                return '请输入有效的目标减速比（大于0）';
+            case 'thrustRequirement':
+                return '推力要求必须为正数或留空';
+            case 'temperature':
+                return '请输入有效的温度值';
+            default:
+                return '输入值无效';
+        }
+    } else if (state === 'warning') {
+        switch (fieldName) {
+            case 'enginePower':
+                return '功率值较大，请确认是否正确';
+            case 'engineSpeed':
+                return '转速值较高，请确认是否正确';
+            case 'targetRatio':
+                return '减速比较大，请确认是否正确';
+            case 'thrustRequirement':
+                return '推力值较大，请确认是否正确';
+            case 'temperature':
+                return '温度超出常规范围，请确认是否正确';
+            default:
+                return '输入值超出常规范围';
+        }
+    }
+    
+    return '';
+  };
+
+  // 修改后的选型处理函数
+  const handleSelectGearbox = useCallback(() => {
+    setLoading(true);
+    setError('');
+    setSuccess('');
+    
+    try {
+        // 使用已计算的表单验证结果
+        if (!formValidation.isValid) {
+            setError('请完成所有必填项，并确保数值有效');
+            setLoading(false);
+            return;
+        }
+
+        // 准备选型参数 - 添加详细日志
+        const selectionParams = {
+            power: parseFloat(engineData.power),
+            speed: parseFloat(engineData.speed),
+            targetRatio: parseFloat(requirementData.targetRatio),
+            thrustRequirement: parseFloat(requirementData.thrustRequirement) || 0,
+            gearboxType: gearboxType,
+            application: requirementData.application
+        };
+        
+        console.log("开始进行选型，参数:", selectionParams);
+
+        // 执行选型算法
+        let result;
+        if (gearboxType === 'auto') {
+            // 自动选型模式
+            result = autoSelectGearbox(
+                {
+                    motorPower: selectionParams.power,
+                    motorSpeed: selectionParams.speed,
+                    targetRatio: selectionParams.targetRatio,
+                    thrust: selectionParams.thrustRequirement,
+                    workCondition: requirementData.workCondition,
+                    temperature: parseFloat(requirementData.temperature) || 30,
+                    hasCover: requirementData.hasCover,
+                    application: requirementData.application
+                },
+                appDataState
+            );
+        } else {
+            // 指定系列选型模式
+            result = selectGearbox(
+                selectionParams.power,
+                selectionParams.speed,
+                selectionParams.targetRatio,
+                selectionParams.thrustRequirement,
+                gearboxType,
+                appDataState,
+                {
+                    workCondition: requirementData.workCondition,
+                    temperature: parseFloat(requirementData.temperature) || 30,
+                    hasCover: requirementData.hasCover,
+                    application: requirementData.application
+                }
+            );
+        }
+
+        setSelectionResult(result);
+        
+        // 如果选型成功，处理推荐的齿轮箱
+        if (result.success && result.recommendations && result.recommendations.length > 0) {
+            // 自动选择第一个推荐项
+            handleGearboxSelection(0);
+            setActiveTab('result');
+            setSuccess('选型成功，已找到符合条件的齿轮箱');
+            
+            // 保存选型历史
+            try {
+                const historyEntry = {
+                    id: Date.now().toString(),
+                    timestamp: new Date().toISOString(),
+                    selectionResult: result,
+                    engineData: {...engineData},
+                    requirementData: {...requirementData},
+                    projectInfo: {...projectInfo},
+                    gearboxType
+                };
+                
+                setSelectionHistory(prev => {
+                    const updatedHistory = [historyEntry, ...prev].slice(0, 20); // 限制历史记录数量
+                    localStorage.setItem('selectionHistory', JSON.stringify(updatedHistory));
+                    return updatedHistory;
+                });
+                
+                console.log("选型结果已保存到历史记录");
+            } catch (historyError) {
+                console.warn("保存选型历史失败:", historyError);
+            }
+        } else {
+            let errorMessage = result.message || '选型失败，未找到合适的齿轮箱';
+            
+            // 检查是否有近似匹配推荐
+            if (result.recommendations && result.recommendations.length > 0) {
+                // 显示近似匹配推荐的提示
+                errorMessage += "。发现接近条件的齿轮箱，请查看结果选项卡。";
+                setActiveTab('result'); // 自动切换到结果选项卡
+                setSuccess('发现近似匹配的齿轮箱，但未找到完全符合条件的型号');
+            } else {
+                // 添加更详细的失败原因
+                if (result.rejectionReasons) {
+                    const reasons = Object.entries(result.rejectionReasons)
+                        .filter(([_, count]) => count > 0)
+                        .map(([reason, count]) => {
+                            switch(reason) {
+                                case 'speedRange': return `${count}个型号因转速范围不匹配被排除`;
+                                case 'ratioOutOfRange': return `${count}个型号因减速比偏差过大被排除`;
+                                case 'capacityTooLow': return `${count}个型号因传递能力不足被排除`;
+                                case 'capacityTooHigh': return `${count}个型号因传递能力余量过大被排除`;
+                                case 'thrustInsufficient': return `${count}个型号因推力不满足要求被排除`;
+                                default: return `${reason}: ${count}`;
+                            }
+                        })
+                        .join("；");
+                    
+                    if (reasons) {
+                        errorMessage += `\n筛选情况：${reasons}`;
+                    }
+                }
+                
+                setError(errorMessage);
+            }
+        }
+    } catch (error) {
+        console.error('选型过程中发生错误:', error);
+        setError('选型过程中发生错误: ' + error.message);
+    } finally {
+        setLoading(false);
+    }
+  }, [engineData, requirementData, gearboxType, appDataState, isAdmin, handleGearboxSelection, setActiveTab, formValidation]);
+
   const inputStyles = useMemo(() => ({
     backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.inputBorder,
     '::placeholder': { color: colors.muted },
   }), [colors]);
+
    const focusStyles = useMemo(() => ({
      '&:focus': { borderColor: colors.primary, boxShadow: `0 0 0 0.2rem ${colors.focusRing}` }
    }), [colors]);
 
-  // Check if we should render different views based on path
-  if (location.pathname === '/login') {
-    return <LoginPage />;
-  }
+  if (location.pathname === '/users' || location.pathname === '/database' || location.pathname === '/login') {
+            return null;
+        }
 
-  if (location.pathname === '/users' && isAdmin) {
-    return <UserManagementView appData={appData} setAppData={updateAppData} />;
-  }
-
-  if (location.pathname === '/database' && isAdmin) {
-    return <DatabaseManagementView appData={appData} setAppData={updateAppData} />;
-  }
-
-  // --- JSX Rendering for Main App ---
   return (
     <Container fluid className="app-container" style={{ backgroundColor: colors.bg, color: colors.text }}>
-      {/* Header Row */}
       <Row className="mb-4 align-items-center">
         <Col>
          <h2 className="mb-0" style={{ color: colors.headerText }}>船用齿轮箱选型系统</h2>
@@ -1082,6 +1268,9 @@ function App({ appData: initialAppData, setAppData }) {
               </Button>
               <Button as={Link} to="/database" variant="outline-success" size="sm" title="管理数据库">
                 <i className="bi bi-database me-1"></i> 数据库管理
+              </Button>
+              <Button variant="outline-info" size="sm" onClick={() => setShowDiagnosticPanel(true)} title="系统诊断">
+                <i className="bi bi-wrench-adjustable me-1"></i> 系统诊断
               </Button>
             </>
           )}
@@ -1103,12 +1292,11 @@ function App({ appData: initialAppData, setAppData }) {
         </Col>
       </Row>
 
-      {/* Error/Loading Alert */}
       {error && (
         <Row className="mb-4">
           <Col>
             <Alert
-              variant={error.includes('成功') ? 'success' : error.includes('警告') || error.includes('无法加载') || error.includes('注意') ? 'warning' : 'danger'}
+              variant={error.includes('成功') ? 'success' : error.includes('警告') || error.includes('无法加载') || error.includes('注意') || error.includes('失败') || error.includes('错误') ? 'warning' : 'danger'}
               onClose={() => setError('')}
               dismissible={!loading}
               className={`app-alert alert-${theme}`}
@@ -1119,464 +1307,524 @@ function App({ appData: initialAppData, setAppData }) {
           </Col>
         </Row>
       )}
+       {loading && !error && (
+          <Row className="mb-4">
+              <Col className="text-center">
+                  <Spinner animation="border" variant="primary" />
+                  <p className="mt-2" style={{ color: colors.text }}>正在执行操作...</p>
+          </Col>
+        </Row>
+      )}
 
-      {/* Main Tabs */}
+      {!appDataState || Object.keys(appDataState).length === 0 ? (
+          <Row className="mb-4">
+              <Col>
+                  <Alert variant="info" className="text-center">
+                      <i className="bi bi-info-circle me-2"></i> 系统数据正在加载中或加载失败。
+                  </Alert>
+              </Col>
+          </Row>
+      ) : (
       <Tabs
         activeKey={activeTab}
         onSelect={(k) => setActiveTab(k)}
-        className={`mb-4 app-tabs tabs-${theme}`}
-        id="main-tabs"
+            className="mb-4"
+            style={{ borderBottomColor: colors.border }}
       >
-        {/* Input Tab */}
-        <Tab eventKey="input" title={<span><i className="bi bi-pencil-square me-1"></i>选型输入</span>}>
+          <Tab eventKey="input" title={<span><i className="bi bi-input-cursor-text me-1"></i>输入参数</span>}>
           <Row>
-            {/* Basic Info Column */}
-            <Col lg={4} md={6} sm={12}>
-              <Card className="mb-4 shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText, borderBottomColor: colors.border }}>
-                  <i className="bi bi-info-circle me-2"></i>基本信息
-                </Card.Header>
-                <Card.Body style={{ padding: '1.5rem' }}>
-                  <Form>
-                    {/* Project Name */}
-                    <Form.Group className="mb-3" controlId="projectName">
-                      <Form.Label style={{ color: colors.text }}>项目名称</Form.Label>
-                      <Form.Control type="text" value={projectInfo.projectName} onChange={(e) => handleProjectInfoChange({ projectName: e.target.value })} placeholder="例如：XX船厂38m渔船" style={{...inputStyles, ...focusStyles}}/>
-                    </Form.Group>
-                    {/* Customer Name */}
-                    <Form.Group className="mb-3" controlId="customerName">
-                      <Form.Label style={{ color: colors.text }}>客户名称</Form.Label>
-                      <Form.Control type="text" value={projectInfo.customerName} onChange={(e) => handleProjectInfoChange({ customerName: e.target.value })} placeholder="请输入客户公司全称" style={{...inputStyles, ...focusStyles}}/>
-                    </Form.Group>
-                    {/* Project Number */}
-                     <Form.Group className="mb-3" controlId="projectNumber">
-                        <Form.Label style={{ color: colors.text }}>项目编号 (可选)</Form.Label>
-                        <Form.Control type="text" value={projectInfo.projectNumber} onChange={(e) => handleProjectInfoChange({ projectNumber: e.target.value })} placeholder="内部项目或订单号" style={{...inputStyles, ...focusStyles}}/>
-                     </Form.Group>
-                     {/* Contact Person */}
-                    <Form.Group className="mb-3" controlId="contactPerson">
-                      <Form.Label style={{ color: colors.text }}>联系人</Form.Label>
-                      <Form.Control type="text" value={projectInfo.contactPerson} onChange={(e) => handleProjectInfoChange({ contactPerson: e.target.value })} placeholder="请输入联系人姓名" style={{...inputStyles, ...focusStyles}}/>
-                    </Form.Group>
-                    {/* Contact Phone */}
-                    <Form.Group className="mb-3" controlId="contactPhone">
-                      <Form.Label style={{ color: colors.text }}>联系电话</Form.Label>
-                      <Form.Control type="text" value={projectInfo.contactPhone} onChange={(e) => handleProjectInfoChange({ contactPhone: e.target.value })} placeholder="请输入联系电话" style={{...inputStyles, ...focusStyles}}/>
-                    </Form.Group>
-                    {/* Contact Email */}
-                      <Form.Group className="mb-3" controlId="contactEmail">
-                        <Form.Label style={{ color: colors.text }}>联系邮箱 (可选)</Form.Label>
-                        <Form.Control type="email" value={projectInfo.contactEmail} onChange={(e) => handleProjectInfoChange({ contactEmail: e.target.value })} placeholder="用于发送报价和协议" style={{...inputStyles, ...focusStyles}}/>
-                    </Form.Group>
-                  </Form>
-                </Card.Body>
-              </Card>
-            </Col>
-
-            {/* Engine & Requirements Column */}
-            <Col lg={4} md={6} sm={12}>
-              {/* Engine & Requirements content */}
+              <Col md={6}>
               <Card className="mb-4 shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
                 <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText, borderBottomColor: colors.border }}>
                  <i className="bi bi-sliders me-2"></i>发动机 & 要求
                 </Card.Header>
                 <Card.Body style={{ padding: '1.5rem' }}>
                   <Form>
-                    {/* Engine Params */}
                     <h6 style={{ color: colors.headerText }}>发动机参数</h6>
-                    {/* Engine Power */}
+                    
                     <Form.Group className="mb-3" controlId="enginePower">
-                        <Form.Label style={{ color: colors.text }}>主机功率 (kW) <span className="text-danger">*</span></Form.Label>
-                        <Form.Control type="number" value={engineData.power} onChange={(e) => handleEngineDataChange({ power: e.target.value })} placeholder="例如: 350" min="1" step="any" required style={{...inputStyles, ...focusStyles}} className={!engineData.power || isNaN(parseFloat(engineData.power)) || parseFloat(engineData.power) <= 0 ? 'is-invalid' : ''} />
-                         <Form.Control.Feedback type="invalid">请输入有效的主机功率 (大于0)</Form.Control.Feedback>
-                     </Form.Group>
-                    {/* Engine Speed */}
-                    <Form.Group className="mb-3" controlId="engineSpeed">
-                        <Form.Label style={{ color: colors.text }}>主机转速 (r/min) <span className="text-danger">*</span></Form.Label>
-                        <Form.Control type="number" value={engineData.speed} onChange={(e) => handleEngineDataChange({ speed: e.target.value })} placeholder="例如: 1800" min="1" step="any" required style={{...inputStyles, ...focusStyles}} className={!engineData.speed || isNaN(parseFloat(engineData.speed)) || parseFloat(engineData.speed) <= 0 ? 'is-invalid' : ''} />
-                        <Form.Control.Feedback type="invalid">请输入有效的主机转速 (大于0)</Form.Control.Feedback>
+                      <Form.Label style={{ color: colors.text }}>主机功率 (kW) <span className="text-danger">*</span></Form.Label>
+                      <Form.Control
+                        type="number"
+                        value={engineData.power}
+                   		onChange={(e) => handleEngineDataChange({ power: e.target.value })}
+                        placeholder="例如: 350"
+                        min="1"
+                        step="any"
+                        required
+                        style={{...inputStyles, ...focusStyles}}
+                        className={`${getValidationClassName(getFieldValidationState('enginePower', engineData.power))}`}
+                      />
+                      <div className="form-feedback invalid">
+                        请输入有效的主机功率 (大于0)
+                      </div>
+                      <div className="form-feedback warning">
+                        功率值较大，请确认是否正确
+                      </div>
                     </Form.Group>
-                    {/* Engine Model */}
-                     <Form.Group className="mb-3" controlId="engineModel">
-                        <Form.Label style={{ color: colors.text }}>主机型号 (可选)</Form.Label>
-                        <Form.Control type="text" value={projectInfo.engineModel} onChange={(e) => handleProjectInfoChange({ engineModel: e.target.value })} placeholder="例如: Weichai WP6" style={{...inputStyles, ...focusStyles}} />
-                     </Form.Group>
 
-                    {/* Requirements */}
-                    <h6 style={{ color: colors.headerText }} className="mt-4">选型要求</h6>
-                    {/* Target Ratio */}
-                     <Form.Group className="mb-3" controlId="targetRatio">
-                        <Form.Label style={{ color: colors.text }}>目标减速比 <span className="text-danger">*</span></Form.Label>
-                        <Form.Control type="number" value={requirementData.targetRatio} onChange={(e) => handleRequirementDataChange({ targetRatio: e.target.value })} placeholder="例如: 4.5" min="0.1" step="any" required style={{...inputStyles, ...focusStyles}} className={!requirementData.targetRatio || isNaN(parseFloat(requirementData.targetRatio)) || parseFloat(requirementData.targetRatio) <= 0 ? 'is-invalid' : ''} />
-                         <Form.Control.Feedback type="invalid">请输入有效的目标减速比 (大于0)</Form.Control.Feedback>
+                    <Form.Group className="mb-3" controlId="engineSpeed">
+                      <Form.Label style={{ color: colors.text }}>主机转速 (r/min) <span className="text-danger">*</span></Form.Label>
+                      <Form.Control
+                        type="number"
+                        value={engineData.speed}
+                        onChange={(e) => handleEngineDataChange({ speed: e.target.value })}
+                        placeholder="例如: 1800"
+                        min="1"
+                        step="any"
+                        required
+                        style={{...inputStyles, ...focusStyles}}
+                        className={`${getValidationClassName(getFieldValidationState('engineSpeed', engineData.speed))}`}
+                      />
+                      <div className="form-feedback invalid">
+                        请输入有效的主机转速 (大于0)
+                      </div>
+                      <div className="form-feedback warning">
+                        转速值较高，请确认是否正确
+                      </div>
+                      <div className="field-info">
+                        常见柴油机转速范围: 750-2200 r/min
+                      </div>
                     </Form.Group>
-                    {/* Thrust Requirement */}
+
+                    <h6 style={{ color: colors.headerText }} className="mt-4">选型要求</h6>
+                    <Form.Group className="mb-3" controlId="targetRatio">
+                      <Form.Label style={{ color: colors.text }}>目标减速比 <span className="text-danger">*</span></Form.Label>
+                      <Form.Control
+                        type="number"
+                        value={requirementData.targetRatio}
+                        onChange={(e) => handleRequirementDataChange({ targetRatio: e.target.value })}
+                        placeholder="例如: 4.5"
+                        min="0.1"
+                        step="any"
+                        required
+                        style={{...inputStyles, ...focusStyles}}
+                        className={`${getValidationClassName(getFieldValidationState('targetRatio', requirementData.targetRatio))}`}
+                      />
+                      <div className="form-feedback invalid">
+                        请输入有效的目标减速比 (大于0)
+                      </div>
+                      <div className="form-feedback warning">
+                        减速比较大，请确认是否正确
+                      </div>
+                      <div className="field-info">
+                        常见减速比范围: 1.5-10
+                      </div>
+                    </Form.Group>
+                    
                     <Form.Group className="mb-3" controlId="thrustRequirement">
                       <Form.Label style={{ color: colors.text }}>推力要求 (kN, 可选)</Form.Label>
-                      <Form.Control type="number" value={requirementData.thrustRequirement} onChange={(e) => handleRequirementDataChange({ thrustRequirement: e.target.value })} placeholder="留空则不强制匹配推力" min="0" step="any" style={{...inputStyles, ...focusStyles}} className={requirementData.thrustRequirement !== '' && (isNaN(parseFloat(requirementData.thrustRequirement)) || parseFloat(requirementData.thrustRequirement) < 0) ? 'is-invalid' : ''} />
-                      <Form.Control.Feedback type="invalid">推力要求不能为负数</Form.Control.Feedback>
+                      <Form.Control
+                        type="number"
+                        value={requirementData.thrustRequirement}
+                        onChange={(e) => handleRequirementDataChange({ thrustRequirement: e.target.value })}
+                        placeholder="留空则不强制匹配推力"
+                        min="0"
+                        step="any"
+                        style={{...inputStyles, ...focusStyles}}
+                        className={`${getValidationClassName(getFieldValidationState('thrustRequirement', requirementData.thrustRequirement))}`}
+                      />
+                      <div className="form-feedback invalid">
+                        推力要求不能为负数
+                      </div>
+                      <div className="form-feedback warning">
+                        推力值较大，请确认是否正确
+                      </div>
+                      <div className="field-info">
+                        更高的推力要求会限制可选齿轮箱型号
+                      </div>
                     </Form.Group>
-                    {/* Application Scenario */}
-                     <Form.Group className="mb-3" controlId="application">
-                      <Form.Label style={{ color: colors.text }}>应用场景</Form.Label>
-                      <Form.Select value={requirementData.application} onChange={(e) => handleRequirementDataChange({ application: e.target.value })} style={{...inputStyles, ...focusStyles}} aria-label="选择应用场景">
-                        {applicationOptions.map(option => (<option key={option.value} value={option.value}>{option.label}</option>))}
+                    
+                    <Form.Group className="mb-3 work-condition-selector" controlId="workCondition">
+                      <Form.Label style={{ color: colors.text }}>工作条件</Form.Label>
+                      <Form.Select 
+                        value={requirementData.workCondition} 
+                        onChange={(e) => handleRequirementDataChange({ workCondition: e.target.value })}
+                        style={{...inputStyles, ...focusStyles}}
+                        aria-label="选择工作条件"
+                      >
+                        {workConditionOptions.map(option => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
                       </Form.Select>
-                       <Form.Text style={{ color: colors.muted }}>影响服务系数和选型策略</Form.Text>
+                      <div className="field-info">
+                        工作条件影响联轴器选型，类别越高代表负载变化越大
+                      </div>
                     </Form.Group>
-                  </Form>
+					</Form>
                 </Card.Body>
               </Card>
             </Col>
 
-            {/* Gearbox Type & Coupling Params Column */}
-            <Col lg={4} md={12} sm={12}>
-              {/* Gearbox & Coupling content */}
+              <Col md={6}>
               <Card className="mb-4 shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
                  <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText, borderBottomColor: colors.border }}>
-                    <i className="bi bi-gear-wide-connected me-2"></i>齿轮箱 & 联轴器
+                     <i className="bi bi-folder-fill me-2"></i>项目信息 & 选型设置
                  </Card.Header>
                  <Card.Body style={{ padding: '1.5rem' }}>
                     <Form>
-                    {/* Gearbox Type */}
-                    <h6 style={{ color: colors.headerText }}>齿轮箱类型</h6>
-                    <Form.Group className="mb-3" controlId="gearboxType">
-                      <Form.Select value={gearboxType} onChange={(e) => handleGearboxTypeChange(e.target.value)} style={{...inputStyles, ...focusStyles}} aria-label="选择齿轮箱类型">
-                        <option value="auto">自动选择最佳系列</option>
-                        <option value="HC">HC系列 (中小功率)</option>
-                        <option value="GW">GW系列 (大功率)</option>
-                        <option value="HCM">HCM系列 (轻型高速)</option>
-                        <option value="DT">DT系列 (电推)</option>
-                        <option value="HCQ">HCQ系列 (特种)</option>
-                        <option value="GC">GC系列 (通用)</option>
-                      </Form.Select>
-                      <Form.Text style={{ color: colors.muted }}>自动选择会综合考虑参数推荐最合适的系列。</Form.Text>
+                       <h6 style={{ color: colors.headerText }}>项目信息 (用于文档生成)</h6>
+                       <Row>
+                         <Col sm={6}>
+                           <Form.Group className="mb-3" controlId="projectName">
+                             <Form.Label style={{ color: colors.text }}>项目名称</Form.Label>
+                             <Form.Control type="text" placeholder="例如: 38m渔船" value={projectInfo.projectName} onChange={(e) => handleProjectInfoChange({ projectName: e.target.value })} style={{...inputStyles, ...focusStyles}}/>
+                           </Form.Group>
+                         </Col>
+                         <Col sm={6}>
+                           <Form.Group className="mb-3" controlId="customerName">
+                             <Form.Label style={{ color: colors.text }}>客户名称</Form.Label>
+                             <Form.Control type="text" placeholder="例如: 舟山渔业公司" value={projectInfo.customerName} onChange={(e) => handleProjectInfoChange({ customerName: e.target.value })} style={{...inputStyles, ...focusStyles}}/>
+                           </Form.Group>
+                         </Col>
+                         <Col sm={6}>
+                           <Form.Group className="mb-3" controlId="engineModel">
+                              <Form.Label style={{ color: colors.text }}>主机型号 (可选)</Form.Label>
+                              <Form.Control
+                                type="text"
+                                value={projectInfo.engineModel}
+                                onChange={(e) => handleProjectInfoChange({ engineModel: e.target.value })}
+                                placeholder="例如: Weichai WP6"
+                                style={{...inputStyles, ...focusStyles}}
+                              />
+                           </Form.Group>
+                         </Col>
+                         <Col sm={6}>
+                            <Form.Group className="mb-3" controlId="contactPerson">
+                                <Form.Label style={{ color: colors.text }}>联系人</Form.Label>
+                                <Form.Control type="text" value={projectInfo.contactPerson} onChange={(e) => handleProjectInfoChange({ contactPerson: e.target.value })} style={{...inputStyles, ...focusStyles}}/>
+                            </Form.Group>
+                          </Col>
+                          <Col sm={6}>
+                              <Form.Group className="mb-3" controlId="contactPhone">
+                                  <Form.Label style={{ color: colors.text }}>联系电话</Form.Label>
+                                  <Form.Control type="tel" value={projectInfo.contactPhone} onChange={(e) => handleProjectInfoChange({ contactPhone: e.target.value })} style={{...inputStyles, ...focusStyles}}/>
+                              </Form.Group>
+                          </Col>
+                       </Row>
+
+                       <h6 style={{ color: colors.headerText }} className="mt-4">选型与配件设置</h6>
+                       
+                       <Form.Group className="mb-4" controlId="gearboxType">
+                          <Form.Label style={{ color: colors.text, fontWeight: 500 }}>齿轮箱系列</Form.Label>
+                          <div className="gearbox-type-selector">
+                            <Button 
+                              variant={gearboxType === 'auto' ? 'primary' : 'outline-primary'} 
+                              onClick={() => handleGearboxTypeChange('auto')}
+                            >
+                              自动选择
+                            </Button>
+                            {appDataState?.hcGearboxes?.length > 0 && 
+                              <Button 
+                                variant={gearboxType === 'HC' ? 'primary' : 'outline-primary'} 
+                                onClick={() => handleGearboxTypeChange('HC')}
+                              >
+                                HC系列
+                              </Button>
+                            }
+                            {appDataState?.gwGearboxes?.length > 0 && 
+                              <Button 
+                                variant={gearboxType === 'GW' ? 'primary' : 'outline-primary'} 
+                                onClick={() => handleGearboxTypeChange('GW')}
+                              >
+                                GW系列
+                              </Button>
+                            }
+                            {appDataState?.hcmGearboxes?.length > 0 && 
+                              <Button 
+                                variant={gearboxType === 'HCM' ? 'primary' : 'outline-primary'} 
+                                onClick={() => handleGearboxTypeChange('HCM')}
+                              >
+                                HCM系列
+                              </Button>
+                            }
+                            {appDataState?.dtGearboxes?.length > 0 && 
+                              <Button 
+                                variant={gearboxType === 'DT' ? 'primary' : 'outline-primary'} 
+                                onClick={() => handleGearboxTypeChange('DT')}
+                              >
+                                DT系列
+                              </Button>
+                            }
+                            {appDataState?.hcqGearboxes?.length > 0 && 
+                              <Button 
+                                variant={gearboxType === 'HCQ' ? 'primary' : 'outline-primary'} 
+                                onClick={() => handleGearboxTypeChange('HCQ')}
+                              >
+                                HCQ系列
+                              </Button>
+                            }
+                            {appDataState?.gcGearboxes?.length > 0 && 
+                              <Button 
+                                variant={gearboxType === 'GC' ? 'primary' : 'outline-primary'} 
+                                onClick={() => handleGearboxTypeChange('GC')}
+                              >
+                                GC系列
+                              </Button>
+                            }
+                          </div>
+                          <div className="field-info">
+                            不同系列齿轮箱适合不同应用场景。自动选择会搜索所有系列找到最佳匹配。
+                          </div>
+                        </Form.Group>
+
+                        <Row>
+                          <Col sm={6}>
+                      <Form.Group className="mb-3" controlId="temperature">
+                      <Form.Label style={{ color: colors.text }}>工作温度 (°C)</Form.Label>
+                              <Form.Control
+                                type="number"
+                                value={requirementData.temperature}
+                                onChange={(e) => handleRequirementDataChange({ temperature: e.target.value })}
+                                placeholder="默认 30"
+                                step="1"
+                                style={{...inputStyles, ...focusStyles}}
+                                className={`${getValidationClassName(getFieldValidationState('temperature', requirementData.temperature))}`}
+                              />
+                              <div className="form-feedback invalid">
+                                请输入有效的工作温度
+                              </div>
+                              <div className="form-feedback warning">
+                                温度超出常规范围，请确认是否正确
+                              </div>
+                              <div className="field-info">
+                                常规工作温度范围: -10°C ~ 50°C
+                              </div>
+                    </Form.Group>
+                          </Col>
+                        </Row>
+                    <Form.Group className="mb-3" controlId="hasCover">
+                          <Form.Check
+                            type="checkbox"
+                            label="联轴器需要带罩壳"
+                            checked={requirementData.hasCover}
+                            onChange={(e) => handleRequirementDataChange({ hasCover: e.target.checked })}
+                            style={{ color: colors.text }}
+                          />
+                          <div className="field-info">
+                            带罩壳联轴器有更好的保护效果，但价格更高
+                          </div>
                     </Form.Group>
 
-                     {/* Coupling Parameters */}
-                     <h6 style={{ color: colors.headerText }} className="mt-4">联轴器参数 (可选)</h6>
-                     {/* Work Condition */}
-                     <Form.Group className="mb-3" controlId="workCondition">
-                      <Form.Label style={{ color: colors.text }}>工作条件</Form.Label>
-                      <Form.Select value={requirementData.workCondition} onChange={(e) => handleRequirementDataChange({ workCondition: e.target.value })} style={{...inputStyles, ...focusStyles}} aria-label="选择工作条件">
-                        {workConditionOptions.map(option => (<option key={option} value={option}>{option}</option>))}
-                      </Form.Select>
-                      <Form.Text style={{ color: colors.muted }}>影响联轴器选型的工况系数。</Form.Text>
-                    </Form.Group>
-                    {/* Temperature */}
-                    <Form.Group className="mb-3" controlId="temperature">
-                      <Form.Label style={{ color: colors.text }}>工作温度 (°C)</Form.Label>
-                      <Form.Control type="number" value={requirementData.temperature} onChange={(e) => handleRequirementDataChange({ temperature: e.target.value })} min="-20" max="120" placeholder="默认 30" style={{...inputStyles, ...focusStyles}} className={isNaN(parseFloat(requirementData.temperature)) ? 'is-invalid' : ''}/>
-                      <Form.Control.Feedback type="invalid">请输入有效的温度</Form.Control.Feedback>
-                      <Form.Text style={{ color: colors.muted }}>影响联轴器选型的温度系数 (通常 0-80°C)。</Form.Text>
-                    </Form.Group>
-                    {/* Has Cover */}
-                    <Form.Group className="mb-3" controlId="hasCover">
-                      <Form.Check type="checkbox" id="couplingCoverCheckbox" label="联轴器带罩壳" checked={requirementData.hasCover || false} onChange={(e) => handleRequirementDataChange({ hasCover: e.target.checked })} style={{ color: colors.text }} className="form-check-inline"/>
-                      <Form.Text style={{ color: colors.muted }}>(特定型号联轴器可选)。</Form.Text>
-                    </Form.Group>
+                       <Form.Group className="mb-3" controlId="application">
+                       <Form.Label style={{ color: colors.text }}>应用场景</Form.Label>
+                       <Form.Select
+                        value={requirementData.application}
+                        onChange={(e) => handleRequirementDataChange({ application: e.target.value })}
+                        style={{...inputStyles, ...focusStyles}}
+                        aria-label="选择应用场景"
+                       >
+                         {applicationOptions.map(option => (
+                           <option key={option.value} value={option.value}>{option.label}</option>
+                         ))}
+                       </Form.Select>
+                       <Form.Text style={{ color: colors.muted }}>影响服务系数和选型策略</Form.Text>
+                       </Form.Group>
+
+                    <div className="d-grid mt-4">
+                      <Button
+                        variant="primary"
+                        onClick={handleSelectGearbox}
+                        disabled={loading || !formValidation.isValid || !appDataState || Object.keys(appDataState).length === 0}
+                        style={{
+                          backgroundColor: colors.primary,
+                          borderColor: colors.primary,
+                          color: colors.primaryText
+                        }}
+                        className="btn-lg"
+                      >
+                        {loading ? (
+                          <>
+                            <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />
+                            选型中...
+                          </>
+                        ) : (
+                          <>
+                           <i className="bi bi-calculator-fill me-2"></i>
+                           开始选型
+                          </>
+                        )}
+                      </Button>
+                      
+                      {success && (
+                        <div className="alert alert-success mt-3">
+                          <i className="bi bi-check-circle-fill me-2"></i>
+                          {success}
+                        </div>
+                      )}
+                    </div>
                    </Form>
                  </Card.Body>
                </Card>
             </Col>
           </Row>
-          {/* Action Button Row */}
-          <Row>
-            <Col className="text-center">
-              <Button variant="primary" size="lg" onClick={handleSelection} disabled={loading || !isFormValid()} className="w-50 shadow-sm" style={{ backgroundColor: colors.primary, borderColor: colors.primary, color: colors.primaryText }}>
-                  {loading ? (<><Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />正在计算...</>) : (<><i className="bi bi-calculator-fill me-2"></i>执行选型</>)}
-                </Button>
-                 {!isFormValid() && !loading && (<p className="mt-2 text-danger"><small>请填写所有必填项 (*) 并确保输入有效。</small></p>)}
-            </Col>
-          </Row>
         </Tab>
 
-        {/* Result Tab */}
-        <Tab eventKey="result" title={<span><i className="bi bi-check2-circle me-1"></i>选型结果</span>} disabled={!selectionResult || !selectionResult.success}>
-           {/* Conditional rendering for result content */}
-           {selectionResult && selectionResult.success && Array.isArray(selectionResult.recommendations) && selectionResult.recommendations.length > 0 && (
-             <div className="mt-3">
-               {/* Top Row: Parameters and Analysis */}
-              <Row className="mb-4">
+          <Tab eventKey="result" title={<span><i className="bi bi-graph-up me-1"></i>选型结果</span>} disabled={!selectionResult}>
+            {selectionResult ? (
+              <Row>
                 <Col>
-                  <Card className="shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                    <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText, borderBottomColor: colors.border }}>
-                      <h5 className="mb-0"><i className="bi bi-clipboard-data me-2"></i>选型概览</h5>
-                    </Card.Header>
-                    <Card.Body>
-                      <Row>
-                        {/* Input Parameters Column */}
-                        <Col md={6} className="border-end" style={{ borderColor: `${colors.border} !important` }}>
-                          <h6>输入参数</h6>
-                          <Table responsive size="sm" bordered hover style={{ backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.border }}>
-                            <tbody>
-                              <tr><td width="40%">主机功率</td><td>{engineData.power} kW</td></tr>
-                              <tr><td>主机转速</td><td>{engineData.speed} r/min</td></tr>
-                              <tr><td>目标减速比</td><td>{requirementData.targetRatio}</td></tr>
-                              <tr><td>应用场景</td><td>{applicationOptions.find(opt => opt.value === requirementData.application)?.label || '-'}</td></tr>
-                              <tr><td>推力要求</td><td>{requirementData.thrustRequirement ? `${requirementData.thrustRequirement} kN` : '未指定'}</td></tr>
-                              <tr><td>联轴器工况</td><td>{requirementData.workCondition}</td></tr>
-                              <tr><td>联轴器温度</td><td>{requirementData.temperature} °C</td></tr>
-                              <tr><td>联轴器带罩壳</td><td>{requirementData.hasCover ? '是' : '否'}</td></tr>
-                            </tbody>
-                          </Table>
-                        </Col>
-                         {/* Analysis Column */}
-                        <Col md={6}>
-                          <h6>性能分析</h6>
-                          <Table responsive size="sm" bordered hover style={{ backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.border }}>
-                           <tbody>
-                            <tr><td width="40%">需求传递能力</td><td>{safeNumberFormat(selectionResult?.requiredTransferCapacity, 4)} kW/rpm</td></tr>
-                            <tr><td>主机扭矩</td><td>{safeNumberFormat(selectionResult?.engineTorque / 1000, 2)} kN·m</td></tr>
-                             <tr><td>推荐齿轮箱系列</td><td>{selectionResult?.recommendedType || '-'}</td></tr>
-                             <tr><td>联轴器计算扭矩</td><td>{safeNumberFormat(selectionResult?.flexibleCoupling?.requiredTorque, 2) || '-'} kN·m</td></tr>
-                           </tbody>
-                          </Table>
-                           {selectionResult?.warning && ( <Alert variant="warning" className={`alert-${theme}`} style={{ fontSize: '0.9em' }}><strong>注意:</strong> {selectionResult.warning}</Alert> )}
-                        </Col>
-                      </Row>
-                    </Card.Body>
-                  </Card>
+                  <GearboxSelectionResult
+                    result={selectionResult}
+                    selectedIndex={selectedGearboxIndex}
+                    onSelectGearbox={handleGearboxSelection}
+                    onGenerateQuotation={handleGenerateQuotation}
+                    onGenerateAgreement={handleGenerateAgreement}
+                    colors={colors}
+                    theme={theme}
+                  />
                 </Col>
               </Row>
-
-               {/* Gearbox Comparison View */}
-              <GearboxComparisonView
-                recommendations={selectionResult.recommendations || []} // Ensure it's an array
-                selectedIndex={selectedGearboxIndex}
-                onSelect={handleGearboxSelection}
-                theme={theme}
-                colors={colors}
-                requiredCapacity={selectionResult?.requiredTransferCapacity}
-                requiredThrust={parseFloat(requirementData.thrustRequirement) || 0}
-              />
-
-               {/* Bottom Row: Selected Config, Price, Actions */}
-              <Row className="mb-4 mt-4">
-                 {/* Left Column: Detailed Selected Components */}
-                <Col md={8}>
-                  <Card className="shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                    <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText, borderBottomColor: colors.border }}>
-                      <h5 className="mb-0"><i className="bi bi-list-check me-2"></i>已选配置详情</h5>
-                    </Card.Header>
-                    <Card.Body>
-                      <Row>
-                        {/* Component Tables */}
-                        <Col md={12}>
-                            {/* Gearbox Details */}
-                            <h6><i className="bi bi-gear me-1"></i>齿轮箱: {selectedComponents.gearbox?.model || '-'}</h6>
-                            {selectedComponents.gearbox ? (
-                                <Table striped bordered hover responsive size="sm" style={{ backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.border }}>
-                                    <tbody>
-                                    <tr><td width="30%">型号</td><td>{selectedComponents.gearbox.model}</td></tr>
-                                    <tr><td>减速比</td><td>{safeNumberFormat(selectedComponents.gearbox.ratio, 3)}</td></tr>
-                                    <tr><td>传递能力 (kW/rpm)</td><td>{safeNumberFormat(selectedComponents.gearbox.selectedCapacity ?? selectedComponents.gearbox.transferCapacity?.[0], 4)}</td></tr>
-                                    <tr><td>能力安全系数</td><td>{safeNumberFormat(selectedComponents.gearbox.safetyFactor, 2)}</td></tr>
-                                    <tr><td>能力余量</td><td className={(selectedComponents.gearbox.capacityMargin ?? 0) < 10 ? 'text-warning' : (selectedComponents.gearbox.capacityMargin ?? 0) < 0 ? 'text-danger' : ''}>{safeNumberFormat(selectedComponents.gearbox.capacityMargin, 1)}%</td></tr>
-                                    <tr><td>推力 (kN)</td><td>{safeNumberFormat(selectedComponents.gearbox.thrust, 1) || '-'}</td></tr>
-                                    <tr><td>推力满足</td><td>{selectedComponents.gearbox.thrustMet === undefined ? '-' : selectedComponents.gearbox.thrustMet ? <span className="text-success">是</span> : <span className="text-danger">否</span>}</td></tr>
-                                    <tr><td>重量 (kg)</td><td>{safeNumberFormat(selectedComponents.gearbox.weight, 0) || '-'}</td></tr>
-                                    <tr><td>中心距 (mm)</td><td>{safeNumberFormat(selectedComponents.gearbox.centerDistance, 0) || '-'}</td></tr>
-                                    <tr><td>控制方式</td><td>{selectedComponents.gearbox.controlType || '-'}</td></tr>
-                                    </tbody>
-                                </Table>
-                            ) : <p style={{color: colors.muted}}>未选择齿轮箱</p>}
-
-                            {/* Coupling Details */}
-                           <h6 className="mt-3"><i className="bi bi-link-45deg me-1"></i>高弹性联轴器: {selectedComponents.coupling?.model || (selectionResult?.flexibleCoupling?.message ?? '未选择/不适用')}</h6>
-                            {selectedComponents.coupling ? (
-                                <Table striped bordered hover responsive size="sm" style={{ backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.border }}>
-                                <tbody>
-                                    <tr><td width="30%">型号</td><td>{selectedComponents.coupling.model}</td></tr>
-                                    <tr><td>额定扭矩 (kN·m)</td><td>{safeNumberFormat(selectedComponents.coupling.torque, 2)}</td></tr>
-                                    <tr><td>需求扭矩 (kN·m)</td><td>{safeNumberFormat(selectedComponents.coupling.requiredTorque, 2)}</td></tr>
-                                    <tr><td>扭矩余量</td><td className={(selectedComponents.coupling.torqueMargin ?? 0) < 10 ? 'text-warning' : (selectedComponents.coupling.torqueMargin ?? 0) < 0 ? 'text-danger' : ''}>{safeNumberFormat(selectedComponents.coupling.torqueMargin, 1)}%</td></tr>
-                                    <tr><td>最大转速 (rpm)</td><td>{selectedComponents.coupling.maxSpeed || '-'}</td></tr>
-                                    {/* Speed check might require engine speed context */}
-                                    {/* <tr><td>转速满足</td><td>{selectedComponents.coupling.speedMet === undefined ? '-' : selectedComponents.coupling.speedMet ? <span className="text-success">是</span> : <span className="text-danger">否</span>}</td></tr> */}
-                                    <tr><td>重量 (kg)</td><td>{safeNumberFormat(selectedComponents.coupling.weight, 0) || '-'}</td></tr>
-                                </tbody>
-                                </Table>
-                            ) : selectionResult?.flexibleCoupling?.message && ( // Show message even if not successful
-                                <Alert variant={selectionResult.flexibleCoupling.success ? "info" : "warning"} className={`alert-${theme}`} style={{fontSize: '0.9em'}}>{selectionResult.flexibleCoupling.message}</Alert>
-                            )}
-
-                             {/* Standby Pump Details */}
-                            <h6 className="mt-3"><i className="bi bi-life-preserver me-1"></i>备用泵: {selectedComponents.pump?.model || (selectionResult?.standbyPump?.message ?? '未选择/不适用')}</h6>
-                             {selectedComponents.pump ? (
-                                <Table striped bordered hover responsive size="sm" style={{ backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.border }}>
-                                <tbody>
-                                    <tr><td width="30%">型号</td><td>{selectedComponents.pump.model}</td></tr>
-                                    <tr><td>流量 (m³/h)</td><td>{safeNumberFormat(selectedComponents.pump.flow, 1) || '-'}</td></tr>
-                                    <tr><td>压力 (MPa)</td><td>{safeNumberFormat(selectedComponents.pump.pressure, 1) || '-'}</td></tr>
-                                    <tr><td>重量 (kg)</td><td>{safeNumberFormat(selectedComponents.pump.weight, 0) || '-'}</td></tr>
-                                </tbody>
-                                </Table>
-                             ) : selectionResult?.standbyPump?.message && ( // Show message even if not successful
-                                <Alert variant={selectionResult.standbyPump.success ? "info" : "warning"} className={`alert-${theme}`} style={{fontSize: '0.9em'}}>{selectionResult.standbyPump.message}</Alert>
-                             )}
-                        </Col>
-                      </Row>
-                    </Card.Body>
-                  </Card>
-                </Col>
-
-                {/* Right Column: Price Calculator and Actions */}
-                <Col md={4}>
-                   {/* Price Calculator */}
-                   <Card className="mb-4 shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                      <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>
-                         <h5 className="mb-0"><i className="bi bi-tags-fill me-2"></i>价格配置</h5>
-                      </Card.Header>
-                      <Card.Body>
-                         <PriceCalculator
-                            selectedComponents={selectedComponents}
-                            packagePrice={packagePrice}
-                            marketPrice={marketPrice} // Pass the main market price
-                            onPriceChange={handlePriceChange}
-                            theme={theme}
-                            colors={colors}
-                         />
-                         {isAdmin && ( // Only show batch adjustment to admins
-                             <div className="d-grid gap-2 mt-4">
-                                <Button variant="outline-secondary" size="sm" onClick={() => setShowBatchPriceAdjustment(true)} style={{color: colors.muted, borderColor: colors.border}}>
-                                <i className="bi bi-pencil-fill me-2"></i> 批量调整基础价格
-                                </Button>
-                            </div>
-                         )}
-                      </Card.Body>
-                   </Card>
-
-                    {/* Action Buttons */}
-                    <Card className="shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                        <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>
-                        <h5 className="mb-0"><i className="bi bi-file-earmark-arrow-down-fill me-2"></i>生成文档</h5>
-                        </Card.Header>
-                        <Card.Body>
-                        <div className="mb-3">
-                            <h6>当前配置总价</h6>
-                            <Table bordered size="sm" style={{ backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.border }}>
-                            <tbody>
-                                <tr><td>打包成本价</td><td className="text-end">{packagePrice > 0 ? packagePrice.toLocaleString() : '-'} 元</td></tr>
-                                <tr style={{ backgroundColor: theme === 'light' ? '#cfe2ff' : '#0a2b5c', color: theme === 'light' ? '#084298' : '#ffffff' }}>
-                                <td ><strong>市场报价</strong></td><td className="text-end"><strong>{marketPrice > 0 ? marketPrice.toLocaleString() : '-'} 元</strong></td>
-                                </tr>
-                            </tbody>
-                            </Table>
-                        </div>
-                        <div className="d-grid gap-2">
-                            <Button variant="primary" onClick={handleGenerateQuotation} disabled={loading || !selectedComponents.gearbox} style={{ backgroundColor: colors.primary, borderColor: colors.primary, color: colors.primaryText }}><i className="bi bi-file-earmark-text me-2"></i> 生成报价单</Button>
-                            <Button variant="outline-success" onClick={handleGenerateAgreement} disabled={loading || !selectedComponents.gearbox}><i className="bi bi-file-earmark-richtext me-2"></i> 生成技术协议</Button>
-                            <Button variant="outline-info" onClick={handleGenerateContract} disabled={loading || !selectedComponents.gearbox || !quotation}><i className="bi bi-file-earmark-medical me-2"></i> 生成销售合同 {(!quotation && selectedComponents.gearbox) && <small>(需先生成报价)</small>}</Button>
-                        </div>
-                        </Card.Body>
-                    </Card>
-                </Col>
-              </Row>
-            </div>
-           )}
-           {/* Add a message if selection succeeded but no recommendations found */}
-            {selectionResult && selectionResult.success && (!Array.isArray(selectionResult.recommendations) || selectionResult.recommendations.length === 0) && (
-                <Alert variant="warning" className={`alert-${theme}`}>选型成功，但数据库中没有找到完全满足所有条件的齿轮箱推荐。</Alert>
+            ) : (
+              <Alert variant="info" className="text-center">
+                <i className="bi bi-info-circle me-2"></i>请先输入参数并执行选型
+              </Alert>
             )}
+          </Tab>
+
+          <Tab eventKey="quotation" title={<span><i className="bi bi-currency-yen me-1"></i>报价单</span>} disabled={!quotation}>
+              {quotation && (
+                  <Row>
+                      <Col>
+                          <QuotationView
+                            quotation={quotation}
+                            onExport={handleExportQuotation}
+                            onGenerateAgreement={handleGenerateAgreement}
+                            colors={colors}
+                            theme={theme}
+                           />
+                      </Col>
+                  </Row>
+              )}
         </Tab>
 
-        {/* Quotation Tab */}
-        <Tab eventKey="quotation" title={<span><i className="bi bi-file-earmark-text-fill me-1"></i>报价单</span>} disabled={!quotation}>
-          {quotation && (<QuotationView quotation={quotation} onExport={handleExportQuotation} onGenerateAgreement={handleGenerateAgreement} onGenerateContract={handleGenerateContract} colors={colors} theme={theme} />)}
+          <Tab eventKey="agreement" title={<span><i className="bi bi-file-earmark-text me-1"></i>技术协议</span>} disabled={!agreement}>
+             {agreement && (
+                 <Row>
+                     <Col>
+                        <AgreementView
+                          agreement={agreement}
+                          onExport={handleExportAgreement}
+                          onGenerateContract={handleGenerateContract}
+                          colors={colors}
+                          theme={theme}
+                        />
+                     </Col>
+                 </Row>
+              )}
         </Tab>
 
-        {/* Agreement Tab */}
-        <Tab eventKey="agreement" title={<span><i className="bi bi-file-earmark-richtext-fill me-1"></i>技术协议</span>} disabled={!agreement}>
-          {agreement && (<AgreementView agreement={agreement} onExport={handleExportAgreement} onGenerateContract={handleGenerateContract} colors={colors} theme={theme} />)}
+          <Tab eventKey="contract" title={<span><i className="bi bi-file-earmark-ruled me-1"></i>销售合同</span>} disabled={!contract}>
+            {contract && (
+              <Row>
+                <Col>
+                     <Card className="mb-4 shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                    <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText, borderBottomColor: colors.border }}>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <span><i className="bi bi-file-earmark-ruled me-2"></i>销售合同</span>
+                        <div>
+                          <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleExportContract('word')}>
+                            <i className="bi bi-file-earmark-word me-1"></i> 导出Word
+                          </Button>
+                          <Button variant="outline-danger" size="sm" onClick={() => handleExportContract('pdf')}>
+                            <i className="bi bi-file-earmark-pdf me-1"></i> 导出PDF
+                          </Button>
+                        </div>
+                      </div>
+                        </Card.Header>
+                    <Card.Body style={{ padding: 0 }}>
+                      <ContractView
+                        contract={contract}
+                        onExportWord={() => handleExportContract('word')}
+                        onExportPDF={() => handleExportContract('pdf')}
+                        theme={theme}
+                        colors={colors}
+                       />
+                      </Card.Body>
+                      </Card>
+                  </Col>
+                </Row>
+              )}
+          </Tab>
+
+          <Tab eventKey="query" title={<span><i className="bi bi-search me-1"></i>数据查询</span>}>
+            <Row>
+              <Col>
+                <DataQuery
+                  appData={appDataState}
+                  theme={theme}
+                  colors={colors}
+                />
+              </Col>
+            </Row>
         </Tab>
 
-        {/* Contract Tab */}
-        <Tab eventKey="contract" title={<span><i className="bi bi-file-earmark-medical-fill me-1"></i>销售合同</span>} disabled={!contract}>
-          {contract && (<ContractView contract={contract} onExportWord={() => handleExportContract('word')} onExportPDF={() => handleExportContract('pdf')} colors={colors} theme={theme} />)}
-        </Tab>
-
-        {/* History Tab */}
-        <Tab eventKey="history" title={<span><i className="bi bi-clock-history me-1"></i>选型历史 ({selectionHistory.length})</span>} disabled={selectionHistory.length === 0}>
-            <Card className="mt-3 shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText, borderColor: colors.border }}>历史选型记录 (最近 {selectionHistory.length} 条)</Card.Header>
+          <Tab eventKey="history" title={<span><i className="bi bi-clock-history me-1"></i>选型历史</span>}>
+            <Row>
+                <Col>
+                    <Card className="shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                        <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>选型历史记录</Card.Header>
                 <Card.Body>
                 {selectionHistory.length > 0 ? (
-                    <Table striped bordered hover responsive size="sm" style={{ color: colors.text, backgroundColor: colors.inputBg, borderColor: colors.border }}>
-                    <thead style={{backgroundColor: colors.headerBg, color: colors.headerText}}>
-                        <tr><th>#</th><th>时间</th><th>项目名称</th><th>客户名称</th><th>主机 (kW@rpm)</th><th>速比</th><th>选定齿轮箱</th><th>操作</th></tr>
-                    </thead>
-                    <tbody>
-                        {selectionHistory.map((entry, index) => (
-                        <tr key={entry.id}>
-                            <td>{index + 1}</td>
-                            <td>{new Date(entry.timestamp).toLocaleString()}</td>
-                            <td>{entry.projectInfo?.projectName || '-'}</td>
-                            <td>{entry.projectInfo?.customerName || '-'}</td>
-                            <td>{entry.engineData?.power || '?'}@{entry.engineData?.speed || '?'}</td>
-                            <td>{entry.requirementData?.targetRatio || '-'}</td>
-                             {/* Safely access the top recommendation model */}
-                            <td>{entry.selectionResult?.recommendations?.[0]?.model || 'N/A'}</td>
-                            <td>
-                            <Button variant="outline-info" size="sm" onClick={() => handleLoadHistoryEntry(entry.id)} className="me-2" title="加载此历史记录"><i className="bi bi-box-arrow-down"></i> 加载</Button>
-                            <Button variant="outline-danger" size="sm" onClick={() => handleDeleteHistoryEntry(entry.id)} title="删除此历史记录"><i className="bi bi-trash"></i> 删除</Button>
-                            </td>
-                        </tr>
-                        ))}
-                    </tbody>
-                    </Table>
-                ) : (<p style={{ color: colors.muted }}>暂无选型历史记录。</p>)}
+                                <ListGroup variant="flush">
+                                    {selectionHistory.map(entry => (
+                                        <ListGroup.Item key={entry.id} className="d-flex justify-content-between align-items-center" style={{ backgroundColor: 'transparent', color: colors.text, borderColor: colors.border }}>
+                                            <div>
+                                                <span className="fw-bold me-2">{entry.projectInfo?.projectName || '未命名项目'}</span>
+                                                <small className="text-muted">{new Date(entry.timestamp).toLocaleString()}</small>
+                                                <br />
+                                                <small style={{ color: colors.muted }}>
+                                                   {entry.engineData?.power}kW / {entry.engineData?.speed}rpm / Ratio {entry.requirementData?.targetRatio}
+                                                   {entry.selectionResult?.recommendations?.[0] ? ` -> ${entry.selectionResult.recommendations[0].model}` : ''}
+                                                </small>
+                                            </div>
+                                            <div>
+                                                <Button key={`${entry.id}-load`} variant="outline-primary" size="sm" className="me-2" onClick={() => handleLoadHistoryEntry(entry.id)}>
+                                                    <i className="bi bi-box-arrow-up-left me-1"></i> 加载
+                                                </Button>
+                                                <Button key={`${entry.id}-delete`} variant="outline-danger" size="sm" onClick={() => handleDeleteHistoryEntry(entry.id)}>
+                                                    <i className="bi bi-trash me-1"></i> 删除
+                                                </Button>
+                                            </div>
+                                        </ListGroup.Item>
+                                    ))}
+                                </ListGroup>
+                            ) : (
+                                <p style={{ color: colors.muted }}>没有历史记录</p>
+                            )}
                 </Card.Body>
             </Card>
-        </Tab>
-
-        {/* Data Query Tab */}
-        <Tab eventKey="query" title={<span><i className="bi bi-search me-1"></i>数据查询</span>}>
-           <DataQuery appData={appData} colors={colors} theme={theme}/>
+                </Col>
+            </Row>
         </Tab>
       </Tabs>
+      )}
 
-      {/* Batch Price Adjustment Modal */}
+
       <BatchPriceAdjustment
         show={showBatchPriceAdjustment}
         onHide={() => setShowBatchPriceAdjustment(false)}
-        onApply={handleBatchPriceAdjustment} // Pass memoized handler
+        onApply={handleBatchPriceAdjustment}
         theme={theme}
-        colors={colors} // Pass colors for styling consistency
+        colors={colors}
       />
 
-       {/* Footer */}
-      <footer className="mt-5 pt-4 text-center" style={{ borderTop: `1px solid ${colors.border}`, color: colors.muted, fontSize: '0.85rem' }}>
-        <p className="mb-1">© {new Date().getFullYear()} 杭州前进齿轮箱集团股份有限公司</p>
-        <p className="mb-0">船用齿轮箱选型与报价系统 v1.5.1</p>
-      </footer>
+      {showDiagnosticPanel && (
+        <DiagnosticPanel
+          appData={appDataState}
+          onReset={forceReset}
+          onHide={() => setShowDiagnosticPanel(false)}
+          validateDatabase={validateDatabase}
+          correctDatabase={correctDatabase}
+          getPriceHistory={getPriceHistory}
+          clearPriceHistory={clearPriceHistory}
+          updateAppData={updateAppDataAndPersist}
+          colors={colors}
+          theme={theme}
+        />
+      )}
     </Container>
   );
 }
 
-// Now we set up the main routing
-function AppWithRoutes({ appData, setAppData }) {
-  return (
-    <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/" element={
-        <ProtectedRoute>
-          <App appData={appData} setAppData={setAppData} />
-        </ProtectedRoute>
-      } />
-      <Route path="/users" element={
-        <ProtectedRoute requiredRoles={[userRoles.ADMIN, userRoles.SUPER_ADMIN]}>
-          <UserManagementView appData={appData} setAppData={setAppData} />
-        </ProtectedRoute>
-      } />
-      <Route path="/database" element={
-        <ProtectedRoute requiredRoles={[userRoles.ADMIN, userRoles.SUPER_ADMIN]}>
-          <DatabaseManagementView appData={appData} setAppData={setAppData} />
-        </ProtectedRoute>
-      } />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  );
-}
-
-export { AppWithRoutes as default, App };
+export default App;

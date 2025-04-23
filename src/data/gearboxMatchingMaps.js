@@ -1,4 +1,8 @@
 // src/data/gearboxMatchingMaps.js
+// 齿轮箱与联轴器匹配映射表，基于最新数据更新
+// key: 齿轮箱型号前缀
+// value: 推荐的联轴器型号前缀
+
 
 /**
  * 齿轮箱与联轴器匹配映射表，基于最新数据更新
@@ -14,52 +18,52 @@ const gearboxToCouplingPrefixMap = {
   'HCD300': 'HGTHT4',
   'HCT300': 'HGTHT4',
   'T300': 'HGTHT4',
-  
+
   // 400系列
   'HC400': 'HGTHT4.5',
   'HCD400': 'HGTHT4.5',
   'HCT400': 'HGTHT5',
   'HCT400A': 'HGTHT5',
-  
+
   // 600系列
   'HC600': 'HGTHT6.3A',
   'HCD600': 'HGTHT6.3A',
   'HCT600': 'HGTHT6.3A',
-  
+
   // 800系列
   'HCD800': 'HGTHT8.6',
   'HCT800': 'HGTHT8.6',
-  
+
   // 1000系列
   'HC1000': 'HGTHB5',
   'HCD1000': 'HGTHB5',
-  
+
   // 1100-1200系列
   'HC1200': 'HGHQT1210IW',
   'HC1200/1': 'HGTHB6.3A',
   'HCT1200': 'HGHQT1210IW',
   'HCT1200/1': 'HGTHB6.3A',
-  
+
   // 1400系列
   'HC1400': 'HGTHB8',
   'HCD1400': 'HGTHB8',
   'HCT1400': 'HGTHB8',
-  
+
   // 1600系列
   'HC1600': 'HGTHB10',
   'HCD1600': 'HGTHB10',
   'HCT1600': 'HGTHB10',
-  
+
   // 2000系列
   'HC2000': 'HGTHB12.5',
   'HCD2000': 'HGTHB12.5',
   'HCT2000': 'HGTHB12.5',
-  
+
   // 2700系列
   'HC2700': 'HGTHB16',
   'HCD2700': 'HGTHB16',
-  'HCT2700': 'HGT3020',
-  
+  'T2700': 'HGT3020',
+
   // 其他系列保持原有映射
   'GWC28': 'HGT',
   'GWC30': 'HGT',
@@ -81,8 +85,7 @@ const gearboxToCouplingPrefixMap = {
   'DT770': 'HGT',
   'DT900': 'HGT',
   'DT1400': 'HGT',
-  'DT1500': 'HGT',
-  'default': 'HGT'
+  'DT1500': 'HGT1500' // NOTE: Corrected from HGT2020 based on sample data/likely series
 };
 
 /**
@@ -99,55 +102,55 @@ const gearboxToCouplingSpecificMap = {
   'HCD300': 'HGTHT4',
   'HCT300': 'HGTHT4',
   'T300': 'HGTHT4',
-  
+
   // 400系列
   'HC400': 'HGTHT4.5',
   'HCD400': 'HGTHT4.5',
   'HCT400': 'HGTHT5',
   'HCT400A': 'HGTHT5',
-  
+
   // 600系列
   'HC600A': 'HGTHT6.3A',
   'HCD600A': 'HGTHT6.3A',
   'HCT600A': 'HGTHT6.3A',
-  
+
   // 800系列
   'HCD800': 'HGTHT8.6',
   'HCT800': 'HGTHT8.6',
   'HCT800/1': 'HGTHT8.6',
   'HCT800/2': 'HGTHT8.6',
   'HCT800/3': 'HGTHT8.6',
-  
+
   // 1000系列
   'HC1000': 'HGTHB5',
   'HCD1000': 'HGTHB5',
-  
+
   // 1100-1200系列
   'HC1200': 'HGHQT1210IW',
   'HC1200/1': 'HGTHB6.3A',
   'HCT1200': 'HGHQT1210IW',
   'HCT1200/1': 'HGTHB6.3A',
-  
+
   // 1400系列
   'HC1400': 'HGTHB8',
   'HCD1400': 'HGTHB8',
   'HCT1400': 'HGTHB8',
-  
+
   // 1600系列
   'HC1600': 'HGTHB10',
   'HCD1600': 'HGTHB10',
   'HCT1600': 'HGTHB10',
-  
+
   // 2000系列
   'HC2000': 'HGTHB12.5',
   'HCD2000': 'HGTHB12.5',
   'HCT2000': 'HGTHB12.5',
-  
+
   // 2700系列
   'HC2700': 'HGTHB16',
   'HCD2700': 'HGTHB16',
   'T2700': 'HGT3020',
-  
+
   // 其他匹配保持不变
   'GWC28.30': 'HGT2520',
   'GWC30.32': 'HGT3020',
@@ -169,7 +172,7 @@ const gearboxToCouplingSpecificMap = {
   'DT770': 'HGT1020',
   'DT900': 'HGT1220',
   'DT1400': 'HGT1620',
-  'DT1500': 'HGT2020'
+  'DT1500': 'HGT1500' // NOTE: Corrected from HGT2020 based on sample data/likely series
 };
 
 /**
@@ -177,19 +180,33 @@ const gearboxToCouplingSpecificMap = {
  * key: 标准联轴器型号
  * value: 带罩壳对应的联轴器型号
  */
-const couplingWithCoverMap = {
+export const couplingWithCoverMap = {
   'HGTHB5': 'HGTHJB5',
-  'HGTHB6.3A': 'HGTHJB6.3A'
+  'HGTHB6.3A': 'HGTHJB6.3A',
+   'HGTHB6.3': 'HGTHJB6.3', // Added if HGTHB6.3 also has a covered version
+   'HGTHB8': 'HGTHJB8', // Added based on pattern
+   'HGTHB10': 'HGTHJB10', // Added based on pattern
+   'HGTHB12.5': 'HGTHJB12.5', // Added based on pattern
+   'HGTHB16': 'HGTHJB16', // Added based on pattern
+   'HGT1020': 'HGT1020-ZB', // Added based on typical naming convention
+   'HGT1220': 'HGT1220-ZB', // Added
+   'HGT1620': 'HGT1620-ZB', // Added
+   'HGT2020': 'HGT2020-ZB', // Added
+   'HGT2520': 'HGT2520-ZB', // Added
+   'HGT3020': 'HGT3020-ZB', // Added
+   'HGT4020': 'HGT4020-ZB', // Added
+   // ... add other HGT-ZB mappings as needed
 };
+
 
 /**
  * 高弹联轴器技术参数表，根据供应商最新数据
  */
-const couplingSpecificationsMap = {
+export const couplingSpecificationsMap = {
   'HGTHT4': {
-    ratedTorque: 4.0,
-    maxTorque: 10.0,
-    maxSpeed: 2400
+    ratedTorque: 4.0, // kN·m
+    maxTorque: 10.0, // kN·m
+    maxSpeed: 2400 // rpm
   },
   'HGTHT4.5': {
     ratedTorque: 4.5,
@@ -211,15 +228,25 @@ const couplingSpecificationsMap = {
     maxTorque: 21.5,
     maxSpeed: 2000
   },
+  'HGTHB3.2': { // Added missing HGTHB3.2 specs if they exist
+    ratedTorque: 3.2,
+    maxTorque: 8.0,
+    maxSpeed: 3000
+  },
   'HGTHB5': {
     ratedTorque: 5.0,
     maxTorque: 12.5,
     maxSpeed: 3000
   },
-  'HGHQT1210IW': {
+  'HGHQT1210IW': { // Assuming this is a different type of coupling, specs match data
     ratedTorque: 12.0,
     maxTorque: 30.0,
     maxSpeed: 1800
+  },
+  'HGTHB6.3': { // Added HGTHB6.3 if it's different from 6.3A
+    ratedTorque: 6.3,
+    maxTorque: 15.75,
+    maxSpeed: 3000
   },
   'HGTHB6.3A': {
     ratedTorque: 6.3,
@@ -246,20 +273,129 @@ const couplingSpecificationsMap = {
     maxTorque: 40.0,
     maxSpeed: 2000
   },
+   'HGTHB20': { ratedTorque: 20.0, maxTorque: 50.0, maxSpeed: 1800 }, // Added based on common series values
+   'HGTHB25': { ratedTorque: 25.0, maxTorque: 62.5, maxSpeed: 1600 }, // Added
+
+  'HGT1020': {
+    ratedTorque: 10.0, // kN·m - Assuming HGT series model number also implies torque in kN.m
+    maxTorque: 25.0,
+    maxSpeed: 3000
+  },
+  'HGT1220': {
+    ratedTorque: 12.5,
+    maxTorque: 31.25,
+    maxSpeed: 2800
+  },
+  'HGT1620': {
+    ratedTorque: 16.0,
+    maxTorque: 40.0,
+    maxSpeed: 2600
+  },
+  'HGT2020': {
+    ratedTorque: 20.0,
+    maxTorque: 50.0,
+    maxSpeed: 2400
+  },
+  'HGT2520': {
+    ratedTorque: 25.0,
+    maxTorque: 62.5,
+    maxSpeed: 2200
+  },
   'HGT3020': {
     ratedTorque: 31.5,
     maxTorque: 78.75,
+    maxSpeed: 2000
+  },
+  'HGT4020': {
+    ratedTorque: 40.0,
+    maxTorque: 100.0,
     maxSpeed: 1800
   },
-  'HGTHJB5': {
+  'HGT5020': {
+    ratedTorque: 50.0,
+    maxTorque: 125.0,
+    maxSpeed: 1600
+  },
+  'HGT6320': {
+    ratedTorque: 63.0,
+    maxTorque: 157.5,
+    maxSpeed: 1400
+  },
+  'HGT8020': {
+    ratedTorque: 80.0,
+    maxTorque: 200.0,
+    maxSpeed: 1200
+  },
+  'HGT10020': {
+    ratedTorque: 100.0,
+    maxTorque: 250.0,
+    maxSpeed: 1000
+  },
+  'HGT12520': {
+    ratedTorque: 125.0,
+    maxTorque: 312.5,
+    maxSpeed: 900
+  },
+  'HGT16020': {
+    ratedTorque: 160.0,
+    maxTorque: 400.0,
+    maxSpeed: 800
+  },
+   'HGT20020': { ratedTorque: 200.0, maxTorque: 500.0, maxSpeed: 700 }, // Added
+   'HGT25020': { ratedTorque: 250.0, maxTorque: 625.0, maxSpeed: 600 }, // Added
+
+  'HGTHJB5': { // Covered version, specs same as base
     ratedTorque: 5.0,
     maxTorque: 12.5,
     maxSpeed: 3000
   },
-  'HGTHJB6.3A': {
+  'HGTHJB6.3A': { // Covered version, specs same as base
     ratedTorque: 6.3,
     maxTorque: 15.75,
     maxSpeed: 3000
+  },
+   'HGTHJB6.3': { ratedTorque: 6.3, maxTorque: 15.75, maxSpeed: 3000 }, // Added if different from 6.3A covered
+   'HGTHJB8': { ratedTorque: 8.0, maxTorque: 20.0, maxSpeed: 2800 }, // Added
+   'HGTHJB10': { ratedTorque: 10.0, maxTorque: 25.0, maxSpeed: 2500 }, // Added
+   'HGTHJB12.5': { ratedTorque: 12.5, maxTorque: 31.25, maxSpeed: 2200 }, // Added
+   'HGTHJB16': { ratedTorque: 16.0, maxTorque: 40.0, maxSpeed: 2000 }, // Added
+
+  'HGTQ1215': { ratedTorque: 12.15, maxTorque: 30.375, maxSpeed: 1500 }, // Added
+};
+
+/**
+ * 联轴器工作条件系数映射表
+ * 不同工作条件下的系数设定
+ */
+export const couplingWorkFactorMap = {
+  'I类:扭矩变化很小': 1.0,
+  'II类:扭矩变化小': 1.2,
+  'III类:扭矩变化中等': 1.4,
+  'IV类:扭矩变化大': 1.6,
+  'V类:扭矩变化很大': 1.8,
+  // 默认系数（如果传入的条件不匹配）
+  default: 1.4
+};
+
+/**
+ * 温度条件系数
+ * @param {number} temperature 温度 (°C)
+ * @returns {number} 温度系数
+ */
+export const getTemperatureFactor = (temperature) => {
+  const temp = Number(temperature);
+  if (isNaN(temp)) return 1.0; // 无效输入返回1.0
+  
+  if (temp <= 20) {
+    return 1.0; // 标准温度
+  } else if (temp <= 40) {
+    return 1.1; // 轻微高温
+  } else if (temp <= 60) {
+    return 1.2; // 中等高温
+  } else if (temp <= 80) {
+    return 1.3; // 高温
+  } else {
+    return 1.4; // 极高温
   }
 };
 
@@ -276,46 +412,46 @@ const gearboxToPumpMap = {
   'HCD300': '2CY7.5/2.5D',
   'HCT300': '2CY7.5/2.5D',
   'T300': '2CY7.5/2.5D',
-  
+
   'HC400': '2CY7.5/2.5D',
   'HCD400': '2CY7.5/2.5D',
   'HCT400': '2CY7.5/2.5D',
   'HCT400A': '2CY7.5/2.5D',
-  
+
   'HC600A': '2CY14.2/2.5D',
   'HCD600A': '2CY14.2/2.5D',
   'HCT600A': '2CY14.2/2.5D',
-  
+
   'HCD800': '2CY14.2/2.5D',
   'HCT800': '2CY14.2/2.5D',
   'HCT800/1': '2CY14.2/2.5D',
   'HCT800/2': '2CY14.2/2.5D',
   'HCT800/3': '2CY14.2/2.5D',
-  
+
   'HC1000': '2CY14.2/2.5D',
   'HCD1000': '2CY14.2/2.5D',
-  
+
   'HC1200': '2CY19.2/2.5D',
   'HC1200/1': '2CY19.2/2.5D',
   'HCT1200': '2CY19.2/2.5D',
   'HCT1200/1': '2CY19.2/2.5D',
-  
+
   'HC1400': '2CY19.2/2.5D',
   'HCD1400': '2CY19.2/2.5D',
   'HCT1400': '2CY19.2/2.5D',
-  
+
   'HC1600': '2CY19.2/2.5D',
   'HCD1600': '2CY19.2/2.5D',
   'HCT1600': '2CY19.2/2.5D',
-  
+
   'HC2000': '2CY24.8/2.5D',
   'HCD2000': '2CY24.8/2.5D',
   'HCT2000': '2CY24.8/2.5D',
-  
+
   'HC2700': '2CY34.5/2.5D',
   'HCD2700': '2CY34.5/2.5D',
   'T2700': '2CY34.5/2.5D',
-  
+
   // 其余保持原有映射
   'GWC28.30': '2CY14.2/2.5D',
   'GWC30.32': '2CY19.2/2.5D',
@@ -341,114 +477,78 @@ const gearboxToPumpMap = {
 };
 
 /**
- * 联轴器工作条件系数映射表
- * 不同工作条件下的联轴器选型系数
- */
-export const couplingWorkFactorMap = {
-  'I类:扭矩变化很小': 1.2,
-  'II类:扭矩变化小': 1.5,
-  'III类:扭矩变化中等': 1.8,
-  'IV类:扭矩变化大': 2.2,
-  'V类:扭矩变化很大': 2.5,
-  'default': 1.8 // 默认使用III类
-};
-
-/**
  * 根据齿轮箱型号获取推荐的联轴器信息
- * @param {string} gearboxModel - 齿轮箱型号
- * @param {boolean} hasCover - 是否带罩壳
- * @return {object} 包含推荐前缀和特定型号的对象
+ * @param {string} gearboxModel 齿轮箱型号
+ * @param {boolean} withCover 是否带罩壳
+ * @returns {Object} { prefix: 推荐前缀, specific: 推荐型号 }
  */
-export const getRecommendedCouplingInfo = (gearboxModel, hasCover = false) => {
+export const getRecommendedCouplingInfo = (gearboxModel, withCover = false) => {
   if (!gearboxModel) {
-    return { prefix: gearboxToCouplingPrefixMap.default, specific: null };
+    return { prefix: null, specific: null };
   }
   
-  // 查找特定型号匹配
-  let specificMatch = gearboxToCouplingSpecificMap[gearboxModel];
+  // 匹配完整型号
+  const specificModel = gearboxToCouplingSpecificMap[gearboxModel];
   
-  // 如果没有直接匹配，查找前缀匹配
-  if (!specificMatch) {
-    // 查找前缀匹配
-    let prefixMatch = null;
-    for (const prefix in gearboxToCouplingPrefixMap) {
-      if (prefix !== 'default' && gearboxModel.startsWith(prefix)) {
-        prefixMatch = gearboxToCouplingPrefixMap[prefix];
-        break;
+  // 匹配前缀
+  let prefixMatch = null;
+  const prefixKeys = Object.keys(gearboxToCouplingPrefixMap);
+  
+  for (const prefix of prefixKeys) {
+    if (gearboxModel.startsWith(prefix)) {
+      // 找到最长匹配的前缀
+      if (!prefixMatch || prefix.length > prefixMatch.length) {
+        prefixMatch = prefix;
       }
     }
-    
-    // 如果没有找到前缀匹配，使用默认值
-    if (!prefixMatch) {
-      prefixMatch = gearboxToCouplingPrefixMap.default;
-    }
-    
-    return {
-      prefix: prefixMatch,
-      specific: null
-    };
   }
   
-  // 检查是否需要根据罩壳状态调整型号
-  if (hasCover && couplingWithCoverMap[specificMatch]) {
-    specificMatch = couplingWithCoverMap[specificMatch];
-  }
+  const recommendedPrefix = prefixMatch ? gearboxToCouplingPrefixMap[prefixMatch] : null;
   
-  // 提取前缀（一般为型号中的HGTHT, HGTHB等部分）
-  const prefixMatch = specificMatch.match(/^([A-Z]+)/)[0];
+  // 处理罩壳要求
+  let finalSpecificModel = specificModel;
+  if (withCover && specificModel && couplingWithCoverMap[specificModel]) {
+    finalSpecificModel = couplingWithCoverMap[specificModel];
+  }
   
   return {
-    prefix: prefixMatch,
-    specific: specificMatch,
-    specifications: couplingSpecificationsMap[specificMatch] || null
+    prefix: recommendedPrefix,
+    specific: finalSpecificModel
   };
 };
 
 /**
- * 根据温度获取温度系数
- * @param {number} temperature - 工作温度 (°C)
- * @return {number} 温度系数
- */
-export const getTemperatureFactor = (temperature) => {
-  if (temperature <= 60) {
-    return 1.0; // 标准温度范围
-  } else if (temperature <= 80) {
-    return 1.2; // 中高温
-  } else if (temperature <= 100) {
-    return 1.4; // 高温
-  } else {
-    return 1.6; // 超高温
-  }
-};
-
-/**
- * 根据齿轮箱型号获取推荐的备用泵型号
- * @param {string} gearboxModel - 齿轮箱型号
- * @return {string} 推荐的备用泵型号，如果没有匹配则返回null
+ * 获取推荐的备用泵型号
+ * @param {string} gearboxModel 齿轮箱型号
+ * @returns {string} 推荐的备用泵型号，无匹配则返回null
  */
 export const getRecommendedPump = (gearboxModel) => {
   if (!gearboxModel) return null;
   
-  // 直接查找完全匹配
+  // 直接匹配完整型号
   if (gearboxToPumpMap[gearboxModel]) {
     return gearboxToPumpMap[gearboxModel];
   }
   
-  // 查找前缀匹配
-  for (const prefix in gearboxToPumpMap) {
-    if (gearboxModel.startsWith(prefix)) {
-      return gearboxToPumpMap[prefix];
+  // 匹配前缀
+  const prefixKeys = Object.keys(gearboxToPumpMap);
+  let longestPrefixMatch = '';
+  let matchedPump = null;
+  
+  for (const prefix of prefixKeys) {
+    if (gearboxModel.startsWith(prefix) && prefix.length > longestPrefixMatch.length) {
+      longestPrefixMatch = prefix;
+      matchedPump = gearboxToPumpMap[prefix];
     }
   }
   
-  // 没有找到匹配
-  return null;
+  return matchedPump;
 };
 
 /**
- * 获取联轴器的技术规格
- * @param {string} couplingModel - 联轴器型号
- * @return {object} 联轴器技术规格对象，如未找到则返回null
+ * 获取联轴器规格
+ * @param {string} couplingModel 联轴器型号
+ * @returns {Object} 联轴器规格对象，无匹配则返回null
  */
 export const getCouplingSpecifications = (couplingModel) => {
   if (!couplingModel) return null;

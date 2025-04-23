@@ -1,7 +1,7 @@
 // src/components/LoginPage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const LoginPage = () => {
@@ -9,35 +9,70 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const loginAttemptedRef = useRef(false); // 使用ref而不是state
   
-  const { currentUser, login } = useAuth();
+  const { user, currentUser, isAuthenticated, login } = useAuth();
   const navigate = useNavigate();
   
-  // 如果已经登录，则重定向到首页
-  if (currentUser) {
-    return <Navigate to="/" />;
-  }
+  // 只在组件首次挂载时清除存储，使用ref避免重复运行
+  const storageCleared = useRef(false);
+  useEffect(() => {
+    if (!storageCleared.current) {
+      localStorage.removeItem('user');
+      localStorage.removeItem('gearbox_users');
+      sessionStorage.removeItem('current_user');
+      storageCleared.current = true;
+    }
+  }, []);
   
-  const handleSubmit = async (e) => {
+  // 检测登录状态变化并导航
+  useEffect(() => {
+    // 只在已认证且未导航的情况下执行一次
+    if (isAuthenticated && (user || currentUser) && !loginAttemptedRef.current) {
+      loginAttemptedRef.current = true; // 标记为已尝试导航
+      // 使用replace模式避免历史堆栈问题
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, user, currentUser, navigate]);
+  
+  const handleSubmit = (e) => {
     e.preventDefault();
+    // 如果已经在加载中，不要重复提交
+    if (loading) return;
+    
     setError('');
     setLoading(true);
     
     try {
-      // 验证表单
+      // 基本表单验证
       if (!username.trim() || !password.trim()) {
         throw new Error('请输入用户名和密码');
       }
       
-      // 尝试登录
-      await login(username, password);
-      navigate('/');
+      // 调用登录函数
+      login(username, password);
+      // 不设置loginAttempted state，改用ref来避免重渲染
+      loginAttemptedRef.current = true;
+      
     } catch (err) {
-      setError(err.message);
-    } finally {
+      console.error('登录失败', err.message);
+      setError(err.message || '登录失败，请重试');
       setLoading(false);
+      loginAttemptedRef.current = false;
     }
   };
+  
+  // 如果已认证，显示简单的加载而不是整个表单
+  if (isAuthenticated) {
+    return (
+      <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', background: '#f5f7fa' }}>
+        <div className="text-center">
+          <Spinner animation="border" variant="primary" style={{ width: '3rem', height: '3rem' }} />
+          <h4 className="mt-3">登录成功，正在进入系统...</h4>
+        </div>
+      </Container>
+    );
+  }
   
   return (
     <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', background: '#f5f7fa' }}>
@@ -106,9 +141,14 @@ const LoginPage = () => {
                 </div>
               </Form>
               
-              <div className="mt-4 text-center text-muted">
-                <p className="mb-0">默认管理员账号: admin / admin123</p>
-                <p>默认用户账号: user / user123</p>
+              <div className="mt-4 text-center">
+                <Alert variant="warning" className="p-2">
+                  <strong>安全提示：</strong>系统密码已更新，请使用新密码登录！
+                </Alert>
+                <div className="text-muted">
+                  <p className="mb-0">管理员账号: admin / Gbox@2024!</p>
+                  <p>普通用户账号: user / User@2024!</p>
+                </div>
               </div>
             </Card.Body>
             <Card.Footer className="text-center text-muted py-3 bg-light">

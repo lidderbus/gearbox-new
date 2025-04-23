@@ -1,1326 +1,1812 @@
 {
   "hcGearboxes": [
     {
-      "model": "40A",
-      "inputSpeedRange": [1000, 3000],
-      "ratios": [2.52, 3.05, 3.50],
-      "transferCapacity": [0.004, 0.012, 0.0199],
-      "thrust": 5.5,
-      "centerDistance": 125,
-      "weight": 115,
-      "dimensions": "291×454×485",
-      "controlType": "推拉软轴",
-      "price": 8560,
-      "marketPrice": 10000,
-      "basePrice": 8560,
-      "discountRate": 0.16
-    },
-    {
-      "model": "120B",
-      "inputSpeedRange": [1000, 2500],
-      "ratios": [2.96, 3.35],
-      "transferCapacity": [0.0235, 0.039],
-      "thrust": 25,
-      "centerDistance": 142,
-      "weight": 225,
-      "dimensions": "510×670×656",
-      "controlType": "推拉软轴",
-      "price": 12520,
-      "marketPrice": 14500,
-      "basePrice": 12520,
-      "discountRate": 0.12
-    },
-    {
-      "model": "120C",
-      "inputSpeedRange": [1000, 2500],
-      "ratios": [2.96, 3.35],
-      "transferCapacity": [0.0235, 0.039],
-      "thrust": 25,
-      "centerDistance": 142,
-      "weight": 225,
-      "dimensions": "510×670×656",
-      "controlType": "推拉软轴",
-      "price": 13420,
-      "marketPrice": 15500,
-      "basePrice": 13420,
-      "discountRate": 0.12
-    },
-    {
-      "model": "MB170",
-      "inputSpeedRange": [1000, 2500],
-      "ratios": [1.97, 2.52, 3.04, 3.54, 3.96],
-      "transferCapacity": [0.031, 0.027],
-      "thrust": 25,
-      "centerDistance": 170,
-      "weight": 240,
-      "dimensions": "605×744×770",
-      "controlType": "推拉软轴",
-      "price": 10950,
-      "marketPrice": 12500,
-      "basePrice": 10950,
-      "discountRate": 0.12
-    },
-    {
-      "model": "MB242",
-      "inputSpeedRange": [1000, 2500],
-      "ratios": [1.97, 2.52, 3.04, 3.54, 3.96],
-      "transferCapacity": [0.031, 0.027],
-      "thrust": 25,
-      "centerDistance": 190,
-      "weight": 400,
-      "dimensions": "432×440×650",
-      "controlType": "推拉软轴",
-      "price": 21300,
-      "marketPrice": 24500,
-      "basePrice": 21300,
-      "discountRate": 0.12
-    },
-    {
-      "model": "MB270A",
-      "inputSpeedRange": [750, 2000],
-      "ratios": [3.5, 4.5, 5.5],
-      "transferCapacity": [0.044, 0.088],
-      "thrust": 29.4,
-      "centerDistance": 225,
-      "weight": 470,
-      "dimensions": "578×792×830",
-      "controlType": "推拉软轴",
-      "price": 28600,
-      "marketPrice": 33000,
-      "basePrice": 28600,
-      "discountRate": 0.12
-    },
-    {
-      "model": "135",
-      "inputSpeedRange": [750, 2000],
-      "ratios": [2.03, 2.59, 3.04, 3.62, 4.11, 4.65, 5.06, 5.47, 5.81],
-      "transferCapacity": [0.1, 0.093, 0.088, 0.077, 0.070],
-      "thrust": 29.4,
-      "centerDistance": 225,
-      "weight": 470,
-      "dimensions": "578×792×830",
-      "controlType": "推拉软轴",
-      "price": 18360,
-      "marketPrice": 21500,
-      "basePrice": 18360,
-      "discountRate": 0.16
-    },
-    {
-      "model": "135A",
-      "inputSpeedRange": [1000, 2500],
-      "ratios": [2.07, 2.96, 3.44, 3.83],
-      "transferCapacity": [0.02],
-      "thrust": 30,
-      "centerDistance": 225,
-      "weight": 520,
-      "dimensions": "520×792×760",
-      "controlType": "推拉软轴",
-      "price": 19200,
-      "marketPrice": 22500,
-      "basePrice": 19200,
-      "discountRate": 0.16
-    },
-    {
-      "model": "HC138",
-      "inputSpeedRange": [1000, 2500],
-      "ratios": [2.00, 2.52, 3.00, 3.57, 4.05, 4.45],
-      "transferCapacity": [0.110],
-      "thrust": 30,
-      "centerDistance": 225,
-      "weight": 360,
-      "dimensions": "520×792×760",
-      "controlType": "推拉软轴",
-      "price": 18200,
-      "marketPrice": 21500,
-      "basePrice": 18200,
-      "discountRate": 0.16
-    },
-    {
-      "model": "HCD138",
-      "inputSpeedRange": [1000, 2500],
-      "ratios": [2.00, 2.54, 3.00, 3.57, 4.05, 4.45, 5.05, 5.63, 6.06, 6.47],
-      "transferCapacity": [0.110, 0.099, 0.093],
-      "thrust": 40,
-      "centerDistance": 296,
-      "weight": 415,
-      "dimensions": "494×800×870",
-      "controlType": "推拉软轴",
-      "price": 19400,
-      "marketPrice": 23000,
-      "basePrice": 19400,
-      "discountRate": 0.16
-    },
-    {
-      "model": "300",
-      "inputSpeedRange": [1000, 2500],
-      "ratios": [1.87, 2.04, 2.54, 3.00, 3.53, 4.10, 4.47, 4.61, 4.94, 5.44],
-      "transferCapacity": [0.257, 0.243, 0.221, 0.184, 0.147, 0.125],
-      "thrust": 50,
-      "centerDistance": 270,
-      "weight": 675,
-      "dimensions": "594×810×868",
-      "controlType": "推拉软轴",
-      "price": 23000,
-      "marketPrice": 27000,
-      "basePrice": 23000,
-      "discountRate": 0.16
-    },
-    {
-      "model": "J300",
-      "inputSpeedRange": [750, 2500],
-      "ratios": [3.00, 4.05, 4.53, 5.12, 5.50, 5.95, 6.39, 6.82],
-      "transferCapacity": [0.243, 0.221, 0.184, 0.147, 0.125],
+      "model": "HC300",
+      "inputSpeedRange": [
+        750,
+        2500
+      ],
+      "ratios": [
+        1.87,
+        2.04,
+        2.54,
+        3,
+        3.53,
+        4.1,
+        4.47,
+        4.61,
+        4.94,
+        5.44
+      ],
+      "transferCapacity": [
+        0.26057142857142856,
+        0.24934567901234567,
+        0.23701763668430334,
+        0.22358730158730158,
+        0.2090546737213404,
+        0.19341975308641973,
+        0.1766825396825397,
+        0.15884303350970014,
+        0.1399012345679012,
+        0.11985714285714281
+      ],
       "thrust": 50,
       "centerDistance": 264,
-      "weight": 740,
-      "dimensions": "786×930×864",
-      "controlType": "推拉软轴",
-      "price": 26680,
-      "marketPrice": 32000,
-      "basePrice": 26680,
-      "discountRate": 0.22
-    },
-    {
-      "model": "HC300",
-      "inputSpeedRange": [1000, 2500],
-      "ratios": [2.00, 2.54, 3.00, 3.57, 4.05],
-      "transferCapacity": [0.220],
-      "thrust": 40,
-      "centerDistance": 250,
-      "weight": 550,
-      "dimensions": "520×800×760",
-      "controlType": "推拉软轴",
-      "price": 26000,
-      "marketPrice": 30000,
-      "basePrice": 26000,
-      "discountRate": 0
-    },
-    {
-      "model": "D300A",
-      "inputSpeedRange": [1000, 2500],
-      "ratios": [4.00, 4.48, 5.05, 5.52, 5.90, 6.56, 7.06, 7.63],
-      "transferCapacity": [0.257, 0.243, 0.221, 0.184, 0.147, 0.125],
-      "thrust": 60,
-      "centerDistance": 355,
-      "weight": 940,
-      "dimensions": "786×1010×1041",
-      "controlType": "推拉软轴",
-      "price": 32420,
-      "marketPrice": 39000,
-      "basePrice": 32420,
-      "discountRate": 0.16
-    },
-    {
-      "model": "T300",
-      "inputSpeedRange": [1000, 2300],
-      "ratios": [4.73, 4.95, 5.51, 6.03, 6.65, 7.04, 7.54, 8.02, 8.47],
-      "transferCapacity": [0.243, 0.221, 0.200],
-      "thrust": 70,
-      "centerDistance": 355,
-      "weight": 1120,
-      "dimensions": "772×980×1106",
-      "controlType": "推拉软轴",
-      "price": 43900,
-      "marketPrice": 52000,
-      "basePrice": 43900,
-      "discountRate": 0.16
-    },
-    {
-      "model": "T300/1",
-      "inputSpeedRange": [1000, 2300],
-      "ratios": [8.94, 9.45],
-      "transferCapacity": [0.196],
-      "thrust": 70,
-      "centerDistance": 355,
-      "weight": 1120,
-      "dimensions": "772×980×1106",
-      "controlType": "推拉软轴",
-      "price": 46900,
-      "marketPrice": 55000,
-      "basePrice": 46900,
-      "discountRate": 0.16
+      "weight": 680,
+      "price": 23000,
+      "controlType": "推拉软轴/电控/气控",
+      "dimensions": "-",
+      "basePrice": 23000,
+      "discountRate": 0.16,
+      "factoryPrice": 22963,
+      "packagePrice": 22963,
+      "marketPrice": 25719
     },
     {
       "model": "HC400",
-      "inputSpeedRange": [1000, 1800],
-      "ratios": [1.50, 1.77, 2.04, 2.50, 2.86, 3.00, 3.25, 3.33, 3.42, 3.60, 3.96, 4.33, 4.43, 4.70, 5.00],
-      "transferCapacity": [0.331, 0.279, 0.190],
+      "inputSpeedRange": [
+        1000,
+        1800
+      ],
+      "ratios": [
+        1.5,
+        1.77,
+        2.04,
+        2.5,
+        2.86,
+        3,
+        3.25,
+        3.33,
+        3.42,
+        3.6,
+        3.96,
+        4.33,
+        4.43,
+        4.7,
+        5
+      ],
+      "transferCapacity": [
+        0.331,
+        0.3258367346938776,
+        0.3199183673469388,
+        0.31324489795918364,
+        0.30581632653061225,
+        0.2976326530612245,
+        0.2886938775510204,
+        0.279,
+        0.2685510204081633,
+        0.2573469387755102,
+        0.2453877551020408,
+        0.2326734693877551,
+        0.2192040816326531,
+        0.20497959183673467,
+        0.19
+      ],
       "thrust": 82,
       "centerDistance": 264,
       "weight": 820,
-      "dimensions": "641×1010×890",
-      "controlType": "推拉软轴",
       "price": 32150,
-      "marketPrice": 38000,
+      "controlType": "推拉软轴/电控/气控",
+      "dimensions": "-",
       "basePrice": 32150,
-      "discountRate": 0.22
-    },
-    {
-      "model": "HCD400A",
-      "inputSpeedRange": [1000, 1800],
-      "ratios": [1.50, 1.77, 2.04, 2.50, 2.86, 3.00, 3.25, 3.33, 3.42, 3.60, 3.96, 4.33, 4.43, 4.70, 5.00, 5.53, 5.71, 5.89, 6.00],
-      "transferCapacity": [0.331, 0.293, 0.272],
-      "thrust": 82,
-      "centerDistance": 355,
-      "weight": 1100,
-      "dimensions": "641×1010×988",
-      "controlType": "推拉软轴",
-      "price": 38150,
-      "marketPrice": 45000,
-      "basePrice": 38150,
-      "discountRate": 0.22
-    },
-    {
-      "model": "HCT400A",
-      "inputSpeedRange": [1000, 2100],
-      "ratios": [6.09, 6.49, 6.93, 7.42, 7.96, 8.40, 9.00, 9.47],
-      "transferCapacity": [0.331, 0.309, 0.294, 0.279],
-      "thrust": 82,
-      "centerDistance": 375,
-      "weight": 1450,
-      "dimensions": "784×992×1130",
-      "controlType": "推拉软轴",
-      "price": 51000,
-      "marketPrice": 60000,
-      "basePrice": 51000,
-      "discountRate": 0.16
-    },
-    {
-      "model": "HCT400A/1",
-      "inputSpeedRange": [1000, 2100],
-      "ratios": [8.15, 8.69, 9.27, 9.94, 10.60, 11.37, 12.00, 12.50, 13.96],
-      "transferCapacity": [0.331, 0.316, 0.297, 0.274, 0.262, 0.204],
-      "thrust": 120,
-      "centerDistance": 465,
-      "weight": 1500,
-      "dimensions": "869×1100×1275",
-      "controlType": "推拉软轴",
-      "price": 60000,
-      "marketPrice": 70000,
-      "basePrice": 60000,
-      "discountRate": 0.16
+      "discountRate": 0.22,
+      "factoryPrice": 32079,
+      "packagePrice": 32079,
+      "marketPrice": 35928
     },
     {
       "model": "HC600A",
-      "inputSpeedRange": [1000, 2100],
-      "ratios": [2.00, 2.48, 2.63, 3.00, 3.58, 3.89],
-      "transferCapacity": [0.490],
+      "inputSpeedRange": [
+        1000,
+        2100
+      ],
+      "ratios": [
+        2,
+        2.48,
+        2.63,
+        3,
+        3.58,
+        3.89
+      ],
+      "transferCapacity": [
+        0.49,
+        0.49,
+        0.49,
+        0.49,
+        0.49,
+        0.49
+      ],
       "thrust": 90,
       "centerDistance": 320,
       "weight": 1300,
-      "dimensions": "745×1214×1126",
-      "controlType": "推拉软轴",
       "price": 57200,
-      "marketPrice": 65000,
+      "controlType": "推拉软轴/电控/气控",
+      "dimensions": "-",
       "basePrice": 57200,
-      "discountRate": 0.12
-    },
-    {
-      "model": "HCD600A",
-      "inputSpeedRange": [1000, 2100],
-      "ratios": [4.18, 4.43, 4.70, 5.00, 5.44, 5.71],
-      "transferCapacity": [0.490, 0.450, 0.430],
-      "thrust": 90,
-      "centerDistance": 415,
-      "weight": 1550,
-      "dimensions": "745×1214×1271",
-      "controlType": "推拉软轴",
-      "price": 60600,
-      "marketPrice": 69000,
-      "basePrice": 60600,
-      "discountRate": 0.12
-    },
-    {
-      "model": "HCT600A",
-      "inputSpeedRange": [1000, 2100],
-      "ratios": [6.06, 6.49, 6.97, 7.51, 8.04, 8.66, 9.35],
-      "transferCapacity": [0.450, 0.419, 0.390, 0.363, 0.338, 0.314, 0.291],
-      "thrust": 90,
-      "centerDistance": 415,
-      "weight": 1650,
-      "dimensions": "821×1214×1271",
-      "controlType": "推拉软轴",
-      "price": 70900,
-      "marketPrice": 80000,
-      "basePrice": 70900,
-      "discountRate": 0.12
-    },
-    {
-      "model": "HCT600A/1",
-      "inputSpeedRange": [1000, 2100],
-      "ratios": [6.09, 6.48, 7.04, 7.69, 8.23, 8.82, 9.47, 10.10, 10.80],
-      "transferCapacity": [0.490, 0.485, 0.45, 0.423, 0.395],
-      "thrust": 140,
-      "centerDistance": 500,
-      "weight": 1700,
-      "dimensions": "878×1224×1346",
-      "controlType": "推拉软轴",
-      "price": 75000,
-      "marketPrice": 85000,
-      "basePrice": 75000,
-      "discountRate": 0.12
-    },
-    {
-      "model": "HCD800",
-      "inputSpeedRange": [600, 1800],
-      "ratios": [3.96, 4.41, 4.48, 4.95, 5.56, 5.94],
-      "transferCapacity": [0.625, 0.588, 0.551, 0.515],
-      "thrust": 110,
-      "centerDistance": 450,
-      "weight": 2250,
-      "dimensions": "1056×1280×1341",
-      "controlType": "推拉软轴",
-      "price": 86100,
-      "marketPrice": 95000,
-      "basePrice": 86100,
-      "discountRate": 0.08
-    },
-    {
-      "model": "HCT800",
-      "inputSpeedRange": [600, 2100],
-      "ratios": [4.95, 5.57, 5.68, 5.93, 6.43, 6.86, 7.33, 7.84, 8.40, 9.00],
-      "transferCapacity": [0.625, 0.588, 0.551, 0.515, 0.480],
-      "thrust": 140,
-      "centerDistance": 450,
-      "weight": 2500,
-      "dimensions": "1056×1280×1425",
-      "controlType": "推拉软轴",
-      "price": 98000,
-      "marketPrice": 108000,
-      "basePrice": 98000,
-      "discountRate": 0.08
-    },
-    {
-      "model": "HCT800/1",
-      "inputSpeedRange": [600, 2100],
-      "ratios": [9.51, 10.06, 10.45, 11.03, 11.46, 11.98, 12.52, 13.09, 13.64, 14.10],
-      "transferCapacity": [0.490, 0.483, 0.452, 0.445, 0.414],
-      "thrust": 220,
-      "centerDistance": 582,
-      "weight": 3300,
-      "dimensions": "1152×1360×1557",
-      "controlType": "推拉软轴",
-      "price": 137200,
-      "marketPrice": 150000,
-      "basePrice": 137200,
-      "discountRate": 0.08
-    },
-    {
-      "model": "HCT800/2",
-      "inputSpeedRange": [600, 2100],
-      "ratios": [11.52, 12.21, 12.97, 13.12, 13.81, 14.55, 15.33, 16.16, 17.04, 17.99, 20.27, 22.18],
-      "transferCapacity": [0.6816, 0.6474, 0.6147, 0.5834, 0.5534, 0.5250, 0.497, 0.441, 0.435],
-      "thrust": 220,
-      "centerDistance": 666,
-      "weight": 3960,
-      "dimensions": "1190×1490×1707",
-      "controlType": "推拉软轴",
-      "price": 150200,
-      "marketPrice": 165000,
-      "basePrice": 150200,
-      "discountRate": 0.08
-    },
-    {
-      "model": "HCT800/3",
-      "inputSpeedRange": [600, 2100],
-      "ratios": [14.08, 14.48, 14.88, 15.48, 15.76, 16.72, 17.78, 18.94, 20.12, 22.10],
-      "transferCapacity": [0.553, 0.549, 0.52, 0.503, 0.491, 0.463, 0.435, 0.382, 0.278],
-      "thrust": 240,
-      "centerDistance": 736,
-      "weight": 4540,
-      "dimensions": "1235×1570×1789",
-      "controlType": "推拉软轴",
-      "price": 170800,
-      "marketPrice": 188000,
-      "basePrice": 170800,
-      "discountRate": 0.08
+      "discountRate": 0.12,
+      "factoryPrice": 57131,
+      "packagePrice": 57131,
+      "marketPrice": 63987
     },
     {
       "model": "HC1000",
-      "inputSpeedRange": [600, 2100],
-      "ratios": [2.00, 2.17, 2.50, 2.64, 3.04, 3.23, 3.48, 3.59, 4.06],
-      "transferCapacity": [0.735, 0.65],
+      "inputSpeedRange": [
+        600,
+        2100
+      ],
+      "ratios": [
+        2,
+        2.17,
+        2.5,
+        2.64,
+        3.04,
+        3.23,
+        3.48,
+        3.59,
+        4.06,
+        5.47,
+        5.83
+      ],
+      "transferCapacity": [
+        0.735,
+        0.7265,
+        0.718,
+        0.7095,
+        0.701,
+        0.6925,
+        0.684,
+        0.6755,
+        0.667,
+        0.6585,
+        0.65
+      ],
       "thrust": 110,
       "centerDistance": 335,
       "weight": 1500,
-      "dimensions": "1082×1120×990",
-      "controlType": "推拉软轴",
       "price": 81200,
-      "marketPrice": 89000,
+      "controlType": "推拉软轴/电控/气控",
+      "dimensions": "-",
       "basePrice": 81200,
-      "discountRate": 0.06
-    },
-    {
-      "model": "HCD1000",
-      "inputSpeedRange": [600, 2100],
-      "ratios": [3.43, 3.96, 4.39, 4.45, 4.90, 5.06, 5.47, 5.83],
-      "transferCapacity": [0.735, 0.68, 0.65],
-      "thrust": 140,
-      "centerDistance": 450,
-      "weight": 2200,
-      "dimensions": "1082×1280×1345",
-      "controlType": "推拉软轴",
-      "price": 89800,
-      "marketPrice": 98000,
-      "basePrice": 89800,
-      "discountRate": 0.06
+      "discountRate": 0.06,
+      "factoryPrice": 81151,
+      "packagePrice": 81151,
+      "marketPrice": 93324
     },
     {
       "model": "HC1200",
-      "inputSpeedRange": [600, 1900],
-      "ratios": [1.60, 2.03, 2.48, 2.50, 2.96, 3.18, 3.33, 3.55, 3.79, 4.06, 4.20, 4.47],
-      "transferCapacity": [0.93, 0.88, 0.80, 0.695, 0.650],
+      "inputSpeedRange": [
+        600,
+        1900
+      ],
+      "ratios": [
+        1.6,
+        2.03,
+        2.48,
+        2.5,
+        2.96,
+        3.18,
+        3.33,
+        3.55,
+        3.79,
+        4.06,
+        4.2,
+        4.47
+      ],
+      "transferCapacity": [
+        0.9378571428571434,
+        0.9121829988193627,
+        0.8862255017709563,
+        0.8599846517119242,
+        0.8334604486422664,
+        0.806652892561983,
+        0.7795619834710739,
+        0.7521877213695392,
+        0.7245301062573786,
+        0.6965891381345924,
+        0.6683648170011806,
+        0.639857142857143
+      ],
       "thrust": 120,
       "centerDistance": 380,
       "weight": 1870,
-      "dimensions": "1082×1200×1130",
-      "controlType": "推拉软轴",
       "price": 92000,
-      "marketPrice": 100000,
+      "controlType": "推拉软轴/电控/气控",
+      "dimensions": "-",
       "basePrice": 92000,
-      "discountRate": 0.14
+      "discountRate": 0.14,
+      "factoryPrice": 91871,
+      "packagePrice": 91871,
+      "marketPrice": 105652
     },
     {
-      "model": "HC1200/1",
-      "inputSpeedRange": [600, 1900],
-      "ratios": [3.70, 3.74, 3.95, 4.14, 4.45, 5.00, 5.25, 5.58],
-      "transferCapacity": [0.93, 0.833, 0.695, 0.65],
-      "thrust": 140,
+      "model": "HC1600",
+      "inputSpeedRange": [
+        500,
+        1650
+      ],
+      "ratios": [
+        2.03,
+        2.54,
+        3,
+        3.5,
+        4
+      ],
+      "transferCapacity": [
+        1.26,
+        1.26,
+        1.26,
+        1.26,
+        1.26
+      ],
+      "thrust": 170,
+      "centerDistance": 415,
+      "weight": 3000,
+      "price": 150000,
+      "controlType": "推拉软轴/电控/气控",
+      "dimensions": "-",
+      "basePrice": 150000,
+      "discountRate": 0.16,
+      "factoryPrice": 149760,
+      "packagePrice": 149760,
+      "marketPrice": 167731
+    },
+    {
+      "model": "HC2000",
+      "inputSpeedRange": [
+        600,
+        1500
+      ],
+      "ratios": [
+        1.97,
+        2.28,
+        2.52,
+        3.13,
+        3.52,
+        3.91,
+        4.4,
+        4.5
+      ],
+      "transferCapacity": [
+        1.5800000000000007,
+        1.538775510204082,
+        1.5008163265306123,
+        1.4661224489795919,
+        1.4346938775510203,
+        1.4065306122448977,
+        1.3816326530612244,
+        1.36
+      ],
+      "thrust": 190,
       "centerDistance": 450,
-      "weight": 2500,
-      "dimensions": "1096×1260×1270",
-      "controlType": "推拉软轴",
-      "price": 108200,
-      "marketPrice": 118000,
-      "basePrice": 108200,
-      "discountRate": 0.10
+      "weight": 3700,
+      "price": 180000,
+      "controlType": "推拉软轴/电控/气控",
+      "dimensions": "-",
+      "basePrice": 180000,
+      "discountRate": 0.16,
+      "factoryPrice": 179712,
+      "packagePrice": 179712,
+      "marketPrice": 201277
     },
     {
-      "model": "HCT1200",
-      "inputSpeedRange": [600, 1900],
-      "ratios": [5.05, 5.26, 5.60, 5.98, 6.39, 6.85, 7.35, 7.90],
-      "transferCapacity": [0.93],
-      "thrust": 150,
-      "centerDistance": 500,
-      "weight": 3200,
-      "dimensions": "1188×1350×1547",
-      "controlType": "推拉软轴",
-      "price": 143000,
-      "marketPrice": 155000,
-      "basePrice": 143000,
-      "discountRate": 0.06
+      "model": "HC138",
+      "inputSpeedRange": [
+        750,
+        2500
+      ],
+      "ratios": [
+        2,
+        2.52,
+        3,
+        3.57,
+        4.05,
+        4.45
+      ],
+      "transferCapacity": [
+        0.11
+      ],
+      "thrust": 30,
+      "centerDistance": 225,
+      "weight": 360,
+      "controlType": "推拉软轴/电控/气控",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
     },
     {
-      "model": "HC16",
-      "inputSpeedRange": [1500, 4000],
-      "ratios": [1.34, 1.58, 1.93, 2.43],
-      "transferCapacity": [0.062],
-      "thrust": 9.5,
-      "centerDistance": 113,
-      "weight": 65,
-      "dimensions": "315×385×420",
+      "model": "HC06",
+      "inputSpeedRange": [
+        1000,
+        2100
+      ],
+      "ratios": [
+        2.52,
+        3.05,
+        3.5
+      ],
+      "transferCapacity": [
+        0.004
+      ],
+      "thrust": 1.8,
+      "centerDistance": 124,
+      "weight": 58,
       "controlType": "手控",
-      "price": 22000,
-      "marketPrice": 24000,
-      "basePrice": 22000,
-      "discountRate": 0.03
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
     },
     {
-      "model": "HC40120C",
-      "inputSpeedRange": [600, 1800],
-      "ratios": [3.96, 4.41, 4.48, 4.95, 5.56, 5.94],
-      "transferCapacity": [0.625],
-      "thrust": 110,
-      "centerDistance": 450,
-      "weight": 2250,
-      "dimensions": "1056×1280×1341",
-      "controlType": "推拉软轴",
-      "price": 86100,
-      "marketPrice": 94000,
-      "basePrice": 86100,
-      "discountRate": 0
+      "model": "HC16A",
+      "inputSpeedRange": [
+        1000,
+        2000
+      ],
+      "ratios": [
+        2.07,
+        2.48,
+        2.95,
+        3.35,
+        3.83
+      ],
+      "transferCapacity": [
+        0.012
+      ],
+      "thrust": 3.5,
+      "centerDistance": 135,
+      "weight": 84,
+      "controlType": "手控",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "HC26",
+      "inputSpeedRange": [
+        1000,
+        2500
+      ],
+      "ratios": [
+        2.5,
+        3,
+        3.5,
+        4
+      ],
+      "transferCapacity": [
+        0.0199
+      ],
+      "thrust": 5,
+      "centerDistance": 135,
+      "weight": 92,
+      "controlType": "手控",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "HC135",
+      "inputSpeedRange": [
+        750,
+        2000
+      ],
+      "ratios": [
+        2.03,
+        2.59,
+        3.04,
+        3.62,
+        4.11,
+        4.65,
+        5.06,
+        5.47,
+        5.81
+      ],
+      "transferCapacity": [
+        0.1
+      ],
+      "thrust": 29.4,
+      "centerDistance": 225,
+      "weight": 470,
+      "controlType": "推拉软轴/电控",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
     }
   ],
   "gwGearboxes": [
     {
       "model": "GWC28.30",
-      "inputSpeedRange": [400, 2000],
-      "ratios": [2.06, 2.51, 3.08, 3.54, 4.05, 4.54, 5.09, 5.59, 6.14],
-      "transferCapacity": [0.865, 0.711, 0.578, 0.504, 0.44, 0.393, 0.35, 0.319, 0.29],
+      "inputSpeedRange": [
+        400,
+        2000
+      ],
+      "ratios": [
+        2.06,
+        2.51,
+        3.08,
+        3.54,
+        4.05,
+        4.54,
+        5.09,
+        5.59,
+        6.14
+      ],
+      "transferCapacity": [
+        0.865,
+        0.711,
+        0.578,
+        0.504,
+        0.44,
+        0.393,
+        0.35,
+        0.319,
+        0.29
+      ],
       "thrust": 80,
-      "centerDistance": 0,
+      "centerDistance": 280,
       "weight": 1230,
-      "dimensions": "800×500×700",
-      "controlType": "电控",
-      "price": 72500
+      "price": 72500,
+      "controlType": "气控/电控",
+      "dimensions": "-",
+      "basePrice": 72500,
+      "discountRate": 0.1,
+      "factoryPrice": 72428,
+      "packagePrice": 72428,
+      "marketPrice": 83292
     },
     {
       "model": "GWC30.32",
-      "inputSpeedRange": [400, 2000],
-      "ratios": [2.03, 2.55, 3.04, 3.52, 4.00, 4.55, 5.05, 5.64, 6.05],
-      "transferCapacity": [1.122, 0.894, 0.75, 0.647, 0.57, 0.501, 0.451, 0.404, 0.376],
+      "inputSpeedRange": [
+        400,
+        2000
+      ],
+      "ratios": [
+        2.03,
+        2.55,
+        3.04,
+        3.52,
+        4,
+        4.55,
+        5.05,
+        5.64,
+        6.05
+      ],
+      "transferCapacity": [
+        1.122,
+        0.894,
+        0.75,
+        0.647,
+        0.57,
+        0.501,
+        0.451,
+        0.404,
+        0.376
+      ],
       "thrust": 100,
-      "centerDistance": 0,
+      "centerDistance": 300,
       "weight": 1460,
-      "dimensions": "850×550×750",
-      "controlType": "电控",
-      "price": 90800
-    },
-    {
-      "model": "GWC32.35",
-      "inputSpeedRange": [400, 2000],
-      "ratios": [2.06, 2.54, 3.02, 3.58, 4.05, 4.59, 5.09, 5.57, 6.08],
-      "transferCapacity": [1.4175, 1.1481, 0.9659, 0.8160, 0.72, 0.6353, 0.5733, 0.5236, 0.48],
-      "thrust": 120,
-      "centerDistance": 0,
-      "weight": 2490,
-      "dimensions": "900×600×800",
-      "controlType": "电控",
-      "price": 103800
+      "price": 90800,
+      "controlType": "气控/电控",
+      "dimensions": "-",
+      "basePrice": 90800,
+      "discountRate": 0.1,
+      "factoryPrice": 90709,
+      "packagePrice": 90709,
+      "marketPrice": 104315
     },
     {
       "model": "GWC36.39",
-      "inputSpeedRange": [400, 1900],
-      "ratios": [1.97, 2.45, 2.98, 3.47, 3.95, 4.40, 5.01, 5.47, 5.97],
-      "transferCapacity": [1.92, 1.546, 1.272, 1.09, 0.96, 0.862, 0.756, 0.693, 0.634],
+      "inputSpeedRange": [
+        400,
+        1900
+      ],
+      "ratios": [
+        1.97,
+        2.45,
+        2.98,
+        3.47,
+        3.95,
+        4.4,
+        5.01,
+        5.47,
+        5.97
+      ],
+      "transferCapacity": [
+        1.92,
+        1.546,
+        1.272,
+        1.09,
+        0.96,
+        0.862,
+        0.756,
+        0.693,
+        0.634
+      ],
       "thrust": 140,
-      "centerDistance": 0,
-      "weight": 2700,
-      "dimensions": "950×650×850",
-      "controlType": "电控",
-      "price": 123800
-    },
-    {
-      "model": "GWC39.41",
-      "inputSpeedRange": [400, 1700],
-      "ratios": [1.98, 2.47, 3.05, 3.48, 4.05, 4.48, 5.00, 5.51, 5.99],
-      "transferCapacity": [2.585, 2.068, 1.672, 1.467, 1.260, 1.138, 1.022, 0.927, 0.8],
-      "thrust": 175,
-      "centerDistance": 0,
-      "weight": 3550,
-      "dimensions": "1000×700×900",
-      "controlType": "电控",
-      "price": 153800
-    },
-    {
-      "model": "GWC42.45",
-      "inputSpeedRange": [400, 1600],
-      "ratios": [2.00, 2.55, 3.02, 3.58, 4.00, 4.47, 5.00, 5.60, 5.93],
-      "transferCapacity": [3.28, 2.577, 2.169, 1.832, 1.64, 1.467, 1.312, 1.171, 1.106],
-      "thrust": 220,
-      "centerDistance": 0,
-      "weight": 4190,
-      "dimensions": "1100×750×950",
-      "controlType": "电控",
-      "price": 185800
+      "centerDistance": 360,
+      "weight": 2080,
+      "price": 123800,
+      "controlType": "气控/电控",
+      "dimensions": "-",
+      "basePrice": 123800,
+      "discountRate": 0.1,
+      "factoryPrice": 123676,
+      "packagePrice": 123676,
+      "marketPrice": 142227
     },
     {
       "model": "GWC45.49",
-      "inputSpeedRange": [400, 1600],
-      "ratios": [1.97, 2.47, 2.89, 3.47, 3.95, 4.37, 4.85, 5.50, 5.98],
-      "transferCapacity": [4.240, 3.392, 2.890, 2.414, 2.120, 1.913, 1.725, 1.520, 1.398],
+      "inputSpeedRange": [
+        400,
+        1600
+      ],
+      "ratios": [
+        1.97,
+        2.47,
+        2.89,
+        3.47,
+        3.95,
+        4.37,
+        4.85,
+        5.5,
+        5.98
+      ],
+      "transferCapacity": [
+        4.24,
+        3.392,
+        2.89,
+        2.414,
+        2.12,
+        1.913,
+        1.725,
+        1.52,
+        1.398
+      ],
       "thrust": 270,
-      "centerDistance": 0,
-      "weight": 5350,
-      "dimensions": "1200×800×1000",
-      "controlType": "电控",
-      "price": 275800
-    },
-    {
-      "model": "GWC45.52",
-      "inputSpeedRange": [400, 1400],
-      "ratios": [1.97, 2.52, 2.99, 3.47, 4.01, 4.64, 4.98, 5.51, 6.04],
-      "transferCapacity": [4.648, 3.62, 3.055, 2.64, 2.279, 1.97, 1.84, 1.66, 1.51],
-      "thrust": 270,
-      "centerDistance": 0,
-      "weight": 6030,
-      "dimensions": "1250×850×1050",
-      "controlType": "电控",
-      "price": 320000
-    },
-    {
-      "model": "GWC49.54",
-      "inputSpeedRange": [400, 1400],
-      "ratios": [1.94, 2.46, 2.92, 3.45, 3.95, 4.53, 4.91, 5.48, 6.00],
-      "transferCapacity": [5.500, 4.540, 3.827, 3.240, 2.825, 2.462, 2.273, 2.036, 1.861],
-      "thrust": 290,
-      "weight": 7900,
-      "dimensions": "1300×900×1100",
-      "controlType": "电控",
-      "price": 402600
-    },
-    {
-      "model": "GWC49.59",
-      "inputSpeedRange": [400, 1200],
-      "ratios": [2.03, 2.49, 3.04, 3.49, 4.00, 4.48, 5.01, 5.51, 6.01],
-      "transferCapacity": [5.55, 5.06, 4.15, 3.62, 3.16, 2.82, 2.52, 2.29, 2.1],
-      "thrust": 290,
-      "weight": 8500,
-      "dimensions": "1350×950×1150",
-      "controlType": "电控",
-      "price": 460000
+      "centerDistance": 450,
+      "weight": 5500,
+      "price": 275800,
+      "controlType": "气控/电控",
+      "dimensions": "-",
+      "basePrice": 275800,
+      "discountRate": 0.1,
+      "factoryPrice": 275524,
+      "packagePrice": 275524,
+      "marketPrice": 316853
     },
     {
       "model": "GWC52.59",
-      "inputSpeedRange": [400, 1200],
-      "ratios": [1.93, 2.48, 2.96, 3.53, 3.95, 4.43, 4.97, 5.40, 5.93],
-      "transferCapacity": [7.438, 5.797, 4.853, 4.081, 3.640, 3.246, 2.893, 2.663, 2.426],
+      "inputSpeedRange": [
+        400,
+        1200
+      ],
+      "ratios": [
+        1.93,
+        2.48,
+        2.96,
+        3.53,
+        3.95,
+        4.43,
+        4.97,
+        5.4,
+        5.93
+      ],
+      "transferCapacity": [
+        7.438,
+        5.797,
+        4.853,
+        4.081,
+        3.64,
+        3.246,
+        2.893,
+        2.663,
+        2.426
+      ],
       "thrust": 300,
-      "weight": 8955,
-      "dimensions": "1400×1000×1200",
-      "controlType": "电控",
-      "price": 545000
+      "centerDistance": 520,
+      "weight": 11000,
+      "price": 545000,
+      "controlType": "气控/电控",
+      "dimensions": "-",
+      "basePrice": 545000,
+      "discountRate": 0.1,
+      "factoryPrice": 544455,
+      "packagePrice": 544455,
+      "marketPrice": 626123
     },
     {
       "model": "GWC60.66",
-      "inputSpeedRange": [400, 1200],
-      "ratios": [2.01, 2.50, 3.07, 3.57, 4.05, 4.48, 5.08, 5.51, 6.12, 6.52, 6.97],
-      "transferCapacity": [9.913, 7.982, 6.492, 5.581, 4.923, 4.448, 3.927, 3.622, 3.261, 3.06, 3.00],
+      "inputSpeedRange": [
+        400,
+        1200
+      ],
+      "ratios": [
+        2.01,
+        2.5,
+        3.07,
+        3.57,
+        3.95,
+        4.49,
+        5.04,
+        5.51,
+        6.04,
+        6.5,
+        6.94
+      ],
+      "transferCapacity": [
+        9.913,
+        7.982,
+        6.492,
+        5.581,
+        4.923,
+        4.448,
+        3.927,
+        3.622,
+        3.261,
+        3.06,
+        3
+      ],
       "thrust": 450,
-      "weight": 14690,
-      "dimensions": "1500×1100×1300",
-      "controlType": "电控",
-      "price": 800000
-    },
-    {
-      "model": "GWC60.74",
-      "inputSpeedRange": [400, 1200],
-      "ratios": [1.99, 2.53, 3.06, 3.51, 4.02, 4.50, 5.04, 5.51, 6.04, 6.50, 6.94],
-      "transferCapacity": [11.409, 8.995, 7.434, 6.474, 5.651, 5.050, 4.512, 4.122, 3.762, 3.496, 3.273],
-      "thrust": 550,
-      "weight": 16600,
-      "dimensions": "1550×1150×1350",
-      "controlType": "电控",
-      "price": 920000
-    },
-    {
-      "model": "GWC63.71",
-      "inputSpeedRange": [300, 1000],
-      "ratios": [2.01, 2.51, 3.03, 3.45, 4.11, 4.55, 5.04, 5.47, 5.95, 6.48, 6.96, 7.46],
-      "transferCapacity": [12.23, 9.8, 8.117, 7.135, 6.0, 5.411, 4.888, 4.5, 4.137, 3.8, 3.541, 3.294],
-      "thrust": 710,
-      "weight": 17500,
-      "dimensions": "1650×1200×1400",
-      "controlType": "电控",
-      "price": 950000
-    },
-    {
-      "model": "GWC66.75",
-      "inputSpeedRange": [300, 950],
-      "ratios": [2.05, 2.55, 2.99, 3.48, 3.95, 4.49, 4.97, 5.51, 6.12, 6.59, 6.95],
-      "transferCapacity": [13.866, 11.148, 9.529, 8.173, 7.200, 6.342, 5.727, 5.165, 4.650, 4.31, 4.08],
-      "thrust": 730,
-      "weight": 20500,
-      "dimensions": "1700×1250×1450",
-      "controlType": "电控",
-      "price": 1050000
+      "centerDistance": 600,
+      "weight": 14500,
+      "price": 800000,
+      "controlType": "气控/电控",
+      "dimensions": "-",
+      "basePrice": 800000,
+      "discountRate": 0.1,
+      "factoryPrice": 799200,
+      "packagePrice": 799200,
+      "marketPrice": 919080
     },
     {
       "model": "GWC70.76",
-      "inputSpeedRange": [300, 950],
-      "ratios": [2.05, 2.55, 2.99, 3.48, 3.95, 4.49, 4.97, 5.51, 6.12, 6.59, 6.95],
-      "transferCapacity": [15.866, 12.148, 10.529, 9.173, 8.200, 7.342, 6.727, 6.165, 5.650, 5.31, 5.08],
+      "inputSpeedRange": [
+        300,
+        950
+      ],
+      "ratios": [
+        2.05,
+        2.53,
+        3.09,
+        3.58,
+        3.95,
+        4.57,
+        5.05,
+        5.58,
+        6.17
+      ],
+      "transferCapacity": [
+        15.643,
+        12.673,
+        10.364,
+        8.943,
+        8.111,
+        7.005,
+        6.348,
+        5.745,
+        5.191
+      ],
       "thrust": 750,
+      "centerDistance": 700,
       "weight": 22500,
-      "dimensions": "1750×1300×1500",
-      "controlType": "电控",
-      "price": 1150000
+      "price": 1100000,
+      "controlType": "气控/电控",
+      "dimensions": "-",
+      "basePrice": 1100000,
+      "discountRate": 0.1,
+      "factoryPrice": 1098900,
+      "packagePrice": 1098900,
+      "marketPrice": 1263735
     },
     {
-      "model": "GWC70.85",
-      "inputSpeedRange": [300, 850],
-      "ratios": [1.98, 2.45, 3.01, 3.49, 3.95, 4.47, 5.05, 5.58, 6.05],
-      "transferCapacity": [19.2, 15.484, 12.617, 10.863, 9.6, 8.484, 7.513, 6.8, 6.269],
-      "thrust": 800,
-      "centerDistance": 0,
-      "weight": 27000,
-      "dimensions": "1800×1350×1550",
-      "controlType": "电控",
-      "price": 1620000
+      "model": "GWC85.100",
+      "inputSpeedRange": [
+        200,
+        1425
+      ],
+      "ratios": [
+        1.98,
+        2.55,
+        2.98,
+        3.48,
+        3.95,
+        4.48,
+        4.97,
+        5.51,
+        5.99,
+        6.45,
+        7.05
+      ],
+      "transferCapacity": [
+        35
+      ],
+      "thrust": 1400,
+      "weight": 56.5,
+      "controlType": "气控/电控",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.1,
+      "factoryPrice": 0,
+      "dimensions": "-"
     },
     {
-      "model": "GWC75.90",
-      "inputSpeedRange": [200, 950],
-      "ratios": [2.01, 2.51, 3.01, 3.51, 4.00, 4.43, 5.04, 5.47, 6.02],
-      "transferCapacity": [22.423, 17.966, 15, 12.833, 11.282, 10.175, 8.953, 8.25, 7.489],
-      "thrust": 980,
-      "centerDistance": 0,
-      "weight": 34000,
-      "dimensions": "1850×1400×1600",
-      "controlType": "电控",
-      "price": 1800000
+      "model": "GWS28.30",
+      "inputSpeedRange": [
+        400,
+        1800
+      ],
+      "ratios": [
+        2,
+        2.56,
+        3,
+        3.57,
+        4.05
+      ],
+      "transferCapacity": [
+        0.44
+      ],
+      "thrust": 80,
+      "weight": 1230,
+      "controlType": "气控/电控",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.1,
+      "factoryPrice": 0,
+      "dimensions": "-"
     },
     {
-      "model": "GWC78.88",
-      "inputSpeedRange": [300, 950],
-      "ratios": [2.04, 2.49, 2.98, 3.48, 3.95, 4.49, 5.01, 5.47, 6.09],
-      "transferCapacity": [23.372, 19.099, 15.983, 13.708, 12.063, 10.615, 9.511, 8.712, 7.830],
-      "thrust": 1000,
-      "centerDistance": 0,
-      "weight": 35000,
-      "dimensions": "1900×1450×1650",
-      "controlType": "电控",
-      "price": 1670000
+      "model": "2GWH1060",
+      "inputSpeedRange": [
+        400,
+        2000
+      ],
+      "ratios": [
+        2,
+        2.5,
+        3,
+        3.5,
+        4,
+        4.5,
+        5,
+        5.5,
+        6
+      ],
+      "transferCapacityPerEngine": 1.12,
+      "thrust": 175,
+      "standardCenterDistance": 1460,
+      "controlType": "双机并车",
+      "transferCapacity": 0,
+      "weight": 0,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.1,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "2GWH4100",
+      "inputSpeedRange": [
+        400,
+        1600
+      ],
+      "ratios": [
+        2,
+        2.5,
+        3,
+        3.5,
+        4,
+        4.5,
+        5,
+        5.5,
+        6
+      ],
+      "transferCapacityPerEngine": 4.24,
+      "thrust": 450,
+      "standardCenterDistance": 2300,
+      "controlType": "双机并车",
+      "transferCapacity": 0,
+      "weight": 0,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.1,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "2GWH7050",
+      "inputSpeedRange": [
+        400,
+        1200
+      ],
+      "ratios": [
+        2,
+        2.5,
+        3,
+        3.5,
+        4,
+        4.5,
+        5,
+        5.5,
+        6
+      ],
+      "transferCapacityPerEngine": 7.43,
+      "thrust": 750,
+      "standardCenterDistance": 2700,
+      "controlType": "双机并车",
+      "transferCapacity": 0,
+      "weight": 0,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.1,
+      "factoryPrice": 0,
+      "dimensions": "-"
     }
   ],
   "hcmGearboxes": [
     {
       "model": "HCM70",
-      "inputSpeedRange": [1500, 4000],
-      "ratios": [1.00, 1.30, 2.00, 2.48, 2.78, 2.90],
-      "transferCapacity": [0.0712, 0.1114, 0.0985, 0.1398, 0.0591, 0.092, 0.0678],
+      "inputSpeedRange": [
+        1500,
+        4000
+      ],
+      "ratios": [
+        1,
+        1.3,
+        2,
+        2.48,
+        2.78,
+        2.9,
+        3
+      ],
+      "transferCapacity": [
+        0.0887,
+        0.0591,
+        0.0365,
+        0.0294,
+        0.0275,
+        0.0265,
+        0.0258
+      ],
       "thrust": 14,
       "centerDistance": 127,
       "weight": 46,
-      "dimensions": "400×300×350",
-      "controlType": "手控",
-      "price": 23000
-    },
-    {
-      "model": "HCM120",
-      "inputSpeedRange": [1500, 3600],
-      "ratios": [1.26, 1.51, 1.93, 1.57, 1.75, 1.96, 2.50, 1.96, 2.48, 2.48, 3.00, 3.00],
-      "transferCapacity": [0.1043, 0.0887, 0.0563, 0.0824, 0.0539, 0.0838, 0.0745, 0.0904, 0.0518, 0.0722, 0.0698, 0.0844],
-      "thrust": 16,
-      "centerDistance": 146,
-      "weight": 73,
-      "dimensions": "450×350×400",
-      "controlType": "手控",
-      "price": 28000
+      "price": 56000,
+      "controlType": "电控",
+      "dimensions": "-",
+      "basePrice": 56000,
+      "discountRate": 0.16,
+      "factoryPrice": 55910,
+      "packagePrice": 55910,
+      "marketPrice": 62619
     },
     {
       "model": "HCM160",
-      "inputSpeedRange": [1500, 3000],
-      "ratios": [1.22, 1.97, 2.92],
-      "transferCapacity": [0.2192, 0.1423, 0.1084, 0.1296, 0.1012],
+      "inputSpeedRange": [
+        1500,
+        3600
+      ],
+      "ratios": [
+        1,
+        1.57,
+        1.75,
+        1.96,
+        2.5,
+        2.48,
+        2.78,
+        2.9,
+        3
+      ],
+      "transferCapacity": [
+        0.1783,
+        0.1136,
+        0.1021,
+        0.0914,
+        0.0718,
+        0.0726,
+        0.0653,
+        0.0625,
+        0.0603
+      ],
       "thrust": 25,
       "centerDistance": 155,
       "weight": 98,
-      "dimensions": "480×380×430",
-      "controlType": "手控",
-      "price": 32000
+      "price": 75000,
+      "controlType": "电控",
+      "dimensions": "-",
+      "basePrice": 75000,
+      "discountRate": 0.16,
+      "factoryPrice": 74880,
+      "packagePrice": 74880,
+      "marketPrice": 83866
     },
     {
       "model": "HCM250",
-      "inputSpeedRange": [1500, 3000],
-      "ratios": [0.85, 0.93, 1.00, 1.11, 1.23, 1.53, 1.78, 2.03, 2.21, 2.60, 2.96],
-      "transferCapacity": [0.3196, 0.213, 0.2101, 0.1882, 0.1802, 0.2351, 0.2557, 0.2917, 0.2917, 0.266, 0.2486],
-      "thrust": 27.5,
-      "centerDistance": 175,
-      "weight": 160,
-      "dimensions": "500×400×450",
-      "controlType": "手控",
-      "price": 36000
+      "inputSpeedRange": [
+        1500,
+        3000
+      ],
+      "ratios": [
+        1.22,
+        1.97,
+        2.92
+      ],
+      "transferCapacity": [
+        0.2192,
+        0.1423,
+        0.1084
+      ],
+      "thrust": 30,
+      "centerDistance": 180,
+      "weight": 180,
+      "price": 89000,
+      "controlType": "电控",
+      "dimensions": "-",
+      "basePrice": 89000,
+      "discountRate": 0.16,
+      "factoryPrice": 88858,
+      "packagePrice": 88858,
+      "marketPrice": 99521
     },
     {
       "model": "HCM435",
-      "inputSpeedRange": [1500, 3000],
-      "ratios": [1.13, 1.50, 1.97],
-      "transferCapacity": [0.3913, 0.3567, 0.2694],
-      "thrust": 40,
-      "centerDistance": 180,
-      "weight": 185,
-      "dimensions": "520×420×470",
-      "controlType": "手控",
-      "price": 42000
-    },
-    {
-      "model": "HCM535",
-      "inputSpeedRange": [1500, 3000],
-      "ratios": [1.11, 1.26, 1.74, 2.00, 2.59],
-      "transferCapacity": [0.4476, 0.3729, 0.3107, 0.29, 0.3997, 0.3654, 0.29, 0.2692],
-      "thrust": 40,
-      "centerDistance": 200,
-      "weight": 248,
-      "dimensions": "550×450×500",
-      "controlType": "手控",
-      "price": 48000
+      "inputSpeedRange": [
+        1500,
+        3000
+      ],
+      "ratios": [
+        0.85,
+        0.93,
+        1,
+        1.11,
+        1.23,
+        1.53,
+        1.78,
+        2.03,
+        2.21,
+        2.6,
+        2.96
+      ],
+      "transferCapacity": [
+        0.3196,
+        0.2917,
+        0.2714,
+        0.2449,
+        0.221,
+        0.178,
+        0.1529,
+        0.1338,
+        0.1232,
+        0.1048,
+        0.0924
+      ],
+      "thrust": 27.5,
+      "centerDistance": 175,
+      "weight": 160,
+      "price": 118000,
+      "controlType": "电控",
+      "dimensions": "-",
+      "basePrice": 118000,
+      "discountRate": 0.16,
+      "factoryPrice": 117811,
+      "packagePrice": 117811,
+      "marketPrice": 131948
     },
     {
       "model": "HCM600",
-      "inputSpeedRange": [1500, 2600],
-      "ratios": [1.50, 2.03, 2.52],
-      "transferCapacity": [0.5028, 0.4382, 0.3771, 0.3111],
+      "inputSpeedRange": [
+        1500,
+        3000
+      ],
+      "ratios": [
+        1.11,
+        1.26,
+        1.74,
+        2,
+        2.59
+      ],
+      "transferCapacity": [
+        0.4476,
+        0.3997,
+        0.3107,
+        0.2694,
+        0.2141
+      ],
       "thrust": 40,
-      "centerDistance": 220,
-      "weight": 342,
-      "dimensions": "580×480×530",
-      "controlType": "手控",
-      "price": 54000
-    },
-    {
-      "model": "HCM685",
-      "inputSpeedRange": [1500, 2600],
-      "ratios": [1.50, 2.04, 2.50],
-      "transferCapacity": [0.398],
-      "thrust": 50,
-      "centerDistance": 255,
-      "weight": 570,
-      "dimensions": "620×520×570",
-      "controlType": "手控",
-      "price": 60000
+      "centerDistance": 200,
+      "weight": 248,
+      "price": 138000,
+      "controlType": "电控",
+      "dimensions": "-",
+      "basePrice": 138000,
+      "discountRate": 0.16,
+      "factoryPrice": 137779,
+      "packagePrice": 137779,
+      "marketPrice": 154312
     },
     {
       "model": "HCM1250",
-      "inputSpeedRange": [1500, 2500],
-      "ratios": [1.53, 2.03, 2.50, 2.96],
-      "transferCapacity": [0.9435, 0.9157, 0.7466, 0.6319],
+      "inputSpeedRange": [
+        1500,
+        2500
+      ],
+      "ratios": [
+        1.53,
+        2.03,
+        2.5,
+        2.96
+      ],
+      "transferCapacity": [
+        0.9435,
+        0.9157,
+        0.7466,
+        0.6319
+      ],
       "thrust": 110,
       "centerDistance": 340,
       "weight": 950,
-      "dimensions": "830×680×740",
-      "controlType": "手控",
-      "price": 85000
-    },
-    {
-      "model": "HCM1400",
-      "inputSpeedRange": [1600, 2100],
-      "ratios": [1.48, 2.02, 2.55, 3.07],
-      "transferCapacity": [1.031, 0.89],
-      "thrust": 110,
-      "centerDistance": 340,
-      "weight": 950,
-      "dimensions": "850×700×760",
-      "controlType": "手控",
-      "price": 95000
+      "price": 260000,
+      "controlType": "电控",
+      "dimensions": "-",
+      "basePrice": 260000,
+      "discountRate": 0.16,
+      "factoryPrice": 259584,
+      "packagePrice": 259584,
+      "marketPrice": 290734
     },
     {
       "model": "HCM1600",
-      "inputSpeedRange": [1000, 2100],
-      "ratios": [1.55, 1.83, 2.04, 2.23, 2.57, 2.77, 2.91, 3.17],
-      "transferCapacity": [1.204, 1.1518, 1.139, 1.4031, 1.3822, 1.3508, 1.3351, 1.3194, 1.3131],
+      "inputSpeedRange": [
+        1000,
+        2100
+      ],
+      "ratios": [
+        1.55,
+        1.83,
+        2.04,
+        2.23,
+        2.57,
+        2.77,
+        2.91,
+        3.17
+      ],
+      "transferCapacity": [
+        1.4031,
+        1.2984,
+        1.1518,
+        1.0584,
+        0.9183,
+        0.8535,
+        0.8053,
+        0.7386
+      ],
       "thrust": 135,
       "centerDistance": 340,
       "weight": 1230,
-      "dimensions": "880×720×780",
-      "controlType": "手控",
-      "price": 105000
+      "price": 320000,
+      "controlType": "电控",
+      "dimensions": "-",
+      "basePrice": 320000,
+      "discountRate": 0.16,
+      "factoryPrice": 319488,
+      "packagePrice": 319488,
+      "marketPrice": 357827
     },
     {
-      "model": "HCM1800",
-      "inputSpeedRange": [1000, 2100],
-      "ratios": [1.58, 2.04, 2.54, 2.74, 2.96],
-      "transferCapacity": [1.859, 1.789, 1.657, 1.5, 1.859],
-      "thrust": 225,
-      "centerDistance": 390,
-      "weight": 1575,
-      "dimensions": "950×780×850",
-      "controlType": "手控",
-      "price": 125000
-    }
-  ],
-  "gcGearboxes": [
-    {
-      "model": "GCS300",
-      "inputSpeedRange": [1000, 2300],
-      "ratios": [2.00, 2.50, 3.00, 3.50],
-      "transferCapacity": [0.200],
-      "thrust": 45,
-      "centerDistance": 260,
-      "weight": 620,
-      "dimensions": "550×820×780",
+      "model": "HCM120",
+      "inputSpeedRange": [
+        1500,
+        4500
+      ],
+      "ratios": [
+        1,
+        1.96,
+        2.48,
+        3
+      ],
+      "transferCapacity": [
+        0.0985
+      ],
+      "thrust": 16,
+      "centerDistance": 135,
+      "weight": 63,
       "controlType": "推拉软轴",
-      "price": 28000,
-      "marketPrice": 32000,
-      "basePrice": 28000,
-      "discountRate": 0
+      "_sourceType": "hcmAluminumGearboxes",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
     },
     {
-      "model": "GCS500",
-      "inputSpeedRange": [800, 1800],
-      "ratios": [2.50, 3.00, 3.50, 4.00],
-      "transferCapacity": [0.350],
-      "thrust": 60,
-      "centerDistance": 300,
-      "weight": 950,
-      "dimensions": "680×950×850",
-      "controlType": "推拉软轴",
-      "price": 45000,
-      "marketPrice": 52000,
-      "basePrice": 45000,
-      "discountRate": 0
-    },
-    {
-      "model": "GCS700",
-      "inputSpeedRange": [600, 1600],
-      "ratios": [3.00, 3.50, 4.00, 4.50],
-      "transferCapacity": [0.520],
-      "thrust": 80,
-      "centerDistance": 350,
-      "weight": 1400,
-      "dimensions": "780×1050×920",
-      "controlType": "推拉软轴",
-      "price": 68000,
-      "marketPrice": 75000,
-      "basePrice": 68000,
-      "discountRate": 0
-    },
-    {
-      "model": "GCS320",
-      "inputSpeedRange": [1000, 2300],
-      "ratios": [2.00, 2.50, 3.00, 3.50],
-      "transferCapacity": [0.220],
-      "thrust": 45,
-      "centerDistance": 260,
-      "weight": 650,
-      "dimensions": "560×830×790",
-      "controlType": "推拉软轴",
-      "price": 30000,
-      "marketPrice": 34000,
-      "basePrice": 30000,
-      "discountRate": 0
-    },
-    {
-      "model": "GCS350",
-      "inputSpeedRange": [1000, 2300],
-      "ratios": [2.00, 2.50, 3.00, 3.50],
-      "transferCapacity": [0.250],
+      "model": "HCM500",
+      "inputSpeedRange": [
+        1000,
+        2600
+      ],
+      "ratios": [
+        1.5,
+        2.04,
+        2.5
+      ],
+      "transferCapacity": [
+        0.5062
+      ],
       "thrust": 50,
-      "centerDistance": 280,
-      "weight": 700,
-      "dimensions": "580×850×810",
-      "controlType": "推拉软轴",
-      "price": 32000,
-      "marketPrice": 36000,
-      "basePrice": 32000,
-      "discountRate": 0
-    },
-    {
-      "model": "GCS390",
-      "inputSpeedRange": [1000, 2300],
-      "ratios": [2.00, 2.50, 3.00, 3.50],
-      "transferCapacity": [0.280],
-      "thrust": 55,
-      "centerDistance": 290,
-      "weight": 750,
-      "dimensions": "600×870×830",
-      "controlType": "推拉软轴",
-      "price": 34000,
-      "marketPrice": 38000,
-      "basePrice": 34000,
-      "discountRate": 0
-    },
-    {
-      "model": "GCS410",
-      "inputSpeedRange": [800, 1800],
-      "ratios": [2.50, 3.00, 3.50, 4.00],
-      "transferCapacity": [0.300],
-      "thrust": 60,
-      "centerDistance": 300,
-      "weight": 800,
-      "dimensions": "620×890×850",
-      "controlType": "推拉软轴",
-      "price": 36000,
-      "marketPrice": 40000,
-      "basePrice": 36000,
-      "discountRate": 0
-    },
-    {
-      "model": "GCS450",
-      "inputSpeedRange": [800, 1800],
-      "ratios": [2.50, 3.00, 3.50, 4.00],
-      "transferCapacity": [0.330],
-      "thrust": 65,
-      "centerDistance": 310,
-      "weight": 850,
-      "dimensions": "640×910×870",
-      "controlType": "推拉软轴",
-      "price": 38000,
-      "marketPrice": 42000,
-      "basePrice": 38000,
-      "discountRate": 0
-    },
-    {
-      "model": "GCS490",
-      "inputSpeedRange": [800, 1800],
-      "ratios": [2.50, 3.00, 3.50, 4.00],
-      "transferCapacity": [0.360],
-      "thrust": 70,
-      "centerDistance": 320,
-      "weight": 900,
-      "dimensions": "660×930×890",
-      "controlType": "推拉软轴",
-      "price": 40000,
-      "marketPrice": 44000,
-      "basePrice": 40000,
-      "discountRate": 0
-    },
-    {
-      "model": "GCS540",
-      "inputSpeedRange": [600, 1600],
-      "ratios": [3.00, 3.50, 4.00, 4.50],
-      "transferCapacity": [0.400],
-      "thrust": 75,
-      "centerDistance": 330,
-      "weight": 950,
-      "dimensions": "680×950×910",
-      "controlType": "推拉软轴",
-      "price": 42000,
-      "marketPrice": 46000,
-      "basePrice": 42000,
-      "discountRate": 0
-    },
-    {
-      "model": "GCS590",
-      "inputSpeedRange": [600, 1600],
-      "ratios": [3.00, 3.50, 4.00, 4.50],
-      "transferCapacity": [0.440],
-      "thrust": 80,
-      "centerDistance": 340,
-      "weight": 1000,
-      "dimensions": "700×970×930",
-      "controlType": "推拉软轴",
-      "price": 44000,
-      "marketPrice": 48000,
-      "basePrice": 44000,
-      "discountRate": 0
-    },
-    {
-      "model": "GCS660",
-      "inputSpeedRange": [600, 1600],
-      "ratios": [3.00, 3.50, 4.00, 4.50],
-      "transferCapacity": [0.480],
-      "thrust": 85,
-      "centerDistance": 350,
-      "weight": 1050,
-      "dimensions": "720×990×950",
-      "controlType": "推拉软轴",
-      "price": 46000,
-      "marketPrice": 50000,
-      "basePrice": 46000,
-      "discountRate": 0
-    },
-    {
-      "model": "GCS700B",
-      "inputSpeedRange": [600, 1600],
-      "ratios": [3.00, 3.50, 4.00, 4.50],
-      "transferCapacity": [0.520],
-      "thrust": 90,
-      "centerDistance": 360,
-      "weight": 1100,
-      "dimensions": "740×1010×970",
-      "controlType": "推拉软轴",
-      "price": 48000,
-      "marketPrice": 52000,
-      "basePrice": 48000,
-      "discountRate": 0
-    },
-    {
-      "model": "GCS750",
-      "inputSpeedRange": [600, 1600],
-      "ratios": [3.00, 3.50, 4.00, 4.50],
-      "transferCapacity": [0.560],
-      "thrust": 95,
-      "centerDistance": 370,
-      "weight": 1150,
-      "dimensions": "760×1030×990",
-      "controlType": "推拉软轴",
-      "price": 50000,
-      "marketPrice": 54000,
-      "basePrice": 50000,
-      "discountRate": 0
-    },
-    {
-      "model": "GCS760",
-      "inputSpeedRange": [600, 1600],
-      "ratios": [3.00, 3.50, 4.00, 4.50],
-      "transferCapacity": [0.600],
-      "thrust": 100,
-      "centerDistance": 380,
-      "weight": 1200,
-      "dimensions": "780×1050×1010",
-      "controlType": "推拉软轴",
-      "price": 52000,
-      "marketPrice": 56000,
-      "basePrice": 52000,
-      "discountRate": 0
+      "centerDistance": 255,
+      "weight": 570,
+      "controlType": "气控/电控",
+      "_sourceType": "hcmAluminumGearboxes",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
     }
   ],
-  "hybridGearboxes": [
+  "dtGearboxes": [
     {
-      "model": "HCH300",
-      "inputSpeedRange": [1000, 2300],
-      "ratios": [2.00, 2.50, 3.00, 3.50],
-      "transferCapacity": [0.200],
-      "thrust": 45,
-      "centerDistance": 260,
-      "weight": 620,
-      "dimensions": "550×820×780",
-      "controlType": "推拉软轴",
-      "price": 28000,
-      "marketPrice": 32000,
-      "basePrice": 28000,
-      "discountRate": 0
+      "model": "DT180",
+      "inputSpeedRange": [
+        750,
+        1500
+      ],
+      "ratios": [
+        1.53,
+        2.03,
+        2.5,
+        2.96,
+        3.54,
+        3.96,
+        4.48,
+        4.96,
+        5.52,
+        5.98
+      ],
+      "transferCapacity": [
+        0.08009696969696972,
+        0.0699381754048421,
+        0.060574635241301925,
+        0.052006349206349216,
+        0.044233317299983976,
+        0.037255539522206185,
+        0.031073015873015877,
+        0.025685746352413018,
+        0.02109373096039764,
+        0.017296969696969706
+      ],
+      "thrust": 14.7,
+      "centerDistance": 142,
+      "weight": 130,
+      "price": 23000,
+      "controlType": "电控",
+      "dimensions": "-",
+      "basePrice": 23000,
+      "discountRate": 0.1,
+      "factoryPrice": 22977,
+      "packagePrice": 22977,
+      "marketPrice": 27113
     },
     {
-      "model": "HCH600",
-      "inputSpeedRange": [800, 1800],
-      "ratios": [2.50, 3.00, 3.50, 4.00],
-      "transferCapacity": [0.350],
+      "model": "DT240",
+      "inputSpeedRange": [
+        750,
+        1500
+      ],
+      "ratios": [
+        1.53,
+        2.03,
+        2.5,
+        2.96,
+        3.55,
+        4,
+        4.53,
+        5.05
+      ],
+      "transferCapacity": [
+        0.170478787878788,
+        0.1398221574344024,
+        0.11193043555084373,
+        0.08680362222811201,
+        0.06444171746620725,
+        0.04484472126512941,
+        0.028012633624878533,
+        0.013945454545454594
+      ],
+      "thrust": 30,
+      "centerDistance": 165,
+      "weight": 240,
+      "price": 39000,
+      "controlType": "电控",
+      "dimensions": "-",
+      "basePrice": 39000,
+      "discountRate": 0.1,
+      "factoryPrice": 38961,
+      "packagePrice": 38961,
+      "marketPrice": 45974
+    },
+    {
+      "model": "DT580",
+      "inputSpeedRange": [
+        750,
+        1500
+      ],
+      "ratios": [
+        1.46,
+        2.05,
+        2.55,
+        2.95,
+        3.48,
+        3.96,
+        4.52,
+        4.94,
+        5.41,
+        5.83
+      ],
+      "transferCapacity": [
+        0.336,
+        0.27,
+        0.25,
+        0.21,
+        0.16,
+        0.14,
+        0.123,
+        0.112,
+        0.102,
+        0.086
+      ],
+      "thrust": 40,
+      "centerDistance": 203,
+      "weight": 370,
+      "price": 52000,
+      "controlType": "电控",
+      "dimensions": "-",
+      "basePrice": 52000,
+      "discountRate": 0.1,
+      "factoryPrice": 51948,
+      "packagePrice": 51948,
+      "marketPrice": 61299
+    },
+    {
+      "model": "DT770",
+      "inputSpeedRange": [
+        750,
+        1500
+      ],
+      "ratios": [
+        1.54,
+        1.96,
+        2.5,
+        3.05,
+        3.47,
+        3.95,
+        4.57,
+        5.1,
+        5.62,
+        5.98
+      ],
+      "transferCapacity": [
+        0.48,
+        0.443,
+        0.4,
+        0.327,
+        0.283,
+        0.214,
+        0.186,
+        0.166,
+        0.134,
+        0.106
+      ],
+      "thrust": 50,
+      "centerDistance": 220,
+      "weight": 480,
+      "price": 58000,
+      "controlType": "电控",
+      "dimensions": "-",
+      "basePrice": 58000,
+      "discountRate": 0.1,
+      "factoryPrice": 57942,
+      "packagePrice": 57942,
+      "marketPrice": 68372
+    },
+    {
+      "model": "DT900",
+      "inputSpeedRange": [
+        750,
+        1500
+      ],
+      "ratios": [
+        1.5,
+        2.03,
+        2.48,
+        2.96,
+        3.57,
+        4.05,
+        4.52,
+        4.99,
+        5.5,
+        5.94
+      ],
+      "transferCapacity": [
+        0.6269454545454547,
+        0.5483460638127305,
+        0.475652076318743,
+        0.40886349206349204,
+        0.3479803110469777,
+        0.29300253326919984,
+        0.24393015873015872,
+        0.20076318742985405,
+        0.16350161936828608,
+        0.13214545454545462
+      ],
       "thrust": 60,
-      "centerDistance": 300,
-      "weight": 950,
-      "dimensions": "680×950×850",
-      "controlType": "推拉软轴",
-      "price": 45000,
-      "marketPrice": 52000,
-      "basePrice": 45000,
-      "discountRate": 0
+      "centerDistance": 264,
+      "weight": 700,
+      "price": 63000,
+      "controlType": "电控",
+      "dimensions": "-",
+      "basePrice": 63000,
+      "discountRate": 0.1,
+      "factoryPrice": 62937,
+      "packagePrice": 62937,
+      "marketPrice": 74266
     },
     {
-      "model": "HCH800",
-      "inputSpeedRange": [600, 1600],
-      "ratios": [3.00, 3.50, 4.00, 4.50],
-      "transferCapacity": [0.520],
-      "thrust": 80,
-      "centerDistance": 350,
-      "weight": 1400,
-      "dimensions": "780×1050×920",
-      "controlType": "推拉软轴",
-      "price": 68000,
-      "marketPrice": 75000,
-      "basePrice": 68000,
-      "discountRate": 0
+      "model": "DT1400",
+      "inputSpeedRange": [
+        750,
+        1500
+      ],
+      "ratios": [
+        1.47,
+        1.96,
+        2.48,
+        3.04,
+        3.44,
+        4.09,
+        4.44,
+        4.95,
+        5.53,
+        6.08
+      ],
+      "transferCapacity": [
+        0.8,
+        0.77,
+        0.663,
+        0.566,
+        0.519,
+        0.451,
+        0.416,
+        0.333,
+        0.3,
+        0.272
+      ],
+      "thrust": 90,
+      "centerDistance": 290,
+      "weight": 900,
+      "price": 100000,
+      "controlType": "电控",
+      "dimensions": "-",
+      "basePrice": 100000,
+      "discountRate": 0.1,
+      "factoryPrice": 99900,
+      "packagePrice": 99900,
+      "marketPrice": 117882
     },
     {
-      "model": "HCH1000",
-      "inputSpeedRange": [600, 1600],
-      "ratios": [3.00, 3.50, 4.00, 4.50],
-      "transferCapacity": [0.600],
+      "model": "DT1500",
+      "inputSpeedRange": [
+        750,
+        1500
+      ],
+      "ratios": [
+        1.54,
+        1.96,
+        2.52,
+        3.05,
+        3.47,
+        3.95,
+        4.45,
+        5,
+        5.49,
+        6.03
+      ],
+      "transferCapacity": [
+        1.125,
+        0.967,
+        0.813,
+        0.713,
+        0.637,
+        0.537,
+        0.41,
+        0.313,
+        0.285,
+        0.259
+      ],
       "thrust": 100,
-      "centerDistance": 380,
-      "weight": 1600,
-      "dimensions": "820×1100×980",
-      "controlType": "推拉软轴",
-      "price": 85000,
-      "marketPrice": 92000,
-      "basePrice": 85000,
-      "discountRate": 0
+      "centerDistance": 310,
+      "weight": 1100,
+      "price": 120000,
+      "controlType": "电控",
+      "dimensions": "-",
+      "basePrice": 120000,
+      "discountRate": 0.1,
+      "factoryPrice": 119880,
+      "packagePrice": 119880,
+      "marketPrice": 141458
     },
     {
-      "model": "HCH1200",
-      "inputSpeedRange": [600, 1600],
-      "ratios": [3.00, 3.50, 4.00, 4.50],
-      "transferCapacity": [0.700],
-      "thrust": 120,
-      "centerDistance": 400,
-      "weight": 1800,
-      "dimensions": "860×1150×1020",
-      "controlType": "推拉软轴",
-      "price": 95000,
-      "marketPrice": 102000,
-      "basePrice": 95000,
-      "discountRate": 0
+      "model": "DT2400",
+      "inputSpeedRange": [
+        750,
+        1500
+      ],
+      "ratios": [
+        1.52,
+        2.04,
+        2.43,
+        2.9,
+        3.48,
+        4,
+        4.45,
+        5,
+        5.35,
+        5.5,
+        5.96
+      ],
+      "transferCapacity": [
+        1.466
+      ],
+      "thrust": 110,
+      "centerDistance": 340,
+      "weight": 1430,
+      "controlType": "电控",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.1,
+      "factoryPrice": 0,
+      "dimensions": "-"
     }
   ],
   "flexibleCouplings": [
     {
+      "model": "HGTHB3.2",
+      "torque": 3.2,
+      "maxSpeed": 5000,
+      "weight": 60,
+      "price": 11000,
+      "basePrice": 11000,
+      "discountRate": 0.1,
+      "factoryPrice": 10989,
+      "marketPrice": 12100
+    },
+    {
+      "model": "HGTHB5",
+      "torque": 5,
+      "maxSpeed": 4500,
+      "weight": 80,
+      "price": 13000,
+      "basePrice": 13000,
+      "discountRate": 0.1,
+      "factoryPrice": 12987,
+      "marketPrice": 14300
+    },
+    {
+      "model": "HGTHB6.3",
+      "torque": 6.3,
+      "maxSpeed": 4000,
+      "weight": 90,
+      "price": 15400,
+      "basePrice": 15400,
+      "discountRate": 0.1,
+      "factoryPrice": 15385,
+      "marketPrice": 16940
+    },
+    {
+      "model": "HGTHB8",
+      "torque": 8,
+      "maxSpeed": 3800,
+      "weight": 110,
+      "price": 18500,
+      "basePrice": 18500,
+      "discountRate": 0.1,
+      "factoryPrice": 18482,
+      "marketPrice": 20350
+    },
+    {
+      "model": "HGTHB10",
+      "torque": 10,
+      "maxSpeed": 3500,
+      "weight": 130,
+      "price": 22000,
+      "basePrice": 22000,
+      "discountRate": 0.1,
+      "factoryPrice": 21978,
+      "marketPrice": 24200
+    },
+    {
+      "model": "HGTHB12.5",
+      "torque": 12.5,
+      "maxSpeed": 3200,
+      "weight": 160,
+      "price": 25000,
+      "basePrice": 25000,
+      "discountRate": 0.1,
+      "factoryPrice": 24975,
+      "marketPrice": 27500
+    },
+    {
+      "model": "HGTHB16",
+      "torque": 16,
+      "maxSpeed": 3000,
+      "weight": 200,
+      "price": 29500,
+      "basePrice": 29500,
+      "discountRate": 0.1,
+      "factoryPrice": 29471,
+      "marketPrice": 32450
+    },
+    {
+      "model": "HGTHB20",
+      "torque": 20,
+      "maxSpeed": 2800,
+      "weight": 240,
+      "price": 37400,
+      "basePrice": 37400,
+      "discountRate": 0.1,
+      "factoryPrice": 37363,
+      "marketPrice": 41140
+    },
+    {
+      "model": "HGTHB25",
+      "torque": 25,
+      "maxSpeed": 2500,
+      "weight": 300,
+      "price": 47000,
+      "basePrice": 47000,
+      "discountRate": 0.1,
+      "factoryPrice": 46953,
+      "marketPrice": 51700
+    },
+    {
       "model": "HGT1020",
       "torque": 10,
+      "maxSpeed": 3000,
       "weight": 280,
-      "price": 11000
+      "price": 11000,
+      "basePrice": 11000,
+      "discountRate": 0.1,
+      "factoryPrice": 10989,
+      "marketPrice": 12100
     },
     {
       "model": "HGT1220",
       "torque": 12.5,
+      "maxSpeed": 2800,
       "weight": 340,
-      "price": 13000
+      "price": 13000,
+      "basePrice": 13000,
+      "discountRate": 0.1,
+      "factoryPrice": 12987,
+      "marketPrice": 14300
     },
     {
       "model": "HGT1620",
       "torque": 16,
+      "maxSpeed": 2600,
       "weight": 400,
-      "price": 15400
+      "price": 15400,
+      "basePrice": 15400,
+      "discountRate": 0.1,
+      "factoryPrice": 15385,
+      "marketPrice": 16940
     },
     {
       "model": "HGT2020",
       "torque": 20,
+      "maxSpeed": 2400,
       "weight": 480,
-      "price": 18500
+      "price": 18500,
+      "basePrice": 18500,
+      "discountRate": 0.1,
+      "factoryPrice": 18482,
+      "marketPrice": 20350
     },
     {
       "model": "HGT2520",
       "torque": 25,
+      "maxSpeed": 2200,
       "weight": 540,
-      "price": 22000
+      "price": 22000,
+      "basePrice": 22000,
+      "discountRate": 0.1,
+      "factoryPrice": 21978,
+      "marketPrice": 24200
     },
     {
       "model": "HGT3020",
       "torque": 31.5,
+      "maxSpeed": 2000,
       "weight": 600,
-      "price": 25000
+      "price": 25000,
+      "basePrice": 25000,
+      "discountRate": 0.1,
+      "factoryPrice": 24975,
+      "marketPrice": 27500
     },
     {
       "model": "HGT4020",
       "torque": 40,
+      "maxSpeed": 1800,
       "weight": 720,
-      "price": 29500
+      "price": 29500,
+      "basePrice": 29500,
+      "discountRate": 0.1,
+      "factoryPrice": 29471,
+      "marketPrice": 32450
     },
     {
       "model": "HGT5020",
       "torque": 50,
+      "maxSpeed": 1600,
       "weight": 900,
-      "price": 37400
+      "price": 37400,
+      "basePrice": 37400,
+      "discountRate": 0.1,
+      "factoryPrice": 37363,
+      "marketPrice": 41140
     },
     {
       "model": "HGT6320",
       "torque": 63,
+      "maxSpeed": 1400,
       "weight": 1100,
-      "price": 47000
+      "price": 47000,
+      "basePrice": 47000,
+      "discountRate": 0.1,
+      "factoryPrice": 46953,
+      "marketPrice": 51700
     },
     {
       "model": "HGT8020",
       "torque": 80,
+      "maxSpeed": 1200,
       "weight": 1350,
-      "price": 58000
+      "price": 58000,
+      "basePrice": 58000,
+      "discountRate": 0.1,
+      "factoryPrice": 57942,
+      "marketPrice": 63800
     },
     {
       "model": "HGT10020",
       "torque": 100,
+      "maxSpeed": 1000,
       "weight": 1650,
-      "price": 71500
+      "price": 71500,
+      "basePrice": 71500,
+      "discountRate": 0.1,
+      "factoryPrice": 71429,
+      "marketPrice": 78650
     },
     {
       "model": "HGT12520",
       "torque": 125,
+      "maxSpeed": 900,
       "weight": 2000,
-      "price": 85800
+      "price": 85800,
+      "basePrice": 85800,
+      "discountRate": 0.1,
+      "factoryPrice": 85714,
+      "marketPrice": 94380
     },
     {
       "model": "HGT16020",
       "torque": 160,
+      "maxSpeed": 800,
       "weight": 2400,
-      "price": 118000
+      "price": 118000,
+      "basePrice": 118000,
+      "discountRate": 0.1,
+      "factoryPrice": 117882,
+      "marketPrice": 129800
     },
     {
       "model": "HGT20020",
       "torque": 200,
+      "maxSpeed": 700,
       "weight": 2850,
-      "price": 154000
+      "price": 154000,
+      "basePrice": 154000,
+      "discountRate": 0.1,
+      "factoryPrice": 153846,
+      "marketPrice": 169400
     },
     {
       "model": "HGT25020",
       "torque": 250,
+      "maxSpeed": 600,
       "weight": 3300,
-      "price": 195000
+      "price": 195000,
+      "basePrice": 195000,
+      "discountRate": 0.1,
+      "factoryPrice": 194805,
+      "marketPrice": 214500
     },
     {
-      "model": "HGT31520",
-      "torque": 315,
-      "weight": 4500,
-      "price": 264000
+      "model": "HGTQ1215",
+      "torque": 12.15,
+      "maxSpeed": 3000,
+      "weight": 150,
+      "price": 25000,
+      "basePrice": 25000,
+      "discountRate": 0.1,
+      "factoryPrice": 24975,
+      "marketPrice": 27500
     },
     {
-      "model": "HGT40020",
-      "torque": 400,
-      "weight": 6700,
-      "price": 350000
+      "model": "HCL250A",
+      "inputSpeedRange": [
+        750,
+        2500
+      ],
+      "torque": 2.5,
+      "transferCapacity": 0.262,
+      "weight": 210,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.12,
+      "factoryPrice": 0
     },
     {
-      "model": "HGT50020",
-      "torque": 500,
-      "weight": 6700,
-      "price": 390000
+      "model": "HCL30",
+      "inputSpeedRange": [
+        750,
+        2500
+      ],
+      "torque": 0.3,
+      "transferCapacity": 0.031,
+      "weight": 100,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.12,
+      "factoryPrice": 0
+    },
+    {
+      "model": "HCL100",
+      "inputSpeedRange": [
+        750,
+        2500
+      ],
+      "torque": 1,
+      "transferCapacity": 0.105,
+      "weight": 156,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.12,
+      "factoryPrice": 0
+    },
+    {
+      "model": "HCL320",
+      "inputSpeedRange": [
+        500,
+        2500
+      ],
+      "torque": 3.2,
+      "transferCapacity": 0.335,
+      "weight": 210,
+      "dimensions": "554x425x635",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.12,
+      "factoryPrice": 0
     }
   ],
   "standbyPumps": [
@@ -1328,95 +1814,746 @@
       "model": "2CY7.5/2.5D",
       "flow": 7.5,
       "pressure": 2.5,
-      "motorPower": 5.5,
-      "price": 6500
+      "motorPower": 3,
+      "weight": 45,
+      "price": 5800,
+      "basePrice": 5800,
+      "discountRate": 0.1,
+      "factoryPrice": 5794,
+      "marketPrice": 6380
     },
     {
       "model": "2CY14.2/2.5D",
       "flow": 14.2,
       "pressure": 2.5,
-      "motorPower": 11,
-      "price": 9800
+      "motorPower": 5.5,
+      "weight": 65,
+      "price": 8500,
+      "basePrice": 8500,
+      "discountRate": 0.1,
+      "factoryPrice": 8492,
+      "marketPrice": 9350
     },
     {
       "model": "2CY19.2/2.5D",
       "flow": 19.2,
       "pressure": 2.5,
-      "motorPower": 15,
-      "price": 12500
+      "motorPower": 7.5,
+      "weight": 80,
+      "price": 10800,
+      "basePrice": 10800,
+      "discountRate": 0.1,
+      "factoryPrice": 10789,
+      "marketPrice": 11880
     },
     {
       "model": "2CY24.8/2.5D",
       "flow": 24.8,
       "pressure": 2.5,
+      "motorPower": 11,
+      "weight": 110,
+      "price": 14500,
+      "basePrice": 14500,
+      "discountRate": 0.1,
+      "factoryPrice": 14486,
+      "marketPrice": 15950
+    },
+    {
+      "model": "2CY34.5/2.5D",
+      "flow": 34.5,
+      "pressure": 2.5,
+      "motorPower": 15,
+      "weight": 150,
+      "price": 19500,
+      "basePrice": 19500,
+      "discountRate": 0.1,
+      "factoryPrice": 19481,
+      "marketPrice": 21450
+    },
+    {
+      "model": "2CY48.2/2.5D",
+      "flow": 48.2,
+      "pressure": 2.5,
       "motorPower": 22,
-      "price": 15800
+      "weight": 215,
+      "price": 26800,
+      "basePrice": 26800,
+      "discountRate": 0.1,
+      "factoryPrice": 26773,
+      "marketPrice": 29480
+    },
+    {
+      "model": "2CY10/3.0",
+      "flow": 10,
+      "pressure": 3,
+      "weight": 75,
+      "price": 10000,
+      "basePrice": 10000,
+      "discountRate": 0.1,
+      "factoryPrice": 9990
+    },
+    {
+      "model": "2CY16/4.0",
+      "flow": 16,
+      "pressure": 4,
+      "weight": 120,
+      "price": 15000,
+      "applicationRange": "大型船舶",
+      "controlType": "机械驱动",
+      "basePrice": 15000,
+      "discountRate": 0.1,
+      "factoryPrice": 14985
+    },
+    {
+      "model": "2CY25/6.3",
+      "flow": 25,
+      "pressure": 6.3,
+      "weight": 210,
+      "price": 22000,
+      "applicationRange": "大型工程船",
+      "controlType": "电动/机械驱动",
+      "basePrice": 22000,
+      "discountRate": 0.1,
+      "factoryPrice": 21978
     }
   ],
-  "doubleInputGearboxes": [
+  "hcqGearboxes": [
     {
-      "model": "HCDI300",
-      "inputSpeedRange": [1000, 2500],
-      "ratios": [2.00, 2.54, 3.00, 3.57, 4.05],
-      "transferCapacity": [0.440],
+      "model": "HC400P",
       "thrust": 80,
-      "centerDistance": 250,
-      "weight": 1100,
-      "dimensions": "520×800×760",
-      "controlType": "推拉软轴",
-      "price": 45000,
-      "marketPrice": 50000,
-      "basePrice": 45000,
-      "discountRate": 0
+      "controlType": "混合动力",
+      "_sourceType": "hybridGearboxes",
+      "_isHybrid": true,
+      "ratios": [
+        1.5,
+        1.77,
+        2.04,
+        2.5,
+        2.86,
+        3,
+        3.25,
+        3.33,
+        3.42,
+        4.06,
+        4.61,
+        4.94
+      ],
+      "_mainRatios": [
+        1.5,
+        1.77,
+        2.04,
+        2.5,
+        2.86,
+        3,
+        3.25,
+        3.33,
+        3.42,
+        4.06,
+        4.61,
+        4.94
+      ],
+      "_ptiRatios": [
+        "x1.368",
+        "x1.571",
+        "x1.727",
+        "x2",
+        "x2.214",
+        "x2.462",
+        "x2.6"
+      ],
+      "_ptiTransferCapacity": 0.13,
+      "_ptiInputSpeedRange": [
+        1000,
+        3000
+      ],
+      "transferCapacity": [
+        0.331
+      ],
+      "_mainTransferCapacity": 0.331,
+      "inputSpeedRange": [
+        1000,
+        2500
+      ],
+      "weight": 0,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
     },
     {
-      "model": "HCDI600",
-      "inputSpeedRange": [1000, 2100],
-      "ratios": [2.00, 2.48, 2.63, 3.00, 3.58, 3.89],
-      "transferCapacity": [0.980],
+      "model": "HC600P",
+      "thrust": 120,
+      "controlType": "混合动力",
+      "_sourceType": "hybridGearboxes",
+      "_isHybrid": true,
+      "ratios": [
+        2,
+        2.48,
+        3,
+        3.58,
+        3.89
+      ],
+      "_mainRatios": [
+        2,
+        2.48,
+        3,
+        3.58,
+        3.89
+      ],
+      "_ptiRatios": [
+        "x1.359",
+        "x1.486",
+        "x1.706",
+        "x1.968",
+        "x2.286",
+        "x2.538",
+        "x2.68"
+      ],
+      "_ptiTransferCapacity": 0.155,
+      "_ptiInputSpeedRange": [
+        1000,
+        3000
+      ],
+      "transferCapacity": [
+        0.49
+      ],
+      "_mainTransferCapacity": 0.49,
+      "inputSpeedRange": [
+        1000,
+        2500
+      ],
+      "weight": 0,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.12,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "HC1200P",
       "thrust": 180,
-      "centerDistance": 320,
-      "weight": 2600,
-      "dimensions": "745×1214×1126",
-      "controlType": "推拉软轴",
-      "price": 85000,
-      "marketPrice": 95000,
-      "basePrice": 85000,
-      "discountRate": 0
+      "controlType": "混合动力",
+      "_sourceType": "hybridGearboxes",
+      "_isHybrid": true,
+      "ratios": [
+        1.6,
+        2.03,
+        2.48,
+        2.5,
+        2.96,
+        3.18,
+        3.33,
+        3.55,
+        3.79,
+        4.06,
+        4.2,
+        4.47
+      ],
+      "_mainRatios": [
+        1.6,
+        2.03,
+        2.48,
+        2.5,
+        2.96,
+        3.18,
+        3.33,
+        3.55,
+        3.79,
+        4.06,
+        4.2,
+        4.47
+      ],
+      "_ptiRatios": [
+        "x1.4",
+        "x1.471",
+        "x1.710",
+        "x2",
+        "x2.231",
+        "x2.5",
+        "x2.652"
+      ],
+      "_ptiTransferCapacity": 0.28,
+      "_ptiInputSpeedRange": [
+        1000,
+        2500
+      ],
+      "transferCapacity": [
+        0.93
+      ],
+      "_mainTransferCapacity": 0.93,
+      "inputSpeedRange": [
+        1000,
+        2500
+      ],
+      "weight": 0,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "HCS138",
+      "inputSpeedRange": [
+        1000,
+        2500
+      ],
+      "transferCapacity": [
+        0.11
+      ],
+      "thrust": 30,
+      "centerDistance": 225,
+      "controlType": "双速",
+      "_sourceType": "twoSpeedGearboxes",
+      "_isTwoSpeed": true,
+      "ratios": [
+        2,
+        2.52,
+        3,
+        3.57,
+        4.05,
+        4.45
+      ],
+      "_fastRatios": [
+        [
+          1.6,
+          1.64,
+          1.73,
+          1.78,
+          1.83
+        ],
+        [
+          2,
+          2.06,
+          2.19,
+          2.27,
+          2.34
+        ],
+        [
+          2.4,
+          2.48,
+          2.57,
+          2.67,
+          2.77
+        ],
+        [
+          2.88,
+          3,
+          3.13,
+          3.26
+        ],
+        [
+          3.21,
+          3.35,
+          3.5,
+          3.67
+        ],
+        [
+          3.56,
+          3.71,
+          3.87,
+          4.05
+        ]
+      ],
+      "weight": 0,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "HCS302",
+      "inputSpeedRange": [
+        750,
+        2500
+      ],
+      "transferCapacity": [
+        0.257
+      ],
+      "thrust": 50,
+      "centerDistance": 264,
+      "controlType": "双速",
+      "_sourceType": "twoSpeedGearboxes",
+      "_isTwoSpeed": true,
+      "ratios": [
+        2,
+        2.54,
+        3,
+        3.59,
+        4.1,
+        4.43
+      ],
+      "_fastRatios": [
+        [
+          1.62,
+          1.66,
+          1.74,
+          1.79,
+          1.84
+        ],
+        [
+          2.06,
+          2.13,
+          2.2,
+          2.28,
+          2.36
+        ],
+        [
+          2.38,
+          2.46,
+          2.56,
+          2.65,
+          2.76
+        ],
+        [
+          2.82,
+          3.04,
+          3.16,
+          3.29
+        ],
+        [
+          3.28,
+          3.42,
+          3.57,
+          3.73
+        ],
+        [
+          3.58,
+          3.72,
+          3.88,
+          4.04
+        ]
+      ],
+      "weight": 0,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "HCQ400",
+      "inputSpeedRange": [
+        1200,
+        2500
+      ],
+      "ratios": [
+        4,
+        4.5,
+        5
+      ],
+      "transferCapacity": [
+        0.14
+      ],
+      "thrust": 55,
+      "centerDistance": 400,
+      "weight": 650,
+      "controlType": "电控",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "HCQ1000",
+      "inputSpeedRange": [
+        1000,
+        2300
+      ],
+      "ratios": [
+        1.18,
+        2.84
+      ],
+      "transferCapacity": [
+        0.735
+      ],
+      "thrust": 100,
+      "centerDistance": 310,
+      "weight": 1100,
+      "controlType": "推拉软轴/电控",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "HCQ1400",
+      "inputSpeedRange": [
+        1000,
+        2100
+      ],
+      "ratios": [
+        1.52,
+        2,
+        2.48,
+        3
+      ],
+      "transferCapacity": [
+        1.03
+      ],
+      "thrust": 110,
+      "centerDistance": 340,
+      "weight": 1430,
+      "controlType": "推拉软轴/电控",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "HCQ1600",
+      "inputSpeedRange": [
+        1000,
+        2100
+      ],
+      "ratios": [
+        1.51,
+        1.97,
+        2.48,
+        2.76
+      ],
+      "transferCapacity": [
+        1.204
+      ],
+      "thrust": 120,
+      "centerDistance": 340,
+      "weight": 1500,
+      "controlType": "推拉软轴/电控",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "HCQ1601",
+      "inputSpeedRange": [
+        1000,
+        2100
+      ],
+      "ratios": [
+        3.04,
+        3.24
+      ],
+      "transferCapacity": [
+        1.204
+      ],
+      "thrust": 120,
+      "centerDistance": 370,
+      "weight": 1550,
+      "controlType": "推拉软轴/电控",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "HCQH1000",
+      "inputSpeedRange": [
+        1000,
+        2300
+      ],
+      "ratios": [
+        2.26
+      ],
+      "transferCapacity": [
+        0.735
+      ],
+      "thrust": 100,
+      "centerDistance": 310,
+      "weight": 0,
+      "controlType": "特殊配置",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "HCQ1001",
+      "inputSpeedRange": [
+        1000,
+        2300
+      ],
+      "ratios": [
+        2.88,
+        3,
+        3.23
+      ],
+      "transferCapacity": [
+        0.735
+      ],
+      "thrust": 100,
+      "centerDistance": 335,
+      "weight": 0,
+      "controlType": "推拉软轴/电控",
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.16,
+      "factoryPrice": 0,
+      "dimensions": "-"
     }
   ],
-  "specialGearboxes": [
+  "gcGearboxes": [
     {
-      "model": "HCS300",
-      "inputSpeedRange": [1000, 2500],
-      "ratios": [2.00, 2.54, 3.00, 3.57, 4.05],
-      "transferCapacity": [0.220],
-      "thrust": 40,
-      "centerDistance": 250,
-      "weight": 550,
-      "dimensions": "520×800×760",
-      "controlType": "推拉软轴",
-      "price": 28000,
-      "marketPrice": 32000,
-      "basePrice": 28000,
-      "discountRate": 0,
-      "specialFeatures": ["特殊密封", "防爆设计"]
+      "model": "GCS320",
+      "inputSpeedRange": [
+        400,
+        1800
+      ],
+      "ratios": [
+        1.97,
+        2.52,
+        2.96,
+        3.52,
+        4
+      ],
+      "transferCapacity": [
+        0.57
+      ],
+      "thrust": 100,
+      "centerDistance": 320,
+      "controlType": "变距桨",
+      "weight": 0,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.1,
+      "factoryPrice": 0,
+      "dimensions": "-"
     },
     {
-      "model": "HCS600",
-      "inputSpeedRange": [1000, 2100],
-      "ratios": [2.00, 2.48, 2.63, 3.00, 3.58, 3.89],
-      "transferCapacity": [0.490],
-      "thrust": 90,
-      "centerDistance": 320,
-      "weight": 1300,
-      "dimensions": "745×1214×1126",
-      "controlType": "推拉软轴",
-      "price": 60000,
-      "marketPrice": 68000,
-      "basePrice": 60000,
-      "discountRate": 0,
-      "specialFeatures": ["特殊密封", "防爆设计"]
+      "model": "GCH390",
+      "inputSpeedRange": [
+        400,
+        1800
+      ],
+      "ratios": [
+        2.03,
+        2.48,
+        2.92,
+        3.48,
+        3.95
+      ],
+      "transferCapacity": [
+        0.96
+      ],
+      "thrust": 140,
+      "centerDistance": 390,
+      "controlType": "变距桨",
+      "weight": 0,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.1,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "GCS1000",
+      "inputSpeedRange": [
+        200,
+        800
+      ],
+      "ratios": [
+        2,
+        2.54,
+        2.96,
+        3.5,
+        3.95
+      ],
+      "transferCapacity": [
+        17.5
+      ],
+      "thrust": 1400,
+      "centerDistance": 1018,
+      "controlType": "变距桨",
+      "weight": 0,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.1,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "GCS540",
+      "inputSpeedRange": [
+        400,
+        1200
+      ],
+      "ratios": [
+        1.97,
+        2.47,
+        3,
+        3.52,
+        3.95
+      ],
+      "transferCapacity": [
+        2.825
+      ],
+      "thrust": 290,
+      "centerDistance": 540,
+      "controlType": "变距桨",
+      "weight": 0,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.1,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "GCH750",
+      "inputSpeedRange": [
+        300,
+        950
+      ],
+      "ratios": [
+        1.97,
+        2.47,
+        3,
+        3.52,
+        3.95,
+        4.48
+      ],
+      "transferCapacity": [
+        7.2
+      ],
+      "thrust": 730,
+      "centerDistance": 750,
+      "controlType": "变距桨",
+      "weight": 0,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.1,
+      "factoryPrice": 0,
+      "dimensions": "-"
+    },
+    {
+      "model": "GCSE20",
+      "inputSpeedRange": [
+        400,
+        1400
+      ],
+      "ratios": [
+        6.5,
+        8
+      ],
+      "transferCapacity": [
+        2.12
+      ],
+      "thrust": 350,
+      "centerDistance": 875,
+      "controlType": "特殊变距",
+      "weight": 0,
+      "basePrice": 0,
+      "price": 0,
+      "discountRate": 0.1,
+      "factoryPrice": 0,
+      "dimensions": "-"
     }
   ]
 }

@@ -3,6 +3,28 @@ import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import { fonts, fontPaths } from './fonts';
 
+// 加载中文字体
+const loadChineseFont = async (pdf) => {
+  try {
+    // 使用 Noto Sans SC 字体
+    const fontUrl = 'https://fonts.gstatic.com/s/notosanssc/v36/k3kXo84MPvpLmixcA63oeALhLOCT-xWNm8Hqd37g1OkDRZe7lR4sg1IzSy-MNbE9VH8V.0.woff2';
+    
+    // 获取字体文件
+    const response = await fetch(fontUrl);
+    const fontData = await response.arrayBuffer();
+    
+    // 将字体添加到PDF
+    pdf.addFileToVFS('NotoSansSC-Regular.ttf', fontData);
+    pdf.addFont('NotoSansSC-Regular.ttf', 'NotoSansSC', 'normal');
+    pdf.setFont('NotoSansSC', 'normal');
+    
+    return true;
+  } catch (error) {
+    console.warn('加载中文字体失败:', error);
+    return false;
+  }
+};
+
 // 导出为PDF的函数
 export const exportToPDF = (data, filename = '导出文档') => {
   try {
@@ -12,12 +34,8 @@ export const exportToPDF = (data, filename = '导出文档') => {
       format: 'a4'
     });
 
-    // 添加中文字体支持
-    Object.entries(fonts['NotoSansSC-Regular']).forEach(([style, fontFile]) => {
-      doc.addFileToVFS(fontFile, fontPaths[fontFile]);
-      doc.addFont(fontFile, 'NotoSansSC', style);
-    });
-    doc.setFont('NotoSansSC', 'normal');
+    // 加载中文字体
+    loadChineseFont(doc);
 
     // 设置基本样式
     doc.setFontSize(10);
@@ -46,21 +64,29 @@ export const exportQuotationToPDF = (quotation, filename = '报价单') => {
   }
 };
 
-// 通用的 HTML 转 PDF 函数
+// 通用的 HTML 转 PDF 函数 (支持多页)
 const convertHtmlToPdf = async (element, options = {}) => {
   const {
     orientation = 'portrait',
     format = 'a4',
     scale = 2,
-    filename = 'document.pdf'
+    filename = 'document.pdf',
+    fontSize = '16px', // Add fontSize option
+    lineHeight = '1.5' // Add lineHeight option
   } = options;
 
   try {
+    if (!element) {
+      throw new Error('找不到要导出的元素');
+    }
+
+    console.log(`开始转换HTML到PDF: ${filename}`);
+
     // 克隆元素以避免修改原始元素
     const container = element.cloneNode(true);
     
-    // 重置容器样式
-    container.style.width = orientation === 'portrait' ? '794px' : '1123px';
+    // 重置容器样式 - 根据方向设置宽度
+    container.style.width = orientation === 'portrait' ? '794px' : '1123px'; 
     container.style.margin = '0';
     container.style.padding = '40px';
     container.style.boxSizing = 'border-box';
@@ -68,64 +94,83 @@ const convertHtmlToPdf = async (element, options = {}) => {
     container.style.position = 'absolute';
     container.style.left = '-9999px';
     container.style.top = '0';
-    container.style.transform = 'none';
+    container.style.fontSize = fontSize; // Use provided font size
+    container.style.lineHeight = lineHeight; // Use provided line height
+    container.style.fontFamily = "'Noto Sans SC', 'Microsoft YaHei', sans-serif"; // Ensure consistent font
     
     // 将容器添加到文档
     document.body.appendChild(container);
 
-    // 获取实际内容高度
-    const contentHeight = container.scrollHeight;
-    const pageHeight = orientation === 'portrait' ? 1123 : 794;
-    const pageCount = Math.ceil(contentHeight / pageHeight);
+    // 等待样式应用和内容渲染
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-    // 创建 PDF
+    // 获取完整内容的高度和宽度
+    const contentHeight = container.scrollHeight;
+    const contentWidth = container.scrollWidth;
+    console.log(`捕获内容尺寸 (${filename}): ${contentWidth} x ${contentHeight}`);
+
+    // 使用html2canvas捕获整个内容区域
+    const canvas = await html2canvas(container, {
+      scale: scale,
+      useCORS: true,
+      logging: false,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      width: contentWidth,
+      height: contentHeight,
+      windowWidth: contentWidth,
+      windowHeight: contentHeight
+    });
+
+    // 创建 PDF - 使用像素单位和指定的方向
     const pdf = new jsPDF({
       orientation: orientation,
-      unit: 'pt',
+      unit: 'px',
       format: format,
       compress: true
     });
 
-    // 逐页处理
-    for (let i = 0; i < pageCount; i++) {
-      // 设置容器样式以显示当前页
-      container.style.top = `${-i * pageHeight}px`;
+    // 配置基本属性
+    await loadChineseFont(pdf); // Basic font setup (helvetica)
 
-      // 转换当前页为 canvas
-      const canvas = await html2canvas(container, {
-        scale: scale,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        height: pageHeight,
-        y: i * pageHeight,
-        scrollY: -i * pageHeight,
-        windowHeight: pageHeight
-      });
+    // 获取PDF页面尺寸 (in px)
+    const pdfPageWidth = pdf.internal.pageSize.getWidth();
+    const pdfPageHeight = pdf.internal.pageSize.getHeight();
 
-      // 将 canvas 转换为图片
-      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+    // 将canvas转换为图像
+    const imgData = canvas.toDataURL('image/jpeg', 1.0);
+    const imgWidth = canvas.width;
+    const imgHeight = canvas.height;
 
-      // 如果不是第一页，添加新页
-      if (i > 0) {
-        pdf.addPage();
-      }
+    // 计算图像在PDF中的缩放比例和实际高度
+    const ratio = pdfPageWidth / imgWidth;
+    const scaledImgHeight = imgHeight * ratio;
 
-      // 添加图片到 PDF
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+    // 计算需要的页数
+    const totalPages = Math.ceil(scaledImgHeight / pdfPageHeight);
+    console.log(`PDF (${filename}) 页面尺寸: ${pdfPageWidth} x ${pdfPageHeight}, 缩放后高度: ${scaledImgHeight}, 总页数: ${totalPages}`);
+
+    // 循环添加页面
+    for (let i = 0; i < totalPages; i++) {
+        if (i > 0) {
+            pdf.addPage();
+        }
+        const imageY = (pdfPageHeight * i) / ratio; 
+        pdf.addImage(imgData, 'JPEG', 0, -imageY, pdfPageWidth, scaledImgHeight, '', 'FAST');
     }
 
-    // 移除临时容器
+    // 保存PDF
+    console.log(`保存PDF: ${filename}`);
+    pdf.save(filename);
+
+    // 清理临时元素
     document.body.removeChild(container);
 
-    // 保存 PDF
-    pdf.save(filename);
+    console.log(`PDF生成成功: ${filename}`);
     return true;
   } catch (error) {
-    console.error('PDF导出错误:', error);
-    throw error;
+    console.error(`PDF生成错误 (${filename}):`, error);
+    throw new Error(`PDF生成失败 (${filename}): ` + error.message);
   }
 };
 
@@ -147,6 +192,8 @@ export const exportAgreementToPDF = async (agreement, filename = '技术协议.p
       orientation: 'portrait',
       format: 'a4',
       scale: 2,
+      fontSize: '14px',
+      lineHeight: '1.5',
       filename: filename
     });
   } catch (error) {
@@ -166,9 +213,11 @@ export const exportContractToPDF = async (contract, filename = '销售合同.pdf
 
     // 导出为PDF
     return await convertHtmlToPdf(previewElement, {
-      orientation: 'landscape',
+      orientation: 'portrait',
       format: 'a4',
       scale: 2,
+      fontSize: '16px',
+      lineHeight: '1.5',
       filename: filename
     });
   } catch (error) {

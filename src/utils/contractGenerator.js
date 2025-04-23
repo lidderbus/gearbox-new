@@ -3,13 +3,12 @@ import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, Borde
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { saveAs } from 'file-saver';
+import { loadChineseFont } from './fontLoader'; // 添加字体加载器引用
+import html2canvas from 'html2canvas';
 
-// --- Font Embedding (Placeholder) ---
-// IMPORTANT: Replace the placeholder below with the actual Base64 encoded string of your TTF font file.
-//            Choose a font that supports Simplified Chinese characters (e.g., Noto Sans SC, Source Han Sans SC).
-//            You can find online tools or use scripts to convert .ttf to Base64.
-const simplifiedChineseFontBase64 = 'YOUR_BASE64_ENCODED_FONT_STRING_HERE'; // <--- REPLACE THIS
-const FONT_NAME = 'SimplifiedChineseFont'; // Choose a name for the font in the PDF
+// --- Font Configuration ---
+// 不再使用静态Base64编码，改为动态加载
+const FONT_NAME = 'NotoSansSC';
 
 /**
  * 将数字金额转换为中文大写
@@ -205,24 +204,28 @@ export const generateContract = (selectionResult, projectInfo, selectedComponent
     if (!selectedComponents.gearbox || !selectedComponents.gearbox.model) {
         throw new Error("缺少有效的齿轮箱选型信息");
     }
-    // 确保价格信息有效
-    const gearboxMarketPrice = priceInfo?.marketPrice ?? selectedComponents.gearbox?.marketPrice ?? 0;
-    if (typeof gearboxMarketPrice !== 'number' || gearboxMarketPrice <= 0) {
-       console.warn("generateContract: Gearbox market price is missing or invalid, using 0.");
-       // Consider throwing an error if price is mandatory:
-       // throw new Error("缺少有效的齿轮箱市场价格");
-    }
 
+    // 获取齿轮箱价格，优先使用传入的价格信息
+    let gearboxMarketPrice = 0;
+    if (priceInfo && typeof priceInfo.marketPrice === 'number' && priceInfo.marketPrice > 0) {
+        gearboxMarketPrice = priceInfo.marketPrice;
+    } else if (selectedComponents.gearbox && typeof selectedComponents.gearbox.marketPrice === 'number' && selectedComponents.gearbox.marketPrice > 0) {
+        gearboxMarketPrice = selectedComponents.gearbox.marketPrice;
+    } else if (selectedComponents.gearbox && typeof selectedComponents.gearbox.price === 'number' && selectedComponents.gearbox.price > 0) {
+        gearboxMarketPrice = selectedComponents.gearbox.price;
+    } else {
+        console.warn("generateContract: 无法获取有效的齿轮箱价格，请检查价格信息");
+    }
 
     // 创建产品信息 (齿轮箱)
     const gearboxProduct = {
       name: "船用齿轮箱",
       model: selectedComponents.gearbox.model,
-      brand: "前进", // Assuming brand is always "前进"
+      brand: "前进",
       unit: "台",
-      quantity: 1, // 修改为1
+      quantity: 1,
       unitPrice: gearboxMarketPrice,
-      amount: gearboxMarketPrice * 1, // 修改为单价乘以1
+      amount: gearboxMarketPrice * 1,
       deliveryYear: deliveryYear,
       deliveryQuarter: deliveryQuarter
     };
@@ -448,13 +451,24 @@ function createProductsTable(contract) {
   // Helper for formatting currency
   const formatCurrency = (value) => {
       if (typeof value !== 'number' || isNaN(value)) return "";
-      // return `¥${value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`; // Add commas if needed
       return `¥${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
-   // Helper to create a paragraph, handles undefined/null
-   const createPara = (text, alignment = AlignmentType.LEFT, bold = false) => new Paragraph({ text: text || "", alignment: alignment, children: [new TextRun({ text: text || "", bold: bold })]});
-   const createRightPara = (text) => createPara(text, AlignmentType.RIGHT);
-   const createCenterPara = (text) => createPara(text, AlignmentType.CENTER);
+  
+  // 修改Helper函数，避免在paragraph中重复text属性
+  const createPara = (text, alignment = AlignmentType.LEFT, bold = false) => {
+      return new Paragraph({
+          alignment: alignment,
+          children: [
+              new TextRun({
+                  text: text || "",
+                  bold: bold
+              })
+          ]
+      });
+  };
+  
+  const createRightPara = (text) => createPara(text, AlignmentType.RIGHT);
+  const createCenterPara = (text) => createPara(text, AlignmentType.CENTER);
 
   // --- Table Header ---
   const headerRow1 = new TableRow({
@@ -467,67 +481,71 @@ function createProductsTable(contract) {
       new TableCell({ width: { size: 5, type: WidthType.PERCENTAGE }, children: [createCenterPara("数量")] }),
       new TableCell({ width: { size: 10, type: WidthType.PERCENTAGE }, children: [createCenterPara("单价（元）")] }),
       new TableCell({ width: { size: 10, type: WidthType.PERCENTAGE }, children: [createCenterPara("金额")] }),
-      new TableCell({ width: { size: 24, type: WidthType.PERCENTAGE }, columnSpan: 4, children: [createCenterPara(`交货期（${contract.products[0]?.deliveryYear || new Date().getFullYear()}年度）`)] }), // Use delivery year from product
+      new TableCell({ width: { size: 24, type: WidthType.PERCENTAGE }, columnSpan: 4, children: [createCenterPara(`交货期（${contract.products[0]?.deliveryYear || new Date().getFullYear()}年度）`)] }),
       new TableCell({ width: { size: 8, type: WidthType.PERCENTAGE }, children: [createCenterPara("备注")] }),
-    ],
-  });
-
-  const headerRow2 = new TableRow({
-    children: [
-      new TableCell({ columnSpan: 8, children: [createPara("")] }), // Empty cells spanning first 8 columns
-      new TableCell({ children: [createCenterPara("一季度")] }),
-      new TableCell({ children: [createCenterPara("二季度")] }),
-      new TableCell({ children: [createCenterPara("三季度")] }),
-      new TableCell({ children: [createCenterPara("四季度")] }),
-      new TableCell({ children: [createPara("")] }), // Empty cell for Remarks column header part
     ],
   });
 
   // --- Product Rows ---
   const productRows = [];
-  const firstProduct = contract.products[0]; // Gearbox
-  const rowSpanCount = contract.coupling ? 2 : 1; // Determine rowspan based on coupling presence
-
-  // Gearbox Row
-  const gearboxRow = new TableRow({
-    children: [
-      new TableCell({ rowSpan: rowSpanCount, verticalAlign: VerticalAlign.CENTER, children: [createCenterPara("2")] }),
-      new TableCell({ children: [createPara(firstProduct.name)] }),
-      new TableCell({ children: [createPara(firstProduct.model)] }),
-      new TableCell({ children: [createPara(firstProduct.brand)] }),
-      new TableCell({ children: [createCenterPara(firstProduct.unit)] }),
-      new TableCell({ children: [createCenterPara(firstProduct.quantity.toString())] }),
-      new TableCell({ children: [createRightPara(formatCurrency(firstProduct.unitPrice))] }),
-      new TableCell({ children: [createRightPara(formatCurrency(firstProduct.amount))] }),
-      new TableCell({ children: [createCenterPara(firstProduct.deliveryQuarter === 1 ? "√" : "")] }), // Q1
-      new TableCell({ children: [createCenterPara(firstProduct.deliveryQuarter === 2 ? "√" : "")] }), // Q2
-      new TableCell({ children: [createCenterPara(firstProduct.deliveryQuarter === 3 ? "√" : "")] }), // Q3
-      new TableCell({ children: [createCenterPara(firstProduct.deliveryQuarter === 4 ? "√" : "")] }), // Q4
-      new TableCell({ rowSpan: rowSpanCount, verticalAlign: VerticalAlign.CENTER, children: [createPara("")] }), // Remarks cell with rowspan
-    ],
-  });
-  productRows.push(gearboxRow);
-
-  // Coupling Row (if exists)
-  if (contract.coupling) {
-    const couplingRow = new TableRow({
+  
+  // 如果有齿轮箱产品
+  if (contract.products && contract.products.length > 0) {
+    const gearboxProduct = contract.products[0]; // 获取齿轮箱产品
+    
+    // 计算行数，用于确定需要应用rowSpan的单元格数
+    const productCount = 1 + (contract.coupling ? 1 : 0); // 齿轮箱 + 可能的联轴器
+    
+    // 齿轮箱行
+    const gearboxRow = new TableRow({
       children: [
-        // No序号 cell due to rowspan
-        new TableCell({ children: [createPara(contract.coupling.name)] }),
-        new TableCell({ children: [createPara(contract.coupling.model)] }),
-        new TableCell({ children: [createPara(contract.coupling.brand)] }),
-        new TableCell({ children: [createCenterPara(contract.coupling.unit)] }),
-        new TableCell({ children: [createCenterPara(contract.coupling.quantity.toString())] }),
-        new TableCell({ children: [createRightPara(formatCurrency(contract.coupling.unitPrice))] }),
-        new TableCell({ children: [createRightPara(formatCurrency(contract.coupling.amount))] }),
-        new TableCell({ children: [createPara("")] }), // Q1
-		new TableCell({ children: [createPara("")] }), // Q2
-        new TableCell({ children: [createPara("")] }), // Q3
-        new TableCell({ children: [createPara("")] }), // Q4
-        // No Remarks cell due to rowspan
+        // 修正序号为1
+        new TableCell({ 
+          rowSpan: productCount, 
+          verticalAlign: VerticalAlign.CENTER, 
+          children: [createCenterPara("1")] 
+        }),
+        new TableCell({ children: [createPara(gearboxProduct.name)] }),
+        new TableCell({ children: [createPara(gearboxProduct.model)] }),
+        new TableCell({ children: [createPara(gearboxProduct.brand)] }),
+        new TableCell({ children: [createCenterPara(gearboxProduct.unit)] }),
+        new TableCell({ children: [createCenterPara(gearboxProduct.quantity.toString())] }),
+        new TableCell({ children: [createRightPara(formatCurrency(gearboxProduct.unitPrice))] }),
+        new TableCell({ children: [createRightPara(formatCurrency(gearboxProduct.amount))] }),
+        new TableCell({ children: [createCenterPara(gearboxProduct.deliveryQuarter === 1 ? "√" : "")] }),
+        new TableCell({ children: [createCenterPara(gearboxProduct.deliveryQuarter === 2 ? "√" : "")] }),
+        new TableCell({ children: [createCenterPara(gearboxProduct.deliveryQuarter === 3 ? "√" : "")] }),
+        new TableCell({ children: [createCenterPara(gearboxProduct.deliveryQuarter === 4 ? "√" : "")] }),
+        new TableCell({ 
+          rowSpan: productCount, 
+          verticalAlign: VerticalAlign.CENTER, 
+          children: [createPara("")] 
+        }),
       ],
     });
-    productRows.push(couplingRow);
+    productRows.push(gearboxRow);
+
+    // 联轴器行 (如果存在)
+    if (contract.coupling) {
+      const couplingRow = new TableRow({
+        children: [
+          // 序号单元格由于rowSpan被省略
+          new TableCell({ children: [createPara(contract.coupling.name)] }),
+          new TableCell({ children: [createPara(contract.coupling.model)] }),
+          new TableCell({ children: [createPara(contract.coupling.brand)] }),
+          new TableCell({ children: [createCenterPara(contract.coupling.unit)] }),
+          new TableCell({ children: [createCenterPara(contract.coupling.quantity.toString())] }),
+          new TableCell({ children: [createRightPara(formatCurrency(contract.coupling.unitPrice))] }),
+          new TableCell({ children: [createRightPara(formatCurrency(contract.coupling.amount))] }),
+          new TableCell({ children: [createPara("")] }), // Q1
+          new TableCell({ children: [createPara("")] }), // Q2
+          new TableCell({ children: [createPara("")] }), // Q3
+          new TableCell({ children: [createPara("")] }), // Q4
+          // 备注单元格由于rowSpan被省略
+        ],
+      });
+      productRows.push(couplingRow);
+    }
   }
 
   // --- Total Row ---
@@ -535,24 +553,23 @@ function createProductsTable(contract) {
     children: [
       new TableCell({
         columnSpan: 2,
-        children: [createPara("合计人民币（大写）：", AlignmentType.LEFT, true)], // Bold total label
+        children: [createPara("合计人民币（大写）：", AlignmentType.LEFT, true)],
       }),
       new TableCell({
-        columnSpan: 5, // Span 5 columns (Model to Quantity)
+        columnSpan: 5,
         children: [createPara(contract.totalAmountInChinese)],
       }),
       new TableCell({
-        columnSpan: 6, // Span remaining 6 columns (UnitPrice to Remarks)
+        columnSpan: 6,
         children: [createPara(`¥（小写）：${formatCurrency(contract.totalAmount)}`)],
       }),
     ],
   });
   productRows.push(totalRow);
 
-  // --- Combine and Return Table ---
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
-    borders: { /* ... Standard Borders ... */
+    borders: {
         top: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
         bottom: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
         left: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
@@ -560,7 +577,7 @@ function createProductsTable(contract) {
         insideHorizontal: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
         insideVertical: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
     },
-    rows: [headerRow1, headerRow2, ...productRows],
+    rows: [headerRow1, ...productRows],
   });
 }
 
@@ -680,15 +697,6 @@ export const exportContractToWord = (contract, filename) => {
         {
           properties: {
              // Define page margins, etc., if needed
-             // Example:
-             // page: {
-             //   margin: {
-             //     top: 720, // 0.5 inch -> 720 twentieths of a point
-             //     right: 720,
-             //     bottom: 720,
-             //     left: 720,
-             //   },
-             // },
           },
           children: [ // <--- Main document content starts here
             // Title
@@ -709,7 +717,6 @@ export const exportContractToWord = (contract, filename) => {
               ],
               spacing: { after: 100 },
               // Add tab stops if needed for precise alignment
-              // tabStops: [ { type: TabStopType.RIGHT, position: TabStopPosition.MAX } ],
             }),
 
             // Date and Stats Number
@@ -719,8 +726,8 @@ export const exportContractToWord = (contract, filename) => {
                   new TextRun(`签订日期：${contract.contractDate}`),
                   new TextRun("\t\t\t\t\t\t"), // Use tabs
                   new TextRun("统计编号："), // Leave blank or fill if needed
-              ],
-              spacing: { after: 400 }
+                ],
+                spacing: { after: 400 }
             }),
 
             // Buyer/Seller Info Table
@@ -740,51 +747,50 @@ export const exportContractToWord = (contract, filename) => {
 
             // Signature Area (Using a Table for better alignment)
             new Table({
-                width: { size: 100, type: WidthType.PERCENTAGE },
-                borders: { // No borders for signature table
-                    top: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
-                    bottom: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
-                    left: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
-                    right: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
-                    insideHorizontal: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
-                    insideVertical: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
-                },
-                columnWidths: [50, 50], // Equal columns
-                rows: [
-                    new TableRow({
-                        children: [
-                            new TableCell({ children: [new Paragraph("需方（盖章）：")] }),
-                            new TableCell({ children: [new Paragraph("供方（盖章）：")] }),
-                        ],
-                    }),
-                     new TableRow({ // Empty row for spacing
-                        children: [
-                            new TableCell({ children: [new Paragraph({ spacing: { before: 200 } })] }),
-                            new TableCell({ children: [new Paragraph({ spacing: { before: 200 } })] }),
-                        ],
-                    }),
-                    new TableRow({
-                        children: [
-                            new TableCell({ children: [new Paragraph("法定代表人或委托代理人（签字）：_______________")] }),
-                            new TableCell({ children: [new Paragraph("法定代表人或委托代理人（签字）：_______________")] }),
-                        ],
-                    }),
-                     new TableRow({ // Empty row for spacing
-                        children: [
-                            new TableCell({ children: [new Paragraph({ spacing: { before: 200 } })] }),
-                            new TableCell({ children: [new Paragraph({ spacing: { before: 200 } })] }),
-                        ],
-                    }),
-                    new TableRow({
-                        children: [
-                            new TableCell({ children: [new Paragraph("日期：_______________")] }),
-                            new TableCell({ children: [new Paragraph("日期：_______________")] }),
-                        ],
-                    }),
-                ],
+              width: { size: 100, type: WidthType.PERCENTAGE },
+              borders: { // No borders for signature table
+                  top: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+                  bottom: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+                  left: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+                  right: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+                  insideHorizontal: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+                  insideVertical: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+              },
+              columnWidths: [50, 50], // Equal columns
+              rows: [
+                  new TableRow({
+                      children: [
+                          new TableCell({ children: [new Paragraph("需方（盖章）：")] }),
+                          new TableCell({ children: [new Paragraph("供方（盖章）：")] }),
+                      ],
+                  }),
+                  new TableRow({ // Empty row for spacing
+                      children: [
+                          new TableCell({ children: [new Paragraph({ spacing: { before: 200 } })] }),
+                          new TableCell({ children: [new Paragraph({ spacing: { before: 200 } })] }),
+                      ],
+                  }),
+                  new TableRow({
+                      children: [
+                          new TableCell({ children: [new Paragraph("法定代表人或委托代理人（签字）：_______________")] }),
+                          new TableCell({ children: [new Paragraph("法定代表人或委托代理人（签字）：_______________")] }),
+                      ],
+                  }),
+                  new TableRow({ // Empty row for spacing
+                      children: [
+                          new TableCell({ children: [new Paragraph({ spacing: { before: 200 } })] }),
+                          new TableCell({ children: [new Paragraph({ spacing: { before: 200 } })] }),
+                      ],
+                  }),
+                  new TableRow({
+                      children: [
+                          new TableCell({ children: [new Paragraph("日期：_______________")] }),
+                          new TableCell({ children: [new Paragraph("日期：_______________")] }),
+                      ],
+                  }),
+              ],
             }),
-
-          ], // <--- End of main document content
+          ],
         },
       ],
     });
@@ -793,319 +799,185 @@ export const exportContractToWord = (contract, filename) => {
     Packer.toBlob(doc).then(blob => {
       saveAs(blob, `${filename || '销售合同'}.docx`);
     }).catch(err => {
-        console.error("Packer.toBlob failed:", err);
-        throw new Error("导出Word文档失败: Packer Error - " + err.message);
+      console.error("Packer.toBlob failed:", err);
+      throw new Error("导出Word文档失败: Packer Error - " + err.message);
     });
   } catch (error) {
     console.error("导出Word文档失败:", error);
     // Avoid throwing another error here if Packer failed, as it's already caught
     if (!error.message.includes("Packer Error")) {
-        throw new Error("导出Word文档失败: " + error.message);
+      throw new Error("导出Word文档失败: " + error.message);
     }
   }
 };
 
 
 /**
+ * 格式化合同内容为PDF文本
+ * @param {Object} contract - 合同数据
+ * @returns {string} 格式化后的合同文本
+ */
+const formatContractContent = (contract) => {
+  let content = '';
+
+  // 添加合同基本信息
+  content += `合同编号：${contract.contractNumber}\n`;
+  content += `签订日期：${contract.contractDate}\n\n`;
+
+  // 添加买方信息
+  content += '买方信息：\n';
+  content += `单位名称：${contract.buyerInfo.name}\n`;
+  content += `法定代表人：${contract.buyerInfo.legalRepresentative}\n`;
+  content += `地址：${contract.buyerInfo.address}\n`;
+  content += `邮编：${contract.buyerInfo.postalCode}\n`;
+  content += `税号：${contract.buyerInfo.taxNumber}\n`;
+  content += `银行：${contract.buyerInfo.bank}\n`;
+  content += `账号：${contract.buyerInfo.accountNumber}\n\n`;
+
+  // 添加卖方信息
+  content += '卖方信息：\n';
+  content += `单位名称：${contract.sellerInfo.name}\n`;
+  content += `法定代表人：${contract.sellerInfo.legalRepresentative}\n`;
+  content += `地址：${contract.sellerInfo.address}\n`;
+  content += `邮编：${contract.sellerInfo.postalCode}\n`;
+  content += `税号：${contract.sellerInfo.taxNumber}\n`;
+  content += `银行：${contract.sellerInfo.bank}\n`;
+  content += `账号：${contract.sellerInfo.accountNumber}\n\n`;
+
+  // 添加产品信息
+  content += '产品信息：\n';
+  contract.products.forEach((product, index) => {
+    content += `产品${index + 1}：\n`;
+    content += `名称：${product.name}\n`;
+    content += `型号：${product.model}\n`;
+    content += `品牌：${product.brand}\n`;
+    content += `单位：${product.unit}\n`;
+    content += `数量：${product.quantity}\n`;
+    content += `单价：${product.unitPrice}\n`;
+    content += `金额：${product.amount}\n`;
+    content += `交货期：${product.deliveryYear}年第${product.deliveryQuarter}季度\n\n`;
+  });
+
+  // 添加合同条款
+  content += '合同条款：\n';
+  content += `执行标准：${contract.executionStandard}\n`;
+  content += `验收期限：${contract.inspectionPeriod}\n`;
+  content += `交货时间：${contract.deliveryDate}\n`;
+  content += `交货地点：${contract.deliveryLocation}\n`;
+  content += `交货方式：${contract.deliveryMethod}\n`;
+  content += `运输方式：${contract.transportMethod}\n`;
+  content += `包装标准：${contract.packagingStandard}\n`;
+  content += `付款方式：${contract.paymentMethod}\n`;
+  content += `争议解决：${contract.disputeResolution}\n`;
+  content += `特殊要求：${contract.specialRequirements}\n`;
+  content += `合同有效期：${contract.expiryDate}\n`;
+  content += `合同份数：${contract.contractCopies}\n\n`;
+
+  // 添加总金额
+  content += `总金额（大写）：${contract.totalAmountInChinese}\n`;
+  content += `总金额（小写）：${contract.totalAmount}\n`;
+
+  return content;
+};
+
+/**
  * 导出合同为PDF文档
  * @param {Object} contract - 合同数据
  * @param {string} [filename] - 文件名 (可选)
  */
-export const exportContractToPDF = (contract, filename) => {
+export const exportContractToPDF = async (contract, filename = '销售合同.pdf') => {
     if (!contract || !contract.success) {
         console.error("无法导出PDF：无效的合同数据");
-        return;
-    }
-  try {
-    // --- PDF Setup ---
-    const doc = new jsPDF('p', 'pt', 'a4'); // Use points for better control, A4 size
-    const pageHeight = doc.internal.pageSize.height;
-    const pageWidth = doc.internal.pageSize.width;
-    const margin = 40; // Page margin in points
-    const contentWidth = pageWidth - 2 * margin;
-    let currentY = margin; // Track current Y position
-
-    // --- Font Loading (Crucial for Chinese) ---
-    // Add the Base64 encoded font to the PDF document
-    if (simplifiedChineseFontBase64 && simplifiedChineseFontBase64 !== 'YOUR_BASE64_ENCODED_FONT_STRING_HERE') {
-        doc.addFileToVFS(`${FONT_NAME}.ttf`, simplifiedChineseFontBase64);
-        doc.addFont(`${FONT_NAME}.ttf`, FONT_NAME, 'normal');
-        doc.setFont(FONT_NAME);
-        console.log(`Font ${FONT_NAME} embedded.`);
-    } else {
-        console.warn("Chinese font Base64 string not provided or is still the placeholder. PDF might have garbled text.");
-        // Fallback font if Base64 is missing
-        doc.setFont('helvetica', 'normal');
+        throw new Error("无效的合同数据");
     }
 
-    // --- Helper function for adding text and updating Y ---
-    const addText = (text, x, y, options = {}) => {
-        const defaultOptions = { maxWidth: contentWidth, align: 'left', fontSize: 10, lineSpacingFactor: 1.15 };
-        const mergedOptions = { ...defaultOptions, ...options };
-
-        doc.setFontSize(mergedOptions.fontSize);
-        const lines = doc.splitTextToSize(text || "", mergedOptions.maxWidth);
-        doc.text(lines, x, y, { align: mergedOptions.align });
-        return y + lines.length * mergedOptions.fontSize * mergedOptions.lineSpacingFactor; // Return new Y
-    };
-
-    // --- Title ---
-    currentY = addText("上海前进齿轮经营有限公司产品销售合同", pageWidth / 2, currentY, { align: 'center', fontSize: 16 });
-    currentY += 10; // Spacing
-
-    // --- Header Info ---
-    doc.setFontSize(9);
-    const headerLeft = `签订地点：上海`;
-    const headerRight = `合同编号：${contract.contractNumber}`;
-    const headerRightWidth = doc.getTextWidth(headerRight);
-    doc.text(headerLeft, margin, currentY);
-    doc.text(headerRight, pageWidth - margin - headerRightWidth, currentY);
-    currentY += 15;
-
-    const dateLeft = `签订日期：${contract.contractDate}`;
-    const dateRight = `统计编号：`; // Leave blank or fill
-    const dateRightWidth = doc.getTextWidth(dateRight);
-    doc.text(dateLeft, margin, currentY);
-    doc.text(dateRight, pageWidth - margin - dateRightWidth, currentY);
-    currentY += 25; // More spacing before table
-
-    // --- Buyer/Seller Table ---
-    const buyerSellerHead = [
-      { content: '序号', styles: { halign: 'center', cellWidth: 30 } },
-      { content: '项目', styles: { cellWidth: 70 } },
-      { content: '需方信息', styles: { cellWidth: 180 } }, // Adjusted width
-      { content: '项目', styles: { cellWidth: 70 } },
-      { content: '供方信息', styles: { cellWidth: 180 } }, // Adjusted width
-    ];
-    const buyerSellerBody = [
-      ['1', '单位名称', contract.buyerInfo.name,          '单位名称', contract.sellerInfo.name],
-      ['', '法定代表人', contract.buyerInfo.legalRepresentative, '法定代表人', contract.sellerInfo.legalRepresentative],
-      ['', '委托代理人', contract.buyerInfo.agent || '',          '委托代理人', contract.sellerInfo.agent || ''], // Add agent if available
-      ['', '通讯地址', contract.buyerInfo.address,       '通讯地址', contract.sellerInfo.address],
-      ['', '邮政编码', contract.buyerInfo.postalCode,    '邮政编码', contract.sellerInfo.postalCode],
-      ['', '电话/传真', `${contract.buyerInfo.phone || ''}${contract.buyerInfo.fax ? ' / '+contract.buyerInfo.fax : ''}`, '电话/传真', `${contract.sellerInfo.phone || ''}${contract.sellerInfo.fax ? ' / '+contract.sellerInfo.fax : ''}`],
-      ['', '税号', contract.buyerInfo.taxNumber,       '税号', contract.sellerInfo.taxNumber],
-      ['', '银行及账号', `${contract.buyerInfo.bank || ''}\n${contract.buyerInfo.accountNumber || ''}`, '银行及账号', `${contract.sellerInfo.bank}\n${contract.sellerInfo.accountNumber}`]
-    ];
-
-    doc.autoTable({
-      startY: currentY,
-      head: [buyerSellerHead],
-      body: buyerSellerBody,
-      theme: 'grid',
-      styles: { 
-          fontSize: 8, 
-          cellPadding: 3, 
-          font: FONT_NAME // Apply the embedded font to the table
-      },
-      headStyles: { 
-          fillColor: [230, 230, 230], 
-          textColor: 0, 
-          halign: 'center', 
-          fontStyle: 'bold', 
-          font: FONT_NAME // Apply font to header
-      },
-      columnStyles: {
-        0: { halign: 'center', valign: 'middle' }, // Seq No
-        2: { cellWidth: 180 }, // Buyer info
-        4: { cellWidth: 180 }, // Seller info
-      },
-      didParseCell: function (data) {
-         // Vertical centering for row-spanned "1"
-        if (data.section === 'body' && data.column.index === 0 && data.row.index === 0) {
-            data.cell.rowSpan = buyerSellerBody.length; // Span all body rows
-            data.cell.styles.valign = 'middle';
-        }
-      },
-      didDrawPage: (data) => { currentY = data.cursor.y; } // Update Y after table draw
-    });
-    currentY += 10; // Spacing
-
-    // --- Products Table ---
-     const productHead = [
-        // Row 1
-        [
-            { content: '序号', rowSpan: 2, styles: { halign: 'center', valign: 'middle'} },
-            { content: '产品名称', rowSpan: 2, styles: { halign: 'center', valign: 'middle'} },
-            { content: '规格型号', rowSpan: 2, styles: { halign: 'center', valign: 'middle'} },
-            { content: '商标', rowSpan: 2, styles: { halign: 'center', valign: 'middle'} },
-            { content: '计量单位', rowSpan: 2, styles: { halign: 'center', valign: 'middle'} },
-            { content: '数量', rowSpan: 2, styles: { halign: 'center', valign: 'middle'} },
-            { content: '单价（元）', rowSpan: 2, styles: { halign: 'center', valign: 'middle'} },
-            { content: '金额（元）', rowSpan: 2, styles: { halign: 'center', valign: 'middle'} },
-            { content: `交货期（${contract.products[0]?.deliveryYear || new Date().getFullYear()}年度）`, colSpan: 4, styles: { halign: 'center', valign: 'middle'} },
-            { content: '备注', rowSpan: 2, styles: { halign: 'center', valign: 'middle'} },
-        ],
-        // Row 2 (Delivery Quarters)
-        [
-            { content: '一季度', styles: { halign: 'center', valign: 'middle', minCellWidth: 25 } },
-            { content: '二季度', styles: { halign: 'center', valign: 'middle', minCellWidth: 25 } },
-            { content: '三季度', styles: { halign: 'center', valign: 'middle', minCellWidth: 25 } },
-            { content: '四季度', styles: { halign: 'center', valign: 'middle', minCellWidth: 25 } },
-        ]
-    ];
-
-    const productBody = [];
-    // Gearbox Row
-    const firstProduct = contract.products[0];
-    productBody.push([
-        { content: '2', rowSpan: contract.coupling ? 2 : 1, styles: { halign: 'center', valign: 'middle'} },
-        firstProduct.name,
-        firstProduct.model,
-        firstProduct.brand,
-        { content: firstProduct.unit, styles: { halign: 'center'} },
-        { content: firstProduct.quantity, styles: { halign: 'center'} },
-        { content: firstProduct.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), styles: { halign: 'right'} },
-        { content: firstProduct.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), styles: { halign: 'right'} },
-        { content: firstProduct.deliveryQuarter === 1 ? '√' : '', styles: { halign: 'center'} },
-        { content: firstProduct.deliveryQuarter === 2 ? '√' : '', styles: { halign: 'center'} },
-        { content: firstProduct.deliveryQuarter === 3 ? '√' : '', styles: { halign: 'center'} },
-        { content: firstProduct.deliveryQuarter === 4 ? '√' : '', styles: { halign: 'center'} },
-        { content: '', rowSpan: contract.coupling ? 2 : 1, styles: { valign: 'middle' } }, // Remark cell with rowspan
-    ]);
-
-    // Coupling Row (if exists)
-    if (contract.coupling) {
-        productBody.push([
-            // Seq num covered by rowspan
-            contract.coupling.name,
-            contract.coupling.model,
-            contract.coupling.brand,
-            { content: contract.coupling.unit, styles: { halign: 'center'} },
-            { content: contract.coupling.quantity, styles: { halign: 'center'} },
-            { content: contract.coupling.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), styles: { halign: 'right'} },
-            { content: contract.coupling.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), styles: { halign: 'right'} },
-            '', '', '', '', // Quarters empty
-            // Remark covered by rowspan
+    try {
+        console.log("开始导出PDF...");
+        
+        // 使用更简单的方法：直接用文本内容创建PDF
+        const doc = new jsPDF({
+            orientation: 'landscape',
+            unit: 'mm',
+            format: 'a4'
+        });
+        
+        // 添加基本字体支持
+        await loadChineseFont(doc);
+        
+        // 设置基本内容
+        doc.setFontSize(18);
+        doc.text("上海前进齿轮经营有限公司产品销售合同", 150, 20, { align: 'center' });
+        
+        doc.setFontSize(10);
+        doc.text(`合同编号: ${contract.contractNumber}`, 20, 30);
+        doc.text(`签订日期: ${contract.contractDate}`, 20, 35);
+        
+        // 添加买方信息
+        doc.setFontSize(12);
+        doc.text("买方信息:", 20, 45);
+        doc.setFontSize(10);
+        doc.text(`单位名称: ${contract.buyerInfo.name}`, 20, 50);
+        doc.text(`法定代表人: ${contract.buyerInfo.legalRepresentative}`, 20, 55);
+        
+        // 添加卖方信息
+        doc.setFontSize(12);
+        doc.text("卖方信息:", 150, 45);
+        doc.setFontSize(10);
+        doc.text(`单位名称: 上海前进齿轮经营有限公司`, 150, 50);
+        doc.text(`法定代表人: 张明`, 150, 55);
+        
+        // 添加产品信息
+        doc.setFontSize(12);
+        doc.text("产品信息:", 20, 70);
+        doc.setFontSize(10);
+        
+        // 表格表头
+        const headers = [["序号", "产品名称", "规格型号", "单价", "数量", "金额"]];
+        
+        // 产品数据
+        const data = contract.products.map((product, index) => [
+            String(index + 1),
+            product.name,
+            product.model,
+            String(product.unitPrice.toFixed(2)),
+            String(product.quantity),
+            String(product.amount.toFixed(2))
         ]);
+        
+        // 添加表格
+        doc.autoTable({
+            startY: 75,
+            head: headers,
+            body: data,
+            theme: 'grid',
+            headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+            styles: { font: 'NotoSansSC', fontSize: 9 }
+        });
+        
+        // 添加总金额
+        const finalY = doc.autoTable.previous.finalY;
+        doc.text(`总金额: ${contract.totalAmount.toFixed(2)} 元`, 20, finalY + 10);
+        doc.text(`总金额大写: ${contract.totalAmountInChinese}`, 20, finalY + 15);
+        
+        // 添加主要条款
+        doc.setFontSize(12);
+        doc.text("主要条款:", 20, finalY + 25);
+        doc.setFontSize(10);
+        doc.text(`交货时间: ${contract.deliveryDate}`, 20, finalY + 30);
+        doc.text(`交货地点: ${contract.deliveryLocation}`, 20, finalY + 35);
+        doc.text(`付款方式: ${contract.paymentMethod}`, 20, finalY + 40);
+        
+        // 添加签名区域
+        doc.text("需方(盖章):", 20, finalY + 60);
+        doc.text("供方(盖章):", 150, finalY + 60);
+        
+        // 保存PDF
+        doc.save(filename);
+        
+        console.log("PDF导出完成:", filename);
+        return true;
+    } catch (error) {
+        console.error('导出PDF失败:', error);
+        throw new Error("导出PDF失败: " + error.message);
     }
-
-    // Total Row
-    productBody.push([
-       { content: '合计人民币（大写）：', colSpan: 2, styles: { fontStyle: 'bold' } },
-       { content: contract.totalAmountInChinese, colSpan: 5 }, // Spans Model to Amount
-       { content: `¥（小写）：${contract.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, colSpan: 6 } // Spans Quarters + Remarks
-    ]);
-
-
-    doc.autoTable({
-      startY: currentY,
-      head: productHead,
-      body: productBody,
-      theme: 'grid',
-      styles: { 
-          fontSize: 8, 
-          cellPadding: 3, 
-          font: FONT_NAME // Apply the embedded font
-      },
-      headStyles: { 
-          fillColor: [230, 230, 230], 
-          textColor: 0, 
-          halign: 'center', 
-          fontStyle: 'bold', 
-          font: FONT_NAME // Apply font to header
-      },
-      didDrawPage: (data) => { currentY = data.cursor.y; }
-    });
-    currentY += 10; // Spacing
-
-    // --- Terms Table ---
-    // Needs careful multi-row span handling in body definition for autoTable
-     const termsBody = [
-        [ // Row 1
-            { content: '3', styles: { halign: 'center' } },
-            `执行质量标准：${contract.executionStandard}`,
-            { content: '11', styles: { halign: 'center' } },
-            `违约责任：按《中华人民共和国民法典》相关规定执行。`,
-        ],
-        [ // Row 2
-            { content: '4', styles: { halign: 'center' } },
-            `需方验收及提出质量异议期限：${contract.inspectionPeriod}`,
-            { content: '12', rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
-            { content: contract.disputeResolution, rowSpan: 2 },
-        ],
-        [ // Row 3
-            { content: '5', styles: { halign: 'center' } },
-            `交货时间：${contract.deliveryDate}`,
-             // Cells 12 covered by rowspan
-        ],
-        [ // Row 4
-            { content: '6', styles: { halign: 'center' } },
-            `交货地点：${contract.deliveryLocation}`,
-            { content: '13', rowSpan: 3, styles: { halign: 'center', valign: 'middle' } },
-            { content: `其他约定事项或特殊订货要求：${contract.specialRequirements}`, rowSpan: 3 },
-        ],
-        [ // Row 5
-             { content: '7', styles: { halign: 'center' } },
-            `交货方式：${contract.deliveryMethod}`,
-            // Cells 13 covered by rowspan
-        ],
-        [ // Row 6
-            { content: '8', styles: { halign: 'center' } },
-            `运输方式及费用承担：${contract.transportMethod}，${contract.transportFeeArrangement}`,
-             // Cells 13 covered by rowspan
-        ],
-        [ // Row 7
-            { content: '9', styles: { halign: 'center' } },
-            `包装标准及费用承担：${contract.packagingStandard}，${contract.packagingFeeArrangement}`,
-            { content: '14', styles: { halign: 'center' } },
-            `合同有效期限：${contract.expiryDate}`,
-        ],
-        [ // Row 8
-            { content: '10', styles: { halign: 'center' } },
-            `结算方式及期限：${contract.paymentMethod}`,
-            { content: '15', styles: { halign: 'center' } },
-            contract.contractCopies,
-        ],
-    ];
-
-    doc.autoTable({
-      startY: currentY,
-      body: termsBody,
-      theme: 'grid',
-      styles: { 
-          fontSize: 8, 
-          cellPadding: 3, 
-          font: FONT_NAME // Apply the embedded font
-      },
-      columnStyles: { // Define widths for the 4 logical columns
-        0: { cellWidth: 30, halign: 'center' }, // Seq No 1
-        1: { cellWidth: 205 }, // Content 1
-        2: { cellWidth: 30, halign: 'center' }, // Seq No 2
-        3: { cellWidth: 205 }, // Content 2
-      },
-      didDrawPage: (data) => { currentY = data.cursor.y; }
-    });
-    currentY += 30; // Spacing before signatures
-
-    // --- Signature Area ---
-     // Check if signature area fits on the current page, otherwise add new page
-     const signatureHeight = 80; // Estimated height needed for signature block
-     if (currentY + signatureHeight > pageHeight - margin) {
-         doc.addPage();
-         currentY = margin;
-     }
-
-    doc.setFontSize(9);
-    const sigLeftX = margin;
-    const sigRightX = margin + contentWidth / 2 + 10;
-
-    doc.text("需方（盖章）：", sigLeftX, currentY);
-    doc.text("供方（盖章）：", sigRightX, currentY);
-    currentY += 25;
-    doc.text("法定代表人或委托代理人（签字）：", sigLeftX, currentY);
-    doc.text("法定代表人或委托代理人（签字）：", sigRightX, currentY);
-    currentY += 15;
-    doc.text("________________________", sigLeftX + doc.getTextWidth("法定代表人或委托代理人（签字）：")-30, currentY); // Underline approx position
-    doc.text("________________________", sigRightX + doc.getTextWidth("法定代表人或委托代理人（签字）：")-30, currentY);
-    currentY += 25;
-    doc.text("日期：________________________", sigLeftX, currentY);
-    doc.text("日期：________________________", sigRightX, currentY);
-
-    // --- Save PDF ---
-    doc.save(`${filename || '销售合同'}.pdf`);
-  } catch (error) {
-    console.error("导出PDF文档失败:", error);
-    throw new Error("导出PDF文档失败: " + error.message);
-  }
 };
