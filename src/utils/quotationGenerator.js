@@ -12,15 +12,54 @@ import html2canvas from 'html2canvas';
 // const LINE_HEIGHTS = { ... };
 
 /**
- * 生成报价单数据 (保持你之前的 generateQuotation 函数不变)
+ * 生成报价单数据
  * @param {Object} selectionResult - 选型结果对象
  * @param {Object} projectInfo - 项目信息
  * @param {Object} selectedComponents - 包含选定 gearbox, coupling (或null), pump (或null) 的对象
  * @param {Object} priceInfo - 包含 packagePrice, marketPrice, totalMarketPrice 和 componentPrices 的对象
+ * @param {Object} options - 额外选项，如配件价格显示设置
  * @returns {Object} 生成的报价单数据对象 { success: boolean, message?: string, ...data }
  */
-export const generateQuotation = (selectionResult, projectInfo, selectedComponents, priceInfo) => {
-    console.log("generateQuotation called with:", { selectionResult, projectInfo, selectedComponents, priceInfo });
+export const generateQuotation = (selectionResult, projectInfo, selectedComponents, priceInfo, options = {}) => {
+    // 默认选项设置
+    const defaultOptions = {
+        showCouplingPrice: true, // 默认显示联轴器单独价格
+        showPumpPrice: true,     // 默认显示备用泵单独价格
+    };
+    
+    // 合并选项
+    const finalOptions = { ...defaultOptions, ...options };
+    
+    // 检查是否为GW系列齿轮箱，如果不是，则默认将配件价格包含在齿轮箱中
+    if (selectedComponents?.gearbox && typeof selectedComponents.gearbox.model === 'string') {
+        const isGWSeries = selectedComponents.gearbox.model.toUpperCase().includes('GW');
+        if (!isGWSeries && options.autoSetPriceOption !== false) {
+            // 非GW系列默认包含配件价格
+            finalOptions.showCouplingPrice = false;
+            finalOptions.showPumpPrice = false;
+            console.log("非GW系列齿轮箱，默认包含配件价格");
+        }
+    }
+    
+    console.log("generateQuotation called with:", { 
+        selectionResultStatus: selectionResult?.success, 
+        componentsPresent: {
+            gearbox: !!selectedComponents?.gearbox,
+            coupling: !!selectedComponents?.coupling,
+            pump: !!selectedComponents?.pump
+        },
+        priceInfo: {
+            packagePrice: priceInfo?.packagePrice,
+            marketPrice: priceInfo?.marketPrice,
+            componentsIncluded: {
+                gearbox: !!priceInfo?.componentPrices?.gearbox,
+                coupling: !!priceInfo?.componentPrices?.coupling,
+                pump: !!priceInfo?.componentPrices?.pump
+            }
+        },
+        options: finalOptions
+    });
+    
     if (!selectedComponents?.gearbox || !priceInfo?.componentPrices?.gearbox) {
         return { success: false, message: "缺少齿轮箱或价格信息" };
     }
@@ -34,9 +73,50 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
     const items = [];
     let calculatedTotalAmount = 0;
     
-    // Add gearbox with all price options
+    // 检查是否需要将配件价格包含在齿轮箱中
+    const includeCouplingInGearbox = !finalOptions.showCouplingPrice && selectedComponents.coupling;
+    const includePumpInGearbox = !finalOptions.showPumpPrice && selectedComponents.pump;
+    
+    // 计算需要包含在齿轮箱价格中的配件价格总和
+    let includedAccessoriesPrice = 0;
+    
+    if (includeCouplingInGearbox && priceInfo.componentPrices.coupling) {
+        includedAccessoriesPrice += priceInfo.componentPrices.coupling.marketPrice || 0;
+        console.log("联轴器价格包含在齿轮箱中:", priceInfo.componentPrices.coupling.marketPrice);
+    }
+    
+    if (includePumpInGearbox && priceInfo.componentPrices.pump) {
+        includedAccessoriesPrice += priceInfo.componentPrices.pump.marketPrice || 0;
+        console.log("备用泵价格包含在齿轮箱中:", priceInfo.componentPrices.pump.marketPrice);
+    }
+    
+    // 添加齿轮箱（可能包含配件价格）
     const gearbox = selectedComponents.gearbox;
     const gearboxPrices = priceInfo.componentPrices.gearbox;
+    
+    // 基础价格
+    let gearboxMarketPrice = typeof gearboxPrices.marketPrice === 'number' ? gearboxPrices.marketPrice : 0;
+    let gearboxFactoryPrice = typeof gearboxPrices.factoryPrice === 'number' ? gearboxPrices.factoryPrice : 0;
+    let gearboxPackagePrice = typeof gearboxPrices.packagePrice === 'number' ? gearboxPrices.packagePrice : 0;
+    
+    // 如果包含配件价格，则增加齿轮箱价格
+    if (includedAccessoriesPrice > 0) {
+        gearboxMarketPrice += includedAccessoriesPrice;
+        gearboxFactoryPrice += includedAccessoriesPrice * 0.88; // 估算工厂价
+        gearboxPackagePrice += includedAccessoriesPrice * 0.88; // 估算包装价
+    }
+    
+    // 生成齿轮箱项目
+    let gearboxRemarks = `速比: ${gearbox.ratio?.toFixed(2) ?? gearbox.selectedRatio?.toFixed(2) ?? 'N/A'}`;
+    
+    // 如果包含配件价格，在备注中注明
+    if (includeCouplingInGearbox || includePumpInGearbox) {
+        let includedItems = [];
+        if (includeCouplingInGearbox) includedItems.push("高弹性联轴器");
+        if (includePumpInGearbox) includedItems.push("备用泵");
+        gearboxRemarks += ` (含${includedItems.join('和')})`;
+    }
+    
     const gearboxItem = {
         id: 1,
         name: "船用齿轮箱",
@@ -44,9 +124,9 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
         quantity: 1,
         unit: '台',
         prices: {
-            factory: typeof gearboxPrices.factoryPrice === 'number' ? gearboxPrices.factoryPrice : 0,
-            package: typeof gearboxPrices.packagePrice === 'number' ? gearboxPrices.packagePrice : 0,
-            market: typeof gearboxPrices.marketPrice === 'number' ? gearboxPrices.marketPrice : 0
+            factory: gearboxFactoryPrice,
+            package: gearboxPackagePrice,
+            market: gearboxMarketPrice
         },
         selectedPrice: 'market', // Default to market price
         get unitPrice() {
@@ -55,16 +135,19 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
         get amount() {
             return this.unitPrice * this.quantity;
         },
-        remarks: `速比: ${gearbox.ratio?.toFixed(2) ?? 'N/A'}`
+        remarks: gearboxRemarks
     };
     items.push(gearboxItem);
     calculatedTotalAmount += gearboxItem.amount;
 
-    // Add coupling if available
-    if (selectedComponents.coupling) {
+    // 添加联轴器（如果显示单独价格）
+    if (selectedComponents.coupling && finalOptions.showCouplingPrice) {
+        console.log("添加联轴器到报价单:", selectedComponents.coupling.model);
         const coupling = selectedComponents.coupling;
         const couplingPrices = priceInfo.componentPrices.coupling;
-        if (couplingPrices) {
+        
+        // 确保有价格信息
+        if (couplingPrices && (couplingPrices.factoryPrice || couplingPrices.marketPrice || couplingPrices.basePrice)) {
             const couplingItem = {
                 id: items.length + 1,
                 name: "高弹性联轴器",
@@ -83,11 +166,13 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
                 get amount() {
                     return this.unitPrice * this.quantity;
                 },
-                remarks: "与齿轮箱配套"
+                remarks: coupling.hasCover ? "带罩壳，与齿轮箱配套" : "与齿轮箱配套"
             };
             items.push(couplingItem);
             calculatedTotalAmount += couplingItem.amount;
+            console.log("联轴器已成功添加到报价单，价格:", couplingItem.unitPrice);
         } else {
+            // 如果没有价格信息，仍然添加但价格为"待定"
             const couplingItem = {
                 id: items.length + 1,
                 name: "高弹性联轴器",
@@ -98,17 +183,25 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
                 selectedPrice: 'market',
                 unitPrice: '待定',
                 amount: '待定',
-                remarks: "配套(价待定)"
+                remarks: coupling.hasCover ? "带罩壳，配套(价待定)" : "配套(价待定)"
             };
             items.push(couplingItem);
+            console.log("联轴器已添加到报价单，但价格为待定");
         }
+    } else if (selectedComponents.coupling && !finalOptions.showCouplingPrice) {
+        console.log("联轴器价格已包含在齿轮箱中，不单独显示");
+    } else {
+        console.log("联轴器组件不存在，已跳过");
     }
 
-    // Add standby pump if available
-    if (selectedComponents.pump) {
+    // 添加备用泵（如果显示单独价格）
+    if (selectedComponents.pump && finalOptions.showPumpPrice) {
+        console.log("添加备用泵到报价单:", selectedComponents.pump.model);
         const pump = selectedComponents.pump;
         const pumpPrices = priceInfo.componentPrices.pump;
-        if (pumpPrices) {
+        
+        // 确保有价格信息
+        if (pumpPrices && (pumpPrices.factoryPrice || pumpPrices.marketPrice || pumpPrices.basePrice)) {
             const pumpItem = {
                 id: items.length + 1,
                 name: "备用泵",
@@ -131,7 +224,9 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
             };
             items.push(pumpItem);
             calculatedTotalAmount += pumpItem.amount;
+            console.log("备用泵已成功添加到报价单，价格:", pumpItem.unitPrice);
         } else {
+            // 如果没有价格信息，仍然添加但价格为"待定"
             const pumpItem = {
                 id: items.length + 1,
                 name: "备用泵",
@@ -145,10 +240,15 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
                 remarks: "配套(价待定)"
             };
             items.push(pumpItem);
+            console.log("备用泵已添加到报价单，但价格为待定");
         }
+    } else if (selectedComponents.pump && !finalOptions.showPumpPrice) {
+        console.log("备用泵价格已包含在齿轮箱中，不单独显示");
+    } else {
+        console.log("备用泵组件不存在，已跳过");
     }
 
-    return {
+    const result = {
         success: true,
         quotationNumber,
         date: formattedDate,
@@ -171,8 +271,20 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
         priceType: 'market', // Default price type
         paymentTerms: "合同签订后支付30%预付款，发货前付清全款。",
         deliveryTime: "合同签订生效后 3 个月内发货。",
-        notes: "此报价有效期30天。价格含标准包装，不含运费保险。最终解释权归供方。"
+        notes: "此报价有效期30天。价格含标准包装，不含运费保险。最终解释权归供方。",
+        options: finalOptions // 保存配置选项，以便后续处理
     };
+    
+    console.log("生成的报价单摘要:", {
+        success: result.success,
+        itemCount: result.items.length,
+        totalAmount: result.totalAmount,
+        includesCoupling: finalOptions.showCouplingPrice && result.items.some(item => item.name === "高弹性联轴器"),
+        includesPump: finalOptions.showPumpPrice && result.items.some(item => item.name === "备用泵"),
+        includedInGearbox: !finalOptions.showCouplingPrice || !finalOptions.showPumpPrice
+    });
+    
+    return result;
 };
 
 /**

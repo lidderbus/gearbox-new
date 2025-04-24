@@ -5,6 +5,7 @@ import { Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-r
 import { useAuth } from './contexts/AuthContext';
 import { userRoles, permissions } from './auth/roles';
 import './styles/global.css';
+import QuotationOptionsModal from './components/QuotationOptionsModal';
 // import { ThemeProvider, createTheme } from '@mui/material/styles'; // Material UI not used directly here
 // import { initialData } from './data/initialData'; // initialData is handled in repair.js now
 // import { adaptEnhancedData } from './utils/dataAdapter'; // adaptEnhancedData is used in repair.js
@@ -143,6 +144,7 @@ function App({ appData: initialAppData, setAppData }) {
   const [marketPrice, setMarketPrice] = useState(0);
   const [totalMarketPrice, setTotalMarketPrice] = useState(0);
   const [showBatchPriceAdjustment, setShowBatchPriceAdjustment] = useState(false);
+  const [showQuotationOptions, setShowQuotationOptions] = useState(false);
 
   const [showDiagnosticPanel, setShowDiagnosticPanel] = useState(false);
 
@@ -683,7 +685,7 @@ function App({ appData: initialAppData, setAppData }) {
     setActiveTab('result');
   }, [selectionResult, appDataState, requirementData, engineData, setActiveTab]);
 
-  const handleGenerateQuotation = useCallback(() => {
+const handleGenerateQuotation = useCallback(() => {
     if (!selectedComponents.gearbox) {
       setError('请先完成选型，确保有选中的齿轮箱');
       setActiveTab('input');
@@ -694,21 +696,62 @@ function App({ appData: initialAppData, setAppData }) {
       return;
     }
 
+    // 弹出报价选项设置对话框
+    setShowQuotationOptions(true);
+  }, [selectedComponents, selectionResult, setActiveTab]);
+
+  // 添加新的生成报价单处理函数，接受选项参数
+  const generateQuotationWithOptions = useCallback((options = {}) => {
     setLoading(true);
     setError('');
     setSuccess('正在生成报价单...');
 
     try {
+      // 创建新的组件对象，并确保价格数据正确
       const finalComponents = {
           gearbox: selectedComponents.gearbox ? correctPriceData(selectedComponents.gearbox) : null,
           coupling: selectedComponents.coupling ? correctPriceData(selectedComponents.coupling) : null,
           pump: selectedComponents.pump ? correctPriceData(selectedComponents.pump) : null,
       };
 
+      console.log("准备生成报价单，组件:", {
+        gearbox: finalComponents.gearbox?.model,
+        coupling: finalComponents.coupling?.model,
+        pump: finalComponents.pump?.model,
+        options
+      });
+
+      // 计算价格
       const currentPackagePrice = calculatePackagePrice(finalComponents.gearbox, finalComponents.coupling, finalComponents.pump);
       const currentMarketPrice = calculateMarketPrice(finalComponents.gearbox, currentPackagePrice);
-      const currentTotalMarketPrice = (finalComponents.gearbox?.marketPrice || 0) + (finalComponents.coupling?.marketPrice || 0) + (finalComponents.pump?.marketPrice || 0);
+      const currentTotalMarketPrice = (finalComponents.gearbox?.marketPrice || 0) + 
+                                     (finalComponents.coupling?.marketPrice || 0) + 
+                                     (finalComponents.pump?.marketPrice || 0);
 
+      console.log("报价单价格信息:", {
+        packagePrice: currentPackagePrice,
+        marketPrice: currentMarketPrice,
+        totalMarketPrice: currentTotalMarketPrice,
+        componentPrices: {
+          gearbox: finalComponents.gearbox ? {
+            basePrice: finalComponents.gearbox.basePrice,
+            factoryPrice: finalComponents.gearbox.factoryPrice,
+            marketPrice: finalComponents.gearbox.marketPrice
+          } : null,
+          coupling: finalComponents.coupling ? {
+            basePrice: finalComponents.coupling.basePrice,
+            factoryPrice: finalComponents.coupling.factoryPrice,
+            marketPrice: finalComponents.coupling.marketPrice
+          } : null,
+          pump: finalComponents.pump ? {
+            basePrice: finalComponents.pump.basePrice,
+            factoryPrice: finalComponents.pump.factoryPrice,
+            marketPrice: finalComponents.pump.marketPrice
+          } : null
+        }
+      });
+
+      // 确保每个组件都有明确的价格数据，即使组件不存在，也传入null
       const quotationData = generateQuotation(
         selectionResult,
         projectInfo,
@@ -726,16 +769,24 @@ function App({ appData: initialAppData, setAppData }) {
              coupling: finalComponents.coupling ? {
                 factoryPrice: finalComponents.coupling.factoryPrice,
                 marketPrice: finalComponents.coupling.marketPrice,
-                 basePrice: finalComponents.coupling.basePrice || finalComponents.coupling.price
+                basePrice: finalComponents.coupling.basePrice || finalComponents.coupling.price
              } : null,
-              pump: finalComponents.pump ? {
+             pump: finalComponents.pump ? {
                 factoryPrice: finalComponents.pump.factoryPrice,
                 marketPrice: finalComponents.pump.marketPrice,
-                 basePrice: finalComponents.pump.basePrice || finalComponents.pump.price
+                basePrice: finalComponents.pump.basePrice || finalComponents.pump.price
              } : null
           }
-        }
+        },
+        options // 传递报价单选项
       );
+
+      // 记录生成的报价单
+      console.log("生成的报价单:", {
+        success: quotationData.success,
+        items: quotationData.items?.length,
+        options: quotationData.options
+      });
 
       setQuotation(quotationData);
       setActiveTab('quotation');
@@ -746,8 +797,9 @@ function App({ appData: initialAppData, setAppData }) {
       setError('生成报价单失败: ' + error.message);
     } finally {
       setLoading(false);
+      setShowQuotationOptions(false); // 关闭选项对话框
     }
-  }, [selectedComponents, selectionResult, projectInfo]);
+  }, [selectedComponents, selectionResult, projectInfo, setActiveTab]);
 
   const handleExportQuotation = useCallback((format) => {
     if (!quotation) {
@@ -1823,6 +1875,16 @@ function App({ appData: initialAppData, setAppData }) {
           theme={theme}
         />
       )}
+	  {showQuotationOptions && (
+  <QuotationOptionsModal
+    show={showQuotationOptions}
+    onHide={() => setShowQuotationOptions(false)}
+    onApply={generateQuotationWithOptions}
+    selectedComponents={selectedComponents}
+    colors={colors}
+    theme={theme}
+  />
+)}
     </Container>
   );
 }
