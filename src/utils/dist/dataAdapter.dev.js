@@ -169,7 +169,7 @@ function convertTorqueToKNm(item) {
 function adaptPriceFields(item) {
   item.basePrice = (0, _dataHelpers.safeParseFloat)(item.basePrice || item.price) || 10000;
   item.price = item.basePrice;
-  item.discountRate = (0, _dataHelpers.safeParseFloat)(item.discountRate) || (0, _priceManager.getDiscountRate)(item.model); // 如果折扣率是百分比格式，转换为小数
+  item.discountRate = (0, _dataHelpers.safeParseFloat)(item.discountRate) || (0, _priceManager.getStandardDiscountRate)(item.model); // 如果折扣率是百分比格式，转换为小数
 
   if (item.discountRate > 1) {
     item.discountRate = item.discountRate / 100;

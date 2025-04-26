@@ -87,14 +87,14 @@ export const getDiscountRate = (model) => {
   // 根据型号返回默认折扣率（小数形式，不是百分比）
   if (!model) return 0.1; // 默认折扣率10%
   
+  // HCM系列折扣率
+  if (model.startsWith('HCM')) return 0; // HCM系列全国统一售价，无折扣
+  
   // HC系列折扣率
   if (model.startsWith('HC')) return 0.16; // 16%折扣
   
   // GW系列折扣率
   if (model.startsWith('GW')) return 0.1; // 10%折扣
-  
-  // HCM系列折扣率
-  if (model.startsWith('HCM')) return 0.16; // 16%折扣
   
   // DT系列折扣率
   if (model.startsWith('DT')) return 0.12; // 12%折扣

@@ -194,14 +194,14 @@ export function applyOfficialPrices(appData, officialPrices, discountData = null
 function getDefaultDiscountRate(model) {
   if (!model) return 0.1; // 默认折扣率10%
   
+  // HCM系列折扣率
+  if (model.startsWith('HCM')) return 0; // HCM系列全国统一售价，无折扣
+  
   // HC系列折扣率
   if (model.startsWith('HC')) return 0.16; // 16%折扣
   
   // GW系列折扣率
   if (model.startsWith('GW')) return 0.1; // 10%折扣
-  
-  // HCM系列折扣率
-  if (model.startsWith('HCM')) return 0.16; // 16%折扣
   
   // DT系列折扣率
   if (model.startsWith('DT')) return 0.12; // 12%折扣

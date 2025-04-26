@@ -1,6 +1,6 @@
 // src/utils/dataAdapter.js
 import { safeParseFloat } from './dataHelpers';
-import { getDiscountRate, calculateFactoryPrice, calculateMarketPrice } from './priceManager';
+import { getStandardDiscountRate, calculateFactoryPrice, calculateMarketPrice } from './priceManager';
 
 export function adaptBasicData(rawData) {
   if (!rawData) return createEmptyData();
@@ -159,7 +159,7 @@ function convertTorqueToKNm(item) {
 function adaptPriceFields(item) {
   item.basePrice = safeParseFloat(item.basePrice || item.price) || 10000;
   item.price = item.basePrice;
-  item.discountRate = safeParseFloat(item.discountRate) || getDiscountRate(item.model);
+  item.discountRate = safeParseFloat(item.discountRate) || getStandardDiscountRate(item.model);
   
   // 如果折扣率是百分比格式，转换为小数
   if (item.discountRate > 1) {

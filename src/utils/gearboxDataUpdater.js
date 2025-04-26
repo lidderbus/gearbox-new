@@ -1,6 +1,6 @@
 // src/utils/gearboxDataUpdater.js
 // 导入价格计算函数
-import { calculateFactoryPrice, getDiscountRate } from './priceDiscount';
+import { calculateFactoryPrice, getStandardDiscountRate } from './priceManager';
 function updateHCGearboxes(data) {
   const hcGearboxes = data.hcGearboxes || [];
   
@@ -263,10 +263,9 @@ function updateSelectionPrices(selection) {
     
     // 确保基本价格存在
     const basePrice = component.basePrice || component.price || 0;
-    // 确保折扣率存在，如果没有就调用 getDiscountRate 函数
-    const discountRate = component.discountRate !== undefined ? 
-                         component.discountRate : 
-                         (typeof getDiscountRate === 'function' ? getDiscountRate(component.model) : 0.1);
+    // 确保折扣率存在，如果没有就调用 getStandardDiscountRate 函数
+    const discountRate = typeof component.discountRate === 'number' ? component.discountRate : 
+      (typeof getStandardDiscountRate === 'function' ? getStandardDiscountRate(component.model) : 0.1);
     // 计算工厂价(如果不存在)
     const factoryPrice = component.factoryPrice || 
                         (typeof calculateFactoryPrice === 'function' ? 

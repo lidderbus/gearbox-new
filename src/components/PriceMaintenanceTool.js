@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, Button, Table, Form, InputGroup, Alert, Spinner, Row, Col, Tab, Tabs, Badge, Modal } from 'react-bootstrap';
 import Papa from 'papaparse'; // 确保已安装 papaparse
-import { calculateFactoryPrice, calculateMarketPrice, getDiscountRate } from '../utils/priceDiscount';
+import { calculateFactoryPrice, calculateMarketPrice, getStandardDiscountRate } from '../utils/priceManager';
 import { parseTextPriceTable, calculateDiscountRates } from '../utils/officialPriceParser';
 import { savePriceHistory, getPriceHistory, compareAndTrackChanges } from '../utils/priceHistoryTracker';
 import PriceComparisonTool from './PriceComparisonTool';

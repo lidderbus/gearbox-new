@@ -1,20 +1,22 @@
-// src/App.js - Main Application Component
+// src/App.js - Main Application Component (Modified with Enhanced Features)
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Container, Row, Col, Form, Button, Card, Table, Tab, Tabs, Alert, Spinner, Modal, Badge, ListGroup } from 'react-bootstrap';
 import { Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { userRoles, permissions } from './auth/roles';
 import './styles/global.css';
+
+// 导入新的模态组件
 import QuotationOptionsModal from './components/QuotationOptionsModal';
-// import { ThemeProvider, createTheme } from '@mui/material/styles'; // Material UI not used directly here
-// import { initialData } from './data/initialData'; // initialData is handled in repair.js now
-// import { adaptEnhancedData } from './utils/dataAdapter'; // adaptEnhancedData is used in repair.js
+import CustomQuotationItemModal from './components/CustomQuotationItemModal';
+import QuotationHistoryModal from './components/QuotationHistoryModal';
 
 // 导入数据修复工具
-import { correctDatabase } from './utils/dataCorrector'; // correctDatabase is still used in DatabaseManagementView
+import { correctDatabase } from './utils/dataCorrector';
 
 // 导入选型结果组件
-import GearboxSelectionResult from './components/GearboxSelectionResult';
+import EnhancedGearboxSelectionResult from './components/EnhancedGearboxSelectionResult';
+import CouplingSelectionResultComponent from './components/CouplingSelectionResultComponent';
 
 // 价格模块相关工具
 import {
@@ -43,19 +45,216 @@ import AgreementView from './components/AgreementView';
 import ContractView from './components/ContractView';
 import GearboxComparisonView from './components/GearboxComparisonView';
 import DataQuery from './components/DataQuery';
-// import ProtectedRoute from './components/ProtectedRoute'; // ProtectedRoute is handled in AppContent now
-import DiagnosticPanel from './components/DiagnosticPanel'; // 引入诊断面板组件
+import DiagnosticPanel from './components/DiagnosticPanel';
 
 // Utils and API functions
 import { selectGearbox, autoSelectGearbox } from './utils/selectionAlgorithm';
 import { selectFlexibleCoupling, selectStandbyPump } from './utils/couplingSelection';
-import { generateQuotation, exportQuotationToExcel, exportQuotationToPDF } from './utils/quotationGenerator';
+import enhancedCouplingSelection from './utils/enhancedCouplingSelection'; // 导入增强联轴器选型函数
+import { 
+  generateQuotation, 
+  exportQuotationToExcel, 
+  exportQuotationToPDF,
+  addCustomItemToQuotation,
+  removeItemFromQuotation,
+  createQuotationPreview
+} from './utils/quotationGenerator';
 import { generateAgreement, exportAgreementToWord, exportAgreementToPDFFormat } from './utils/agreementGenerator';
 import { generateContract, exportContractToWord, exportContractToPDF } from './utils/contractGenerator';
 import { getCouplingSpecifications } from './data/gearboxMatchingMaps';
+import { 
+  optimizedHtmlToPdf, 
+  exportHtmlContentToPDF 
+} from './utils/pdfExportUtils';
+
+// 导入报价单管理工具
+import { 
+  saveQuotation, 
+  getSavedQuotations, 
+  loadSavedQuotation, 
+  deleteSavedQuotation, 
+  compareQuotations,
+  exportComparisonToExcel
+} from './utils/quotationManager';
+
+// 导入价格修复工具
+import fixHCMSeriesPrices from './utils/priceFixers';
 
 // 数据持久化键名 (Still relevant for history/user settings)
 const STORAGE_KEY = 'gearbox_app_data';
+
+// 报价单比较结果对话框组件
+const ComparisonResultModal = ({
+  show,
+  onHide,
+  comparisonResult,
+  colors,
+  theme
+}) => {
+  if (!comparisonResult) return null;
+  
+  // 格式化价格显示
+  const formatPrice = (price) => {
+    if (typeof price !== 'number') return '-';
+    return price.toLocaleString('zh-CN', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  };
+  
+  // 格式化百分比显示
+  const formatPercent = (value) => {
+    if (typeof value !== 'number') return '-';
+    return value.toFixed(2) + '%';
+  };
+  
+  // 获取差异项的图标和样式
+  const getDifferenceStyle = (type, percentChange) => {
+    if (type === 'itemRemoved') {
+      return {
+        icon: <i className="bi bi-dash-circle text-danger me-1"></i>,
+        className: 'text-danger'
+      };
+    } else if (type === 'itemAdded') {
+      return {
+        icon: <i className="bi bi-plus-circle text-success me-1"></i>,
+        className: 'text-success'
+      };
+    } else if (percentChange > 0) {
+      return {
+        icon: <i className="bi bi-arrow-up-circle text-danger me-1"></i>,
+        className: 'text-danger'
+      };
+    } else if (percentChange < 0) {
+      return {
+        icon: <i className="bi bi-arrow-down-circle text-success me-1"></i>,
+        className: 'text-success'
+      };
+    }
+    return {
+      icon: <i className="bi bi-dash-circle text-muted me-1"></i>,
+      className: ''
+    };
+  };
+  
+  return (
+    <Modal
+      show={show}
+      onHide={onHide}
+      centered
+      size="xl"
+    >
+      <Modal.Header
+        closeButton
+        style={{ backgroundColor: colors?.headerBg, color: colors?.headerText }}
+      >
+        <Modal.Title>报价单比较结果</Modal.Title>
+      </Modal.Header>
+      <Modal.Body style={{ backgroundColor: colors?.card, color: colors?.text }}>
+        <Row className="mb-4">
+          <Col md={6}>
+            <h6>报价单 A</h6>
+            <Table bordered size="sm">
+              <tbody>
+                <tr>
+                  <td width="30%">报价单号</td>
+                  <td>{comparisonResult.quotationA.id}</td>
+                </tr>
+                <tr>
+                  <td>日期</td>
+                  <td>{comparisonResult.quotationA.date}</td>
+                </tr>
+                <tr>
+                  <td>总金额</td>
+                  <td>{formatPrice(comparisonResult.quotationA.totalAmount)}元</td>
+                </tr>
+              </tbody>
+            </Table>
+          </Col>
+          <Col md={6}>
+            <h6>报价单 B</h6>
+            <Table bordered size="sm">
+              <tbody>
+                <tr>
+                  <td width="30%">报价单号</td>
+                  <td>{comparisonResult.quotationB.id}</td>
+                </tr>
+                <tr>
+                  <td>日期</td>
+                  <td>{comparisonResult.quotationB.date}</td>
+                </tr>
+                <tr>
+                  <td>总金额</td>
+                  <td>{formatPrice(comparisonResult.quotationB.totalAmount)}元</td>
+                </tr>
+              </tbody>
+            </Table>
+          </Col>
+        </Row>
+        
+        <h6 className="border-bottom pb-2 mb-3">价格差异明细</h6>
+        
+        <Table bordered responsive>
+          <thead>
+            <tr>
+              <th>项目</th>
+              <th>描述</th>
+              <th>报价单A价格</th>
+              <th>报价单B价格</th>
+              <th>差异</th>
+              <th>变化率</th>
+            </tr>
+          </thead>
+          <tbody>
+            {comparisonResult.differences.map((diff, index) => {
+              const { icon, className } = getDifferenceStyle(diff.type, diff.percentChange);
+              return (
+                <tr key={index} className={className}>
+                  <td>{icon} {diff.type === 'totalAmount' ? '总金额' : diff.model}</td>
+                  <td>{diff.description}</td>
+                  <td className="text-end">{formatPrice(diff.valueA)}</td>
+                  <td className="text-end">{formatPrice(diff.valueB)}</td>
+                  <td className={`text-end ${diff.difference > 0 ? 'text-danger' : diff.difference < 0 ? 'text-success' : ''}`}>
+                    {diff.difference > 0 ? '+' : ''}{formatPrice(diff.difference)}
+                  </td>
+                  <td className="text-end">
+                    {diff.percentChange > 0 ? '+' : ''}{formatPercent(diff.percentChange)}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+        
+        <Alert variant="info" className="mt-3">
+          <i className="bi bi-info-circle me-2"></i>
+          总体变化: 报价单B比报价单A
+          {comparisonResult.differences[0]?.difference > 0 ? '增加了' : '减少了'}
+          {formatPrice(Math.abs(comparisonResult.differences[0]?.difference || 0))}元
+          ({formatPercent(Math.abs(comparisonResult.differences[0]?.percentChange || 0))})
+        </Alert>
+      </Modal.Body>
+      <Modal.Footer style={{ backgroundColor: colors?.card }}>
+        <Button
+          variant="secondary"
+          onClick={onHide}
+        >
+          关闭
+        </Button>
+        <Button
+          variant="primary"
+          onClick={() => {
+            // 导出比较结果为Excel
+            exportComparisonToExcel(comparisonResult, `报价单比较-${new Date().toISOString().slice(0, 10)}`);
+            onHide();
+          }}
+        >
+          <i className="bi bi-file-earmark-excel me-1"></i> 导出比较结果
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
 
 const forceReset = () => {
   try {
@@ -125,7 +324,7 @@ function App({ appData: initialAppData, setAppData }) {
   const [gearboxType, setGearboxType] = useState('auto');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(''); // 添加成功消息状态
+  const [success, setSuccess] = useState('');
   const [selectionResult, setSelectionResult] = useState(null);
   const [quotation, setQuotation] = useState(null);
   const [agreement, setAgreement] = useState(null);
@@ -144,7 +343,14 @@ function App({ appData: initialAppData, setAppData }) {
   const [marketPrice, setMarketPrice] = useState(0);
   const [totalMarketPrice, setTotalMarketPrice] = useState(0);
   const [showBatchPriceAdjustment, setShowBatchPriceAdjustment] = useState(false);
+  
+  // 新增报价单相关状态
   const [showQuotationOptions, setShowQuotationOptions] = useState(false);
+  const [showCustomItemModal, setShowCustomItemModal] = useState(false);
+  const [showQuotationHistoryModal, setShowQuotationHistoryModal] = useState(false);
+  const [showComparisonModal, setShowComparisonModal] = useState(false);
+  const [comparisonResult, setComparisonResult] = useState(null);
+  const [savedQuotation, setSavedQuotation] = useState(null);
 
   const [showDiagnosticPanel, setShowDiagnosticPanel] = useState(false);
 
@@ -587,105 +793,156 @@ function App({ appData: initialAppData, setAppData }) {
 
   }, [appDataState, updateAppDataAndPersist]);
 
-  // 修改后的 handleGearboxSelection 函数
+  // 修改后的齿轮箱选择函数 - 使用增强型联轴器选型
   const handleGearboxSelection = useCallback((index) => {
-    if (!selectionResult || !Array.isArray(selectionResult.recommendations) || !selectionResult.recommendations[index]) {
-        console.error("Cannot select gearbox, invalid state or index:", index, selectionResult);
-        setError("无法选择齿轮箱，内部状态错误。");
-        return;
+    // 首先进行更完善的验证
+    if (!selectionResult) {
+      console.error("Cannot select gearbox, selection result is null or undefined");
+      setError("无法选择齿轮箱，请先进行选型。");
+      return;
     }
-
+    
+    if (!Array.isArray(selectionResult.recommendations)) {
+      console.error("Cannot select gearbox, recommendations is not an array:", selectionResult);
+      setError("无法选择齿轮箱，选型结果格式错误。");
+      return;
+    }
+    
+    if (index < 0 || index >= selectionResult.recommendations.length) {
+      console.error(`Cannot select gearbox, index ${index} out of range (0-${selectionResult.recommendations.length - 1})`);
+      setError(`无法选择齿轮箱，索引 ${index} 超出范围。`);
+      return;
+    }
+  
+    // 确认可以选择齿轮箱
     setSelectedGearboxIndex(index);
     const selectedGearbox = { ...selectionResult.recommendations[index] };
     console.log(`User selected gearbox at index ${index}:`, selectedGearbox.model);
-
+  
     // 如果是部分匹配的齿轮箱，显示警告
     if (selectedGearbox.isPartialMatch) {
-        setSuccess(''); // 清除成功消息
-        setError(`注意: 选择的齿轮箱 ${selectedGearbox.model} 是部分匹配结果，${selectedGearbox.failureReason || '不完全满足所有要求'}`);
+      setSuccess(''); // 清除成功消息
+      setError(`注意: 选择的齿轮箱 ${selectedGearbox.model} 是部分匹配结果，${selectedGearbox.failureReason || '不完全满足所有要求'}`);
     } else {
-        setError(''); // 清除错误消息
+      setError(''); // 清除错误消息
     }
-
+  
     // 修正价格和其他数据
     const correctedGearbox = correctPriceData(selectedGearbox);
-
-    const engineTorque = selectionResult.engineTorque;
-
-     if (!appDataState || !Array.isArray(appDataState.flexibleCouplings) || !Array.isArray(appDataState.standbyPumps)) {
-       setError("数据加载不完整，无法选择配件。");
-       console.error("Missing data for coupling/pump selection:", appDataState);
-       return;
-     }
-
-    // 获取或重新选择联轴器和备用泵
-    let updatedCouplingResult, updatedPumpResult;
-    
-    // 如果选型结果中已经有配件信息，优先使用
-    if (index === 0 && selectionResult.flexibleCoupling) {
-        updatedCouplingResult = selectionResult.flexibleCoupling;
-    } else {
-        // 为选定齿轮箱重新选择联轴器
-        updatedCouplingResult = selectFlexibleCoupling(
-          engineTorque,
-          correctedGearbox.model,
-          appDataState.flexibleCouplings,
-          getCouplingSpecifications,
-          requirementData.workCondition,
-          parseFloat(requirementData.temperature) || 30,
-          requirementData.hasCover,
-          selectionResult.engineSpeed || parseFloat(engineData.speed)
-        );
+  
+    // 确保engineTorque存在，否则使用计算值
+    const engineTorque = selectionResult.engineTorque || 
+                         (parseFloat(engineData.power) * 9550 / parseFloat(engineData.speed));
+  
+    // 确保appDataState包含必要的数据
+    if (!appDataState || !Array.isArray(appDataState.flexibleCouplings) || !Array.isArray(appDataState.standbyPumps)) {
+      setError("数据加载不完整，无法选择配件。");
+      console.error("Missing data for coupling/pump selection:", appDataState);
+      
+      // 即使缺少配件数据，也设置齿轮箱
+      setSelectedComponents(prev => ({
+        ...prev,
+        gearbox: correctedGearbox
+      }));
+      
+      // 计算价格（只有齿轮箱）
+      const newPackagePrice = calculatePackagePrice(correctedGearbox, null, null);
+      setPackagePrice(newPackagePrice);
+      
+      const newMarketPrice = calculateMarketPrice(correctedGearbox, newPackagePrice);
+      setMarketPrice(newMarketPrice);
+      setTotalMarketPrice(newMarketPrice);
+      
+      setActiveTab('result');
+      return;
     }
-
-    if (index === 0 && selectionResult.standbyPump) {
+  
+    // 使用增强型联轴器选型功能
+    let updatedCouplingResult;
+    
+    try {
+      // 如果不是首选齿轮箱(index=0)，或者没有预先计算好的联轴器，则重新选择
+      if (index !== 0 || !selectionResult.flexibleCoupling) {
+        // 使用增强型联轴器选型
+        updatedCouplingResult = enhancedCouplingSelection(
+          {
+            ...selectionResult,
+            recommendations: [correctedGearbox],  // 使用当前选中的齿轮箱
+            engineTorque,
+            engineSpeed: parseFloat(engineData.speed)
+          },
+          appDataState.flexibleCouplings,
+          {
+            workCondition: requirementData.workCondition,
+            temperature: parseFloat(requirementData.temperature) || 30,
+            hasCover: requirementData.hasCover
+          }
+        );
+      } else {
+        // 使用原有选型结果中的联轴器
+        updatedCouplingResult = selectionResult.flexibleCoupling;
+      }
+    } catch (error) {
+      console.error("联轴器选择失败:", error);
+      updatedCouplingResult = { success: false, message: "联轴器选择过程中出错: " + error.message };
+    }
+  
+    // 获取或重新选择备用泵
+    let updatedPumpResult;
+    
+    try {
+      if (index === 0 && selectionResult.standbyPump) {
         updatedPumpResult = selectionResult.standbyPump;
-    } else {
+      } else {
         updatedPumpResult = selectStandbyPump(
           correctedGearbox.model,
           appDataState.standbyPumps
         );
+      }
+    } catch (error) {
+      console.error("备用泵选择失败:", error);
+      updatedPumpResult = { success: false, message: "备用泵选择过程中出错: " + error.message };
     }
-
+  
     const currentCoupling = updatedCouplingResult?.success ? correctPriceData({ ...updatedCouplingResult }) : null;
-
     const currentPump = updatedPumpResult?.success ? correctPriceData({ ...updatedPumpResult }) : null;
-
+  
     setSelectedComponents({
       gearbox: correctedGearbox,
       coupling: currentCoupling,
       pump: currentPump
     });
-
+  
     const newPackagePrice = calculatePackagePrice(correctedGearbox, currentCoupling, currentPump);
     setPackagePrice(newPackagePrice);
-
+  
     const newMarketPrice = calculateMarketPrice(correctedGearbox, newPackagePrice);
     setMarketPrice(newMarketPrice);
-
-     const totalMarket = (correctedGearbox?.marketPrice || 0) + (currentCoupling?.marketPrice || 0) + (currentPump?.marketPrice || 0);
-     setTotalMarketPrice(totalMarket);
-
-
+  
+    const totalMarket = (correctedGearbox?.marketPrice || 0) + 
+                        (currentCoupling?.marketPrice || 0) + 
+                        (currentPump?.marketPrice || 0);
+    setTotalMarketPrice(totalMarket);
+  
     console.log("Selected Components Updated:", {
-        gearbox: correctedGearbox?.model,
-        coupling: currentCoupling?.model,
-        pump: currentPump?.model
-      });
-      console.log("Prices Updated:", {
-        packagePrice: newPackagePrice,
-        marketPrice: newMarketPrice,
-        totalMarketPrice: totalMarket
-      });
-
-
+      gearbox: correctedGearbox?.model,
+      coupling: currentCoupling?.model,
+      pump: currentPump?.model
+    });
+    console.log("Prices Updated:", {
+      packagePrice: newPackagePrice,
+      marketPrice: newMarketPrice,
+      totalMarketPrice: totalMarket
+    });
+  
     setQuotation(null);
     setAgreement(null);
     setContract(null);
     setActiveTab('result');
-  }, [selectionResult, appDataState, requirementData, engineData, setActiveTab]);
+  }, [selectionResult, appDataState, requirementData, engineData, setActiveTab, correctPriceData, calculatePackagePrice, calculateMarketPrice]);
 
-const handleGenerateQuotation = useCallback(() => {
+  // 修改后的生成报价单函数 - 显示选项对话框
+  const handleGenerateQuotation = useCallback(() => {
     if (!selectedComponents.gearbox) {
       setError('请先完成选型，确保有选中的齿轮箱');
       setActiveTab('input');
@@ -769,12 +1026,12 @@ const handleGenerateQuotation = useCallback(() => {
              coupling: finalComponents.coupling ? {
                 factoryPrice: finalComponents.coupling.factoryPrice,
                 marketPrice: finalComponents.coupling.marketPrice,
-                basePrice: finalComponents.coupling.basePrice || finalComponents.coupling.price
+                 basePrice: finalComponents.coupling.basePrice || finalComponents.coupling.price
              } : null,
-             pump: finalComponents.pump ? {
+              pump: finalComponents.pump ? {
                 factoryPrice: finalComponents.pump.factoryPrice,
                 marketPrice: finalComponents.pump.marketPrice,
-                basePrice: finalComponents.pump.basePrice || finalComponents.pump.price
+                 basePrice: finalComponents.pump.basePrice || finalComponents.pump.price
              } : null
           }
         },
@@ -788,10 +1045,46 @@ const handleGenerateQuotation = useCallback(() => {
         options: quotationData.options
       });
 
+      // 如果有税率选项，计算含税价格
+      if (options.taxRate && options.taxRate > 0) {
+        const taxRate = options.taxRate / 100;
+        
+        // 为每个项目添加含税价格
+        quotationData.items.forEach(item => {
+          if (typeof item.unitPrice === 'number') {
+            item.taxPrice = item.unitPrice * (1 + taxRate);
+            item.taxAmount = item.taxPrice * item.quantity;
+          }
+        });
+        
+        // 计算总含税金额
+        quotationData.totalTaxAmount = quotationData.totalAmount * (1 + taxRate);
+      }
+
       setQuotation(quotationData);
       setActiveTab('quotation');
       setError('');
       setSuccess('报价单生成成功');
+      
+      // 保存到本地存储以便恢复
+      try {
+        const quotationHistory = JSON.parse(localStorage.getItem('quotationHistory') || '[]');
+        const newHistory = [
+          {
+            id: Date.now().toString(),
+            date: new Date().toISOString(),
+            projectName: projectInfo.projectName || '未命名项目',
+            customerName: projectInfo.customerName || '未知客户',
+            totalAmount: quotationData.totalAmount,
+            gearboxModel: finalComponents.gearbox?.model || '未知型号'
+          },
+          ...quotationHistory
+        ].slice(0, 10); // 最多保留10条历史记录
+        
+        localStorage.setItem('quotationHistory', JSON.stringify(newHistory));
+      } catch (storageError) {
+        console.warn('保存报价历史失败:', storageError);
+      }
     } catch (error) {
        console.error("生成报价单错误:", error);
       setError('生成报价单失败: ' + error.message);
@@ -799,26 +1092,261 @@ const handleGenerateQuotation = useCallback(() => {
       setLoading(false);
       setShowQuotationOptions(false); // 关闭选项对话框
     }
-  }, [selectedComponents, selectionResult, projectInfo, setActiveTab]);
+  }, [selectedComponents, selectionResult, projectInfo, setActiveTab, correctPriceData, calculatePackagePrice, calculateMarketPrice]);
 
-  const handleExportQuotation = useCallback((format) => {
+  // 处理自定义报价项目添加
+  const handleAddCustomQuotationItem = useCallback((itemData) => {
+    if (!quotation || !quotation.success) {
+      setError('请先生成基本报价单');
+      return;
+    }
+    
+    setLoading(true);
+    setError('');
+    
+    try {
+      // 添加自定义项目到报价单
+      const updatedQuotation = addCustomItemToQuotation(quotation, itemData);
+      
+      // 更新状态
+      setQuotation(updatedQuotation);
+      setSuccess(`已添加自定义项目: ${itemData.name}`);
+    } catch (error) {
+      console.error("添加自定义项目错误:", error);
+      setError('添加自定义项目失败: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [quotation]);
+
+  // 处理移除报价项目
+  const handleRemoveQuotationItem = useCallback((itemId) => {
+    if (!quotation || !quotation.success || !Array.isArray(quotation.items)) {
+      return;
+    }
+    
+    // 确认是否删除
+    if (window.confirm("确定要从报价单中移除此项目?")) {
+      setLoading(true);
+      
+      try {
+        // 从报价单移除项目
+        const updatedQuotation = removeItemFromQuotation(quotation, itemId);
+        
+        // 更新状态
+        setQuotation(updatedQuotation);
+        setSuccess('已从报价单移除项目');
+      } catch (error) {
+        console.error("移除项目错误:", error);
+        setError('移除项目失败: ' + error.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+  }, [quotation]);
+
+  // 保存当前报价单
+  const handleSaveQuotation = useCallback((name) => {
+    if (!quotation || !quotation.success) {
+      setError('请先生成报价单');
+      return;
+    }
+    
+    try {
+      const success = saveQuotation(quotation, name, projectInfo);
+      
+      if (success) {
+        setSuccess(`报价单已保存${name ? ': ' + name : ''}`);
+      } else {
+        setError('保存报价单失败');
+      }
+    } catch (error) {
+      console.error("保存报价单错误:", error);
+      setError('保存报价单失败: ' + error.message);
+    }
+  }, [projectInfo, quotation]);
+
+  // 加载保存的报价单
+  const handleLoadSavedQuotation = useCallback((quotationId) => {
+    try {
+      // 从本地存储获取报价单历史
+      const savedQuotation = loadSavedQuotation(quotationId);
+      
+      if (!savedQuotation || !savedQuotation.data) {
+        setError('找不到指定的保存报价单');
+        return;
+      }
+      
+      // 加载报价单
+      setQuotation(savedQuotation.data);
+      
+      // 如果有项目信息，也加载项目信息
+      if (savedQuotation.projectInfo) {
+        setProjectInfo(prev => ({
+          ...prev,
+          projectName: savedQuotation.projectInfo.projectName || prev.projectName,
+          customerName: savedQuotation.projectInfo.customerName || prev.customerName
+        }));
+      }
+      
+      // 更新状态为成功
+      setSuccess(`已加载保存的报价单: ${savedQuotation.name || savedQuotation.id}`);
+      setActiveTab('quotation');
+    } catch (error) {
+      console.error("加载保存报价单错误:", error);
+      setError('加载保存报价单失败: ' + error.message);
+    }
+  }, [setActiveTab, setProjectInfo]);
+
+  // 比较两个报价单
+  const handleCompareQuotations = useCallback((quotationA, quotationB) => {
+    if (!quotationA || !quotationB) {
+      setError('请选择两个需要比较的报价单');
+      return;
+    }
+    
+    try {
+      // 创建比较结果对象
+      const comparisonData = compareQuotations(quotationA, quotationB);
+      
+      if (!comparisonData) {
+        setError('比较报价单失败：无法生成比较数据');
+        return;
+      }
+      
+      // 保存比较结果
+      setComparisonResult(comparisonData);
+      setShowComparisonModal(true);
+      
+    } catch (error) {
+      console.error("比较报价单错误:", error);
+      setError('比较报价单失败: ' + error.message);
+    }
+  }, []);
+
+  // 更新报价单价格
+  const handleUpdateQuotationPrices = useCallback(() => {
+    if (!quotation || !quotation.success) {
+      setError('请先生成报价单');
+      return;
+    }
+    
+    setLoading(true);
+    setError('');
+    setSuccess('正在更新报价单价格...');
+    
+    try {
+      // 创建新的报价单对象
+      const updatedQuotation = {
+        ...quotation,
+        items: [...quotation.items]
+      };
+      
+      // 更新每个项目的价格
+      let totalAmount = 0;
+      
+      updatedQuotation.items.forEach(item => {
+        // 对于齿轮箱项目，使用当前选中的组件价格
+        if (item.name === "船用齿轮箱" && selectedComponents.gearbox) {
+          const gearbox = selectedComponents.gearbox;
+          const marketPrice = gearbox.marketPrice || gearbox.factoryPrice * 1.15;
+          
+          // 更新价格
+          item.prices.market = marketPrice;
+          item.prices.factory = gearbox.factoryPrice || marketPrice * 0.85;
+          item.prices.package = gearbox.factoryPrice || marketPrice * 0.85;
+        }
+        
+        // 对于联轴器项目，使用当前选中的组件价格
+        if (item.name === "高弹性联轴器" && selectedComponents.coupling) {
+          const coupling = selectedComponents.coupling;
+          const marketPrice = coupling.marketPrice || coupling.factoryPrice * 1.15;
+          
+          // 更新价格
+          item.prices.market = marketPrice;
+          item.prices.factory = coupling.factoryPrice || marketPrice * 0.85;
+          item.prices.package = coupling.factoryPrice || marketPrice * 0.85;
+        }
+        
+        // 对于备用泵项目，使用当前选中的组件价格
+        if (item.name === "备用泵" && selectedComponents.pump) {
+          const pump = selectedComponents.pump;
+          const marketPrice = pump.marketPrice || pump.factoryPrice * 1.15;
+          
+          // 更新价格
+          item.prices.market = marketPrice;
+          item.prices.factory = pump.factoryPrice || marketPrice * 0.85;
+          item.prices.package = pump.factoryPrice || marketPrice * 0.85;
+        }
+        
+        // 重新计算金额
+        item.unitPrice = item.prices[item.selectedPrice] || 0;
+        item.amount = item.unitPrice * item.quantity;
+        
+        // 累加总金额
+        totalAmount += item.amount;
+      });
+      
+      // 更新总金额
+      updatedQuotation.totalAmount = totalAmount;
+      
+      // 更新状态
+      setQuotation(updatedQuotation);
+      setSuccess('报价单价格已更新');
+    } catch (error) {
+      console.error("更新报价单价格错误:", error);
+      setError('更新报价单价格失败: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [quotation, selectedComponents]);
+
+  const handleExportQuotation = useCallback(async (format) => {
     if (!quotation) {
       setError('请先生成报价单');
       return;
     }
+    
     setLoading(true);
     setError('');
     setSuccess(`正在导出报价单为 ${format.toUpperCase()}...`);
+    
     try {
       const filename = `${projectInfo.projectName || '未命名项目'}-报价单`;
+      
       if (format === 'excel') {
-        exportQuotationToExcel(quotation, filename);
-        setSuccess('报价单已导出为Excel格式');
+        try {
+          await exportQuotationToExcel(quotation, filename);
+          setSuccess('报价单已成功导出为Excel格式');
+        } catch (excelError) {
+          console.error("Excel导出错误:", excelError);
+          setError('Excel导出失败: ' + excelError.message);
+        }
       } else if (format === 'pdf') {
-        exportQuotationToPDF(quotation, filename);
-        setSuccess('报价单已导出为PDF格式');
+        try {
+          // 获取报价单预览元素
+          const previewElement = document.querySelector('.quotation-preview-content');
+          
+          if (previewElement) {
+            // 如果已有预览元素，使用优化的PDF导出函数
+            await optimizedHtmlToPdf(previewElement, {
+              filename: `${filename}.pdf`,
+              orientation: 'portrait',
+              format: 'a4',
+              scale: 2
+            });
+            setSuccess('报价单已成功导出为PDF格式');
+          } else {
+            // 否则使用原生导出函数
+            await exportQuotationToPDF(quotation, filename);
+            setSuccess('报价单已成功导出为PDF格式');
+          }
+        } catch (pdfError) {
+          console.error("PDF导出错误:", pdfError);
+          setError('PDF导出失败: ' + pdfError.message);
+        }
       } else {
-          setError('不支持的导出格式');
+        setError('不支持的导出格式: ' + format);
       }
     } catch (error) {
       console.error("导出报价单错误:", error);
@@ -855,9 +1383,9 @@ const handleGenerateQuotation = useCallback(() => {
     } finally {
       setLoading(false);
     }
-  }, [selectedComponents, selectionResult, projectInfo]);
+  }, [selectedComponents, selectionResult, projectInfo, setActiveTab]);
 
-  const handleExportAgreement = useCallback((format) => {
+  const handleExportAgreement = useCallback(async (format) => {
     if (!agreement) {
       setError('请先生成技术协议');
       return;
@@ -871,8 +1399,25 @@ const handleGenerateQuotation = useCallback(() => {
         exportAgreementToWord(agreement, filename);
         setSuccess('技术协议已导出为Word格式');
       } else if (format === 'pdf') {
-        exportAgreementToPDFFormat(agreement, filename);
-        setSuccess('技术协议已导出为PDF格式');
+        // 获取技术协议预览元素
+        const previewElement = document.querySelector('.agreement-preview-content');
+        
+        if (previewElement) {
+          // 如果已有预览元素，使用优化的PDF导出函数
+          await optimizedHtmlToPdf(previewElement, {
+            filename: `${filename}.pdf`,
+            orientation: 'portrait',
+            format: 'a4',
+            scale: 2,
+            fontSize: '14px',
+            lineHeight: '1.5'
+          });
+          setSuccess('技术协议已导出为PDF格式');
+        } else {
+          // 否则使用原生导出函数
+          await exportAgreementToPDFFormat(agreement, filename);
+          setSuccess('技术协议已导出为PDF格式');
+        }
       } else if (format === 'copy') {
         const contentToCopy = agreement?.details || JSON.stringify(agreement, null, 2);
         navigator.clipboard.writeText(contentToCopy)
@@ -940,7 +1485,7 @@ const handleGenerateQuotation = useCallback(() => {
     } finally {
       setLoading(false);
     }
-  }, [selectedComponents, selectionResult, projectInfo, quotation, packagePrice, marketPrice, totalMarketPrice, setActiveTab, setContract, setError, setLoading, setSuccess]);
+  }, [selectedComponents, selectionResult, projectInfo, quotation, packagePrice, marketPrice, totalMarketPrice, setActiveTab]);
 
   // 添加缺失的合同导出函数
   const handleExportContract = useCallback(async (format) => {
@@ -955,12 +1500,30 @@ const handleGenerateQuotation = useCallback(() => {
     
     try {
       const filename = `${projectInfo.projectName || '未命名项目'}-销售合同`;
+      
       if (format === 'word') {
         exportContractToWord(contract, filename);
         setSuccess('销售合同已导出为Word格式');
       } else if (format === 'pdf') {
-        await exportContractToPDF(contract, filename);
-        setSuccess('销售合同已导出为PDF格式');
+        // 获取合同预览元素
+        const previewElement = document.querySelector('.contract-preview-content');
+        
+        if (previewElement) {
+          // 如果已有预览元素，使用优化的PDF导出函数
+          await optimizedHtmlToPdf(previewElement, {
+            filename: `${filename}.pdf`,
+            orientation: 'portrait',
+            format: 'a4',
+            scale: 2,
+            fontSize: '14px',
+            lineHeight: '1.5'
+          });
+          setSuccess('销售合同已导出为PDF格式');
+        } else {
+          // 否则使用原生导出函数
+          await exportContractToPDF(contract, filename);
+          setSuccess('销售合同已导出为PDF格式');
+        }
       } else {
         setError('不支持的导出格式');
       }
@@ -970,7 +1533,7 @@ const handleGenerateQuotation = useCallback(() => {
     } finally {
       setLoading(false);
     }
-  }, [contract, projectInfo.projectName, setError, setLoading, setSuccess]);
+  }, [contract, projectInfo.projectName]);
 
   // 添加缺失的历史记录加载函数
   const handleLoadHistoryEntry = useCallback((historyId) => {
@@ -1002,7 +1565,7 @@ const handleGenerateQuotation = useCallback(() => {
       console.error("Failed to load history entry:", entry);
       setLoading(false);
     }
-  }, [selectionHistory, setActiveTab, setAgreement, setContract, setEngineData, setError, setGearboxType, setLoading, setProjectInfo, setQuotation, setRequirementData, setSelectionResult, setSuccess]);
+  }, [selectionHistory, setActiveTab]);
 
   // 添加缺失的历史记录删除函数
   const handleDeleteHistoryEntry = useCallback((historyId) => {
@@ -1020,7 +1583,7 @@ const handleGenerateQuotation = useCallback(() => {
         return filtered;
       });
     }
-  }, [setError, setSelectionHistory, setSuccess]);
+  }, [setError, setSuccess]);
 
   // 增强的表单验证函数
   const isFormValid = useCallback(() => {
@@ -1157,7 +1720,7 @@ const handleGenerateQuotation = useCallback(() => {
     return '';
   };
 
-  // 修改后的选型处理函数
+  // 修改后的选型处理函数 - 使用增强型联轴器选型
   const handleSelectGearbox = useCallback(() => {
     setLoading(true);
     setError('');
@@ -1186,7 +1749,7 @@ const handleGenerateQuotation = useCallback(() => {
         // 执行选型算法
         let result;
         if (gearboxType === 'auto') {
-            // 自动选型模式
+            // 自动选型模式，传递完整选项
             result = autoSelectGearbox(
                 {
                     motorPower: selectionParams.power,
@@ -1216,6 +1779,41 @@ const handleGenerateQuotation = useCallback(() => {
                     application: requirementData.application
                 }
             );
+        }
+
+        // 记录原始选型结果
+        console.log("原始选型结果:", result);
+
+        // 如果没有联轴器选型结果，使用增强型联轴器选型
+        if (result.success && result.recommendations && result.recommendations.length > 0 && !result.flexibleCoupling) {
+            // 准备增强型联轴器选型参数
+            const selectedGearbox = result.recommendations[0];
+            const engineTorque = result.engineTorque || (selectionParams.power * 9550 / selectionParams.speed);
+            
+            try {
+                console.log("使用增强型联轴器选型...");
+                const enhancedCouplingResult = enhancedCouplingSelection(
+                    {
+                        success: true,
+                        recommendations: [selectedGearbox],
+                        engineTorque,
+                        engineSpeed: selectionParams.speed
+                    },
+                    appDataState.flexibleCouplings,
+                    {
+                        workCondition: requirementData.workCondition,
+                        temperature: parseFloat(requirementData.temperature) || 30,
+                        hasCover: requirementData.hasCover
+                    }
+                );
+                
+                // 将增强型联轴器选型结果添加到选型结果中
+                result.flexibleCoupling = enhancedCouplingResult;
+                console.log("增强型联轴器选型结果:", enhancedCouplingResult);
+            } catch (couplingError) {
+                console.error("增强型联轴器选型失败:", couplingError);
+                // 联轴器选型失败不影响整体选型结果
+            }
         }
 
         setSelectionResult(result);
@@ -1289,20 +1887,73 @@ const handleGenerateQuotation = useCallback(() => {
     } finally {
         setLoading(false);
     }
-  }, [engineData, requirementData, gearboxType, appDataState, isAdmin, handleGearboxSelection, setActiveTab, formValidation]);
+  }, [engineData, requirementData, gearboxType, appDataState, handleGearboxSelection, setActiveTab, formValidation]);
 
   const inputStyles = useMemo(() => ({
     backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.inputBorder,
     '::placeholder': { color: colors.muted },
   }), [colors]);
 
-   const focusStyles = useMemo(() => ({
-     '&:focus': { borderColor: colors.primary, boxShadow: `0 0 0 0.2rem ${colors.focusRing}` }
-   }), [colors]);
+  const focusStyles = useMemo(() => ({
+    '&:focus': { borderColor: colors.primary, boxShadow: `0 0 0 0.2rem ${colors.focusRing}` }
+  }), [colors]);
+
+  // 渲染报价单增强选项区域
+  const renderQuotationEnhancedOptions = () => {
+    if (!quotation || !quotation.success) return null;
+    
+    return (
+      <Card className="mb-3" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+        <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>
+          报价单增强功能
+        </Card.Header>
+        <Card.Body>
+          <Row>
+            <Col md={6}>
+              <Button 
+                variant="outline-primary" 
+                className="w-100 mb-2"
+                onClick={() => setShowCustomItemModal(true)}
+              >
+                <i className="bi bi-plus-circle me-2"></i> 添加自定义项目
+              </Button>
+            </Col>
+            <Col md={6}>
+              <Button 
+                variant="outline-success" 
+                className="w-100 mb-2"
+                onClick={() => handleSaveQuotation()}
+              >
+                <i className="bi bi-save me-2"></i> 保存此报价单
+              </Button>
+            </Col>
+            <Col md={6}>
+              <Button 
+                variant="outline-secondary" 
+                className="w-100 mb-2"
+                onClick={() => setShowQuotationHistoryModal(true)}
+              >
+                <i className="bi bi-clock-history me-2"></i> 查看保存的报价单
+              </Button>
+            </Col>
+            <Col md={6}>
+              <Button 
+                variant="outline-info" 
+                className="w-100 mb-2"
+                onClick={() => handleUpdateQuotationPrices()}
+              >
+                <i className="bi bi-currency-exchange me-2"></i> 更新所有价格
+              </Button>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+    );
+  };
 
   if (location.pathname === '/users' || location.pathname === '/database' || location.pathname === '/login') {
-            return null;
-        }
+    return null;
+  }
 
   return (
     <Container fluid className="app-container" style={{ backgroundColor: colors.bg, color: colors.text }}>
@@ -1359,7 +2010,24 @@ const handleGenerateQuotation = useCallback(() => {
           </Col>
         </Row>
       )}
-       {loading && !error && (
+      
+      {success && (
+        <Row className="mb-4">
+          <Col>
+            <Alert
+              variant="success"
+              onClose={() => setSuccess('')}
+              dismissible
+              className={`app-alert alert-${theme}`}
+            >
+              <i className="bi bi-check-circle-fill me-2"></i>
+              {success}
+            </Alert>
+          </Col>
+        </Row>
+      )}
+      
+       {loading && !error && !success && (
           <Row className="mb-4">
               <Col className="text-center">
                   <Spinner animation="border" variant="primary" />
@@ -1380,8 +2048,8 @@ const handleGenerateQuotation = useCallback(() => {
       <Tabs
         activeKey={activeTab}
         onSelect={(k) => setActiveTab(k)}
-            className="mb-4"
-            style={{ borderBottomColor: colors.border }}
+        className="mb-4"
+        style={{ borderBottomColor: colors.border }}
       >
           <Tab eventKey="input" title={<span><i className="bi bi-input-cursor-text me-1"></i>输入参数</span>}>
           <Row>
@@ -1399,7 +2067,7 @@ const handleGenerateQuotation = useCallback(() => {
                       <Form.Control
                         type="number"
                         value={engineData.power}
-                   		onChange={(e) => handleEngineDataChange({ power: e.target.value })}
+                        onChange={(e) => handleEngineDataChange({ power: e.target.value })}
                         placeholder="例如: 350"
                         min="1"
                         step="any"
@@ -1658,53 +2326,46 @@ const handleGenerateQuotation = useCallback(() => {
                           </div>
                     </Form.Group>
 
-                       <Form.Group className="mb-3" controlId="application">
-                       <Form.Label style={{ color: colors.text }}>应用场景</Form.Label>
-                       <Form.Select
-                        value={requirementData.application}
-                        onChange={(e) => handleRequirementDataChange({ application: e.target.value })}
-                        style={{...inputStyles, ...focusStyles}}
-                        aria-label="选择应用场景"
-                       >
-                         {applicationOptions.map(option => (
-                           <option key={option.value} value={option.value}>{option.label}</option>
-                         ))}
-                       </Form.Select>
-                       <Form.Text style={{ color: colors.muted }}>影响服务系数和选型策略</Form.Text>
-                       </Form.Group>
+                        <Form.Group className="mb-3" controlId="application">
+                          <Form.Label style={{ color: colors.text }}>应用场景</Form.Label>
+                          <Form.Select
+                            value={requirementData.application}
+                            onChange={(e) => handleRequirementDataChange({ application: e.target.value })}
+                            style={{...inputStyles, ...focusStyles}}
+                            aria-label="选择应用场景"
+                          >
+                            {applicationOptions.map(option => (
+                             <option key={option.value} value={option.value}>{option.label}</option>
+                            ))}
+                           </Form.Select>
+                           <Form.Text style={{ color: colors.muted }}>影响服务系数和选型策略</Form.Text>
+                          </Form.Group>
 
-                    <div className="d-grid mt-4">
-                      <Button
-                        variant="primary"
-                        onClick={handleSelectGearbox}
-                        disabled={loading || !formValidation.isValid || !appDataState || Object.keys(appDataState).length === 0}
-                        style={{
-                          backgroundColor: colors.primary,
-                          borderColor: colors.primary,
-                          color: colors.primaryText
-                        }}
-                        className="btn-lg"
-                      >
-                        {loading ? (
-                          <>
-                            <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />
-                            选型中...
-                          </>
-                        ) : (
-                          <>
-                           <i className="bi bi-calculator-fill me-2"></i>
-                           开始选型
-                          </>
-                        )}
-                      </Button>
-                      
-                      {success && (
-                        <div className="alert alert-success mt-3">
-                          <i className="bi bi-check-circle-fill me-2"></i>
-                          {success}
+                        <div className="d-grid mt-4">
+                          <Button
+                            variant="primary"
+                            onClick={handleSelectGearbox}
+                            disabled={loading || !formValidation.isValid || !appDataState || Object.keys(appDataState).length === 0}
+                            style={{
+                              backgroundColor: colors.primary,
+                              borderColor: colors.primary,
+                              color: colors.primaryText
+                            }}
+                            className="btn-lg"
+                          >
+                            {loading ? (
+                              <>
+                                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />
+                                选型中...
+                              </>
+                            ) : (
+                              <>
+                               <i className="bi bi-calculator-fill me-2"></i>
+                               开始选型
+                              </>
+                            )}
+                          </Button>
                         </div>
-                      )}
-                    </div>
                    </Form>
                  </Card.Body>
                </Card>
@@ -1716,7 +2377,7 @@ const handleGenerateQuotation = useCallback(() => {
             {selectionResult ? (
               <Row>
                 <Col>
-                  <GearboxSelectionResult
+                  <EnhancedGearboxSelectionResult
                     result={selectionResult}
                     selectedIndex={selectedGearboxIndex}
                     onSelectGearbox={handleGearboxSelection}
@@ -1738,13 +2399,20 @@ const handleGenerateQuotation = useCallback(() => {
               {quotation && (
                   <Row>
                       <Col>
-                          <QuotationView
-                            quotation={quotation}
-                            onExport={handleExportQuotation}
-                            onGenerateAgreement={handleGenerateAgreement}
-                            colors={colors}
-                            theme={theme}
-                           />
+                        {/* 增强选项区域 */}
+                        {renderQuotationEnhancedOptions()}
+                        
+                        <QuotationView
+                          quotation={quotation}
+                          onExport={handleExportQuotation}
+                          onGenerateAgreement={handleGenerateAgreement}
+                          onAddCustomItem={() => setShowCustomItemModal(true)}
+                          onRemoveItem={handleRemoveQuotationItem}
+                          onUpdatePrices={handleUpdateQuotationPrices}
+                          onSave={handleSaveQuotation}
+                          colors={colors}
+                          theme={theme}
+                        />
                       </Col>
                   </Row>
               )}
@@ -1809,50 +2477,50 @@ const handleGenerateQuotation = useCallback(() => {
                 />
               </Col>
             </Row>
-        </Tab>
+          </Tab>
 
-          <Tab eventKey="history" title={<span><i className="bi bi-clock-history me-1"></i>选型历史</span>}>
+<Tab eventKey="history" title={<span><i className="bi bi-clock-history me-1"></i>选型历史</span>}>
             <Row>
-                <Col>
-                    <Card className="shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                        <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>选型历史记录</Card.Header>
-                <Card.Body>
-                {selectionHistory.length > 0 ? (
-                                <ListGroup variant="flush">
-                                    {selectionHistory.map(entry => (
-                                        <ListGroup.Item key={entry.id} className="d-flex justify-content-between align-items-center" style={{ backgroundColor: 'transparent', color: colors.text, borderColor: colors.border }}>
-                                            <div>
-                                                <span className="fw-bold me-2">{entry.projectInfo?.projectName || '未命名项目'}</span>
-                                                <small className="text-muted">{new Date(entry.timestamp).toLocaleString()}</small>
-                                                <br />
-                                                <small style={{ color: colors.muted }}>
-                                                   {entry.engineData?.power}kW / {entry.engineData?.speed}rpm / Ratio {entry.requirementData?.targetRatio}
-                                                   {entry.selectionResult?.recommendations?.[0] ? ` -> ${entry.selectionResult.recommendations[0].model}` : ''}
-                                                </small>
-                                            </div>
-                                            <div>
-                                                <Button key={`${entry.id}-load`} variant="outline-primary" size="sm" className="me-2" onClick={() => handleLoadHistoryEntry(entry.id)}>
-                                                    <i className="bi bi-box-arrow-up-left me-1"></i> 加载
-                                                </Button>
-                                                <Button key={`${entry.id}-delete`} variant="outline-danger" size="sm" onClick={() => handleDeleteHistoryEntry(entry.id)}>
-                                                    <i className="bi bi-trash me-1"></i> 删除
-                                                </Button>
-                                            </div>
-                                        </ListGroup.Item>
-                                    ))}
-                                </ListGroup>
-                            ) : (
-                                <p style={{ color: colors.muted }}>没有历史记录</p>
-                            )}
-                </Card.Body>
-            </Card>
-                </Col>
+              <Col>
+                <Card className="shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                  <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>选型历史记录</Card.Header>
+                  <Card.Body>
+                    {selectionHistory.length > 0 ? (
+                      <ListGroup variant="flush">
+                        {selectionHistory.map(entry => (
+                          <ListGroup.Item key={entry.id} className="d-flex justify-content-between align-items-center" style={{ backgroundColor: 'transparent', color: colors.text, borderColor: colors.border }}>
+                            <div>
+                              <span className="fw-bold me-2">{entry.projectInfo?.projectName || '未命名项目'}</span>
+                              <small className="text-muted">{new Date(entry.timestamp).toLocaleString()}</small>
+                              <br />
+                              <small style={{ color: colors.muted }}>
+                                {entry.engineData?.power}kW / {entry.engineData?.speed}rpm / Ratio {entry.requirementData?.targetRatio}
+                                {entry.selectionResult?.recommendations?.[0] ? ` -> ${entry.selectionResult.recommendations[0].model}` : ''}
+                              </small>
+                            </div>
+                            <div>
+                              <Button key={`${entry.id}-load`} variant="outline-primary" size="sm" className="me-2" onClick={() => handleLoadHistoryEntry(entry.id)}>
+                                <i className="bi bi-box-arrow-up-left me-1"></i> 加载
+                              </Button>
+                              <Button key={`${entry.id}-delete`} variant="outline-danger" size="sm" onClick={() => handleDeleteHistoryEntry(entry.id)}>
+                                <i className="bi bi-trash me-1"></i> 删除
+                              </Button>
+                            </div>
+                          </ListGroup.Item>
+                        ))}
+                      </ListGroup>
+                    ) : (
+                      <p style={{ color: colors.muted }}>没有历史记录</p>
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
             </Row>
-        </Tab>
-      </Tabs>
+          </Tab>
+        </Tabs>
       )}
 
-
+      {/* 批量价格调整对话框 */}
       <BatchPriceAdjustment
         show={showBatchPriceAdjustment}
         onHide={() => setShowBatchPriceAdjustment(false)}
@@ -1861,6 +2529,7 @@ const handleGenerateQuotation = useCallback(() => {
         colors={colors}
       />
 
+      {/* 系统诊断面板 */}
       {showDiagnosticPanel && (
         <DiagnosticPanel
           appData={appDataState}
@@ -1875,16 +2544,53 @@ const handleGenerateQuotation = useCallback(() => {
           theme={theme}
         />
       )}
-	  {showQuotationOptions && (
-  <QuotationOptionsModal
-    show={showQuotationOptions}
-    onHide={() => setShowQuotationOptions(false)}
-    onApply={generateQuotationWithOptions}
-    selectedComponents={selectedComponents}
-    colors={colors}
-    theme={theme}
-  />
-)}
+
+      {/* 报价选项对话框 */}
+      {showQuotationOptions && (
+        <QuotationOptionsModal
+          show={showQuotationOptions}
+          onHide={() => setShowQuotationOptions(false)}
+          onApply={generateQuotationWithOptions}
+          selectedComponents={selectedComponents}
+          colors={colors}
+          theme={theme}
+        />
+      )}
+
+      {/* 自定义报价项目对话框 */}
+      {showCustomItemModal && (
+        <CustomQuotationItemModal
+          show={showCustomItemModal}
+          onHide={() => setShowCustomItemModal(false)}
+          onAdd={handleAddCustomQuotationItem}
+          existingItems={quotation?.items || []}
+          colors={colors}
+          theme={theme}
+        />
+      )}
+
+      {/* 保存的报价单历史对话框 */}
+      {showQuotationHistoryModal && (
+        <QuotationHistoryModal
+          show={showQuotationHistoryModal}
+          onHide={() => setShowQuotationHistoryModal(false)}
+          onLoad={handleLoadSavedQuotation}
+          onCompare={handleCompareQuotations}
+          colors={colors}
+          theme={theme}
+        />
+      )}
+
+      {/* 报价单比较对话框 */}
+      {showComparisonModal && comparisonResult && (
+        <ComparisonResultModal
+          show={showComparisonModal}
+          onHide={() => setShowComparisonModal(false)}
+          comparisonResult={comparisonResult}
+          colors={colors}
+          theme={theme}
+        />
+      )}
     </Container>
   );
 }

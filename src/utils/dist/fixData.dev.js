@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.fixOtherGearboxData = exports.fixMvGearboxData = exports.fixHcvGearboxData = exports.fixHcaGearboxData = exports.fixHcxGearboxData = exports.fixGCGearboxData = exports.fixHCQGearboxData = exports.fixDTGearboxData = exports.fixHCMGearboxData = exports.fixGWGearboxData = exports.fixGearboxCapacityArrays = exports.fixSpecialGearboxData = void 0;
 
-var _priceDiscount = require("./priceDiscount");
+var _priceManager = require("./priceManager");
 
 var _dataHelpers = require("./dataHelpers");
 
@@ -15,7 +15,7 @@ var _gearboxMatchingMaps = require("../data/gearboxMatchingMaps");
 
 // src/utils/fixData.js
 // 系统数据修复工具
-// Assuming priceDiscount.js exists for price calculations
+// Update import to use priceManager instead of priceDiscount
 // Assuming dataHelpers.js exists for safeParseFloat
 // Assuming capacityEstimator.js exists
 // Assuming gearboxMatchingMaps.js exists for couplingSpecificationsMap

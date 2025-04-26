@@ -1,618 +1,470 @@
-// src/utils/dataValidator.js
-/**
- * 数据验证工具
- * 用于验证数据库中的数据是否有效
- */
+// src/utils/dataValidator.js 增强版
 
-import { safeParseFloat } from './dataHelpers'; // 确保 dataHelpers.js 中的 safeParseFloat 可用
-import { couplingSpecificationsMap } from '../data/gearboxMatchingMaps'; // 导入联轴器规格映射表
-import { getStandardDiscountRate } from './priceManager'; // 导入获取标准折扣率函数
-import { DEFAULTS } from '../config'; // Import DEFAULTS for checking against default values
+import { safeParseFloat } from './dataHelpers';
 
 /**
- * 验证单个齿轮箱数据项
- * @param {Object} item 齿轮箱对象
- * @param {number} index 在集合中的原始索引
- * @returns {Object} 验证结果 { valid: boolean, errors: string[], warnings: string[], model: string, originalIndex: number }
+ * 验证齿轮箱数据
+ * @param {Object} gearbox - 齿轮箱对象
+ * @returns {Object} 验证结果 { valid, errors, warnings }
  */
-export const validateGearbox = (item, index) => {
+export const validateGearbox = (gearbox) => {
   const errors = [];
   const warnings = [];
-  const originalIndex = index;
-
-  if (!item || typeof item !== 'object') {
-    return { valid: false, warnings: [], errors: ['无效的项目格式'], originalIndex };
+  
+  // 必需字段检查
+  if (!gearbox) {
+    errors.push('齿轮箱对象为空');
+    return { valid: false, errors, warnings };
   }
-
-  // 检查必需字段和基本类型
-  const model = item.model?.trim();
-  if (typeof model !== 'string' || !model) {
-    errors.push('型号 (model) 缺失或无效');
+  
+  if (!gearbox.model) {
+    errors.push('缺少型号(model)字段');
   }
-
-  // 检查速度范围
-  const speedRange = item.inputSpeedRange;
-  // 修正: 检查数组长度和元素是否为有效数字且 >= 0
-  if (!Array.isArray(speedRange) || speedRange.length !== 2 || !speedRange.every(v => safeParseFloat(v) !== undefined && safeParseFloat(v) >= 0 && !isNaN(safeParseFloat(v)))) {
-      errors.push(`输入转速范围 (inputSpeedRange:${JSON.stringify(item.inputSpeedRange)}) 格式无效、缺失或包含负数`);
-  } else if (safeParseFloat(speedRange[0]) > safeParseFloat(speedRange[1])) {
-      warnings.push(`输入转速范围上限(${safeParseFloat(speedRange[1])})不应小于下限(${safeParseFloat(speedRange[0])})`);
-  }
-
-
-  // 检查减速比数组
-  const ratios = item.ratios;
-  // 修正: 检查是否为数组，非空，且所有元素都是有效数字 > 0
-  if (!Array.isArray(ratios) || ratios.length === 0 || !ratios.every(v => safeParseFloat(v) !== undefined && safeParseFloat(v) > 0 && !isNaN(safeParseFloat(v)))) {
-    errors.push(`减速比 (ratios:${JSON.stringify(item.ratios)}) 缺失、为空或包含无效/非正向值`);
-  } else if (ratios.some(v => typeof v === 'string' && !/^\d+(\.\d+)?$/.test(v.trim()))) { // Check for obvious non-numeric strings
-       warnings.push(`减速比数组包含看起来不像数字的字符串值`);
-  }
-
-
-  // 检查传递能力数组
-  const capacityArray = item.transferCapacity;
-   // 修正: 检查是否为数组，非空，且所有元素都是有效数字 > 0
-  if (!Array.isArray(capacityArray) || capacityArray.length === 0 || !capacityArray.every(v => safeParseFloat(v) !== undefined && safeParseFloat(v) > 0 && !isNaN(safeParseFloat(v)))) {
-     errors.push(`传递能力 (transferCapacity:${JSON.stringify(item.transferCapacity)}) 缺失、为空或包含无效/非正向值`);
-  } else if (Array.isArray(ratios) && Array.isArray(capacityArray) && ratios.length !== capacityArray.length) {
-      errors.push(`减速比数量(${Array.isArray(ratios) ? ratios.length : 'N/A'})与传递能力数量(${capacityArray.length})不匹配`);
-  } else if (capacityArray.some(v => typeof v === 'string' && !/^\d+(\.\d+)?$/.test(v.trim()))) { // Check for obvious non-numeric strings
-       warnings.push(`传递能力数组包含看起来不像数字的字符串值`);
-  }
-
-
-  // 检查推力
-   const thrust = safeParseFloat(item.thrust);
-   if (thrust === undefined || isNaN(thrust) || thrust < 0) {
-        // 修正: 如果被 fixer 设置为默认值 0，则只报警告（除非型号是默认型号）
-        if (thrust === 0 && model !== DEFAULTS.gearbox.model) {
-             warnings.push(`推力 (thrust) 为 0，如果需要推力选型请检查`);
-        } else {
-           errors.push(`推力 (thrust:${item.thrust}) 缺失、无效或为负数`);
-        }
-   }
-
-
-  // 检查中心距
-   const centerDistance = safeParseFloat(item.centerDistance);
-    if (centerDistance === undefined || isNaN(centerDistance) || centerDistance < 0) {
-         // 修正: 如果被 fixer 设置为默认值 0，则只报警告（除非型号是默认型号）
-        if (centerDistance === 0 && model !== DEFAULTS.gearbox.model) {
-            warnings.push(`中心距 (centerDistance) 为 0`);
-        } else {
-           errors.push(`中心距 (centerDistance:${item.centerDistance}) 缺失、无效或为负数`);
-        }
+  
+  // 验证输入转速范围
+  if (!Array.isArray(gearbox.inputSpeedRange) || gearbox.inputSpeedRange.length !== 2) {
+    warnings.push('输入转速范围(inputSpeedRange)字段格式不正确，应为两元素数组 [min, max]');
+  } else {
+    const [minSpeed, maxSpeed] = gearbox.inputSpeedRange;
+    if (typeof minSpeed !== 'number' || typeof maxSpeed !== 'number' || minSpeed >= maxSpeed) {
+      errors.push(`输入转速范围无效: [${minSpeed}, ${maxSpeed}]`);
     }
-
-
-  // 检查重量
-   const weight = safeParseFloat(item.weight);
-    if (weight === undefined || isNaN(weight) || weight <= 0) {
-       // 修正: 如果被 fixer 设置为默认值 DEFAULTS.gearbox.weight，则只报警告（除非型号是默认型号）
-       if (weight === DEFAULTS.gearbox.weight && model !== DEFAULTS.gearbox.model) {
-            warnings.push(`重量 (weight) 为默认值 ${DEFAULTS.gearbox.weight}`);
-       } else {
-            errors.push(`重量 (weight:${item.weight}) 缺失、无效或非正向`);
-       }
+  }
+  
+  // 验证减速比
+  if (!Array.isArray(gearbox.ratios) || gearbox.ratios.length === 0) {
+    errors.push('缺少减速比(ratios)字段或格式不正确');
+  } else {
+    const invalidRatios = gearbox.ratios.filter(ratio => 
+      typeof ratio !== 'number' || isNaN(ratio) || ratio <= 0
+    );
+    if (invalidRatios.length > 0) {
+      errors.push(`包含${invalidRatios.length}个无效减速比值`);
     }
+  }
+  
+  // 验证传递能力
+  if (!Array.isArray(gearbox.transferCapacity)) {
+    warnings.push('传递能力(transferCapacity)字段缺失或不是数组');
+  } else if (Array.isArray(gearbox.ratios) && gearbox.transferCapacity.length !== gearbox.ratios.length) {
+    errors.push(`传递能力数组长度(${gearbox.transferCapacity.length})与减速比数组长度(${gearbox.ratios.length})不匹配`);
+  } else {
+    const invalidCapacities = gearbox.transferCapacity.filter(cap => 
+      typeof cap !== 'number' || isNaN(cap) || cap <= 0
+    );
+    if (invalidCapacities.length > 0) {
+      errors.push(`包含${invalidCapacities.length}个无效传递能力值`);
+    }
+  }
+  
+  // 验证推力
+  if (gearbox.thrust !== undefined) {
+    const thrust = safeParseFloat(gearbox.thrust);
+    if (thrust === undefined || thrust < 0) {
+      warnings.push('推力(thrust)字段值无效或为负');
+    }
+  }
+  
+  // 验证重量
+  if (gearbox.weight !== undefined) {
+    const weight = safeParseFloat(gearbox.weight);
+    if (weight === undefined || weight <= 0) {
+      warnings.push('重量(weight)字段值无效或不为正数');
+    }
+  }
+  
+  // 验证价格字段
+  if (gearbox.basePrice !== undefined) {
+    const basePrice = safeParseFloat(gearbox.basePrice);
+    if (basePrice === undefined || basePrice <= 0) {
+      warnings.push('基础价格(basePrice)字段值无效或不为正数');
+    }
+  }
+  
+  // src/utils/dataValidator.js 增强版(续)
 
-
-  // 检查效率
-   const efficiency = safeParseFloat(item.efficiency);
-   if (efficiency === undefined || isNaN(efficiency) || efficiency <= 0 || efficiency > 1) {
-       // 修正: 如果被 fixer 设置为默认值 DEFAULTS.gearbox.efficiency，则只报警告（除非型号是默认型号）
-       if (efficiency === DEFAULTS.gearbox.efficiency && model !== DEFAULTS.gearbox.model) {
-           warnings.push(`效率 (efficiency) 为默认值 ${DEFAULTS.gearbox.efficiency}`);
-       } else {
-           errors.push(`效率 (efficiency:${item.efficiency}) 缺失、无效或超出范围(0-1)`);
-       }
-   }
-
-
-  // 检查价格字段 (processPriceData should ensure these are numbers >= 0 and calculated correctly)
-  const priceFields = ['basePrice', 'price', 'factoryPrice', 'marketPrice', 'packagePrice'];
-  priceFields.forEach(field => {
-       const price = safeParseFloat(item[field]);
-       if (price === undefined || isNaN(price) || price < 0) {
-            errors.push(`价格字段 ${field} (${item[field]}) 缺失、无效或为负数`);
-       } else if (price === 0 && model !== DEFAULTS.gearbox.model) { // Warn if 0 for non-default model
-             warnings.push(`价格字段 ${field} 为 0`);
-       }
-  });
-
-   // 检查折扣率 (processPriceData should ensure this is a number between 0 and 1)
-   const discountRate = safeParseFloat(item.discountRate);
-   if (discountRate === undefined || isNaN(discountRate) || discountRate < 0 || discountRate > 1) {
-        // 修正: 如果被 fixer 设置为默认值 getStandardDiscountRate(model)，则只报警告（除非型号是默认型号）
-       const standardDefaultRate = getStandardDiscountRate(model);
-       if (discountRate !== undefined && Math.abs(discountRate - standardDefaultRate) < 1e-6 && model !== DEFAULTS.gearbox.model) {
-            warnings.push(`折扣率 (discountRate) 为默认值 ${standardDefaultRate * 100}%`);
-       } else {
-           errors.push(`折扣率 (discountRate:${item.discountRate}) 缺失、无效或超出范围(0-1)`);
-       }
-   }
-
-    // Cross-field price validation (handled by processPriceData fixing, just validate final state)
-    // Check consistency between basePrice, discountRate, factoryPrice
-     const basePrice = safeParseFloat(item.basePrice);
-     const discountRateVal = safeParseFloat(item.discountRate);
-     const factoryPrice = safeParseFloat(item.factoryPrice);
-     // Only check consistency if key fields are valid and basePrice/factoryPrice are positive
-     if (basePrice !== undefined && basePrice > 0 && discountRateVal !== undefined && discountRateVal >= 0 && discountRateVal <= 1 && factoryPrice !== undefined && factoryPrice > 0) {
-        const expectedFactory = basePrice * (1 - discountRateVal);
-         if (Math.abs(factoryPrice - expectedFactory) > 1) { // Allow 1 unit tolerance
-             warnings.push(`工厂价 (${factoryPrice}) 与基础价 (${basePrice}) 和折扣率 (${(discountRateVal*100).toFixed(1)}%) 计算不一致`);
-         }
-     } else if (basePrice !== undefined && basePrice === 0 && factoryPrice !== undefined && factoryPrice > 0) {
-         // If base price is 0 but factory is positive, this is inconsistent
-         warnings.push(`基础价为 0 但工厂价 (${factoryPrice}) 大于 0`);
-     }
-
-
-    // Check consistency between factoryPrice and marketPrice
-     const marketPrice = safeParseFloat(item.marketPrice);
-      if (factoryPrice !== undefined && factoryPrice >= 0 && marketPrice !== undefined && marketPrice >= 0) {
-          const expectedMarket = factoryPrice * 1.1;
-           if (Math.abs(marketPrice - expectedMarket) > 1) {
-              warnings.push(`市场价 (${marketPrice}) 与工厂价 (${factoryPrice}) 计算不一致 (期望 ${expectedMarket.toFixed(2)})`);
-          }
-      }
-
-      // Check consistency between factoryPrice and packagePrice
-      const packagePrice = safeParseFloat(item.packagePrice);
-      if (factoryPrice !== undefined && factoryPrice >= 0 && packagePrice !== undefined && packagePrice >= 0) {
-           // packagePrice should ideally be equal to factoryPrice after fixes, but might differ if overridden
-           // Check only if they differ significantly and it's not the default item
-          if (Math.abs(packagePrice - factoryPrice) > 1 && model !== DEFAULTS.gearbox.model) {
-              warnings.push(`打包价 (${packagePrice}) 与工厂价 (${factoryPrice}) 不一致`);
-          }
-      }
-
-
+  if (gearbox.discountRate !== undefined) {
+    const discountRate = safeParseFloat(gearbox.discountRate);
+    if (discountRate === undefined || discountRate < 0 || discountRate > 1) {
+      warnings.push('折扣率(discountRate)字段值无效或超出范围(0-1)');
+    }
+  }
+  
+  if (gearbox.factoryPrice !== undefined) {
+    const factoryPrice = safeParseFloat(gearbox.factoryPrice);
+    if (factoryPrice === undefined || factoryPrice <= 0) {
+      warnings.push('工厂价(factoryPrice)字段值无效或不为正数');
+    }
+  }
+  
+  if (gearbox.marketPrice !== undefined) {
+    const marketPrice = safeParseFloat(gearbox.marketPrice);
+    if (marketPrice === undefined || marketPrice <= 0) {
+      warnings.push('市场价(marketPrice)字段值无效或不为正数');
+    }
+  }
+  
   return {
     valid: errors.length === 0,
     errors,
-    warnings,
-    model: item.model,
-    originalIndex // Include original index in validation result
+    warnings
   };
 };
 
-
 /**
- * 验证单个联轴器数据项
- * @param {Object} item 联轴器对象
- * @param {number} index 在集合中的原始索引
- * @returns {Object} 验证结果 { valid: boolean, errors: string[], warnings: string[], model: string, originalIndex: number }
+ * 验证联轴器数据
+ * @param {Object} coupling - 联轴器对象
+ * @returns {Object} 验证结果 { valid, errors, warnings }
  */
-export const validateCoupling = (item, index) => {
+export const validateCoupling = (coupling) => {
   const errors = [];
   const warnings = [];
-  const originalIndex = index;
-
-  if (!item || typeof item !== 'object') {
-    return { valid: false, warnings: [], errors: ['无效的项目格式'], originalIndex };
+  
+  // 必需字段检查
+  if (!coupling) {
+    errors.push('联轴器对象为空');
+    return { valid: false, errors, warnings };
   }
-
-  // 检查必需字段和基本类型
-  const model = item.model?.trim();
-  if (typeof model !== 'string' || !model) {
-    errors.push('型号 (model) 缺失或无效');
+  
+  if (!coupling.model) {
+    errors.push('缺少型号(model)字段');
   }
-
-  // 检查扭矩 (应为 > 0 的数字)
-  const torque = safeParseFloat(item.torque);
-  if (torque === undefined || isNaN(torque) || torque <= 0) {
-      // 修正: 如果被 fixer 设置为默认值 DEFAULTS.coupling.torque，则只报警告（除非型号是默认型号）
-      if (torque === DEFAULTS.coupling.torque && model !== DEFAULTS.coupling.model) {
-           warnings.push(`联轴器扭矩 (torque) 为默认值 ${DEFAULTS.coupling.torque}`);
-      } else {
-         errors.push(`联轴器扭矩 (torque:${item.torque}) 缺失、无效或非正向`);
+  
+  // 验证扭矩
+  if (coupling.torque === undefined) {
+    errors.push('缺少扭矩(torque)字段');
+  } else {
+    const torque = safeParseFloat(coupling.torque);
+    if (torque === undefined || torque <= 0) {
+      errors.push('扭矩(torque)字段值无效或不为正数');
+    } else {
+      // 检查扭矩单位是否一致
+      if (!coupling.torqueUnit) {
+        warnings.push('缺少扭矩单位(torqueUnit)字段，可能导致单位不一致问题');
+      } else if (!['knm', 'kn·m', 'kn.m', 'kn m', 'nm', 'n·m', 'n.m', 'n m'].includes(coupling.torqueUnit.toLowerCase().trim())) {
+        warnings.push(`未知的扭矩单位: ${coupling.torqueUnit}`);
       }
-  }
-
-  // 检查最大扭矩 (应为 > 0 的数字)
-   const maxTorque = safeParseFloat(item.maxTorque);
-   if (maxTorque === undefined || isNaN(maxTorque) || maxTorque <= 0) {
-        // 修正: 如果被 fixer 设置为默认值 DEFAULTS.coupling.torque * 2.5，则只报警告（除非型号是默认型号）
-       if (maxTorque !== undefined && Math.abs(maxTorque - DEFAULTS.coupling.torque * 2.5) < 1e-6 && model !== DEFAULTS.coupling.model) {
-           warnings.push(`最大扭矩 (maxTorque) 为默认值 ${(DEFAULTS.coupling.torque * 2.5).toFixed(3)}`);
-       } else {
-           // Changed to error as maxTorque is important for safety factor
-           errors.push(`最大扭矩 (maxTorque:${item.maxTorque}) 缺失、无效或非正向`);
-       }
-   } else if (torque !== undefined && torque > 0 && maxTorque < torque) {
-        // Check consistency: maxTorque >= torque
-        warnings.push(`最大扭矩(${maxTorque})应大于额定扭矩(${torque})`); // Keep as warning
-   }
-
-
-   // 检查最大转速 (应为 > 0 的数字)
-   const maxSpeed = safeParseFloat(item.maxSpeed);
-   if (maxSpeed === undefined || isNaN(maxSpeed) || maxSpeed <= 0) {
-      // 修正: 如果被 fixer 设置为默认值 DEFAULTS.coupling.maxSpeed，则只报警告（除非型号是默认型号）
-       if (maxSpeed === DEFAULTS.coupling.maxSpeed && model !== DEFAULTS.coupling.model) {
-            warnings.push(`最大转速 (maxSpeed) 为默认值 ${DEFAULTS.coupling.maxSpeed}`);
-       } else {
-           errors.push(`最大转速 (maxSpeed:${item.maxSpeed}) 缺失、无效或非正向`);
-       }
-   }
-
-
-  // 检查重量 (应为 > 0 的数字)
-   const weight = safeParseFloat(item.weight);
-   if (weight === undefined || isNaN(weight) || weight <= 0) {
-       // 修正: 如果被 fixer 设置为默认值 DEFAULTS.coupling.weight，则只报警告（除非型号是默认型号）
-       if (weight === DEFAULTS.coupling.weight && model !== DEFAULTS.coupling.model) {
-           warnings.push(`重量 (weight) 为默认值 ${DEFAULTS.coupling.weight}`);
-       } else {
-            warnings.push(`重量 (weight:${item.weight}) 缺失、无效或非正向`);
-       }
-   }
-
-
-   // 检查价格字段 (与 Gearbox 相同逻辑)
-  const priceFields = ['basePrice', 'price', 'factoryPrice', 'marketPrice', 'packagePrice'];
-  priceFields.forEach(field => {
-       const price = safeParseFloat(item[field]);
-       if (price === undefined || isNaN(price) || price < 0) {
-             errors.push(`价格字段 ${field} (${item[field]}) 缺失、无效或为负数`);
-       } else if (price === 0 && model !== DEFAULTS.coupling.model) { // Warn if 0 for non-default model
-             warnings.push(`价格字段 ${field} 为 0`);
-       }
-  });
-
-   // 检查折扣率 (与 Gearbox 相同逻辑)
-   const discountRate = safeParseFloat(item.discountRate);
-   if (discountRate === undefined || isNaN(discountRate) || discountRate < 0 || discountRate > 1) {
-       // 修正: 如果被 fixer 设置为默认值 getStandardDiscountRate(model)，则只报警告（除非型号是默认型号）
-       const standardDefaultRate = getStandardDiscountRate(model);
-       if (discountRate !== undefined && Math.abs(discountRate - standardDefaultRate) < 1e-6 && model !== DEFAULTS.coupling.model) {
-            warnings.push(`折扣率 (discountRate) 为默认值 ${standardDefaultRate * 100}%`);
-       } else {
-           errors.push(`折扣率 (discountRate:${item.discountRate}) 缺失、无效或超出范围(0-1)`);
-       }
-   }
-
-    // Cross-field price validation (similar to gearbox)
-    const basePrice = safeParseFloat(item.basePrice);
-    const discountRateVal = safeParseFloat(item.discountRate);
-    const factoryPrice = safeParseFloat(item.factoryPrice);
-     // 只有当关键字段有效且 basePrice/factoryPrice >= 0 时才检查一致性
-    if (basePrice !== undefined && basePrice >= 0 && discountRateVal !== undefined && discountRateVal >= 0 && discountRateVal <= 1 && factoryPrice !== undefined && factoryPrice >= 0) {
-       const expectedFactory = basePrice * (1 - discountRateVal);
-        // 如果 basePrice 是 0，工厂价期望也是 0
-       if ((basePrice === 0 && factoryPrice !== 0) || (basePrice > 0 && Math.abs(factoryPrice - expectedFactory) > 1)) { // Allow 1 unit tolerance for non-zero prices
-            warnings.push(`工厂价 (${factoryPrice}) 与基础价 (${basePrice}) 和折扣率 (${(discountRateVal*100).toFixed(1)}%) 计算不一致`);
-       }
+      
+      // 检查扭矩值是否合理
+      if (coupling.torqueUnit && coupling.torqueUnit.toLowerCase().includes('kn') && torque > 100) {
+        warnings.push(`扭矩值(${torque} ${coupling.torqueUnit})异常大，请确认单位是否正确`);
+      } else if (!coupling.torqueUnit && torque > 500) {
+        warnings.push(`扭矩值(${torque})异常大，可能需要转换单位 (N·m -> kN·m)`);
+      }
     }
-
-     const marketPrice = safeParseFloat(item.marketPrice);
-      if (factoryPrice !== undefined && factoryPrice >= 0 && marketPrice !== undefined && marketPrice >= 0) {
-          const expectedMarket = factoryPrice * 1.1;
-           if (Math.abs(marketPrice - expectedMarket) > 1) {
-              warnings.push(`市场价 (${marketPrice}) 与工厂价 (${factoryPrice}) 计算不一致 (期望 ${expectedMarket.toFixed(2)})`);
-          }
-      }
-
-      const packagePrice = safeParseFloat(item.packagePrice);
-      if (factoryPrice !== undefined && factoryPrice >= 0 && packagePrice !== undefined && packagePrice >= 0) {
-           // packagePrice should ideally be equal to factoryPrice after fixes
-          if (Math.abs(packagePrice - factoryPrice) > 1 && model !== DEFAULTS.coupling.model) {
-              warnings.push(`打包价 (${packagePrice}) 与工厂价 (${factoryPrice}) 不一致`);
-          }
-      }
-
-
+  }
+  
+  // 验证最大转速
+  if (coupling.maxSpeed === undefined) {
+    warnings.push('缺少最大转速(maxSpeed)字段');
+  } else {
+    const maxSpeed = safeParseFloat(coupling.maxSpeed);
+    if (maxSpeed === undefined || maxSpeed <= 0) {
+      warnings.push('最大转速(maxSpeed)字段值无效或不为正数');
+    } else if (maxSpeed > 10000) {
+      warnings.push(`最大转速(${maxSpeed} r/min)异常高，请确认是否正确`);
+    }
+  }
+  
+  // 验证重量
+  if (coupling.weight === undefined) {
+    warnings.push('缺少重量(weight)字段');
+  } else {
+    const weight = safeParseFloat(coupling.weight);
+    if (weight === undefined || weight <= 0) {
+      warnings.push('重量(weight)字段值无效或不为正数');
+    }
+  }
+  
+  // 验证价格字段
+  if (coupling.basePrice === undefined && coupling.price === undefined) {
+    warnings.push('缺少基础价格(basePrice/price)字段');
+  } else {
+    const basePrice = safeParseFloat(coupling.basePrice || coupling.price);
+    if (basePrice === undefined || basePrice <= 0) {
+      warnings.push('基础价格(basePrice/price)字段值无效或不为正数');
+    }
+  }
+  
+  // 验证折扣率
+  if (coupling.discountRate !== undefined) {
+    const discountRate = safeParseFloat(coupling.discountRate);
+    if (discountRate === undefined || discountRate < 0 || discountRate > 1) {
+      warnings.push('折扣率(discountRate)字段值无效或超出范围(0-1)');
+    }
+  }
+  
   return {
     valid: errors.length === 0,
     errors,
-    warnings,
-    model: item.model,
-    originalIndex // Include original index in validation result
+    warnings
   };
 };
 
-
 /**
- * 验证单个备用泵数据项
- * @param {Object} item 备用泵对象
- * @param {number} index 在集合中的原始索引
- * @returns {Object} 验证结果 { valid: boolean, errors: string[], warnings: string[], model: string, originalIndex: number }
+ * 验证备用泵数据
+ * @param {Object} pump - 备用泵对象
+ * @returns {Object} 验证结果 { valid, errors, warnings }
  */
-export const validatePump = (item, index) => {
+export const validatePump = (pump) => {
   const errors = [];
   const warnings = [];
-  const originalIndex = index;
-
-  if (!item || typeof item !== 'object') {
-    return { valid: false, warnings: [], errors: ['无效的项目格式'], originalIndex };
+  
+  // 必需字段检查
+  if (!pump) {
+    errors.push('备用泵对象为空');
+    return { valid: false, errors, warnings };
   }
-
-  // 检查必需字段和基本类型
-  const model = item.model?.trim();
-  if (typeof model !== 'string' || !model) {
-    errors.push('型号 (model) 缺失或无效');
+  
+  if (!pump.model) {
+    errors.push('缺少型号(model)字段');
   }
-
-  // 检查流量 (应为 > 0 的数字)
-   const flow = safeParseFloat(item.flow);
-   if (flow === undefined || isNaN(flow) || flow <= 0) {
-       // 修正: 如果被 fixer 设置为默认值 DEFAULTS.sparePump.flow，则只报警告（除非型号是默认型号）
-       if (flow === DEFAULTS.sparePump.flow && model !== DEFAULTS.pump.model) {
-           warnings.push(`流量 (flow) 为默认值 ${DEFAULTS.sparePump.flow}`);
-       } else {
-            errors.push(`流量 (flow:${item.flow}) 缺失、无效或非正向`);
-       }
-   }
-
-  // 检查压力 (应为 > 0 的数字)
-   const pressure = safeParseFloat(item.pressure);
-   if (pressure === undefined || isNaN(pressure) || pressure <= 0) {
-       // 修正: 如果被 fixer 设置为默认值 DEFAULTS.sparePump.pressure，则只报警告（除非型号是默认型号）
-       if (pressure === DEFAULTS.sparePump.pressure && model !== DEFAULTS.pump.model) {
-           warnings.push(`压力 (pressure) 为默认值 ${DEFAULTS.sparePump.pressure}`);
-       } else {
-            errors.push(`压力 (pressure:${item.pressure}) 缺失、无效或非正向`);
-       }
-   }
-
-  // 检查电机功率 (应为 > 0 的数字)
-   const motorPower = safeParseFloat(item.motorPower);
-   if (motorPower === undefined || isNaN(motorPower) || motorPower <= 0) {
-       // 修正: 如果被 fixer 设置为默认值 DEFAULTS.sparePump.motorPower，则只报警告（除非型号是默认型号）
-       if (motorPower === DEFAULTS.sparePump.motorPower && model !== DEFAULTS.pump.model) {
-           warnings.push(`电机功率 (motorPower) 为默认值 ${DEFAULTS.sparePump.motorPower}`);
-       } else {
-            errors.push(`电机功率 (motorPower:${item.motorPower}) 缺失、无效或非正向`);
-       }
-   }
-
-  // 检查重量 (应为 > 0 的数字)
-   const weight = safeParseFloat(item.weight);
-   if (weight === undefined || isNaN(weight) || weight <= 0) {
-       // 修正: 如果被 fixer 设置为默认值 DEFAULTS.sparePump.weight，则只报警告（除非型号是默认型号）
-       if (weight === DEFAULTS.sparePump.weight && model !== DEFAULTS.pump.model) {
-           warnings.push(`重量 (weight) 为默认值 ${DEFAULTS.sparePump.weight}`);
-       } else {
-            warnings.push(`重量 (weight:${item.weight}) 缺失、无效或非正向`);
-       }
-   }
-
-
-   // 检查价格字段 (与 Gearbox 相同逻辑)
-  const priceFields = ['basePrice', 'price', 'factoryPrice', 'marketPrice', 'packagePrice'];
-  priceFields.forEach(field => {
-       const price = safeParseFloat(item[field]);
-       if (price === undefined || isNaN(price) || price < 0) {
-             errors.push(`价格字段 ${field} (${item[field]}) 缺失、无效或为负数`);
-       } else if (price === 0 && model !== DEFAULTS.pump.model) { // Warn if 0 for non-default model
-             warnings.push(`价格字段 ${field} 为 0`);
-       }
-  });
-
-   // 检查折扣率 (与 Gearbox 相同逻辑)
-   const discountRate = safeParseFloat(item.discountRate);
-   if (discountRate === undefined || isNaN(discountRate) || discountRate < 0 || discountRate > 1) {
-       // 修正: 如果被 fixer 设置为默认值 getStandardDiscountRate(model)，则只报警告（除非型号是默认型号）
-       const standardDefaultRate = getStandardDiscountRate(model);
-       if (discountRate !== undefined && Math.abs(discountRate - standardDefaultRate) < 1e-6 && model !== DEFAULTS.pump.model) {
-            warnings.push(`折扣率 (discountRate) 为默认值 ${standardDefaultRate * 100}%`);
-       } else {
-           errors.push(`折扣率 (discountRate:${item.discountRate}) 缺失、无效或超出范围(0-1)`);
-       }
-   }
-
-    // Cross-field price validation (similar to gearbox)
-    const basePrice = safeParseFloat(item.basePrice);
-    const discountRateVal = safeParseFloat(item.discountRate);
-    const factoryPrice = safeParseFloat(item.factoryPrice);
-     // 只有当关键字段有效且 basePrice/factoryPrice >= 0 时才检查一致性
-    if (basePrice !== undefined && basePrice >= 0 && discountRateVal !== undefined && discountRateVal >= 0 && discountRateVal <= 1 && factoryPrice !== undefined && factoryPrice >= 0) {
-       const expectedFactory = basePrice * (1 - discountRateVal);
-        // 如果 basePrice 是 0，工厂价期望也是 0
-       if ((basePrice === 0 && factoryPrice !== 0) || (basePrice > 0 && Math.abs(factoryPrice - expectedFactory) > 1)) { // Allow 1 unit tolerance for non-zero prices
-            warnings.push(`工厂价 (${factoryPrice}) 与基础价 (${basePrice}) 和折扣率 (${(discountRateVal*100).toFixed(1)}%) 计算不一致`);
-       }
+  
+  // 验证流量
+  if (pump.flow === undefined) {
+    warnings.push('缺少流量(flow)字段');
+  } else {
+    const flow = safeParseFloat(pump.flow);
+    if (flow === undefined || flow <= 0) {
+      warnings.push('流量(flow)字段值无效或不为正数');
     }
-
-     const marketPrice = safeParseFloat(item.marketPrice);
-      if (factoryPrice !== undefined && factoryPrice >= 0 && marketPrice !== undefined && marketPrice >= 0) {
-          const expectedMarket = factoryPrice * 1.1;
-           if (Math.abs(marketPrice - expectedMarket) > 1) {
-              warnings.push(`市场价 (${marketPrice}) 与工厂价 (${factoryPrice}) 计算不一致 (期望 ${expectedMarket.toFixed(2)})`);
-          }
-      }
-
-      const packagePrice = safeParseFloat(item.packagePrice);
-      if (factoryPrice !== undefined && factoryPrice >= 0 && packagePrice !== undefined && packagePrice >= 0) {
-           // packagePrice should ideally be equal to factoryPrice after fixes
-          if (Math.abs(packagePrice - factoryPrice) > 1 && model !== DEFAULTS.pump.model) {
-              warnings.push(`打包价 (${packagePrice}) 与工厂价 (${factoryPrice}) 不一致`);
-          }
-      }
-
+  }
+  
+  // 验证压力
+  if (pump.pressure === undefined) {
+    warnings.push('缺少压力(pressure)字段');
+  } else {
+    const pressure = safeParseFloat(pump.pressure);
+    if (pressure === undefined || pressure <= 0) {
+      warnings.push('压力(pressure)字段值无效或不为正数');
+    }
+  }
+  
+  // 验证电机功率
+  if (pump.motorPower === undefined) {
+    warnings.push('缺少电机功率(motorPower)字段');
+  } else {
+    const motorPower = safeParseFloat(pump.motorPower);
+    if (motorPower === undefined || motorPower <= 0) {
+      warnings.push('电机功率(motorPower)字段值无效或不为正数');
+    }
+  }
+  
+  // 验证重量
+  if (pump.weight === undefined) {
+    warnings.push('缺少重量(weight)字段');
+  } else {
+    const weight = safeParseFloat(pump.weight);
+    if (weight === undefined || weight <= 0) {
+      warnings.push('重量(weight)字段值无效或不为正数');
+    }
+  }
+  
+  // 验证价格字段
+  if (pump.basePrice === undefined && pump.price === undefined) {
+    warnings.push('缺少基础价格(basePrice/price)字段');
+  } else {
+    const basePrice = safeParseFloat(pump.basePrice || pump.price);
+    if (basePrice === undefined || basePrice <= 0) {
+      warnings.push('基础价格(basePrice/price)字段值无效或不为正数');
+    }
+  }
+  
   return {
     valid: errors.length === 0,
     errors,
-    warnings,
-    model: item.model,
-    originalIndex // Include original index in validation result
+    warnings
   };
 };
 
-
 /**
- * 验证整个数据库结构和数据项
- * @param {Object} data应用程序数据对象
- * @returns {Object} 验证结果 { success: boolean, message: string, details: object, summary: object }
+ * 验证整个数据库
+ * @param {Object} data - 应用数据对象
+ * @returns {Object} 验证结果 { success, message, details, summary }
  */
 export const validateDatabase = (data) => {
   const results = {
     success: true,
     message: '数据库验证成功',
-    details: {}, // Detailed results per collection
-    summary: { total: 0, valid: 0, invalid: 0, warnings: 0 } // Overall summary
+    details: {}, // 每个集合的详细结果
+    summary: { total: 0, valid: 0, invalid: 0, warnings: 0 } // 总体摘要
   };
 
-  // Define expected collections
-  const collectionsToValidate = [
-    'hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes',
-    'hcqGearboxes', 'gcGearboxes', 'hcxGearboxes', 'hcaGearboxes',
-    'hcvGearboxes', 'mvGearboxes', 'otherGearboxes', // Include all gearbox types
-    'flexibleCouplings', 'standbyPumps'
-  ];
-
-  // 修正：在循环外部检查 data 是否有效
+  // 如果数据无效，直接返回
   if (!data || typeof data !== 'object') {
-      results.summary.total = 1;
-      results.summary.invalid = 1;
-      results.success = false;
-       results.message = `数据库验证失败：输入数据无效 (${typeof data})。`;
-       results.details.overall = { total: 1, valid: 0, invalid: 1, warnings: 0, invalidItems: [{ model: 'Database Input', errors: [`Input data is null, undefined, or not an object (${typeof data}).`], originalIndex: -1 }], warningItems: [] };
-       console.error("validateDatabase: Input data object is null, undefined, or not an object.", data);
-       return results; // 直接返回，无需遍历
+    results.success = false;
+    results.message = `数据库验证失败：输入数据无效 (${typeof data})。`;
+    console.error("validateDatabase: 输入数据对象为null、undefined或不是对象。", data);
+    return results;
   }
 
+  // 定义需要验证的集合
+  const collectionsToValidate = [
+    { key: 'hcGearboxes', validator: validateGearbox, label: 'HC系列齿轮箱' },
+    { key: 'gwGearboxes', validator: validateGearbox, label: 'GW系列齿轮箱' },
+    { key: 'hcmGearboxes', validator: validateGearbox, label: 'HCM系列齿轮箱' },
+    { key: 'dtGearboxes', validator: validateGearbox, label: 'DT系列齿轮箱' },
+    { key: 'hcqGearboxes', validator: validateGearbox, label: 'HCQ系列齿轮箱' },
+    { key: 'gcGearboxes', validator: validateGearbox, label: 'GC系列齿轮箱' },
+    { key: 'hcxGearboxes', validator: validateGearbox, label: 'HCX系列齿轮箱' },
+    { key: 'hcaGearboxes', validator: validateGearbox, label: 'HCA系列齿轮箱' },
+    { key: 'hcvGearboxes', validator: validateGearbox, label: 'HCV系列齿轮箱' },
+    { key: 'mvGearboxes', validator: validateGearbox, label: 'MV系列齿轮箱' },
+    { key: 'otherGearboxes', validator: validateGearbox, label: '其他齿轮箱' },
+    { key: 'flexibleCouplings', validator: validateCoupling, label: '高弹性联轴器' },
+    { key: 'standbyPumps', validator: validatePump, label: '备用泵' }
+  ];
 
-  collectionsToValidate.forEach(colKey => {
-      results.details[colKey] = { total: 0, valid: 0, invalid: 0, warnings: 0, invalidItems: [], warningItems: [] };
+  // 验证每个集合
+  collectionsToValidate.forEach(({ key, validator, label }) => {
+    results.details[key] = {
+      name: label,
+      total: 0,
+      valid: 0,
+      invalid: 0,
+      warnings: 0,
+      invalidItems: [],
+      warningItems: []
+    };
 
-      // 修正：检查集合是否存在且是数组
-      if (data.hasOwnProperty(colKey) && Array.isArray(data[colKey])) {
-              data[colKey].forEach((item, index) => {
-                  results.details[colKey].total++; // Count items within the array
-
-                  let itemValidationResult = { valid: true, errors: [], warnings: [], model: item?.model || `Index ${index}`, originalIndex: index }; // Default result
-
-                  if (colKey.endsWith('Gearboxes')) {
-                      itemValidationResult = validateGearbox(item, index);
-                  } else if (colKey === 'flexibleCouplings') {
-                      itemValidationResult = validateCoupling(item, index);
-                  } else if (colKey === 'standbyPumps') {
-                      itemValidationResult = validatePump(item, index);
-                  } else {
-                       // If it's an array but not a known type, just check basic item format
-                       if (!item || typeof item !== 'object' || (typeof item.model !== 'string' || !item.model.trim())) {
-                           itemValidationResult.valid = false;
-                           itemValidationResult.errors.push('项目格式无效或型号缺失');
-                           itemValidationResult.model = item?.model || `Index ${index}`;
-                       }
-                  }
-
-                  if (itemValidationResult.errors && itemValidationResult.errors.length > 0) {
-                      results.details[colKey].invalid++;
-                      results.summary.invalid++; // 累加无效项目总数
-                      results.details[colKey].invalidItems.push({
-                          model: itemValidationResult.model,
-                          errors: itemValidationResult.errors,
-                          originalIndex: itemValidationResult.originalIndex
-                      });
-                  } else {
-                       // Only count as valid if no errors
-                      results.details[colKey].valid++;
-                  }
-
-
-                  if (itemValidationResult.warnings && itemValidationResult.warnings.length > 0) {
-                      results.details[colKey].warnings += itemValidationResult.warnings.length;
-                      results.summary.warnings += itemValidationResult.warnings.length;
-                       results.details[colKey].warningItems.push({
-                          model: itemValidationResult.model,
-                          warnings: itemValidationResult.warnings,
-                          originalIndex: itemValidationResult.originalIndex
-                       });
-                  }
-              });
-              results.summary.total += data[colKey].length; // 累加集合中的项目数量到总数
-          } else if (data.hasOwnProperty(colKey) && !Array.isArray(data[colKey])) {
-              // 修正：Key exists but is not an array - structural issue
-               results.details[colKey].total = 1; // Count this structural issue as 1 entity
-               results.details[colKey].invalid = 1;
-               results.summary.total++; // Count this structural issue in overall total
-               results.summary.invalid++;
-               results.details[colKey].invalidItems.push({
-                   model: `Collection: ${colKey}`,
-                   errors: [`Expected collection '${colKey}' to be an array, but found ${typeof data[colKey]}`],
-                   originalIndex: -1 // Indicates a collection-level issue, not item
-               });
-          } else {
-              // 修正：Collection is missing completely. Report as an invalid item related to the collection key.
-              // ensureCollections should prevent this if data goes through repair, but validate defensively.
-               results.details[colKey] = { total: 0, valid: 0, invalid: 1, warnings: 0, invalidItems: [], warningItems: [] };
-               results.details[colKey].invalidItems.push({
-                   model: `Collection: ${colKey}`,
-                   errors: [`Required collection '${colKey}' is missing.`],
-                   originalIndex: -1
-               });
-               results.summary.invalid++;
-               results.summary.total++; // Count the "missing collection" as 1 invalid entity for summary
+    // 检查集合是否存在且是数组
+    if (data.hasOwnProperty(key) && Array.isArray(data[key])) {
+      data[key].forEach((item, index) => {
+        results.details[key].total++;
+        results.summary.total++;
+        
+        // 使用对应的验证器验证项目
+        const validationResult = validator(item);
+        
+        if (!validationResult.valid) {
+          results.details[key].invalid++;
+          results.summary.invalid++;
+          results.details[key].invalidItems.push({
+            model: item?.model || `#${index}`,
+            errors: validationResult.errors,
+            warnings: validationResult.warnings,
+            originalIndex: index
+          });
+        } else {
+          results.details[key].valid++;
+          results.summary.valid++;
+        }
+        
+        if (validationResult.warnings && validationResult.warnings.length > 0) {
+          results.details[key].warnings += validationResult.warnings.length;
+          results.summary.warnings += validationResult.warnings.length;
+          
+          if (validationResult.valid) {
+            results.details[key].warningItems.push({
+              model: item?.model || `#${index}`,
+              warnings: validationResult.warnings,
+              originalIndex: index
+            });
           }
+        }
+      });
+    } else if (data.hasOwnProperty(key) && !Array.isArray(data[key])) {
+      // 集合存在但不是数组
+      results.details[key].total = 1;
+      results.details[key].invalid = 1;
+      results.summary.total++;
+      results.summary.invalid++;
+      results.details[key].invalidItems.push({
+        model: `Collection: ${key}`,
+        errors: [`预期集合 '${key}' 应为数组，但发现 ${typeof data[key]}`],
+        originalIndex: -1
+      });
+    } else {
+      // 集合完全缺失
+      results.details[key].total = 0;
+      results.details[key].invalid = 1;
+      results.summary.invalid++;
+      results.summary.total++;
+      results.details[key].invalidItems.push({
+        model: `Collection: ${key}`,
+        errors: [`所需集合 '${key}' 缺失。`],
+        originalIndex: -1
+      });
+    }
   });
 
-    // Recalculate summary.valid based on total and invalid counts
-    results.summary.valid = results.summary.total - results.summary.invalid;
-     // Ensure valid count is non-negative
-     results.summary.valid = Math.max(0, results.summary.valid);
-
-
-    // Final overall message update based on summary
-    if (results.summary.invalid > 0) {
-       results.success = false; // Ensure success is false if invalid items were found
-       results.message = `数据库验证失败：发现 ${results.summary.invalid} 个无效项目和 ${results.summary.warnings} 个警告。`;
-    } else if (results.summary.total === 0) { // Check for empty database *after* processing all collections
-        results.success = false;
-        results.message = `数据库验证失败：数据库为空，未加载任何数据。`;
-        // Add a specific invalid item entry if the database is totally empty
-        if (results.summary.invalid === 0) { // Avoid adding duplicate error if invalid count is already > 0
-             results.details.overall = { total: 1, valid: 0, invalid: 1, warnings: 0, invalidItems: [{ model: 'Database', errors: ['数据库中没有找到任何产品数据。请检查数据源和导入过程。'], originalIndex: -1 }], warningItems: [] }; // Improved message
-             results.summary.invalid = 1; // Reflect this critical error in summary
-             results.summary.total = 1; // Count the database itself as the entity
-             results.summary.valid = 0;
-        }
-    } else if (results.summary.warnings > 0) {
-       results.success = true; // Validation passed on errors, but had warnings
-       results.message = `数据库验证完成：发现 ${results.summary.warnings} 个警告。`;
-    } else { // success is true, warnings is 0, total > 0
-      results.success = true;
-      results.message = '数据库验证成功，未发现任何问题。';
-    }
-
+  // 更新最终结果信息
+  if (results.summary.invalid > 0) {
+    results.success = false;
+    results.message = `数据库验证失败：发现 ${results.summary.invalid} 个无效项目和 ${results.summary.warnings} 个警告。`;
+  } else if (results.summary.total === 0) {
+    results.success = false;
+    results.message = `数据库验证失败：数据库为空，未加载任何数据。`;
+  } else if (results.summary.warnings > 0) {
+    results.success = true;
+    results.message = `数据库验证完成：发现 ${results.summary.warnings} 个警告。`;
+  } else {
+    results.success = true;
+    results.message = '数据库验证成功，未发现任何问题。';
+  }
 
   return results;
 };
 
 /**
- * 验证关键数据的有效性，是validateDatabase的简化版。
- * 此函数已不再需要，完整的 validateDatabase 会捕获关键错误并抛出。
- * 保留作为参考或删除。
- * @param {Object} data 应用程序数据对象
- * @returns {Object} 验证结果 { success: boolean, message: string, criticalErrors: string[] }
+ * 修正选型结果数据问题
+ * 确保关键字段存在且格式正确
+ * @param {Object} result - 选型结果对象
+ * @returns {Object} 修正后的选型结果
  */
-export const validateCriticalData = (data) => {
-    console.warn("validateCriticalData is deprecated. Use validateDatabase instead.");
-    // You can call validateDatabase and check its summary.invalid
-    const fullValidation = validateDatabase(data);
+export const correctSelectionResult = (result) => {
+  if (!result) return null;
+  
+  const corrected = { ...result };
+  
+  // 确保推荐列表是数组
+  if (!Array.isArray(corrected.recommendations)) {
+    corrected.recommendations = [];
+  }
+  
+  // 修正每个推荐项的关键字段
+  corrected.recommendations = corrected.recommendations.map(gearbox => {
+    const fixed = { ...gearbox };
+    
+    // 确保selectedRatio字段存在
+    if (fixed.selectedRatio === undefined) {
+      if (fixed.ratio !== undefined) {
+        fixed.selectedRatio = fixed.ratio;
+      } else if (Array.isArray(fixed.ratios) && fixed.ratios.length > 0) {
+        fixed.selectedRatio = fixed.ratios[0];
+      }
+    }
+    
+    // 确保selectedCapacity字段存在
+    if (fixed.selectedCapacity === undefined) {
+      if (Array.isArray(fixed.transferCapacity) && fixed.transferCapacity.length > 0) {
+        fixed.selectedCapacity = fixed.transferCapacity[0];
+      } else if (typeof fixed.transferCapacity === 'number') {
+        fixed.selectedCapacity = fixed.transferCapacity;
+      }
+    }
+    
+    // 确保capacityMargin字段存在
+    if (fixed.capacityMargin === undefined && fixed.selectedCapacity !== undefined && result.requiredTransferCapacity) {
+      fixed.capacityMargin = ((fixed.selectedCapacity - result.requiredTransferCapacity) / result.requiredTransferCapacity) * 100;
+    }
+    
+    // 确保ratioDiffPercent字段存在
+    if (fixed.ratioDiffPercent === undefined && fixed.selectedRatio !== undefined && result.targetRatio) {
+      fixed.ratioDiffPercent = (Math.abs(fixed.selectedRatio - result.targetRatio) / result.targetRatio) * 100;
+    }
+    
+    return fixed;
+  });
+  
+  return corrected;
+};
 
-     // Extract critical errors based on full validation results
-     const criticalErrors = [];
-     Object.keys(fullValidation.details).forEach(key => {
-         if (fullValidation.details[key].invalidItems.length > 0) {
-             fullValidation.details[key].invalidItems.forEach(item => {
-                 criticalErrors.push(`[${key}/${item.model}] ${item.errors.join('; ')}`);
-             });
-         }
-     });
-
-    return {
-        // Critical success implies no invalid items AND total items > 0
-        success: fullValidation.summary.invalid === 0 && fullValidation.summary.total > 0,
-        message: fullValidation.summary.invalid === 0 && fullValidation.summary.total > 0
-                 ? '关键数据验证通过'
-                 : fullValidation.summary.total === 0
-                   ? '关键数据验证失败：数据库为空。'
-                   : `关键数据验证失败：发现 ${fullValidation.summary.invalid} 个无效项目。`,
-        criticalErrors: criticalErrors.length > 0 ? criticalErrors : (fullValidation.summary.total === 0 ? ['数据库中没有找到任何产品数据。请检查数据源和导入过程。'] : [])
-    };
+// 导出模块
+export default {
+  validateGearbox,
+  validateCoupling,
+  validatePump,
+  validateDatabase,
+  correctSelectionResult
 };

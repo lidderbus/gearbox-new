@@ -7,7 +7,7 @@ import {
   getCouplingSpecifications,
   couplingSpecificationsMap // 确保导入映射表
 } from '../data/gearboxMatchingMaps'; // Make sure this file exists
-import { calculateFactoryPrice, calculateMarketPrice, getDiscountRate } from './priceManager'; // Make sure priceManager.js exists
+import { calculateFactoryPrice, calculateMarketPrice, getStandardDiscountRate } from './priceManager'; // Make sure priceManager.js exists
 import { safeParseFloat } from './dataHelpers'; // Make sure dataHelpers.js exists
 import { couplingWithCoverMap } from '../data/gearboxMatchingMaps';
 
@@ -114,7 +114,7 @@ export const fixCouplingTorque = (coupling, couplingSpecsMap) => {
  * @param {number} engineTorque 主机扭矩 (N·m)
  * @param {string} gearboxModel 齿轮箱型号
  * @param {Array} couplingsData 联轴器数据数组
- * @param {Object} couplingSpecificationsMap 联轴器规格映射表
+ * @param {function|Object} couplingSpecificationsMapOrFn 联轴器规格映射表或获取映射表的函数
  * @param {string} workCondition 工况条件
  * @param {number} temperature 工作温度
  * @param {boolean} hasCover 是否带罩壳
@@ -125,7 +125,7 @@ export const selectFlexibleCoupling = (
     engineTorque, // N·m
     gearboxModel,
     couplingsData,
-    couplingSpecificationsMap, // 接收联轴器规格映射表
+    couplingSpecificationsMapOrFn, // 接收联轴器规格映射表或函数
     workCondition = "III类:扭矩变化中等",
     temperature = 30,
     hasCover = false,
@@ -139,7 +139,7 @@ export const selectFlexibleCoupling = (
         hasCover, 
         engineSpeed, 
         couplingsCount: couplingsData?.length,
-        mapAvailable: !!couplingSpecificationsMap
+        mapAvailable: !!couplingSpecificationsMapOrFn
     });
 
     if (!engineTorque || engineTorque <= 0) {
@@ -153,9 +153,23 @@ export const selectFlexibleCoupling = (
     }
     
     // 确保couplingSpecificationsMap是对象
+    let couplingSpecificationsMap;
+    if (typeof couplingSpecificationsMapOrFn === 'function') {
+        // 如果是函数，调用它获取映射表
+        try {
+            couplingSpecificationsMap = couplingSpecificationsMapOrFn();
+        } catch (e) {
+            console.warn("无法从函数获取coupling规格映射表:", e);
+            couplingSpecificationsMap = {};
+        }
+    } else {
+        // 否则直接使用传入的对象
+        couplingSpecificationsMap = couplingSpecificationsMapOrFn || {};
+    }
+    
     if (!couplingSpecificationsMap || typeof couplingSpecificationsMap !== 'object') {
         console.warn("couplingSpecificationsMap不是有效对象在selectFlexibleCoupling中");
-        return { success: false, message: "联轴器规格映射表无效", recommendations: [] };
+        couplingSpecificationsMap = {}; // 使用空对象避免后续代码中的错误
     }
 
     // 1. 确定工况系数和温度系数
@@ -251,31 +265,31 @@ export const selectFlexibleCoupling = (
 
         let score = 0;
 
-        // 1. 扭矩余量评分（40分）- 优先选择10-30%的余量
-        if (torqueMargin >= 10 && torqueMargin <= 30) score += 40;
-        else if (torqueMargin > 30 && torqueMargin <= 50) score += 30;
-        else if (torqueMargin > 50) score += 20; // 非常大的余量不太理想
-        else if (torqueMargin >= 0 && torqueMargin < 10) score += 25; // 小余量但满足要求
+        // 1. 扭矩余量评分（20分）- 优先选择10-30%的余量 - 修改降低了权重
+        // 1. 扭矩余量评分（20分）- 优先选择10-30%的余量 - 修改降低了权重
+        if (torqueMargin >= 10 && torqueMargin <= 30) score += 20;
+        else if (torqueMargin > 30 && torqueMargin <= 50) score += 15; 
+        else if (torqueMargin > 50) score += 10; // 非常大的余量不太理想
+        else if (torqueMargin >= 0 && torqueMargin < 10) score += 12; // 小余量但满足要求
 
-        // 2. 推荐匹配评分（30分）
+        // 2. 推荐匹配评分（30分）- 保持不变
         if (recommendedModel && coupling.model === recommendedModel) score += 30; // 精确推荐型号匹配
         else if (recommendedPrefix && coupling.model.startsWith(recommendedPrefix)) score += 20; // 推荐前缀匹配
         else score += 5; // 无特定推荐匹配
 
-        // 3. 最大速度余量评分（10分）- 如果存在足够余量，偏好更接近引擎速度的
+        // 3. 最大速度余量评分（15分）- 增加权重
         const speedMarginPercent = ((couplingMaxSpeed / maxEngineSpeed) - 1) * 100;
-        if (speedMarginPercent >= 0 && speedMarginPercent <= 20) score += 10; // 理想速度余量 (0-20%)
-        else if (speedMarginPercent > 20 && speedMarginPercent <= 50) score += 8; // 更高速度余量
-        else if (speedMarginPercent > 50) score += 5; // 非常高的速度余量（不太理想）
+        if (speedMarginPercent >= 0 && speedMarginPercent <= 20) score += 15; // 理想速度余量 (0-20%)
+        else if (speedMarginPercent > 20 && speedMarginPercent <= 50) score += 12; // 更高速度余量
+        else if (speedMarginPercent > 50) score += 8; // 非常高的速度余量（不太理想）
         // 注意：不满足最小速度的联轴器已经被过滤掉。
 
-        // 4. 成本评分（15分）- 价格越低越好。相对于合格联轴器标准化价格。
+        // 4. 成本评分（25分）- 价格越低越好。提高了权重
         const basePrice = coupling.basePrice || coupling.price || 0;
         let normalizedPriceScore = 0; // 稍后在找到最低/最高价格后计算
 
-        // 5. 重量评分（5分）- 重量越轻越好。相对于合格联轴器标准化重量。
+        // 5. 重量评分（10分）- 重量越轻越好。提高了权重
         let normalizedWeightScore = 0; // 稍后计算
-
 
         eligibleCouplings.push({
           ...coupling,
@@ -315,9 +329,10 @@ export const selectFlexibleCoupling = (
        eligibleCouplings.forEach(c => {
              let priceScore = 0;
              if (priceRange > 0 && (c.basePrice || c.price || 0) > 0) {
-                priceScore = 15 * (1 - (((c.basePrice || c.price) - minPrice) / priceRange) || 0); // 处理潜在的除以零情况（如果minPrice == maxPrice）
+                // 修改为25分权重
+                priceScore = 25 * (1 - (((c.basePrice || c.price) - minPrice) / priceRange) || 0); // 处理潜在的除以零情况（如果minPrice == maxPrice）
              } else if ((c.basePrice || c.price || 0) > 0) { // 单项或零范围
-                priceScore = 15;
+                priceScore = 25; // 修改为25分
              } else { // 无有效价格
                  priceScore = 0; // 如果价格缺失，不加分
              }
@@ -325,9 +340,10 @@ export const selectFlexibleCoupling = (
 
              let weightScore = 0;
              if (weightRange > 0 && (c.weight || 0) > 0) {
-                weightScore = 5 * (1 - (((c.weight || 0) - minWeight) / weightRange) || 0); // 处理潜在的除以零情况
+                // 修改为10分权重
+                weightScore = 10 * (1 - (((c.weight || 0) - minWeight) / weightRange) || 0); // 处理潜在的除以零情况
              } else if ((c.weight || 0) > 0) { // 单项或零范围
-                weightScore = 5;
+                weightScore = 10; // 修改为10分
              } else { // 无有效重量
                  weightScore = 0; // 如果重量缺失，不加分
              }
@@ -336,8 +352,12 @@ export const selectFlexibleCoupling = (
        });
     } else if (eligibleCouplings.length === 1) {
         // 对于单个合格联轴器，如果数据存在，只添加固定价格/重量评分
-         if ((eligibleCouplings[0].basePrice || eligibleCouplings[0].price) > 0) eligibleCouplings[0].score = Math.max(0, Math.min(100, Math.round(eligibleCouplings[0].score + 15))); // 添加全部价格评分
-         if ((eligibleCouplings[0].weight || 0) > 0) eligibleCouplings[0].score = Math.max(0, Math.min(100, Math.round(eligibleCouplings[0].score + 5))); // 添加全部重量评分
+         if ((eligibleCouplings[0].basePrice || eligibleCouplings[0].price) > 0) {
+             eligibleCouplings[0].score = Math.max(0, Math.min(100, Math.round(eligibleCouplings[0].score + 25))); // 修改为25分
+         }
+         if ((eligibleCouplings[0].weight || 0) > 0) {
+             eligibleCouplings[0].score = Math.max(0, Math.min(100, Math.round(eligibleCouplings[0].score + 10))); // 修改为10分
+         }
     }
 
 
@@ -423,7 +443,7 @@ export const selectFlexibleCoupling = (
     let bestMatchMarketPrice = null;
     if(bestMatch) {
         const basePrice = bestMatch.basePrice || bestMatch.price || 0;
-        const discountRate = bestMatch.discountRate ?? getDiscountRate(bestMatch.model);
+        const discountRate = bestMatch.discountRate ?? getStandardDiscountRate(bestMatch.model);
         bestMatchFactoryPrice = bestMatch.factoryPrice || calculateFactoryPrice({ ...bestMatch, basePrice, discountRate });
         bestMatchMarketPrice = calculateMarketPrice({factoryPrice: bestMatchFactoryPrice}); // 计算市场价格
     }
@@ -471,9 +491,11 @@ export const selectStandbyPump = (gearboxModel, pumpsData) => {
   }
   console.log(`选择备用泵，齿轮箱型号: ${gearboxModel}`);
 
+  // 尝试获取推荐的泵型号
   const recommendedPumpModel = getRecommendedPump(gearboxModel);
   console.log(`模型 ${gearboxModel} 的推荐泵型号: ${recommendedPumpModel}`);
 
+  // 尝试查找推荐型号
   let matchedPump = null;
   if (recommendedPumpModel) {
     matchedPump = pumps.find(p => p && p.model === recommendedPumpModel);
@@ -483,8 +505,8 @@ export const selectStandbyPump = (gearboxModel, pumpsData) => {
     console.log(`找到完全匹配的备用泵: ${matchedPump.model}`);
     // 确保价格已计算/存在
     const basePrice = matchedPump.basePrice || matchedPump.price || 0;
-    const discountRate = matchedPump.discountRate ?? getDiscountRate(matchedPump.model);
-    const factoryPrice = matchedPump.factoryPrice || calculateFactoryPrice({ ...matchedPump, basePrice, discountRate }); // 如果缺失则重新计算
+    const discountRate = matchedPump.discountRate ?? getStandardDiscountRate(matchedPump.model);
+    const factoryPrice = matchedPump.factoryPrice || calculateFactoryPrice({ ...matchedPump, basePrice, discountRate });
 
     return {
       success: true,
@@ -498,34 +520,39 @@ export const selectStandbyPump = (gearboxModel, pumpsData) => {
       weight: matchedPump.weight || 0
     };
   } else {
-    console.warn(`推荐泵型号 (${recommendedPumpModel}) 在数据中未找到，或无推荐型号。将选择流量最接近的泵。`);
-    // 后备：如果特定推荐缺失或未找到，找到合适的泵
-    // 更复杂的后备可以基于齿轮箱的油需求选择，如果可用。
-    // 目前，让我们只指示失败或选择一个默认（如果需要）。
-     if (pumps.length > 0) {
-       // 简单后备：选择第一个或具有合理流量的一个
-        const fallbackPump = pumps.find(p => p.flow > 5) || pumps[0]; // 示例：选择流量>5的或第一个
-        const basePrice = fallbackPump.basePrice || fallbackPump.price || 0;
-        const discountRate = fallbackPump.discountRate ?? getDiscountRate(fallbackPump.model);
-        const factoryPrice = fallbackPump.factoryPrice || calculateFactoryPrice({ ...fallbackPump, basePrice, discountRate });
+    console.warn(`未找到推荐泵型号 (${recommendedPumpModel}) 在数据中，选择默认泵。`);
+    
+    // 如果没有找到特定推荐，选择默认泵
+    // 优先选择2CY7.5/2.5D作为默认泵，这是一个常用型号
+    const defaultPump = pumps.find(p => p.model === '2CY7.5/2.5D') || pumps[0];
+    
+    if (defaultPump) {
+      const basePrice = defaultPump.basePrice || defaultPump.price || 0;
+      const discountRate = defaultPump.discountRate ?? getStandardDiscountRate(defaultPump.model);
+      const factoryPrice = defaultPump.factoryPrice || calculateFactoryPrice({ ...defaultPump, basePrice, discountRate });
 
-        return {
-           success: true,
-           message: `未找到推荐泵 (${recommendedPumpModel}), 已选择备用 ${fallbackPump.model}`,
-           ...fallbackPump,
-           basePrice,
-           discountRate,
-           factoryPrice,
-           flow: fallbackPump.flow || 0,
-           pressure: fallbackPump.pressure || 0,
-           motorPower: fallbackPump.motorPower || 0,
-           weight: fallbackPump.weight || 0,
-           warning: `未找到推荐泵型号 ${recommendedPumpModel}, 已选择备用 ${fallbackPump.model}` // 添加警告
-        };
-     } else {
-        return { success: false, message: `未找到推荐泵 (${recommendedPumpModel}) 且无备用泵可选` };
-     }
+      return {
+        success: true,
+        message: `未找到推荐泵型号，已选择默认泵 ${defaultPump.model}`,
+        ...defaultPump,
+        basePrice,
+        discountRate,
+        factoryPrice,
+        flow: defaultPump.flow || 0,
+        pressure: defaultPump.pressure || 0,
+        motorPower: defaultPump.motorPower || 0,
+        weight: defaultPump.weight || 0,
+        warning: `未找到推荐泵型号，已选择默认泵 ${defaultPump.model}`
+      };
+    } else {
+      return { success: false, message: "无法选择备用泵，数据不足" };
+    }
   }
 };
 
 // 导出函数
+export default {
+  fixCouplingTorque,
+  selectFlexibleCoupling,
+  selectStandbyPump
+};

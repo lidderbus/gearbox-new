@@ -1,8 +1,8 @@
 // src/utils/fixData.js
 // 系统数据修复工具
 
-// Assuming priceDiscount.js exists for price calculations
-import { getDiscountRate, calculateFactoryPrice, calculateMarketPrice } from './priceDiscount';
+// Update import to use priceManager instead of priceDiscount
+import { getStandardDiscountRate, calculateFactoryPrice, calculateMarketPrice } from './priceManager';
 // Assuming dataHelpers.js exists for safeParseFloat
 import { safeParseFloat } from './dataHelpers';
 // Assuming capacityEstimator.js exists

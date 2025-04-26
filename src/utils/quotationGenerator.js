@@ -1,15 +1,9 @@
-// utils/quotationGenerator.js
+// utils/quotationGenerator.js - 修正版本
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
-// import { numberToChinese } from './contractGenerator'; // Removed unused import
-
-// --- Font Embedding (Only needed for PDF export, remove if not used elsewhere) ---
-// const simplifiedChineseFontBase64 = 'AAEAAAASAQAABAAgR0RFRgAAAAAA...【粘贴你生成的完整 Base64 字符串】...AAAAL'; // Removed unused variable
-
-// Unused definitions, removed
-// const FONT_SIZES = { ... };
-// const LINE_HEIGHTS = { ... };
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
 
 /**
  * 生成报价单数据
@@ -25,6 +19,18 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
     const defaultOptions = {
         showCouplingPrice: true, // 默认显示联轴器单独价格
         showPumpPrice: true,     // 默认显示备用泵单独价格
+        taxRate: 0,              // 默认税率为0（不含税）
+        includeDelivery: false,  // 默认不包含运输
+        deliveryCost: 0,         // 默认运输费用
+        includeInstallation: false, // 默认不包含安装
+        installationCost: 0,     // 默认安装费用
+        discountPercentage: 0,   // 默认折扣百分比
+        validityDays: 30,        // 默认有效期
+        paymentTerms: '合同签订后支付30%预付款，发货前付清全款',
+        deliveryTime: '合同签订生效后3个月内发货',
+        currency: 'CNY',         // 默认货币
+        language: 'zh-CN',       // 默认语言
+        format: 'standard'       // 默认报价单格式
     };
     
     // 合并选项
@@ -66,9 +72,9 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
 
     const today = new Date();
     const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    const expiryDate = new Date(today); expiryDate.setDate(today.getDate() + 30);
+    const expiryDate = new Date(today); expiryDate.setDate(today.getDate() + finalOptions.validityDays);
     const formattedExpiryDate = `${expiryDate.getFullYear()}-${String(expiryDate.getMonth() + 1).padStart(2, '0')}-${String(expiryDate.getDate()).padStart(2, '0')}`;
-    const quotationNumber = `Q-${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`;
+    const quotationNumber = `Q-${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(Math.floor(Math.random() * 10000)).toString().padStart(4, '0')}`;
 
     const items = [];
     let calculatedTotalAmount = 0;
@@ -248,6 +254,111 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
         console.log("备用泵组件不存在，已跳过");
     }
 
+    // 添加额外服务项目
+    // 1. 运输服务
+    if (finalOptions.includeDelivery && finalOptions.deliveryCost > 0) {
+        const deliveryItem = {
+            id: items.length + 1,
+            name: "运输服务",
+            model: "-",
+            quantity: 1,
+            unit: '项',
+            prices: {
+                factory: finalOptions.deliveryCost,
+                package: finalOptions.deliveryCost,
+                market: finalOptions.deliveryCost
+            },
+            selectedPrice: 'market',
+            get unitPrice() {
+                return this.prices[this.selectedPrice] || 0;
+            },
+            get amount() {
+                return this.unitPrice * this.quantity;
+            },
+            remarks: "运输至客户指定地点"
+        };
+        items.push(deliveryItem);
+        calculatedTotalAmount += deliveryItem.amount;
+    }
+
+    // 2. 安装调试服务
+    if (finalOptions.includeInstallation && finalOptions.installationCost > 0) {
+        const installationItem = {
+            id: items.length + 1,
+            name: "安装调试服务",
+            model: "-",
+            quantity: 1,
+            unit: '项',
+            prices: {
+                factory: finalOptions.installationCost,
+                package: finalOptions.installationCost,
+                market: finalOptions.installationCost
+            },
+            selectedPrice: 'market',
+            get unitPrice() {
+                return this.prices[this.selectedPrice] || 0;
+            },
+            get amount() {
+                return this.unitPrice * this.quantity;
+            },
+            remarks: "产品安装、调试及操作培训"
+        };
+        items.push(installationItem);
+        calculatedTotalAmount += installationItem.amount;
+    }
+
+    // 应用折扣
+    let finalTotalAmount = calculatedTotalAmount;
+    let discountAmount = 0;
+    if (finalOptions.discountPercentage > 0) {
+        discountAmount = calculatedTotalAmount * (finalOptions.discountPercentage / 100);
+        finalTotalAmount = calculatedTotalAmount - discountAmount;
+    }
+
+    // 计算含税金额
+    let taxAmount = 0;
+    let taxIncludedAmount = finalTotalAmount;
+    if (finalOptions.taxRate > 0) {
+        taxAmount = finalTotalAmount * (finalOptions.taxRate / 100);
+        taxIncludedAmount = finalTotalAmount + taxAmount;
+    }
+    
+    // 生成人民币大写金额
+    function numberToChinese(num) {
+        if (isNaN(num)) return '零元整';
+        
+        const fraction = ['角', '分'];
+        const digit = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
+        const unit = [
+            ['元', '万', '亿'],
+            ['', '拾', '佰', '仟']
+        ];
+        
+        const head = num < 0 ? '负' : '';
+        num = Math.abs(num);
+        
+        let s = '';
+        
+        for (let i = 0; i < fraction.length; i++) {
+            s += (digit[Math.floor(num * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, '');
+        }
+        
+        s = s || '整';
+        num = Math.floor(num);
+        
+        for (let i = 0; i < unit[0].length && num > 0; i++) {
+            let p = '';
+            for (let j = 0; j < unit[1].length && num > 0; j++) {
+                p = digit[num % 10] + unit[1][j] + p;
+                num = Math.floor(num / 10);
+            }
+            s = p.replace(/(零.)*零$/, '').replace(/^$/, '零') + unit[0][i] + s;
+        }
+        
+        return head + s.replace(/(零.)*零元/, '元').replace(/(零.)+/g, '零').replace(/^整$/, '零元整');
+    }
+
+    // 生成最终的报价单对象
     const result = {
         success: true,
         quotationNumber,
@@ -267,11 +378,23 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
             account: "452759227880"
         },
         items,
-        totalAmount: calculatedTotalAmount,
+        totalAmount: finalTotalAmount,
+        originalAmount: calculatedTotalAmount,
+        discountAmount,
+        discountPercentage: finalOptions.discountPercentage,
+        taxRate: finalOptions.taxRate,
+        taxAmount,
+        taxIncludedAmount,
+        totalAmountInChinese: numberToChinese(finalTotalAmount),
         priceType: 'market', // Default price type
-        paymentTerms: "合同签订后支付30%预付款，发货前付清全款。",
-        deliveryTime: "合同签订生效后 3 个月内发货。",
-        notes: "此报价有效期30天。价格含标准包装，不含运费保险。最终解释权归供方。",
+        paymentTerms: finalOptions.paymentTerms,
+        deliveryTime: finalOptions.deliveryTime,
+        notes: `此报价有效期${finalOptions.validityDays}天。价格含标准包装，不含运费保险。最终解释权归供方。`,
+        summary: {
+            packagePrice: priceInfo.packagePrice,
+            marketPrice: priceInfo.marketPrice,
+            totalMarketPrice: priceInfo.totalMarketPrice
+        },
         options: finalOptions // 保存配置选项，以便后续处理
     };
     
@@ -299,6 +422,7 @@ export const createQuotationPreview = (quotation) => {
     container.style.boxSizing = 'border-box';
     container.style.color = '#333';
     container.style.padding = '40px 60px'; // 增加整体内边距
+    container.className = 'quotation-preview-content';
 
     // 页眉 - 公司信息
     const header = document.createElement('div');
@@ -396,15 +520,66 @@ export const createQuotationPreview = (quotation) => {
 
     // 添加合计行
     const tfoot = document.createElement('tfoot');
-    tfoot.innerHTML = `
+    
+    // 小计行
+    if (quotation.discountAmount > 0 || quotation.taxAmount > 0) {
+        tfoot.innerHTML += `
+            <tr>
+                <td colspan="6" style="border: 1px solid #000; padding: 10px; text-align: right; font-weight: bold;">小计：</td>
+                <td style="border: 1px solid #000; padding: 10px; text-align: right;">¥${quotation.originalAmount?.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</td>
+                <td style="border: 1px solid #000; padding: 10px;"></td>
+            </tr>
+        `;
+    }
+    
+    // 折扣行
+    if (quotation.discountAmount > 0) {
+        tfoot.innerHTML += `
+            <tr>
+                <td colspan="6" style="border: 1px solid #000; padding: 10px; text-align: right;">折扣 (${quotation.discountPercentage}%)：</td>
+                <td style="border: 1px solid #000; padding: 10px; text-align: right;">-¥${quotation.discountAmount?.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</td>
+                <td style="border: 1px solid #000; padding: 10px;"></td>
+            </tr>
+        `;
+    }
+    
+    // 不含税合计行
+    tfoot.innerHTML += `
         <tr>
-            <td colspan="6" style="border: 1px solid #000; padding: 10px; text-align: right; font-weight: bold;">合计金额：</td>
+            <td colspan="6" style="border: 1px solid #000; padding: 10px; text-align: right; font-weight: bold;">不含税总计：</td>
             <td style="border: 1px solid #000; padding: 10px; text-align: right; font-weight: bold;">¥${quotation.totalAmount?.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</td>
             <td style="border: 1px solid #000; padding: 10px;"></td>
         </tr>
     `;
+    
+    // 税额行
+    if (quotation.taxAmount > 0) {
+        tfoot.innerHTML += `
+            <tr>
+                <td colspan="6" style="border: 1px solid #000; padding: 10px; text-align: right;">增值税 (${quotation.taxRate}%)：</td>
+                <td style="border: 1px solid #000; padding: 10px; text-align: right;">¥${quotation.taxAmount?.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</td>
+                <td style="border: 1px solid #000; padding: 10px;"></td>
+            </tr>
+            <tr>
+                <td colspan="6" style="border: 1px solid #000; padding: 10px; text-align: right; font-weight: bold;">含税总计：</td>
+                <td style="border: 1px solid #000; padding: 10px; text-align: right; font-weight: bold;">¥${quotation.taxIncludedAmount?.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</td>
+                <td style="border: 1px solid #000; padding: 10px;"></td>
+            </tr>
+        `;
+    }
+    
     table.appendChild(tfoot);
     container.appendChild(table);
+
+    // 大写金额
+    const amountInChinese = document.createElement('div');
+    amountInChinese.style.marginBottom = '20px';
+    amountInChinese.style.fontSize = '14px';
+    amountInChinese.style.fontWeight = 'bold';
+    amountInChinese.innerHTML = `
+        <div>合计人民币(大写)：${quotation.totalAmountInChinese || ''}</div>
+    `;
+    container.appendChild(amountInChinese);
 
     // 说明事项
     const notes = document.createElement('div');
@@ -457,6 +632,183 @@ export const createQuotationPreview = (quotation) => {
     container.appendChild(signature);
 
     return container;
+};
+
+/**
+ * 导出报价单为Excel
+ * @param {Object} quotation - 报价单数据
+ * @param {string} filename - 文件名
+ */
+export const exportQuotationToExcel = (quotation, filename = '报价单') => {
+    try {
+        if (!quotation || !quotation.success) {
+            throw new Error('无效的报价单数据');
+        }
+
+        // 创建工作簿
+        const workbook = XLSX.utils.book_new();
+        
+        // 1. 报价单信息工作表
+        const infoData = [
+            ['报价单号', quotation.quotationNumber],
+            ['日期', quotation.date],
+            ['有效期至', quotation.expiryDate],
+            [''],
+            ['客户信息', ''],
+            ['客户名称', quotation.customerInfo.name],
+            ['联系人', quotation.customerInfo.contactPerson || ''],
+            ['联系电话', quotation.customerInfo.phone || ''],
+            ['客户地址', quotation.customerInfo.address || ''],
+            [''],
+            ['供方信息', ''],
+            ['公司名称', quotation.sellerInfo.name],
+            ['地址', quotation.sellerInfo.address],
+            ['电话', quotation.sellerInfo.phone],
+            ['开户行', quotation.sellerInfo.bank],
+            ['账号', quotation.sellerInfo.account]
+        ];
+        
+        const infoSheet = XLSX.utils.aoa_to_sheet(infoData);
+        XLSX.utils.book_append_sheet(workbook, infoSheet, '报价单信息');
+        
+        // 设置列宽
+        infoSheet['!cols'] = [
+            { wch: 15 },  // 第一列宽度
+            { wch: 40 }   // 第二列宽度
+        ];
+        
+        // 2. 报价明细工作表
+        const itemsHeaders = ['序号', '产品名称', '型号', '数量', '单位', '单价(元)', '金额(元)', '备注'];
+        
+        // 添加所有项目
+        const itemsData = quotation.items.map((item, index) => {
+            const unitPrice = typeof item.unitPrice === 'string' ? item.unitPrice : 
+                             (typeof item.unitPrice === 'number' ? item.unitPrice : 0);
+            const amount = typeof item.amount === 'string' ? item.amount : 
+                          (typeof item.amount === 'number' ? item.amount : 0);
+            
+            return [
+                index + 1,
+                item.name || '',
+                item.model || '',
+                item.quantity,
+                item.unit || '',
+                unitPrice,
+                amount,
+                item.remarks || ''
+            ];
+        });
+        
+        // 添加小计行
+        if (quotation.discountAmount > 0 || quotation.taxAmount > 0) {
+            itemsData.push([
+                '',
+                '',
+                '',
+                '',
+                '',
+                '小计',
+                quotation.originalAmount || 0,
+                ''
+            ]);
+        }
+        
+        // 添加折扣行
+        if (quotation.discountAmount > 0) {
+            itemsData.push([
+                '',
+                '',
+                '',
+                '',
+                '',
+                `折扣 (${quotation.discountPercentage}%)`,
+                -quotation.discountAmount || 0,
+                ''
+            ]);
+        }
+        
+        // 添加不含税合计行
+        itemsData.push([
+            '',
+            '',
+            '',
+            '',
+            '',
+            '不含税总计',
+            quotation.totalAmount || 0,
+            ''
+        ]);
+        
+        // 添加税额行
+        if (quotation.taxAmount > 0) {
+            itemsData.push([
+                '',
+                '',
+                '',
+                '',
+                '',
+                `增值税 (${quotation.taxRate}%)`,
+                quotation.taxAmount || 0,
+                ''
+            ]);
+            
+            itemsData.push([
+                '',
+                '',
+                '',
+                '',
+                '',
+                '含税总计',
+                quotation.taxIncludedAmount || 0,
+                ''
+            ]);
+        }
+        
+        const itemsSheet = XLSX.utils.aoa_to_sheet([itemsHeaders, ...itemsData]);
+        XLSX.utils.book_append_sheet(workbook, itemsSheet, '报价明细');
+        
+        // 设置列宽
+        itemsSheet['!cols'] = [
+            { wch: 8 },   // 序号
+            { wch: 15 },  // 产品名称
+            { wch: 25 },  // 型号
+            { wch: 8 },   // 数量
+            { wch: 8 },   // 单位
+            { wch: 15 },  // 单价
+            { wch: 15 },  // 金额
+            { wch: 30 }   // 备注
+        ];
+        
+        // 3. 说明事项工作表
+        const notesData = [
+            ['支付条件', quotation.paymentTerms || '合同签订后支付30%预付款，发货前付清全款。'],
+            ['交货期', quotation.deliveryTime || '合同签订生效后3个月内发货。'],
+            ['质保期', '产品安装调试完成后12个月内'],
+            [''],
+            ['其他说明事项', ''],
+            ['1', '此报价有效期' + (quotation.options?.validityDays || 30) + '天。'],
+            ['2', '价格含标准包装，不含运费保险。'],
+            ['3', '技术协议和最终合同以双方确认为准。'],
+            ['4', '最终解释权归供方所有。']
+        ];
+        
+        const notesSheet = XLSX.utils.aoa_to_sheet(notesData);
+        XLSX.utils.book_append_sheet(workbook, notesSheet, '说明事项');
+        
+        // 设置列宽
+        notesSheet['!cols'] = [
+            { wch: 15 },  // 第一列宽度
+            { wch: 60 }   // 第二列宽度
+        ];
+        
+        // 导出Excel文件
+        XLSX.writeFile(workbook, `${filename}.xlsx`);
+        console.log('Excel导出成功:', filename);
+        return true;
+    } catch (error) {
+        console.error('导出Excel失败:', error);
+        throw new Error('导出Excel失败: ' + error.message);
+    }
 };
 
 /**
@@ -529,9 +881,152 @@ export const exportQuotationToPDF = async (quotation, filename = '报价单') =>
     }
 };
 
-// --- 其他可能存在的函数 (如 exportQuotationToExcel) ---
-export const exportQuotationToExcel = (quotation, filename) => {
-   // ... 保持你之前的 Excel 导出逻辑 ...
-   console.log("Exporting Quotation to Excel (Placeholder)", quotation, filename);
-   alert("Excel导出功能暂未实现");
+/**
+ * 添加自定义项目到报价单
+ * @param {Object} quotation - 现有报价单数据
+ * @param {Object} item - 自定义项目数据
+ * @returns {Object} - 更新后的报价单数据
+ */
+export const addCustomItemToQuotation = (quotation, item) => {
+    if (!quotation || !quotation.success || !Array.isArray(quotation.items)) {
+        console.error('无法添加自定义项目: 报价单数据无效');
+        throw new Error('报价单数据无效');
+    }
+    
+    if (!item || !item.name || !item.model) {
+        console.error('无法添加自定义项目: 项目数据不完整');
+        throw new Error('项目数据不完整');
+    }
+    
+    try {
+        // 创建新项目对象
+        const quantity = typeof item.quantity === 'number' ? item.quantity : 1;
+        const unitPrice = typeof item.unitPrice === 'number' ? item.unitPrice : 0;
+        const amount = quantity * unitPrice;
+        
+        const newItem = {
+            id: quotation.items.length + 1,
+            name: item.name,
+            model: item.model,
+            quantity: quantity,
+            unit: item.unit || '个',
+            prices: {
+                factory: unitPrice * 0.85, // 估算
+                package: unitPrice * 0.85, // 估算
+                market: unitPrice
+            },
+            selectedPrice: 'market',
+            get unitPrice() {
+                return this.prices[this.selectedPrice] || 0;
+            },
+            get amount() {
+                return this.unitPrice * this.quantity;
+            },
+            remarks: item.remarks || '自定义项目'
+        };
+        
+        // 创建新报价单对象 (不直接修改原对象)
+        const newQuotation = {
+            ...quotation,
+            items: [...quotation.items, newItem],
+        };
+        
+        // 重新计算总金额
+        let calculatedTotalAmount = newQuotation.items.reduce((sum, item) => {
+            const itemAmount = typeof item.amount === 'number' ? item.amount : 0;
+            return sum + itemAmount;
+        }, 0);
+        
+        // 应用折扣
+        let finalTotalAmount = calculatedTotalAmount;
+        let discountAmount = 0;
+        if (newQuotation.options?.discountPercentage > 0) {
+            discountAmount = calculatedTotalAmount * (newQuotation.options.discountPercentage / 100);
+            finalTotalAmount = calculatedTotalAmount - discountAmount;
+        }
+
+        // 更新总金额相关字段
+        newQuotation.originalAmount = calculatedTotalAmount;
+        newQuotation.discountAmount = discountAmount;
+        newQuotation.totalAmount = finalTotalAmount;
+        
+        // 更新税额相关字段
+        if (newQuotation.options?.taxRate > 0) {
+            const taxAmount = finalTotalAmount * (newQuotation.options.taxRate / 100);
+            newQuotation.taxAmount = taxAmount;
+            newQuotation.taxIncludedAmount = finalTotalAmount + taxAmount;
+        }
+        
+        console.log('自定义项目已添加到报价单:', newItem.name);
+        return newQuotation;
+    } catch (error) {
+        console.error('添加自定义项目失败:', error);
+        throw new Error('添加自定义项目失败: ' + error.message);
+    }
+};
+
+/**
+ * 从报价单中移除项目
+ * @param {Object} quotation - 现有报价单数据
+ * @param {number} itemId - 要移除项目的ID
+ * @returns {Object} - 更新后的报价单数据
+ */
+export const removeItemFromQuotation = (quotation, itemId) => {
+    if (!quotation || !quotation.success || !Array.isArray(quotation.items)) {
+        console.error('无法移除项目: 报价单数据无效');
+        throw new Error('报价单数据无效');
+    }
+    
+    try {
+        // 找到要移除的项目索引
+        const itemIndex = quotation.items.findIndex(item => item.id === itemId);
+        
+        if (itemIndex === -1) {
+            console.warn(`无法找到ID为 ${itemId} 的项目`);
+            return quotation;
+        }
+        
+        // 创建新报价单对象 (不直接修改原对象)
+        const newQuotation = {
+            ...quotation,
+            items: quotation.items.filter(item => item.id !== itemId),
+        };
+        
+        // 重新编号和计算总金额
+        newQuotation.items.forEach((item, index) => {
+            item.id = index + 1;
+        });
+        
+        // 重新计算总金额
+        let calculatedTotalAmount = newQuotation.items.reduce((sum, item) => {
+            const itemAmount = typeof item.amount === 'number' ? item.amount : 0;
+            return sum + itemAmount;
+        }, 0);
+        
+        // 应用折扣
+        let finalTotalAmount = calculatedTotalAmount;
+        let discountAmount = 0;
+        if (newQuotation.options?.discountPercentage > 0) {
+            discountAmount = calculatedTotalAmount * (newQuotation.options.discountPercentage / 100);
+            finalTotalAmount = calculatedTotalAmount - discountAmount;
+        }
+
+        // 更新总金额相关字段
+        newQuotation.originalAmount = calculatedTotalAmount;
+        newQuotation.discountAmount = discountAmount;
+        newQuotation.totalAmount = finalTotalAmount;
+        
+        // 更新税额相关字段
+        if (newQuotation.options?.taxRate > 0) {
+            const taxAmount = finalTotalAmount * (newQuotation.options.taxRate / 100);
+            newQuotation.taxAmount = taxAmount;
+            newQuotation.taxIncludedAmount = finalTotalAmount + taxAmount;
+        }
+        
+        console.log(`已从报价单移除ID为 ${itemId} 的项目`);
+        return newQuotation;
+    } catch (error) {
+        console.error('移除项目失败:', error);
+        throw new Error('移除项目失败: ' + error.message);
+    }
 };

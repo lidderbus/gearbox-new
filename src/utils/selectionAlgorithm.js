@@ -12,7 +12,7 @@ import {
 import {
     calculateFactoryPrice,
     calculateMarketPrice, // Import calculateMarketPrice
-    getDiscountRate
+    getStandardDiscountRate
 } from './priceManager'; // Import price calculation functions
 import { safeParseFloat } from './dataHelpers';
 // Import selection helper functions from couplingSelection.js
@@ -285,7 +285,7 @@ export const selectGearbox = (
 
         // Ensure price fields are calculated/present
          const gbBasePrice = gearbox.basePrice || gearbox.price || 0;
-         const gbDiscountRate = gearbox.discountRate ?? getDiscountRate(gearbox.model);
+         const gbDiscountRate = gearbox.discountRate ?? getStandardDiscountRate(gearbox.model);
          const gbFactoryPrice = gearbox.factoryPrice || calculateFactoryPrice({ ...gearbox, basePrice: gbBasePrice, discountRate: gbDiscountRate });
 
 
@@ -295,17 +295,25 @@ export const selectGearbox = (
             selectedCapacity: capacity,
             capacityMargin: capacityMargin,
             thrustMet: thrustMet, // Record if thrust requirement is met
-            ratio: ratioSelected, // Ensure ratio field exists for convenience
+            ratio: ratioSelected, // Ensure ratio field exists for convenience 
             engineTorque: engineTorque_Nm, // Add engine torque for reference (N·m)
             ratioDiffPercent: ratioDiffPercent, // 记录减速比偏差百分比
             safetyFactor: safetyFactor,
-            // Ensure price fields are consistent
+            // 确保价格字段一致性
             basePrice: gbBasePrice,
             price: gbBasePrice, // Ensure price matches basePrice
             discountRate: gbDiscountRate,
             factoryPrice: gbFactoryPrice,
             packagePrice: gbFactoryPrice, // Package price defaults to factory price
             marketPrice: calculateMarketPrice({factoryPrice: gbFactoryPrice}), // Calculate market price
+            // 添加用于显示的额外字段
+            _displayFields: {
+                capacityText: `${capacity.toFixed(6)} kW/rpm`,
+                requiredCapacityText: `${requiredTransferCapacity.toFixed(6)} kW/rpm`,
+                capacityMarginText: `${capacityMargin.toFixed(1)}%`,
+                selectedRatioText: ratioSelected.toFixed(2),
+                ratioDiffText: `${ratioDiffPercent.toFixed(1)}%`,
+            }
         });
     }
 
@@ -380,7 +388,7 @@ export const selectGearbox = (
                 gearboxTypeUsed: gearboxType,
                 rejectionReasons,
                 engineTorque: engineTorque_Nm,
-                requiredTransferCapacity,
+                requiredTransferCapacity: requiredTransferCapacity,
                 warning: "找到一些接近条件的齿轮箱，但它们不满足全部选型要求。请考虑调整输入参数。"
             };
         }
@@ -586,20 +594,20 @@ export const selectGearbox = (
 
 
 // --- autoSelectGearbox 函数 (与修改版本一致，包含放宽标准) ---
-export const autoSelectGearbox = (requirements, data) => {
+export const autoSelectGearbox = (requirements, appData) => {
     console.log('开始自动选型 (autoSelectGearbox)...', requirements);
     const { motorPower, motorSpeed, targetRatio, thrust, ...options } = requirements;
     
     // 日志记录：检查高弹数据是否正确加载
-    console.log("flexibleCouplings 数据:", data?.flexibleCouplings?.length || 0, "条记录");
-    if (data?.flexibleCouplings?.length > 0) {
-        console.log("flexibleCouplings 示例:", data.flexibleCouplings[0]);
+    console.log("flexibleCouplings 数据:", appData?.flexibleCouplings?.length || 0, "条记录");
+    if (appData?.flexibleCouplings?.length > 0) {
+        console.log("flexibleCouplings 示例:", appData.flexibleCouplings[0]);
     }
 
     // Define types to check, ensure corresponding data keys exist (e.g., hcGearboxes)
     const availableTypes = [
         'HC', 'GW', 'HCM', 'DT', 'HCQ', 'GC'
-    ].filter(type => data[`${type.toLowerCase()}Gearboxes`] && Array.isArray(data[`${type.toLowerCase()}Gearboxes`]) && data[`${type.toLowerCase()}Gearboxes`].length > 0);
+    ].filter(type => appData[`${type.toLowerCase()}Gearboxes`] && Array.isArray(appData[`${type.toLowerCase()}Gearboxes`]) && appData[`${type.toLowerCase()}Gearboxes`].length > 0);
 
     if (availableTypes.length === 0) {
         console.error("自动选型失败：没有可用的齿轮箱数据系列。");
@@ -620,7 +628,7 @@ export const autoSelectGearbox = (requirements, data) => {
             targetRatio,
             thrust,
             type, // Specify current type
-            data,
+            appData,
             options // Pass options (workCondition, temp, cover, etc.)
         );
         
@@ -745,7 +753,7 @@ export const autoSelectGearbox = (requirements, data) => {
     const finalCouplingResult = selectFlexibleCoupling(
         engineTorque_Nm, // Pass engine torque in N·m
         bestOverallGearbox.model,
-        data.flexibleCouplings,
+        appData.flexibleCouplings,
         couplingSpecificationsMap, // 使用映射表而不是函数
         options.workCondition,
         options.temperature,
@@ -756,7 +764,7 @@ export const autoSelectGearbox = (requirements, data) => {
     console.log("联轴器选择结果:", finalCouplingResult?.success ? "成功" : "失败", 
                  finalCouplingResult?.model || "(无匹配型号)");
     
-    const finalPumpResult = selectStandbyPump(bestOverallGearbox.model, data.standbyPumps);
+    const finalPumpResult = selectStandbyPump(bestOverallGearbox.model, appData.standbyPumps);
 
     // 5. Build the final result object
     const finalResult = {
@@ -775,7 +783,13 @@ export const autoSelectGearbox = (requirements, data) => {
         targetRatio: targetRatio,
         thrustRequirement: thrust,
         options: options, // Store options used
-        partialMatchCount: allRecommendations.filter(r => r.isPartialMatch).length // 统计部分匹配的数量
+        partialMatchCount: allRecommendations.filter(r => r.isPartialMatch).length, // 统计部分匹配的数量
+        // 添加附加属性，确保UI层获得完整信息
+        _meta: {
+            calculationTime: new Date().toISOString(),
+            version: '1.0',
+            dataVersion: appData?._version || 'unknown'
+        }
     };
 
     // 6. Generate final consolidated warning
