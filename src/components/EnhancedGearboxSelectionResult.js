@@ -25,6 +25,27 @@ const EnhancedGearboxSelectionResult = ({
     pump: null
   });
 
+  // 获取高弹联轴器和备用泵数据
+  const couplingResult = result?.flexibleCoupling || null;
+  const pumpResult = result?.standbyPump || null;
+
+  // 在组件挂载或依赖项更改时初始化已选配件
+  useEffect(() => {
+    if (couplingResult && couplingResult.success) {
+      setSelectedAccessories(prev => ({
+        ...prev,
+        coupling: couplingResult
+      }));
+    }
+    
+    if (pumpResult && pumpResult.success) {
+      setSelectedAccessories(prev => ({
+        ...prev,
+        pump: pumpResult
+      }));
+    }
+  }, [couplingResult, pumpResult]);
+
   // 如果没有结果，提前返回
   if (!result || !result.recommendations || result.recommendations.length === 0) {
     return (
@@ -52,27 +73,6 @@ const EnhancedGearboxSelectionResult = ({
   const recommendations = result.recommendations || [];
   const selectedGearbox = recommendations[selectedIndex];
   const isPartialMatch = selectedGearbox.isPartialMatch === true;
-
-  // 获取高弹联轴器和备用泵数据
-  const couplingResult = result.flexibleCoupling || null;
-  const pumpResult = result.standbyPump || null;
-
-  // 在组件挂载或依赖项更改时初始化已选配件
-  useEffect(() => {
-    if (couplingResult && couplingResult.success) {
-      setSelectedAccessories(prev => ({
-        ...prev,
-        coupling: couplingResult
-      }));
-    }
-    
-    if (pumpResult && pumpResult.success) {
-      setSelectedAccessories(prev => ({
-        ...prev,
-        pump: pumpResult
-      }));
-    }
-  }, [couplingResult, pumpResult]);
 
   // 对比功能处理
   const toggleCompareGearbox = (gearbox) => {
