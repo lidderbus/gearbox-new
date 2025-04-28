@@ -369,3 +369,105 @@ export const exportHtmlContentToPDF = async (htmlContent, filename = 'document',
     throw error;
   }
 };
+
+/**
+ * 打印HTML内容
+ * @param {HTMLElement} element - 要打印的DOM元素
+ * @param {Object} options - 打印选项
+ * @param {string} options.title - 打印窗口的标题
+ * @param {function} options.beforePrint - 打印前的回调
+ * @param {function} options.afterPrint - 打印后的回调
+ */
+export const printHtmlContent = (element, options = {}) => {
+  if (!element) {
+    console.error('打印失败: 未提供有效的DOM元素');
+    return;
+  }
+  
+  const { title = '打印内容', beforePrint, afterPrint } = options;
+  
+  // 打印前回调
+  if (typeof beforePrint === 'function') {
+    beforePrint();
+  }
+  
+  // 克隆要打印的内容
+  const clonedElement = element.cloneNode(true);
+  
+  // 创建打印样式
+  const style = document.createElement('style');
+  style.textContent = `
+    @media print {
+      body { margin: 0; padding: 0; }
+      @page { size: A4; margin: 10mm; }
+      /* 避免在元素之间分页 */
+      .party, .agreement-section, table, tr, .info-row {
+        page-break-inside: avoid;
+      }
+      /* 设置分页前的最小行数 */
+      p, li {
+        orphans: 3;
+        widows: 3;
+      }
+    }
+  `;
+  
+  // 创建打印框架
+  const printFrame = document.createElement('iframe');
+  printFrame.style.position = 'fixed';
+  printFrame.style.right = '0';
+  printFrame.style.bottom = '0';
+  printFrame.style.width = '0';
+  printFrame.style.height = '0';
+  printFrame.style.border = 'none';
+  
+  document.body.appendChild(printFrame);
+  
+  const frameWindow = printFrame.contentWindow;
+  const frameDoc = frameWindow.document;
+  
+  // 写入打印内容
+  frameDoc.open();
+  frameDoc.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>${title}</title>
+        ${document.head.innerHTML}
+      </head>
+      <body>
+        ${clonedElement.outerHTML || ''}
+      </body>
+    </html>
+  `);
+  frameDoc.head.appendChild(style);
+  frameDoc.close();
+  
+  // 等待图片加载
+  const waitForImages = () => {
+    const images = frameDoc.querySelectorAll('img');
+    const allImagesLoaded = Array.from(images).every(img => img.complete);
+    
+    if (allImagesLoaded) {
+      // 执行打印
+      frameWindow.focus();
+      setTimeout(() => {
+        frameWindow.print();
+        
+        // 打印对话框关闭后移除框架
+        setTimeout(() => {
+          document.body.removeChild(printFrame);
+          // 打印后回调
+          if (typeof afterPrint === 'function') {
+            afterPrint();
+          }
+        }, 1000);
+      }, 500);
+    } else {
+      // 继续等待图片加载
+      setTimeout(waitForImages, 50);
+    }
+  };
+  
+  waitForImages();
+};

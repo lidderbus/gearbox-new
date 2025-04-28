@@ -1,0 +1,208 @@
+/* src/styles/agreementTemplates.css */
+/**
+ * 技术协议模板样式
+ * 用于统一各类型技术协议的显示效果和打印样式
+ */
+
+/* 全局设置 */
+.agreement-container {
+  font-family: 'SimSun', 'Times New Roman', serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  max-width: 210mm; /* A4宽度 */
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 标题 */
+.agreement-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px 0 30px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #333;
+}
+
+/* 协议头部（签署方信息） */
+.agreement-header {
+  margin-bottom: 30px;
+}
+
+.parties {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.party {
+  margin-bottom: 10px;
+}
+
+.party p {
+  margin: 5px 0;
+}
+
+/* 协议介绍部分 */
+.agreement-intro {
+  margin-bottom: 20px;
+  text-indent: 2em;
+}
+
+/* 协议各部分 */
+.agreement-section {
+  margin-bottom: 25px;
+}
+
+.agreement-section h2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* 表格式信息 */
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.info-row {
+  display: flex;
+  border-bottom: 1px solid #eee;
+  padding: 8px 0;
+}
+
+.info-label {
+  flex: 0 0 35%;
+  font-weight: bold;
+  padding-right: 15px;
+}
+
+.info-value {
+  flex: 0 0 65%;
+}
+
+/* 复选框组 */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* 有序列表和无序列表 */
+.content-text ol,
+.content-text ul {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+
+.content-text li {
+  margin-bottom: 8px;
+}
+
+/* 特殊内容 */
+.special-requirements {
+  white-space: pre-line;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-left: 3px solid #007bff;
+}
+
+/* 子信息 */
+.sub-info {
+  margin-top: 5px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* 表格 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+/* 打印样式 */
+@media print {
+  .agreement-container {
+    box-shadow: none;
+    padding: 0;
+    font-size: 12px;
+  }
+  
+  .agreement-title {
+    font-size: 20px;
+  }
+  
+  .agreement-section h2 {
+    font-size: 16px;
+  }
+  
+  /* 避免在元素之间分页 */
+  .party, .agreement-section {
+    page-break-inside: avoid;
+  }
+  
+  /* 设置分页前的最小行数 */
+  p, li {
+    orphans: 3;
+    widows: 3;
+  }
+}
+
+/* 暗黑模式支持 */
+@media (prefers-color-scheme: dark) {
+  body.dark-mode .agreement-container {
+    background-color: #222;
+    color: #eee;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  }
+  
+  body.dark-mode .agreement-title {
+    border-bottom-color: #555;
+  }
+  
+  body.dark-mode .agreement-section h2 {
+    border-bottom-color: #444;
+  }
+  
+  body.dark-mode .info-row {
+    border-bottom-color: #333;
+  }
+  
+  body.dark-mode table th,
+  body.dark-mode table td {
+    border-color: #444;
+  }
+  
+  body.dark-mode table th {
+    background-color: #333;
+  }
+  
+  body.dark-mode .special-requirements {
+    background-color: #2a2a2a;
+    border-left-color: #0066cc;
+  }
+}

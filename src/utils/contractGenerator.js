@@ -147,9 +147,14 @@ export const exportContractToPDF = async (contract, filename = 'contract') => {
     });
 
     // 添加中文字体支持
-    doc.addFileToVFS('NotoSansSC-Regular-normal.ttf', NotoSansSCFont.font);
-    doc.addFont('NotoSansSC-Regular-normal.ttf', 'NotoSansSC', 'normal');
-    doc.setFont('NotoSansSC');
+    try {
+      doc.addFileToVFS('NotoSansSC-Regular-normal.ttf', NotoSansSCFont.font);
+      doc.addFont('NotoSansSC-Regular-normal.ttf', 'NotoSansSC', 'normal');
+      doc.setFont('NotoSansSC');
+    } catch (fontError) {
+      console.warn('中文字体加载失败，将使用默认字体:', fontError);
+      // 继续使用默认字体
+    }
 
     // 设置基本样式
     doc.setFontSize(14);
@@ -185,29 +190,44 @@ export const exportContractToPDF = async (contract, filename = 'contract') => {
     doc.text(`银行及账号：${contract.sellerInfo?.bank || ''} ${contract.sellerInfo?.accountNumber || ''}`, 125, 65);
 
     // 产品信息表格
-    doc.autoTable({
-      startY: 75,
-      head: [['序号', '产品名称', '规格型号', '单位', '数量', '单价(元)', '金额', '交货期']],
-      body: contract.products?.map((product, index) => [
-        index + 1,
-        product.name || '',
-        product.model || '',
-        product.unit || '',
-        product.quantity || '',
-        product.unitPrice?.toLocaleString() || '',
-        product.amount?.toLocaleString() || '',
-        product.deliveryQuarter ? `第${product.deliveryQuarter}季度` : '',
-      ]) || [],
-      theme: 'grid',
-      styles: { font: 'NotoSansSC', fontSize: 9 },
-      headStyles: { fillColor: [220, 220, 220], textColor: [0, 0, 0] },
-    });
+    let tableHeight = 75; // 默认的表格高度
+    try {
+      doc.autoTable({
+        startY: 75,
+        head: [['序号', '产品名称', '规格型号', '单位', '数量', '单价(元)', '金额', '交货期']],
+        body: contract.products?.map((product, index) => [
+          index + 1,
+          product.name || '',
+          product.model || '',
+          product.unit || '',
+          product.quantity || '',
+          product.unitPrice?.toLocaleString() || '',
+          product.amount?.toLocaleString() || '',
+          product.deliveryQuarter ? `第${product.deliveryQuarter}季度` : '',
+        ]) || [],
+        theme: 'grid',
+        styles: { fontSize: 9 },
+        headStyles: { fillColor: [220, 220, 220], textColor: [0, 0, 0] },
+      });
+      
+      // 更新表格高度，注意检查 lastAutoTable 是否存在
+      if (doc.lastAutoTable) {
+        tableHeight = doc.lastAutoTable.finalY;
+      } else {
+        // 如果表格生成失败，使用默认高度并添加备用文本
+        tableHeight = 120;
+        doc.text('产品表格生成失败，请查看产品数据', 20, 80);
+      }
+    } catch (tableError) {
+      console.error('表格生成失败:', tableError);
+      tableHeight = 120; // 出错时使用固定高度
+      doc.text('产品表格生成失败，请查看产品数据', 20, 80);
+    }
 
     // 合计金额
-    const tableHeight = doc.lastAutoTable.finalY;
     doc.setFontSize(10);
     doc.text(`合计人民币(大写)：${contract.totalAmountInChinese || ''}`, 20, tableHeight + 10);
-    doc.text(`¥(小写)：${contract.totalAmount?.toLocaleString() || ''}`, 120, tableHeight + 10);
+    doc.text(`¥(小写)：${contract.totalAmount?.toLocaleString() || '0'}`, 120, tableHeight + 10);
 
     // 合同条款
     doc.setFontSize(12);
@@ -230,6 +250,11 @@ export const exportContractToPDF = async (contract, filename = 'contract') => {
     doc.text(`13. ${contract.contractCopies || '本合同一式两份，双方各持一份。'}`, 25, y); y += 15;
 
     // 签名区域
+    if (y > doc.internal.pageSize.getHeight() - 60) {
+      doc.addPage();
+      y = 30;
+    }
+
     doc.text('需方(盖章)：', 30, y);
     doc.text('供方(盖章)：', 120, y);
     y += 20;
@@ -362,13 +387,167 @@ export const exportContractToWord = (contract, filename = 'contract') => {
                     }),
                   ],
                 }),
-                // 后续行包含具体的买卖方信息...
-                // 这里为了简洁，未详细列出所有行，实际应该包含完整的信息
+                // 单位名称行
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      children: [new Paragraph({ text: '1' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: '单位名称' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: contract.buyerInfo?.name || '' })],
+                      columnSpan: 2,
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: '单位名称' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: contract.sellerInfo?.name || '' })],
+                      columnSpan: 2,
+                    }),
+                  ],
+                }),
+                // 通讯地址行
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      children: [new Paragraph({ text: '2' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: '通讯地址' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: contract.buyerInfo?.address || '' })],
+                      columnSpan: 2,
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: '通讯地址' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: contract.sellerInfo?.address || '' })],
+                      columnSpan: 2,
+                    }),
+                  ],
+                }),
+                // 法定代表人行
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      children: [new Paragraph({ text: '3' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: '法定代表人' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: contract.buyerInfo?.legalRepresentative || '' })],
+                      columnSpan: 2,
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: '法定代表人' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: contract.sellerInfo?.legalRepresentative || '' })],
+                      columnSpan: 2,
+                    }),
+                  ],
+                }),
               ],
             }),
             
-            // 商品信息表格，条款等后续内容
-            // 同样，这里省略具体实现细节
+            // 产品信息表格
+            new Table({
+              width: {
+                size: 100,
+                type: WidthType.PERCENTAGE,
+              },
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      children: [new Paragraph({ text: '序号' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: '产品名称' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: '规格型号' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: '单位' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: '数量' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: '单价(元)' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: '金额' })],
+                    }),
+                    new TableCell({
+                      children: [new Paragraph({ text: '交货期' })],
+                    }),
+                  ],
+                }),
+                ...(contract.products || []).map((product, index) => 
+                  new TableRow({
+                    children: [
+                      new TableCell({
+                        children: [new Paragraph({ text: (index + 1).toString() })],
+                      }),
+                      new TableCell({
+                        children: [new Paragraph({ text: product.name || '' })],
+                      }),
+                      new TableCell({
+                        children: [new Paragraph({ text: product.model || '' })],
+                      }),
+                      new TableCell({
+                        children: [new Paragraph({ text: product.unit || '' })],
+                      }),
+                      new TableCell({
+                        children: [new Paragraph({ text: product.quantity?.toString() || '' })],
+                      }),
+                      new TableCell({
+                        children: [new Paragraph({ text: product.unitPrice?.toLocaleString() || '' })],
+                      }),
+                      new TableCell({
+                        children: [new Paragraph({ text: product.amount?.toLocaleString() || '' })],
+                      }),
+                      new TableCell({
+                        children: [new Paragraph({ text: product.deliveryQuarter ? `第${product.deliveryQuarter}季度` : '' })],
+                      }),
+                    ],
+                  })
+                ),
+              ],
+            }),
+            
+            // 合计金额
+            new Paragraph({
+              children: [
+                new TextRun({ text: `合计人民币(大写)：${contract.totalAmountInChinese || ''}`, size: 24 }),
+                new TextRun({ text: '\t', size: 24 }),
+                new TextRun({ text: `¥(小写)：${contract.totalAmount?.toLocaleString() || '0'}`, size: 24 }),
+              ],
+            }),
+            
+            // 合同条款
+            new Paragraph({ text: '合同条款：', bold: true }),
+            new Paragraph({ text: `1. 执行质量标准：${contract.executionStandard || '按国家标准'}` }),
+            new Paragraph({ text: `2. 验收及提出质量异议期限：${contract.inspectionPeriod || ''}` }),
+            new Paragraph({ text: `3. 交货时间：${contract.deliveryDate || ''}` }),
+            new Paragraph({ text: `4. 交货地点：${contract.deliveryLocation || ''}` }),
+            new Paragraph({ text: `5. 交货方式：${contract.deliveryMethod || ''}` }),
+            new Paragraph({ text: `6. 运输方式：${contract.transportMethod || ''} 运费结算：${contract.transportFeeArrangement || ''}` }),
+            new Paragraph({ text: `7. 包装标准：${contract.packagingStandard || ''} 包装费：${contract.packagingFeeArrangement || ''}` }),
+            new Paragraph({ text: `8. 结算方式及期限：${contract.paymentMethod || ''}` }),
+            new Paragraph({ text: `9. 违约责任：按"民法典"规定条款执行。` }),
+            new Paragraph({ text: `10. ${contract.disputeResolution || ''}` }),
+            new Paragraph({ text: `11. 其他约定事项或特殊订货要求：${contract.specialRequirements || '无'}` }),
+            new Paragraph({ text: `12. 合同有效期限：自签订日起至${contract.expiryDate || ''}止` }),
+            new Paragraph({ text: `13. ${contract.contractCopies || '本合同一式两份，双方各持一份。'}` }),
             
             // 签名区域
             new Paragraph({

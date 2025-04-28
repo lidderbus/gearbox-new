@@ -230,8 +230,8 @@ const CouplingSelectionResultComponent = ({
               </Col>
               <Col md={5}>
                 <h6 style={{ color: colors?.headerText }}>扭矩组成</h6>
-                <div style={{ width: '100%', height: 200, minWidth: 200, minHeight: 200 }}>
-                  <ResponsiveContainer width="100%" height="100%">
+                <div style={{ width: '100%', height: 200 }}>
+                  <ResponsiveContainer>
                     <PieChart>
                       <Pie
                         data={createCouplingTorquePieData()}

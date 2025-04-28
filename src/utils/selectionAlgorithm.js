@@ -17,6 +17,8 @@ import {
 import { safeParseFloat } from './dataHelpers';
 // Import selection helper functions from couplingSelection.js
 import { selectFlexibleCoupling, selectStandbyPump, fixCouplingTorque } from './couplingSelection';
+// 导入GW系列特殊打包价格支持
+import { getGWPackagePriceConfig, checkPackageMatch } from '../data/packagePriceConfig';
 
 
 // 定义联轴器罩壳映射（如果需要） - 用于特定型号的罩壳变体
@@ -288,6 +290,14 @@ export const selectGearbox = (
          const gbDiscountRate = gearbox.discountRate ?? getStandardDiscountRate(gearbox.model);
          const gbFactoryPrice = gearbox.factoryPrice || calculateFactoryPrice({ ...gearbox, basePrice: gbBasePrice, discountRate: gbDiscountRate });
 
+        // 检查是否有特殊打包价格配置
+        const gwConfig = getGWPackagePriceConfig(gearbox.model);
+        
+        // 处理GW特殊价格
+        let gwPackagePrice = null;
+        if (gwConfig && !gwConfig.isSmallGWModel) {
+            gwPackagePrice = gwConfig.packagePrice;
+        }
 
         matchingGearboxes.push({
             ...gearbox,
@@ -304,8 +314,11 @@ export const selectGearbox = (
             price: gbBasePrice, // Ensure price matches basePrice
             discountRate: gbDiscountRate,
             factoryPrice: gbFactoryPrice,
-            packagePrice: gbFactoryPrice, // Package price defaults to factory price
-            marketPrice: calculateMarketPrice({factoryPrice: gbFactoryPrice}), // Calculate market price
+            packagePrice: gwPackagePrice || gbFactoryPrice, // 使用特殊打包价或工厂价
+            marketPrice: gwPackagePrice || calculateMarketPrice({factoryPrice: gbFactoryPrice}), // 使用特殊打包价或计算市场价
+            // GW系列特殊打包价格标记
+            hasSpecialPackagePrice: !!gwPackagePrice,
+            gwPackageConfig: gwConfig,
             // 添加用于显示的额外字段
             _displayFields: {
                 capacityText: `${capacity.toFixed(6)} kW/rpm`,
@@ -357,11 +370,44 @@ export const selectGearbox = (
                     }
                 }
                 
+                // 添加特殊打包价格加分
+                const gwConfig = getGWPackagePriceConfig(match.model);
+                if (gwConfig && !gwConfig.isSmallGWModel) {
+                    score += 20; // 有特殊打包价格的型号加分
+                }
+                
                 match.score = score / 3; // 平均分
+                
+                // 确保价格字段
+                const gbBasePrice = match.basePrice || match.price || 0;
+                const gbDiscountRate = match.discountRate ?? getStandardDiscountRate(match.model);
+                const gbFactoryPrice = match.factoryPrice || calculateFactoryPrice({ ...match, basePrice: gbBasePrice, discountRate: gbDiscountRate });
+                
+                // 处理GW特殊价格
+                let gwPackagePrice = null;
+                if (gwConfig && !gwConfig.isSmallGWModel) {
+                    gwPackagePrice = gwConfig.packagePrice;
+                    match.hasSpecialPackagePrice = true;
+                    match.gwPackageConfig = gwConfig;
+                }
+                
+                match.basePrice = gbBasePrice;
+                match.price = gbBasePrice;
+                match.discountRate = gbDiscountRate;
+                match.factoryPrice = gbFactoryPrice;
+                match.packagePrice = gwPackagePrice || gbFactoryPrice;
+                match.marketPrice = gwPackagePrice || calculateMarketPrice({factoryPrice: gbFactoryPrice});
             });
             
             // 排序
-            nearMatches.sort((a, b) => b.score - a.score);
+            nearMatches.sort((a, b) => {
+                // 优先考虑有特殊打包价格的型号
+                if (a.hasSpecialPackagePrice !== b.hasSpecialPackagePrice) {
+                    return a.hasSpecialPackagePrice ? -1 : 1;
+                }
+                // 然后按评分排序
+                return b.score - a.score;
+            });
             
             // 限制返回数量
             nearMatches = nearMatches.slice(0, 5);
@@ -430,6 +476,12 @@ export const selectGearbox = (
         } else {
             score += 5; // Add some points if thrust wasn't required, as having thrust is a feature
         }
+        
+        // 5. 特殊打包价格加分 (15点) - GW系列特殊打包价格
+        if (gearbox.hasSpecialPackagePrice) {
+            score += 15;
+            console.log(`为GW系列特殊打包价格齿轮箱 ${gearbox.model} 加分15分`);
+        }
 
         // Initial score before normalization
         gearbox.score = score;
@@ -480,9 +532,13 @@ export const selectGearbox = (
          }
      }
 
-
     // --- Sort scored gearboxes ---
     scoredGearboxes.sort((a, b) => {
+        // 优先使用特殊打包价格的齿轮箱
+        if (a.hasSpecialPackagePrice !== b.hasSpecialPackagePrice) {
+            return a.hasSpecialPackagePrice ? -1 : 1;
+        }
+        
         // Primary sort: score (descending)
         if (b.score !== a.score) return b.score - a.score;
         // Secondary sort: prefer closer capacity margin to 15%
@@ -577,6 +633,11 @@ export const selectGearbox = (
         if (couplingWarning) consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${couplingWarning}` : couplingWarning;
         if (pumpWarning) consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${pumpWarning}` : pumpWarning;
 
+        // 添加特殊打包价格提示
+        if (topRecommendation.hasSpecialPackagePrice) {
+            const packageInfo = `该型号采用市场常规打包价${topRecommendation.packagePrice.toLocaleString()}元。`;
+            consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${packageInfo}` : packageInfo;
+        }
     } else if (!result.success) {
         // If no gearboxes were found, the main message is sufficient, but could add detail
          consolidatedWarning = result.message;
@@ -593,7 +654,7 @@ export const selectGearbox = (
 };
 
 
-// --- autoSelectGearbox 函数 (与修改版本一致，包含放宽标准) ---
+// --- autoSelectGearbox 函数 (修改版本，优先考虑GW系列特殊打包价格) ---
 export const autoSelectGearbox = (requirements, appData) => {
     console.log('开始自动选型 (autoSelectGearbox)...', requirements);
     const { motorPower, motorSpeed, targetRatio, thrust, ...options } = requirements;
@@ -643,6 +704,11 @@ export const autoSelectGearbox = (requirements, appData) => {
                  // Example: Boost score for GW if power is high
                  if (type === 'GW' && motorPower > 800) rec.score += 5;
                  if (type === 'HCM' && motorSpeed > 2000) rec.score += 3;
+                 
+                 // 检查是否有特殊打包价格，提升评分
+                 if (rec.hasSpecialPackagePrice) {
+                     rec.score += 15; // 额外加分
+                 }
             });
             allRecommendations.push(...result.recommendations);
         } else {
@@ -660,13 +726,18 @@ export const autoSelectGearbox = (requirements, appData) => {
                         rec.score = rec.score * 0.85; // 降低15%
                     }
                     
+                    // 如果有特殊打包价格，即使是部分匹配也加分
+                    if (rec.hasSpecialPackagePrice) {
+                        rec.score = (rec.score || 0) + 10; // 特殊打包价格部分匹配也加分
+                    }
+                    
                     // 添加失败原因
                     rec.failureReason = rec.failureReason || "不满足部分选型条件";
                 });
                 
                 // 只添加评分较高的近似匹配
                 const topPartialMatches = result.recommendations
-                    .filter(rec => rec.score > 60)
+                    .filter(rec => rec.score > 60 || rec.hasSpecialPackagePrice) // 特殊打包价格不受评分限制
                     .slice(0, 2); // 每个系列最多添加2个近似匹配
                     
                 if (topPartialMatches.length > 0) {
@@ -694,10 +765,22 @@ export const autoSelectGearbox = (requirements, appData) => {
                 let score = 0;
                 // 基于之前的评分逻辑，可能会更复杂
                 match.score = match.score || 50; // 默认分数
+                
+                // 检查是否有特殊打包价格
+                if (match.hasSpecialPackagePrice) {
+                    match.score += 15; // 特殊打包价格加分
+                }
             });
             
             // 排序并限制数量
-            allNearMatches.sort((a, b) => b.score - a.score);
+            allNearMatches.sort((a, b) => {
+                // 优先考虑有特殊打包价格的型号
+                if (a.hasSpecialPackagePrice !== b.hasSpecialPackagePrice) {
+                    return a.hasSpecialPackagePrice ? -1 : 1;
+                }
+                return b.score - a.score;
+            });
+            
             const bestNearMatches = allNearMatches.slice(0, 5);
             
             return {
@@ -720,7 +803,12 @@ export const autoSelectGearbox = (requirements, appData) => {
 
     // 2. Sort all combined recommendations globally
     allRecommendations.sort((a, b) => {
-        // 首先区分完全匹配和部分匹配
+        // 优先考虑特殊打包价格
+        if (a.hasSpecialPackagePrice !== b.hasSpecialPackagePrice) {
+            return a.hasSpecialPackagePrice ? -1 : 1;
+        }
+        
+        // 然后区分完全匹配和部分匹配
         if (a.isPartialMatch !== b.isPartialMatch) {
             return a.isPartialMatch ? 1 : -1; // 完全匹配优先
         }
@@ -743,7 +831,7 @@ export const autoSelectGearbox = (requirements, appData) => {
     // 3. Select the best overall gearbox
     const bestOverallGearbox = allRecommendations[0];
     const bestType = bestOverallGearbox.originalType;
-    console.log(`自动选型最终推荐: ${bestOverallGearbox.model} (来自 ${bestType} 系列), 评分: ${bestOverallGearbox.score}`);
+    console.log(`自动选型最终推荐: ${bestOverallGearbox.model} (来自 ${bestType} 系列), 评分: ${bestOverallGearbox.score}, 特殊打包价格: ${bestOverallGearbox.hasSpecialPackagePrice ? '是' : '否'}`);
 
     // 4. Re-select accessories specifically for the chosen best gearbox
     const engineTorque_Nm = bestOverallGearbox.engineTorque || (motorPower * 9550) / motorSpeed;
@@ -818,6 +906,11 @@ export const autoSelectGearbox = (requirements, appData) => {
         if (finalCouplingResult?.warning) consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${finalCouplingResult.warning}` : finalCouplingResult.warning;
         if (finalPumpResult?.warning) consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${finalPumpResult.warning}` : finalPumpResult.warning;
 
+        // 添加特殊打包价格提示
+        if (bestOverallGearbox.hasSpecialPackagePrice) {
+            const packageInfo = `该型号采用市场常规打包价${bestOverallGearbox.packagePrice.toLocaleString()}元。`;
+            consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${packageInfo}` : packageInfo;
+        }
     } else if (!finalResult.success) {
         // If no gearboxes were found, the main message is sufficient, but could add detail
          consolidatedWarning = finalResult.message;

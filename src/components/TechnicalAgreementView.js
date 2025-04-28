@@ -1,0 +1,245 @@
+// src/components/TechnicalAgreementView.js
+import React, { useState } from 'react';
+import { Container, Row, Col, Button, Alert, Card } from 'react-bootstrap';
+import AgreementGenerator from './AgreementGenerator';
+import { exportHtmlContentToPDF, printHtmlContent } from '../utils/pdfExportUtils';
+
+/**
+ * 技术协议视图组件
+ * 用于管理技术协议的生成、预览和导出
+ */
+const TechnicalAgreementView = ({
+  selectionResult,
+  projectInfo,
+  selectedComponents,
+  colors,
+  theme,
+  onNavigateToQuotation,
+  onNavigateToContract
+}) => {
+  const [agreement, setAgreement] = useState(null);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
+  
+  // 处理协议生成完成
+  const handleAgreementGenerated = (generatedAgreement) => {
+    setAgreement(generatedAgreement);
+    setSuccess('技术协议已成功生成');
+    setError('');
+  };
+  
+  // 导出为Word
+  const exportToWord = () => {
+    if (!agreement) {
+      setError('请先生成技术协议');
+      return;
+    }
+
+    try {
+      // 创建一个新的Blob对象，内容为HTML
+      const blob = new Blob([agreement.html], { type: 'application/msword' });
+      
+      // 创建下载链接
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${projectInfo?.projectName || '齿轮箱'}_技术协议.doc`;
+      
+      // 模拟点击下载
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      setSuccess('技术协议已导出为Word格式');
+    } catch (error) {
+      console.error('导出Word失败:', error);
+      setError(`导出Word失败: ${error.message}`);
+    }
+  };
+  
+  // 导出为PDF - 修改版
+  const exportToPDF = () => {
+    if (!agreement) {
+      setError('请先生成技术协议');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    
+    try {
+      // 获取预览元素
+      const previewElement = document.querySelector('.agreement-preview-content');
+      
+      if (!previewElement) {
+        throw new Error('无法找到预览内容');
+      }
+      
+      // 添加延迟确保内容渲染完成
+      setTimeout(() => {
+        // 导出PDF
+        exportHtmlContentToPDF(previewElement, {
+          filename: `${projectInfo?.projectName || '齿轮箱'}_技术协议.pdf`,
+          orientation: 'portrait',
+          format: 'a4',
+          margin: { top: 20, right: 20, bottom: 20, left: 20 },
+          scale: 1.5,
+          useCORS: true,
+          allowTaint: true
+        })
+        .then(() => {
+          setSuccess('技术协议已导出为PDF格式');
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error('导出PDF失败:', err);
+          setError(`导出PDF失败: ${err.message}`);
+          setLoading(false);
+        });
+      }, 500); // 添加500ms延时确保DOM渲染完成
+    } catch (error) {
+      console.error('导出PDF失败:', error);
+      setError(`导出PDF失败: ${error.message}`);
+      setLoading(false);
+    }
+  };
+  
+  // 复制到剪贴板
+  const copyToClipboard = () => {
+    if (!agreement) {
+      setError('请先生成技术协议');
+      return;
+    }
+
+    try {
+      // 创建一个临时元素用于复制
+      const tempElement = document.createElement('div');
+      tempElement.innerHTML = agreement.html;
+      
+      // 获取纯文本
+      const plainText = tempElement.textContent || tempElement.innerText;
+      
+      // 复制到剪贴板
+      navigator.clipboard.writeText(plainText)
+        .then(() => {
+          setSuccess('技术协议内容已复制到剪贴板');
+        })
+        .catch((err) => {
+          console.error('复制到剪贴板失败:', err);
+          setError(`复制到剪贴板失败: ${err.message}`);
+        });
+    } catch (error) {
+      console.error('复制到剪贴板失败:', error);
+      setError(`复制到剪贴板失败: ${error.message}`);
+    }
+  };
+  
+  // 打印功能 - 新增
+  const handlePrint = () => {
+    if (!agreement) {
+      setError('请先生成技术协议');
+      return;
+    }
+
+    const previewElement = document.querySelector('.agreement-preview-content');
+    
+    if (!previewElement) {
+      setError('无法找到预览内容');
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      printHtmlContent(previewElement, {
+        title: `${projectInfo?.projectName || '齿轮箱'}_技术协议`,
+        beforePrint: () => setSuccess('正在准备打印...'),
+        afterPrint: () => {
+          setLoading(false);
+          setSuccess('打印准备完成');
+        }
+      });
+    } catch (error) {
+      console.error('打印失败:', error);
+      setError(`打印失败: ${error.message}`);
+      setLoading(false);
+    }
+  };
+  
+  return (
+    <Container fluid>
+      {error && (
+        <Row className="mb-3">
+          <Col>
+            <Alert variant="danger" onClose={() => setError('')} dismissible>
+              <i className="bi bi-exclamation-triangle-fill me-2"></i>
+              {error}
+            </Alert>
+          </Col>
+        </Row>
+      )}
+      
+      {success && (
+        <Row className="mb-3">
+          <Col>
+            <Alert variant="success" onClose={() => setSuccess('')} dismissible>
+              <i className="bi bi-check-circle-fill me-2"></i>
+              {success}
+            </Alert>
+          </Col>
+        </Row>
+      )}
+      
+      <Row className="mb-3">
+        <Col>
+          <Card className="shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+            <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>
+              <div className="d-flex justify-content-between align-items-center">
+                <span>
+                  <i className="bi bi-file-earmark-text me-2"></i>
+                  技术协议管理
+                </span>
+                <div>
+                  {agreement && (
+                    <>
+                      <Button variant="outline-primary" size="sm" className="me-2" onClick={exportToWord}>
+                        <i className="bi bi-file-earmark-word me-1"></i> 导出Word
+                      </Button>
+                      <Button variant="outline-danger" size="sm" className="me-2" onClick={exportToPDF}>
+                        <i className="bi bi-file-earmark-pdf me-1"></i> 导出PDF
+                      </Button>
+                      <Button variant="outline-secondary" size="sm" className="me-2" onClick={handlePrint}>
+                        <i className="bi bi-printer me-1"></i> 打印
+                      </Button>
+                      <Button variant="outline-secondary" size="sm" className="me-2" onClick={copyToClipboard}>
+                        <i className="bi bi-clipboard me-1"></i> 复制内容
+                      </Button>
+                    </>
+                  )}
+                  <Button variant="outline-success" size="sm" className="me-2" onClick={onNavigateToQuotation}>
+                    <i className="bi bi-currency-yen me-1"></i> 返回报价单
+                  </Button>
+                  <Button variant="outline-info" size="sm" onClick={onNavigateToContract}>
+                    <i className="bi bi-file-earmark-ruled me-1"></i> 生成合同
+                  </Button>
+                </div>
+              </div>
+            </Card.Header>
+            <Card.Body>
+              <AgreementGenerator
+                selectionResult={selectionResult}
+                projectInfo={projectInfo}
+                selectedComponents={selectedComponents}
+                colors={colors}
+                theme={theme}
+                onGenerated={handleAgreementGenerated}
+              />
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
+
+export default TechnicalAgreementView;

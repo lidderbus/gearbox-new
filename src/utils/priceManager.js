@@ -6,6 +6,7 @@
  */
 
 import { safeParseFloat } from './dataHelpers';
+import { getGWPackagePriceConfig, checkPackageMatch } from '../data/packagePriceConfig';
 
 // 价格常量
 export const PRICE_CONSTANTS = {
@@ -190,6 +191,28 @@ export const calculateFactoryPrice = (item) => {
 export const calculateMarketPrice = (item, packagePrice = null) => {
   if (!item) return 0;
   
+  // 检查是否存在打包价配置
+  const gwConfig = getGWPackagePriceConfig(item.model);
+  
+  // 对于有特殊打包价的型号，直接使用打包价作为市场价
+  if (gwConfig && !gwConfig.isSmallGWModel && gwConfig.packagePrice) {
+    return gwConfig.packagePrice;
+  }
+  
+  // 对于小型号 (GW39.41及以下)
+  if (gwConfig && gwConfig.isSmallGWModel) {
+    // 按照销售政策，市场价不得低于出厂价下浮10%后的价格
+    const factoryPrice = item.factoryPrice || (typeof item.basePrice === 'number' && typeof item.discountRate === 'number' ? 
+                         item.basePrice * (1 - item.discountRate) : 0);
+    // 最低市场价 = 出厂价 * 0.9
+    const minimumPrice = factoryPrice * 0.9;
+    
+    // 确保市场价不低于最低限制
+    const calculatedMarketPrice = packagePrice ? packagePrice * PRICE_CONSTANTS.MARKET_PRICE_MULTIPLIER : 
+                                (factoryPrice * PRICE_CONSTANTS.MARKET_PRICE_MULTIPLIER);
+    return Math.max(calculatedMarketPrice, minimumPrice);
+  }
+  
   // 处理"全国统一售价"特殊情况
   if (isFixedPriceSeries(item.model) || (item.notes && item.notes.includes('全国统一售价'))) {
     return safeParseFloat(item.basePrice) || 0;
@@ -216,19 +239,26 @@ export const calculateMarketPrice = (item, packagePrice = null) => {
  * @returns {number} 计算的打包价
  */
 export const calculatePackagePrice = (gearbox, coupling = null, pump = null) => {
-  let total = 0;
+  if (!gearbox) return 0;
   
-  // 添加齿轮箱价格
-  if (gearbox) {
-    // 检查是否有特定的打包价覆盖
-    const model = gearbox.model && gearbox.model.trim();
-    if (model && PRICE_CONSTANTS.SPECIAL_PACKAGE_PRICES[model]) {
-      return PRICE_CONSTANTS.SPECIAL_PACKAGE_PRICES[model];
-    }
-    
-    // 添加齿轮箱工厂价
-    total += safeParseFloat(gearbox.factoryPrice) || calculateFactoryPrice(gearbox) || 0;
+  // 检查是否存在打包价配置
+  const gwConfig = getGWPackagePriceConfig(gearbox.model);
+  
+  // 检查是否满足打包价格条件
+  if (gwConfig && !gwConfig.isSmallGWModel && checkPackageMatch(gearbox, coupling, pump, gwConfig)) {
+    console.log(`应用打包价格: ${gearbox.model}, 价格: ${gwConfig.packagePrice}`);
+    // 使用打包价格
+    return gwConfig.packagePrice;
   }
+  
+  // 检查是否有特定的打包价覆盖
+  const model = gearbox.model && gearbox.model.trim();
+  if (model && PRICE_CONSTANTS.SPECIAL_PACKAGE_PRICES[model]) {
+    return PRICE_CONSTANTS.SPECIAL_PACKAGE_PRICES[model];
+  }
+  
+  // 添加齿轮箱工厂价
+  let total = safeParseFloat(gearbox.factoryPrice) || calculateFactoryPrice(gearbox) || 0;
   
   // 添加联轴器价格
   if (coupling) {
@@ -292,6 +322,9 @@ export const correctPriceData = (item) => {
     // 检查是否有特殊型号价格覆盖
     const specialItem = applySpecialModelPrice(item);
     
+    // 检查GW系列特殊打包价格
+    const gwConfig = getGWPackagePriceConfig(specialItem.model);
+    
     // 检查是否为"全国统一售价"
     const isFixedPrice = isFixedPriceSeries(specialItem.model) || 
                          (specialItem.notes && specialItem.notes.includes('全国统一售价'));
@@ -308,12 +341,28 @@ export const correctPriceData = (item) => {
     // 3. 计算工厂价
     const factoryPrice = isFixedPrice ? basePrice : parseFloat((basePrice * (1 - discountRate)).toFixed(2));
     
-    // 4. 计算市场价
-    const marketPrice = isFixedPrice ? basePrice : parseFloat((factoryPrice * PRICE_CONSTANTS.MARKET_PRICE_MULTIPLIER).toFixed(2));
+    // 4. 计算市场价 - 考虑GW系列特殊打包价格
+    let marketPrice;
+    let packagePrice = factoryPrice;
     
-    // 5. 设置包装价（检查特殊打包价，默认等于工厂价）
-    const specialPackagePrice = specialItem.model && PRICE_CONSTANTS.SPECIAL_PACKAGE_PRICES[specialItem.model.trim()];
-    const packagePrice = specialPackagePrice || factoryPrice;
+    // 特殊打包价处理
+    if (gwConfig && !gwConfig.isSmallGWModel && gwConfig.packagePrice) {
+      // GW系列特殊打包价
+      packagePrice = gwConfig.packagePrice;
+      marketPrice = gwConfig.packagePrice; // 市场价与打包价一致
+    } else if (isFixedPrice) {
+      // 全国统一售价
+      marketPrice = basePrice;
+    } else {
+      // 常规市场价
+      marketPrice = parseFloat((factoryPrice * PRICE_CONSTANTS.MARKET_PRICE_MULTIPLIER).toFixed(2));
+      
+      // 检查现有的特殊打包价格常量
+      const specialPackagePrice = specialItem.model && PRICE_CONSTANTS.SPECIAL_PACKAGE_PRICES[specialItem.model.trim()];
+      if (specialPackagePrice) {
+        packagePrice = specialPackagePrice;
+      }
+    }
     
     // 如果是固定价格系列，确保添加相应的注释
     let notes = specialItem.notes || '';

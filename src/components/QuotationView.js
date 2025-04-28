@@ -1,6 +1,7 @@
-// src/components/QuotationView.js
+// src/components/QuotationView.js - 修复版本
 import React, { useState } from 'react';
 import { Card, Table, Button, Alert, Row, Col, Badge, Form, Dropdown } from 'react-bootstrap';
+import { printHtmlContent } from '../utils/pdfExportUtils';
 
 /**
  * 报价单查看组件
@@ -20,6 +21,9 @@ const QuotationView = ({
   const [showPriceDetails, setShowPriceDetails] = useState(false);
   const [saveNameInput, setSaveNameInput] = useState('');
   const [showSaveForm, setShowSaveForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   // 如果没有报价单数据，显示提示
   if (!quotation || !quotation.success) {
@@ -59,6 +63,38 @@ const QuotationView = ({
       setShowSaveForm(true);
     }
   };
+  
+  // 打印功能 - 新增
+  const handlePrint = () => {
+    if (!quotation || !quotation.success) {
+      setError('请先生成报价单');
+      return;
+    }
+
+    const previewElement = document.querySelector('.quotation-preview-content');
+    
+    if (!previewElement) {
+      setError('无法找到预览内容');
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      printHtmlContent(previewElement, {
+        title: `报价单 - ${quotation.quotationNumber || '未命名'}`,
+        beforePrint: () => setSuccess('正在准备打印...'),
+        afterPrint: () => {
+          setLoading(false);
+          setSuccess('打印准备完成');
+        }
+      });
+    } catch (error) {
+      console.error('打印失败:', error);
+      setError(`打印失败: ${error.message}`);
+      setLoading(false);
+    }
+  };
 
   // 渲染报价单
   return (
@@ -75,6 +111,14 @@ const QuotationView = ({
             >
               <i className={`bi bi-info-circle${showPriceDetails ? '-fill' : ''} me-1`}></i>
               {showPriceDetails ? '隐藏价格详情' : '显示价格详情'}
+            </Button>
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              className="me-2"
+              onClick={handlePrint}
+            >
+              <i className="bi bi-printer me-1"></i> 打印
             </Button>
             <Dropdown className="d-inline-block me-2">
               <Dropdown.Toggle variant="outline-primary" size="sm" id="dropdown-export">
@@ -101,6 +145,20 @@ const QuotationView = ({
         </div>
       </Card.Header>
       <Card.Body className="p-0">
+        {error && (
+          <Alert variant="danger" className="m-3" onClose={() => setError('')} dismissible>
+            <i className="bi bi-exclamation-triangle-fill me-2"></i>
+            {error}
+          </Alert>
+        )}
+        
+        {success && (
+          <Alert variant="success" className="m-3" onClose={() => setSuccess('')} dismissible>
+            <i className="bi bi-check-circle-fill me-2"></i>
+            {success}
+          </Alert>
+        )}
+        
         <div className="quotation-preview-content">
           {/* 报价单标题 */}
           <div className="text-center p-4" style={{ borderBottom: `1px solid ${colors?.border}` }}>
@@ -168,6 +226,32 @@ const QuotationView = ({
             </Col>
           </Row>
           
+          {/* 配件包含提示（如果有） */}
+          {!quotation.usingSpecialPackagePrice && (
+            (quotation.options?.includeCouplingInGearbox || 
+            (quotation.options?.includePumpInGearbox && quotation.options?.needsPump)) && (
+              <div className="mx-3 mt-3">
+                <Alert variant="info">
+                  <i className="bi bi-info-circle-fill me-2"></i>
+                  <strong>配件说明：</strong>
+                  {quotation.options?.includeCouplingInGearbox && <span>联轴器价格已包含在齿轮箱价格中。</span>}
+                  {quotation.options?.includeCouplingInGearbox && quotation.options?.includePumpInGearbox && quotation.options?.needsPump && <span> </span>}
+                  {quotation.options?.includePumpInGearbox && quotation.options?.needsPump && <span>备用泵价格已包含在齿轮箱价格中。</span>}
+                </Alert>
+              </div>
+            )
+          )}
+  
+          {/* 特殊打包价格提示（如果有） */}
+          {quotation.usingSpecialPackagePrice && (
+            <div className="mx-3 mt-3">
+              <Alert variant="info">
+                <i className="bi bi-info-circle-fill me-2"></i>
+                <strong>特别说明：</strong> 本报价采用GW系列市场常规打包价格。
+              </Alert>
+            </div>
+          )}
+          
           {/* 报价明细 */}
           <div className="p-3">
             <h6 style={{ color: colors?.headerText }}>报价明细</h6>
@@ -188,9 +272,17 @@ const QuotationView = ({
                 </thead>
                 <tbody>
                   {quotation.items.map((item, index) => (
-                    <tr key={index}>
+                    <tr key={index} className={quotation.usingSpecialPackagePrice && item.name === "船用齿轮箱" ? "table-info" : ""}>
                       <td className="text-center">{index + 1}</td>
-                      <td>{item.name}</td>
+                      <td>
+                        {item.name}
+                        {quotation.options?.includeCouplingInGearbox && item.name === "船用齿轮箱" && 
+                          <Badge bg="info" className="ms-1">含联轴器</Badge>
+                        }
+                        {quotation.options?.includePumpInGearbox && quotation.options?.needsPump && item.name === "船用齿轮箱" && 
+                          <Badge bg="info" className="ms-1">含备用泵</Badge>
+                        }
+                      </td>
                       <td>{item.model}</td>
                       <td className="text-center">{item.quantity}</td>
                       <td className="text-center">{item.unit}</td>
@@ -229,9 +321,9 @@ const QuotationView = ({
                     </tr>
                   )}
                   
-                  {/* 不含税合计行 */}
+                  {/* 修改: 将"不含税总计"改为"总计" */}
                   <tr>
-                    <td colSpan="6" className="text-end"><strong>不含税总计：</strong></td>
+                    <td colSpan="6" className="text-end"><strong>总计：</strong></td>
                     <td className="text-end"><strong>{formatCurrency(quotation.totalAmount)}</strong></td>
                     <td colSpan="2"></td>
                   </tr>
@@ -389,6 +481,13 @@ const QuotationView = ({
                 </Button>
               </div>
               <div>
+                <Button 
+                  variant="outline-secondary" 
+                  className="me-2" 
+                  onClick={handlePrint}
+                >
+                  <i className="bi bi-printer me-1"></i> 打印
+                </Button>
                 <Dropdown className="d-inline-block me-2">
                   <Dropdown.Toggle variant="outline-primary" id="dropdown-export">
                     <i className="bi bi-download me-1"></i> 导出

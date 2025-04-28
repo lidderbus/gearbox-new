@@ -1,354 +1,391 @@
-// src/components/QuotationOptionsModal.js
-import React, { useState } from 'react';
+// src/components/QuotationOptionsModal.js - 修复版
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
 
 /**
- * 报价单选项对话框组件
- * 允许用户配置报价单生成选项
+ * 报价单选项设置对话框
+ * 用于配置报价单的显示选项、价格选项等
  */
 const QuotationOptionsModal = ({ 
   show, 
   onHide, 
   onApply, 
-  selectedComponents,
+  selectedComponents, 
+  hasSpecialPackagePrice,
+  specialPackageConfig,
   colors,
   theme
 }) => {
-  // 选项状态
-  const [options, setOptions] = useState({
-    showCouplingPrice: true,
-    showPumpPrice: true,
-    taxRate: 0,
-    includeDelivery: false,
-    deliveryCost: 0,
-    includeInstallation: false,
-    installationCost: 0,
-    discountPercentage: 0,
-    validityDays: 30,
+  // 默认选项
+  const defaultOptions = {
+    showCouplingPrice: true,    // 默认显示联轴器单独价格
+    showPumpPrice: true,        // 默认显示备用泵单独价格
+    includePump: true,          // 默认包含备用泵
+    taxRate: 0,                 // 默认税率
+    discountPercentage: 0,      // 默认折扣
+    validityDays: 30,           // 默认有效期
     paymentTerms: '合同签订后支付30%预付款，发货前付清全款',
     deliveryTime: '合同签订生效后3个月内发货',
-    currency: 'CNY',
-    language: 'zh-CN',
-    format: 'standard'
-  });
-
-  // 确定齿轮箱系列
-  const isGWSeries = selectedComponents?.gearbox?.model?.toUpperCase()?.includes('GW') || false;
-
-  // 重置选项为默认值
-  const resetToDefaults = () => {
-    setOptions({
-      // 根据齿轮箱系列设置不同默认值
-      showCouplingPrice: isGWSeries,
-      showPumpPrice: isGWSeries,
-      taxRate: 0,
-      includeDelivery: false,
-      deliveryCost: 0,
-      includeInstallation: false,
-      installationCost: 0,
-      discountPercentage: 0,
-      validityDays: 30,
-      paymentTerms: '合同签订后支付30%预付款，发货前付清全款',
-      deliveryTime: '合同签订生效后3个月内发货',
-      currency: 'CNY',
-      language: 'zh-CN',
-      format: 'standard'
-    });
+    includeDelivery: false,     // 默认不包含运输
+    deliveryCost: 0,            // 默认运输费用
+    includeInstallation: false, // 默认不包含安装
+    installationCost: 0         // 默认安装费用
   };
 
-  // 初始化默认选项
-  React.useEffect(() => {
+  // 状态
+  const [options, setOptions] = useState(defaultOptions);
+  const [error, setError] = useState('');
+
+  // 初始化
+  useEffect(() => {
     if (show) {
-      resetToDefaults();
+      // 特殊处理：如果是GW系列特殊打包价格，强制不单独显示配件价格
+      if (hasSpecialPackagePrice) {
+        setOptions({
+          ...defaultOptions,
+          showCouplingPrice: false,
+          showPumpPrice: false
+        });
+      } 
+      // 特殊处理：如果不是GW系列齿轮箱，默认配件价格包含在齿轮箱中
+      else if (selectedComponents?.gearbox?.model && 
+               !selectedComponents.gearbox.model.toUpperCase().includes('GW')) {
+        setOptions({
+          ...defaultOptions,
+          showCouplingPrice: false,
+          showPumpPrice: false
+        });
+      }
+      // 默认设置
+      else {
+        setOptions(defaultOptions);
+      }
+
+      // 清除错误信息
+      setError('');
     }
-  }, [show, isGWSeries]);
+  }, [show, hasSpecialPackagePrice, selectedComponents]);
 
-  // 处理选项变更
-  const handleOptionChange = (name, value) => {
-    setOptions(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  // 处理输入变化
+  const handleChange = (field, value) => {
+    if (field === 'taxRate' || field === 'discountPercentage' || 
+        field === 'validityDays' || field === 'deliveryCost' || field === 'installationCost') {
+      // 数字类型字段
+      value = value === '' ? 0 : parseFloat(value);
+      if (isNaN(value)) value = 0;
+    }
+
+    setOptions(prevOptions => ({ ...prevOptions, [field]: value }));
   };
 
-  // 应用选项并关闭对话框
+  // 检查输入是否有效
+  const isValid = () => {
+    if (options.taxRate < 0 || options.taxRate > 100) {
+      setError('税率必须在0-100%之间');
+      return false;
+    }
+    if (options.discountPercentage < 0 || options.discountPercentage > 100) {
+      setError('折扣必须在0-100%之间');
+      return false;
+    }
+    if (options.validityDays <= 0) {
+      setError('有效期必须大于0天');
+      return false;
+    }
+    if (options.includeDelivery && options.deliveryCost <= 0) {
+      setError('包含运输时，运输费用必须大于0');
+      return false;
+    }
+    if (options.includeInstallation && options.installationCost <= 0) {
+      setError('包含安装时，安装费用必须大于0');
+      return false;
+    }
+    return true;
+  };
+
+  // 应用选项
   const handleApply = () => {
+    if (!isValid()) return;
     onApply(options);
-    onHide();
   };
 
+  // 判断是否需要备用泵
+  const needsPump = selectedComponents?.gearbox?.model && (
+    selectedComponents.gearbox.model.startsWith('GW') || 
+    (selectedComponents.gearbox.power && selectedComponents.gearbox.power >= 600)
+  );
+
+  // 渲染组件
   return (
-    <Modal
-      show={show}
+    <Modal 
+      show={show} 
       onHide={onHide}
+      size="lg"
       centered
       backdrop="static"
-      size="lg"
+      style={{ color: colors?.text }}
     >
       <Modal.Header 
         closeButton
         style={{ backgroundColor: colors?.headerBg, color: colors?.headerText }}
       >
-        <Modal.Title>报价单生成选项</Modal.Title>
+        <Modal.Title>报价单选项</Modal.Title>
       </Modal.Header>
-      <Modal.Body style={{ backgroundColor: colors?.card, color: colors?.text }}>
-        <Alert variant="info" className="mb-3">
-          <i className="bi bi-info-circle me-2"></i>
-          通过调整以下选项自定义报价单内容和格式
-        </Alert>
 
-        <h6 className="mb-3 border-bottom pb-2" style={{ color: colors?.headerText }}>价格显示选项</h6>
-        <Row className="mb-3">
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Check
-                type="switch"
-                id="showCouplingPrice"
-                label="联轴器单独显示价格"
-                checked={options.showCouplingPrice}
-                onChange={(e) => handleOptionChange('showCouplingPrice', e.target.checked)}
-              />
-              <Form.Text style={{ color: colors?.muted }}>
-                {isGWSeries 
-                  ? 'GW系列齿轮箱默认单独显示联轴器价格' 
-                  : '非GW系列齿轮箱默认包含联轴器价格'}
-              </Form.Text>
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Check
-                type="switch"
-                id="showPumpPrice"
-                label="备用泵单独显示价格"
-                checked={options.showPumpPrice}
-                onChange={(e) => handleOptionChange('showPumpPrice', e.target.checked)}
-              />
-              <Form.Text style={{ color: colors?.muted }}>
-                {isGWSeries 
-                  ? 'GW系列齿轮箱默认单独显示备用泵价格' 
-                  : '非GW系列齿轮箱默认包含备用泵价格'}
-              </Form.Text>
-            </Form.Group>
-          </Col>
-        </Row>
+      <Modal.Body style={{ backgroundColor: colors?.card }}>
+        {error && (
+          <Alert variant="danger" onClose={() => setError('')} dismissible>
+            <i className="bi bi-exclamation-triangle-fill me-2"></i>
+            {error}
+          </Alert>
+        )}
 
-        <h6 className="mb-3 border-bottom pb-2" style={{ color: colors?.headerText }}>税率和折扣</h6>
-        <Row className="mb-3">
-          <Col md={4}>
-            <Form.Group className="mb-3">
-              <Form.Label>增值税率 (%)</Form.Label>
-              <Form.Control
-                type="number"
-                min="0"
-                max="100"
-                step="1"
-                value={options.taxRate}
-                onChange={(e) => handleOptionChange('taxRate', parseFloat(e.target.value) || 0)}
-                style={{
-                  backgroundColor: colors?.inputBg,
-                  color: colors?.text,
-                  borderColor: colors?.inputBorder
-                }}
-              />
-              <Form.Text style={{ color: colors?.muted }}>
-                设置为0表示不含税价格，设置为13表示含13%增值税
-              </Form.Text>
-            </Form.Group>
-          </Col>
-          <Col md={4}>
-            <Form.Group className="mb-3">
-              <Form.Label>折扣百分比 (%)</Form.Label>
-              <Form.Control
-                type="number"
-                min="0"
-                max="100"
-                step="0.5"
-                value={options.discountPercentage}
-                onChange={(e) => handleOptionChange('discountPercentage', parseFloat(e.target.value) || 0)}
-                style={{
-                  backgroundColor: colors?.inputBg,
-                  color: colors?.text,
-                  borderColor: colors?.inputBorder
-                }}
-              />
-              <Form.Text style={{ color: colors?.muted }}>
-                应用于总价的折扣比例
-              </Form.Text>
-            </Form.Group>
-          </Col>
-          <Col md={4}>
-            <Form.Group className="mb-3">
-              <Form.Label>报价有效期 (天)</Form.Label>
-              <Form.Control
-                type="number"
-                min="1"
-                max="365"
-                step="1"
-                value={options.validityDays}
-                onChange={(e) => handleOptionChange('validityDays', parseInt(e.target.value) || 30)}
-                style={{
-                  backgroundColor: colors?.inputBg,
-                  color: colors?.text,
-                  borderColor: colors?.inputBorder
-                }}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
+        {/* 特殊打包价格提示 */}
+        {hasSpecialPackagePrice && (
+          <Alert variant="info" className="mb-3">
+            <i className="bi bi-info-circle-fill me-2"></i>
+            <strong>特别说明：</strong> GW系列齿轮箱使用市场常规打包价格 ({specialPackageConfig?.packagePrice?.toLocaleString()} 元)，配件价格已包含在内。
+          </Alert>
+        )}
 
-        <h6 className="mb-3 border-bottom pb-2" style={{ color: colors?.headerText }}>额外服务</h6>
-        <Row className="mb-4">
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Check
-                type="switch"
-                id="includeDelivery"
-                label="包含运输服务"
-                checked={options.includeDelivery}
-                onChange={(e) => handleOptionChange('includeDelivery', e.target.checked)}
-              />
-              {options.includeDelivery && (
-                <Form.Control
-                  type="number"
-                  placeholder="运输费用 (元)"
+        {/* 非GW系列默认配置提示 */}
+        {!hasSpecialPackagePrice && selectedComponents?.gearbox?.model && 
+        !selectedComponents.gearbox.model.toUpperCase().includes('GW') && (
+          <Alert variant="info" className="mb-3">
+            <i className="bi bi-info-circle-fill me-2"></i>
+            <strong>默认配置：</strong> 非GW系列齿轮箱默认将配件价格包含在齿轮箱价格中。
+          </Alert>
+        )}
+
+        <Form>
+          <h6 className="mb-3" style={{ color: colors?.headerText }}>显示选项</h6>
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group controlId="showCouplingPrice">
+                <Form.Check 
+                  type="checkbox"
+                  label="联轴器单独显示价格"
+                  checked={options.showCouplingPrice}
+                  onChange={(e) => handleChange('showCouplingPrice', e.target.checked)}
+                  disabled={hasSpecialPackagePrice} // GW系列特殊打包价格时禁用选项
+                />
+                <Form.Text className="text-muted">
+                  {options.showCouplingPrice ? 
+                    '联轴器将作为单独项目显示在报价单中' : 
+                    '联轴器价格将包含在齿轮箱价格中'}
+                </Form.Text>
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group controlId="showPumpPrice">
+                <Form.Check 
+                  type="checkbox"
+                  label="备用泵单独显示价格"
+                  checked={options.showPumpPrice}
+                  onChange={(e) => handleChange('showPumpPrice', e.target.checked)}
+                  disabled={hasSpecialPackagePrice || !needsPump} // GW系列特殊打包价格或不需要备用泵时禁用选项
+                />
+                <Form.Text className="text-muted">
+                  {needsPump ? 
+                    (options.showPumpPrice ? 
+                      '备用泵将作为单独项目显示在报价单中' : 
+                      '备用泵价格将包含在齿轮箱价格中') : 
+                    '当前选型不需要备用泵'}
+                </Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group controlId="includePump">
+                <Form.Check 
+                  type="checkbox"
+                  label="包含备用泵"
+                  checked={options.includePump}
+                  onChange={(e) => handleChange('includePump', e.target.checked)}
+                  disabled={!needsPump} // 不需要备用泵时禁用选项
+                />
+                <Form.Text className="text-muted">
+                  {needsPump ? 
+                    (options.includePump ? 
+                      '报价单将包含备用泵' : 
+                      '报价单不包含备用泵') : 
+                    '当前选型不需要备用泵'}
+                </Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <h6 className="mb-3 mt-4" style={{ color: colors?.headerText }}>价格选项</h6>
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group controlId="taxRate">
+                <Form.Label>增值税税率 (%)</Form.Label>
+                <Form.Control 
+                  type="number" 
+                  value={options.taxRate}
+                  onChange={(e) => handleChange('taxRate', e.target.value)}
                   min="0"
+                  max="100"
+                  style={{
+                    backgroundColor: colors?.inputBg,
+                    color: colors?.text,
+                    borderColor: colors?.inputBorder
+                  }}
+                />
+                <Form.Text className="text-muted">
+                  0表示不含税，标准税率为13%
+                </Form.Text>
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group controlId="discountPercentage">
+                <Form.Label>折扣百分比 (%)</Form.Label>
+                <Form.Control 
+                  type="number" 
+                  value={options.discountPercentage}
+                  onChange={(e) => handleChange('discountPercentage', e.target.value)}
+                  min="0"
+                  max="100"
+                  style={{
+                    backgroundColor: colors?.inputBg,
+                    color: colors?.text,
+                    borderColor: colors?.inputBorder
+                  }}
+                />
+                <Form.Text className="text-muted">
+                  0表示不打折
+                </Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <h6 className="mb-3 mt-4" style={{ color: colors?.headerText }}>额外服务</h6>
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group controlId="includeDelivery">
+                <Form.Check 
+                  type="checkbox"
+                  label="包含运输服务"
+                  checked={options.includeDelivery}
+                  onChange={(e) => handleChange('includeDelivery', e.target.checked)}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group controlId="deliveryCost">
+                <Form.Label>运输费用 (元)</Form.Label>
+                <Form.Control 
+                  type="number" 
                   value={options.deliveryCost}
-                  onChange={(e) => handleOptionChange('deliveryCost', parseFloat(e.target.value) || 0)}
-                  className="mt-2"
-                  style={{
-                    backgroundColor: colors?.inputBg,
-                    color: colors?.text,
-                    borderColor: colors?.inputBorder
-                  }}
-                />
-              )}
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Check
-                type="switch"
-                id="includeInstallation"
-                label="包含安装调试服务"
-                checked={options.includeInstallation}
-                onChange={(e) => handleOptionChange('includeInstallation', e.target.checked)}
-              />
-              {options.includeInstallation && (
-                <Form.Control
-                  type="number"
-                  placeholder="安装费用 (元)"
+                  onChange={(e) => handleChange('deliveryCost', e.target.value)}
+                  disabled={!options.includeDelivery}
                   min="0"
-                  value={options.installationCost}
-                  onChange={(e) => handleOptionChange('installationCost', parseFloat(e.target.value) || 0)}
-                  className="mt-2"
                   style={{
                     backgroundColor: colors?.inputBg,
                     color: colors?.text,
                     borderColor: colors?.inputBorder
                   }}
                 />
-              )}
-            </Form.Group>
-          </Col>
-        </Row>
+              </Form.Group>
+            </Col>
+          </Row>
 
-        <h6 className="mb-3 border-bottom pb-2" style={{ color: colors?.headerText }}>合同条款</h6>
-        <Row className="mb-3">
-          <Col md={12}>
-            <Form.Group className="mb-3">
-              <Form.Label>付款条件</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={2}
-                value={options.paymentTerms}
-                onChange={(e) => handleOptionChange('paymentTerms', e.target.value)}
-                style={{
-                  backgroundColor: colors?.inputBg,
-                  color: colors?.text,
-                  borderColor: colors?.inputBorder
-                }}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={12}>
-            <Form.Group className="mb-3">
-              <Form.Label>交货时间</Form.Label>
-              <Form.Control
-                type="text"
-                value={options.deliveryTime}
-                onChange={(e) => handleOptionChange('deliveryTime', e.target.value)}
-                style={{
-                  backgroundColor: colors?.inputBg,
-                  color: colors?.text,
-                  borderColor: colors?.inputBorder
-                }}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group controlId="includeInstallation">
+                <Form.Check 
+                  type="checkbox"
+                  label="包含安装调试服务"
+                  checked={options.includeInstallation}
+                  onChange={(e) => handleChange('includeInstallation', e.target.checked)}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group controlId="installationCost">
+                <Form.Label>安装费用 (元)</Form.Label>
+                <Form.Control 
+                  type="number" 
+                  value={options.installationCost}
+                  onChange={(e) => handleChange('installationCost', e.target.value)}
+                  disabled={!options.includeInstallation}
+                  min="0"
+                  style={{
+                    backgroundColor: colors?.inputBg,
+                    color: colors?.text,
+                    borderColor: colors?.inputBorder
+                  }}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
 
-        <h6 className="mb-3 border-bottom pb-2" style={{ color: colors?.headerText }}>格式设置</h6>
-        <Row className="mb-3">
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>报价单格式</Form.Label>
-              <Form.Select
-                value={options.format}
-                onChange={(e) => handleOptionChange('format', e.target.value)}
-                style={{
-                  backgroundColor: colors?.inputBg,
-                  color: colors?.text,
-                  borderColor: colors?.inputBorder
-                }}
-              >
-                <option value="standard">标准报价单</option>
-                <option value="detailed">详细报价单</option>
-                <option value="simplified">简化报价单</option>
-              </Form.Select>
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>语言</Form.Label>
-              <Form.Select
-                value={options.language}
-                onChange={(e) => handleOptionChange('language', e.target.value)}
-                style={{
-                  backgroundColor: colors?.inputBg,
-                  color: colors?.text,
-                  borderColor: colors?.inputBorder
-                }}
-              >
-                <option value="zh-CN">中文</option>
-                <option value="en-US">英文</option>
-              </Form.Select>
-            </Form.Group>
-          </Col>
-        </Row>
+          <h6 className="mb-3 mt-4" style={{ color: colors?.headerText }}>其他设置</h6>
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group controlId="validityDays">
+                <Form.Label>有效期天数</Form.Label>
+                <Form.Control 
+                  type="number" 
+                  value={options.validityDays}
+                  onChange={(e) => handleChange('validityDays', e.target.value)}
+                  min="1"
+                  style={{
+                    backgroundColor: colors?.inputBg,
+                    color: colors?.text,
+                    borderColor: colors?.inputBorder
+                  }}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <Row className="mb-3">
+            <Col>
+              <Form.Group controlId="paymentTerms">
+                <Form.Label>付款条件</Form.Label>
+                <Form.Control 
+                  type="text" 
+                  value={options.paymentTerms}
+                  onChange={(e) => handleChange('paymentTerms', e.target.value)}
+                  style={{
+                    backgroundColor: colors?.inputBg,
+                    color: colors?.text,
+                    borderColor: colors?.inputBorder
+                  }}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <Row className="mb-3">
+            <Col>
+              <Form.Group controlId="deliveryTime">
+                <Form.Label>交货时间</Form.Label>
+                <Form.Control 
+                  type="text" 
+                  value={options.deliveryTime}
+                  onChange={(e) => handleChange('deliveryTime', e.target.value)}
+                  style={{
+                    backgroundColor: colors?.inputBg,
+                    color: colors?.text,
+                    borderColor: colors?.inputBorder
+                  }}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+        </Form>
       </Modal.Body>
+
       <Modal.Footer style={{ backgroundColor: colors?.card }}>
-        <Button 
-          variant="outline-secondary" 
-          onClick={resetToDefaults}
-        >
-          重置默认值
-        </Button>
-        <Button 
-          variant="secondary" 
-          onClick={onHide}
-        >
+        <Button variant="secondary" onClick={onHide}>
           取消
         </Button>
-        <Button 
-          variant="primary" 
-          onClick={handleApply}
-          style={{
-            backgroundColor: colors?.primary,
-            borderColor: colors?.primary
-          }}
-        >
-          应用设置并生成报价单
+        <Button variant="primary" onClick={handleApply}>
+          生成报价单
         </Button>
       </Modal.Footer>
     </Modal>

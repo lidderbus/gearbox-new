@@ -139,13 +139,15 @@ export const enhancedCouplingSelection = (
     }
 
     // 主要过滤条件检查
-    // 1. 检查扭矩是否满足要求
-    if (fixedTorque_kNm < requiredCouplingTorque_kNm) {
-      console.log(`跳过 ${coupling.model}: 扭矩 ${fixedTorque_kNm.toFixed(3)} < 所需 ${requiredCouplingTorque_kNm.toFixed(3)}`);
+    // 1. 检查扭矩是否满足要求 - 放宽限制，保留额定扭矩大于等于所需扭矩的0.99倍的联轴器
+    // 允许有轻微的负余量（最多1%的缺口）
+    const minTorqueThreshold = requiredCouplingTorque_kNm * 0.99;
+    if (fixedTorque_kNm < minTorqueThreshold) {
+      console.log(`跳过 ${coupling.model}: 扭矩 ${fixedTorque_kNm.toFixed(3)} < 所需最小 ${minTorqueThreshold.toFixed(3)} (所需理想: ${requiredCouplingTorque_kNm.toFixed(3)})`);
       return;
     }
     
-    // 2. 检查最大速度是否满足要求
+    // 2. 检查最大速度是否满足要求 - 保留速度限制，因为这是物理限制
     if (couplingMaxSpeed < maxEngineSpeed) {
       console.log(`跳过 ${coupling.model}: 最大速度 ${couplingMaxSpeed} < 引擎速度 ${maxEngineSpeed}`);
       return;
@@ -171,25 +173,28 @@ export const enhancedCouplingSelection = (
     const speedMarginPercent = ((couplingMaxSpeed / maxEngineSpeed) - 1) * 100;
 
     // 初始评分计算
-    // 1. 扭矩余量评分 (25分)
+    // 1. 扭矩余量评分 (25分) - 新的评分标准，更友好地处理低余量
     let torqueMarginScore = 0;
     let torqueMarginExplanation = '';
     
     if (torqueMargin >= 10 && torqueMargin <= 30) {
-      torqueMarginScore = 25;
+      torqueMarginScore = 25; // 理想范围
       torqueMarginExplanation = '理想扭矩余量(10-30%)';
     } else if (torqueMargin > 30 && torqueMargin <= 50) {
-      torqueMarginScore = 20;
+      torqueMarginScore = 20; // 较高但合理
       torqueMarginExplanation = '扭矩余量较高(30-50%)';
     } else if (torqueMargin > 50) {
-      torqueMarginScore = 15;
+      torqueMarginScore = 18; // 过高
       torqueMarginExplanation = '扭矩余量过高(>50%)';
     } else if (torqueMargin >= 5 && torqueMargin < 10) {
-      torqueMarginScore = 18;
-      torqueMarginExplanation = '扭矩余量偏低(5-10%)';
+      torqueMarginScore = 22; // 接近理想但略低
+      torqueMarginExplanation = '扭矩余量可接受(5-10%)';
     } else if (torqueMargin >= 0 && torqueMargin < 5) {
-      torqueMarginScore = 10;
-      torqueMarginExplanation = '扭矩余量不足(<5%)';
+      torqueMarginScore = 18; // 较低但可用
+      torqueMarginExplanation = '扭矩余量较低(0-5%)';
+    } else if (torqueMargin >= -1 && torqueMargin < 0) {
+      torqueMarginScore = 15; // 非常低，但在允许范围内
+      torqueMarginExplanation = '扭矩余量临界(接近0%)';
     }
 
     // 2. 推荐匹配评分 (30分)
@@ -198,12 +203,12 @@ export const enhancedCouplingSelection = (
     
     if (recommendedModel && coupling.model === recommendedModel) {
       recommendationScore = 30;
-      recommendationExplanation = '完全匹配';
+      recommendationExplanation = '完全匹配推荐型号';
     } else if (recommendedPrefix && coupling.model.startsWith(recommendedPrefix)) {
-      recommendationScore = 20;
-      recommendationExplanation = '前缀匹配';
+      recommendationScore = 25;
+      recommendationExplanation = '匹配推荐前缀';
     } else {
-      recommendationScore = 5;
+      recommendationScore = 10;
       recommendationExplanation = '无特定推荐匹配';
     }
 
@@ -215,10 +220,10 @@ export const enhancedCouplingSelection = (
       speedMarginScore = 15;
       speedMarginExplanation = '理想速度余量(0-20%)';
     } else if (speedMarginPercent > 20 && speedMarginPercent <= 50) {
-      speedMarginScore = 12;
+      speedMarginScore = 13;
       speedMarginExplanation = '速度余量较高(20-50%)';
     } else if (speedMarginPercent > 50) {
-      speedMarginScore = 8;
+      speedMarginScore = 10;
       speedMarginExplanation = '速度余量过高(>50%)';
     }
 
@@ -398,8 +403,11 @@ export const enhancedCouplingSelection = (
   eligibleCouplings.sort((a, b) => {
     // 主要排序：评分（降序）
     if (b.score !== a.score) return b.score - a.score;
-    // 次要排序：偏好更接近15%的扭矩余量
-    return Math.abs(a.torqueMargin - 15) - Math.abs(b.torqueMargin - 15);
+    // 次要排序：更偏好推荐型号
+    if (a.model === recommendedModel) return -1;
+    if (b.model === recommendedModel) return 1;
+    // 第三排序：偏好更接近10%的扭矩余量
+    return Math.abs(a.torqueMargin - 10) - Math.abs(b.torqueMargin - 10);
   });
 
   // 生成警告信息
@@ -407,10 +415,10 @@ export const enhancedCouplingSelection = (
   if (eligibleCouplings.length > 0) {
     const topPick = eligibleCouplings[0];
     
-    if (topPick.torqueMargin < 5) {
-      warning = `警告: 首选联轴器 (${topPick.model}) 的扭矩余量 (${topPick.torqueMargin.toFixed(1)}%) 非常低 (<5%)。`;
-    } else if (topPick.torqueMargin < 10) {
-      warning = `注意: 首选联轴器 (${topPick.model}) 的扭矩余量 (${topPick.torqueMargin.toFixed(1)}%) 较低 (<10%)。`;
+    if (topPick.torqueMargin < 0) {
+      warning = `警告: 首选联轴器 (${topPick.model}) 的扭矩余量 (${topPick.torqueMargin.toFixed(1)}%) 为负值，实际扭矩低于理论所需扭矩，仅适用于轻负载情况。`;
+    } else if (topPick.torqueMargin < 5) {
+      warning = `注意: 首选联轴器 (${topPick.model}) 的扭矩余量 (${topPick.torqueMargin.toFixed(1)}%) 较低 (<5%)。`;
     } else if (topPick.torqueMargin > 50) {
       warning = `注意: 首选联轴器 (${topPick.model}) 的扭矩余量 (${topPick.torqueMargin.toFixed(1)}%) 较高 (>50%)，可能过度选型。`;
     }
@@ -480,7 +488,7 @@ export const enhancedCouplingSelection = (
       requiredTorque: requiredCouplingTorque_kNm,
       hasCover: hasCover
     } : null),
-    recommendations: eligibleCouplings.slice(0, 5),
+    recommendations: eligibleCouplings,
     allEligibleCouplings: eligibleCouplings,
     requiredCouplingTorque: requiredCouplingTorque_kNm,
     warning: warning,
