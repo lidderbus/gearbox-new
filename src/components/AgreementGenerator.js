@@ -1,9 +1,497 @@
 // src/components/AgreementGenerator.js
-import React, { useState, useEffect, useRef } from 'react';
-import { Form, Row, Col, Card, Button, Tabs, Tab, Alert, Spinner } from 'react-bootstrap';
+import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
+import { Form, Row, Col, Card, Button, Tabs, Tab, Alert, Spinner, ListGroup, Badge } from 'react-bootstrap';
 import { getAgreementTemplate, fillTemplate, TemplateType, LanguageType } from '../utils/agreementTemplateManager';
 import { exportHtmlContentToPDF } from '../utils/pdfExportUtils';
 import '../styles/agreementTemplates.css';
+// 导入双语模板工具
+import { 
+  bilingualTemplates, 
+  generateBilingualAgreement,
+  getCurrentDate,
+  translateSpecialRequirements,
+  formatSpecialRequirements,
+  fillTemplate as bilingualFillTemplate
+} from '../utils/bilingualTemplates';
+// 导入特殊要求模板
+import { specialRequirementTemplates, processTemplate } from '../utils/specialRequirementTemplates';
+// 导入双语样式
+import '../styles/bilingualStyles.css';
+
+/**
+ * 特殊订货要求模板选择组件
+ * 用于选择、定制和管理特殊订货要求模板
+ */
+const SpecialRequirementsTemplateSelector = memo(({ 
+  currentRequirements, 
+  templateData, 
+  onRequirementsChange,
+  colors
+}) => {
+  // 状态定义
+  const [selectedCategory, setSelectedCategory] = useState('performance');
+  const [selectedTemplates, setSelectedTemplates] = useState([]);
+  const [customRequirement, setCustomRequirement] = useState('');
+  const [localError, setLocalError] = useState(null);
+  
+  // 调试日志 - 可以帮助诊断问题
+  useEffect(() => {
+    console.log("SpecialRequirementsTemplateSelector组件挂载");
+    console.log("初始templateData:", templateData);
+    console.log("初始currentRequirements:", currentRequirements);
+    
+    return () => {
+      console.log("SpecialRequirementsTemplateSelector组件卸载");
+    };
+  }, []);
+  
+  // 安全地初始化模板列表
+  useEffect(() => {
+    try {
+      console.log("处理currentRequirements变更:", currentRequirements);
+      
+      // 清除任何错误
+      setLocalError(null);
+      
+      if (!currentRequirements) {
+        console.log("无currentRequirements，设置空数组");
+        setSelectedTemplates([]);
+        return;
+      }
+      
+      if (typeof currentRequirements !== 'string') {
+        console.log("currentRequirements不是字符串，设置空数组");
+        setSelectedTemplates([]);
+        return;
+      }
+      
+      // 安全解析当前需求
+      const requirements = currentRequirements
+        .split('\n')
+        .filter(line => line && line.trim !== undefined && line.trim() !== '')
+        .map(line => line.trim());
+      
+      console.log(`解析出${requirements.length}个模板项`);
+      setSelectedTemplates(requirements);
+    } catch (error) {
+      console.error("初始化模板列表出错:", error);
+      setLocalError("无法加载当前要求列表");
+      setSelectedTemplates([]);
+    }
+  }, [currentRequirements]);
+  
+  // 带有缓存的类别变更处理函数
+  const handleCategoryChange = useCallback((category) => {
+    console.log("切换类别到:", category);
+    setSelectedCategory(category);
+    setLocalError(null);
+  }, []);
+  
+  // 带有缓存的模板处理函数
+  const processTemplateData = useCallback((template) => {
+    if (!template || typeof template !== 'string') {
+      return '';
+    }
+    
+    try {
+      // 创建模板的副本以避免修改原始数据
+      let processedTemplate = String(template);
+      
+      // 安全地替换变量
+      if (templateData && typeof templateData === 'object') {
+        // 遍历变量数据
+        for (const key in templateData) {
+          if (Object.prototype.hasOwnProperty.call(templateData, key)) {
+            const value = templateData[key];
+            if (value !== undefined && value !== null) {
+              // 使用字符串替换而不是正则表达式，以避免特殊字符问题
+              const placeholder = `{{${key}}}`;
+              while (processedTemplate.includes(placeholder)) {
+                processedTemplate = processedTemplate.replace(placeholder, String(value));
+              }
+            }
+          }
+        }
+      }
+      
+      // 替换所有剩余的变量为空字符串
+      // 使用简单的字符串操作而不是正则表达式
+      let startIndex;
+      while ((startIndex = processedTemplate.indexOf('{{')) !== -1) {
+        const endIndex = processedTemplate.indexOf('}}', startIndex);
+        if (endIndex !== -1) {
+          processedTemplate = 
+            processedTemplate.substring(0, startIndex) + 
+            processedTemplate.substring(endIndex + 2);
+        } else {
+          // 如果没有找到结束标记，退出循环
+          break;
+        }
+      }
+      
+      return processedTemplate;
+    } catch (error) {
+      console.error("处理模板变量出错:", error);
+      return template; // 返回原始模板
+    }
+  }, [templateData]);
+  
+  // 添加模板函数
+  const addTemplate = useCallback((template) => {
+    console.log("尝试添加模板:", template);
+    
+    if (!template || typeof template !== 'string') {
+      console.warn("无效的模板内容");
+      return;
+    }
+    
+    try {
+      // 处理模板变量
+      const processedTemplate = processTemplateData(template);
+      console.log("处理后的模板:", processedTemplate);
+      
+      if (!processedTemplate.trim()) {
+        console.warn("处理后的模板为空");
+        return;
+      }
+      
+      // 检查是否重复
+      setSelectedTemplates(prevTemplates => {
+        if (!Array.isArray(prevTemplates)) {
+          prevTemplates = [];
+        }
+        
+        // 检查是否重复
+        const isDuplicate = prevTemplates.some(item => 
+          item.trim() === processedTemplate.trim()
+        );
+        
+        if (isDuplicate) {
+          console.log("模板已存在，跳过添加");
+          return prevTemplates;
+        }
+        
+        // 创建一个新的数组，避免直接修改状态
+        const newTemplates = [...prevTemplates, processedTemplate.trim()];
+        
+        // 通知父组件
+        setTimeout(() => {
+          if (onRequirementsChange && typeof onRequirementsChange === 'function') {
+            onRequirementsChange(newTemplates.join('\n'));
+          }
+        }, 0);
+        
+        return newTemplates;
+      });
+      
+      setLocalError(null);
+    } catch (error) {
+      console.error("添加模板出错:", error);
+      setLocalError("添加模板时出错");
+    }
+  }, [processTemplateData, onRequirementsChange]);
+  
+  // 添加自定义需求
+  const addCustomRequirement = useCallback(() => {
+    if (!customRequirement.trim()) {
+      return;
+    }
+    
+    try {
+      addTemplate(customRequirement);
+      setCustomRequirement('');
+    } catch (error) {
+      console.error("添加自定义需求出错:", error);
+      setLocalError("添加自定义需求时出错");
+    }
+  }, [customRequirement, addTemplate]);
+  
+  // 清空模板列表
+  const clearTemplates = useCallback(() => {
+    console.log("清空模板列表");
+    
+    setSelectedTemplates([]);
+    
+    if (onRequirementsChange && typeof onRequirementsChange === 'function') {
+      onRequirementsChange('');
+    }
+    
+    setLocalError(null);
+  }, [onRequirementsChange]);
+  
+  // 移除模板
+  const removeTemplate = useCallback((index) => {
+    console.log("移除模板，索引:", index);
+    
+    if (index < 0) {
+      return;
+    }
+    
+    setSelectedTemplates(prevTemplates => {
+      if (!Array.isArray(prevTemplates) || index >= prevTemplates.length) {
+        return prevTemplates;
+      }
+      
+      const newTemplates = prevTemplates.filter((_, i) => i !== index);
+      
+      setTimeout(() => {
+        if (onRequirementsChange && typeof onRequirementsChange === 'function') {
+          onRequirementsChange(newTemplates.join('\n'));
+        }
+      }, 0);
+      
+      return newTemplates;
+    });
+  }, [onRequirementsChange]);
+  
+  // 移动模板函数
+  const moveTemplate = useCallback((fromIndex, toIndex) => {
+    console.log(`移动模板从${fromIndex}到${toIndex}`);
+    
+    if (fromIndex < 0 || toIndex < 0) {
+      return;
+    }
+    
+    setSelectedTemplates(prevTemplates => {
+      if (!Array.isArray(prevTemplates) || 
+          fromIndex >= prevTemplates.length || 
+          toIndex >= prevTemplates.length) {
+        return prevTemplates;
+      }
+      
+      const newTemplates = [...prevTemplates];
+      const [moved] = newTemplates.splice(fromIndex, 1);
+      newTemplates.splice(toIndex, 0, moved);
+      
+      setTimeout(() => {
+        if (onRequirementsChange && typeof onRequirementsChange === 'function') {
+          onRequirementsChange(newTemplates.join('\n'));
+        }
+      }, 0);
+      
+      return newTemplates;
+    });
+  }, [onRequirementsChange]);
+  
+  // 渲染模板选项
+  const renderTemplateOptions = useCallback(() => {
+    try {
+      if (!specialRequirementTemplates || 
+          !specialRequirementTemplates[selectedCategory] ||
+          !Array.isArray(specialRequirementTemplates[selectedCategory].chinese)) {
+        return (
+          <ListGroup.Item 
+            style={{
+              backgroundColor: colors?.card || '#fff',
+              color: colors?.text || '#333'
+            }}
+          >
+            无可用模板
+          </ListGroup.Item>
+        );
+      }
+      
+      return specialRequirementTemplates[selectedCategory].chinese.map((template, index) => {
+        const displayText = processTemplateData(template);
+        
+        return (
+          <ListGroup.Item 
+            key={`template-option-${index}`}
+            action
+            onClick={() => addTemplate(template)}
+            style={{
+              backgroundColor: colors?.card || '#fff',
+              color: colors?.text || '#333',
+              borderColor: colors?.border || '#ced4da'
+            }}
+          >
+            {displayText}
+          </ListGroup.Item>
+        );
+      });
+    } catch (error) {
+      console.error("渲染模板选项出错:", error);
+      return (
+        <ListGroup.Item 
+          style={{
+            backgroundColor: colors?.card || '#fff',
+            color: colors?.text || '#333'
+          }}
+        >
+          加载模板出错
+        </ListGroup.Item>
+      );
+    }
+  }, [selectedCategory, colors, processTemplateData, addTemplate]);
+  
+  // 渲染已选模板列表
+  const renderSelectedTemplates = useCallback(() => {
+    if (!Array.isArray(selectedTemplates) || selectedTemplates.length === 0) {
+      return (
+        <p className="text-muted mb-0">请从左侧选择需要添加的特殊订货要求模板</p>
+      );
+    }
+    
+    return (
+      <ol className="mb-0 ps-3">
+        {selectedTemplates.map((template, index) => (
+          <li key={`selected-template-${index}`} className="mb-2 d-flex align-items-start">
+            <span className="me-2">{template}</span>
+            <div className="ms-auto d-flex">
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                className="me-1 p-0 px-1"
+                onClick={() => moveTemplate(index, index - 1)}
+                disabled={index === 0}
+                title="上移"
+              >
+                <i className="bi bi-arrow-up"></i>
+              </Button>
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                className="me-1 p-0 px-1"
+                onClick={() => moveTemplate(index, index + 1)}
+                disabled={index === selectedTemplates.length - 1}
+                title="下移"
+              >
+                <i className="bi bi-arrow-down"></i>
+              </Button>
+              <Button
+                variant="outline-danger"
+                size="sm"
+                className="p-0 px-1"
+                onClick={() => removeTemplate(index)}
+                title="删除"
+              >
+                <i className="bi bi-x"></i>
+              </Button>
+            </div>
+          </li>
+        ))}
+      </ol>
+    );
+  }, [selectedTemplates, moveTemplate, removeTemplate]);
+  
+  // 组件渲染
+  return (
+    <div className="mb-3">
+      <h6 style={{ color: colors?.headerText || '#333' }}>特殊订货要求模板</h6>
+      
+      {localError && (
+        <Alert variant="danger" className="mb-2" dismissible onClose={() => setLocalError(null)}>
+          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+          {localError}
+        </Alert>
+      )}
+      
+      <Row>
+        <Col md={4}>
+          <div className="mb-3">
+            <Form.Group>
+              <Form.Label>类别</Form.Label>
+              <Form.Select 
+                value={selectedCategory}
+                onChange={(e) => handleCategoryChange(e.target.value)}
+                style={{
+                  backgroundColor: colors?.inputBg || '#fff',
+                  color: colors?.text || '#333',
+                  borderColor: colors?.inputBorder || '#ced4da'
+                }}
+              >
+                <option value="performance">性能参数类</option>
+                <option value="installation">安装与连接类</option>
+                <option value="cooling">冷却系统类</option>
+                <option value="lubrication">润滑系统类</option>
+                <option value="monitoring">监测与报警系统类</option>
+                <option value="control">操控系统类</option>
+                <option value="documentation">检验与文档类</option>
+                <option value="special">特殊应用场景</option>
+              </Form.Select>
+            </Form.Group>
+            
+            <div className="mt-3">
+              <Form.Label>可选模板</Form.Label>
+              <ListGroup
+                style={{
+                  maxHeight: '200px',
+                  overflow: 'auto',
+                  backgroundColor: colors?.card || '#fff',
+                  borderColor: colors?.border || '#ced4da'
+                }}
+              >
+                {renderTemplateOptions()}
+              </ListGroup>
+            </div>
+            
+            <div className="mt-3">
+              <Form.Group>
+                <Form.Label>自定义需求</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={2}
+                  value={customRequirement}
+                  onChange={(e) => setCustomRequirement(e.target.value)}
+                  placeholder="输入自定义特殊需求..."
+                  style={{
+                    backgroundColor: colors?.inputBg || '#fff',
+                    color: colors?.text || '#333',
+                    borderColor: colors?.inputBorder || '#ced4da'
+                  }}
+                />
+              </Form.Group>
+              <Button
+                variant="outline-primary"
+                size="sm"
+                className="mt-2"
+                onClick={addCustomRequirement}
+                disabled={!customRequirement.trim()}
+              >
+                <i className="bi bi-plus-circle me-1"></i> 添加自定义需求
+              </Button>
+            </div>
+          </div>
+        </Col>
+        
+        <Col md={8}>
+          <div className="mb-3">
+            <Form.Label>已选特殊订货要求 
+              <Badge bg="info" className="ms-2">
+                {Array.isArray(selectedTemplates) ? selectedTemplates.length : 0}
+              </Badge>
+              {Array.isArray(selectedTemplates) && selectedTemplates.length > 0 && (
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  className="ms-2"
+                  onClick={clearTemplates}
+                >
+                  <i className="bi bi-trash me-1"></i> 清空
+                </Button>
+              )}
+            </Form.Label>
+            <div 
+              className="p-3 border rounded"
+              style={{
+                maxHeight: '300px',
+                overflowY: 'auto',
+                backgroundColor: colors?.card || '#fff',
+                color: colors?.text || '#333',
+                borderColor: colors?.border || '#ced4da'
+              }}
+            >
+              {renderSelectedTemplates()}
+            </div>
+          </div>
+        </Col>
+      </Row>
+    </div>
+  );
+});
+
+// 设置显示名称以便于调试
+SpecialRequirementsTemplateSelector.displayName = 'SpecialRequirementsTemplateSelector';
 
 /**
  * 技术协议生成器组件
@@ -30,45 +518,203 @@ const AgreementGenerator = ({
     warrantyPeriod: "十二个月"
   });
   const [specialRequirements, setSpecialRequirements] = useState('');
+  const [specialReqType, setSpecialReqType] = useState('custom'); // 'custom' 或 'template'
+  const [specialRequirementsFormat, setSpecialRequirementsFormat] = useState('numbered'); // 'numbered', 'bullet', 'plain'
   const [agreement, setAgreement] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('config');
+  
+  // 新增双语模板相关状态
+  const [isBilingual, setIsBilingual] = useState(false);
+  const [bilingualLayout, setBilingualLayout] = useState('side-by-side');
   
   // 预览引用
   const previewRef = useRef(null);
 
   // 根据所选齿轮箱型号自动设置模板类型
   useEffect(() => {
-    if (selectedComponents?.gearbox?.model) {
-      const model = selectedComponents.gearbox.model;
-      if (model.startsWith('GWC') || model.startsWith('GWL')) {
-        setTemplateType(TemplateType.GWC);
-      } else if (model.startsWith('HCT')) {
-        setTemplateType(TemplateType.HCT);
-      } else if (model.startsWith('HC')) {
-        setTemplateType(TemplateType.HC);
-      } else if (model.startsWith('DT')) {
-        setTemplateType(TemplateType.DT);
-      } else if (model.startsWith('HCD')) {
-        setTemplateType(TemplateType.HCD);
+    try {
+      if (selectedComponents?.gearbox?.model) {
+        const model = selectedComponents.gearbox.model;
+        if (model.startsWith('GWC') || model.startsWith('GWL')) {
+          setTemplateType(TemplateType.GWC);
+        } else if (model.startsWith('HCT')) {
+          setTemplateType(TemplateType.HCT);
+        } else if (model.startsWith('HC')) {
+          setTemplateType(TemplateType.HC);
+        } else if (model.startsWith('DT')) {
+          setTemplateType(TemplateType.DT);
+        } else if (model.startsWith('HCD')) {
+          setTemplateType(TemplateType.HCD);
+        }
       }
+    } catch (error) {
+      console.error("根据型号设置模板类型出错:", error);
     }
   }, [selectedComponents]);
   
   // 处理选项变更
-  const handleOptionChange = (name, value) => {
+  const handleOptionChange = useCallback((name, value) => {
     setOptions(prev => ({
       ...prev,
       [name]: value
     }));
-  };
+  }, []);
   
   // 生成协议内容
-  const generateAgreement = () => {
+  const generateAgreement = useCallback(() => {
     setLoading(true);
     setError('');
     
+    try {
+      // 检查是否使用双语模式
+      if (isBilingual) {
+        generateBilingualAgreementContent();
+      } else {
+        generateSingleLanguageAgreementContent();
+      }
+    } catch (error) {
+      console.error('生成技术协议失败:', error);
+      setError(`生成技术协议失败: ${error.message}`);
+      setLoading(false);
+    }
+  }, [isBilingual]);
+  
+  // 生成双语版技术协议 - 改进版
+  const generateBilingualAgreementContent = useCallback(() => {
+    try {
+      // 准备数据
+      const gearbox = selectedComponents?.gearbox || {};
+      const engine = selectionResult?.engineData || {};
+      const ship = projectInfo || {};
+      
+      // 检查必要数据
+      if (!gearbox.model) {
+        throw new Error('未选择齿轮箱，无法生成协议');
+      }
+      
+      // 准备模板数据
+      const templateData = {
+        // 项目和船舶信息
+        projectName: ship.projectName || '',
+        shipOwner: ship.customerName || '',
+        shipyard: ship.shipyard || '',
+        shipType: ship.shipType || '客运船',
+        shipManufacturer: ship.shipManufacturer || '',
+        projectNumber: ship.projectNumber || '',
+        
+        // 主机信息
+        engineModel: ship.engineModel || engine.model || '',
+        enginePower: engine.power || '',
+        engineSpeed: engine.speed || '',
+        engineRotation: engine.rotation || '顺时针',
+        
+        // 齿轮箱信息
+        model: gearbox.model || '',
+        reductionRatio: gearbox.reductionRatio || gearbox.ratio || '',
+        arrangement: gearbox.arrangement || '水平排列',
+        
+        // 技术参数
+        transmissionCapacity: gearbox.transmissionCapacity || gearbox.power || '',
+        maxInputSpeed: gearbox.maxInputSpeed || engine.speed || '',
+        lubricationOilPressure: gearbox.lubricationOilPressure || '0.04～0.4',
+        maxPropellerThrust: gearbox.maxPropellerThrust || '',
+        centerDistance: gearbox.centerDistance || '',
+        maxOilTemperature: gearbox.maxOilTemperature || '75',
+        mechanicalEfficiency: gearbox.mechanicalEfficiency || '96',
+        weight: gearbox.weight || '',
+        
+        // 倾斜度
+        longitudinalInclination: gearbox.longitudinalInclination || '10',
+        transverseInclination: gearbox.transverseInclination || '15',
+        
+        // 配件信息
+        couplingModel: selectedComponents?.coupling?.model || '主机厂配',
+        pumpModel: selectedComponents?.pump?.model || '',
+        
+        // 配置选项
+        approvalPeriod: options.approvalPeriod.toString(),
+        feedbackPeriod: options.feedbackPeriod.toString(),
+        warrantyPeriod: options.warrantyPeriod,
+        
+        // 特殊订货要求
+        specialRequirements: specialRequirements || '无',
+        specialRequirementsFormat: specialRequirementsFormat,
+        
+        // 选项标记
+        includeQualitySection: options.includeQualitySection,
+        includeMaintenanceSection: options.includeMaintenanceSection,
+        includeAttachmentSection: options.includeAttachmentSection,
+        includeShipInfo: options.includeShipInfo,
+        
+        // 监控报警参数
+        lowOilPressureAlarm: gearbox.lowOilPressureAlarm || '0.05',
+        highOilTemperatureAlarm: gearbox.highOilTemperatureAlarm || '75',
+        
+        // 冷却系统参数
+        coolingWaterInletTemperature: gearbox.coolingWaterInletTemperature || '32',
+        coolingWaterVolume: gearbox.coolingWaterVolume || '2',
+        coolingWaterPressure: gearbox.coolingWaterPressure || '0.35',
+        
+        // 润滑系统参数
+        oilCapacity: gearbox.oilCapacity || '100',
+        oilGrade: gearbox.oilGrade || 'CD40'
+      };
+      
+      // 使用双语生成器生成内容，并根据布局类型添加相应的CSS类名
+      let content = '';
+      
+      if (bilingualLayout === 'side-by-side') {
+        content = generateBilingualAgreement(templateData, bilingualLayout)
+          .replace('<div class="container bilingual-document">', 
+                   '<div class="container bilingual-document side-by-side">');
+      } 
+      else if (bilingualLayout === 'sequential') {
+        content = generateBilingualAgreement(templateData, bilingualLayout)
+          .replace('<div class="container bilingual-document">', 
+                   '<div class="container bilingual-document sequential-layout">');
+      }
+      else { // complete layout
+        content = generateBilingualAgreement(templateData, bilingualLayout)
+          .replace('<div class="container bilingual-document">', 
+                   '<div class="container bilingual-document complete-layout">');
+      }
+      
+      // 确保引入CSS样式
+      if (!content.includes('<link rel="stylesheet" href="../styles/bilingualStyles.css">')) {
+        content = content.replace('</head>', 
+          '<link rel="stylesheet" href="../styles/bilingualStyles.css">\n</head>');
+      }
+      
+      // 设置协议内容
+      const generatedAgreement = {
+        type: templateType,
+        language: 'bilingual',
+        html: content,
+        options: { ...options },
+        data: templateData,
+        bilingualLayout: bilingualLayout
+      };
+      
+      setAgreement(generatedAgreement);
+      
+      // 切换到预览选项卡
+      setActiveTab('preview');
+      
+      // 通知父组件协议已生成
+      onGenerated(generatedAgreement);
+      
+      setLoading(false);
+    } catch (error) {
+      console.error('生成双语技术协议失败:', error);
+      setError(`生成双语技术协议失败: ${error.message}`);
+      setLoading(false);
+    }
+  }, [selectedComponents, selectionResult, projectInfo, options, specialRequirements, specialRequirementsFormat, bilingualLayout, templateType, onGenerated]);
+  
+  // 生成单语种技术协议
+  const generateSingleLanguageAgreementContent = useCallback(() => {
     try {
       // 获取模板
       const template = getAgreementTemplate(templateType, language, options);
@@ -221,6 +867,23 @@ const AgreementGenerator = ({
         designer: ship.designer || '',
       };
       
+      // 处理特殊订货要求格式化（如果有）
+      if (specialRequirements && specialRequirements.trim() !== '') {
+        try {
+          // 将每行转换为HTML列表项
+          const reqLines = specialRequirements.split('\n').filter(line => line.trim() !== '');
+          if (reqLines.length > 0) {
+            const reqListItems = reqLines.map((line, index) => `<li key="req-${index}">${line.trim()}</li>`).join('');
+            const reqListHtml = '<ol class="special-requirements-list">' + reqListItems + '</ol>';
+            templateData.specialRequirements = reqListHtml;
+          }
+        } catch (reqError) {
+          console.error("处理特殊要求格式失败:", reqError);
+          // 保留原始文本，不进行格式化
+          templateData.specialRequirements = specialRequirements;
+        }
+      }
+      
       // 填充模板
       const content = fillTemplate(template, templateData);
       
@@ -245,16 +908,16 @@ const AgreementGenerator = ({
         data: templateData
       });
       
+      setLoading(false);
     } catch (error) {
-      console.error('生成协议失败:', error);
-      setError(`生成协议失败: ${error.message}`);
-    } finally {
+      console.error('生成单语言技术协议失败:', error);
+      setError(`生成技术协议失败: ${error.message}`);
       setLoading(false);
     }
-  };
+  }, [language, onGenerated, options, projectInfo, selectedComponents, selectionResult, specialRequirements, specialRequirementsFormat, templateType]);
   
   // 导出为PDF - 修改版
-  const exportToPDF = () => {
+  const exportToPDF = useCallback(() => {
     if (!agreement || !previewRef.current) {
       setError('请先生成技术协议');
       return;
@@ -284,7 +947,57 @@ const AgreementGenerator = ({
         setLoading(false);
       });
     }, 500);
-  };
+  }, [agreement, projectInfo]);
+  
+  // 获取模板数据，用于特殊订货要求模板中的变量替换
+  const getTemplateDataForRequirements = useCallback(() => {
+    try {
+      const gearbox = selectedComponents?.gearbox || {};
+      const engine = selectionResult?.engineData || {};
+      
+      return {
+        maxInputSpeed: (gearbox.maxInputSpeed || engine.speed || '1800').toString(),
+        maxPropellerThrust: (gearbox.maxPropellerThrust || '50').toString(),
+        mechanicalEfficiency: (gearbox.mechanicalEfficiency || '96').toString(),
+        longitudinalInclination: (gearbox.longitudinalInclination || '10').toString(),
+        transverseInclination: (gearbox.transverseInclination || '15').toString(),
+        coolingWaterInletTemperature: (gearbox.coolingWaterInletTemperature || '32').toString(),
+        coolingWaterVolume: (gearbox.coolingWaterVolume || '2').toString(),
+        coolingWaterPressure: (gearbox.coolingWaterPressure || '0.35').toString(),
+        lubricationOilPressure: (gearbox.lubricationOilPressure || '0.04～0.4').toString(),
+        maxOilTemperature: (gearbox.maxOilTemperature || '75').toString(),
+        oilCapacity: (gearbox.oilCapacity || '100').toString(),
+        oilGrade: (gearbox.oilGrade || 'CD40').toString(),
+        lowOilPressureAlarm: (gearbox.lowOilPressureAlarm || '0.05').toString(),
+        highOilTemperatureAlarm: (gearbox.highOilTemperatureAlarm || '75').toString()
+      };
+    } catch (error) {
+      console.error("获取模板数据出错:", error);
+      // 返回默认值避免空对象
+      return {
+        maxInputSpeed: '1800',
+        maxPropellerThrust: '50',
+        mechanicalEfficiency: '96',
+        longitudinalInclination: '10',
+        transverseInclination: '15',
+        coolingWaterInletTemperature: '32',
+        coolingWaterVolume: '2',
+        coolingWaterPressure: '0.35',
+        lubricationOilPressure: '0.04～0.4',
+        maxOilTemperature: '75',
+        oilCapacity: '100',
+        oilGrade: 'CD40',
+        lowOilPressureAlarm: '0.05',
+        highOilTemperatureAlarm: '75'
+      };
+    }
+  }, [selectedComponents, selectionResult]);
+  
+  // 处理特殊订货要求变更
+  const handleSpecialRequirementsChange = useCallback((value) => {
+    console.log("特殊订货要求更新:", value);
+    setSpecialRequirements(value);
+  }, []);
   
   return (
     <Card className="mb-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
@@ -337,16 +1050,92 @@ const AgreementGenerator = ({
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>协议语言</Form.Label>
-                    <Form.Select
-                      value={language}
-                      onChange={(e) => setLanguage(e.target.value)}
-                    >
-                      <option value={LanguageType.CHINESE}>中文</option>
-                      <option value={LanguageType.ENGLISH}>英文</option>
-                    </Form.Select>
+                    <div>
+                      <Form.Check
+                        inline
+                        type="radio"
+                        id="lang-zh"
+                        label="仅中文"
+                        name="language-option"
+                        checked={language === LanguageType.CHINESE && !isBilingual}
+                        onChange={() => {
+                          setLanguage(LanguageType.CHINESE);
+                          setIsBilingual(false);
+                        }}
+                        className="mb-2"
+                      />
+                      <Form.Check
+                        inline
+                        type="radio"
+                        id="lang-en"
+                        label="仅英文"
+                        name="language-option"
+                        checked={language === LanguageType.ENGLISH && !isBilingual}
+                        onChange={() => {
+                          setLanguage(LanguageType.ENGLISH);
+                          setIsBilingual(false);
+                        }}
+                        className="mb-2"
+                      />
+                      <Form.Check
+                        inline
+                        type="radio"
+                        id="lang-bilingual"
+                        label="中英文对照"
+                        name="language-option"
+                        checked={isBilingual}
+                        onChange={() => {
+                          setIsBilingual(true);
+                        }}
+                        className="mb-2"
+                      />
+                    </div>
                   </Form.Group>
                 </Col>
               </Row>
+              
+              {/* 双语布局选项 - 当选择中英文对照时显示 */}
+              {isBilingual && (
+                <Row className="mb-3">
+                  <Col md={12}>
+                    <Form.Group className="mb-3">
+                      <Form.Label>双语布局方式</Form.Label>
+                      <div>
+                        <Form.Check
+                          inline
+                          type="radio"
+                          id="layout-side"
+                          label="左右对照（中英文并排）"
+                          name="bilingual-layout"
+                          checked={bilingualLayout === 'side-by-side'}
+                          onChange={() => setBilingualLayout('side-by-side')}
+                          className="mb-2"
+                        />
+                        <Form.Check
+                          inline
+                          type="radio"
+                          id="layout-sequential"
+                          label="分段对照（每段先中后英）"
+                          name="bilingual-layout"
+                          checked={bilingualLayout === 'sequential'}
+                          onChange={() => setBilingualLayout('sequential')}
+                          className="mb-2"
+                        />
+                        <Form.Check
+                          inline
+                          type="radio"
+                          id="layout-complete"
+                          label="全文对照（先中文后英文）"
+                          name="bilingual-layout"
+                          checked={bilingualLayout === 'complete'}
+                          onChange={() => setBilingualLayout('complete')}
+                          className="mb-2"
+                        />
+                      </div>
+                    </Form.Group>
+                  </Col>
+                </Row>
+              )}
               
               <Card className="mb-3">
                 <Card.Header>协议模块配置</Card.Header>
@@ -436,19 +1225,97 @@ const AgreementGenerator = ({
                 </Card.Body>
               </Card>
               
-              <Form.Group className="mb-3">
-                <Form.Label>特殊订货要求</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={5}
-                  value={specialRequirements}
-                  onChange={(e) => setSpecialRequirements(e.target.value)}
-                  placeholder="请输入特殊订货要求，每条要求占一行..."
-                />
-                <Form.Text className="text-muted">
-                  每行一条特殊要求，如压力、冷却水流量等特殊要求
-                </Form.Text>
-              </Form.Group>
+              <Card className="mb-3">
+                <Card.Header>特殊订货要求</Card.Header>
+                <Card.Body>
+                  <Form.Group className="mb-3">
+                    <Form.Label>使用模板或自定义特殊订货要求</Form.Label>
+                    <Row>
+                      <Col>
+                        <Form.Check
+                          type="radio"
+                          id="special-req-template"
+                          label="使用模板生成"
+                          name="special-req-type"
+                          checked={specialReqType === 'template'}
+                          onChange={() => setSpecialReqType('template')}
+                          className="mb-2"
+                        />
+                        <Form.Check
+                          type="radio"
+                          id="special-req-custom"
+                          label="手动输入文本"
+                          name="special-req-type"
+                          checked={specialReqType === 'custom'}
+                          onChange={() => setSpecialReqType('custom')}
+                          className="mb-2"
+                        />
+                      </Col>
+                    </Row>
+                    
+                    <Form.Group className="mb-3">
+                      <Form.Label>特殊订货要求格式</Form.Label>
+                      <div>
+                        <Form.Check
+                          inline
+                          type="radio"
+                          id="special-req-format-numbered"
+                          label="编号列表"
+                          name="special-req-format"
+                          checked={specialRequirementsFormat === 'numbered'}
+                          onChange={() => setSpecialRequirementsFormat('numbered')}
+                          className="mb-2"
+                        />
+                        <Form.Check
+                          inline
+                          type="radio"
+                          id="special-req-format-bullet"
+                          label="项目符号"
+                          name="special-req-format"
+                          checked={specialRequirementsFormat === 'bullet'}
+                          onChange={() => setSpecialRequirementsFormat('bullet')}
+                          className="mb-2"
+                        />
+                        <Form.Check
+                          inline
+                          type="radio"
+                          id="special-req-format-plain"
+                          label="纯文本"
+                          name="special-req-format"
+                          checked={specialRequirementsFormat === 'plain'}
+                          onChange={() => setSpecialRequirementsFormat('plain')}
+                          className="mb-2"
+                        />
+                      </div>
+                    </Form.Group>
+                    
+                    {specialReqType === 'template' ? (
+                      <SpecialRequirementsTemplateSelector
+                        currentRequirements={specialRequirements}
+                        templateData={getTemplateDataForRequirements()}
+                        onRequirementsChange={handleSpecialRequirementsChange}
+                        colors={colors}
+                      />
+                    ) : (
+                      <Form.Control
+                        as="textarea"
+                        rows={5}
+                        value={specialRequirements}
+                        onChange={(e) => setSpecialRequirements(e.target.value)}
+                        placeholder="请输入特殊订货要求，每条要求占一行..."
+                        style={{
+                          backgroundColor: colors?.inputBg || '#fff',
+                          color: colors?.text || '#333',
+                          borderColor: colors?.inputBorder || '#ced4da'
+                        }}
+                      />
+                    )}
+                    <Form.Text className="text-muted">
+                      每行一条特殊要求，如压力、冷却水流量等特殊要求
+                    </Form.Text>
+                  </Form.Group>
+                </Card.Body>
+              </Card>
               
               <div className="d-flex justify-content-end">
                 <Button

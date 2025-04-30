@@ -1,0 +1,247 @@
+/* src/styles/bilingualStyles.css */
+
+/* 双语文档通用样式 */
+.bilingual-document {
+  font-family: Arial, SimSun, sans-serif;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* 中文内容样式 */
+.chinese-content {
+  font-family: SimSun, "宋体", sans-serif;
+}
+
+/* 英文内容样式 */
+.english-content {
+  font-family: Arial, "Helvetica Neue", sans-serif;
+}
+
+/* 左右对照布局 */
+.side-by-side .row {
+  display: flex;
+  margin-bottom: 2rem;
+}
+
+.side-by-side .col-6 {
+  width: 50%;
+  padding: 0 15px;
+}
+
+/* 分段对照布局 */
+.sequential-layout .bilingual-section {
+  margin-bottom: 2.5rem;
+}
+
+/* 分段对照布局 */
+.sequential-layout .bilingual-section {
+  margin-bottom: 2.5rem;
+}
+
+.sequential-layout .section-title {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.sequential-layout .chinese-content {
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+  border-left: 3px solid #e8e8e8;
+}
+
+.sequential-layout .english-content {
+  margin-bottom: 2rem;
+  padding-left: 1rem;
+  border-left: 3px solid #f0f0f0;
+  color: #555;
+}
+
+/* 全文对照布局 */
+.complete-layout .language-title {
+  text-align: center;
+  margin: 2rem 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+}
+
+.complete-layout .language-divider {
+  margin: 3rem 0;
+  border-top: 1px solid #999;
+}
+
+/* 表格样式 */
+.bilingual-document table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  page-break-inside: avoid;
+}
+
+.bilingual-document table, 
+.bilingual-document th, 
+.bilingual-document td {
+  border: 1px solid #ddd;
+}
+
+.bilingual-document th, 
+.bilingual-document td {
+  padding: 8px;
+  text-align: left;
+}
+
+.bilingual-document th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+/* 标题样式 */
+.bilingual-document h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.bilingual-document h2 {
+  font-size: 1.5rem;
+  margin: 1.5rem 0 1rem 0;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.bilingual-document h3 {
+  font-size: 1.3rem;
+  margin: 1.2rem 0 1rem 0;
+}
+
+/* 列表样式 */
+.bilingual-document ul,
+.bilingual-document ol {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+}
+
+.bilingual-document li {
+  margin-bottom: 0.5rem;
+}
+
+/* 签名栏样式 */
+.signature-area {
+  margin-top: 4rem;
+  page-break-inside: avoid;
+}
+
+/* 打印样式优化 */
+@media print {
+  .bilingual-document {
+    font-size: 10pt;
+  }
+  
+  .bilingual-document h1 {
+    font-size: 16pt;
+  }
+  
+  .bilingual-document h2 {
+    font-size: 14pt;
+  }
+  
+  .bilingual-document h3 {
+    font-size: 12pt;
+  }
+  
+  /* 确保页面中的元素不会被分隔到不同页 */
+  .bilingual-section {
+    page-break-inside: avoid;
+  }
+  
+  /* 确保表格标题在同一页 */
+  h2 + table {
+    page-break-before: avoid;
+  }
+  
+  /* 分页控制 */
+  .page-break {
+    page-break-before: always;
+  }
+  
+  /* 优化左右对照布局的打印 */
+  .side-by-side .row {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+}
+
+/* 响应式设计调整 */
+@media (max-width: 768px) {
+  .side-by-side .row {
+    flex-direction: column;
+  }
+  
+  .side-by-side .col-6 {
+    width: 100%;
+    padding: 0;
+  }
+  
+  .chinese-content {
+    margin-bottom: 1.5rem;
+  }
+  
+  .bilingual-document h1 {
+    font-size: 1.5rem;
+  }
+  
+  .bilingual-document h2 {
+    font-size: 1.3rem;
+  }
+}
+
+/* 双语表格特殊样式 */
+.bilingual-table {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.bilingual-table th.chinese-header,
+.bilingual-table td.chinese-content {
+  font-family: SimSun, "宋体", sans-serif;
+}
+
+.bilingual-table th.english-header,
+.bilingual-table td.english-content {
+  font-family: Arial, "Helvetica Neue", sans-serif;
+}
+
+/* 打印优化 */
+@page {
+  size: A4;
+  margin: 2cm;
+}
+
+/* 特殊要求列表样式 */
+.special-requirements-list {
+  padding-left: 1.5rem;
+}
+
+.special-requirements-list li {
+  margin-bottom: 0.5rem;
+}
+
+/* 确保英文内容正确换行 */
+.english-content {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* 确保表格中的内容垂直居中 */
+.bilingual-document td {
+  vertical-align: middle;
+}
+
+/* 双语对照版块间距 */
+.bilingual-section {
+  margin-bottom: 2.5rem;
+}

@@ -1,6 +1,7 @@
 // src/components/QuotationOptionsModal.js - 修复版
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
+import { needsStandbyPump } from '../utils/enhancedPumpSelection';
 
 /**
  * 报价单选项设置对话框
@@ -39,12 +40,21 @@ const QuotationOptionsModal = ({
   // 初始化
   useEffect(() => {
     if (show) {
+      // 检查备用泵需求
+      const needsPumpFlag = selectedComponents?.gearbox?.model 
+        ? needsStandbyPump(selectedComponents.gearbox.model, { 
+            power: selectedComponents.gearbox.power 
+          }) 
+        : false;
+      
       // 特殊处理：如果是GW系列特殊打包价格，强制不单独显示配件价格
       if (hasSpecialPackagePrice) {
         setOptions({
           ...defaultOptions,
           showCouplingPrice: false,
-          showPumpPrice: false
+          showPumpPrice: false,
+          includePump: needsPumpFlag, // 根据需求设置是否包含备用泵
+          needsPump: needsPumpFlag // 添加备用泵需求标记
         });
       } 
       // 特殊处理：如果不是GW系列齿轮箱，默认配件价格包含在齿轮箱中
@@ -53,12 +63,18 @@ const QuotationOptionsModal = ({
         setOptions({
           ...defaultOptions,
           showCouplingPrice: false,
-          showPumpPrice: false
+          showPumpPrice: false,
+          includePump: needsPumpFlag, // 根据需求设置是否包含备用泵
+          needsPump: needsPumpFlag // 添加备用泵需求标记
         });
       }
       // 默认设置
       else {
-        setOptions(defaultOptions);
+        setOptions({
+          ...defaultOptions,
+          includePump: needsPumpFlag, // 根据需求设置是否包含备用泵
+          needsPump: needsPumpFlag // 添加备用泵需求标记
+        });
       }
 
       // 清除错误信息
@@ -110,10 +126,10 @@ const QuotationOptionsModal = ({
   };
 
   // 判断是否需要备用泵
-  const needsPump = selectedComponents?.gearbox?.model && (
-    selectedComponents.gearbox.model.startsWith('GW') || 
-    (selectedComponents.gearbox.power && selectedComponents.gearbox.power >= 600)
-  );
+  const needsPump = selectedComponents?.gearbox?.model &&
+    needsStandbyPump(selectedComponents.gearbox.model, {
+      power: selectedComponents.gearbox.power
+    });
 
   // 渲染组件
   return (

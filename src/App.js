@@ -5,6 +5,8 @@ import { Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-r
 import { useAuth } from './contexts/AuthContext';
 import { userRoles, permissions } from './auth/roles';
 import './styles/global.css';
+// 导入增强版备用泵选型功能
+import { enhancedSelectPump, needsStandbyPump } from './utils/enhancedPumpSelection';
 
 // 导入新的模态组件
 import QuotationOptionsModal from './components/QuotationOptionsModal';
@@ -50,7 +52,7 @@ import TechnicalAgreementView from './components/TechnicalAgreementView';
 
 // Utils and API functions
 import { selectGearbox, autoSelectGearbox } from './utils/selectionAlgorithm';
-import { selectFlexibleCoupling, selectStandbyPump } from './utils/couplingSelection';
+import { selectFlexibleCoupling } from './utils/couplingSelection';
 import enhancedCouplingSelection from './utils/enhancedCouplingSelection'; // 导入增强联轴器选型函数
 import { 
   generateQuotation, 
@@ -67,6 +69,7 @@ import {
   optimizedHtmlToPdf, 
   exportHtmlContentToPDF 
 } from './utils/pdfExportUtils';
+import { numberToChinese } from './utils/quotationGenerator'; // <-- Import numberToChinese
 
 // 导入报价单管理工具
 import { 
@@ -343,9 +346,25 @@ function App({ appData: initialAppData, setAppData }) {
     pump: null
   });
 
+  // 原有的价格状态 - 保留兼容性
   const [packagePrice, setPackagePrice] = useState(0);
   const [marketPrice, setMarketPrice] = useState(0);
   const [totalMarketPrice, setTotalMarketPrice] = useState(0);
+  
+  // 新增统一的价格状态对象 - 修改部分，新增更详细的价格状态 
+  const [priceData, setPriceData] = useState({
+    packagePrice: 0,
+    marketPrice: 0,
+    totalMarketPrice: 0,
+    gearbox: null,
+    coupling: null,
+    pump: null,
+    hasSpecialPackagePrice: false,
+    specialPackageConfig: null,
+    needsPump: false,
+    includePump: true
+  });
+  
   const [showBatchPriceAdjustment, setShowBatchPriceAdjustment] = useState(false);
   
   // 新增报价单相关状态
@@ -357,6 +376,53 @@ function App({ appData: initialAppData, setAppData }) {
   const [savedQuotation, setSavedQuotation] = useState(null);
 
   const [showDiagnosticPanel, setShowDiagnosticPanel] = useState(false);
+
+  // --- Start: Define Validation Helpers Here (Moved) ---
+  const getFieldValidationState = useCallback((fieldName, value) => {
+    const numValue = parseFloat(value);
+    const requiredPos = ['enginePower', 'engineSpeed', 'targetRatio'];
+    const optionalNonNeg = ['thrustRequirement', 'temperature'];
+
+    if (requiredPos.includes(fieldName)) {
+      if (value === '' || value === null || isNaN(numValue) || numValue <= 0) return 'invalid';
+      if ((fieldName === 'enginePower' && numValue > 5000) || 
+          (fieldName === 'engineSpeed' && numValue > 3000) ||
+          (fieldName === 'targetRatio' && numValue > 20)) return 'warning'; // Example warning thresholds
+    }
+
+    if (optionalNonNeg.includes(fieldName)) {
+        if (value !== '' && value !== null && (isNaN(numValue) || numValue < 0)) return 'invalid';
+        if (fieldName === 'thrustRequirement' && numValue > 1000) return 'warning';
+        if (fieldName === 'temperature' && (numValue < -20 || numValue > 60)) return 'warning';
+    }
+
+    // Add other field checks if needed
+
+    return 'valid'; // Default to valid if no issues found
+  }, []);
+
+  const getValidationClassName = useCallback((state) => {
+    if (state === 'invalid') return 'is-invalid';
+    if (state === 'warning') return 'is-warning'; // Assuming you have styles for .is-warning
+    return ''; // Valid or no state
+  }, []);
+
+  const isFormValid = useCallback(() => {
+    const states = [
+      getFieldValidationState('enginePower', engineData.power),
+      getFieldValidationState('engineSpeed', engineData.speed),
+      getFieldValidationState('targetRatio', requirementData.targetRatio),
+      getFieldValidationState('thrustRequirement', requirementData.thrustRequirement),
+      getFieldValidationState('temperature', requirementData.temperature)
+    ];
+
+    const isValid = states.every(state => state === 'valid' || state === 'warning');
+    const warnings = states.filter(state => state === 'warning').length;
+
+    return { isValid, warnings };
+
+  }, [engineData, requirementData, getFieldValidationState]);
+  // --- End: Define Validation Helpers Here ---
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -504,6 +570,81 @@ function App({ appData: initialAppData, setAppData }) {
     return num.toFixed(decimals);
   }, []);
 
+  // 新增：统一的价格计算函数
+  const calculateAllPrices = useCallback((gearbox, coupling, pump, options = {}) => {
+    // 默认选项
+    const defaultOptions = {
+      includePump: true
+    };
+    
+    // 合并选项
+    const finalOptions = { ...defaultOptions, ...options };
+    
+    // 检查是否需要备用泵
+    const needsPumpFlag = gearbox ? needsStandbyPump(gearbox.model, {
+      power: gearbox.power
+    }) : false;
+    
+    // 最终决定是否包含泵
+    const effectiveIncludePump = needsPumpFlag && finalOptions.includePump;
+    
+    // 创建要使用的泵对象（如果不包含泵则为null）
+    const pumpToUse = effectiveIncludePump ? pump : null;
+    
+    // 检查是否有特殊打包价格
+    let hasSpecialPackagePrice = false;
+    let specialPackageConfig = null;
+    let packagePrice = 0;
+    let marketPrice = 0;
+    let totalMarketPrice = 0;
+    
+    if (gearbox && gearbox.model) {
+      const gwConfig = getGWPackagePriceConfig(gearbox.model);
+      if (gwConfig && !gwConfig.isSmallGWModel) {
+        // 检查组件组合是否符合打包价格条件
+        if (checkPackageMatch(gearbox, coupling, pumpToUse, gwConfig)) {
+          hasSpecialPackagePrice = true;
+          specialPackageConfig = gwConfig;
+          
+          // 使用特殊打包价格
+          packagePrice = gwConfig.packagePrice;
+          marketPrice = gwConfig.packagePrice;
+          totalMarketPrice = gwConfig.packagePrice;
+          
+          console.log(`使用GW系列特殊打包价格: ${gwConfig.packagePrice}`);
+        }
+      }
+    }
+    
+    // 如果没有特殊打包价格，则进行常规价格计算
+    if (!hasSpecialPackagePrice) {
+      // 计算打包价格
+      packagePrice = calculatePackagePrice(gearbox, coupling, pumpToUse);
+      
+      // 计算市场价
+      marketPrice = calculateMarketPrice(gearbox, packagePrice);
+      
+      // 计算总市场价格
+      totalMarketPrice = (gearbox?.marketPrice || 0) + 
+                        (coupling?.marketPrice || 0) + 
+                        (pumpToUse?.marketPrice || 0);
+    }
+    
+    // 返回完整的价格数据对象
+    return {
+      packagePrice,
+      marketPrice,
+      totalMarketPrice,
+      gearbox: gearbox ? { ...gearbox } : null,
+      coupling: coupling ? { ...coupling } : null,
+      pump: pump ? { ...pump } : null,
+      hasSpecialPackagePrice,
+      specialPackageConfig,
+      needsPump: needsPumpFlag,
+      includePump: effectiveIncludePump
+    };
+  }, []);
+
   useEffect(() => {
     if (selectionResult && selectionResult.success && Array.isArray(selectionResult.recommendations) && selectionResult.recommendations.length > 0) {
       console.log("New selection result received, updating components...");
@@ -538,47 +679,54 @@ function App({ appData: initialAppData, setAppData }) {
         pump: currentPump
       });
 
-      // 计算打包价格，考虑特殊打包价格
-      const calcPackagePrice = calculatePackagePrice(currentGearbox, currentCoupling, currentPump);
-      setPackagePrice(calcPackagePrice);
-
-      // 计算市场价格，考虑特殊打包价格
-      const initialMarketPrice = calculateMarketPrice(currentGearbox, calcPackagePrice);
-      setMarketPrice(initialMarketPrice);
+      // 使用统一的价格计算函数
+      const newPriceData = calculateAllPrices(
+        currentGearbox,
+        currentCoupling,
+        currentPump,
+        { includePump: true } // 默认包含备用泵
+      );
       
-      // 计算总市场价格
-      let totalPrice;
-      if (currentGearbox.hasSpecialPackagePrice) {
-        // 使用特殊打包价格
-        totalPrice = currentGearbox.packagePrice;
-      } else {
-        // 常规价格计算
-        totalPrice = (currentGearbox?.marketPrice || 0) + 
-                   (currentCoupling?.marketPrice || 0) + 
-                   (currentPump?.marketPrice || 0);
-      }
-      setTotalMarketPrice(totalPrice);
+      // 更新统一的价格状态
+      setPriceData(newPriceData);
+      
+      // 保持对原有状态的更新，以便兼容性
+      setPackagePrice(newPriceData.packagePrice);
+      setMarketPrice(newPriceData.marketPrice);
+      setTotalMarketPrice(newPriceData.totalMarketPrice);
 
       console.log("Selected Components Updated:", {
         gearbox: currentGearbox?.model,
         coupling: currentCoupling?.model,
         pump: currentPump?.model,
-        hasSpecialPackagePrice: currentGearbox?.hasSpecialPackagePrice || false
+        hasSpecialPackagePrice: currentGearbox.hasSpecialPackagePrice || false
       });
       console.log("Prices Updated:", {
-        packagePrice: calcPackagePrice,
-        marketPrice: initialMarketPrice,
-        totalMarketPrice: totalPrice
+        packagePrice: newPriceData.packagePrice,
+        marketPrice: newPriceData.marketPrice,
+        totalMarketPrice: newPriceData.totalMarketPrice
       });
     } else if (selectionResult && !selectionResult.success) {
       console.log("Selection failed, clearing components and prices.");
       setSelectedGearboxIndex(0);
       setSelectedComponents({ gearbox: null, coupling: null, pump: null });
+      setPriceData({
+        packagePrice: 0,
+        marketPrice: 0,
+        totalMarketPrice: 0,
+        gearbox: null,
+        coupling: null,
+        pump: null,
+        hasSpecialPackagePrice: false,
+        specialPackageConfig: null,
+        needsPump: false,
+        includePump: true
+      });
       setPackagePrice(0);
       setMarketPrice(0);
       setTotalMarketPrice(0);
     }
-  }, [selectionResult]);
+  }, [selectionResult, calculateAllPrices]);
 
   useEffect(() => {
     const storedHistory = localStorage.getItem('selectionHistory');
@@ -599,14 +747,13 @@ function App({ appData: initialAppData, setAppData }) {
     }
   }, []);
 
+  // 修改：更新价格变更处理函数
   const handlePriceChange = useCallback((component, field, value) => {
     if (value === '') {
       setSelectedComponents(prev => ({
         ...prev,
         [component]: { ...prev[component], [field]: undefined }
       }));
-       if (field === 'basePrice' || field === 'factoryPrice' || field === 'marketPrice' || field === 'discountRate') {
-       }
       return;
     }
 
@@ -635,7 +782,6 @@ function App({ appData: initialAppData, setAppData }) {
             updatedComponent[field] = parsedValue;
        }
 
-
       if (field === 'basePrice' || field === 'discountRate') {
          if (updatedComponent.basePrice !== undefined && updatedComponent.discountRate !== undefined) {
             updatedComponent.factoryPrice = calculateFactoryPrice(updatedComponent);
@@ -663,49 +809,21 @@ function App({ appData: initialAppData, setAppData }) {
 
       const newComponents = { ...prev, [component]: updatedComponent };
 
-      // 重新计算打包价格，考虑特殊打包价格
-      const newPackagePrice = calculatePackagePrice(newComponents.gearbox, newComponents.coupling, newComponents.pump);
-      setPackagePrice(newPackagePrice);
-
-      let newMarketPrice;
-      if (component === 'gearbox' && (field === 'basePrice' || field === 'discountRate' || field === 'factoryPrice' || field === 'marketPrice')) {
-        // 计算市场价，考虑特殊打包价格
-        if (newComponents.gearbox.hasSpecialPackagePrice && !newComponents.gearbox._userOverridePrice) {
-          // 使用特殊打包价格作为市场价
-          newMarketPrice = newComponents.gearbox.gwPackageConfig.packagePrice;
-        } else {
-          // 常规计算
-          newMarketPrice = calculateMarketPrice(newComponents.gearbox, newPackagePrice);
-        }
-        setMarketPrice(newMarketPrice);
-        
-        // 计算总市场价格
-        if (newComponents.gearbox.hasSpecialPackagePrice && !newComponents.gearbox._userOverridePrice) {
-          // 使用特殊打包价格作为总价
-          setTotalMarketPrice(newComponents.gearbox.gwPackageConfig.packagePrice);
-        } else {
-          // 常规计算总价
-          setTotalMarketPrice((newComponents.gearbox?.marketPrice || 0) + 
-                           (newComponents.coupling?.marketPrice || 0) + 
-                           (newComponents.pump?.marketPrice || 0));
-        }
-      } else {
-        // 其他组件价格变更，常规处理
-        const updatedGearbox = newComponents.gearbox ? correctPriceData(newComponents.gearbox) : null;
-        const updatedCoupling = newComponents.coupling ? correctPriceData(newComponents.coupling) : null;
-        const updatedPump = newComponents.pump ? correctPriceData(newComponents.pump) : null;
-
-        // 计算市场价和总价，考虑特殊打包价格
-        if (updatedGearbox?.hasSpecialPackagePrice && !updatedGearbox?._userOverridePrice) {
-          setMarketPrice(updatedGearbox.gwPackageConfig.packagePrice);
-          setTotalMarketPrice(updatedGearbox.gwPackageConfig.packagePrice);
-        } else {
-          setMarketPrice(updatedGearbox?.marketPrice || 0);
-          setTotalMarketPrice((updatedGearbox?.marketPrice || 0) + 
-                           (updatedCoupling?.marketPrice || 0) + 
-                           (updatedPump?.marketPrice || 0));
-        }
-      }
+      // 使用统一的价格计算函数更新价格
+      const newPriceData = calculateAllPrices(
+        newComponents.gearbox,
+        newComponents.coupling,
+        newComponents.pump,
+        { includePump: priceData.includePump }
+      );
+      
+      // 更新统一的价格状态
+      setPriceData(newPriceData);
+      
+      // 保持对原有状态的更新，以便兼容性
+      setPackagePrice(newPriceData.packagePrice);
+      setMarketPrice(newPriceData.marketPrice);
+      setTotalMarketPrice(newPriceData.totalMarketPrice);
 
       console.log("价格变更后更新组件:", newComponents);
       return newComponents;
@@ -714,7 +832,7 @@ function App({ appData: initialAppData, setAppData }) {
     setQuotation(null);
     setAgreement(null);
     setContract(null);
-  }, []);
+  }, [calculateAllPrices, priceData.includePump]);
 
   const handleBatchPriceAdjustment = useCallback((adjustmentInfo) => {
     const { category, field, type, value, reason } = adjustmentInfo;
@@ -870,7 +988,7 @@ function App({ appData: initialAppData, setAppData }) {
 
   }, [appDataState, updateAppDataAndPersist]);
 
-  // 修改后的齿轮箱选择函数 - 使用增强型联轴器选型
+  // 修改：更新齿轮箱选择函数，使用统一价格计算
   const handleGearboxSelection = useCallback((index) => {
     // 首先进行更完善的验证
     if (!selectionResult) {
@@ -935,19 +1053,21 @@ function App({ appData: initialAppData, setAppData }) {
         gearbox: correctedGearbox
       }));
       
-      // 计算价格（只有齿轮箱）
-      const newPackagePrice = calculatePackagePrice(correctedGearbox, null, null);
-      setPackagePrice(newPackagePrice);
+      // 使用统一的价格计算函数
+      const newPriceData = calculateAllPrices(
+        correctedGearbox, 
+        null, 
+        null,
+        { includePump: true }
+      );
       
-      // 计算市场价，考虑特殊打包价格
-      let newMarketPrice;
-      if (correctedGearbox.hasSpecialPackagePrice) {
-        newMarketPrice = correctedGearbox.gwPackageConfig.packagePrice;
-      } else {
-        newMarketPrice = calculateMarketPrice(correctedGearbox, newPackagePrice);
-      }
-      setMarketPrice(newMarketPrice);
-      setTotalMarketPrice(newMarketPrice);
+      // 更新统一的价格状态
+      setPriceData(newPriceData);
+      
+      // 保持对原有状态的更新，以便兼容性
+      setPackagePrice(newPriceData.packagePrice);
+      setMarketPrice(newPriceData.marketPrice);
+      setTotalMarketPrice(newPriceData.totalMarketPrice);
       
       setActiveTab('result');
       return;
@@ -985,19 +1105,28 @@ function App({ appData: initialAppData, setAppData }) {
   
     // 获取或重新选择备用泵
     let updatedPumpResult;
-    
+    const pumpOptions = { power: correctedGearbox.power };
+
     try {
-      if (index === 0 && selectionResult.standbyPump) {
-        updatedPumpResult = selectionResult.standbyPump;
-      } else {
-        updatedPumpResult = selectStandbyPump(
-          correctedGearbox.model,
-          appDataState.standbyPumps
-        );
+      // 使用增强版备用泵选型函数
+      updatedPumpResult = enhancedSelectPump(
+        correctedGearbox.model,
+        appDataState.standbyPumps,
+        pumpOptions
+      );
+      
+      // 如果返回的结果表示不需要备用泵，需要进行特殊处理
+      if (updatedPumpResult && !updatedPumpResult.requiresPump) {
+        console.log(`齿轮箱 ${correctedGearbox.model} 不需要配备备用泵`);
+        // 在界面上可以显示不需要备用泵的提示
       }
     } catch (error) {
       console.error("备用泵选择失败:", error);
-      updatedPumpResult = { success: false, message: "备用泵选择过程中出错: " + error.message };
+      updatedPumpResult = { 
+        success: false, 
+        message: "备用泵选择过程中出错: " + error.message,
+        requiresPump: needsStandbyPump(correctedGearbox.model, pumpOptions)
+      };
     }
   
     const currentCoupling = updatedCouplingResult?.success ? correctPriceData({ ...updatedCouplingResult }) : null;
@@ -1009,51 +1138,41 @@ function App({ appData: initialAppData, setAppData }) {
       pump: currentPump
     });
   
-    // 计算打包价格，考虑特殊打包价格
-    const newPackagePrice = calculatePackagePrice(correctedGearbox, currentCoupling, currentPump);
-    setPackagePrice(newPackagePrice);
-  
-    // 计算市场价，考虑特殊打包价格
-    let newMarketPrice;
-    if (correctedGearbox.hasSpecialPackagePrice) {
-      // 使用特殊打包价格
-      newMarketPrice = correctedGearbox.gwPackageConfig.packagePrice;
-    } else {
-      // 常规计算
-      newMarketPrice = calculateMarketPrice(correctedGearbox, newPackagePrice);
-    }
-    setMarketPrice(newMarketPrice);
-  
-    // 计算总市场价格
-    let totalMarket;
-    if (correctedGearbox.hasSpecialPackagePrice) {
-      // 对于特殊打包价格，总价等于打包价
-      totalMarket = correctedGearbox.gwPackageConfig.packagePrice;
-    } else {
-      // 常规计算总价
-      totalMarket = (correctedGearbox?.marketPrice || 0) + 
-                  (currentCoupling?.marketPrice || 0) + 
-                  (currentPump?.marketPrice || 0);
-    }
-    setTotalMarketPrice(totalMarket);
+    // 使用统一的价格计算函数
+    const newPriceData = calculateAllPrices(
+      correctedGearbox, 
+      currentCoupling, 
+      currentPump,
+      { includePump: true } // 默认包含备用泵
+    );
+    
+    // 更新统一的价格状态
+    setPriceData(newPriceData);
+    
+    // 保持对原有状态的更新，以便兼容性
+    setPackagePrice(newPriceData.packagePrice);
+    setMarketPrice(newPriceData.marketPrice);
+    setTotalMarketPrice(newPriceData.totalMarketPrice);
   
     console.log("Selected Components Updated:", {
       gearbox: correctedGearbox?.model,
       coupling: currentCoupling?.model,
       pump: currentPump?.model,
-      hasSpecialPackagePrice: correctedGearbox.hasSpecialPackagePrice || false
+      hasSpecialPackagePrice: correctedGearbox.hasSpecialPackagePrice || false,
+      needsPump: newPriceData.needsPump,
+      includePump: newPriceData.includePump
     });
     console.log("Prices Updated:", {
-      packagePrice: newPackagePrice,
-      marketPrice: newMarketPrice,
-      totalMarketPrice: totalMarket
+      packagePrice: newPriceData.packagePrice,
+      marketPrice: newPriceData.marketPrice,
+      totalMarketPrice: newPriceData.totalMarketPrice
     });
   
     setQuotation(null);
     setAgreement(null);
     setContract(null);
     setActiveTab('result');
-  }, [selectionResult, appDataState, requirementData, engineData, setActiveTab, correctPriceData, calculatePackagePrice, calculateMarketPrice]);
+  }, [selectionResult, appDataState, requirementData, engineData, setActiveTab, calculateAllPrices]);
 
   // 新增处理联轴器选择的函数
   const handleCouplingSelection = useCallback((index) => {
@@ -1098,37 +1217,21 @@ function App({ appData: initialAppData, setAppData }) {
         coupling: correctedCoupling
       }));
       
-      // 检查是否有特殊打包价格
-      const gearbox = selectedComponents.gearbox;
-      const gwConfig = gearbox ? getGWPackagePriceConfig(gearbox.model) : null;
-      const hasSpecialPackagePrice = gwConfig && !gwConfig.isSmallGWModel;
-      
-      // 更新价格，考虑特殊打包价格
-      const newPackagePrice = calculatePackagePrice(
-        selectedComponents.gearbox, 
-        correctedCoupling, 
-        selectedComponents.pump
+      // 使用统一的价格计算函数更新价格
+      const newPriceData = calculateAllPrices(
+        selectedComponents.gearbox,
+        correctedCoupling,
+        selectedComponents.pump,
+        { includePump: priceData.includePump }
       );
-      setPackagePrice(newPackagePrice);
       
-      // 计算市场价和总价，考虑特殊打包价格
-      if (hasSpecialPackagePrice) {
-        // 特殊打包价格
-        setMarketPrice(gwConfig.packagePrice);
-        setTotalMarketPrice(gwConfig.packagePrice);
-      } else {
-        // 常规计算
-        const newMarketPrice = calculateMarketPrice(
-          selectedComponents.gearbox, 
-          newPackagePrice
-        );
-        setMarketPrice(newMarketPrice);
-        
-        const totalMarket = (selectedComponents.gearbox?.marketPrice || 0) + 
-                          (correctedCoupling?.marketPrice || 0) + 
-                          (selectedComponents.pump?.marketPrice || 0);
-        setTotalMarketPrice(totalMarket);
-      }
+      // 更新统一的价格状态
+      setPriceData(newPriceData);
+      
+      // 保持对原有状态的更新，以便兼容性
+      setPackagePrice(newPriceData.packagePrice);
+      setMarketPrice(newPriceData.marketPrice);
+      setTotalMarketPrice(newPriceData.totalMarketPrice);
       
       // 清除之前的报价单和协议
       setQuotation(null);
@@ -1140,7 +1243,7 @@ function App({ appData: initialAppData, setAppData }) {
       console.error("选择联轴器出错:", error);
       setError('选择联轴器时出错: ' + error.message);
     }
-  }, [selectionResult, selectedComponents, correctPriceData, calculatePackagePrice, calculateMarketPrice]);
+  }, [selectionResult, selectedComponents, priceData.includePump, calculateAllPrices]);
 
   // 修改后的生成报价单函数 - 显示选项对话框
   const handleGenerateQuotation = useCallback(() => {
@@ -1158,102 +1261,101 @@ function App({ appData: initialAppData, setAppData }) {
     setShowQuotationOptions(true);
   }, [selectedComponents, selectionResult, setActiveTab]);
 
-  // 添加新的生成报价单处理函数，接受选项参数
+  // 修改：更新报价单生成函数，使用统一的价格数据
   const generateQuotationWithOptions = useCallback((options = {}) => {
     setLoading(true);
     setError('');
     setSuccess('正在生成报价单...');
-
+    
     try {
       // 创建新的组件对象，并确保价格数据正确
       const finalComponents = {
-          gearbox: selectedComponents.gearbox ? correctPriceData(selectedComponents.gearbox) : null,
-          coupling: selectedComponents.coupling ? correctPriceData(selectedComponents.coupling) : null,
-          pump: selectedComponents.pump ? correctPriceData(selectedComponents.pump) : null,
+        gearbox: selectedComponents.gearbox ? correctPriceData(selectedComponents.gearbox) : null,
+        coupling: selectedComponents.coupling ? correctPriceData(selectedComponents.coupling) : null,
+        pump: selectedComponents.pump ? correctPriceData(selectedComponents.pump) : null,
       };
-
-      // 检查齿轮箱是否有特殊打包价格
-      const gearbox = finalComponents.gearbox;
-      const gwConfig = gearbox ? getGWPackagePriceConfig(gearbox.model) : null;
-      const hasSpecialPackagePrice = gwConfig && !gwConfig.isSmallGWModel;
+      
+      // 使用统一的价格计算函数更新价格 - 传入用户选择的配件显示选项
+      const quotationPriceData = calculateAllPrices(
+        finalComponents.gearbox,
+        finalComponents.coupling,
+        finalComponents.pump,
+        { includePump: options.includePump }
+      );
       
       // 根据特殊打包价格配置调整显示选项
-      if (hasSpecialPackagePrice) {
+      if (quotationPriceData.hasSpecialPackagePrice) {
         // 对于特殊打包价格，默认不显示联轴器和泵的单独价格
         options.showCouplingPrice = false;
         options.showPumpPrice = false;
         console.log("使用GW系列特殊打包价格，不显示联轴器和泵的单独价格");
       }
-
+      
       console.log("准备生成报价单，组件:", {
         gearbox: finalComponents.gearbox?.model,
         coupling: finalComponents.coupling?.model,
         pump: finalComponents.pump?.model,
-        hasSpecialPackagePrice: hasSpecialPackagePrice,
+        hasSpecialPackagePrice: quotationPriceData.hasSpecialPackagePrice,
+        needsPump: quotationPriceData.needsPump,
+        includePump: quotationPriceData.includePump,
         options
       });
-
-      // 计算价格，考虑特殊打包价格
-      let currentPackagePrice, currentMarketPrice, currentTotalMarketPrice;
       
-      if (hasSpecialPackagePrice) {
-        // 使用特殊打包价格
-        currentPackagePrice = gwConfig.packagePrice;
-        currentMarketPrice = gwConfig.packagePrice;
-        currentTotalMarketPrice = gwConfig.packagePrice;
-      } else {
-        // 常规价格计算
-        currentPackagePrice = calculatePackagePrice(finalComponents.gearbox, finalComponents.coupling, finalComponents.pump);
-        currentMarketPrice = calculateMarketPrice(finalComponents.gearbox, currentPackagePrice);
-        currentTotalMarketPrice = (finalComponents.gearbox?.marketPrice || 0) + 
-                                 (finalComponents.coupling?.marketPrice || 0) + 
-                                 (finalComponents.pump?.marketPrice || 0);
-      }
-
-      // 确保每个组件都有明确的价格数据，即使组件不存在，也传入null
+      // 生成报价单，使用统一的价格数据
       const quotationData = generateQuotation(
         selectionResult,
         projectInfo,
         finalComponents,
         {
-          packagePrice: currentPackagePrice,
-          marketPrice: currentMarketPrice,
-          totalMarketPrice: currentTotalMarketPrice,
+          packagePrice: quotationPriceData.packagePrice,
+          marketPrice: quotationPriceData.marketPrice,
+          totalMarketPrice: quotationPriceData.totalMarketPrice,
           componentPrices: {
-             gearbox: finalComponents.gearbox ? {
-                factoryPrice: finalComponents.gearbox.factoryPrice,
-                marketPrice: finalComponents.gearbox.marketPrice,
-                basePrice: finalComponents.gearbox.basePrice || finalComponents.gearbox.price,
-                packagePrice: finalComponents.gearbox.packagePrice
-             } : null,
-             coupling: finalComponents.coupling ? {
-                factoryPrice: finalComponents.coupling.factoryPrice,
-                marketPrice: finalComponents.coupling.marketPrice,
-                basePrice: finalComponents.coupling.basePrice || finalComponents.coupling.price
-             } : null,
-             pump: finalComponents.pump ? {
-                factoryPrice: finalComponents.pump.factoryPrice,
-                marketPrice: finalComponents.pump.marketPrice,
-                basePrice: finalComponents.pump.basePrice || finalComponents.pump.price
-             } : null
-          }
+            gearbox: finalComponents.gearbox ? {
+              factoryPrice: finalComponents.gearbox.factoryPrice,
+              marketPrice: finalComponents.gearbox.marketPrice,
+              basePrice: finalComponents.gearbox.basePrice || finalComponents.gearbox.price,
+              packagePrice: finalComponents.gearbox.packagePrice
+            } : null,
+            coupling: finalComponents.coupling ? {
+              factoryPrice: finalComponents.coupling.factoryPrice,
+              marketPrice: finalComponents.coupling.marketPrice,
+              basePrice: finalComponents.coupling.basePrice || finalComponents.coupling.price
+            } : null,
+            pump: finalComponents.pump ? {
+              factoryPrice: finalComponents.pump.factoryPrice,
+              marketPrice: finalComponents.pump.marketPrice,
+              basePrice: finalComponents.pump.basePrice || finalComponents.pump.price
+            } : null
+          },
+          // 添加标准化的备用泵需求信息
+          needsPump: quotationPriceData.needsPump,
+          includePump: quotationPriceData.includePump,
+          hasSpecialPackagePrice: quotationPriceData.hasSpecialPackagePrice,
+          specialPackageConfig: quotationPriceData.specialPackageConfig
         },
         options // 传递报价单选项
       );
-
+      
+      // 更新价格数据状态，确保包含最新用户选择
+      setPriceData({
+        ...quotationPriceData,
+        includePump: options.includePump
+      });
+      
       setQuotation(quotationData);
       setActiveTab('quotation');
       setError('');
       setSuccess('报价单生成成功');
       
     } catch (error) {
-       console.error("生成报价单错误:", error);
+      console.error("生成报价单错误:", error);
       setError('生成报价单失败: ' + error.message);
     } finally {
       setLoading(false);
       setShowQuotationOptions(false); // 关闭选项对话框
     }
-  }, [selectedComponents, selectionResult, projectInfo, setActiveTab, correctPriceData, calculatePackagePrice, calculateMarketPrice]);
+  }, [selectedComponents, selectionResult, projectInfo, setActiveTab, calculateAllPrices]);
 
   // 处理自定义报价项目添加
   const handleAddCustomQuotationItem = useCallback((itemData) => {
@@ -1360,6 +1462,7 @@ function App({ appData: initialAppData, setAppData }) {
 
   // 比较两个报价单
   const handleCompareQuotations = useCallback((quotationA, quotationB) => {
+   // 比较两个报价单
     if (!quotationA || !quotationB) {
       setError('请选择两个需要比较的报价单');
       return;
@@ -1383,144 +1486,144 @@ function App({ appData: initialAppData, setAppData }) {
   }, []);
 
   // 更新报价单价格
- // 更新报价单价格
-// 更新报价单价格
-const handleUpdateQuotationPrices = useCallback(() => {
-  if (!quotation || !quotation.success) {
-    setError('请先生成报价单');
-    return;
-  }
-  
-  setLoading(true);
-  setError('');
-  setSuccess('正在更新报价单价格...');
-  
-  try {
-    // 创建新的报价单对象
-    const updatedQuotation = {
-      ...quotation,
-      items: [...quotation.items]
-    };
-    
-    // 更新每个项目的价格
-    let totalAmount = 0;
-    let usingSpecialPackagePrice = false;
-    let specialPackagePrice = 0;
-    
-    // 判断是否需要备用泵
-    const needsPump = selectedComponents.gearbox && 
-                     (selectedComponents.gearbox.model.startsWith('GW') ||
-                      (selectedComponents.gearbox.power && selectedComponents.gearbox.power >= 600));
-    
-    // 从原报价单中获取是否包含备用泵的设置
-    const includePump = updatedQuotation.options?.includePump !== undefined ? 
-                        updatedQuotation.options.includePump : 
-                        needsPump; // 默认值基于型号判断
-    
-    // 如果不需要备用泵或用户选择不包含，则移除备用泵项目
-    if (!needsPump || !includePump) {
-      const pumpIndex = updatedQuotation.items.findIndex(item => item.name === "备用泵");
-      if (pumpIndex >= 0) {
-        updatedQuotation.items.splice(pumpIndex, 1);
-      }
+  const handleUpdateQuotationPrices = useCallback(() => {
+    if (!quotation || !quotation.success) {
+      setError('请先生成报价单');
+      return;
     }
     
-    updatedQuotation.items.forEach(item => {
-      // 对于齿轮箱项目，使用当前选中的组件价格
-      if (item.name === "船用齿轮箱" && selectedComponents.gearbox) {
-        const gearbox = selectedComponents.gearbox;
-        
-        // 检查是否有特殊打包价格
-        const gwConfig = getGWPackagePriceConfig(gearbox.model);
-        const hasSpecialPackagePrice = gwConfig && !gwConfig.isSmallGWModel;
-        
-        // 更新价格
-        if (hasSpecialPackagePrice) {
-          // 使用特殊打包价格
-          item.prices.market = gwConfig.packagePrice;
-          item.prices.factory = gwConfig.packagePrice * 0.85;
-          item.prices.package = gwConfig.packagePrice;
-          // 添加特殊打包价格标记
-          item.hasSpecialPackagePrice = true;
-          item.gwPackageConfig = gwConfig;
-          
-          // 设置标志和特殊价格，用于计算总金额
-          usingSpecialPackagePrice = true;
-          specialPackagePrice = gwConfig.packagePrice;
-        } else {
-          // 常规价格
-          const marketPrice = gearbox.marketPrice || gearbox.factoryPrice * 1.15;
-          item.prices.market = marketPrice;
-          item.prices.factory = gearbox.factoryPrice || marketPrice * 0.85;
-          item.prices.package = gearbox.factoryPrice || marketPrice * 0.85;
+    setLoading(true);
+    setError('');
+    setSuccess('正在更新报价单价格...');
+    
+    try {
+      // 创建新的报价单对象
+      const updatedQuotation = {
+        ...quotation,
+        items: [...quotation.items]
+      };
+      
+      // 更新每个项目的价格
+      let totalAmount = 0;
+      let usingSpecialPackagePrice = false;
+      let specialPackagePrice = 0;
+      
+      // 判断是否需要备用泵
+      const needsPump = selectedComponents.gearbox && needsStandbyPump(
+        selectedComponents.gearbox.model,
+        { power: selectedComponents.gearbox.power }
+      );
+      
+      // 从原报价单中获取是否包含备用泵的设置
+      const includePump = updatedQuotation.options?.includePump !== undefined ? 
+                         updatedQuotation.options.includePump : 
+                         needsPump; // 默认值基于型号判断
+      
+      // 如果不需要备用泵或用户选择不包含，则移除备用泵项目
+      if (!needsPump || !includePump) {
+        const pumpIndex = updatedQuotation.items.findIndex(item => item.name === "备用泵");
+        if (pumpIndex >= 0) {
+          updatedQuotation.items.splice(pumpIndex, 1);
         }
       }
       
-      // 对于联轴器项目，使用当前选中的组件价格
-      if (item.name === "高弹性联轴器" && selectedComponents.coupling) {
-        const coupling = selectedComponents.coupling;
-        const marketPrice = coupling.marketPrice || coupling.factoryPrice * 1.15;
+      updatedQuotation.items.forEach(item => {
+        // 对于齿轮箱项目，使用当前选中的组件价格
+        if (item.name === "船用齿轮箱" && selectedComponents.gearbox) {
+          const gearbox = selectedComponents.gearbox;
+          
+          // 检查是否有特殊打包价格
+          const gwConfig = getGWPackagePriceConfig(gearbox.model);
+          const hasSpecialPackagePrice = gwConfig && !gwConfig.isSmallGWModel;
+          
+          // 更新价格
+          if (hasSpecialPackagePrice) {
+            // 使用特殊打包价格
+            item.prices.market = gwConfig.packagePrice;
+            item.prices.factory = gwConfig.packagePrice * 0.85;
+            item.prices.package = gwConfig.packagePrice;
+            // 添加特殊打包价格标记
+            item.hasSpecialPackagePrice = true;
+            item.gwPackageConfig = gwConfig;
+            
+            // 设置标志和特殊价格，用于计算总金额
+            usingSpecialPackagePrice = true;
+            specialPackagePrice = gwConfig.packagePrice;
+          } else {
+            // 常规价格
+            const marketPrice = gearbox.marketPrice || gearbox.factoryPrice * 1.15;
+            item.prices.market = marketPrice;
+            item.prices.factory = gearbox.factoryPrice || marketPrice * 0.85;
+            item.prices.package = gearbox.factoryPrice || marketPrice * 0.85;
+          }
+        }
         
-        // 更新价格
-        item.prices.market = marketPrice;
-        item.prices.factory = coupling.factoryPrice || marketPrice * 0.85;
-        item.prices.package = coupling.factoryPrice || marketPrice * 0.85;
+        // 对于联轴器项目，使用当前选中的组件价格
+        if (item.name === "高弹性联轴器" && selectedComponents.coupling) {
+          const coupling = selectedComponents.coupling;
+          const marketPrice = coupling.marketPrice || coupling.factoryPrice * 1.15;
+          
+          // 更新价格
+          item.prices.market = marketPrice;
+          item.prices.factory = coupling.factoryPrice || marketPrice * 0.85;
+          item.prices.package = coupling.factoryPrice || marketPrice * 0.85;
+        }
+        
+        // 对于备用泵项目，使用当前选中的组件价格
+        if (item.name === "备用泵" && selectedComponents.pump && needsPump && includePump) {
+          const pump = selectedComponents.pump;
+          const marketPrice = pump.marketPrice || pump.factoryPrice * 1.15;
+          
+          // 更新价格
+          item.prices.market = marketPrice;
+          item.prices.factory = pump.factoryPrice || marketPrice * 0.85;
+          item.prices.package = pump.factoryPrice || marketPrice * 0.85;
+        }
+        
+        // 重新计算金额
+        item.unitPrice = item.prices[item.selectedPrice] || 0;
+        item.amount = item.unitPrice * item.quantity;
+      });
+      
+      // 关键修改：使用特殊打包价格计算总金额
+      if (usingSpecialPackagePrice) {
+        // 如果使用特殊打包价格，总金额就等于特殊打包价格
+        totalAmount = specialPackagePrice;
+        
+        // 标记报价单使用特殊打包价格
+        updatedQuotation.usingSpecialPackagePrice = true;
+        updatedQuotation.specialPackageConfig = updatedQuotation.items.find(
+          item => item.name === "船用齿轮箱" && item.hasSpecialPackagePrice
+        )?.gwPackageConfig;
+      } else {
+        // 常规方式计算总金额
+        totalAmount = updatedQuotation.items.reduce((sum, item) => sum + item.amount, 0);
       }
       
-      // 对于备用泵项目，使用当前选中的组件价格
-      if (item.name === "备用泵" && selectedComponents.pump && needsPump && includePump) {
-        const pump = selectedComponents.pump;
-        const marketPrice = pump.marketPrice || pump.factoryPrice * 1.15;
-        
-        // 更新价格
-        item.prices.market = marketPrice;
-        item.prices.factory = pump.factoryPrice || marketPrice * 0.85;
-        item.prices.package = pump.factoryPrice || marketPrice * 0.85;
+      // 更新总金额
+      updatedQuotation.totalAmount = totalAmount;
+      updatedQuotation.originalAmount = totalAmount;
+      
+      // 应用折扣（如果有）
+      if (updatedQuotation.discountPercentage > 0) {
+        updatedQuotation.discountAmount = Math.round(updatedQuotation.originalAmount * (updatedQuotation.discountPercentage / 100));
+        updatedQuotation.totalAmount = updatedQuotation.originalAmount - updatedQuotation.discountAmount;
       }
       
-      // 重新计算金额
-      item.unitPrice = item.prices[item.selectedPrice] || 0;
-      item.amount = item.unitPrice * item.quantity;
-    });
-    
-    // 关键修改：使用特殊打包价格计算总金额
-    if (usingSpecialPackagePrice) {
-      // 如果使用特殊打包价格，总金额就等于特殊打包价格
-      totalAmount = specialPackagePrice;
+      // 更新总金额大写
+      updatedQuotation.totalAmountInChinese = numberToChinese(updatedQuotation.totalAmount);
       
-      // 标记报价单使用特殊打包价格
-      updatedQuotation.usingSpecialPackagePrice = true;
-      updatedQuotation.specialPackageConfig = updatedQuotation.items.find(
-        item => item.name === "船用齿轮箱" && item.hasSpecialPackagePrice
-      )?.gwPackageConfig;
-    } else {
-      // 常规方式计算总金额
-      totalAmount = updatedQuotation.items.reduce((sum, item) => sum + item.amount, 0);
+      // 更新状态
+      setQuotation(updatedQuotation);
+      setSuccess('报价单价格已更新');
+    } catch (error) {
+      console.error("更新报价单价格错误:", error);
+      setError('更新报价单价格失败: ' + error.message);
+    } finally {
+      setLoading(false);
     }
-    
-    // 更新总金额
-    updatedQuotation.totalAmount = totalAmount;
-    updatedQuotation.originalAmount = totalAmount;
-    
-    // 应用折扣（如果有）
-    if (updatedQuotation.discountPercentage > 0) {
-      updatedQuotation.discountAmount = Math.round(updatedQuotation.originalAmount * (updatedQuotation.discountPercentage / 100));
-      updatedQuotation.totalAmount = updatedQuotation.originalAmount - updatedQuotation.discountAmount;
-    }
-    
-    // 更新总金额大写
-    updatedQuotation.totalAmountInChinese = numberToChinese(updatedQuotation.totalAmount);
-    
-    // 更新状态
-    setQuotation(updatedQuotation);
-    setSuccess('报价单价格已更新');
-  } catch (error) {
-    console.error("更新报价单价格错误:", error);
-    setError('更新报价单价格失败: ' + error.message);
-  } finally {
-    setLoading(false);
-  }
-}, [quotation, selectedComponents]);
+  }, [quotation, selectedComponents]);
+
   const handleExportQuotation = useCallback(async (format) => {
     if (!quotation) {
       setError('请先生成报价单');
@@ -1587,10 +1690,18 @@ const handleUpdateQuotationPrices = useCallback(() => {
       return;
     }
     
-    // 直接跳转到技术协议选项卡，而不是生成固定的协议格式
+    // 在跳转前，确保selectionResult包含最新的价格信息
+    if (selectionResult && !selectionResult.priceData) {
+      setSelectionResult(prev => ({
+        ...prev,
+        priceData: { ...priceData }
+      }));
+    }
+    
+    // 直接跳转到技术协议选项卡
     setActiveTab('agreement');
     setSuccess('请在技术协议选项卡中选择所需的协议模板和配置');
-  }, [selectedComponents, selectionResult, setActiveTab]);
+  }, [selectedComponents, selectionResult, priceData, setActiveTab]);
 
   const handleExportAgreement = useCallback(async (format) => {
     if (!agreement) {
@@ -1646,7 +1757,7 @@ const handleUpdateQuotationPrices = useCallback(() => {
     }
   }, [agreement, projectInfo.projectName]);
 
-  // 添加缺失的合同生成函数
+  // 修改：更新合同生成函数，使用统一的价格数据
   const handleGenerateContract = useCallback(() => {
     if (!selectedComponents.gearbox) {
       setError('请先完成选型，确保有选中的齿轮箱');
@@ -1667,10 +1778,12 @@ const handleUpdateQuotationPrices = useCallback(() => {
     setSuccess('正在生成销售合同...');
     
     try {
-      const contractPackagePrice = quotation?.summary?.packagePrice ?? packagePrice;
-      const contractMarketPrice = quotation?.summary?.marketPrice ?? marketPrice;
-      const contractTotalMarketPrice = quotation?.summary?.totalMarketPrice ?? totalMarketPrice;
-
+      // 使用报价单中的价格信息 - 报价单生成时已经包含了正确的价格和配件选项
+      const contractPackagePrice = quotation.summary?.packagePrice;
+      const contractMarketPrice = quotation.summary?.marketPrice;
+      const contractTotalMarketPrice = quotation.summary?.totalMarketPrice;
+      
+      // 确保使用与报价单一致的价格
       const contractData = generateContract(
         selectionResult,
         projectInfo,
@@ -1679,7 +1792,12 @@ const handleUpdateQuotationPrices = useCallback(() => {
           packagePrice: contractPackagePrice,
           marketPrice: contractMarketPrice,
           totalMarketPrice: contractTotalMarketPrice,
-          quotationDetails: quotation
+          quotationDetails: quotation,
+          // 直接传递报价单中的备用泵需求信息，确保一致性
+          needsPump: quotation.options?.needsPump,
+          includePump: quotation.options?.includePump,
+          hasSpecialPackagePrice: quotation.usingSpecialPackagePrice,
+          specialPackageConfig: quotation.specialPackageConfig
         }
       );
       
@@ -1692,68 +1810,68 @@ const handleUpdateQuotationPrices = useCallback(() => {
     } finally {
       setLoading(false);
     }
-  }, [selectedComponents, selectionResult, projectInfo, quotation, packagePrice, marketPrice, totalMarketPrice, setActiveTab]);
+  }, [selectedComponents, selectionResult, projectInfo, quotation, setActiveTab]);
 
   // 添加缺失的合同导出函数
-const handleExportContract = useCallback(async (format) => {
-  if (!contract) {
-    setError('请先生成销售合同');
-    return;
-  }
-  
-  setLoading(true);
-  setError('');
-  setSuccess(`正在导出销售合同为 ${format.toUpperCase()}...`);
-  
-  try {
-    const filename = `${projectInfo.projectName || '未命名项目'}-销售合同`;
+  const handleExportContract = useCallback(async (format) => {
+    if (!contract) {
+      setError('请先生成销售合同');
+      return;
+    }
     
-    if (format === 'word') {
-      exportContractToWord(contract, filename);
-      setSuccess('销售合同已导出为Word格式');
-      setLoading(false);
-    } else if (format === 'pdf') {
-      // 获取合同预览元素
-      const previewElement = document.querySelector('.contract-preview-content');
+    setLoading(true);
+    setError('');
+    setSuccess(`正在导出销售合同为 ${format.toUpperCase()}...`);
+    
+    try {
+      const filename = `${projectInfo.projectName || '未命名项目'}-销售合同`;
       
-      if (previewElement) {
-        // 添加延时确保内容完全渲染
-        setTimeout(async () => {
-          try {
-            // 使用优化的PDF导出函数
-            await optimizedHtmlToPdf(previewElement, {
-              filename: `${filename}.pdf`,
-              orientation: 'portrait',
-              format: 'a4',
-              scale: 2,
-              fontSize: '14px',
-              lineHeight: '1.5',
-              useCORS: true,
-              allowTaint: true,
-              logging: true
-            });
-            setSuccess('销售合同已导出为PDF格式');
-          } catch (pdfError) {
-            console.error("PDF导出详细错误:", pdfError);
-            setError('PDF导出失败: ' + pdfError.message);
-          }
+      if (format === 'word') {
+        exportContractToWord(contract, filename);
+        setSuccess('销售合同已导出为Word格式');
+        setLoading(false);
+      } else if (format === 'pdf') {
+        // 获取合同预览元素
+        const previewElement = document.querySelector('.contract-preview-content');
+        
+        if (previewElement) {
+          // 添加延时确保内容完全渲染
+          setTimeout(async () => {
+            try {
+              // 使用优化的PDF导出函数
+              await optimizedHtmlToPdf(previewElement, {
+                filename: `${filename}.pdf`,
+                orientation: 'portrait',
+                format: 'a4',
+                scale: 2,
+                fontSize: '14px',
+                lineHeight: '1.5',
+                useCORS: true,
+                allowTaint: true,
+                logging: true
+              });
+              setSuccess('销售合同已导出为PDF格式');
+            } catch (pdfError) {
+              console.error("PDF导出详细错误:", pdfError);
+              setError('PDF导出失败: ' + pdfError.message);
+            }
+            setLoading(false);
+          }, 800); // 使用更长的延时(800ms)确保复杂内容渲染完成
+        } else {
+          // 未找到预览元素
+          setError('无法找到合同预览内容，请确保合同正确生成');
           setLoading(false);
-        }, 800); // 使用更长的延时(800ms)确保复杂内容渲染完成
+        }
       } else {
-        // 未找到预览元素
-        setError('无法找到合同预览内容，请确保合同正确生成');
+        setError('不支持的导出格式');
         setLoading(false);
       }
-    } else {
-      setError('不支持的导出格式');
+    } catch (error) {
+      console.error("导出销售合同错误:", error);
+      setError('导出销售合同失败: ' + error.message);
       setLoading(false);
     }
-  } catch (error) {
-    console.error("导出销售合同错误:", error);
-    setError('导出销售合同失败: ' + error.message);
-    setLoading(false);
-  }
-}, [contract, projectInfo.projectName]);
+  }, [contract, projectInfo.projectName]);
 
   // 添加缺失的历史记录加载函数
   const handleLoadHistoryEntry = useCallback((historyId) => {
@@ -1805,141 +1923,6 @@ const handleExportContract = useCallback(async (format) => {
     }
   }, [setError, setSuccess]);
 
-  // 增强的表单验证函数
-  const isFormValid = useCallback(() => {
-    // 基本验证：检查必填字段是否有值且为合法数字
-    const powerValid = engineData.power !== '' && !isNaN(parseFloat(engineData.power)) && parseFloat(engineData.power) > 0;
-    const speedValid = engineData.speed !== '' && !isNaN(parseFloat(engineData.speed)) && parseFloat(engineData.speed) > 0;
-    const ratioValid = requirementData.targetRatio !== '' && !isNaN(parseFloat(requirementData.targetRatio)) && parseFloat(requirementData.targetRatio) > 0;
-    const thrustValid = requirementData.thrustRequirement === '' || (!isNaN(parseFloat(requirementData.thrustRequirement)) && parseFloat(requirementData.thrustRequirement) >= 0);
-    const tempValid = requirementData.temperature === '' || !isNaN(parseFloat(requirementData.temperature));
-
-    // 增强验证：检查数值范围是否合理
-    let validationErrors = [];
-    if (powerValid && parseFloat(engineData.power) > 10000) {
-        validationErrors.push('主机功率超过 10000kW，请确认是否正确');
-    }
-    
-    if (speedValid && parseFloat(engineData.speed) > 3500) {
-        validationErrors.push('主机转速超过 3500rpm，请确认是否正确');
-    }
-    
-    if (ratioValid && parseFloat(requirementData.targetRatio) > 20) {
-        validationErrors.push('目标减速比超过 20，请确认是否正确');
-    }
-    
-    if (thrustValid && requirementData.thrustRequirement !== '' && parseFloat(requirementData.thrustRequirement) > 1000) {
-        validationErrors.push('推力要求超过 1000kN，请确认是否正确');
-    }
-    
-    if (tempValid && requirementData.temperature !== '' && (parseFloat(requirementData.temperature) < -20 || parseFloat(requirementData.temperature) > 80)) {
-        validationErrors.push('工作温度超出正常范围 (-20°C ~ 80°C)，请确认是否正确');
-    }
-    
-    return {
-      isValid: powerValid && speedValid && ratioValid && thrustValid && tempValid,
-      validationErrors
-    };
-  }, [engineData.power, engineData.speed, requirementData.targetRatio, requirementData.thrustRequirement, requirementData.temperature]);
-
-  // 使用useMemo存储表单验证结果，避免在渲染过程中调用函数
-  const formValidation = useMemo(() => isFormValid(), [isFormValid]);
-  
-  // 在effect中处理错误消息
-  useEffect(() => {
-    if (formValidation.validationErrors.length > 0 && formValidation.isValid) {
-      setError('警告: ' + formValidation.validationErrors.join('; ') + '。如确认无误，仍可进行选型。');
-    } else if (formValidation.isValid) {
-      setError(''); // 如果表单有效且没有警告，清除错误消息
-    }
-  }, [formValidation]);
-
-  // 字段验证状态函数
-  const getFieldValidationState = (fieldName, value) => {
-    if (value === '') return null; // 未填写的字段不显示验证状态
-    
-    switch (fieldName) {
-        case 'enginePower':
-            return !isNaN(parseFloat(value)) && parseFloat(value) > 0 
-                ? (parseFloat(value) <= 10000 ? 'valid' : 'warning') 
-                : 'invalid';
-        
-        case 'engineSpeed':
-            return !isNaN(parseFloat(value)) && parseFloat(value) > 0 
-                ? (parseFloat(value) <= 3500 ? 'valid' : 'warning') 
-                : 'invalid';
-        
-        case 'targetRatio':
-            return !isNaN(parseFloat(value)) && parseFloat(value) > 0 
-                ? (parseFloat(value) <= 20 ? 'valid' : 'warning') 
-                : 'invalid';
-        
-        case 'thrustRequirement':
-            return value === '' || (!isNaN(parseFloat(value)) && parseFloat(value) >= 0)
-                ? (value === '' || parseFloat(value) <= 1000 ? 'valid' : 'warning')
-                : 'invalid';
-        
-        case 'temperature':
-            return value === '' || !isNaN(parseFloat(value))
-                ? (value === '' || (parseFloat(value) >= -20 && parseFloat(value) <= 80) ? 'valid' : 'warning')
-                : 'invalid';
-        
-        default:
-            return 'valid';
-    }
-  };
-
-  // 获取验证状态对应的样式类名
-  const getValidationClassName = (state) => {
-    if (!state) return '';
-    switch (state) {
-        case 'valid': return 'is-valid';
-        case 'invalid': return 'is-invalid';
-        case 'warning': return 'is-warning'; // 需要在CSS中定义此类
-        default: return '';
-    }
-  };
-
-  // 获取验证状态对应的反馈信息
-  const getValidationFeedback = (fieldName, value) => {
-    if (value === '') return '';
-    const state = getFieldValidationState(fieldName, value);
-    
-    if (state === 'invalid') {
-        switch (fieldName) {
-            case 'enginePower':
-                return '请输入有效的主机功率（大于0）';
-            case 'engineSpeed':
-                return '请输入有效的主机转速（大于0）';
-            case 'targetRatio':
-                return '请输入有效的目标减速比（大于0）';
-            case 'thrustRequirement':
-                return '推力要求必须为正数或留空';
-            case 'temperature':
-                return '请输入有效的温度值';
-            default:
-                return '输入值无效';
-        }
-    } else if (state === 'warning') {
-        switch (fieldName) {
-            case 'enginePower':
-                return '功率值较大，请确认是否正确';
-            case 'engineSpeed':
-                return '转速值较高，请确认是否正确';
-            case 'targetRatio':
-                return '减速比较大，请确认是否正确';
-            case 'thrustRequirement':
-                return '推力值较大，请确认是否正确';
-            case 'temperature':
-                return '温度超出常规范围，请确认是否正确';
-            default:
-                return '输入值超出常规范围';
-        }
-    }
-    
-    return '';
-  };
-
   // 修改后的选型处理函数 - 使用增强型联轴器选型
   const handleSelectGearbox = useCallback(() => {
     setLoading(true);
@@ -1948,7 +1931,8 @@ const handleExportContract = useCallback(async (format) => {
     
     try {
         // 使用已计算的表单验证结果
-        if (!formValidation.isValid) {
+        const validation = isFormValid(); // 直接调用 isFormValid
+        if (!validation.isValid) { // 使用调用结果
             setError('请完成所有必填项，并确保数值有效');
             setLoading(false);
             return;
@@ -2129,7 +2113,7 @@ const handleExportContract = useCallback(async (format) => {
     } finally {
         setLoading(false);
     }
-  }, [engineData, requirementData, gearboxType, appDataState, handleGearboxSelection, setActiveTab, formValidation]);
+  }, [engineData, requirementData, gearboxType, appDataState, handleGearboxSelection, setActiveTab, isFormValid]); // <-- 确保 isFormValid 在依赖项中
 
   const inputStyles = useMemo(() => ({
     backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.inputBorder,
@@ -2370,10 +2354,9 @@ const handleExportContract = useCallback(async (format) => {
                         减速比较大，请确认是否正确
                       </div>
                       <div className="field-info">
-                        常见减速比范围: 1.5-10
-                      </div>
+                         常见减速比范围: 1.5-10
+                      </div>  
                     </Form.Group>
-                    
                     <Form.Group className="mb-3" controlId="thrustRequirement">
                       <Form.Label style={{ color: colors.text }}>推力要求 (kN, 可选)</Form.Label>
                       <Form.Control
@@ -2413,7 +2396,7 @@ const handleExportContract = useCallback(async (format) => {
                         工作条件影响联轴器选型，类别越高代表负载变化越大
                       </div>
                     </Form.Group>
-					</Form>
+                    </Form>		                  		
                 </Card.Body>
               </Card>
             </Col>
@@ -2587,7 +2570,7 @@ const handleExportContract = useCallback(async (format) => {
                           <Button
                             variant="primary"
                             onClick={handleSelectGearbox}
-                            disabled={loading || !formValidation.isValid || !appDataState || Object.keys(appDataState).length === 0}
+                            disabled={loading || !isFormValid().isValid || !appDataState || Object.keys(appDataState).length === 0} // 直接调用 isFormValid().isValid
                             style={{
                               backgroundColor: colors.primary,
                               borderColor: colors.primary,
@@ -2736,7 +2719,7 @@ const handleExportContract = useCallback(async (format) => {
             </Row>
           </Tab>
 
-<Tab eventKey="history" title={<span><i className="bi bi-clock-history me-1"></i>选型历史</span>}>
+          <Tab eventKey="history" title={<span><i className="bi bi-clock-history me-1"></i>选型历史</span>}>
             <Row>
               <Col>
                 <Card className="shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
@@ -2767,7 +2750,7 @@ const handleExportContract = useCallback(async (format) => {
                         ))}
                       </ListGroup>
                     ) : (
-                      <p style={{ color: colors.muted }}>没有历史记录</p>
+                     <p style={{ color: colors.muted }}>没有历史记录</p>
                     )}
                   </Card.Body>
                 </Card>
@@ -2812,6 +2795,11 @@ const handleExportContract = useCallback(async (format) => {
           // 传递特殊打包价格相关信息
           hasSpecialPackagePrice={selectedComponents.gearbox?.hasSpecialPackagePrice}
           specialPackageConfig={selectedComponents.gearbox?.gwPackageConfig}
+          // 传递备用泵需求信息 - 新增
+          needsPump={selectedComponents.gearbox && needsStandbyPump(
+            selectedComponents.gearbox.model,
+            { power: selectedComponents.gearbox.power }
+          )}
           colors={colors}
           theme={theme}
         />
@@ -2826,7 +2814,7 @@ const handleExportContract = useCallback(async (format) => {
           existingItems={quotation?.items || []}
           colors={colors}
           theme={theme}
-        />
+		 />
       )}
 
       {/* 保存的报价单历史对话框 */}

@@ -5,6 +5,15 @@
  * 简化版 - 解决编译问题
  */
 
+// 导入模板
+import { 
+  gwcChineseTemplate, 
+  gwcEnglishTemplate, 
+  hctChineseTemplate, 
+  hcChineseTemplate, 
+  dtChineseTemplate 
+} from './agreementTemplates';
+
 // 协议模板类型枚举
 export const TemplateType = {
   GWC: 'GWC',     // GWC系列船用齿轮箱
@@ -118,15 +127,6 @@ export const fillTemplate = (template, data) => {
   
   return result;
 };
-
-// 导入模板
-import { 
-  gwcChineseTemplate, 
-  gwcEnglishTemplate, 
-  hctChineseTemplate, 
-  hcChineseTemplate, 
-  dtChineseTemplate 
-} from './agreementTemplates';
 
 export default {
   getAgreementTemplate,

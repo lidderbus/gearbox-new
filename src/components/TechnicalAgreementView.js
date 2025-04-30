@@ -1,8 +1,10 @@
-// src/components/TechnicalAgreementView.js
-import React, { useState } from 'react';
-import { Container, Row, Col, Button, Alert, Card } from 'react-bootstrap';
+// src/components/TechnicalAgreementView.js - 修改版，支持中英文对照
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Button, Alert, Card, Badge } from 'react-bootstrap';
 import AgreementGenerator from './AgreementGenerator';
+import ErrorBoundary from './ErrorBoundary'; // 导入错误边界组件
 import { exportHtmlContentToPDF, printHtmlContent } from '../utils/pdfExportUtils';
+import { needsStandbyPump } from '../utils/enhancedPumpSelection';
 
 /**
  * 技术协议视图组件
@@ -20,13 +22,52 @@ const TechnicalAgreementView = ({
   const [agreement, setAgreement] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [warning, setWarning] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  // 检查备用泵需求
+  useEffect(() => {
+    if (selectedComponents && selectedComponents.gearbox) {
+      const gearboxModel = selectedComponents.gearbox.model;
+      
+      // 使用与其他组件一致的判断逻辑
+      const requiresPump = needsStandbyPump(gearboxModel, { 
+        power: selectedComponents.gearbox.power 
+      });
+      
+      // 检查是否存在备用泵需求不匹配的情况
+      if (requiresPump && !selectedComponents.pump) {
+        setWarning("注意: 当前选择的齿轮箱型号需要配备备用泵，但技术协议中未包含备用泵信息。");
+      } else if (!requiresPump && selectedComponents.pump) {
+        setWarning("注意: 当前选择的齿轮箱型号不需要配备备用泵，但技术协议中包含了备用泵信息。");
+      } else {
+        setWarning("");
+      }
+    }
+  }, [selectedComponents]);
   
   // 处理协议生成完成
   const handleAgreementGenerated = (generatedAgreement) => {
     setAgreement(generatedAgreement);
-    setSuccess('技术协议已成功生成');
+    
+    // 根据协议语言设置成功消息
+    if (generatedAgreement.language === 'bilingual') {
+      setSuccess(`中英文对照技术协议已成功生成 (布局: ${getBilingualLayoutName(generatedAgreement.bilingualLayout)})`);
+    } else {
+      setSuccess(`${generatedAgreement.language === 'zh' ? '中文' : '英文'}技术协议已成功生成`);
+    }
+    
     setError('');
+  };
+  
+  // 获取布局名称
+  const getBilingualLayoutName = (layout) => {
+    switch (layout) {
+      case 'side-by-side': return '左右对照';
+      case 'sequential': return '分段对照';
+      case 'complete': return '全文对照';
+      default: return layout;
+    }
   };
   
   // 导出为Word
@@ -38,12 +79,26 @@ const TechnicalAgreementView = ({
 
     try {
       // 创建一个新的Blob对象，内容为HTML
-      const blob = new Blob([agreement.html], { type: 'application/msword' });
+      const blob = new Blob([agreement.html], { 
+        type: 'application/msword',
+        encoding: 'UTF-8'
+      });
       
       // 创建下载链接
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = `${projectInfo?.projectName || '齿轮箱'}_技术协议.doc`;
+      
+      // 构建文件名，包含语言信息
+      let filename = `${projectInfo?.projectName || '齿轮箱'}_技术协议`;
+      if (agreement.language === 'bilingual') {
+        filename += '_中英文对照';
+      } else if (agreement.language === 'en') {
+        filename += '_英文版';
+      } else {
+        filename += '_中文版';
+      }
+      
+      link.download = `${filename}.doc`;
       
       // 模拟点击下载
       document.body.appendChild(link);
@@ -75,11 +130,21 @@ const TechnicalAgreementView = ({
         throw new Error('无法找到预览内容');
       }
       
+      // 构建文件名，包含语言信息
+      let filename = `${projectInfo?.projectName || '齿轮箱'}_技术协议`;
+      if (agreement.language === 'bilingual') {
+        filename += '_中英文对照';
+      } else if (agreement.language === 'en') {
+        filename += '_英文版';
+      } else {
+        filename += '_中文版';
+      }
+      
       // 添加延迟确保内容渲染完成
       setTimeout(() => {
         // 导出PDF
         exportHtmlContentToPDF(previewElement, {
-          filename: `${projectInfo?.projectName || '齿轮箱'}_技术协议.pdf`,
+          filename: `${filename}.pdf`,
           orientation: 'portrait',
           format: 'a4',
           margin: { top: 20, right: 20, bottom: 20, left: 20 },
@@ -165,6 +230,26 @@ const TechnicalAgreementView = ({
       setLoading(false);
     }
   };
+
+  // 当技术协议组件出错时渲染的备用UI
+  const agreementFallback = (
+    <Card className="mt-3">
+      <Card.Body className="text-center">
+        <p>无法渲染技术协议生成器组件。请尝试以下操作：</p>
+        <ul className="text-start">
+          <li>刷新页面重试</li>
+          <li>暂时禁用特殊订货要求模板选择功能</li>
+          <li>联系系统管理员</li>
+        </ul>
+        <Button 
+          variant="primary" 
+          onClick={onNavigateToQuotation}
+        >
+          返回报价单
+        </Button>
+      </Card.Body>
+    </Card>
+  );
   
   return (
     <Container fluid>
@@ -190,15 +275,51 @@ const TechnicalAgreementView = ({
         </Row>
       )}
       
+      {warning && (
+        <Row className="mb-3">
+          <Col>
+            <Alert variant="warning" onClose={() => setWarning('')} dismissible>
+              <i className="bi bi-exclamation-circle-fill me-2"></i>
+              {warning}
+            </Alert>
+          </Col>
+        </Row>
+      )}
+      
+      {/* 备用泵需求提示 */}
+      {selectedComponents?.gearbox && (
+        <Row className="mb-3">
+          <Col>
+            <Alert variant="info">
+              <i className="bi bi-info-circle-fill me-2"></i>
+              <strong>备用泵需求检查：</strong> 当前选择的齿轮箱型号 ({selectedComponents.gearbox.model}) 
+              {needsStandbyPump(selectedComponents.gearbox.model, { power: selectedComponents.gearbox.power }) ? 
+                <strong> 需要配备备用泵</strong> : 
+                <strong> 不需要配备备用泵</strong>
+              }。
+              {needsStandbyPump(selectedComponents.gearbox.model, { power: selectedComponents.gearbox.power }) && !selectedComponents.pump && 
+                <span className="ms-2 text-danger">请确保在技术协议中正确考虑备用泵配套要求。</span>
+              }
+            </Alert>
+          </Col>
+        </Row>
+      )}
+      
       <Row className="mb-3">
         <Col>
           <Card className="shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
             <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>
               <div className="d-flex justify-content-between align-items-center">
-                <span>
+                <div>
                   <i className="bi bi-file-earmark-text me-2"></i>
                   技术协议管理
-                </span>
+                  {agreement && agreement.language === 'bilingual' && (
+                    <Badge bg="info" className="ms-2">中英文对照</Badge>
+                  )}
+                  {agreement && agreement.language === 'en' && (
+                    <Badge bg="secondary" className="ms-2">英文版</Badge>
+                  )}
+                </div>
                 <div>
                   {agreement && (
                     <>
@@ -226,14 +347,17 @@ const TechnicalAgreementView = ({
               </div>
             </Card.Header>
             <Card.Body>
-              <AgreementGenerator
-                selectionResult={selectionResult}
-                projectInfo={projectInfo}
-                selectedComponents={selectedComponents}
-                colors={colors}
-                theme={theme}
-                onGenerated={handleAgreementGenerated}
-              />
+              {/* 使用错误边界包裹AgreementGenerator组件 */}
+              <ErrorBoundary fallback={agreementFallback}>
+                <AgreementGenerator
+                  selectionResult={selectionResult}
+                  projectInfo={projectInfo}
+                  selectedComponents={selectedComponents}
+                  colors={colors}
+                  theme={theme}
+                  onGenerated={handleAgreementGenerated}
+                />
+              </ErrorBoundary>
             </Card.Body>
           </Card>
         </Col>

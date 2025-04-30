@@ -1,7 +1,8 @@
-// src/components/EnhancedGearboxSelectionResult.js - 最终修复版本
-import React, { useState, useEffect } from 'react';
+// src/components/EnhancedGearboxSelectionResult.js
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, Row, Col, Table, Badge, Button, Tabs, Tab, Alert, Accordion, Form, ListGroup } from 'react-bootstrap';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
+import { needsStandbyPump } from '../utils/enhancedPumpSelection';
 
 /**
  * 增强的齿轮箱选型结果组件
@@ -28,6 +29,24 @@ const EnhancedGearboxSelectionResult = ({
   // 获取高弹联轴器和备用泵数据
   const couplingResult = result?.flexibleCoupling || null;
   const pumpResult = result?.standbyPump || null;
+
+  // 判断是否需要备用泵
+  const needsPumpFlag = useMemo(() => {
+    if (!result || !result.recommendations || !result.recommendations[selectedIndex]) {
+      return false;
+    }
+    
+    const gearbox = result.recommendations[selectedIndex];
+    // 优先使用备用泵选型结果中的requiresPump标志
+    if (pumpResult && 'requiresPump' in pumpResult) {
+      return pumpResult.requiresPump;
+    }
+    
+    // 如果没有备用泵选型结果，使用增强版备用泵选型函数判断
+    return needsStandbyPump(gearbox.model, {
+      power: gearbox.power
+    });
+  }, [result, selectedIndex, pumpResult]);
 
   // 在组件挂载或依赖项更改时初始化已选配件
   useEffect(() => {
@@ -116,7 +135,9 @@ const EnhancedGearboxSelectionResult = ({
         '重量(kg)': gearbox.weight || 0,
         '价格(元)': gearbox.marketPrice || 0,
         ...metrics,
-        isSelected: gearbox.model === selectedGearbox.model
+        isSelected: gearbox.model === selectedGearbox.model,
+        // 添加备用泵需求判断
+        requiresPump: needsStandbyPump(gearbox.model, { power: gearbox.power })
       };
     });
   };
@@ -235,11 +256,25 @@ const EnhancedGearboxSelectionResult = ({
 
   // 生成备用泵数据
   const renderPumpSection = () => {
+    // 检查是否需要备用泵
+    if (!needsPumpFlag) {
+      return (
+        <Alert variant="info">
+          <i className="bi bi-info-circle me-2"></i>
+          <strong>当前选择的齿轮箱型号 {selectedGearbox.model} 不需要配备备用泵。</strong>
+          <p className="mt-2 mb-0">
+            根据配套规则，此型号齿轮箱无需配备备用泵。如有特殊需求，可以在报价单选项中手动添加。
+          </p>
+        </Alert>
+      );
+    }
+    
+    // 正常情况 - 需要备用泵但未找到匹配
     if (!pumpResult || !pumpResult.success) {
       return (
         <Alert variant="warning">
           <i className="bi bi-exclamation-triangle me-2"></i>
-          未能找到匹配的备用泵
+          未能找到匹配的备用泵，但该齿轮箱型号需要配备备用泵
           {pumpResult && pumpResult.message && (
             <p className="mt-2 mb-0"><small>{pumpResult.message}</small></p>
           )}
@@ -275,6 +310,13 @@ const EnhancedGearboxSelectionResult = ({
             <tr>
               <td>价格</td>
               <td>{(pumpResult.marketPrice || 0).toLocaleString()} 元</td>
+            </tr>
+            <tr>
+              <td>配套依据</td>
+              <td>
+                {pumpResult.matchType || '-'} 
+                {pumpResult.matchInfo && <small className="d-block text-muted">{pumpResult.matchInfo}</small>}
+              </td>
             </tr>
           </tbody>
         </Table>
@@ -365,6 +407,16 @@ const EnhancedGearboxSelectionResult = ({
                       <Badge bg="success" className="ms-2">满足</Badge> : 
                       <Badge bg="danger" className="ms-2">不满足</Badge>
                   )}
+                </td>
+              ))}
+            </tr>
+            <tr>
+              <td>备用泵需求</td>
+              {comparisonData.map(item => (
+                <td key={`${item.name}-pump-req`}>
+                  {item.requiresPump ? 
+                    <Badge bg="primary">需要</Badge> : 
+                    <Badge bg="secondary">不需要</Badge>}
                 </td>
               ))}
             </tr>
@@ -674,6 +726,16 @@ const EnhancedGearboxSelectionResult = ({
                       </tr>
                     )}
                     <tr>
+                      <td>备用泵需求</td>
+                      <td>
+                        {needsPumpFlag ? (
+                          <Badge bg="primary">需要配备备用泵</Badge>
+                        ) : (
+                          <Badge bg="secondary">不需要配备备用泵</Badge>
+                        )}
+                      </td>
+                    </tr>
+                    <tr>
                       <td>重量</td>
                       <td>{selectedGearbox.weight || '-'} kg</td>
                     </tr>
@@ -799,7 +861,12 @@ const EnhancedGearboxSelectionResult = ({
                 )}
                 
                 <h6 className="mt-4" style={{ color: colors?.headerText }}>备用泵</h6>
-                {pumpResult && pumpResult.success ? (
+                {!needsPumpFlag ? (
+                  <Alert variant="info">
+                    <i className="bi bi-info-circle me-2"></i>
+                    当前选择的齿轮箱型号不需要配备备用泵
+                  </Alert>
+                ) : pumpResult && pumpResult.success ? (
                   <ListGroup>
                     <ListGroup.Item style={{ backgroundColor: colors?.card, color: colors?.text, borderColor: colors?.border }}>
                       <div className="d-flex justify-content-between align-items-center">
@@ -815,7 +882,7 @@ const EnhancedGearboxSelectionResult = ({
                     </ListGroup.Item>
                   </ListGroup>
                 ) : (
-                  <Alert variant="warning">未找到合适的备用泵</Alert>
+                  <Alert variant="warning">未找到合适的备用泵，但该齿轮箱型号需要配备备用泵</Alert>
                 )}
               </Col>
               
@@ -835,15 +902,17 @@ const EnhancedGearboxSelectionResult = ({
                           <td>联轴器价格</td>
                           <td>{(couplingResult?.marketPrice || 0).toLocaleString()} 元</td>
                         </tr>
-                        <tr>
-                          <td>备用泵价格</td>
-                          <td>{(pumpResult?.marketPrice || 0).toLocaleString()} 元</td>
-                        </tr>
+                        {needsPumpFlag && (
+                          <tr>
+                            <td>备用泵价格</td>
+                            <td>{(pumpResult?.marketPrice || 0).toLocaleString()} 元</td>
+                          </tr>
+                        )}
                         <tr className="table-info">
                           <td><strong>总价格</strong></td>
                           <td><strong>{((selectedGearbox.marketPrice || 0) + 
                                       (couplingResult?.marketPrice || 0) + 
-                                      (pumpResult?.marketPrice || 0)).toLocaleString()} 元</strong></td>
+                                      (needsPumpFlag ? (pumpResult?.marketPrice || 0) : 0)).toLocaleString()} 元</strong></td>
                         </tr>
                       </tbody>
                     </Table>
@@ -857,7 +926,7 @@ const EnhancedGearboxSelectionResult = ({
                               data={[
                                 { name: '齿轮箱', value: selectedGearbox.marketPrice || 0, fill: '#8884d8' },
                                 { name: '联轴器', value: couplingResult?.marketPrice || 0, fill: '#82ca9d' },
-                                { name: '备用泵', value: pumpResult?.marketPrice || 0, fill: '#ffc658' }
+                                { name: '备用泵', value: needsPumpFlag ? (pumpResult?.marketPrice || 0) : 0, fill: '#ffc658' }
                               ]}
                               dataKey="value"
                               nameKey="name"
@@ -929,6 +998,15 @@ const EnhancedGearboxSelectionResult = ({
         </div>
       </Card.Header>
       <Card.Body>
+        {/* 添加备用泵需求提示 */}
+        <Alert variant={needsPumpFlag ? "primary" : "info"} className="mb-3">
+          <i className="bi bi-info-circle me-2"></i>
+          <strong>备用泵需求：</strong>
+          {needsPumpFlag ? 
+            "该齿轮箱型号需要配备备用泵" : 
+            "该齿轮箱型号不需要配备备用泵"}
+        </Alert>
+        
         {/* 根据模式渲染不同内容 */}
         {comparisonMode ? renderComparisonContent() : renderTabsContent()}
       </Card.Body>
