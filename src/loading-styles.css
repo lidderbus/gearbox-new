@@ -1,0 +1,120 @@
+/* loading-styles.css */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.loading-spinner {
+  text-align: center;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+}
+
+.dark-theme .loading-spinner {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* iOS 特定适配 */
+@supports (-webkit-touch-callout: none) {
+  .loading-spinner {
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* 更好的表格响应式支持 */
+.table-responsive {
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+
+/* 滚动指示器 */
+.table-responsive::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.05));
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.table-responsive.scrollable::after {
+  opacity: 1;
+}
+
+/* 触摸反馈 */
+@media (hover: none) {
+  .btn:active {
+    transform: scale(0.98);
+    transition: transform 0.1s;
+  }
+}
+
+/* 固定底部导航样式 */
+.fixed-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--light-card-bg);
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+  padding: 10px 15px;
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+}
+
+.dark-theme .fixed-bottom-nav {
+  background-color: var(--dark-card-bg);
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+}
+
+/* 提升可用性的焦点状态 */
+button:focus, 
+a:focus, 
+input:focus, 
+select:focus, 
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25) !important;
+}
+
+.dark-theme button:focus, 
+.dark-theme a:focus, 
+.dark-theme input:focus, 
+.dark-theme select:focus, 
+.dark-theme textarea:focus {
+  box-shadow: 0 0 0 3px rgba(75, 150, 255, 0.25) !important;
+}
+
+/* 简单的进场动画 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  animation: fadeIn 0.3s ease-out;
+}

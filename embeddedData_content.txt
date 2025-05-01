@@ -1,0 +1,121 @@
+// src/data/embeddedData.js
+// 船用齿轮箱内置数据
+
+/**
+ * 嵌入式齿轮箱数据集
+ * key 为分类，value 为对应数组
+ */
+export const embeddedGearboxData = {
+  hcGearboxes: [
+    {
+      model: "40A",
+      inputSpeedRange: [750, 2000],
+      ratios: [2.07, 2.96, 3.44, 3.83],
+      transferCapacity: [0.0294, 0.0294, 0.0235, 0.02],
+      thrust: 8.8,
+      centerDistance: 142,
+      weight: 225,
+      controlType: "推拉软轴",
+      dimensions: "490x670x620",
+      basePrice: 8560,
+      price: 8560,
+      discountRate: 0.1,
+      factoryPrice: 7704,
+      packagePrice: 7704,
+      marketPrice: 8560,
+    },
+  ],
+  gcGearboxes: [],
+  gwGearboxes: [
+    {
+      model: "2GWH1060",
+      inputSpeedRange: [400, 2000],
+      ratios: [2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6],
+      transferCapacity: [1.12,1.12,1.12,1.12,1.12,1.12,1.12,1.12,1.12],
+      thrust: 175,
+      standardCenterDistance: 1460,
+      weight: 14500,
+      controlType: "双机并车",
+      // 价格信息
+      basePrice: 850000,
+      price: 850000,
+      discountRate: 0.1,
+      factoryPrice: 765000,
+      packagePrice: 765000,
+      marketPrice: 869318.18,
+      dimensions: "-",
+    },
+    {
+      model: "2GWH4100",
+      inputSpeedRange: [400, 1600],
+      ratios: [2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6],
+      transferCapacity: [4.24,4.24,4.24,4.24,4.24,4.24,4.24,4.24,4.24],
+      thrust: 450,
+      standardCenterDistance: 2300,
+      weight: 22500,
+      controlType: "双机并车",
+      basePrice: 1250000,
+      price: 1250000,
+      discountRate: 0.1,
+      factoryPrice: 1125000,
+      packagePrice: 1125000,
+      marketPrice: 1278409.09,
+      dimensions: "-",
+    },
+    {
+      model: "2GWH7050",
+      inputSpeedRange: [400, 1500],
+      ratios: [2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6],
+      transferCapacity: [7.05,7.05,7.05,7.05,7.05,7.05,7.05,7.05,7.05],
+      thrust: 700,
+      standardCenterDistance: 2700,
+      weight: 25000,
+      controlType: "双机并车",
+      basePrice: 1800000,
+      price: 1800000,
+      discountRate: 0.1,
+      factoryPrice: 1620000,
+      packagePrice: 1620000,
+      marketPrice: 1840909.09,
+      dimensions: "-",
+    },
+  ],
+  dtGearboxes: [],
+  hcqGearboxes: [],
+  hcmGearboxes: [],
+  standbyPumps: [],
+};
+
+/**
+ * 根据外部价格表更新齿轮箱价格
+ * @param {object} data 嵌入式数据
+ * @param {Array<{model:string,basePrice:number,discountRate:number,discountedPrice:number}>} priceList 外部价格列表
+ * @returns {object} 更新后的数据
+ */
+export function applyPriceUpdates(data, priceList) {
+  const priceMap = new Map();
+  priceList.forEach((item) => {
+    const key = item.model.trim();
+    priceMap.set(key, item);
+  });
+
+  const updated = JSON.parse(JSON.stringify(data));
+  Object.values(updated).forEach((arr) => {
+    if (!Array.isArray(arr)) return;
+    arr.forEach((g) => {
+      const p = priceMap.get(g.model);
+      if (p) {
+        g.basePrice = p.basePrice;
+        g.price = p.basePrice;
+        g.discountRate = p.discountRate;
+        g.factoryPrice = p.discountedPrice;
+        g.packagePrice = p.discountedPrice;
+        g.marketPrice = g.factoryPrice
+          ? parseFloat((g.factoryPrice / (1 - 0.12)).toFixed(2))
+          : 0;
+        g.priceWarning = false;
+      }
+    });
+  });
+  return updated;
+} 

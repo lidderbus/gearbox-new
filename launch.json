@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug Remote Java",
+            "request": "attach",
+            "hostName": "localhost",  // 这里填写远程或本地主机地址
+            "port": 5005              // Java应用程序的调试端口
+        }
+    ]
+}

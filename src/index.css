@@ -1,0 +1,175 @@
+body {
+  margin: 0;
+  font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f5f7fa;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* 设置视口适配iOS */
+@viewport {
+  width: device-width;
+  height: device-height;
+}
+
+/* 防止iOS缩放问题 */
+html {
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* 全局样式覆盖 */
+.container-fluid {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #333;
+}
+
+/* 表格样式优化 */
+.table {
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.table th {
+  font-weight: 600;
+  padding: 0.75rem;
+}
+
+.table td {
+  padding: 0.75rem;
+}
+
+/* 表单控件样式优化 */
+.form-control:focus, 
+.form-select:focus {
+  border-color: #0056b3;
+  box-shadow: 0 0 0 0.2rem rgba(0, 86, 179, 0.25);
+}
+
+/* 按钮悬停效果 */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 标签页样式优化 */
+.nav-tabs {
+  border-bottom: 1px solid #dee2e6;
+  margin-bottom: 1rem;
+}
+
+.nav-tabs .nav-link {
+  margin-bottom: -1px;
+  border: 1px solid transparent;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  padding: 0.6rem 1rem;
+}
+
+.nav-tabs .nav-link:hover {
+  border-color: #e9ecef #e9ecef #dee2e6;
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* 用于滚动的指示器 */
+.scroll-indicator {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.table-responsive:hover .scroll-indicator {
+  opacity: 1;
+}
+
+/* iOS特定样式 */
+@supports (-webkit-touch-callout: none) {
+  /* 修复iOS按钮触摸反馈 */
+  button, 
+  [type="button"], 
+  [type="reset"], 
+  [type="submit"] {
+    -webkit-appearance: none;
+  }
+  
+  /* 修复iOS输入框样式问题 */
+  input, 
+  textarea {
+    -webkit-appearance: none;
+    border-radius: 8px;
+  }
+  
+  /* 添加iOS滚动惯性 */
+  .table-responsive,
+  .card-body,
+  .modal-body {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* 避免iOS缩放问题 */
+  select, input, textarea {
+    font-size: 16px;
+  }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .card {
+    margin-bottom: 1rem;
+  }
+  
+  .btn {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  /* 增大触摸目标 */
+  .form-control,
+  .form-select,
+  .btn,
+  .nav-link {
+    min-height: 44px;
+  }
+}
+
+/* 黑暗模式文本颜色调整 */
+@media (prefers-color-scheme: dark) {
+  .text-muted {
+    color: #adb5bd !important;
+  }
+}
