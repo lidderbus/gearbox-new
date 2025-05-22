@@ -345,8 +345,17 @@ const ensureRangeArray = (value, defaultRange = [0, 0]) => {
 const processGearboxData = (jsonData) => {
   return jsonData.map(item => {
     const basePrice = safeParseFloat(item['成本价'] || item.price || item.basePrice);
-    const discountRate = item['下浮率(%)'] !== undefined ? safeParseFloat(item['下浮率(%)']) : undefined; // Keep undefined if not present
-    const factoryPrice = safeParseFloat(item['出厂价'] || item.factoryPrice);
+    const discountRateValue = item['下浮率(%)'] !== undefined ? safeParseFloat(item['下浮率(%)']) : undefined;
+    const factoryPriceInput = safeParseFloat(item['出厂价'] || item.factoryPrice);
+
+    let finalFactoryPrice = 0;
+
+    if (factoryPriceInput > 0) {
+        finalFactoryPrice = factoryPriceInput;
+    } else if (basePrice > 0 && discountRateValue !== undefined && !isNaN(discountRateValue)) {
+        let calculatedPrice = basePrice * (1 - discountRateValue / 100.0);
+        finalFactoryPrice = Math.max(0, calculatedPrice); // Ensure price is not negative
+    }
 
     const processed = {
       model: String(item['型号'] || item.model || '').trim(),
@@ -360,9 +369,10 @@ const processGearboxData = (jsonData) => {
       controlType: String(item['控制方式'] || item.controlType || '推拉软轴').trim(),
       price: basePrice, // Use price = basePrice convention
       basePrice: basePrice,
-      // Only include discountRate/factoryPrice if they were present or calculable
-      ...(discountRate !== undefined && { discountRate }),
-      ...(factoryPrice > 0 && { factoryPrice }),
+      // Conditionally add discountRate if it was defined
+      ...(discountRateValue !== undefined && { discountRate: discountRateValue }),
+      // Conditionally add factoryPrice if finalFactoryPrice is positive
+      ...(finalFactoryPrice > 0 && { factoryPrice: finalFactoryPrice }),
       packagePrice: safeParseFloat(item['打包价'] || item.packagePrice),
       marketPrice: safeParseFloat(item['市场价'] || item.marketPrice),
       recommendedHighFlex: String(item['推荐高弹'] || item.recommendedHighFlex || '').trim(),
@@ -378,12 +388,24 @@ const processGearboxData = (jsonData) => {
   }).filter(Boolean);
 };
 
+// Add for testing
+export { processGearboxData, processCouplingData, processPumpData, safeParseFloat, stringToArrayOfNumbers, ensureRangeArray };
+
 // Process coupling data from a sheet
 const processCouplingData = (jsonData) => {
    return jsonData.map(item => {
     const basePrice = safeParseFloat(item['成本价'] || item.price || item.basePrice);
-    const discountRate = item['下浮率(%)'] !== undefined ? safeParseFloat(item['下浮率(%)']) : undefined;
-    const factoryPrice = safeParseFloat(item['出厂价'] || item.factoryPrice);
+    const discountRateValue = item['下浮率(%)'] !== undefined ? safeParseFloat(item['下浮率(%)']) : undefined;
+    const factoryPriceInput = safeParseFloat(item['出厂价'] || item.factoryPrice);
+
+    let finalFactoryPrice = 0;
+
+    if (factoryPriceInput > 0) {
+        finalFactoryPrice = factoryPriceInput;
+    } else if (basePrice > 0 && discountRateValue !== undefined && !isNaN(discountRateValue)) {
+        let calculatedPrice = basePrice * (1 - discountRateValue / 100.0);
+        finalFactoryPrice = Math.max(0, calculatedPrice); // Ensure price is not negative
+    }
 
     const processed = {
         model: String(item['型号'] || item.model || '').trim(),
@@ -392,8 +414,8 @@ const processCouplingData = (jsonData) => {
         weight: safeParseFloat(item['重量(kg)'] || item.weight),
         price: basePrice,
         basePrice: basePrice,
-        ...(discountRate !== undefined && { discountRate }),
-        ...(factoryPrice > 0 && { factoryPrice }),
+        ...(discountRateValue !== undefined && { discountRate: discountRateValue }),
+        ...(finalFactoryPrice > 0 && { factoryPrice: finalFactoryPrice }),
         marketPrice: safeParseFloat(item['市场价'] || item.marketPrice)
     };
      if (!processed.model || processed.torque <= 0 || processed.price <= 0) {
@@ -408,8 +430,17 @@ const processCouplingData = (jsonData) => {
 const processPumpData = (jsonData) => {
    return jsonData.map(item => {
      const basePrice = safeParseFloat(item['成本价'] || item.price || item.basePrice);
-     const discountRate = item['下浮率(%)'] !== undefined ? safeParseFloat(item['下浮率(%)']) : undefined;
-     const factoryPrice = safeParseFloat(item['出厂价'] || item.factoryPrice);
+     const discountRateValue = item['下浮率(%)'] !== undefined ? safeParseFloat(item['下浮率(%)']) : undefined;
+     const factoryPriceInput = safeParseFloat(item['出厂价'] || item.factoryPrice);
+
+    let finalFactoryPrice = 0;
+
+    if (factoryPriceInput > 0) {
+        finalFactoryPrice = factoryPriceInput;
+    } else if (basePrice > 0 && discountRateValue !== undefined && !isNaN(discountRateValue)) {
+        let calculatedPrice = basePrice * (1 - discountRateValue / 100.0);
+        finalFactoryPrice = Math.max(0, calculatedPrice); // Ensure price is not negative
+    }
 
     const processed = {
         model: String(item['型号'] || item.model || '').trim(),
@@ -419,8 +450,8 @@ const processPumpData = (jsonData) => {
         weight: safeParseFloat(item['重量(kg)'] || item.weight),
         price: basePrice,
         basePrice: basePrice,
-        ...(discountRate !== undefined && { discountRate }),
-        ...(factoryPrice > 0 && { factoryPrice }),
+        ...(discountRateValue !== undefined && { discountRate: discountRateValue }),
+        ...(finalFactoryPrice > 0 && { factoryPrice: finalFactoryPrice }),
         marketPrice: safeParseFloat(item['市场价'] || item.marketPrice)
     };
      if (!processed.model || processed.flow <= 0 || processed.price <= 0) {
