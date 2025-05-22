@@ -2,6 +2,8 @@
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
+import { convertToChinaNum } from './numberConverter.js';
+import { loadChineseFont } from './pdfExportUtils.js';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { getGWPackagePriceConfig, checkPackageMatch } from '../data/packagePriceConfig';
@@ -350,7 +352,7 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
         taxRate: finalOptions.taxRate,
         taxAmount: 0,
         taxIncludedAmount: usingSpecialPackagePrice ? specialPackageConfig.packagePrice : calculatedTotalAmount,
-        totalAmountInChinese: numberToChinese(usingSpecialPackagePrice ? specialPackageConfig.packagePrice : calculatedTotalAmount),
+        totalAmountInChinese: convertToChinaNum(usingSpecialPackagePrice ? specialPackageConfig.packagePrice : calculatedTotalAmount),
         priceType: 'market', // Default price type
         paymentTerms: finalOptions.paymentTerms,
         deliveryTime: finalOptions.deliveryTime,
@@ -381,7 +383,7 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
     if (finalOptions.discountPercentage > 0) {
         result.discountAmount = Math.round(result.originalAmount * (finalOptions.discountPercentage / 100));
         result.totalAmount = result.originalAmount - result.discountAmount;
-        result.totalAmountInChinese = numberToChinese(result.totalAmount);
+        result.totalAmountInChinese = convertToChinaNum(result.totalAmount);
     }
     
     // 计算含税金额
@@ -426,7 +428,7 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
         if (finalOptions.discountPercentage > 0) {
             result.discountAmount = Math.round(result.originalAmount * (finalOptions.discountPercentage / 100));
             result.totalAmount = result.originalAmount - result.discountAmount;
-            result.totalAmountInChinese = numberToChinese(result.totalAmount);
+            result.totalAmountInChinese = convertToChinaNum(result.totalAmount);
             
             // 重新计算税额
             if (finalOptions.taxRate > 0) {
@@ -435,7 +437,7 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
             }
         } else {
             result.totalAmount = result.originalAmount;
-            result.totalAmountInChinese = numberToChinese(result.totalAmount);
+            result.totalAmountInChinese = convertToChinaNum(result.totalAmount);
             
             // 重新计算税额
             if (finalOptions.taxRate > 0) {
@@ -481,7 +483,7 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
         if (finalOptions.discountPercentage > 0) {
             result.discountAmount = Math.round(result.originalAmount * (finalOptions.discountPercentage / 100));
             result.totalAmount = result.originalAmount - result.discountAmount;
-            result.totalAmountInChinese = numberToChinese(result.totalAmount);
+            result.totalAmountInChinese = convertToChinaNum(result.totalAmount);
             
             // 重新计算税额
             if (finalOptions.taxRate > 0) {
@@ -490,7 +492,7 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
             }
         } else {
             result.totalAmount = result.originalAmount;
-            result.totalAmountInChinese = numberToChinese(result.totalAmount);
+            result.totalAmountInChinese = convertToChinaNum(result.totalAmount);
             
             // 重新计算税额
             if (finalOptions.taxRate > 0) {
@@ -516,79 +518,6 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
 };
 
 /**
- * 将数字转换为中文大写金额
- * @param {number} n - 数字
- * @returns {string} 中文大写金额
- */
-export function numberToChinese(n) {
-    if (typeof n !== 'number') {
-        return '零元整';
-    }
-    
-    const fraction = ['角', '分'];
-    const digit = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
-    const unit = [
-        ['元', '万', '亿'],
-        ['', '拾', '佰', '仟']
-    ];
-    
-    const head = n < 0 ? '负' : '';
-    n = Math.abs(n);
-    
-    let s = '';
-    
-    // 处理小数部分
-    const decimalPart = Math.floor(n * 100 % 100);
-    if (decimalPart > 0) {
-        const decimalStr = decimalPart.toString().padStart(2, '0');
-        s += digit[parseInt(decimalStr[0])] + fraction[0];
-        if (decimalStr[1] !== '0') {
-            s += digit[parseInt(decimalStr[1])] + fraction[1];
-        }
-    } else {
-        s = '整';
-    }
-    
-    // 处理整数部分
-    const integerPart = Math.floor(n);
-    if (integerPart > 0) {
-        let integerStr = integerPart.toString();
-        const length = integerStr.length;
-        
-        for (let i = 0; i < length; i++) {
-            const pos = length - i - 1;
-            const unitPos = pos % 4;
-            const currDigit = parseInt(integerStr[i]);
-            
-            if (currDigit !== 0) {
-                if (i > 0 && integerStr[i-1] === '0') {
-                    s = '零' + s;
-                }
-                s = digit[currDigit] + unit[1][unitPos] + s;
-            } else {
-                if (unitPos === 0 && pos > 0) {
-                    // 处理万亿等
-                    if (integerStr[i-1] !== '0') {
-                        s = unit[0][Math.floor(pos / 4)] + s;
-                    }
-                } else if (i > 0 && integerStr[i-1] !== '0' && unitPos !== 0) {
-                    s = '零' + s;
-                }
-            }
-            
-            if (unitPos === 0 && pos > 0) {
-                if (parseInt(integerStr.substr(Math.max(0, i - unitPos), unitPos + 1)) > 0) {
-                    s = unit[0][Math.floor(pos / 4)] + s;
-                }
-            }
-        }
-    } else {
-        s = '零' + s;
-    }
-    
-    return head + s;
-}
-
 /**
  * 向报价单添加自定义项目
  * @param {Object} quotation - 报价单对象
@@ -652,7 +581,7 @@ export function addCustomItemToQuotation(quotation, itemData) {
     }
     
     // 更新中文大写金额
-    updatedQuotation.totalAmountInChinese = numberToChinese(updatedQuotation.totalAmount);
+    updatedQuotation.totalAmountInChinese = convertToChinaNum(updatedQuotation.totalAmount);
     
     // 更新税额
     if (updatedQuotation.taxRate > 0) {
@@ -715,7 +644,7 @@ export function removeItemFromQuotation(quotation, itemId) {
     }
     
     // 更新中文大写金额
-    updatedQuotation.totalAmountInChinese = numberToChinese(updatedQuotation.totalAmount);
+    updatedQuotation.totalAmountInChinese = convertToChinaNum(updatedQuotation.totalAmount);
     
     // 更新税额
     if (updatedQuotation.taxRate > 0) {
@@ -834,7 +763,7 @@ export function exportQuotationToExcel(quotation, filename = '报价单') {
  * @param {Object} quotation - 报价单对象
  * @param {string} filename - 文件名（不含扩展名）
  */
-export function exportQuotationToPDF(quotation, filename = '报价单') {
+export async function exportQuotationToPDF(quotation, filename = '报价单') {
     if (!quotation || !quotation.items) {
         throw new Error('无效的报价单数据');
     }
@@ -842,8 +771,11 @@ export function exportQuotationToPDF(quotation, filename = '报价单') {
     // 创建PDF文档
     const doc = new jsPDF('p', 'mm', 'a4');
     
+    // 加载中文字体
+    await loadChineseFont(doc);
+    
     // 设置字体
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('helvetica', 'normal'); // Fallback font, loadChineseFont should set the primary
     
     // 标题
     doc.setFontSize(20);

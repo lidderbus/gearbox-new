@@ -551,8 +551,33 @@ export const selectStandbyPump = (gearboxModel, pumpsData) => {
 };
 
 // 导出函数
+
+/**
+ * 根据齿轮箱型号直接获取推荐联轴器
+ * @param {string} gearboxModel - 齿轮箱型号
+ * @param {Array} couplingsData - 联轴器数据数组
+ * @param {boolean} hasCover - 是否带罩壳
+ * @return {object} 推荐联轴器对象或null
+ */
+export const getDirectCouplingRecommendation = (gearboxModel, couplingsData, hasCover = false) => {
+  if (!gearboxModel || !couplingsData || couplingsData.length === 0) {
+    return null;
+  }
+  
+  // 获取推荐型号
+  const { specific: recommendedModel } = getRecommendedCouplingInfo(gearboxModel, hasCover);
+  
+  if (!recommendedModel) {
+    return null;
+  }
+  
+  // 查找联轴器数据
+  return couplingsData.find(c => c.model === recommendedModel) || null;
+};
+
 export default {
   fixCouplingTorque,
   selectFlexibleCoupling,
-  selectStandbyPump
+  selectStandbyPump,
+  getDirectCouplingRecommendation
 };

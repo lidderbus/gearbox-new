@@ -8,50 +8,6 @@
 // 方案：在线 fetch CDN TTF -> 转 base64 -> addFileToVFS
 // 避免本地打包字体导致体积膨胀
 
-const FONT_NAME = 'NotoSansSC';
-const FONT_URL = 'https://cdn.jsdelivr.net/gh/googlefonts/noto-cjk@main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf';
-
-/**
- * 加载中文字体到PDF文档
- * @param {Object} doc - jsPDF文档对象
- * @returns {Promise<boolean>} 加载成功返回true
- */
-export const loadChineseFont = async (doc) => {
-    if (!doc) {
-        console.error("字体加载错误: 无效的PDF文档对象");
-        return false;
-    }
-
-    try {
-        // 若已注册则直接使用
-        if (doc.getFontList && doc.getFontList()[FONT_NAME]) {
-            doc.setFont(FONT_NAME);
-            return true;
-        }
-
-        console.log('在线获取中文字体...');
-        const res = await fetch(FONT_URL);
-        if (!res.ok) throw new Error('下载字体失败');
-        const buf = await res.arrayBuffer();
-        // 转 base64
-        let binary = '';
-        const bytes = new Uint8Array(buf);
-        const len = bytes.byteLength;
-        for (let i = 0; i < len; i++) binary += String.fromCharCode(bytes[i]);
-        const base64 = btoa(binary);
-
-        doc.addFileToVFS(`${FONT_NAME}.otf`, base64);
-        doc.addFont(`${FONT_NAME}.otf`, FONT_NAME, 'normal');
-        doc.setFont(FONT_NAME);
-        console.log('中文字体加载完成');
-                return true;
-    } catch (err) {
-        console.warn('中文字体加载失败，退回默认字体:', err);
-        doc.setFont('Helvetica', 'normal');
-        return false;
-    }
-};
-
 /**
  * 检测PDF对象是否支持中文
  * @param {Object} doc - jsPDF文档对象
@@ -92,5 +48,3 @@ export const checkChineseSupport = (doc) => {
         return false;
     }
 };
-
-export default loadChineseFont;

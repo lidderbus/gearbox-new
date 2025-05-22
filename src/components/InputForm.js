@@ -57,8 +57,8 @@ const InputForm = ({
     <div className="input-form">
       <Row>
         <Col lg={6} md={12}>
-          <Card className="mb-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-            <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText, borderBottomColor: colors.border }}>
+          <Card className="mb-4">
+            <Card.Header>
               齿轮箱类型
             </Card.Header>
             <Card.Body style={{ padding: '1.5rem' }}>
@@ -90,8 +90,8 @@ const InputForm = ({
               </Form>
             </Card.Body>
           </Card>
-          <Card className="mb-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-            <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText, borderBottomColor: colors.border }}>
+          <Card className="mb-4">
+            <Card.Header>
               选型要求
             </Card.Header>
             <Card.Body style={{ padding: '1.5rem' }}>
@@ -122,8 +122,8 @@ const InputForm = ({
           </Card>
         </Col>
         <Col lg={6} md={12}>
-          <Card className="mb-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-            <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText, borderBottomColor: colors.border }}>
+          <Card className="mb-4">
+            <Card.Header>
               项目信息
             </Card.Header>
             <Card.Body style={{ padding: '1.5rem' }}>
@@ -179,8 +179,8 @@ const InputForm = ({
       
       <Row>
         <Col lg={6} md={12}>
-          <Card className="mb-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-            <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText, borderBottomColor: colors.border }}>
+          <Card className="mb-4">
+            <Card.Header>
               发动机参数
             </Card.Header>
             <Card.Body style={{ padding: '1.5rem' }}>

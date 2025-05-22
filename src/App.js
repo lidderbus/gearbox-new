@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Container, Row, Col, Form, Button, Card, Table, Tab, Tabs, Alert, Spinner, Modal, Badge, ListGroup } from 'react-bootstrap';
 import { Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
+import { useDarkMode } from './contexts/DarkModeContext'; 
 import { userRoles, permissions } from './auth/roles';
 import './styles/global.css';
 // 导入增强版备用泵选型功能
@@ -45,7 +46,7 @@ import DatabaseManagementView from './components/DatabaseManagementView';
 import QuotationView from './components/QuotationView';
 import AgreementView from './components/AgreementView';
 import ContractView from './components/ContractView';
-import GearboxComparisonView from './components/GearboxComparisonView';
+import GearboxDataImporter from './components/GearboxDataImporter.jsx';
 import DataQuery from './components/DataQuery';
 import DiagnosticPanel from './components/DiagnosticPanel';
 import TechnicalAgreementView from './components/TechnicalAgreementView';
@@ -338,7 +339,7 @@ function App({ appData: initialAppData, setAppData }) {
   const [contract, setContract] = useState(null);
   const [activeTab, setActiveTab] = useState('input');
   const [selectionHistory, setSelectionHistory] = useState([]);
-  const [theme, setTheme] = useState('light');
+  const { darkMode, toggleDarkMode } = useDarkMode();
   const [selectedGearboxIndex, setSelectedGearboxIndex] = useState(0);
   const [selectedComponents, setSelectedComponents] = useState({
     gearbox: null,
@@ -425,17 +426,6 @@ function App({ appData: initialAppData, setAppData }) {
   // --- End: Define Validation Helpers Here ---
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  useEffect(() => {
     if (!isAuthenticated && location.pathname !== '/login') {
       console.log(`Redirecting to login from ${location.pathname}`);
       navigate('/login', { state: { from: location.pathname }, replace: true });
@@ -520,8 +510,8 @@ function App({ appData: initialAppData, setAppData }) {
       inputBorder: '#4a5568', muted: '#718096', primary: '#38b2ac',
       primaryText: '#1a202c', focusRing: 'rgba(56, 178, 172, 0.5)'
     };
-    return theme === 'light' ? light : dark;
-  }, [theme]);
+    return darkMode ? dark : light;
+  }, [darkMode]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -556,10 +546,6 @@ function App({ appData: initialAppData, setAppData }) {
   const handleGearboxTypeChange = useCallback((type) => {
     setGearboxType(type);
     setError('');
-  }, []);
-
-  const toggleTheme = useCallback(() => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
   }, []);
 
   const safeNumberFormat = useCallback((value, decimals = 2) => {
@@ -2204,14 +2190,14 @@ function App({ appData: initialAppData, setAppData }) {
             </>
           )}
           <Button
-            variant={theme === 'light' ? 'outline-secondary' : 'outline-light'}
+            variant={darkMode ? 'outline-light' : 'outline-secondary'}
             size="sm"
-            onClick={toggleTheme}
-            title={`切换${theme === 'light' ? '深色' : '浅色'}主题`}
+            onClick={toggleDarkMode}
+            title={`切换${darkMode ? '浅色' : '深色'}主题`}
             style={{ borderColor: colors.inputBorder, color: colors.muted }}
             className="theme-toggle-button"
           >
-            <i className={`bi bi-${theme === 'light' ? 'moon-stars-fill' : 'sun-fill'} me-1`}></i>
+            <i className={`bi bi-${darkMode ? 'sun-fill' : 'moon-stars-fill'} me-1`}></i>
           </Button>
           {user && (
             <Button variant="outline-danger" size="sm" onClick={logout} title="退出登录">
@@ -2228,7 +2214,7 @@ function App({ appData: initialAppData, setAppData }) {
               variant={error.includes('成功') ? 'success' : error.includes('警告') || error.includes('无法加载') || error.includes('注意') || error.includes('失败') || error.includes('错误') ? 'warning' : 'danger'}
               onClose={() => setError('')}
               dismissible={!loading}
-              className={`app-alert alert-${theme}`}
+              className={`app-alert alert-${darkMode ? 'dark' : 'light'}`}
             >
               {loading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />}
               {error}
@@ -2244,7 +2230,7 @@ function App({ appData: initialAppData, setAppData }) {
               variant="success"
               onClose={() => setSuccess('')}
               dismissible
-              className={`app-alert alert-${theme}`}
+              className={`app-alert alert-${darkMode ? 'dark' : 'light'}`}
             >
               <i className="bi bi-check-circle-fill me-2"></i>
               {success}
@@ -2609,7 +2595,7 @@ function App({ appData: initialAppData, setAppData }) {
                     onGenerateQuotation={handleGenerateQuotation}
                     onGenerateAgreement={handleGenerateAgreement}
                     colors={colors}
-                    theme={theme}
+                    theme={darkMode ? 'dark' : 'light'}
                   />
                   
                   {/* 联轴器选型结果 - 使用修改后的组件，传递onSelectCoupling参数 */}
@@ -2622,7 +2608,7 @@ function App({ appData: initialAppData, setAppData }) {
                     onReset={() => handleSelectGearbox()}
                     onSelectCoupling={handleCouplingSelection} /* 添加联轴器选择函数 */
                     colors={colors}
-                    theme={theme}
+                    theme={darkMode ? 'dark' : 'light'}
                   />
                 </Col>
               </Row>
@@ -2649,7 +2635,7 @@ function App({ appData: initialAppData, setAppData }) {
                           onUpdatePrices={handleUpdateQuotationPrices}
                           onSave={handleSaveQuotation}
                           colors={colors}
-                          theme={theme}
+                          theme={darkMode ? 'dark' : 'light'}
                         />
                       </Col>
                   </Row>
@@ -2665,7 +2651,7 @@ function App({ appData: initialAppData, setAppData }) {
                     projectInfo={projectInfo}
                     selectedComponents={selectedComponents}
                     colors={colors}
-                    theme={theme}
+                    theme={darkMode ? 'dark' : 'light'}
                     onNavigateToQuotation={() => setActiveTab('quotation')}
                     onNavigateToContract={() => handleGenerateContract()}
                   />
@@ -2697,7 +2683,7 @@ function App({ appData: initialAppData, setAppData }) {
                         contract={contract}
                         onExportWord={() => handleExportContract('word')}
                         onExportPDF={() => handleExportContract('pdf')}
-                        theme={theme}
+                        theme={darkMode ? 'dark' : 'light'}
                         colors={colors}
                        />
                       </Card.Body>
@@ -2712,7 +2698,7 @@ function App({ appData: initialAppData, setAppData }) {
               <Col>
                 <DataQuery
                   appData={appDataState}
-                  theme={theme}
+                  theme={darkMode ? 'dark' : 'light'}
                   colors={colors}
                 />
               </Col>
@@ -2765,7 +2751,7 @@ function App({ appData: initialAppData, setAppData }) {
         show={showBatchPriceAdjustment}
         onHide={() => setShowBatchPriceAdjustment(false)}
         onApply={handleBatchPriceAdjustment}
-        theme={theme}
+        theme={darkMode ? 'dark' : 'light'}
         colors={colors}
       />
 
@@ -2781,7 +2767,7 @@ function App({ appData: initialAppData, setAppData }) {
           clearPriceHistory={clearPriceHistory}
           updateAppData={updateAppDataAndPersist}
           colors={colors}
-          theme={theme}
+          theme={darkMode ? 'dark' : 'light'}
         />
       )}
 
@@ -2801,7 +2787,7 @@ function App({ appData: initialAppData, setAppData }) {
             { power: selectedComponents.gearbox.power }
           )}
           colors={colors}
-          theme={theme}
+          theme={darkMode ? 'dark' : 'light'}
         />
       )}
 
@@ -2813,7 +2799,7 @@ function App({ appData: initialAppData, setAppData }) {
           onAdd={handleAddCustomQuotationItem}
           existingItems={quotation?.items || []}
           colors={colors}
-          theme={theme}
+          theme={darkMode ? 'dark' : 'light'}
 		 />
       )}
 
@@ -2825,7 +2811,7 @@ function App({ appData: initialAppData, setAppData }) {
           onLoad={handleLoadSavedQuotation}
           onCompare={handleCompareQuotations}
           colors={colors}
-          theme={theme}
+          theme={darkMode ? 'dark' : 'light'}
         />
       )}
 
@@ -2836,7 +2822,7 @@ function App({ appData: initialAppData, setAppData }) {
           onHide={() => setShowComparisonModal(false)}
           comparisonResult={comparisonResult}
           colors={colors}
-          theme={theme}
+          theme={darkMode ? 'dark' : 'light'}
         />
       )}
     </Container>
