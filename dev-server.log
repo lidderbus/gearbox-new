@@ -1,0 +1,480 @@
+
+> gearbox-selection-system@1.0.0 start
+> react-scripts start
+
+(node:3970) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:3970) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+
+Compiled successfully!
+
+You can now view gearbox-selection-system in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://172.22.62.200:3000
+
+Note that the development build is not optimized.
+To create a production build, use yarn build.
+
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/App.js
+  Line 17:1:  Import in body of module; reorder to top  import/first
+  Line 20:1:  Import in body of module; reorder to top  import/first
+  Line 21:1:  Import in body of module; reorder to top  import/first
+  Line 22:1:  Import in body of module; reorder to top  import/first
+  Line 25:1:  Import in body of module; reorder to top  import/first
+  Line 28:1:  Import in body of module; reorder to top  import/first
+  Line 29:1:  Import in body of module; reorder to top  import/first
+  Line 32:1:  Import in body of module; reorder to top  import/first
+  Line 43:1:  Import in body of module; reorder to top  import/first
+  Line 44:1:  Import in body of module; reorder to top  import/first
+  Line 45:1:  Import in body of module; reorder to top  import/first
+  Line 46:1:  Import in body of module; reorder to top  import/first
+  Line 47:1:  Import in body of module; reorder to top  import/first
+  Line 50:1:  Import in body of module; reorder to top  import/first
+  Line 51:1:  Import in body of module; reorder to top  import/first
+  Line 52:1:  Import in body of module; reorder to top  import/first
+  Line 53:1:  Import in body of module; reorder to top  import/first
+  Line 54:1:  Import in body of module; reorder to top  import/first
+  Line 55:1:  Import in body of module; reorder to top  import/first
+  Line 56:1:  Import in body of module; reorder to top  import/first
+  Line 57:1:  Import in body of module; reorder to top  import/first
+  Line 58:1:  Import in body of module; reorder to top  import/first
+  Line 59:1:  Import in body of module; reorder to top  import/first
+  Line 62:1:  Import in body of module; reorder to top  import/first
+  Line 63:1:  Import in body of module; reorder to top  import/first
+  Line 64:1:  Import in body of module; reorder to top  import/first
+  Line 65:1:  Import in body of module; reorder to top  import/first
+  Line 73:1:  Import in body of module; reorder to top  import/first
+  Line 74:1:  Import in body of module; reorder to top  import/first
+  Line 75:1:  Import in body of module; reorder to top  import/first
+  Line 76:1:  Import in body of module; reorder to top  import/first
+  Line 80:1:  Import in body of module; reorder to top  import/first
+  Line 83:1:  Import in body of module; reorder to top  import/first
+  Line 93:1:  Import in body of module; reorder to top  import/first
+  Line 96:1:  Import in body of module; reorder to top  import/first
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/App.js
+  Line 3:92:    'Badge' is defined but never used                                                                                 no-unused-vars
+  Line 4:10:    'Routes' is defined but never used                                                                                no-unused-vars
+  Line 4:18:    'Route' is defined but never used                                                                                 no-unused-vars
+  Line 4:25:    'Navigate' is defined but never used                                                                              no-unused-vars
+  Line 6:21:    'permissions' is defined but never used                                                                           no-unused-vars
+  Line 9:8:     'LoadingSpinner' is defined but never used                                                                        no-unused-vars
+  Line 33:3:    'validatePriceData' is defined but never used                                                                     no-unused-vars
+  Line 38:3:    'processPriceData' is defined but never used                                                                      no-unused-vars
+  Line 39:3:    'fixSpecificModelPrices' is defined but never used                                                                no-unused-vars
+  Line 43:28:   'validateGearbox' is defined but never used                                                                       no-unused-vars
+  Line 43:45:   'validateCoupling' is defined but never used                                                                      no-unused-vars
+  Line 43:63:   'validatePump' is defined but never used                                                                          no-unused-vars
+  Line 45:10:   'parseTextPriceTable' is defined but never used                                                                   no-unused-vars
+  Line 45:31:   'calculateDiscountRates' is defined but never used                                                                no-unused-vars
+  Line 46:8:    'PriceCalculator' is defined but never used                                                                       no-unused-vars
+  Line 50:8:    'LoginPage' is defined but never used                                                                             no-unused-vars
+  Line 51:8:    'UserManagementView' is defined but never used                                                                    no-unused-vars
+  Line 52:8:    'DatabaseManagementView' is defined but never used                                                                no-unused-vars
+  Line 54:8:    'AgreementView' is defined but never used                                                                         no-unused-vars
+  Line 56:8:    'GearboxComparisonView' is defined but never used                                                                 no-unused-vars
+  Line 63:10:   'selectFlexibleCoupling' is defined but never used                                                                no-unused-vars
+  Line 71:3:    'createQuotationPreview' is defined but never used                                                                no-unused-vars
+  Line 73:10:   'generateAgreement' is defined but never used                                                                     no-unused-vars
+  Line 74:50:   'exportContractToPDF' is defined but never used                                                                   no-unused-vars
+  Line 75:10:   'getCouplingSpecifications' is defined but never used                                                             no-unused-vars
+  Line 78:3:    'exportHtmlContentToPDF' is defined but never used                                                                no-unused-vars
+  Line 85:3:    'getSavedQuotations' is defined but never used                                                                    no-unused-vars
+  Line 87:3:    'deleteSavedQuotation' is defined but never used                                                                  no-unused-vars
+  Line 93:8:    'fixHCMSeriesPrices' is defined but never used                                                                    no-unused-vars
+  Line 99:7:    'STORAGE_KEY' is assigned a value but never used                                                                  no-unused-vars
+  Line 317:10:  'dataFixed' is assigned a value but never used                                                                    no-unused-vars
+  Line 317:21:  'setDataFixed' is assigned a value but never used                                                                 no-unused-vars
+  Line 319:10:  'dataChecked' is assigned a value but never used                                                                  no-unused-vars
+  Line 319:23:  'setDataChecked' is assigned a value but never used                                                               no-unused-vars
+  Line 358:10:  'packagePrice' is assigned a value but never used                                                                 no-unused-vars
+  Line 359:10:  'marketPrice' is assigned a value but never used                                                                  no-unused-vars
+  Line 360:10:  'totalMarketPrice' is assigned a value but never used                                                             no-unused-vars
+  Line 384:10:  'savedQuotation' is assigned a value but never used                                                               no-unused-vars
+  Line 384:26:  'setSavedQuotation' is assigned a value but never used                                                            no-unused-vars
+  Line 573:9:   'safeNumberFormat' is assigned a value but never used                                                             no-unused-vars
+  Line 759:9:   'handlePriceChange' is assigned a value but never used                                                            no-unused-vars
+  Line 983:11:  'adjustmentDesc' is assigned a value but never used                                                               no-unused-vars
+  Line 1714:9:  'handleExportAgreement' is assigned a value but never used                                                        no-unused-vars
+  Line 2124:6:  React Hook useCallback has a missing dependency: 'projectInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+ERROR in [eslint] 
+src/App.js
+  Line 17:1:  Import in body of module; reorder to top  import/first
+  Line 20:1:  Import in body of module; reorder to top  import/first
+  Line 21:1:  Import in body of module; reorder to top  import/first
+  Line 22:1:  Import in body of module; reorder to top  import/first
+  Line 25:1:  Import in body of module; reorder to top  import/first
+  Line 28:1:  Import in body of module; reorder to top  import/first
+  Line 29:1:  Import in body of module; reorder to top  import/first
+  Line 32:1:  Import in body of module; reorder to top  import/first
+  Line 43:1:  Import in body of module; reorder to top  import/first
+  Line 44:1:  Import in body of module; reorder to top  import/first
+  Line 45:1:  Import in body of module; reorder to top  import/first
+  Line 46:1:  Import in body of module; reorder to top  import/first
+  Line 47:1:  Import in body of module; reorder to top  import/first
+  Line 50:1:  Import in body of module; reorder to top  import/first
+  Line 51:1:  Import in body of module; reorder to top  import/first
+  Line 52:1:  Import in body of module; reorder to top  import/first
+  Line 53:1:  Import in body of module; reorder to top  import/first
+  Line 54:1:  Import in body of module; reorder to top  import/first
+  Line 55:1:  Import in body of module; reorder to top  import/first
+  Line 56:1:  Import in body of module; reorder to top  import/first
+  Line 57:1:  Import in body of module; reorder to top  import/first
+  Line 58:1:  Import in body of module; reorder to top  import/first
+  Line 59:1:  Import in body of module; reorder to top  import/first
+  Line 62:1:  Import in body of module; reorder to top  import/first
+  Line 63:1:  Import in body of module; reorder to top  import/first
+  Line 64:1:  Import in body of module; reorder to top  import/first
+  Line 65:1:  Import in body of module; reorder to top  import/first
+  Line 73:1:  Import in body of module; reorder to top  import/first
+  Line 74:1:  Import in body of module; reorder to top  import/first
+  Line 75:1:  Import in body of module; reorder to top  import/first
+  Line 76:1:  Import in body of module; reorder to top  import/first
+  Line 80:1:  Import in body of module; reorder to top  import/first
+  Line 83:1:  Import in body of module; reorder to top  import/first
+  Line 93:1:  Import in body of module; reorder to top  import/first
+  Line 96:1:  Import in body of module; reorder to top  import/first
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 3:92:    'Badge' is defined but never used                                                                                 no-unused-vars
+  Line 4:10:    'Routes' is defined but never used                                                                                no-unused-vars
+  Line 4:18:    'Route' is defined but never used                                                                                 no-unused-vars
+  Line 4:25:    'Navigate' is defined but never used                                                                              no-unused-vars
+  Line 6:21:    'permissions' is defined but never used                                                                           no-unused-vars
+  Line 9:8:     'LoadingSpinner' is defined but never used                                                                        no-unused-vars
+  Line 10:10:   'suppressRepairWarnings' is defined but never used                                                                no-unused-vars
+  Line 28:3:    'validatePriceData' is defined but never used                                                                     no-unused-vars
+  Line 33:3:    'processPriceData' is defined but never used                                                                      no-unused-vars
+  Line 34:3:    'fixSpecificModelPrices' is defined but never used                                                                no-unused-vars
+  Line 38:28:   'validateGearbox' is defined but never used                                                                       no-unused-vars
+  Line 38:45:   'validateCoupling' is defined but never used                                                                      no-unused-vars
+  Line 38:63:   'validatePump' is defined but never used                                                                          no-unused-vars
+  Line 40:10:   'parseTextPriceTable' is defined but never used                                                                   no-unused-vars
+  Line 40:31:   'calculateDiscountRates' is defined but never used                                                                no-unused-vars
+  Line 41:8:    'PriceCalculator' is defined but never used                                                                       no-unused-vars
+  Line 45:8:    'LoginPage' is defined but never used                                                                             no-unused-vars
+  Line 46:8:    'UserManagementView' is defined but never used                                                                    no-unused-vars
+  Line 47:8:    'DatabaseManagementView' is defined but never used                                                                no-unused-vars
+  Line 49:8:    'AgreementView' is defined but never used                                                                         no-unused-vars
+  Line 51:8:    'GearboxComparisonView' is defined but never used                                                                 no-unused-vars
+  Line 58:10:   'selectFlexibleCoupling' is defined but never used                                                                no-unused-vars
+  Line 66:3:    'createQuotationPreview' is defined but never used                                                                no-unused-vars
+  Line 68:10:   'generateAgreement' is defined but never used                                                                     no-unused-vars
+  Line 69:50:   'exportContractToPDF' is defined but never used                                                                   no-unused-vars
+  Line 70:10:   'getCouplingSpecifications' is defined but never used                                                             no-unused-vars
+  Line 73:3:    'exportHtmlContentToPDF' is defined but never used                                                                no-unused-vars
+  Line 80:3:    'getSavedQuotations' is defined but never used                                                                    no-unused-vars
+  Line 82:3:    'deleteSavedQuotation' is defined but never used                                                                  no-unused-vars
+  Line 88:8:    'fixHCMSeriesPrices' is defined but never used                                                                    no-unused-vars
+  Line 94:7:    'STORAGE_KEY' is assigned a value but never used                                                                  no-unused-vars
+  Line 312:10:  'dataFixed' is assigned a value but never used                                                                    no-unused-vars
+  Line 312:21:  'setDataFixed' is assigned a value but never used                                                                 no-unused-vars
+  Line 314:10:  'dataChecked' is assigned a value but never used                                                                  no-unused-vars
+  Line 314:23:  'setDataChecked' is assigned a value but never used                                                               no-unused-vars
+  Line 353:10:  'packagePrice' is assigned a value but never used                                                                 no-unused-vars
+  Line 354:10:  'marketPrice' is assigned a value but never used                                                                  no-unused-vars
+  Line 355:10:  'totalMarketPrice' is assigned a value but never used                                                             no-unused-vars
+  Line 379:10:  'savedQuotation' is assigned a value but never used                                                               no-unused-vars
+  Line 379:26:  'setSavedQuotation' is assigned a value but never used                                                            no-unused-vars
+  Line 568:9:   'safeNumberFormat' is assigned a value but never used                                                             no-unused-vars
+  Line 754:9:   'handlePriceChange' is assigned a value but never used                                                            no-unused-vars
+  Line 978:11:  'adjustmentDesc' is assigned a value but never used                                                               no-unused-vars
+  Line 1709:9:  'handleExportAgreement' is assigned a value but never used                                                        no-unused-vars
+  Line 2119:6:  React Hook useCallback has a missing dependency: 'projectInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 3:92:    'Badge' is defined but never used                                                                                 no-unused-vars
+  Line 4:10:    'Routes' is defined but never used                                                                                no-unused-vars
+  Line 4:18:    'Route' is defined but never used                                                                                 no-unused-vars
+  Line 4:25:    'Navigate' is defined but never used                                                                              no-unused-vars
+  Line 6:21:    'permissions' is defined but never used                                                                           no-unused-vars
+  Line 9:8:     'LoadingSpinner' is defined but never used                                                                        no-unused-vars
+  Line 10:10:   'suppressRepairWarnings' is defined but never used                                                                no-unused-vars
+  Line 28:3:    'validatePriceData' is defined but never used                                                                     no-unused-vars
+  Line 33:3:    'processPriceData' is defined but never used                                                                      no-unused-vars
+  Line 34:3:    'fixSpecificModelPrices' is defined but never used                                                                no-unused-vars
+  Line 38:28:   'validateGearbox' is defined but never used                                                                       no-unused-vars
+  Line 38:45:   'validateCoupling' is defined but never used                                                                      no-unused-vars
+  Line 38:63:   'validatePump' is defined but never used                                                                          no-unused-vars
+  Line 40:10:   'parseTextPriceTable' is defined but never used                                                                   no-unused-vars
+  Line 40:31:   'calculateDiscountRates' is defined but never used                                                                no-unused-vars
+  Line 41:8:    'PriceCalculator' is defined but never used                                                                       no-unused-vars
+  Line 45:8:    'LoginPage' is defined but never used                                                                             no-unused-vars
+  Line 46:8:    'UserManagementView' is defined but never used                                                                    no-unused-vars
+  Line 47:8:    'DatabaseManagementView' is defined but never used                                                                no-unused-vars
+  Line 49:8:    'AgreementView' is defined but never used                                                                         no-unused-vars
+  Line 51:8:    'GearboxComparisonView' is defined but never used                                                                 no-unused-vars
+  Line 58:10:   'selectFlexibleCoupling' is defined but never used                                                                no-unused-vars
+  Line 66:3:    'createQuotationPreview' is defined but never used                                                                no-unused-vars
+  Line 68:10:   'generateAgreement' is defined but never used                                                                     no-unused-vars
+  Line 69:50:   'exportContractToPDF' is defined but never used                                                                   no-unused-vars
+  Line 70:10:   'getCouplingSpecifications' is defined but never used                                                             no-unused-vars
+  Line 73:3:    'exportHtmlContentToPDF' is defined but never used                                                                no-unused-vars
+  Line 80:3:    'getSavedQuotations' is defined but never used                                                                    no-unused-vars
+  Line 82:3:    'deleteSavedQuotation' is defined but never used                                                                  no-unused-vars
+  Line 88:8:    'fixHCMSeriesPrices' is defined but never used                                                                    no-unused-vars
+  Line 94:7:    'STORAGE_KEY' is assigned a value but never used                                                                  no-unused-vars
+  Line 312:10:  'dataFixed' is assigned a value but never used                                                                    no-unused-vars
+  Line 312:21:  'setDataFixed' is assigned a value but never used                                                                 no-unused-vars
+  Line 314:10:  'dataChecked' is assigned a value but never used                                                                  no-unused-vars
+  Line 314:23:  'setDataChecked' is assigned a value but never used                                                               no-unused-vars
+  Line 353:10:  'packagePrice' is assigned a value but never used                                                                 no-unused-vars
+  Line 354:10:  'marketPrice' is assigned a value but never used                                                                  no-unused-vars
+  Line 355:10:  'totalMarketPrice' is assigned a value but never used                                                             no-unused-vars
+  Line 379:10:  'savedQuotation' is assigned a value but never used                                                               no-unused-vars
+  Line 379:26:  'setSavedQuotation' is assigned a value but never used                                                            no-unused-vars
+  Line 568:9:   'safeNumberFormat' is assigned a value but never used                                                             no-unused-vars
+  Line 754:9:   'handlePriceChange' is assigned a value but never used                                                            no-unused-vars
+  Line 978:11:  'adjustmentDesc' is assigned a value but never used                                                               no-unused-vars
+  Line 1709:9:  'handleExportAgreement' is assigned a value but never used                                                        no-unused-vars
+  Line 2119:6:  React Hook useCallback has a missing dependency: 'projectInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 3:92:    'Badge' is defined but never used                                                                                 no-unused-vars
+  Line 4:10:    'Routes' is defined but never used                                                                                no-unused-vars
+  Line 4:18:    'Route' is defined but never used                                                                                 no-unused-vars
+  Line 4:25:    'Navigate' is defined but never used                                                                              no-unused-vars
+  Line 6:21:    'permissions' is defined but never used                                                                           no-unused-vars
+  Line 9:8:     'LoadingSpinner' is defined but never used                                                                        no-unused-vars
+  Line 28:3:    'validatePriceData' is defined but never used                                                                     no-unused-vars
+  Line 33:3:    'processPriceData' is defined but never used                                                                      no-unused-vars
+  Line 34:3:    'fixSpecificModelPrices' is defined but never used                                                                no-unused-vars
+  Line 38:28:   'validateGearbox' is defined but never used                                                                       no-unused-vars
+  Line 38:45:   'validateCoupling' is defined but never used                                                                      no-unused-vars
+  Line 38:63:   'validatePump' is defined but never used                                                                          no-unused-vars
+  Line 40:10:   'parseTextPriceTable' is defined but never used                                                                   no-unused-vars
+  Line 40:31:   'calculateDiscountRates' is defined but never used                                                                no-unused-vars
+  Line 41:8:    'PriceCalculator' is defined but never used                                                                       no-unused-vars
+  Line 45:8:    'LoginPage' is defined but never used                                                                             no-unused-vars
+  Line 46:8:    'UserManagementView' is defined but never used                                                                    no-unused-vars
+  Line 47:8:    'DatabaseManagementView' is defined but never used                                                                no-unused-vars
+  Line 49:8:    'AgreementView' is defined but never used                                                                         no-unused-vars
+  Line 51:8:    'GearboxComparisonView' is defined but never used                                                                 no-unused-vars
+  Line 58:10:   'selectFlexibleCoupling' is defined but never used                                                                no-unused-vars
+  Line 66:3:    'createQuotationPreview' is defined but never used                                                                no-unused-vars
+  Line 68:10:   'generateAgreement' is defined but never used                                                                     no-unused-vars
+  Line 69:50:   'exportContractToPDF' is defined but never used                                                                   no-unused-vars
+  Line 70:10:   'getCouplingSpecifications' is defined but never used                                                             no-unused-vars
+  Line 73:3:    'exportHtmlContentToPDF' is defined but never used                                                                no-unused-vars
+  Line 80:3:    'getSavedQuotations' is defined but never used                                                                    no-unused-vars
+  Line 82:3:    'deleteSavedQuotation' is defined but never used                                                                  no-unused-vars
+  Line 88:8:    'fixHCMSeriesPrices' is defined but never used                                                                    no-unused-vars
+  Line 94:7:    'STORAGE_KEY' is assigned a value but never used                                                                  no-unused-vars
+  Line 316:10:  'dataFixed' is assigned a value but never used                                                                    no-unused-vars
+  Line 316:21:  'setDataFixed' is assigned a value but never used                                                                 no-unused-vars
+  Line 318:10:  'dataChecked' is assigned a value but never used                                                                  no-unused-vars
+  Line 318:23:  'setDataChecked' is assigned a value but never used                                                               no-unused-vars
+  Line 357:10:  'packagePrice' is assigned a value but never used                                                                 no-unused-vars
+  Line 358:10:  'marketPrice' is assigned a value but never used                                                                  no-unused-vars
+  Line 359:10:  'totalMarketPrice' is assigned a value but never used                                                             no-unused-vars
+  Line 383:10:  'savedQuotation' is assigned a value but never used                                                               no-unused-vars
+  Line 383:26:  'setSavedQuotation' is assigned a value but never used                                                            no-unused-vars
+  Line 572:9:   'safeNumberFormat' is assigned a value but never used                                                             no-unused-vars
+  Line 758:9:   'handlePriceChange' is assigned a value but never used                                                            no-unused-vars
+  Line 982:11:  'adjustmentDesc' is assigned a value but never used                                                               no-unused-vars
+  Line 1713:9:  'handleExportAgreement' is assigned a value but never used                                                        no-unused-vars
+  Line 2123:6:  React Hook useCallback has a missing dependency: 'projectInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 3:92:    'Badge' is defined but never used                                                                                 no-unused-vars
+  Line 4:10:    'Routes' is defined but never used                                                                                no-unused-vars
+  Line 4:18:    'Route' is defined but never used                                                                                 no-unused-vars
+  Line 4:25:    'Navigate' is defined but never used                                                                              no-unused-vars
+  Line 6:21:    'permissions' is defined but never used                                                                           no-unused-vars
+  Line 9:8:     'LoadingSpinner' is defined but never used                                                                        no-unused-vars
+  Line 28:3:    'validatePriceData' is defined but never used                                                                     no-unused-vars
+  Line 33:3:    'processPriceData' is defined but never used                                                                      no-unused-vars
+  Line 34:3:    'fixSpecificModelPrices' is defined but never used                                                                no-unused-vars
+  Line 38:28:   'validateGearbox' is defined but never used                                                                       no-unused-vars
+  Line 38:45:   'validateCoupling' is defined but never used                                                                      no-unused-vars
+  Line 38:63:   'validatePump' is defined but never used                                                                          no-unused-vars
+  Line 40:10:   'parseTextPriceTable' is defined but never used                                                                   no-unused-vars
+  Line 40:31:   'calculateDiscountRates' is defined but never used                                                                no-unused-vars
+  Line 41:8:    'PriceCalculator' is defined but never used                                                                       no-unused-vars
+  Line 45:8:    'LoginPage' is defined but never used                                                                             no-unused-vars
+  Line 46:8:    'UserManagementView' is defined but never used                                                                    no-unused-vars
+  Line 47:8:    'DatabaseManagementView' is defined but never used                                                                no-unused-vars
+  Line 49:8:    'AgreementView' is defined but never used                                                                         no-unused-vars
+  Line 51:8:    'GearboxComparisonView' is defined but never used                                                                 no-unused-vars
+  Line 58:10:   'selectFlexibleCoupling' is defined but never used                                                                no-unused-vars
+  Line 66:3:    'createQuotationPreview' is defined but never used                                                                no-unused-vars
+  Line 68:10:   'generateAgreement' is defined but never used                                                                     no-unused-vars
+  Line 69:50:   'exportContractToPDF' is defined but never used                                                                   no-unused-vars
+  Line 70:10:   'getCouplingSpecifications' is defined but never used                                                             no-unused-vars
+  Line 73:3:    'exportHtmlContentToPDF' is defined but never used                                                                no-unused-vars
+  Line 80:3:    'getSavedQuotations' is defined but never used                                                                    no-unused-vars
+  Line 82:3:    'deleteSavedQuotation' is defined but never used                                                                  no-unused-vars
+  Line 88:8:    'fixHCMSeriesPrices' is defined but never used                                                                    no-unused-vars
+  Line 94:7:    'STORAGE_KEY' is assigned a value but never used                                                                  no-unused-vars
+  Line 316:10:  'dataFixed' is assigned a value but never used                                                                    no-unused-vars
+  Line 316:21:  'setDataFixed' is assigned a value but never used                                                                 no-unused-vars
+  Line 318:10:  'dataChecked' is assigned a value but never used                                                                  no-unused-vars
+  Line 318:23:  'setDataChecked' is assigned a value but never used                                                               no-unused-vars
+  Line 357:10:  'packagePrice' is assigned a value but never used                                                                 no-unused-vars
+  Line 358:10:  'marketPrice' is assigned a value but never used                                                                  no-unused-vars
+  Line 359:10:  'totalMarketPrice' is assigned a value but never used                                                             no-unused-vars
+  Line 383:10:  'savedQuotation' is assigned a value but never used                                                               no-unused-vars
+  Line 383:26:  'setSavedQuotation' is assigned a value but never used                                                            no-unused-vars
+  Line 572:9:   'safeNumberFormat' is assigned a value but never used                                                             no-unused-vars
+  Line 758:9:   'handlePriceChange' is assigned a value but never used                                                            no-unused-vars
+  Line 982:11:  'adjustmentDesc' is assigned a value but never used                                                               no-unused-vars
+  Line 1713:9:  'handleExportAgreement' is assigned a value but never used                                                        no-unused-vars
+  Line 2123:6:  React Hook useCallback has a missing dependency: 'projectInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 3:92:    'Badge' is defined but never used                                                                                 no-unused-vars
+  Line 4:10:    'Routes' is defined but never used                                                                                no-unused-vars
+  Line 4:18:    'Route' is defined but never used                                                                                 no-unused-vars
+  Line 4:25:    'Navigate' is defined but never used                                                                              no-unused-vars
+  Line 6:21:    'permissions' is defined but never used                                                                           no-unused-vars
+  Line 9:8:     'LoadingSpinner' is defined but never used                                                                        no-unused-vars
+  Line 28:3:    'validatePriceData' is defined but never used                                                                     no-unused-vars
+  Line 33:3:    'processPriceData' is defined but never used                                                                      no-unused-vars
+  Line 34:3:    'fixSpecificModelPrices' is defined but never used                                                                no-unused-vars
+  Line 38:28:   'validateGearbox' is defined but never used                                                                       no-unused-vars
+  Line 38:45:   'validateCoupling' is defined but never used                                                                      no-unused-vars
+  Line 38:63:   'validatePump' is defined but never used                                                                          no-unused-vars
+  Line 40:10:   'parseTextPriceTable' is defined but never used                                                                   no-unused-vars
+  Line 40:31:   'calculateDiscountRates' is defined but never used                                                                no-unused-vars
+  Line 41:8:    'PriceCalculator' is defined but never used                                                                       no-unused-vars
+  Line 45:8:    'LoginPage' is defined but never used                                                                             no-unused-vars
+  Line 46:8:    'UserManagementView' is defined but never used                                                                    no-unused-vars
+  Line 47:8:    'DatabaseManagementView' is defined but never used                                                                no-unused-vars
+  Line 49:8:    'AgreementView' is defined but never used                                                                         no-unused-vars
+  Line 51:8:    'GearboxComparisonView' is defined but never used                                                                 no-unused-vars
+  Line 58:10:   'selectFlexibleCoupling' is defined but never used                                                                no-unused-vars
+  Line 66:3:    'createQuotationPreview' is defined but never used                                                                no-unused-vars
+  Line 68:10:   'generateAgreement' is defined but never used                                                                     no-unused-vars
+  Line 69:50:   'exportContractToPDF' is defined but never used                                                                   no-unused-vars
+  Line 70:10:   'getCouplingSpecifications' is defined but never used                                                             no-unused-vars
+  Line 73:3:    'exportHtmlContentToPDF' is defined but never used                                                                no-unused-vars
+  Line 80:3:    'getSavedQuotations' is defined but never used                                                                    no-unused-vars
+  Line 82:3:    'deleteSavedQuotation' is defined but never used                                                                  no-unused-vars
+  Line 88:8:    'fixHCMSeriesPrices' is defined but never used                                                                    no-unused-vars
+  Line 94:7:    'STORAGE_KEY' is assigned a value but never used                                                                  no-unused-vars
+  Line 316:10:  'dataFixed' is assigned a value but never used                                                                    no-unused-vars
+  Line 316:21:  'setDataFixed' is assigned a value but never used                                                                 no-unused-vars
+  Line 318:10:  'dataChecked' is assigned a value but never used                                                                  no-unused-vars
+  Line 318:23:  'setDataChecked' is assigned a value but never used                                                               no-unused-vars
+  Line 357:10:  'packagePrice' is assigned a value but never used                                                                 no-unused-vars
+  Line 358:10:  'marketPrice' is assigned a value but never used                                                                  no-unused-vars
+  Line 359:10:  'totalMarketPrice' is assigned a value but never used                                                             no-unused-vars
+  Line 383:10:  'savedQuotation' is assigned a value but never used                                                               no-unused-vars
+  Line 383:26:  'setSavedQuotation' is assigned a value but never used                                                            no-unused-vars
+  Line 572:9:   'safeNumberFormat' is assigned a value but never used                                                             no-unused-vars
+  Line 758:9:   'handlePriceChange' is assigned a value but never used                                                            no-unused-vars
+  Line 982:11:  'adjustmentDesc' is assigned a value but never used                                                               no-unused-vars
+  Line 1713:9:  'handleExportAgreement' is assigned a value but never used                                                        no-unused-vars
+  Line 2123:6:  React Hook useCallback has a missing dependency: 'projectInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/components/AgreementGenerator.js
+  Line 9:3:    'bilingualTemplates' is defined but never used                                                                                                                                         no-unused-vars
+  Line 11:3:   'getCurrentDate' is defined but never used                                                                                                                                             no-unused-vars
+  Line 12:3:   'translateSpecialRequirements' is defined but never used                                                                                                                               no-unused-vars
+  Line 13:3:   'formatSpecialRequirements' is defined but never used                                                                                                                                  no-unused-vars
+  Line 14:19:  'bilingualFillTemplate' is defined but never used                                                                                                                                      no-unused-vars
+  Line 17:39:  'processTemplate' is defined but never used                                                                                                                                            no-unused-vars
+  Line 46:6:   React Hook useEffect has missing dependencies: 'currentRequirements' and 'templateData'. Either include them or remove the dependency array                                            react-hooks/exhaustive-deps
+  Line 582:6:  React Hook useCallback has missing dependencies: 'generateBilingualAgreementContent' and 'generateSingleLanguageAgreementContent'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 917:6:  React Hook useCallback has an unnecessary dependency: 'specialRequirementsFormat'. Either exclude it or remove the dependency array                                                    react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 3:92:    'Badge' is defined but never used                                                                                 no-unused-vars
+  Line 4:10:    'Routes' is defined but never used                                                                                no-unused-vars
+  Line 4:18:    'Route' is defined but never used                                                                                 no-unused-vars
+  Line 4:25:    'Navigate' is defined but never used                                                                              no-unused-vars
+  Line 6:21:    'permissions' is defined but never used                                                                           no-unused-vars
+  Line 9:8:     'LoadingSpinner' is defined but never used                                                                        no-unused-vars
+  Line 28:3:    'validatePriceData' is defined but never used                                                                     no-unused-vars
+  Line 33:3:    'processPriceData' is defined but never used                                                                      no-unused-vars
+  Line 34:3:    'fixSpecificModelPrices' is defined but never used                                                                no-unused-vars
+  Line 38:28:   'validateGearbox' is defined but never used                                                                       no-unused-vars
+  Line 38:45:   'validateCoupling' is defined but never used                                                                      no-unused-vars
+  Line 38:63:   'validatePump' is defined but never used                                                                          no-unused-vars
+  Line 40:10:   'parseTextPriceTable' is defined but never used                                                                   no-unused-vars
+  Line 40:31:   'calculateDiscountRates' is defined but never used                                                                no-unused-vars
+  Line 41:8:    'PriceCalculator' is defined but never used                                                                       no-unused-vars
+  Line 45:8:    'LoginPage' is defined but never used                                                                             no-unused-vars
+  Line 46:8:    'UserManagementView' is defined but never used                                                                    no-unused-vars
+  Line 47:8:    'DatabaseManagementView' is defined but never used                                                                no-unused-vars
+  Line 49:8:    'AgreementView' is defined but never used                                                                         no-unused-vars
+  Line 51:8:    'GearboxComparisonView' is defined but never used                                                                 no-unused-vars
+  Line 58:10:   'selectFlexibleCoupling' is defined but never used                                                                no-unused-vars
+  Line 66:3:    'createQuotationPreview' is defined but never used                                                                no-unused-vars
+  Line 68:10:   'generateAgreement' is defined but never used                                                                     no-unused-vars
+  Line 69:50:   'exportContractToPDF' is defined but never used                                                                   no-unused-vars
+  Line 70:10:   'getCouplingSpecifications' is defined but never used                                                             no-unused-vars
+  Line 73:3:    'exportHtmlContentToPDF' is defined but never used                                                                no-unused-vars
+  Line 80:3:    'getSavedQuotations' is defined but never used                                                                    no-unused-vars
+  Line 82:3:    'deleteSavedQuotation' is defined but never used                                                                  no-unused-vars
+  Line 88:8:    'fixHCMSeriesPrices' is defined but never used                                                                    no-unused-vars
+  Line 94:7:    'STORAGE_KEY' is assigned a value but never used                                                                  no-unused-vars
+  Line 316:10:  'dataFixed' is assigned a value but never used                                                                    no-unused-vars
+  Line 316:21:  'setDataFixed' is assigned a value but never used                                                                 no-unused-vars
+  Line 318:10:  'dataChecked' is assigned a value but never used                                                                  no-unused-vars
+  Line 318:23:  'setDataChecked' is assigned a value but never used                                                               no-unused-vars
+  Line 357:10:  'packagePrice' is assigned a value but never used                                                                 no-unused-vars
+  Line 358:10:  'marketPrice' is assigned a value but never used                                                                  no-unused-vars
+  Line 359:10:  'totalMarketPrice' is assigned a value but never used                                                             no-unused-vars
+  Line 383:10:  'savedQuotation' is assigned a value but never used                                                               no-unused-vars
+  Line 383:26:  'setSavedQuotation' is assigned a value but never used                                                            no-unused-vars
+  Line 572:9:   'safeNumberFormat' is assigned a value but never used                                                             no-unused-vars
+  Line 758:9:   'handlePriceChange' is assigned a value but never used                                                            no-unused-vars
+  Line 982:11:  'adjustmentDesc' is assigned a value but never used                                                               no-unused-vars
+  Line 1713:9:  'handleExportAgreement' is assigned a value but never used                                                        no-unused-vars
+  Line 2123:6:  React Hook useCallback has a missing dependency: 'projectInfo'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/components/AgreementGenerator.js
+  Line 9:3:    'bilingualTemplates' is defined but never used                                                                                                                                         no-unused-vars
+  Line 11:3:   'getCurrentDate' is defined but never used                                                                                                                                             no-unused-vars
+  Line 12:3:   'translateSpecialRequirements' is defined but never used                                                                                                                               no-unused-vars
+  Line 13:3:   'formatSpecialRequirements' is defined but never used                                                                                                                                  no-unused-vars
+  Line 14:19:  'bilingualFillTemplate' is defined but never used                                                                                                                                      no-unused-vars
+  Line 17:39:  'processTemplate' is defined but never used                                                                                                                                            no-unused-vars
+  Line 46:6:   React Hook useEffect has missing dependencies: 'currentRequirements' and 'templateData'. Either include them or remove the dependency array                                            react-hooks/exhaustive-deps
+  Line 582:6:  React Hook useCallback has missing dependencies: 'generateBilingualAgreementContent' and 'generateSingleLanguageAgreementContent'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 917:6:  React Hook useCallback has an unnecessary dependency: 'specialRequirementsFormat'. Either exclude it or remove the dependency array                                                    react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning

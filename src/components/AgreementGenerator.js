@@ -1295,6 +1295,7 @@ const AgreementGenerator = ({
                         templateData={getTemplateDataForRequirements()}
                         onRequirementsChange={handleSpecialRequirementsChange}
                         colors={colors}
+                        specialRequirementTemplates={specialRequirementTemplates}
                       />
                     ) : (
                       <Form.Control

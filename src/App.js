@@ -7,6 +7,7 @@ import { userRoles, permissions } from './auth/roles';
 import './App.css';
 import ModernNavBar from './components/ModernNavBar';
 import LoadingSpinner from './components/LoadingSpinner';
+import { suppressRepairWarnings } from './config/logging';
 // 导入增强版备用泵选型功能
 import { enhancedSelectPump, needsStandbyPump } from './utils/enhancedPumpSelection';
 
@@ -302,6 +303,10 @@ const forceReset = () => {
 };
 
 function App({ appData: initialAppData, setAppData }) {
+  // Suppress repair warnings in development
+  if (process.env.NODE_ENV === 'development') {
+    suppressRepairWarnings();
+  }
   const { user, isAuthenticated, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
