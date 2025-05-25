@@ -2191,38 +2191,41 @@ function App({ appData: initialAppData, setAppData }) {
           <h1>船用齿轮箱选型系统</h1>
           <p>自动选型、报价和技术协议生成</p>
         </div>
-        <Col xs="auto" className="d-flex align-items-center gap-2">
-         {user && <span style={{ color: colors.muted, fontSize: '0.9em' }} className="me-2">用户: {user.username} ({user.role})</span>}
-          {isAdmin && (
-            <>
-              <Button as={Link} to="/users" variant="outline-success" size="sm" title="管理用户">
-                <i className="bi bi-people me-1"></i> 用户管理
+        <Row className="mb-4 align-items-center">
+          <Col>
+            <div className="d-flex align-items-center gap-2">
+              {user && <span style={{ color: colors.muted, fontSize: '0.9em' }} className="me-2">用户: {user.username} ({user.role})</span>}
+              {isAdmin && (
+                <>
+                  <Button as={Link} to="/users" variant="outline-success" size="sm" title="管理用户">
+                    <i className="bi bi-people me-1"></i> 用户管理
+                  </Button>
+                  <Button as={Link} to="/database" variant="outline-success" size="sm" title="管理数据库">
+                    <i className="bi bi-database me-1"></i> 数据库管理
+                  </Button>
+                  <Button variant="outline-info" size="sm" onClick={() => setShowDiagnosticPanel(true)} title="系统诊断">
+                    <i className="bi bi-wrench-adjustable me-1"></i> 系统诊断
+                  </Button>
+                </>
+              )}
+              <Button
+                variant={theme === 'light' ? 'outline-secondary' : 'outline-light'}
+                size="sm"
+                onClick={toggleTheme}
+                title={`切换${theme === 'light' ? '深色' : '浅色'}主题`}
+                style={{ borderColor: colors.inputBorder, color: colors.muted }}
+                className="theme-toggle-button"
+              >
+                <i className={`bi bi-${theme === 'light' ? 'moon-stars-fill' : 'sun-fill'} me-1`}></i>
               </Button>
-              <Button as={Link} to="/database" variant="outline-success" size="sm" title="管理数据库">
-                <i className="bi bi-database me-1"></i> 数据库管理
-              </Button>
-              <Button variant="outline-info" size="sm" onClick={() => setShowDiagnosticPanel(true)} title="系统诊断">
-                <i className="bi bi-wrench-adjustable me-1"></i> 系统诊断
-              </Button>
-            </>
-          )}
-          <Button
-            variant={theme === 'light' ? 'outline-secondary' : 'outline-light'}
-            size="sm"
-            onClick={toggleTheme}
-            title={`切换${theme === 'light' ? '深色' : '浅色'}主题`}
-            style={{ borderColor: colors.inputBorder, color: colors.muted }}
-            className="theme-toggle-button"
-          >
-            <i className={`bi bi-${theme === 'light' ? 'moon-stars-fill' : 'sun-fill'} me-1`}></i>
-          </Button>
-          {user && (
-            <Button variant="outline-danger" size="sm" onClick={logout} title="退出登录">
-              <i className="bi bi-box-arrow-right me-1"></i> 退出
-            </Button>
-          )}
-        </Col>
-      </Row>
+              {user && (
+                <Button variant="outline-danger" size="sm" onClick={logout} title="退出登录">
+                  <i className="bi bi-box-arrow-right me-1"></i> 退出
+                </Button>
+              )}
+            </div>
+          </Col>
+        </Row>
 
       {error && (
         <Row className="mb-4">
