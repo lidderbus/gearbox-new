@@ -1,182 +1,199 @@
-/* 基本样式 */
-body {
-  transition: background-color 0.3s, color 0.3s;
-  margin: 0;
-  padding: 0;
+/* Import new theme and component styles */
+@import './styles/theme.css';
+@import './styles/components.css';
+@import './styles/bootstrap-overrides.css';
+
+/* App Container */
+.App {
+  min-height: 100vh;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all var(--transition-slow);
 }
 
-/* 主题切换按钮样式 */
-.theme-switch-wrapper {
+.app-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+  padding-top: 80px; /* Account for fixed nav */
+  animation: fadeIn var(--transition-slow);
+}
+
+/* Header Styles */
+.app-header {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+  color: var(--text-inverse);
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.app-header::before {
+  content: '';
   position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: pulse 4s ease-in-out infinite;
 }
 
-.theme-switch {
-  transition: all 0.3s ease;
+.app-header h1 {
+  margin: 0;
+  font-size: var(--text-3xl);
+  position: relative;
+  z-index: 1;
 }
 
-/* 浅色主题 (默认) */
-.light-theme {
-  background-color: #f8f9fa;
-  color: #333;
+/* Main Content */
+.main-content {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-xl);
 }
 
-.light-theme .card {
-  background-color: #fff;
-  border-color: #ddd;
+/* Footer */
+.app-footer {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
 }
 
-.light-theme .card-header {
-  background-color: #f0f0f0;
-  border-color: #ddd;
+/* Selection Form Enhancements */
+.selection-form {
+  background: var(--bg-card);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--spacing-xl);
 }
 
-.light-theme .table {
-  background-color: #fff;
-  color: #333;
+.selection-form .form-section {
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-xl);
+  border-bottom: 1px solid var(--border-color);
 }
 
-.light-theme .form-control,
-.light-theme .form-select {
-  background-color: #fff;
-  color: #333;
-  border-color: #ced4da;
+.selection-form .form-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
-.light-theme .nav-tabs .nav-link {
-  color: #495057;
+.section-title {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
-.light-theme .nav-tabs .nav-link.active {
-  background-color: #fff;
-  border-color: #dee2e6 #dee2e6 #fff;
-  color: #495057;
+.section-title i {
+  font-size: var(--text-2xl);
 }
 
-/* 深色主题 */
-.dark-theme {
-  background-color: #282c34;
-  color: #f8f9fa;
+/* Result Display Enhancements */
+.result-container {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--spacing-xl);
+  animation: fadeIn var(--transition-slow);
 }
 
-.dark-theme .card {
-  background-color: #3a3f48;
-  border-color: #4a4e56;
+.result-header {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+  color: var(--text-inverse);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
 }
 
-.dark-theme .card-header {
-  background-color: #32363f;
-  border-color: #4a4e56;
-  color: #f8f9fa;
+.result-item {
+  padding: var(--spacing-lg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+  transition: all var(--transition-fast);
 }
 
-.dark-theme .table {
-  background-color: #3a3f48;
-  color: #f8f9fa;
+.result-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--primary-color);
 }
 
-.dark-theme .table-striped tbody tr:nth-of-type(odd) {
-  background-color: rgba(255, 255, 255, 0.05);
+/* Status Indicators */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  gap: var(--spacing-xs);
 }
 
-.dark-theme .table-bordered {
-  border-color: #4a4e56;
+.status-success {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success-color);
 }
 
-.dark-theme .table-bordered td,
-.dark-theme .table-bordered th {
-  border-color: #4a4e56;
+.status-warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning-color);
 }
 
-.dark-theme .form-control,
-.dark-theme .form-select {
-  background-color: #3a3f48;
-  color: #f8f9fa;
-  border-color: #4a4e56;
+.status-error {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger-color);
 }
 
-.dark-theme .form-control:focus,
-.dark-theme .form-select:focus {
-  background-color: #32363f;
-  color: #f8f9fa;
-  border-color: #6c757d;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .app-container {
+    padding: var(--spacing-md);
+    padding-top: 70px;
+  }
+  
+  .app-header h1 {
+    font-size: var(--text-2xl);
+  }
+  
+  .selection-form,
+  .main-content,
+  .result-container {
+    padding: var(--spacing-md);
+  }
 }
 
-.dark-theme .form-text.text-muted {
-  color: #adb5bd !important;
-}
-
-.dark-theme .btn-primary {
-  background-color: #5c7cfa;
-  border-color: #5c7cfa;
-}
-
-.dark-theme .btn-success {
-  background-color: #51cf66;
-  border-color: #51cf66;
-}
-
-.dark-theme .btn-info {
-  background-color: #339af0;
-  border-color: #339af0;
-  color: #f8f9fa;
-}
-
-.dark-theme .btn-outline-primary {
-  color: #5c7cfa;
-  border-color: #5c7cfa;
-}
-
-.dark-theme .btn-outline-secondary {
-  color: #adb5bd;
-  border-color: #adb5bd;
-}
-
-.dark-theme .btn-outline-danger {
-  color: #fa5252;
-  border-color: #fa5252;
-}
-
-.dark-theme .nav-tabs {
-  border-bottom-color: #4a4e56;
-}
-
-.dark-theme .nav-tabs .nav-link {
-  color: #adb5bd;
-}
-
-.dark-theme .nav-tabs .nav-link.active {
-  background-color: #32363f;
-  border-color: #4a4e56 #4a4e56 #32363f;
-  color: #f8f9fa;
-}
-
-.dark-theme .alert-success {
-  background-color: #37b24d;
-  color: #f8f9fa;
-  border-color: #2f9e44;
-}
-
-.dark-theme .alert-danger {
-  background-color: #e03131;
-  color: #f8f9fa;
-  border-color: #c92a2a;
-}
-
-.dark-theme .alert-info {
-  background-color: #1c7ed6;
-  color: #f8f9fa;
-  border-color: #1971c2;
-}
-
-.dark-theme .alert-warning {
-  background-color: #f08c00;
-  color: #f8f9fa;
-  border-color: #e67700;
-}
-
-.dark-theme footer {
-  color: #adb5bd;
+/* Print Styles */
+@media print {
+  .nav-modern,
+  .theme-toggle-btn,
+  .btn-modern {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .app-header {
+    background: none;
+    color: black;
+    border: 1px solid #000;
+  }
 }

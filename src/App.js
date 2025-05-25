@@ -4,7 +4,9 @@ import { Container, Row, Col, Form, Button, Card, Table, Tab, Tabs, Alert, Spinn
 import { Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { userRoles, permissions } from './auth/roles';
-import './styles/global.css';
+import './App.css';
+import ModernNavBar from './components/ModernNavBar';
+import LoadingSpinner from './components/LoadingSpinner';
 // 导入增强版备用泵选型功能
 import { enhancedSelectPump, needsStandbyPump } from './utils/enhancedPumpSelection';
 
@@ -2182,12 +2184,13 @@ function App({ appData: initialAppData, setAppData }) {
   }
 
   return (
-    <Container fluid className="app-container" style={{ backgroundColor: colors.bg, color: colors.text }}>
-      <Row className="mb-4 align-items-center">
-        <Col>
-         <h2 className="mb-0" style={{ color: colors.headerText }}>船用齿轮箱选型系统</h2>
-          <p className="mb-0" style={{ color: colors.muted }}>自动选型、报价和技术协议生成</p>
-        </Col>
+    <div className="App">
+      <ModernNavBar />
+      <Container fluid className="app-container">
+        <div className="app-header">
+          <h1>船用齿轮箱选型系统</h1>
+          <p>自动选型、报价和技术协议生成</p>
+        </div>
         <Col xs="auto" className="d-flex align-items-center gap-2">
          {user && <span style={{ color: colors.muted, fontSize: '0.9em' }} className="me-2">用户: {user.username} ({user.role})</span>}
           {isAdmin && (
@@ -2839,7 +2842,8 @@ function App({ appData: initialAppData, setAppData }) {
           theme={theme}
         />
       )}
-    </Container>
+      </Container>
+    </div>
   );
 }
 
