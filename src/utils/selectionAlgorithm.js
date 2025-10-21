@@ -1,5 +1,8 @@
 // src/utils/selectionAlgorithm.js
 
+// 导入日志工具
+import { createLogger } from './logger';
+
 // 导入映射表和辅助函数
 import {
   getRecommendedCouplingInfo,
@@ -20,6 +23,8 @@ import { selectFlexibleCoupling, selectStandbyPump, fixCouplingTorque } from './
 // 导入GW系列特殊打包价格支持
 import { getGWPackagePriceConfig, checkPackageMatch } from '../data/packagePriceConfig';
 
+// 创建模块日志记录器
+const log = createLogger('SelectionAlgorithm');
 
 // 定义联轴器罩壳映射（如果需要） - 用于特定型号的罩壳变体
 // NOTE: This map might be better placed in gearboxMatchingMaps or a dedicated config if used elsewhere.
@@ -27,18 +32,6 @@ const couplingWithCoverMap = {
   'HGTHB5': 'HGTHJB5',
   'HGTHB6.3A': 'HGTHJB6.3A',
   // 添加其他标准型号和其对应的带罩壳型号映射
-};
-
-// 增加一个调试选项，可在生产环境中关闭
-const DEBUG_MODE = true;
-const DEBUG_LOG = (message, data) => {
-  if (DEBUG_MODE) {
-    if (data) {
-      console.log(message, data);
-    } else {
-      console.log(message);
-    }
-  }
 };
 
 // --- selectGearbox 函数 ---
@@ -52,12 +45,12 @@ export const selectGearbox = (
     data,
     options = {} // Receive workCondition, temperature, hasCover, application, etc.
 ) => {
-    console.log(`开始 ${gearboxType} 系列齿轮箱选型:`, { enginePower, engineSpeed, targetRatio, thrustRequirement, options });
-    
+    log.debug(`开始 ${gearboxType} 系列齿轮箱选型:`, { enginePower, engineSpeed, targetRatio, thrustRequirement, options });
+
     // 日志记录：检查高弹数据是否正确加载
-    console.log("flexibleCouplings 数据:", data?.flexibleCouplings?.length || 0, "条记录");
+    log.debug("flexibleCouplings 数据:", data?.flexibleCouplings?.length || 0, "条记录");
     if (data?.flexibleCouplings?.length > 0) {
-        console.log("flexibleCouplings 示例:", data.flexibleCouplings[0]);
+        log.debug("flexibleCouplings 示例:", data.flexibleCouplings[0]);
     }
 
     // --- Parameter validation ---
@@ -71,14 +64,14 @@ export const selectGearbox = (
     let gearboxes = data[gearboxTypeName];
 
     if (!Array.isArray(gearboxes) || gearboxes.length === 0) {
-        console.error(`${gearboxType} 系列数据无效或缺失`);
+        log.error(`${gearboxType} 系列数据无效或缺失`);
         return { success: false, message: `没有找到 ${gearboxType} 系列齿轮箱数据`, recommendations: [], gearboxTypeUsed: gearboxType };
     }
 
     // --- Calculate required capacity and torque ---
     const requiredTransferCapacity = enginePower / engineSpeed;
     const engineTorque_Nm = (enginePower * 9550) / engineSpeed; // N·m
-    console.log(`计算参数: Required Capacity=${requiredTransferCapacity.toFixed(6)} kW/rpm, Engine Torque=${engineTorque_Nm.toFixed(2)} N·m`);
+    log.debug(`计算参数: Required Capacity=${requiredTransferCapacity.toFixed(6)} kW/rpm, Engine Torque=${engineTorque_Nm.toFixed(2)} N·m`);
 
     // --- 创建失败原因收集器，帮助诊断 ---
     const rejectionReasons = {
@@ -103,7 +96,7 @@ export const selectGearbox = (
     const matchingGearboxes = [];
     for (const gearbox of gearboxes) {
         if (!gearbox || typeof gearbox !== 'object' || !gearbox.model) {
-            console.warn(`Skipping invalid gearbox data in ${gearboxType} series:`, gearbox);
+            log.warn(`Skipping invalid gearbox data in ${gearboxType} series:`, gearbox);
             continue;
         }
 
@@ -119,12 +112,12 @@ export const selectGearbox = (
                 continue;
             }
         } else {
-             console.warn(`Gearbox ${gearbox.model} has invalid inputSpeedRange. Skipping range check.`);
+             log.warn(`Gearbox ${gearbox.model} has invalid inputSpeedRange. Skipping range check.`);
         }
 
         // Check ratios and find best match
         if (!Array.isArray(gearbox.ratios) || gearbox.ratios.length === 0) {
-             console.warn(`Gearbox ${gearbox.model} has no ratios.`);
+             log.warn(`Gearbox ${gearbox.model} has no ratios.`);
             continue;
         }
 
@@ -134,7 +127,7 @@ export const selectGearbox = (
         
         gearbox.ratios.forEach((ratio, index) => {
             if (typeof ratio !== 'number' || isNaN(ratio) || ratio <= 0) {
-                 console.warn(`Gearbox ${gearbox.model} has invalid ratio value at index ${index}: ${ratio}`);
+                 log.warn(`Gearbox ${gearbox.model} has invalid ratio value at index ${index}: ${ratio}`);
                 return; // Skip invalid ratios
             }
             const diff = Math.abs(ratio - targetRatio);
@@ -185,17 +178,17 @@ export const selectGearbox = (
         } else if (Array.isArray(gearbox.transferCapacity) && gearbox.transferCapacity.length > 0 && typeof gearbox.transferCapacity[0] === 'number') {
              // Fallback to first capacity if array exists but index is bad or value invalid
              capacity = gearbox.transferCapacity[0];
-             console.warn(`Gearbox ${gearbox.model} using fallback capacity due to index/value issue at ratio index ${bestRatioIndex}`);
+             log.warn(`Gearbox ${gearbox.model} using fallback capacity due to index/value issue at ratio index ${bestRatioIndex}`);
         } else if (typeof gearbox.transferCapacity === 'number') {
             capacity = gearbox.transferCapacity; // Single value case
         } else {
-            console.warn(`Gearbox ${gearbox.model} has invalid transferCapacity data.`);
+            log.warn(`Gearbox ${gearbox.model} has invalid transferCapacity data.`);
             continue; // Skip if capacity data is unusable
         }
 
         // Calculate capacity margin
         if (capacity <= 0) {
-             console.warn(`Skipping ${gearbox.model}: Capacity is not positive (${capacity})`);
+             log.warn(`Skipping ${gearbox.model}: Capacity is not positive (${capacity})`);
             continue; // Skip if capacity is not positive
         }
         const capacityMargin = ((capacity - requiredTransferCapacity) / requiredTransferCapacity) * 100;
@@ -472,7 +465,7 @@ export const selectGearbox = (
         // 4. Thrust Match Score (10 points)
         if (thrustRequirement > 0) {
             score += gearbox.thrustMet ? 10 : 0;
-             if (!gearbox.thrustMet) console.warn(`Gearbox ${gearbox.model} thrust ${gearbox.thrust} < required ${thrustRequirement}`);
+             if (!gearbox.thrustMet) log.warn(`Gearbox ${gearbox.model} thrust ${gearbox.thrust} < required ${thrustRequirement}`);
         } else {
             score += 5; // Add some points if thrust wasn't required, as having thrust is a feature
         }
