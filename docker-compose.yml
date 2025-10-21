@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  gearbox-system:
+    build: .
+    image: gearbox-system:latest
+    container_name: gearbox-system
+    ports:
+      - "8080:80"
+    volumes:
+      # 可选：挂载日志目录
+      - ./logs:/var/log/nginx
+    restart: unless-stopped
+    networks:
+      - webnet
+    labels:
+      - "com.example.description=Gearbox Selection System"
+      - "com.example.version=1.0"
+
+networks:
+  webnet:
+    driver: bridge
