@@ -1,0 +1,55 @@
+{
+  "compilerOptions": {
+    // 目标和模块
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+
+    // 严格模式配置
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // 模块解析
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+
+    // 渐进式迁移配置
+    "allowJs": true,
+    "checkJs": false,
+    "skipLibCheck": true,
+
+    // 输出配置
+    "noEmit": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    // 路径映射
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["./*"],
+      "@components/*": ["components/*"],
+      "@utils/*": ["utils/*"],
+      "@hooks/*": ["hooks/*"],
+      "@contexts/*": ["contexts/*"],
+      "@data/*": ["data/*"],
+      "@types/*": ["types/*"]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
+}

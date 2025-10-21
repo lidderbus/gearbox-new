@@ -1,19 +1,21 @@
 // src/reportWebVitals.js
-// 性能指标上报（可选）：当前仅做占位，避免构建错误。
+// 性能指标上报 - 增强版本
+
+import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+import { initWebVitalsMonitoring } from './utils/performanceMonitor';
 
 const reportWebVitals = (onPerfEntry) => {
   if (onPerfEntry && onPerfEntry instanceof Function) {
-    // 动态导入 web-vitals，避免额外体积
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-      getCLS(onPerfEntry);
-      getFID(onPerfEntry);
-      getFCP(onPerfEntry);
-      getLCP(onPerfEntry);
-      getTTFB(onPerfEntry);
-    }).catch(() => {
-      // web-vitals 未安装或加载失败时静默处理
-    });
+    // 如果提供了自定义回调，使用自定义回调
+    getCLS(onPerfEntry);
+    getFID(onPerfEntry);
+    getFCP(onPerfEntry);
+    getLCP(onPerfEntry);
+    getTTFB(onPerfEntry);
+  } else {
+    // 否则使用默认的性能监控系统
+    initWebVitalsMonitoring();
   }
 };
 
-export default reportWebVitals; 
+export default reportWebVitals;
