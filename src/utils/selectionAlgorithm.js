@@ -106,7 +106,7 @@ export const selectGearbox = (
         if (Array.isArray(gearbox.inputSpeedRange) && gearbox.inputSpeedRange.length === 2) {
             const [minSpeed, maxSpeed] = gearbox.inputSpeedRange;
             if (engineSpeed < minSpeed || engineSpeed > maxSpeed) {
-                 DEBUG_LOG(`Skipping ${gearbox.model}: Speed ${engineSpeed} outside range [${minSpeed}, ${maxSpeed}]`);
+                 log.debug(`Skipping ${gearbox.model}: Speed ${engineSpeed} outside range [${minSpeed}, ${maxSpeed}]`);
                  rejectionReasons.speedRange++;
                  failureReason = `转速 ${engineSpeed} 超出范围 [${minSpeed}, ${maxSpeed}]`;
                 continue;
@@ -143,7 +143,7 @@ export const selectGearbox = (
         });
 
         if (bestRatioIndex === -1) {
-            DEBUG_LOG(`Skipping ${gearbox.model}: No ratio within ${MAX_RATIO_DIFF_PERCENT}% of target ${targetRatio}`);
+            log.debug(`Skipping ${gearbox.model}: No ratio within ${MAX_RATIO_DIFF_PERCENT}% of target ${targetRatio}`);
             rejectionReasons.ratioOutOfRange++;
             failureReason = `没有减速比在目标值 ${targetRatio} 的 ${MAX_RATIO_DIFF_PERCENT}% 偏差范围内`;
             
@@ -195,7 +195,7 @@ export const selectGearbox = (
 
         // 检查容量余量要求 (使用放宽后的参数)
         if (capacity < requiredTransferCapacity) {
-            DEBUG_LOG(`Skipping ${gearbox.model}: Capacity ${capacity} too low (Required ${requiredTransferCapacity})`);
+            log.debug(`Skipping ${gearbox.model}: Capacity ${capacity} too low (Required ${requiredTransferCapacity})`);
             rejectionReasons.capacityTooLow++;
             failureReason = `传递能力 ${capacity} 不足以满足需求 ${requiredTransferCapacity.toFixed(6)}`;
             
@@ -216,7 +216,7 @@ export const selectGearbox = (
         }
         
         if (capacityMargin > MAX_CAPACITY_MARGIN) {
-            DEBUG_LOG(`Skipping ${gearbox.model}: Capacity margin ${capacityMargin.toFixed(1)}% too high (Max ${MAX_CAPACITY_MARGIN}%)`);
+            log.debug(`Skipping ${gearbox.model}: Capacity margin ${capacityMargin.toFixed(1)}% too high (Max ${MAX_CAPACITY_MARGIN}%)`);
             rejectionReasons.capacityTooHigh++;
             failureReason = `传递能力余量 ${capacityMargin.toFixed(1)}% 超过上限 ${MAX_CAPACITY_MARGIN}%`;
             
@@ -242,7 +242,7 @@ export const selectGearbox = (
              if (typeof gearbox.thrust === 'number' && !isNaN(gearbox.thrust)) {
                  thrustMet = gearbox.thrust >= thrustRequirement;
                  if (!thrustMet) {
-                    DEBUG_LOG(`Gearbox ${gearbox.model} thrust ${gearbox.thrust}kN does not meet requirement ${thrustRequirement}kN`);
+                    log.debug(`Gearbox ${gearbox.model} thrust ${gearbox.thrust}kN does not meet requirement ${thrustRequirement}kN`);
                     rejectionReasons.thrustInsufficient++;
                     failureReason = `推力 ${gearbox.thrust}kN 不满足需求 ${thrustRequirement}kN`;
                     

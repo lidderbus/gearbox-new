@@ -252,16 +252,29 @@ export function clearPerformanceData() {
 
 /**
  * 监控React组件渲染性能
+ * 注意：需要在使用时导入React
  */
 export function withPerformanceTracking(Component, componentName) {
+  // 此函数需要在调用时传入React
   return function TrackedComponent(props) {
     const mark = new PerformanceMark(`Render ${componentName}`);
 
-    React.useEffect(() => {
-      mark.end();
-    });
+    // 使用useEffect需要React，调用者需要自行处理
+    // 示例用法：
+    // import React from 'react';
+    // const Tracked = withPerformanceTracking(MyComponent, 'MyComponent');
 
-    return React.createElement(Component, props);
+    if (typeof window !== 'undefined' && window.React) {
+      const { useEffect } = window.React;
+      useEffect(() => {
+        mark.end();
+      });
+    }
+
+    // 简单版本：直接渲染后结束计时
+    setTimeout(() => mark.end(), 0);
+
+    return Component(props);
   };
 }
 
