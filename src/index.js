@@ -75,11 +75,9 @@ const Root = () => {
 
   // 正常渲染应用
   return (
-    <React.StrictMode>
-      <DarkModeProvider>
-        <AppWrapper initialData={appData} setAppData={setAppData} />
-      </DarkModeProvider>
-    </React.StrictMode>
+    <DarkModeProvider>
+      <AppWrapper initialData={appData} setAppData={setAppData} />
+    </DarkModeProvider>
   );
 };
 
