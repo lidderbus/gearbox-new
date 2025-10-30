@@ -7,15 +7,10 @@ import ErrorBoundary from './ErrorBoundary';
 import '../styles/agreementTemplates.css';
 // 导入双语模板工具
 import {
-  bilingualTemplates,
-  generateBilingualAgreement,
-  getCurrentDate,
-  translateSpecialRequirements,
-  formatSpecialRequirements,
-  fillTemplate as bilingualFillTemplate
+  generateBilingualAgreement
 } from '../utils/bilingualTemplates';
 // 导入特殊要求模板
-import { specialRequirementTemplates, processTemplate } from '../utils/specialRequirementTemplates';
+import { specialRequirementTemplates } from '../utils/specialRequirementTemplates';
 // 导入双语样式
 import '../styles/bilingualStyles.css';
 
