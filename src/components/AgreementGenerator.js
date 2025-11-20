@@ -3,18 +3,14 @@ import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { Form, Row, Col, Card, Button, Tabs, Tab, Alert, Spinner, ListGroup, Badge } from 'react-bootstrap';
 import { getAgreementTemplate, fillTemplate, TemplateType, LanguageType } from '../utils/agreementTemplateManager';
 import { exportHtmlContentToPDF } from '../utils/pdfExportUtils';
+import ErrorBoundary from './ErrorBoundary';
 import '../styles/agreementTemplates.css';
 // 导入双语模板工具
-import { 
-  bilingualTemplates, 
-  generateBilingualAgreement,
-  getCurrentDate,
-  translateSpecialRequirements,
-  formatSpecialRequirements,
-  fillTemplate as bilingualFillTemplate
+import {
+  generateBilingualAgreement
 } from '../utils/bilingualTemplates';
 // 导入特殊要求模板
-import { specialRequirementTemplates, processTemplate } from '../utils/specialRequirementTemplates';
+import { specialRequirementTemplates } from '../utils/specialRequirementTemplates';
 // 导入双语样式
 import '../styles/bilingualStyles.css';
 
@@ -28,18 +24,28 @@ const SpecialRequirementsTemplateSelector = memo(({
   onRequirementsChange,
   colors
 }) => {
-  // 状态定义
+  // 状态定义 - 添加初始化标志
   const [selectedCategory, setSelectedCategory] = useState('performance');
   const [selectedTemplates, setSelectedTemplates] = useState([]);
   const [customRequirement, setCustomRequirement] = useState('');
   const [localError, setLocalError] = useState(null);
+  const [isInitialized, setIsInitialized] = useState(false);
   
-  // 调试日志 - 可以帮助诊断问题
+  // 调试日志和初始化检查
   useEffect(() => {
     console.log("SpecialRequirementsTemplateSelector组件挂载");
     console.log("初始templateData:", templateData);
     console.log("初始currentRequirements:", currentRequirements);
-    
+
+    // 验证 specialRequirementTemplates 是否已正确导入
+    if (!specialRequirementTemplates) {
+      console.error("specialRequirementTemplates 未正确导入！");
+      setLocalError("模板数据加载失败，请刷新页面重试");
+    } else {
+      console.log("specialRequirementTemplates 已加载，包含类别:", Object.keys(specialRequirementTemplates));
+      setIsInitialized(true);
+    }
+
     return () => {
       console.log("SpecialRequirementsTemplateSelector组件卸载");
     };
@@ -49,33 +55,49 @@ const SpecialRequirementsTemplateSelector = memo(({
   useEffect(() => {
     try {
       console.log("处理currentRequirements变更:", currentRequirements);
-      
+
       // 清除任何错误
       setLocalError(null);
-      
-      if (!currentRequirements) {
-        console.log("无currentRequirements，设置空数组");
+
+      // 更严格的类型检查
+      if (currentRequirements === null || currentRequirements === undefined) {
+        console.log("currentRequirements 为 null 或 undefined，设置空数组");
         setSelectedTemplates([]);
         return;
       }
-      
+
       if (typeof currentRequirements !== 'string') {
-        console.log("currentRequirements不是字符串，设置空数组");
+        console.warn("currentRequirements 不是字符串类型，实际类型:", typeof currentRequirements);
         setSelectedTemplates([]);
         return;
       }
-      
-      // 安全解析当前需求
+
+      // 处理空字符串
+      if (currentRequirements.trim() === '') {
+        console.log("currentRequirements 为空字符串，设置空数组");
+        setSelectedTemplates([]);
+        return;
+      }
+
+      // 安全解析当前需求，增加更多的边界检查
       const requirements = currentRequirements
         .split('\n')
-        .filter(line => line && line.trim !== undefined && line.trim() !== '')
+        .filter(line => {
+          // 确保 line 是字符串且有 trim 方法
+          if (typeof line !== 'string') {
+            console.warn("遇到非字符串行，跳过");
+            return false;
+          }
+          // 过滤空行
+          return line.trim() !== '';
+        })
         .map(line => line.trim());
-      
-      console.log(`解析出${requirements.length}个模板项`);
+
+      console.log(`成功解析出 ${requirements.length} 个模板项`);
       setSelectedTemplates(requirements);
     } catch (error) {
       console.error("初始化模板列表出错:", error);
-      setLocalError("无法加载当前要求列表");
+      setLocalError(`无法加载当前要求列表: ${error.message}`);
       setSelectedTemplates([]);
     }
   }, [currentRequirements]);
@@ -276,49 +298,104 @@ const SpecialRequirementsTemplateSelector = memo(({
   // 渲染模板选项
   const renderTemplateOptions = useCallback(() => {
     try {
-      if (!specialRequirementTemplates || 
-          !specialRequirementTemplates[selectedCategory] ||
-          !Array.isArray(specialRequirementTemplates[selectedCategory].chinese)) {
+      // 安全检查: 确保 specialRequirementTemplates 存在且有效
+      if (!specialRequirementTemplates) {
+        console.warn("specialRequirementTemplates 未定义");
         return (
-          <ListGroup.Item 
+          <ListGroup.Item
             style={{
               backgroundColor: colors?.card || '#fff',
               color: colors?.text || '#333'
             }}
           >
-            无可用模板
+            模板数据未加载
           </ListGroup.Item>
         );
       }
-      
-      return specialRequirementTemplates[selectedCategory].chinese.map((template, index) => {
-        const displayText = processTemplateData(template);
-        
+
+      // 安全检查: 确保所选类别存在
+      if (!specialRequirementTemplates[selectedCategory]) {
+        console.warn(`类别 ${selectedCategory} 不存在于 specialRequirementTemplates 中`);
         return (
-          <ListGroup.Item 
-            key={`template-option-${index}`}
+          <ListGroup.Item
+            style={{
+              backgroundColor: colors?.card || '#fff',
+              color: colors?.text || '#333'
+            }}
+          >
+            该类别暂无模板
+          </ListGroup.Item>
+        );
+      }
+
+      // 安全检查: 确保中文模板数组存在且有效
+      const categoryData = specialRequirementTemplates[selectedCategory];
+      if (!categoryData || !categoryData.chinese || !Array.isArray(categoryData.chinese)) {
+        console.warn(`类别 ${selectedCategory} 的中文模板数据无效`);
+        return (
+          <ListGroup.Item
+            style={{
+              backgroundColor: colors?.card || '#fff',
+              color: colors?.text || '#333'
+            }}
+          >
+            该类别模板格式错误
+          </ListGroup.Item>
+        );
+      }
+
+      // 检查是否有可用模板
+      if (categoryData.chinese.length === 0) {
+        return (
+          <ListGroup.Item
+            style={{
+              backgroundColor: colors?.card || '#fff',
+              color: colors?.text || '#333'
+            }}
+          >
+            该类别暂无可用模板
+          </ListGroup.Item>
+        );
+      }
+
+      // 渲染模板列表
+      return categoryData.chinese.map((template, index) => {
+        // 安全处理每个模板
+        if (!template || typeof template !== 'string') {
+          console.warn(`跳过无效的模板项 (索引 ${index})`);
+          return null;
+        }
+
+        const displayText = processTemplateData(template);
+
+        return (
+          <ListGroup.Item
+            key={`template-option-${selectedCategory}-${index}`}
             action
             onClick={() => addTemplate(template)}
             style={{
               backgroundColor: colors?.card || '#fff',
               color: colors?.text || '#333',
-              borderColor: colors?.border || '#ced4da'
+              borderColor: colors?.border || '#ced4da',
+              cursor: 'pointer'
             }}
           >
-            {displayText}
+            {displayText || '(空模板)'}
           </ListGroup.Item>
         );
-      });
+      }).filter(item => item !== null); // 过滤掉无效项
     } catch (error) {
       console.error("渲染模板选项出错:", error);
+      setLocalError("渲染模板列表时出错");
       return (
-        <ListGroup.Item 
+        <ListGroup.Item
           style={{
             backgroundColor: colors?.card || '#fff',
             color: colors?.text || '#333'
           }}
         >
-          加载模板出错
+          <i className="bi bi-exclamation-triangle me-2 text-warning"></i>
+          加载模板出错: {error.message}
         </ListGroup.Item>
       );
     }
@@ -378,14 +455,22 @@ const SpecialRequirementsTemplateSelector = memo(({
   return (
     <div className="mb-3">
       <h6 style={{ color: colors?.headerText || '#333' }}>特殊订货要求模板</h6>
-      
+
       {localError && (
         <Alert variant="danger" className="mb-2" dismissible onClose={() => setLocalError(null)}>
           <i className="bi bi-exclamation-triangle-fill me-2"></i>
           {localError}
         </Alert>
       )}
-      
+
+      {/* 初始化检查 */}
+      {!isInitialized && !localError && (
+        <Alert variant="info" className="mb-2">
+          <i className="bi bi-info-circle-fill me-2"></i>
+          正在加载模板数据...
+        </Alert>
+      )}
+
       <Row>
         <Col md={4}>
           <div className="mb-3">
@@ -1290,13 +1375,30 @@ const AgreementGenerator = ({
                     </Form.Group>
                     
                     {specialReqType === 'template' ? (
-                      <SpecialRequirementsTemplateSelector
-                        currentRequirements={specialRequirements}
-                        templateData={getTemplateDataForRequirements()}
-                        onRequirementsChange={handleSpecialRequirementsChange}
-                        colors={colors}
-                        specialRequirementTemplates={specialRequirementTemplates}
-                      />
+                      <ErrorBoundary
+                        fallback={
+                          <Alert variant="warning">
+                            <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                            特殊订货要求模板选择器加载失败，请尝试使用手动输入文本模式。
+                            <div className="mt-2">
+                              <Button
+                                variant="outline-primary"
+                                size="sm"
+                                onClick={() => setSpecialReqType('custom')}
+                              >
+                                切换到手动输入
+                              </Button>
+                            </div>
+                          </Alert>
+                        }
+                      >
+                        <SpecialRequirementsTemplateSelector
+                          currentRequirements={specialRequirements}
+                          templateData={getTemplateDataForRequirements()}
+                          onRequirementsChange={handleSpecialRequirementsChange}
+                          colors={colors}
+                        />
+                      </ErrorBoundary>
                     ) : (
                       <Form.Control
                         as="textarea"

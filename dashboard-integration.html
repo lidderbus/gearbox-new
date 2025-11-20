@@ -1,0 +1,167 @@
+<!--
+  Dashboard 集成示例代码
+  将以下代码添加到您的 dashboard-complete.html 中
+-->
+
+<!-- 1. 在导航菜单中添加入口 -->
+<li class="nav-item">
+  <a class="nav-link" href="#" onclick="loadGearboxModule(); return false;">
+    <i class="fas fa-cog"></i>
+    <span>齿轮箱选型系统</span>
+  </a>
+</li>
+
+<!-- 2. 在主内容区添加模块容器 -->
+<div id="gearbox-module-container" class="module-container" style="display:none;">
+  <!-- 工具栏（可选） -->
+  <div class="module-toolbar">
+    <button onclick="refreshGearboxModule()" class="btn btn-sm btn-primary">
+      <i class="fas fa-sync-alt"></i> 刷新
+    </button>
+    <button onclick="closeGearboxModule()" class="btn btn-sm btn-secondary">
+      <i class="fas fa-times"></i> 关闭
+    </button>
+    <button onclick="openInNewWindow()" class="btn btn-sm btn-info">
+      <i class="fas fa-external-link-alt"></i> 新窗口打开
+    </button>
+  </div>
+
+  <!-- iframe 嵌入 -->
+  <iframe
+    id="gearbox-iframe"
+    src="/gearbox/"
+    style="width:100%; height:calc(100vh - 120px); border:none; background:#fff;"
+    frameborder="0"
+    loading="lazy"
+    allow="fullscreen">
+  </iframe>
+</div>
+
+<!-- 3. JavaScript 控制代码 -->
+<script>
+// 加载齿轮箱模块
+function loadGearboxModule() {
+  // 隐藏所有其他模块
+  document.querySelectorAll('.module-container').forEach(function(el) {
+    el.style.display = 'none';
+  });
+
+  // 显示齿轮箱模块
+  var container = document.getElementById('gearbox-module-container');
+  container.style.display = 'block';
+
+  // 懒加载：首次加载时才设置 iframe src
+  var iframe = document.getElementById('gearbox-iframe');
+  if (!iframe.src || iframe.src === 'about:blank') {
+    iframe.src = '/gearbox/';
+  }
+
+  // 更新导航激活状态
+  updateNavActive('gearbox');
+}
+
+// 刷新齿轮箱模块
+function refreshGearboxModule() {
+  var iframe = document.getElementById('gearbox-iframe');
+  iframe.src = iframe.src; // 重新加载
+}
+
+// 关闭齿轮箱模块
+function closeGearboxModule() {
+  document.getElementById('gearbox-module-container').style.display = 'none';
+
+  // 返回默认页面（根据您的需求调整）
+  loadDefaultModule();
+}
+
+// 在新窗口打开
+function openInNewWindow() {
+  window.open('/gearbox/', '_blank', 'width=1400,height=900');
+}
+
+// 更新导航激活状态（根据您的导航结构调整）
+function updateNavActive(moduleName) {
+  document.querySelectorAll('.nav-link').forEach(function(link) {
+    link.classList.remove('active');
+  });
+
+  var activeLink = document.querySelector('[onclick*="' + moduleName + '"]');
+  if (activeLink) {
+    activeLink.classList.add('active');
+  }
+}
+
+// iframe 通信（可选）
+// 如果需要在 dashboard 和齿轮箱系统之间通信
+window.addEventListener('message', function(event) {
+  // 验证来源
+  if (event.origin !== window.location.origin) {
+    return;
+  }
+
+  var data = event.data;
+
+  // 处理来自齿轮箱系统的消息
+  switch(data.type) {
+    case 'gearbox-selected':
+      console.log('选择的齿轮箱:', data.payload);
+      // 在这里处理数据，例如更新 dashboard 其他部分
+      break;
+
+    case 'quotation-generated':
+      console.log('生成的报价单:', data.payload);
+      break;
+
+    default:
+      console.log('未知消息类型:', data.type);
+  }
+});
+
+// 可选：自动路由
+// 如果 URL 包含 #gearbox，自动加载模块
+if (window.location.hash === '#gearbox') {
+  loadGearboxModule();
+}
+</script>
+
+<!-- 4. CSS 样式（可选） -->
+<style>
+#gearbox-module-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #f5f5f5;
+}
+
+.module-toolbar {
+  padding: 10px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  gap: 10px;
+}
+
+.module-toolbar .btn {
+  margin: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  #gearbox-iframe {
+    height: calc(100vh - 150px) !important;
+  }
+
+  .module-toolbar {
+    flex-wrap: wrap;
+  }
+}
+
+/* 加载动画（可选） */
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+</style>
