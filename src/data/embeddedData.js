@@ -464,6 +464,122 @@ export const embeddedGearboxData = {
       "marketPrice": 57200.00, // Calculated
       "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控)" // From OCR Doc 1 P4
     },
+    // === PTI/PTO混动专用型号 (P后缀) - 2026-01-05添加 ===
+    {
+      "model": "HC400P",
+      "inputSpeedRange": [1000, 2500],
+      "ratios": [1.5, 1.77, 2.04, 2.5, 2.86, 3, 3.25],
+      "transferCapacity": [0.331, 0.331, 0.331, 0.331, 0.279, 0.279, 0.19],
+      "thrust": 60,
+      "centerDistance": 264,
+      "weight": 600,
+      "controlType": "推拉软轴/电控",
+      "dimensions": "604×886×880",
+      "efficiency": 0.97,
+      "basePrice": 46000,
+      "price": 46000,
+      "discountRate": 0.10,
+      "factoryPrice": 41400,
+      "packagePrice": 41400,
+      "marketPrice": 46000,
+      "notes": "PTI/PTO混动专用型号 - 杭齿厂选型手册2025版"
+    },
+    {
+      "model": "HC600P",
+      "inputSpeedRange": [1000, 2500],
+      "ratios": [2, 2.48, 2.63, 3, 3.58, 3.89],
+      "transferCapacity": [1.359, 1.486, 1.706, 1.706, 1.706, 1.706],
+      "thrust": 155,
+      "centerDistance": 350,
+      "weight": 1500,
+      "controlType": "推拉软轴/电控/气控",
+      "dimensions": "-",
+      "efficiency": 0.97,
+      "basePrice": 60000,
+      "price": 60000,
+      "discountRate": 0.10,
+      "factoryPrice": 54000,
+      "packagePrice": 54000,
+      "marketPrice": 60000,
+      "notes": "PTI/PTO混动专用型号 - 杭齿厂选型手册2025版"
+    },
+    {
+      "model": "HC1200P",
+      "inputSpeedRange": [1000, 2500],
+      "ratios": [1.6, 2.03, 2.48, 2.5, 2.96, 3.18, 3.33, 3.55],
+      "transferCapacity": [1.4, 1.471, 1.71, 1.994, 2.231, 2.5, 2.652, 2.652],
+      "thrust": 250,
+      "centerDistance": 450,
+      "weight": 2500,
+      "controlType": "电控/气控",
+      "dimensions": "-",
+      "efficiency": 0.97,
+      "basePrice": 102000,
+      "price": 102000,
+      "discountRate": 0.10,
+      "factoryPrice": 91800,
+      "packagePrice": 91800,
+      "marketPrice": 102000,
+      "notes": "PTI/PTO混动专用型号 - 杭齿厂选型手册2025版"
+    },
+    {
+      "model": "HC1600P",
+      "inputSpeedRange": [1000, 2500],
+      "ratios": [2.03, 2.5, 2.96, 3.55, 4],
+      "transferCapacity": [1.353, 1.5, 1.759, 1.759, 1.759],
+      "thrust": 440,
+      "centerDistance": 500,
+      "weight": 3200,
+      "controlType": "电控/气控",
+      "dimensions": "-",
+      "efficiency": 0.97,
+      "basePrice": 130000,
+      "price": 130000,
+      "discountRate": 0.10,
+      "factoryPrice": 117000,
+      "packagePrice": 117000,
+      "marketPrice": 130000,
+      "notes": "PTI/PTO混动专用型号 - 杭齿厂选型手册2025版"
+    },
+    {
+      "model": "HC2000P",
+      "inputSpeedRange": [1000, 2500],
+      "ratios": [1.97, 2.5, 2.96, 3.5, 4, 4.5],
+      "transferCapacity": [1.375, 1.533, 1.714, 1.714, 1.714, 1.714],
+      "thrust": 580,
+      "centerDistance": 550,
+      "weight": 4000,
+      "controlType": "电控/气控",
+      "dimensions": "-",
+      "efficiency": 0.97,
+      "basePrice": 158000,
+      "price": 158000,
+      "discountRate": 0.10,
+      "factoryPrice": 142200,
+      "packagePrice": 142200,
+      "marketPrice": 158000,
+      "notes": "PTI/PTO混动专用型号 - 杭齿厂选型手册2025版"
+    },
+    {
+      "model": "HC2700P",
+      "inputSpeedRange": [1000, 2500],
+      "ratios": [1.54, 2.03, 2.58, 3.09, 3.48, 3.95, 4.47],
+      "transferCapacity": [1.371, 1.515, 1.767, 1.767, 1.767, 1.767, 1.767],
+      "thrust": 670,
+      "centerDistance": 600,
+      "weight": 5000,
+      "controlType": "电控/气控",
+      "dimensions": "-",
+      "efficiency": 0.97,
+      "basePrice": 207000,
+      "price": 207000,
+      "discountRate": 0.10,
+      "factoryPrice": 186300,
+      "packagePrice": 186300,
+      "marketPrice": 207000,
+      "notes": "PTI/PTO混动专用型号 - 杭齿厂选型手册2025版"
+    },
+    // === PTI/PTO混动专用型号结束 ===
     {
       "model": "HCD600A",
       "inputSpeedRange": [1000, 2100],
@@ -1757,10 +1873,10 @@ export const embeddedGearboxData = {
       "model": "2GWH1060", // Not in 2022 price lists provided, keep existing data
       "inputSpeedRange": [400, 2000],
       "ratios": [2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6], // Note: 9 ratios
-      "transferCapacity": [1.12],       // Note: Capacity array length mismatch, will be fixed by repair
+      "transferCapacity": [1.12, 1.12, 1.12, 1.12, 1.12, 1.12, 1.12, 1.12, 1.12],       // Note: Capacity array length mismatch, will be fixed by repair
       "thrust": 175,
       "standardCenterDistance": 1460,
-      "weight": 14500,
+      "weight": 10600,
       "controlType": "双机并车",
       "efficiency": 0.97,
       "basePrice": 850000, // Old price
@@ -2163,7 +2279,7 @@ export const embeddedGearboxData = {
       "model": "DT2400",
       "inputSpeedRange": [750, 1500],
       "ratios": [1.52, 2.04, 2.43, 2.90, 3.48, 4.00, 4.45, 5.00, 5.35, 5.50, 5.96], // Note: 11 ratios
-      "transferCapacity": [1.466], // Note: Capacity array length mismatch, will be fixed by repair
+      "transferCapacity": [1.466, 1.466, 1.466, 1.466, 1.466, 1.466, 1.466, 1.466, 1.466, 1.466, 1.466], // Note: Capacity array length mismatch, will be fixed by repair
       "thrust": 110,
       "centerDistance": 340,
       "weight": 1430,
@@ -2256,7 +2372,7 @@ export const embeddedGearboxData = {
            "model": "HCQ1001", // Not in OCR Doc 1 P8-9, retaining old data, setting price to 0
             "inputSpeedRange": [1500, 2100],
             "ratios": [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0], // Note: 8 ratios
-            "transferCapacity": [0.12], // Note: Capacity array length mismatch, will be fixed by repair
+            "transferCapacity": [0.12, 0.12, 0.12, 0.12, 0.12, 0.12, 0.12, 0.12], // Note: Capacity array length mismatch, will be fixed by repair
             "thrust": 30,
             "centerDistance": 335,
             "weight": 1200,
@@ -2269,7 +2385,7 @@ export const embeddedGearboxData = {
            "model": "HCQ400", // Not in OCR Doc 1 P8-9, retaining old data, setting price to 0
             "inputSpeedRange": [1000, 2500],
             "ratios": [1.5, 2.0, 2.5, 3.0], // Note: 4 ratios
-            "transferCapacity": [0.04], // Note: Capacity array length mismatch, will be fixed by repair
+            "transferCapacity": [0.04, 0.04, 0.04, 0.04], // Note: Capacity array length mismatch, will be fixed by repair
             "thrust": 15,
             "centerDistance": 400,
             "weight": 650,
@@ -2295,7 +2411,7 @@ export const embeddedGearboxData = {
            "model": "HCQ1000", // Not in OCR Doc 1 P8-9, retaining old data, setting price to 0
             "inputSpeedRange": [1500, 2100],
             "ratios": [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0], // Note: 8 ratios
-            "transferCapacity": [0.1], // Note: Capacity array length mismatch, will be fixed by repair
+            "transferCapacity": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], // Note: Capacity array length mismatch, will be fixed by repair
       "thrust": 30,
             "centerDistance": 310,
             "weight": 1100,
@@ -2308,7 +2424,7 @@ export const embeddedGearboxData = {
            "model": "HCQ1400", // Not in OCR Doc 1 P8-9, retaining old data, setting price to 0
             "inputSpeedRange": [750, 1500],
             "ratios": [1.5, 2.0, 2.5, 3.0, 3.5], // Note: 5 ratios
-            "transferCapacity": [0.18], // Note: Capacity array length mismatch, will be fixed by repair
+            "transferCapacity": [0.18, 0.18, 0.18, 0.18, 0.18], // Note: Capacity array length mismatch, will be fixed by repair
             "thrust": 35,
             "centerDistance": 340,
             "weight": 1450,
@@ -2321,7 +2437,7 @@ export const embeddedGearboxData = {
            "model": "HCQ1600", // Not in OCR Doc 1 P8-9, retaining old data, setting price to 0
             "inputSpeedRange": [750, 1500],
             "ratios": [1.5, 2.0, 2.5, 3.0], // Note: 4 ratios
-            "transferCapacity": [0.2], // Note: Capacity array length mismatch, will be fixed by repair
+            "transferCapacity": [0.2, 0.2, 0.2, 0.2], // Note: Capacity array length mismatch, will be fixed by repair
       "thrust": 40,
             "centerDistance": 340, // Note: Same as HCQ1400? Needs verification
             "weight": 1550,
@@ -2334,7 +2450,7 @@ export const embeddedGearboxData = {
            "model": "HCQ1601", // Not in OCR Doc 1 P8-9, retaining old data, setting price to 0
             "inputSpeedRange": [750, 1500],
             "ratios": [1.5, 2.0, 2.5, 3.0], // Note: 4 ratios
-            "transferCapacity": [0.25], // Note: Capacity array length mismatch, will be fixed by repair
+            "transferCapacity": [0.25, 0.25, 0.25, 0.25], // Note: Capacity array length mismatch, will be fixed by repair
             "thrust": 50,
             "centerDistance": 370,
             "weight": 1600,
@@ -2347,7 +2463,7 @@ export const embeddedGearboxData = {
            "model": "HCS138", // Not in OCR Doc 1 P8-9, retaining old data, setting price to 0
             "inputSpeedRange": [1000, 2500],
             "ratios": [2, 2.52, 3, 3.57, 4.05, 4.45], // Note: 6 ratios
-            "transferCapacity": [0.11], // Note: Capacity array length mismatch, will be fixed by repair
+            "transferCapacity": [0.11, 0.11, 0.11, 0.11, 0.11, 0.11], // Note: Capacity array length mismatch, will be fixed by repair
             "thrust": 30,
             "centerDistance": 225, // Note: Same as HC138? Needs verification
             "weight": 460,
@@ -2360,7 +2476,7 @@ export const embeddedGearboxData = {
            "model": "HCS302", // Not in OCR Doc 1 P8-9, retaining old data, setting price to 0
             "inputSpeedRange": [750, 2500],
             "ratios": [1.87, 2.04, 2.54, 3.00, 3.53, 4.10, 4.47, 4.61, 4.94, 5.44], // Note: 10 ratios
-            "transferCapacity": [0.22], // Note: Capacity array length mismatch, will be fixed by repair
+            "transferCapacity": [0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22], // Note: Capacity array length mismatch, will be fixed by repair
             "thrust": 50,
             "centerDistance": 264, // Note: Same as 300/HC300? Needs verification
             "weight": 680,
@@ -2376,7 +2492,7 @@ export const embeddedGearboxData = {
             "model": "GCS320",
             "inputSpeedRange": [1000, 2500], // Placeholder
             "ratios": [2.0, 2.5, 3.0, 3.5, 4.0], // Placeholder
-            "transferCapacity": [0.15], // Placeholder
+            "transferCapacity": [0.15, 0.15, 0.15, 0.15, 0.15], // Placeholder
             "thrust": 50, // Placeholder
             "centerDistance": null, // Missing
             "weight": 1200, // Estimated
@@ -2395,7 +2511,7 @@ export const embeddedGearboxData = {
             "model": "GCH390",
             "inputSpeedRange": [1000, 2500], // Placeholder
             "ratios": [2.0, 2.5, 3.0, 3.5, 4.0], // Placeholder
-            "transferCapacity": [0.2], // Placeholder
+            "transferCapacity": [0.2, 0.2, 0.2, 0.2, 0.2], // Placeholder
             "thrust": 70, // Placeholder
             "centerDistance": null, // Missing
             "weight": 1600, // Estimated
@@ -2433,7 +2549,7 @@ export const embeddedGearboxData = {
             "model": "GCS540",
             "inputSpeedRange": [1000, 2000], // Placeholder
             "ratios": [2.0, 2.5, 3.0, 3.5, 4.0], // Placeholder
-            "transferCapacity": [0.3], // Placeholder
+            "transferCapacity": [0.3, 0.3, 0.3, 0.3, 0.3], // Placeholder
             "thrust": 100, // Placeholder
             "centerDistance": null, // Missing
             "weight": 3200, // Estimated
@@ -2452,7 +2568,7 @@ export const embeddedGearboxData = {
             "model": "GCH750",
             "inputSpeedRange": [1000, 2000], // Placeholder
             "ratios": [2.0, 2.5, 3.0, 3.5, 4.0], // Placeholder
-            "transferCapacity": [0.4], // Placeholder
+            "transferCapacity": [0.4, 0.4, 0.4, 0.4, 0.4], // Placeholder
             "thrust": 130, // Placeholder
             "centerDistance": null, // Missing
             "weight": 4500, // Estimated
@@ -2471,7 +2587,7 @@ export const embeddedGearboxData = {
             "model": "GCS1000",
             "inputSpeedRange": [1000, 2000], // Placeholder
             "ratios": [2.0, 2.5, 3.0, 3.5, 4.0], // Placeholder
-            "transferCapacity": [0.5], // Placeholder
+            "transferCapacity": [0.5, 0.5, 0.5, 0.5, 0.5], // Placeholder
             "thrust": 150, // Placeholder
             "centerDistance": null, // Missing
             "weight": 6500, // Estimated
@@ -2490,7 +2606,7 @@ export const embeddedGearboxData = {
             "model": "GCSE20", // Found in OCR Doc 1 P7, marked as high-speed
             "inputSpeedRange": [2000, 3000], // Estimated high speed
             "ratios": [2.0, 2.5, 3.0, 3.5, 4.0], // Placeholder
-            "transferCapacity": [0.1], // Placeholder
+            "transferCapacity": [0.1, 0.1, 0.1, 0.1, 0.1], // Placeholder
             "thrust": 30, // Placeholder
             "centerDistance": null, // Missing
             "weight": 1800, // Estimated
