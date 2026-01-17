@@ -91,7 +91,8 @@ export const generateContract = (selectionResult, projectInfo, selectedComponent
     packagingFeeArrangement: '包装费包含在总价中',
     paymentMethod: '买方签收后30天内支付全部款项',
     disputeResolution: '争议解决方式：双方协商解决，协商不成，提交上海仲裁委员会仲裁。',
-    specialRequirements: '无',
+    // 使用从技术协议传入的特殊订货要求，保持与技术协议同步
+    specialRequirements: priceInfo.specialRequirements || '无',
     expiryDate: expiryDateStr,
     contractCopies: '本合同一式两份，买卖双方各执一份，两份具有同等法律效力。'
   };
@@ -112,8 +113,11 @@ export const generateContract = (selectionResult, projectInfo, selectedComponent
     contract.products.push(contract.coupling);
   }
 
-  // 如果有备用泵，添加到产品列表
-  if (pump) {
+  // 如果有备用泵且确实需要备用泵，添加到产品列表
+  // priceInfo.needsPump: 齿轮箱是否需要备用泵 (从选型结果判断)
+  // priceInfo.includePump: 用户是否选择包含备用泵 (从报价单选项)
+  const shouldIncludePump = pump && priceInfo.needsPump !== false && priceInfo.includePump !== false;
+  if (shouldIncludePump) {
     const pumpProduct = {
       name: '备用泵',
       model: pump.model,
@@ -124,7 +128,7 @@ export const generateContract = (selectionResult, projectInfo, selectedComponent
       amount: pump.marketPrice || pump.factoryPrice || 0,
       deliveryQuarter: currentQuarter
     };
-    
+
     contract.products.push(pumpProduct);
   }
 

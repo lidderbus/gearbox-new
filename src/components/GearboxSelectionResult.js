@@ -150,6 +150,97 @@ const GearboxSelectionResult = ({
                       <td>价格</td>
                       <td>{(selectedGearbox.marketPrice || 0).toLocaleString()} 元</td>
                     </tr>
+                    {/* 输入接口信息 */}
+                    {selectedGearbox.inputInterfaces && (
+                      <>
+                        {selectedGearbox.inputInterfaces.sae && selectedGearbox.inputInterfaces.sae.length > 0 && (
+                          <tr>
+                            <td>SAE接口</td>
+                            <td>
+                              {selectedGearbox.inputInterfaces.sae.map((spec, idx) => (
+                                <Badge
+                                  key={idx}
+                                  bg={selectedGearbox.interfaceMatch?.type === 'sae' && selectedGearbox.interfaceMatch?.matched ? 'success' : 'primary'}
+                                  className="me-1"
+                                >
+                                  {spec}
+                                  {selectedGearbox.interfaceMatch?.type === 'sae' &&
+                                   selectedGearbox.interfaceMatch?.spec === spec &&
+                                   <i className="bi bi-check-circle-fill ms-1"></i>}
+                                </Badge>
+                              ))}
+                            </td>
+                          </tr>
+                        )}
+                        {selectedGearbox.inputInterfaces.domestic && selectedGearbox.inputInterfaces.domestic.length > 0 && (
+                          <tr>
+                            <td>国内机接口</td>
+                            <td>
+                              {selectedGearbox.inputInterfaces.domestic.map((spec, idx) => (
+                                <Badge
+                                  key={idx}
+                                  bg={selectedGearbox.interfaceMatch?.type === 'domestic' && selectedGearbox.interfaceMatch?.matched ? 'success' : 'info'}
+                                  className="me-1"
+                                >
+                                  {spec}
+                                  {selectedGearbox.interfaceMatch?.type === 'domestic' &&
+                                   selectedGearbox.interfaceMatch?.spec === spec &&
+                                   <i className="bi bi-check-circle-fill ms-1"></i>}
+                                </Badge>
+                              ))}
+                            </td>
+                          </tr>
+                        )}
+                        {selectedGearbox.inputInterfaces.type && (
+                          <tr>
+                            <td>驱动类型</td>
+                            <td>
+                              <Badge bg="secondary">{selectedGearbox.inputInterfaces.type}</Badge>
+                              {selectedGearbox.inputInterfaces.note && (
+                                <span className="ms-2 text-muted small">{selectedGearbox.inputInterfaces.note}</span>
+                              )}
+                            </td>
+                          </tr>
+                        )}
+                      </>
+                    )}
+                    {/* 接口兼容性状态 */}
+                    {selectedGearbox.interfaceMatch && (
+                      <tr className={selectedGearbox.interfaceMatch.matched ? 'table-success' : 'table-warning'}>
+                        <td>接口兼容性</td>
+                        <td>
+                          {selectedGearbox.interfaceMatch.matched ? (
+                            <>
+                              <Badge bg="success"><i className="bi bi-check-circle-fill me-1"></i>匹配</Badge>
+                              <span className="ms-2">
+                                支持 {selectedGearbox.interfaceMatch.type === 'sae' ? 'SAE' : '国内机'} {selectedGearbox.interfaceMatch.spec}
+                              </span>
+                            </>
+                          ) : selectedGearbox.interfaceMatch.needsAdapter ? (
+                            <>
+                              <Badge bg="warning" text="dark"><i className="bi bi-exclamation-triangle-fill me-1"></i>需转接</Badge>
+                              <span className="ms-2 text-muted">
+                                需要转接法兰 ({selectedGearbox.interfaceMatch.spec} → 可用接口)
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <Badge bg="danger"><i className="bi bi-x-circle-fill me-1"></i>不匹配</Badge>
+                              <span className="ms-2 text-muted">
+                                不支持 {selectedGearbox.interfaceMatch.type === 'sae' ? 'SAE' : '国内机'} {selectedGearbox.interfaceMatch.spec}
+                              </span>
+                            </>
+                          )}
+                        </td>
+                      </tr>
+                    )}
+                    {/* 无接口数据提示 */}
+                    {!selectedGearbox.inputInterfaces && (
+                      <tr>
+                        <td>输入接口</td>
+                        <td><span className="text-muted">暂无接口数据</span></td>
+                      </tr>
+                    )}
                     {isPartialMatch && selectedGearbox.failureReason && (
                       <tr className="table-warning">
                         <td>匹配度不足原因</td>

@@ -4,11 +4,13 @@ import { flexibleCouplings } from '../data/flexibleCouplings';
 import { standbyPumps } from '../data/standbyPumps';
 import { adaptBasicData } from './dataAdapter';
 import { validateCriticalData } from './dataValidator';
-import { 
+import {
   processPriceData,
   fixSpecificModelPrices,
-  getStandardDiscountRate 
+  getStandardDiscountRate
 } from './priceManager';
+// 性能优化: 导入懒加载工具
+import { loadQuickData, loadRemainingData, loadFullData, getLoadingStatus } from './dataLazyLoader';
 
 export async function loadAndPrepareData(options = {}) {
   const { onProgress } = options;
@@ -158,3 +160,76 @@ function mergeArrays(baseArray, newArray) {
   
   return Array.from(modelMap.values());
 }
+
+/**
+ * 性能优化: 快速加载模式
+ * 首先加载最常用的HC系列数据用于首屏显示
+ * 剩余数据在后台加载
+ * @param {Object} options - 配置选项
+ * @returns {Promise<Object>} 快速加载的数据
+ */
+export async function loadQuickModeData(options = {}) {
+  const { onProgress, onBackgroundComplete } = options;
+
+  try {
+    onProgress?.('quick loading HC series');
+    console.log("DataLoader: 快速加载模式启动...");
+
+    // 1. 快速加载HC系列
+    const quickData = await loadQuickData();
+
+    // 2. 添加联轴器和备用泵数据
+    const baseData = {
+      ...quickData,
+      flexibleCouplings: flexibleCouplings || [],
+      standbyPumps: standbyPumps || [],
+      _loadMode: 'quick'
+    };
+
+    // 3. 基础适配和价格处理
+    const adaptedData = adaptBasicData(baseData);
+    const priceFixResult = processPriceData(adaptedData);
+    const finalData = fixSpecificModelPrices(priceFixResult.data);
+
+    // 4. 后台加载剩余数据
+    setTimeout(() => {
+      loadRemainingData(
+        (loaded, total, series) => {
+          console.log(`DataLoader: 后台加载进度 ${loaded}/${total} - ${series}`);
+        },
+        (fullData) => {
+          console.log("DataLoader: 后台加载完成");
+          if (onBackgroundComplete) {
+            // 重新处理完整数据
+            const fullBaseData = {
+              ...fullData,
+              flexibleCouplings: flexibleCouplings || [],
+              standbyPumps: standbyPumps || []
+            };
+            const fullAdaptedData = adaptBasicData(fullBaseData);
+            const fullPriceResult = processPriceData(fullAdaptedData);
+            const fullFinalData = fixSpecificModelPrices(fullPriceResult.data);
+            onBackgroundComplete(fullFinalData);
+          }
+        }
+      );
+    }, 100);
+
+    return finalData;
+
+  } catch (error) {
+    console.error("DataLoader: 快速加载失败，回退到完整加载", error);
+    return loadAndPrepareData(options);
+  }
+}
+
+/**
+ * 获取数据加载状态
+ * @returns {Object} 加载状态信息
+ */
+export function getDataLoadingStatus() {
+  return getLoadingStatus();
+}
+
+// 导出懒加载工具供外部使用
+export { loadQuickData, loadRemainingData, loadFullData } from './dataLazyLoader';

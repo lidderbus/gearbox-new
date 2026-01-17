@@ -1,0 +1,81 @@
+/**
+ * 双机布置平面示意图样式
+ * Twin Engine Arrangement Diagram Styles
+ */
+
+.twin-engine-diagram {
+  display: block;
+  margin: 20px auto;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
+/* 打印优化 */
+@media print {
+  .twin-engine-diagram {
+    border: 1px solid #cccccc;
+    page-break-inside: avoid;
+    max-width: 100%;
+    width: 650px;
+    height: auto;
+  }
+
+  .twin-engine-diagram text {
+    fill: #000000 !important;
+  }
+
+  .twin-engine-diagram rect,
+  .twin-engine-diagram circle,
+  .twin-engine-diagram ellipse,
+  .twin-engine-diagram polygon {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+/* PDF导出优化 */
+.twin-engine-diagram.pdf-mode {
+  border: none;
+  box-shadow: none;
+}
+
+/* 推进线组件悬停效果 - 仅用于Web交互 */
+.propulsion-line rect,
+.propulsion-line circle,
+.propulsion-line ellipse {
+  transition: opacity 0.2s ease;
+}
+
+/* 响应式调整 */
+@media screen and (max-width: 768px) {
+  .twin-engine-diagram {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* 嵌入到技术协议时的容器样式 */
+.arrangement-diagram-container {
+  width: 100%;
+  text-align: center;
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #fafafa;
+  border-radius: 4px;
+}
+
+.arrangement-diagram-container .diagram-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* 协议模板内的图表样式 */
+.agreement-content .twin-engine-diagram {
+  margin: 10px auto;
+  display: block;
+}

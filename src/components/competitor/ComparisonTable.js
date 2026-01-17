@@ -14,6 +14,7 @@ import {
   getManufacturerInfo
 } from '../../utils/competitorAnalysis';
 import { hangchiAdvantages } from '../../data/competitorData';
+import { formatPowerRange } from '../../utils/gearboxDataEnhancer';
 
 const ComparisonTable = ({
   hangchiProduct,
@@ -159,9 +160,7 @@ const ComparisonTable = ({
           <tr>
             <td>功率范围</td>
             <td>
-              {hangchiProduct.minPower && hangchiProduct.maxPower
-                ? `${hangchiProduct.minPower}-${hangchiProduct.maxPower} kW`
-                : '-'}
+              {formatPowerRange(hangchiProduct)}
             </td>
             {competitors.map(comp => (
               <td key={comp.model}>
@@ -172,8 +171,8 @@ const ComparisonTable = ({
           <tr>
             <td>转速范围</td>
             <td>
-              {hangchiProduct.minSpeed && hangchiProduct.maxSpeed
-                ? `${hangchiProduct.minSpeed}-${hangchiProduct.maxSpeed} rpm`
+              {hangchiProduct.speedRange?.length === 2
+                ? `${hangchiProduct.speedRange[0]}-${hangchiProduct.speedRange[1]} rpm`
                 : '-'}
             </td>
             {competitors.map(comp => (
@@ -257,7 +256,7 @@ const ComparisonTable = ({
           <tr>
             <td>交货周期</td>
             <td style={getAdvantageStyle(competitorAdvantages.some(a => a.deliveryAdvantage?.isAdvantage))}>
-              {formatDelivery(hangchiAdvantages.deliveryAdvantage.hangchiWeeks)}
+              {formatDelivery(hangchiProduct.deliveryWeeks || hangchiAdvantages.deliveryAdvantage.hangchiWeeks)}
               {competitorAdvantages.some(a => a.deliveryAdvantage?.isAdvantage) &&
                 renderAdvantageTag(true, '更快')}
             </td>
@@ -275,7 +274,7 @@ const ComparisonTable = ({
           <tr>
             <td>质保期限</td>
             <td style={getAdvantageStyle(competitorAdvantages.some(a => a.warrantyAdvantage?.isAdvantage))}>
-              {hangchiAdvantages.warrantyAdvantage.hangchiMonths}个月
+              {hangchiProduct.warrantyMonths || hangchiAdvantages.warrantyAdvantage.hangchiMonths}个月
               {competitorAdvantages.some(a => a.warrantyAdvantage?.isAdvantage) &&
                 renderAdvantageTag(true, '更长')}
             </td>

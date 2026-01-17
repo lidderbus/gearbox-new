@@ -1,0 +1,537 @@
+/**
+ * MobileGearboxSelection.css - 移动端选型页面样式
+ */
+
+/* ==================== 基础布局 ==================== */
+.mobile-selection {
+  padding: 12px;
+  padding-bottom: 80px; /* 为底部导航留空间 */
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.mobile-selection.dark-theme {
+  background: #121212;
+}
+
+/* ==================== 选型卡片 ==================== */
+.mobile-selection-card {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.dark-theme .mobile-selection-card {
+  background: #1e1e1e;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+}
+
+.header-icon {
+  font-size: 1.3rem;
+}
+
+.mobile-card-body {
+  padding: 16px;
+}
+
+/* ==================== 快速预设 ==================== */
+.quick-presets {
+  margin-bottom: 20px;
+}
+
+.preset-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.dark-theme .preset-label {
+  color: #aaa;
+}
+
+.preset-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.preset-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 8px;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: #333;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dark-theme .preset-btn {
+  background: #2d2d2d;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.preset-btn:active {
+  transform: scale(0.98);
+  border-color: #1976d2;
+  background: rgba(25, 118, 210, 0.1);
+}
+
+.preset-icon {
+  font-size: 1.3rem;
+}
+
+.preset-text {
+  font-weight: 500;
+}
+
+/* ==================== 表单输入 ==================== */
+.input-group-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobile-form-group {
+  margin-bottom: 0;
+}
+
+.mobile-form-group .form-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.dark-theme .mobile-form-group .form-label {
+  color: #e0e0e0;
+}
+
+.mobile-input {
+  height: 50px;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  padding: 8px 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.dark-theme .mobile-input {
+  background: #2d2d2d;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.mobile-input:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
+}
+
+/* ==================== 速比选择器 ==================== */
+.ratio-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ratio-input {
+  flex: none;
+}
+
+.ratio-quick-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ratio-btn {
+  min-width: 48px;
+  height: 36px;
+  padding: 0 12px;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 18px;
+  font-size: 0.85rem;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.dark-theme .ratio-btn {
+  background: #333;
+  border-color: #555;
+  color: #ccc;
+}
+
+.ratio-btn.active {
+  background: #1976d2;
+  border-color: #1976d2;
+  color: white;
+}
+
+.ratio-btn:active {
+  transform: scale(0.95);
+}
+
+/* ==================== 高级选项 ==================== */
+.advanced-toggle {
+  margin: 16px 0;
+}
+
+.advanced-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0;
+  color: #666;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.dark-theme .advanced-btn {
+  color: #aaa;
+}
+
+.advanced-options {
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.dark-theme .advanced-options {
+  background: #2d2d2d;
+}
+
+/* ==================== 选型按钮 ==================== */
+.selection-btn {
+  width: 100%;
+  height: 54px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  border: none;
+}
+
+.selection-btn:disabled {
+  background: #ccc;
+  opacity: 0.7;
+}
+
+/* ==================== 错误提示 ==================== */
+.mobile-alert {
+  margin-top: 16px;
+  border-radius: 12px;
+  border: none;
+}
+
+/* ==================== 选型结果 ==================== */
+.mobile-results {
+  margin-top: 20px;
+}
+
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.results-header h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+}
+
+.dark-theme .results-header h3 {
+  color: #e0e0e0;
+}
+
+/* ==================== 结果指示器 ==================== */
+.results-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.indicator-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ddd;
+  border: none;
+  padding: 0;
+  transition: all 0.2s;
+}
+
+.dark-theme .indicator-dot {
+  background: #555;
+}
+
+.indicator-dot.active {
+  background: #1976d2;
+  transform: scale(1.3);
+}
+
+/* ==================== 结果卡片 ==================== */
+.result-card {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.dark-theme .result-card {
+  background: #1e1e1e;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: linear-gradient(135deg, #4caf50 0%, #43a047 100%);
+  color: white;
+  border: none;
+}
+
+.result-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.result-icon {
+  font-size: 1.3rem;
+}
+
+.result-model {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.result-series {
+  font-size: 0.8rem;
+}
+
+.result-body {
+  padding: 16px;
+}
+
+/* ==================== 规格显示 ==================== */
+.result-specs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.dark-theme .spec-item {
+  background: #2d2d2d;
+}
+
+.spec-label {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.spec-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.dark-theme .spec-value {
+  color: #e0e0e0;
+}
+
+/* ==================== 价格显示 ==================== */
+.result-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.dark-theme .result-price {
+  background: linear-gradient(135deg, #3e2723 0%, #4e342e 100%);
+}
+
+.price-label {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.dark-theme .price-label {
+  color: #bbb;
+}
+
+.price-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #e65100;
+}
+
+.dark-theme .price-value {
+  color: #ffb74d;
+}
+
+/* ==================== 结果操作按钮 ==================== */
+.result-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.action-btn {
+  flex: 1;
+  height: 44px;
+  font-size: 0.9rem;
+  border-radius: 10px;
+}
+
+.action-btn.select-btn {
+  flex: 2;
+  font-weight: 600;
+}
+
+/* ==================== 结果列表 ==================== */
+.results-list {
+  margin-top: 24px;
+}
+
+.results-list h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.dark-theme .results-list h4 {
+  color: #aaa;
+}
+
+.result-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 16px;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.dark-theme .result-list-item {
+  background: #1e1e1e;
+  border-color: #333;
+}
+
+.result-list-item.selected {
+  border-color: #1976d2;
+  background: rgba(25, 118, 210, 0.05);
+}
+
+.dark-theme .result-list-item.selected {
+  background: rgba(25, 118, 210, 0.15);
+}
+
+.result-list-item:active {
+  transform: scale(0.99);
+}
+
+.list-item-model {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+
+.dark-theme .list-item-model {
+  color: #e0e0e0;
+}
+
+.list-item-series {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+/* ==================== 触摸优化 ==================== */
+@media (hover: none) and (pointer: coarse) {
+  .preset-btn,
+  .ratio-btn,
+  .action-btn,
+  .result-list-item {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* ==================== 横屏适配 ==================== */
+@media (orientation: landscape) and (max-height: 500px) {
+  .mobile-selection {
+    padding: 8px;
+  }
+
+  .preset-buttons {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .input-group-mobile {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .mobile-form-group {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .result-specs {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

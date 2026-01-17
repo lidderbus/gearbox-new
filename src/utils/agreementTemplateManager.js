@@ -6,12 +6,13 @@
  */
 
 // 导入模板
-import { 
-  gwcChineseTemplate, 
-  gwcEnglishTemplate, 
-  hctChineseTemplate, 
-  hcChineseTemplate, 
-  dtChineseTemplate 
+import {
+  gwcChineseTemplate,
+  gwcEnglishTemplate,
+  hctChineseTemplate,
+  hcChineseTemplate,
+  dtChineseTemplate,
+  hcqChineseTemplate
 } from './agreementTemplates';
 
 // 协议模板类型枚举
@@ -20,6 +21,7 @@ export const TemplateType = {
   HCT: 'HCT',     // HCT系列船用齿轮箱
   HC: 'HC',       // HC系列船用齿轮箱
   DT: 'DT',       // DT系列船用齿轮箱
+  HCQ: 'HCQ',     // HCQ系列船用齿轮箱（高扭矩大功率）
   HCD: 'HCD',     // HCD系列船用齿轮箱
 };
 
@@ -52,6 +54,9 @@ export const getAgreementTemplate = (templateType, language, options = {}) => {
       break;
     case TemplateType.DT:
       template = dtChineseTemplate;
+      break;
+    case TemplateType.HCQ:
+      template = hcqChineseTemplate;
       break;
     case TemplateType.HCD:
       template = hcChineseTemplate; // 与HC系列使用相同模板

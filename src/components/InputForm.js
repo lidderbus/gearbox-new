@@ -1,6 +1,11 @@
 // components/InputForm.js
 import React from 'react';
 import { Form, Button, Row, Col, Card, Spinner } from 'react-bootstrap';
+import SelectionGuidelines, { HelpTooltip, SeriesCharacteristicsBadge } from './SelectionGuidelines';
+import HybridConfigPanel from './HybridConfigPanel';
+import WeightConfigPanel from './WeightConfigPanel';
+import ToleranceConfigPanel from './ToleranceConfigPanel';
+import SmartHintsPanel from './SmartHintsPanel';
 
 /**
  * Input form component for gearbox selection
@@ -16,6 +21,10 @@ import { Form, Button, Row, Col, Card, Spinner } from 'react-bootstrap';
  * @param {Function} props.onSelect - Function to trigger selection process
  * @param {boolean} props.loading - Loading state
  * @param {Object} props.colors - Theme colors object
+ * @param {Object} props.hybridConfig - Hybrid propulsion configuration (optional)
+ * @param {Function} props.setHybridConfig - Function to update hybrid config (optional)
+ * @param {Object} props.selectionDiagnostics - Selection diagnostics for smart hints (optional)
+ * @param {boolean} props.showConfigPanels - Whether to show config panels (optional, default true)
  * @returns {JSX.Element} Input form component
  */
 const InputForm = ({
@@ -29,7 +38,11 @@ const InputForm = ({
   setGearboxType,
   onSelect,
   loading,
-  colors = {}
+  colors = {},
+  hybridConfig = null,
+  setHybridConfig = null,
+  selectionDiagnostics = null,
+  showConfigPanels = true
 }) => {
   // Handlers
   const handleEngineDataChange = (field, value) => {
@@ -55,6 +68,29 @@ const InputForm = ({
 
   return (
     <div className="input-form">
+      {/* 选型须知面板 */}
+      <SelectionGuidelines colors={colors} defaultOpen={false} />
+
+      {/* 智能提示面板 - 显示选型诊断信息 */}
+      {selectionDiagnostics && (
+        <SmartHintsPanel
+          diagnostics={selectionDiagnostics}
+          colors={colors}
+        />
+      )}
+
+      {/* 评分与容差配置面板 */}
+      {showConfigPanels && (
+        <Row className="mb-3">
+          <Col lg={6} md={12}>
+            <WeightConfigPanel colors={colors} compact={false} />
+          </Col>
+          <Col lg={6} md={12}>
+            <ToleranceConfigPanel colors={colors} compact={false} />
+          </Col>
+        </Row>
+      )}
+
       <Row>
         <Col lg={6} md={12}>
           <Card className="mb-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
@@ -86,6 +122,8 @@ const InputForm = ({
                   {gearboxType === 'DT' && <p>DT系列齿轮箱，适用于大型船舶的主推进动力系统，具有高推力承载能力。</p>}
                   {gearboxType === 'HCQ' && <p>HCQ系列齿轮箱，适用于需要轻量化设计的高速船艇推进系统。</p>}
                   {gearboxType === 'GC' && <p>GC系列齿轮箱，适用于特种工作船的推进系统，具有特殊工况适应能力。</p>}
+                  {/* 系列技术特性徽章 */}
+                  <SeriesCharacteristicsBadge seriesType={gearboxType} style={{ marginTop: '10px' }} />
                 </div>
               </Form>
             </Card.Body>
@@ -97,7 +135,10 @@ const InputForm = ({
             <Card.Body style={{ padding: '1.5rem' }}>
               <Form>
                 <Form.Group className="mb-3">
-                  <Form.Label>目标减速比</Form.Label>
+                  <Form.Label>
+                    目标减速比
+                    <HelpTooltip id="ratio-help" content="减速比 = 输入转速 ÷ 输出转速，减速比越大输出扭矩越大" />
+                  </Form.Label>
                   <Form.Control
                     type="number"
                     value={requirementData.targetRatio}
@@ -186,7 +227,10 @@ const InputForm = ({
             <Card.Body style={{ padding: '1.5rem' }}>
               <Form>
                 <Form.Group className="mb-3">
-                  <Form.Label>主机功率 (kW)</Form.Label>
+                  <Form.Label>
+                    主机功率 (kW)
+                    <HelpTooltip id="power-help" content="传递能力 = 功率 ÷ 转速 (kW/r·min⁻¹)" />
+                  </Form.Label>
                   <Form.Control
                     type="number"
                     value={engineData.power}
@@ -197,7 +241,10 @@ const InputForm = ({
                 </Form.Group>
                 
                 <Form.Group className="mb-3">
-                  <Form.Label>主机转速 (r/min)</Form.Label>
+                  <Form.Label>
+                    主机转速 (r/min)
+                    <HelpTooltip id="speed-help" content="发动机额定转速，齿轮箱输入转速范围需覆盖此值" />
+                  </Form.Label>
                   <Form.Control
                     type="number"
                     value={engineData.speed}
@@ -236,12 +283,12 @@ const InputForm = ({
           >
             {loading ? (
               <>
-                <Spinner 
-                  as="span" 
-                  animation="border" 
-                  size="sm" 
-                  role="status" 
-                  aria-hidden="true" 
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
                   className="me-2"
                 />
                 正在选型...
@@ -255,6 +302,21 @@ const InputForm = ({
           )}
         </Col>
       </Row>
+
+      {/* 混合动力配置面板 (可选功能) */}
+      {setHybridConfig && (
+        <Row className="mt-3">
+          <Col>
+            <HybridConfigPanel
+              hybridConfig={hybridConfig}
+              setHybridConfig={setHybridConfig}
+              enginePower={engineData.power}
+              colors={colors}
+              collapsed={true}
+            />
+          </Col>
+        </Row>
+      )}
     </div>
   );
 };

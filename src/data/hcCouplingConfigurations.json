@@ -1,0 +1,718 @@
+{
+  "source_file": "HC高弹及主机配套20210426-大功率汇总.xlsx",
+  "update_date": "2021-04-26",
+  "configurations": [
+    {
+      "gearbox_models": [
+        "HCD800",
+        "HCT800",
+        "HCT800/1",
+        "HCT800/2",
+        "HCT800/3"
+      ],
+      "coupling_type": "",
+      "config_rules": [
+        "1、常规配置（带罩/无罩）：高弹HGTHT8.6系列",
+        "2、选用配置：可拆式高弹HGTHT8.6系列",
+        "3、选用配置：齿形块联轴器"
+      ],
+      "couplings": [
+        {
+          "model": "HGTHT8.6/14",
+          "part_number": "10071467",
+          "spec": "配SAE14\""
+        },
+        {
+          "model": "HGTHT8.6/16",
+          "part_number": "10043443",
+          "spec": "配SAE16\""
+        },
+        {
+          "model": "HGTHT8.6/18",
+          "part_number": "10043444",
+          "spec": "配SAE18\""
+        },
+        {
+          "model": "HGTHT8.6/21",
+          "part_number": "10043445",
+          "spec": "配SAE21\""
+        },
+        {
+          "model": "HGTHT8.6/φ505",
+          "part_number": "10043446",
+          "spec": "配国内机505"
+        },
+        {
+          "model": "HGTHT8.6/φ518",
+          "part_number": "10043447",
+          "spec": "配国内机518"
+        },
+        {
+          "model": "HGTHT8.6/18X3",
+          "part_number": "10083772",
+          "spec": "可拆式，SAE18\""
+        },
+        {
+          "model": "HGTHT8.6/21X11",
+          "part_number": "10098850",
+          "spec": "可拆式，SAE21\""
+        },
+        {
+          "model": "HGTLX8.6/16-03",
+          "part_number": "10059486",
+          "spec": ""
+        },
+        {
+          "model": "HGTLX8.6/18-03",
+          "part_number": "10056723",
+          "spec": ""
+        },
+        {
+          "model": "HGTLX8.6/21-03",
+          "part_number": "10066390",
+          "spec": ""
+        }
+      ]
+    },
+    {
+      "gearbox_models": [
+        "HC1000",
+        "HCD1000"
+      ],
+      "coupling_type": "",
+      "config_rules": [
+        "1、常规配置：“无罩”，高弹HGTHB5系列",
+        "2、选用配置：“带罩”，高弹HGTHJB5（加强型）系列",
+        "3、选用配置：“可拆式”高弹HGTHB5系列",
+        "4、选用配置：齿形块联轴器"
+      ],
+      "couplings": [
+        {
+          "model": "HGTHB5/18",
+          "part_number": "10044917",
+          "spec": "配SAE18\""
+        },
+        {
+          "model": "HGTHB5/21",
+          "part_number": "10044918",
+          "spec": "配SAE21\""
+        },
+        {
+          "model": "HGTHB5/φ505",
+          "part_number": "10059932",
+          "spec": "配国内机505"
+        },
+        {
+          "model": "HGTHB5/φ518",
+          "part_number": "10030718",
+          "spec": "配国内机518"
+        },
+        {
+          "model": "HGTHB5/φ640",
+          "part_number": "10078735",
+          "spec": "配国内机640"
+        },
+        {
+          "model": "HGTHB5/φ640A",
+          "part_number": "10078736",
+          "spec": "配国内机640"
+        },
+        {
+          "model": "HGTHJB5/18",
+          "part_number": "10030719",
+          "spec": "配SAE18\"，带罩"
+        },
+        {
+          "model": "HGTHJB5/21",
+          "part_number": "10044919",
+          "spec": "配SAE21\"，带罩"
+        }
+      ]
+    },
+    {
+      "gearbox_models": [
+        "HC1200",
+        "HC1200/1"
+      ],
+      "coupling_type": "",
+      "config_rules": [
+        "1、常规配置：“无罩”，高弹HGTQ1215系列",
+        "2、选用配置：“无罩”，高弹HGTHB6.3系列",
+        "3、选用配置：“可拆式”高弹HGTHB6.3系列",
+        "4、选用配置：“带罩”，高弹HGTHJB6.3（加强型）系列",
+        "5、选用配置：齿形块联轴器"
+      ],
+      "couplings": [
+        {
+          "model": "HGTQ1215ⅠD /16",
+          "part_number": "10078731",
+          "spec": "配SAE16\""
+        },
+        {
+          "model": "HGTQ1215ⅠD /18",
+          "part_number": "10044078",
+          "spec": "配SAE18\""
+        },
+        {
+          "model": "HGTQ1210ⅠW /18/Φ96",
+          "part_number": "10044078",
+          "spec": "配SAE18\""
+        },
+        {
+          "model": "HGTQ1215ⅠD /21",
+          "part_number": "10044256",
+          "spec": "配SAE21\""
+        },
+        {
+          "model": "HGTQ1210ⅠW /21/Φ96",
+          "part_number": "10044256",
+          "spec": "配SAE21\""
+        },
+        {
+          "model": "HGTQ1215ⅠD /φ518",
+          "part_number": "10044077",
+          "spec": "配国内机518"
+        },
+        {
+          "model": "HGTQ1210ⅠW /Φ518/Φ96",
+          "part_number": "10044077",
+          "spec": "配国内机518"
+        },
+        {
+          "model": "HGTQ1215ⅠD/φ640",
+          "part_number": "10051916",
+          "spec": "配国内机640"
+        },
+        {
+          "model": "HGTQ1210ⅠW /Φ640/Φ96",
+          "part_number": "10051916",
+          "spec": "配国内机640"
+        },
+        {
+          "model": "HGTQ1215ⅠD/φ640A",
+          "part_number": "10051917",
+          "spec": "配国内机640"
+        },
+        {
+          "model": "HGTQ1210ⅠW /Φ640A/Φ96",
+          "part_number": "10051917",
+          "spec": "配国内机640"
+        },
+        {
+          "model": "HGTQ1215ⅡW /φ290",
+          "part_number": "10078732",
+          "spec": "配国内机290"
+        },
+        {
+          "model": "HGTQ1215ⅠD /φ800",
+          "part_number": "10078902",
+          "spec": "配国内机800"
+        },
+        {
+          "model": "HGTHB6.3/16",
+          "part_number": "10078730",
+          "spec": "配SAE16\""
+        },
+        {
+          "model": "HGTHB6.3/18",
+          "part_number": "10058824",
+          "spec": "配SAE18\""
+        },
+        {
+          "model": "HGTHB6.3/21",
+          "part_number": "10058823",
+          "spec": "配SAE21\""
+        },
+        {
+          "model": "HGTHB6.3/φ518",
+          "part_number": "10058822",
+          "spec": "配国内机518"
+        },
+        {
+          "model": "HGTHB6.3/φ640",
+          "part_number": "10045917",
+          "spec": "配国内机640"
+        },
+        {
+          "model": "HGTHB6.3/φ640A",
+          "part_number": "10058821",
+          "spec": "配国内机640"
+        },
+        {
+          "model": "HGTHB6.3/φ290",
+          "part_number": "10068959",
+          "spec": "配国内机290"
+        },
+        {
+          "model": "HGTHJB6.3/16",
+          "part_number": "10078729",
+          "spec": "配SAE16\"，带罩"
+        },
+        {
+          "model": "HGTHJB6.3/18",
+          "part_number": "10058826",
+          "spec": "配SAE18\"，带罩"
+        },
+        {
+          "model": "HGTHJB6.3/21",
+          "part_number": "10058825",
+          "spec": "配SAE21\"，带罩"
+        }
+      ]
+    },
+    {
+      "gearbox_models": [
+        "HCT1100",
+        "HCT1200"
+      ],
+      "coupling_type": "",
+      "config_rules": [
+        "1、常规配置：“无罩”，高弹HGTQ1215系列",
+        "2、选用配置：“无罩”，高弹HGTHB6.3系列",
+        "3、选用配置：“可拆式”高弹HGTHB6.3系列",
+        "4、选用配置：“带罩”，高弹HGTHJB6.3（加强型）系列"
+      ],
+      "couplings": [
+        {
+          "model": "HGTQ1215ⅠD/18",
+          "part_number": "10044078",
+          "spec": "配SAE18\""
+        },
+        {
+          "model": "HGTQ1215ⅠD/21",
+          "part_number": "10044256",
+          "spec": "配SAE21\""
+        },
+        {
+          "model": "HGTQ1215ⅠD/φ518",
+          "part_number": "10044077",
+          "spec": "配国内机518"
+        },
+        {
+          "model": "HGTHB6.3/18",
+          "part_number": "10058824",
+          "spec": "配SAE18\""
+        },
+        {
+          "model": "HGTHB6.3/21",
+          "part_number": "10058823",
+          "spec": "配SAE21\""
+        },
+        {
+          "model": "HGTHB6.3/φ518",
+          "part_number": "10058822",
+          "spec": "配国内机518"
+        },
+        {
+          "model": "HGTHJB6.3/18",
+          "part_number": "10058826",
+          "spec": "配SAE18\"，带罩"
+        },
+        {
+          "model": "HGTHJB6.3/21",
+          "part_number": "10058825",
+          "spec": "配SAE21\"，带罩"
+        },
+        {
+          "model": "HGTHJB6.3/φ518",
+          "part_number": "10058827",
+          "spec": "配国内518，带罩"
+        }
+      ]
+    },
+    {
+      "gearbox_models": [
+        "HCT1200/1"
+      ],
+      "coupling_type": "",
+      "config_rules": [
+        "1、常规配置：“无罩”，高弹HGTHB6.3系列",
+        "2、选用配置：“可拆式”高弹HGTHB6.3系列"
+      ],
+      "couplings": [
+        {
+          "model": "HGTHB6.3/18",
+          "part_number": "10058824",
+          "spec": "配SAE18\""
+        },
+        {
+          "model": "HGTHB6.3/21",
+          "part_number": "10058823",
+          "spec": "配SAE21\""
+        },
+        {
+          "model": "HGTHB6.3/φ518",
+          "part_number": "10058822",
+          "spec": "配国内机518"
+        },
+        {
+          "model": "HGTHB6.3/φ640",
+          "part_number": "10045917",
+          "spec": "配国内机640"
+        },
+        {
+          "model": "HGTHB6.3/φ640A",
+          "part_number": "10058821",
+          "spec": "配国内机640"
+        }
+      ]
+    },
+    {
+      "gearbox_models": [
+        "HCD1400"
+      ],
+      "coupling_type": "",
+      "config_rules": [
+        "1、常规配置：“无罩”，高弹HGTHB8系列",
+        "2、选用配置：“带罩”，高弹HGTHJB8（加强型）系列"
+      ],
+      "couplings": [
+        {
+          "model": "HGTHB8/18",
+          "part_number": "10044482",
+          "spec": "配SAE18\""
+        },
+        {
+          "model": "HGTHB8/21",
+          "part_number": "10038157",
+          "spec": "配SAE21\""
+        },
+        {
+          "model": "HGTHB8/φ518",
+          "part_number": "10044483",
+          "spec": "配国内机518"
+        },
+        {
+          "model": "HGTHB8/φ640",
+          "part_number": "10058830",
+          "spec": "配国内机640"
+        },
+        {
+          "model": "HGTHB8/φ640A",
+          "part_number": "10058829",
+          "spec": "配国内机640"
+        },
+        {
+          "model": "HGTHJB8/21",
+          "part_number": "10058833",
+          "spec": "配SAE18\"，带罩"
+        },
+        {
+          "model": "HGTHJB8/18",
+          "part_number": "10058832",
+          "spec": "配SAE21\"，带罩"
+        },
+        {
+          "model": "HGTHJB8/φ518",
+          "part_number": "10058834",
+          "spec": "配国内518，带罩"
+        }
+      ]
+    },
+    {
+      "gearbox_models": [
+        "HCT1400"
+      ],
+      "coupling_type": "",
+      "config_rules": [
+        "1、常规配置：高弹HGTHB8系列",
+        "2、“可拆式”高弹HGTHB6.3系列"
+      ],
+      "couplings": [
+        {
+          "model": "HGTHB8/18",
+          "part_number": "10044482",
+          "spec": "配SAE18\""
+        },
+        {
+          "model": "HGTHB8/21",
+          "part_number": "10038157",
+          "spec": "配SAE21\""
+        },
+        {
+          "model": "HGTHB8/φ518",
+          "part_number": "10044483",
+          "spec": "配国内机518"
+        },
+        {
+          "model": "HGTHB8/φ540",
+          "part_number": "10050401",
+          "spec": "配国内机518"
+        },
+        {
+          "model": "HGTHB8/φ720",
+          "part_number": "10060157",
+          "spec": "配国内机720"
+        }
+      ]
+    },
+    {
+      "gearbox_models": [
+        "HCT1400/2"
+      ],
+      "coupling_type": "",
+      "config_rules": [],
+      "couplings": [
+        {
+          "model": "HGTHB8/18",
+          "part_number": "10044482",
+          "spec": "配SAE18\""
+        }
+      ]
+    },
+    {
+      "gearbox_models": [
+        "HC1600"
+      ],
+      "coupling_type": "",
+      "config_rules": [
+        "1、常规配置：“无罩”，高弹HGTHB10系列",
+        "2、选用配置：“带罩”，高弹HGTHJB10（加强型）系列"
+      ],
+      "couplings": [
+        {
+          "model": "HGTHB10/18",
+          "part_number": "10049315",
+          "spec": "配SAE18\""
+        },
+        {
+          "model": "HGTHJB10/18",
+          "part_number": "10058838",
+          "spec": "配SAE18\"，带罩"
+        },
+        {
+          "model": "HGTHB10/21",
+          "part_number": "10049316",
+          "spec": "配SAE21\""
+        },
+        {
+          "model": "HGTHB10/φ518",
+          "part_number": "10049867",
+          "spec": "配国内机518"
+        },
+        {
+          "model": "HGTHB10/φ540",
+          "part_number": "10057831",
+          "spec": "配国内机540"
+        }
+      ]
+    },
+    {
+      "gearbox_models": [
+        "HCD1600",
+        "HCT1600",
+        "HCT1600/1"
+      ],
+      "coupling_type": "",
+      "config_rules": [
+        "1、常规配置：高弹HGTHB10系列"
+      ],
+      "couplings": [
+        {
+          "model": "HGTHB10/18",
+          "part_number": "10049315",
+          "spec": "配SAE18\""
+        },
+        {
+          "model": "HGTHB10/21",
+          "part_number": "10049316",
+          "spec": "配SAE21\""
+        },
+        {
+          "model": "HGTHB10/φ518",
+          "part_number": "10049867",
+          "spec": "配国内机518"
+        },
+        {
+          "model": "HGTHB10/φ540",
+          "part_number": "10057831",
+          "spec": "配国内机540"
+        }
+      ]
+    },
+    {
+      "gearbox_models": [
+        "HC2000",
+        "HCD2000",
+        "HCT2000"
+      ],
+      "coupling_type": "",
+      "config_rules": [
+        "1、常规配置：高弹HGTHB12.5系列"
+      ],
+      "couplings": [
+        {
+          "model": "HGTHB12.5/18",
+          "part_number": "10046048",
+          "spec": "配SAE18\""
+        },
+        {
+          "model": "HGTHB12.5/21",
+          "part_number": "10046049",
+          "spec": "配SAE21\""
+        },
+        {
+          "model": "HGTHB12.5/Φ518",
+          "part_number": "10058840",
+          "spec": "配国内机518"
+        },
+        {
+          "model": "HGTHB12.5/Φ640",
+          "part_number": "10058839",
+          "spec": "配国内机640"
+        },
+        {
+          "model": "HGTHB12.5/Φ640A",
+          "part_number": "10058841",
+          "spec": "配国内机640"
+        },
+        {
+          "model": "HGTHB12.5/Φ700",
+          "part_number": "10079988",
+          "spec": "配国内机700"
+        },
+        {
+          "model": "HGTHB12.5/φ770",
+          "part_number": "10048125",
+          "spec": "配国内机770"
+        }
+      ]
+    },
+    {
+      "gearbox_models": [
+        "HCT2000/1"
+      ],
+      "coupling_type": "",
+      "config_rules": [
+        "1、常规配置：高弹HGTHB12.5系列"
+      ],
+      "couplings": [
+        {
+          "model": "HGTHB12.5/18",
+          "part_number": "10046048",
+          "spec": "配SAE18\""
+        },
+        {
+          "model": "HGTHB12.5/21",
+          "part_number": "10046049",
+          "spec": "配SAE21\""
+        },
+        {
+          "model": "HGTHB12.5/Φ700",
+          "part_number": "10079988",
+          "spec": "配Φ700飞轮"
+        },
+        {
+          "model": "HGTHB12.5/φ770",
+          "part_number": "10048125",
+          "spec": "配Φ770飞轮"
+        }
+      ]
+    },
+    {
+      "gearbox_models": [
+        "HCD2700",
+        "HC2700"
+      ],
+      "coupling_type": "",
+      "config_rules": [
+        "1、常规配置：高弹HGTHB16系列",
+        "2、选用配置：“可拆式”高弹HGTHB16系列"
+      ],
+      "couplings": [
+        {
+          "model": "HGTHB16/φ770",
+          "part_number": "10057428",
+          "spec": "配国内机770"
+        }
+      ]
+    },
+    {
+      "gearbox_models": [
+        "HCT2700"
+      ],
+      "coupling_type": "",
+      "config_rules": [],
+      "couplings": []
+    }
+  ],
+  "coupling_series": {
+    "HGTHT8.6": {
+      "name": "HGTHT8.6",
+      "applicable_gearboxes": [],
+      "variants": []
+    },
+    "HGTHB5": {
+      "name": "HGTHB5",
+      "applicable_gearboxes": [],
+      "variants": []
+    },
+    "HGTHJB5": {
+      "name": "HGTHJB5",
+      "applicable_gearboxes": [],
+      "variants": []
+    },
+    "HGTQ1215": {
+      "name": "HGTQ1215",
+      "applicable_gearboxes": [],
+      "variants": []
+    },
+    "HGTHB6.3": {
+      "name": "HGTHB6.3",
+      "applicable_gearboxes": [],
+      "variants": []
+    },
+    "HGTHJB6.3": {
+      "name": "HGTHJB6.3",
+      "applicable_gearboxes": [],
+      "variants": []
+    },
+    "HGTHB8": {
+      "name": "HGTHB8",
+      "applicable_gearboxes": [],
+      "variants": []
+    },
+    "HGTHJB8": {
+      "name": "HGTHJB8",
+      "applicable_gearboxes": [],
+      "variants": []
+    },
+    "HGTHB10": {
+      "name": "HGTHB10",
+      "applicable_gearboxes": [],
+      "variants": []
+    },
+    "HGTHJB10": {
+      "name": "HGTHJB10",
+      "applicable_gearboxes": [],
+      "variants": []
+    },
+    "HGTHB12.5": {
+      "name": "HGTHB12.5",
+      "applicable_gearboxes": [],
+      "variants": []
+    },
+    "HGTHB16": {
+      "name": "HGTHB16",
+      "applicable_gearboxes": [],
+      "variants": []
+    }
+  },
+  "sae_flywheel_specs": [
+    "SAE21\"",
+    "SAE14\"",
+    "SAE18\"",
+    "SAE16\""
+  ],
+  "domestic_flywheel_specs": [
+    "φ290",
+    "φ700",
+    "φ770",
+    "φ800",
+    "φ720",
+    "φ640",
+    "φ540",
+    "φ505",
+    "φ518"
+  ]
+}

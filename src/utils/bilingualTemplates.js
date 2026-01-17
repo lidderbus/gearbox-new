@@ -348,23 +348,151 @@ export const translateSpecialRequirements = (requirements) => {
         });
       }
       
-      // 如果没有找到匹配的模板，使用基本翻译
+      // 如果没有找到匹配的模板，使用增强翻译
       if (!found) {
-        // 简单翻译一些常见短语
-        translatedLine = trimmedLine
-          .replace(/齿轮箱/g, 'gearbox')
-          .replace(/润滑油/g, 'lubricating oil')
-          .replace(/冷却水/g, 'cooling water')
-          .replace(/温度/g, 'temperature')
-          .replace(/压力/g, 'pressure')
-          .replace(/转速/g, 'speed')
-          .replace(/推力/g, 'thrust')
-          .replace(/电控/g, 'electric control')
-          .replace(/监测/g, 'monitoring')
-          .replace(/报警/g, 'alarm')
-          .replace(/效率/g, 'efficiency')
-          .replace(/装置/g, 'device')
-          .replace(/系统/g, 'system');
+        // 完整句子模式匹配翻译（优先级高）
+        const sentencePatterns = [
+          // 性能参数
+          { pattern: /齿轮箱最大输入转速不超过(\d+)r\/min/, replacement: 'Maximum input speed of the gearbox shall not exceed $1 r/min' },
+          { pattern: /齿轮箱机械效率不低于(\d+)%/, replacement: 'Mechanical efficiency of the gearbox shall not be less than $1%' },
+          { pattern: /齿轮箱最大允许螺旋桨轴推力不低于(\d+)kN/, replacement: 'Maximum permissible propeller shaft thrust shall not be less than $1 kN' },
+          { pattern: /齿轮箱最大允许螺旋桨推力不低于(\d+)kN/, replacement: 'Maximum permissible propeller thrust shall not be less than $1 kN' },
+
+          // 倾斜要求
+          { pattern: /齿轮箱允许纵倾不小于(\d+)°[，,]\s*横倾不小于(\d+)°/, replacement: 'Longitudinal inclination of the gearbox shall not be less than $1°, transverse inclination shall not be less than $2°' },
+          { pattern: /允许纵倾不小于(\d+)°[，,]\s*横倾不小于(\d+)°/, replacement: 'Longitudinal inclination shall not be less than $1°, transverse inclination shall not be less than $2°' },
+
+          // 冷却系统
+          { pattern: /冷却水进水温度不高于(\d+)℃/, replacement: 'Cooling water inlet temperature shall not exceed $1°C' },
+          { pattern: /冷却水流量不小于([\d.]+)\s*m³\/h/, replacement: 'Cooling water flow shall not be less than $1 m³/h' },
+          { pattern: /冷却水系统工作压力不大于([\d.]+)\s*MPa/, replacement: 'Cooling water system working pressure shall not exceed $1 MPa' },
+          { pattern: /冷却水压力不大于([\d.]+)\s*MPa/, replacement: 'Cooling water pressure shall not exceed $1 MPa' },
+
+          // 润滑系统
+          { pattern: /齿轮箱润滑油压力范围为([\d.~～\-]+)\s*MPa/, replacement: 'The gearbox lubricating oil pressure range is $1 MPa' },
+          { pattern: /润滑油最高工作温度不超过(\d+)℃/, replacement: 'Maximum lubricating oil working temperature shall not exceed $1°C' },
+          { pattern: /润滑油工作温度不超过(\d+)℃/, replacement: 'Lubricating oil working temperature shall not exceed $1°C' },
+          { pattern: /齿轮箱总油量约为(\d+)\s*L[，,]\s*推荐使用(.+?)润滑油/, replacement: 'Total oil capacity of the gearbox is approximately $1 L, recommended oil grade is $2' },
+          { pattern: /齿轮箱总油量约(\d+)\s*L/, replacement: 'Total oil capacity of the gearbox is approximately $1 L' },
+
+          // 报警装置
+          { pattern: /齿轮箱应配备油压低报警装置[，,]\s*报警值设定为([\d.]+)\s*MPa/, replacement: 'The gearbox shall be equipped with low oil pressure alarm device, with alarm value set at $1 MPa' },
+          { pattern: /齿轮箱应配备油温高报警装置[，,]\s*报警值设定为(\d+)℃/, replacement: 'The gearbox shall be equipped with high oil temperature alarm device, with alarm value set at $1°C' },
+          { pattern: /配备油压低报警装置/, replacement: 'equipped with low oil pressure alarm device' },
+          { pattern: /配备油温高报警装置/, replacement: 'equipped with high oil temperature alarm device' },
+
+          // 连接方式
+          { pattern: /齿轮箱输入轴与主机输出轴采用高弹性联轴器连接/, replacement: 'The gearbox input shaft shall be connected to the main engine output shaft with a high-elastic coupling' },
+          { pattern: /输入轴与主机输出轴采用高弹性联轴器连接/, replacement: 'The input shaft shall be connected to the main engine output shaft with a high-elastic coupling' },
+          { pattern: /采用高弹性联轴器连接/, replacement: 'connected with a high-elastic coupling' },
+
+          // 温度传感器
+          { pattern: /齿轮箱应配备温度传感器和温度报警装置/, replacement: 'The gearbox shall be equipped with temperature sensors and temperature alarm device' },
+          { pattern: /应配备温度传感器/, replacement: 'shall be equipped with temperature sensors' },
+
+          // 冷却适应性
+          { pattern: /齿轮箱冷却系统应能适应海水冷却/, replacement: 'The gearbox cooling system shall be adaptable to seawater cooling' },
+          { pattern: /冷却系统应能适应海水冷却/, replacement: 'The cooling system shall be adaptable to seawater cooling' },
+
+          // 操纵系统
+          { pattern: /齿轮箱操纵系统为(.+?)操纵/, replacement: 'The gearbox control system is $1 control' },
+          { pattern: /操纵系统为(.+?)操纵/, replacement: 'The control system is $1 control' },
+
+          // 换向时间
+          { pattern: /换向时间不大于(\d+)\s*秒/, replacement: 'Shifting time shall not exceed $1 seconds' },
+          { pattern: /换向时间不超过(\d+)\s*秒/, replacement: 'Shifting time shall not exceed $1 seconds' },
+
+          // 噪声
+          { pattern: /齿轮箱噪声不大于(\d+)\s*dB/, replacement: 'Gearbox noise level shall not exceed $1 dB' },
+
+          // 证书要求
+          { pattern: /齿轮箱应持有(.+?)船级社证书/, replacement: 'The gearbox shall hold $1 classification society certificate' },
+          { pattern: /应持有CCS船级社证书/, replacement: 'shall hold CCS classification society certificate' },
+        ];
+
+        // 先尝试句子模式匹配
+        let matched = false;
+        for (const { pattern, replacement } of sentencePatterns) {
+          if (pattern.test(trimmedLine)) {
+            translatedLine = trimmedLine.replace(pattern, replacement);
+            matched = true;
+            break;
+          }
+        }
+
+        // 如果句子模式未匹配，使用增强词汇替换（按句子结构顺序替换）
+        if (!matched) {
+          translatedLine = trimmedLine
+            // 主语
+            .replace(/齿轮箱/g, 'The gearbox')
+            // 条件/限定词（放在前面）
+            .replace(/最大/g, 'maximum ')
+            .replace(/最高/g, 'maximum ')
+            .replace(/最小/g, 'minimum ')
+            .replace(/最低/g, 'minimum ')
+            .replace(/额定/g, 'rated ')
+            // 名词短语
+            .replace(/输入转速/g, 'input speed')
+            .replace(/输出转速/g, 'output speed')
+            .replace(/输入轴/g, 'input shaft')
+            .replace(/输出轴/g, 'output shaft')
+            .replace(/润滑油/g, 'lubricating oil')
+            .replace(/冷却水/g, 'cooling water')
+            .replace(/进水温度/g, 'inlet temperature')
+            .replace(/工作温度/g, 'working temperature')
+            .replace(/工作压力/g, 'working pressure')
+            .replace(/螺旋桨推力/g, 'propeller thrust')
+            .replace(/螺旋桨轴推力/g, 'propeller shaft thrust')
+            .replace(/机械效率/g, 'mechanical efficiency')
+            .replace(/总油量/g, 'total oil capacity')
+            .replace(/油压低/g, 'low oil pressure')
+            .replace(/油温高/g, 'high oil temperature')
+            .replace(/纵倾/g, 'longitudinal inclination')
+            .replace(/横倾/g, 'transverse inclination')
+            .replace(/高弹性联轴器/g, 'high-elastic coupling')
+            .replace(/温度传感器/g, 'temperature sensor')
+            .replace(/报警装置/g, 'alarm device')
+            .replace(/操纵系统/g, 'control system')
+            .replace(/冷却系统/g, 'cooling system')
+            .replace(/换向时间/g, 'shifting time')
+            // 单独名词
+            .replace(/温度/g, 'temperature')
+            .replace(/压力/g, 'pressure')
+            .replace(/转速/g, 'speed')
+            .replace(/推力/g, 'thrust')
+            .replace(/效率/g, 'efficiency')
+            .replace(/流量/g, 'flow')
+            .replace(/噪声/g, 'noise')
+            .replace(/装置/g, 'device')
+            .replace(/系统/g, 'system')
+            .replace(/传感器/g, 'sensor')
+            // 动词短语
+            .replace(/不超过/g, 'shall not exceed ')
+            .replace(/不高于/g, 'shall not exceed ')
+            .replace(/不大于/g, 'shall not exceed ')
+            .replace(/不低于/g, 'shall not be less than ')
+            .replace(/不小于/g, 'shall not be less than ')
+            .replace(/应配备/g, 'shall be equipped with ')
+            .replace(/应持有/g, 'shall hold ')
+            .replace(/采用/g, 'using ')
+            .replace(/推荐使用/g, 'recommended ')
+            .replace(/约为/g, 'is approximately ')
+            .replace(/范围为/g, 'range is ')
+            .replace(/设定为/g, 'set at ')
+            // 其他
+            .replace(/电控/g, 'electric control')
+            .replace(/监测/g, 'monitoring')
+            .replace(/报警/g, 'alarm')
+            .replace(/允许/g, 'permissible ')
+            .replace(/输入/g, 'input ')
+            .replace(/输出/g, 'output ')
+            .replace(/工作/g, 'working ')
+            .replace(/进水/g, 'inlet ')
+            .replace(/机械/g, 'mechanical ')
+            .replace(/和/g, ' and ')
+            .replace(/或/g, ' or ')
+            .replace(/℃/g, '°C');
+        }
       }
       
       return translatedLine;
@@ -495,13 +623,9 @@ export function generateBilingualAgreement(data, layout = 'side-by-side') {
       default:
         htmlContent = generateSideBySideLayout(templateData);
     }
-    
-    // 确保添加CSS引用
-    if (!htmlContent.includes('<link rel="stylesheet" href="../styles/bilingualStyles.css">')) {
-      htmlContent = htmlContent.replace('</head>', 
-        '<link rel="stylesheet" href="../styles/bilingualStyles.css">\n</head>');
-    }
-    
+
+    // 注意: CSS样式通过内联<style>标签提供，无需外部CSS链接
+
     return htmlContent;
   } catch (error) {
     console.error('生成双语技术协议出错:', error);
@@ -669,7 +793,6 @@ export const generateSideBySideLayout = (templateData) => {
       <meta charset="UTF-8">
       <title>船用齿轮箱技术协议 / Marine Gearbox Technical Agreement</title>
       ${styles}
-      <link rel="stylesheet" href="../styles/bilingualStyles.css">
     </head>
     <body>
       <div class="container bilingual-document side-by-side">
@@ -838,7 +961,6 @@ export const generateSequentialLayout = (templateData) => {
       <meta charset="UTF-8">
       <title>船用齿轮箱技术协议 / Marine Gearbox Technical Agreement</title>
       ${styles}
-      <link rel="stylesheet" href="../styles/bilingualStyles.css">
     </head>
     <body>
       <div class="container bilingual-document sequential-layout">
@@ -918,7 +1040,6 @@ export const generateCompleteLayout = (templateData) => {
       <meta charset="UTF-8">
       <title>船用齿轮箱技术协议 / Marine Gearbox Technical Agreement</title>
       ${styles}
-      <link rel="stylesheet" href="../styles/bilingualStyles.css">
     </head>
     <body>
       <div class="container bilingual-document complete-layout">

@@ -1,0 +1,323 @@
+/**
+ * MobileNav.css - 移动端导航样式
+ */
+
+/* ==================== 顶部导航栏 ==================== */
+.mobile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
+
+.mobile-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 8px;
+}
+
+.mobile-menu-btn,
+.mobile-theme-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.mobile-menu-btn:hover,
+.mobile-theme-btn:hover,
+.mobile-menu-btn:focus,
+.mobile-theme-btn:focus {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+.mobile-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.logo-icon {
+  font-size: 1.5rem;
+}
+
+/* ==================== 侧边抽屉菜单 ==================== */
+.mobile-offcanvas {
+  width: 85% !important;
+  max-width: 320px;
+}
+
+.mobile-offcanvas.dark-theme {
+  background: #1e1e1e;
+  color: #ffffff;
+}
+
+.mobile-offcanvas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+}
+
+.dark-theme .mobile-offcanvas-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-title-icon {
+  margin-right: 8px;
+  font-size: 1.3rem;
+}
+
+.mobile-close-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 0;
+  border: none;
+}
+
+.mobile-offcanvas-body {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+/* ==================== 用户信息 ==================== */
+.mobile-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(25, 118, 210, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dark-theme .mobile-user-info {
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.user-role {
+  font-size: 0.7rem;
+  width: fit-content;
+}
+
+/* ==================== 导航列表 ==================== */
+.mobile-nav-list {
+  flex: 1;
+  padding: 8px 0;
+}
+
+.mobile-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  color: #333;
+  font-size: 1rem;
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.dark-theme .mobile-nav-item {
+  color: #e0e0e0;
+}
+
+.mobile-nav-item:hover {
+  background: rgba(25, 118, 210, 0.08);
+  color: #1976d2;
+}
+
+.dark-theme .mobile-nav-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #90caf9;
+}
+
+.mobile-nav-item.active {
+  background: rgba(25, 118, 210, 0.12);
+  border-left-color: #1976d2;
+  color: #1976d2;
+  font-weight: 600;
+}
+
+.dark-theme .mobile-nav-item.active {
+  background: rgba(144, 202, 249, 0.15);
+  border-left-color: #90caf9;
+  color: #90caf9;
+}
+
+.mobile-nav-item.primary {
+  background: rgba(76, 175, 80, 0.08);
+}
+
+.mobile-nav-item.primary:hover {
+  background: rgba(76, 175, 80, 0.15);
+}
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+  color: inherit;
+  opacity: 0.8;
+}
+
+.nav-label {
+  flex: 1;
+}
+
+.nav-badge {
+  font-size: 0.65rem;
+  padding: 2px 6px;
+}
+
+/* ==================== 底部操作区 ==================== */
+.mobile-nav-footer {
+  padding: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dark-theme .mobile-nav-footer {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-footer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+}
+
+/* ==================== 底部导航栏 ==================== */
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: white;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: stretch;
+  z-index: 1000;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.dark-theme .mobile-bottom-nav {
+  background: #1e1e1e;
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 0.7rem;
+  padding: 8px 4px;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dark-theme .bottom-nav-item {
+  color: #999;
+}
+
+.bottom-nav-item:active {
+  background: rgba(25, 118, 210, 0.1);
+}
+
+.bottom-nav-item.active {
+  color: #1976d2;
+}
+
+.dark-theme .bottom-nav-item.active {
+  color: #90caf9;
+}
+
+.bottom-nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.bottom-nav-label {
+  font-weight: 500;
+}
+
+/* ==================== 内容区域补偿 ==================== */
+.mobile-content-wrapper {
+  padding-top: 56px;  /* 顶部导航高度 */
+  padding-bottom: 60px; /* 底部导航高度 */
+  min-height: 100vh;
+}
+
+/* ==================== 深色模式覆盖 ==================== */
+[data-theme="dark"] .mobile-header {
+  background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
+}
+
+[data-theme="dark"] .mobile-bottom-nav {
+  background: #121212;
+}

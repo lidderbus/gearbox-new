@@ -8,7 +8,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import {
   Container, Row, Col, Card, Tabs, Tab, Form, Button,
-  InputGroup, Alert, Badge
+  InputGroup, Alert, Badge, Table
 } from 'react-bootstrap';
 import CompetitorSelector from './CompetitorSelector';
 import ComparisonTable from './ComparisonTable';
@@ -18,6 +18,7 @@ import {
   findEquivalentCompetitors,
   formatPrice
 } from '../../utils/competitorAnalysis';
+import { formatPowerRange, selectHangchiWithScore } from '../../utils/gearboxDataEnhancer';
 
 const CompetitorComparisonView = ({
   colors,
@@ -44,26 +45,24 @@ const CompetitorComparisonView = ({
     }
   }, []);
 
-  // 根据参数筛选杭齿产品
+  // 根据参数筛选杭齿产品 (使用带评分的选型函数)
   const filteredHangchiProducts = useMemo(() => {
-    if (!power || !speed || !ratio) return hangchiData.slice(0, 20);
+    if (!power || !speed || !ratio) return hangchiData.slice(0, 100);
 
     const powerNum = parseFloat(power);
     const speedNum = parseFloat(speed);
     const ratioNum = parseFloat(ratio);
-    const requiredCapacity = powerNum / speedNum;
 
-    return hangchiData
-      .filter(g => {
-        if (powerNum < g.minPower || powerNum > g.maxPower) return false;
-        if (speedNum < g.minSpeed || speedNum > g.maxSpeed) return false;
-        const hasRatio = g.ratios?.some(r => Math.abs(r - ratioNum) / ratioNum <= 0.15);
-        if (!hasRatio) return false;
-        const capacity = g.transmissionCapacityPerRatio?.[0] || g.transferCapacity || 0;
-        return capacity >= requiredCapacity * 0.8;
-      })
-      .slice(0, 20);
+    // 使用带评分的选型函数
+    const results = selectHangchiWithScore(hangchiData, powerNum, speedNum, ratioNum);
+    return results.slice(0, 100);
   }, [hangchiData, power, speed, ratio]);
+
+  // 计算所需传递能力 (用于显示)
+  const requiredCapacity = useMemo(() => {
+    if (!power || !speed) return 0;
+    return parseFloat(power) / parseFloat(speed);
+  }, [power, speed]);
 
   // 获取竞品匹配结果
   const matchedCompetitors = useMemo(() => {
@@ -191,15 +190,86 @@ const CompetitorComparisonView = ({
           </Row>
           {power && speed && ratio && (
             <div className="mt-3 pt-3 border-top">
-              <small className="text-muted">
-                匹配结果:
-                <Badge bg="warning" text="dark" className="mx-2">
-                  杭齿 {filteredHangchiProducts.length} 个
-                </Badge>
-                <Badge bg="secondary" className="me-2">
-                  竞品 {matchedCompetitors.length} 个
-                </Badge>
-                所需传递能力: {(parseFloat(speed) > 0 ? (parseFloat(power) / parseFloat(speed)).toFixed(3) : '-')} kW/(r/min)
+              <div className="d-flex justify-content-between align-items-center mb-2">
+                <small className="text-muted">
+                  匹配结果:
+                  <Badge bg="warning" text="dark" className="mx-2">
+                    杭齿 {filteredHangchiProducts.length} 个
+                  </Badge>
+                  <Badge bg="secondary" className="me-2">
+                    竞品 {matchedCompetitors.length} 个
+                  </Badge>
+                </small>
+                <small>
+                  <strong>选型条件:</strong> {power}kW ÷ {speed}rpm =
+                  <span className="text-primary fw-bold"> {requiredCapacity.toFixed(3)}</span> kW/(r/min)
+                  <span className="text-muted ms-2">| 速比容差 ±10%</span>
+                </small>
+              </div>
+            </div>
+          )}
+          {/* Top 5 选型结果表格 */}
+          {power && speed && ratio && filteredHangchiProducts.length > 0 && (
+            <div className="mt-3">
+              <Card className="border-success">
+                <Card.Header className="bg-success text-white py-2">
+                  <i className="bi bi-trophy me-2"></i>
+                  选型结果 TOP 5 (共匹配 {filteredHangchiProducts.length} 个)
+                </Card.Header>
+                <Card.Body className="p-0">
+                  <Table size="sm" className="mb-0 table-hover">
+                    <thead className="table-light">
+                      <tr>
+                        <th className="text-center" style={{width: '50px'}}>排名</th>
+                        <th>型号</th>
+                        <th>系列</th>
+                        <th className="text-center">匹配速比</th>
+                        <th className="text-center">传递能力</th>
+                        <th className="text-center">富裕度</th>
+                        <th className="text-center" style={{width: '70px'}}>评分</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredHangchiProducts.slice(0, 5).map((p, idx) => (
+                        <tr
+                          key={p.model}
+                          style={{ cursor: 'pointer' }}
+                          className={selectedHangchi?.model === p.model ? 'table-warning' : ''}
+                          onClick={() => handleHangchiSelect(p)}
+                        >
+                          <td className="text-center">
+                            <Badge bg={idx === 0 ? 'warning' : idx < 3 ? 'secondary' : 'light'} text={idx < 3 ? 'white' : 'dark'}>
+                              {idx + 1}
+                            </Badge>
+                          </td>
+                          <td><strong>{p.model}</strong></td>
+                          <td><Badge bg="secondary" className="fw-normal">{p.series}</Badge></td>
+                          <td className="text-center">
+                            {p.matchedRatio}
+                            <small className="text-muted ms-1">(差{p.ratioDiff}%)</small>
+                          </td>
+                          <td className="text-center">
+                            {p.matchedCapacity?.toFixed(3)}
+                            <small className="text-muted"> kW/(r/min)</small>
+                          </td>
+                          <td className={`text-center fw-bold ${
+                            parseFloat(p.margin) < 20 ? 'text-success' :
+                            parseFloat(p.margin) < 50 ? 'text-warning' : 'text-danger'
+                          }`}>
+                            +{p.margin}%
+                          </td>
+                          <td className="text-center">
+                            <Badge bg="info">{p.score}分</Badge>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </Card.Body>
+              </Card>
+              <small className="text-muted d-block mt-1">
+                <i className="bi bi-info-circle me-1"></i>
+                评分算法: 富裕度(50分,10%最佳) + 速比匹配(30分) + 价格数据(20分)
               </small>
             </div>
           )}
@@ -249,8 +319,7 @@ const CompetitorComparisonView = ({
                           )}
                         </div>
                         <small className="text-muted d-block mt-1">
-                          {product.minPower}-{product.maxPower}kW |
-                          {formatPrice(product.price)}
+                          {formatPowerRange(product)} | {formatPrice(product.price)}
                         </small>
                       </div>
                     ))

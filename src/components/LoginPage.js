@@ -142,12 +142,8 @@ const LoginPage = () => {
               </Form>
               
               <div className="mt-4 text-center">
-                <Alert variant="warning" className="p-2">
-                  <strong>安全提示：</strong>系统密码已更新，请使用新密码登录！
-                </Alert>
                 <div className="text-muted">
-                  <p className="mb-0">管理员账号: admin / Gbox@2024!</p>
-                  <p>普通用户账号: user / User@2024!</p>
+                  <small>如忘记密码，请联系系统管理员</small>
                 </div>
               </div>
             </Card.Body>

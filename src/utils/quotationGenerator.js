@@ -1,9 +1,12 @@
 // utils/quotationGenerator.js - 完整版
-import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
-import html2canvas from 'html2canvas';
-import { saveAs } from 'file-saver';
-import * as XLSX from 'xlsx';
+// 性能优化: 重依赖使用动态导入，减少首屏加载时间
+// 以下导入被移除，改为在需要时动态加载:
+// import { jsPDF } from 'jspdf';
+// import 'jspdf-autotable';
+// import html2canvas from 'html2canvas';
+// import { saveAs } from 'file-saver';
+// import * as XLSX from 'xlsx';
+import { loadXLSX, loadJsPDF, loadFileSaver } from './dynamicImports';
 import { getGWPackagePriceConfig, checkPackageMatch } from '../data/packagePriceConfig';
 // 导入增强版备用泵需求判断函数
 import { needsStandbyPump } from '../utils/enhancedPumpSelection';
@@ -728,14 +731,18 @@ export function removeItemFromQuotation(quotation, itemId) {
 
 /**
  * 导出报价单为Excel文件
+ * 性能优化: 使用动态导入XLSX库
  * @param {Object} quotation - 报价单对象
  * @param {string} filename - 文件名（不含扩展名）
  */
-export function exportQuotationToExcel(quotation, filename = '报价单') {
+export async function exportQuotationToExcel(quotation, filename = '报价单') {
     if (!quotation || !quotation.items) {
         throw new Error('无效的报价单数据');
     }
-    
+
+    // 动态导入XLSX库
+    const XLSX = await loadXLSX();
+
     // 创建工作簿
     const wb = XLSX.utils.book_new();
     
@@ -831,14 +838,18 @@ export function exportQuotationToExcel(quotation, filename = '报价单') {
 
 /**
  * 导出报价单为PDF文件
+ * 性能优化: 使用动态导入jsPDF库
  * @param {Object} quotation - 报价单对象
  * @param {string} filename - 文件名（不含扩展名）
  */
-export function exportQuotationToPDF(quotation, filename = '报价单') {
+export async function exportQuotationToPDF(quotation, filename = '报价单') {
     if (!quotation || !quotation.items) {
         throw new Error('无效的报价单数据');
     }
-    
+
+    // 动态导入jsPDF库
+    const jsPDF = await loadJsPDF();
+
     // 创建PDF文档
     const doc = new jsPDF('p', 'mm', 'a4');
     

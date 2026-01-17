@@ -1,5 +1,5 @@
 // src/AppWrapper.js
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { userRoles } from './auth/roles';
@@ -12,6 +12,10 @@ import UserManagementView from './components/UserManagementView'; // Import User
 import DatabaseManagementView from './components/DatabaseManagementView'; // Import DatabaseManagementView
 // import DarkModeProvider from './contexts/DarkModeContext'; // Assuming DarkModeProvider is needed
 // import { flexibleCouplings } from './data/flexibleCouplings'; // Not needed here
+import { useIsMobile } from './hooks/useIsMobile';
+
+// 懒加载移动端应用
+const MobileApp = lazy(() => import('./components/mobile/MobileApp'));
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -31,11 +35,22 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const AppContent = ({ appData, setAppData }) => {
-  const { currentUser, user, isAuthenticated, loading: authLoading } = useAuth();
+  const { currentUser, user, isAuthenticated, loading: authLoading, logout } = useAuth();
+  const { isMobile } = useIsMobile();
+
+  // 强制桌面模式状态 (用户可以选择在移动端使用桌面版)
+  const [forceDesktop, setForceDesktop] = useState(() => {
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem('forceDesktop') === 'true';
+    }
+    return false;
+  });
 
   // Check if user is admin
   const isAdmin = user && (user.role === userRoles.ADMIN || user.role === userRoles.SUPER_ADMIN);
 
+  // 是否显示移动端界面
+  const showMobileApp = isMobile && !forceDesktop;
 
   if (authLoading) {
     return (
@@ -48,6 +63,14 @@ const AppContent = ({ appData, setAppData }) => {
 
   const userIsAuthenticated = isAuthenticated && (currentUser || user);
 
+  // 移动端加载占位符
+  const MobileLoadingFallback = () => (
+    <div className="loading-container">
+      <div className="loading-spinner"></div>
+      <p>加载移动端界面...</p>
+    </div>
+  );
+
   return (
     <Routes>
       <Route path="/login" element={userIsAuthenticated ? <Navigate to="/" replace /> : <LoginPage />} />
@@ -58,14 +81,30 @@ const AppContent = ({ appData, setAppData }) => {
            <Route path="/database" element={<DatabaseManagementView appData={appData} setAppData={setAppData} />} />
          </>
       )}
-      {/* Main application route */}
+      {/* Main application route - 根据设备类型渲染不同界面 */}
       <Route
         path="/*"
         element={
-          userIsAuthenticated ? (
-            <App appData={appData} setAppData={setAppData} />
+          showMobileApp ? (
+            // 移动端免登录访问
+            <Suspense fallback={<MobileLoadingFallback />}>
+              <MobileApp
+                user={user || currentUser}
+                onLogout={logout}
+                gearboxDatabase={appData?.gearboxDatabase || []}
+                onSwitchToDesktop={() => {
+                  setForceDesktop(true);
+                  localStorage.setItem('forceDesktop', 'true');
+                }}
+              />
+            </Suspense>
           ) : (
-            <Navigate to="/login" replace state={{ from: window.location.pathname }} />
+            // 桌面端需要登录
+            userIsAuthenticated ? (
+              <App appData={appData} setAppData={setAppData} />
+            ) : (
+              <Navigate to="/login" replace state={{ from: window.location.pathname }} />
+            )
           )
         }
       />
@@ -94,7 +133,7 @@ const AppWrapper = ({ initialData, setAppData }) => {
       {/* Assuming DarkModeProvider wraps AuthProvider */}
       {/* <DarkModeProvider> */}
         <GlobalStyle />
-        <Router>
+        <Router basename="/gearbox-app">
           <AppContent appData={initialData} setAppData={setAppData} />
         </Router>
       {/* </DarkModeProvider> */}

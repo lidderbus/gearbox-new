@@ -7,7 +7,7 @@ let users = [
   {
     id: 1,
     username: 'admin',
-    // 新密码: Gbox@2024!
+    // 密码: Gbox@2024!
     passwordHash: '95e02caa27467e7f0cef1173f4c9ec3c2ca1248c51fce9ea9c79ecd5a73e841f',
     role: userRoles.ADMIN,
     name: '系统管理员',
@@ -19,7 +19,7 @@ let users = [
   {
     id: 2,
     username: 'user',
-    // 新密码: User@2024!
+    // 密码: User@2024!
     passwordHash: '0e6d3ce3e3bebc9c80eb62711b0bdf12b21590b4b447fb85a8b1c1079aed4867',
     role: userRoles.USER,
     name: '普通用户',

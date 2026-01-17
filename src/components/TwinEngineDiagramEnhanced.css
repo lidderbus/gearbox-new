@@ -1,0 +1,174 @@
+/* TwinEngineDiagramEnhanced.css - 双机推进旋向示意图样式 */
+/* 版本: v1.1 (2025-12-27) - 样式优化 */
+
+/* 导入工业风格字体 - 使用国内CDN镜像 */
+@import url('https://fonts.loli.net/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+/* 主容器样式 */
+.twin-engine-diagram-enhanced {
+  border-radius: 10px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 245, 212, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.twin-engine-diagram-enhanced:hover {
+  box-shadow: 0 8px 35px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 245, 212, 0.2);
+}
+
+/* 顺时针旋转动画 */
+@keyframes rotateClockwiseTwin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 逆时针旋转动画 */
+@keyframes rotateCounterClockwiseTwin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+/* 旋转箭头动画类 - 加快速度更有动感 */
+.rotate-clockwise-twin {
+  animation: rotateClockwiseTwin 2.5s linear infinite;
+}
+
+.rotate-ccw-twin {
+  animation: rotateCounterClockwiseTwin 2.5s linear infinite;
+}
+
+/* 螺旋桨顺时针旋转 - 更快的旋转 */
+.spin-cw-twin {
+  animation: rotateClockwiseTwin 1.5s linear infinite;
+}
+
+/* 螺旋桨逆时针旋转 */
+.spin-ccw-twin {
+  animation: rotateCounterClockwiseTwin 1.5s linear infinite;
+}
+
+/* 减少动画模式支持 */
+@media (prefers-reduced-motion: reduce) {
+  .rotate-clockwise-twin,
+  .rotate-ccw-twin,
+  .spin-cw-twin,
+  .spin-ccw-twin {
+    animation: none;
+  }
+}
+
+/* 旋转箭头组样式 */
+.rotation-arrow-twin {
+  transition: opacity 0.3s ease;
+}
+
+.rotation-arrow-twin:hover {
+  opacity: 0.8;
+}
+
+/* 螺旋桨组样式 */
+.propeller-twin {
+  transition: filter 0.3s ease;
+}
+
+.propeller-twin:hover {
+  filter: brightness(1.1);
+}
+
+/* 响应式布局 */
+@media (max-width: 850px) {
+  .twin-engine-diagram-enhanced {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* 暗色主题适配 */
+@media (prefers-color-scheme: dark) {
+  .twin-engine-diagram-enhanced {
+    box-shadow: 0 4px 25px rgba(0, 245, 212, 0.15);
+  }
+}
+
+/* 发光脉冲动画 */
+@keyframes glowPulseTwin {
+  0%, 100% {
+    filter: drop-shadow(0 0 3px rgba(0, 245, 212, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(0, 245, 212, 0.8));
+  }
+}
+
+/* 标题发光效果 */
+.twin-engine-diagram-enhanced text[filter="url(#titleGlowTwin)"] {
+  animation: glowPulseTwin 2s ease-in-out infinite;
+}
+
+/* 连接轴动画 */
+@keyframes shaftRotateTwin {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 20;
+  }
+}
+
+/* 倒档高亮脉冲 */
+@keyframes reversePulseTwin {
+  0%, 100% {
+    stroke-opacity: 1;
+    filter: drop-shadow(0 0 3px rgba(255, 159, 67, 0.6));
+  }
+  50% {
+    stroke-opacity: 0.8;
+    filter: drop-shadow(0 0 8px rgba(255, 159, 67, 0.9));
+  }
+}
+
+/* 倒档齿轮箱脉冲效果 */
+.reverse-gearbox-twin {
+  animation: reversePulseTwin 1.5s ease-in-out infinite;
+}
+
+/* 组件悬停增强 */
+.twin-engine-diagram-enhanced rect:hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+}
+
+/* 船首箭头动画 */
+@keyframes bowPulseTwin {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.bow-indicator-twin {
+  animation: bowPulseTwin 2s ease-in-out infinite;
+}
+
+/* 打印样式 */
+@media print {
+  .twin-engine-diagram-enhanced {
+    box-shadow: none;
+  }
+
+  .rotate-clockwise-twin,
+  .rotate-ccw-twin,
+  .spin-cw-twin,
+  .spin-ccw-twin {
+    animation: none;
+  }
+}

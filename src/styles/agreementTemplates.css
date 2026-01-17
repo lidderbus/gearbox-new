@@ -17,14 +17,18 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* 标题 */
+/* 标题 - 增强可见性 */
+.agreement-container > .agreement-title,
 .agreement-title {
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center;
-  margin: 20px 0 30px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #333;
+  display: block !important;
+  visibility: visible !important;
+  font-size: 24px !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  margin: 20px 0 30px !important;
+  padding: 10px !important;
+  border-bottom: 2px solid #333 !important;
+  background-color: #f8f9fa;
 }
 
 /* 协议头部（签署方信息） */

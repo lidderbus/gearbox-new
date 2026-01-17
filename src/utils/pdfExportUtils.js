@@ -1,7 +1,11 @@
 // src/utils/pdfExportUtils.js
-import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
-import html2canvas from 'html2canvas';
+// 性能优化: 重依赖使用动态导入
+// 以下导入被移除，改为在需要时动态加载:
+// import { jsPDF } from 'jspdf';
+// import 'jspdf-autotable';
+// import html2canvas from 'html2canvas';
+import { loadJsPDF, loadHtml2Canvas } from './dynamicImports';
+import { logger } from '../config/logging';
 
 // 中文字体Base64压缩数据（仅供示例，实际使用需要完整字体数据）
 const notoSansSCBase64 = 'AAEKS...'; // 此处省略实际Base64字体数据，实际使用时需要完整字体
@@ -18,33 +22,51 @@ const loadChineseFont = async (pdf) => {
       pdf.addFileToVFS('NotoSansSC-Regular.ttf', notoSansSCBase64);
       pdf.addFont('NotoSansSC-Regular.ttf', 'NotoSansSC', 'normal');
       pdf.setFont('NotoSansSC', 'normal');
-      console.log('使用内置中文字体');
+      logger.debug('使用内置中文字体');
       return true;
     }
     
-    // 否则尝试从网络加载字体
-    try {
-      const fontUrl = 'https://fonts.gstatic.com/s/notosanssc/v36/k3kXo84MPvpLmixcA63oeALhLOCT-xWNm8Hqd37g1OkDRZe7lR4sg1IzSy-MNbE9VH8V.0.woff2';
-      const response = await fetch(fontUrl);
-      
-      if (!response.ok) {
-        throw new Error(`字体加载失败: ${response.status} ${response.statusText}`);
+    // 否则尝试从网络加载字体 - 使用多个CDN源作为备选
+    const fontUrls = [
+      // 本地服务器字体 - 最可靠
+      '/fonts/NotoSansSC-Regular.ttf',
+      // Google Fonts 直接链接
+      'https://fonts.gstatic.com/s/notosanssc/v39/k3kCo84MPvpLmixcA63oeAL7Iqp5IZJF9bmaG9_FnYw.ttf'
+    ];
+
+    for (const fontUrl of fontUrls) {
+      try {
+        const response = await fetch(fontUrl);
+
+        if (response.ok) {
+          const fontData = await response.arrayBuffer();
+          // 将ArrayBuffer转换为base64字符串
+          const base64Font = btoa(
+            new Uint8Array(fontData).reduce((data, byte) => data + String.fromCharCode(byte), '')
+          );
+          // 根据字体文件扩展名设置VFS文件名
+          let fontName = 'NotoSansSC.ttf';
+          if (fontUrl.endsWith('.otf')) fontName = 'NotoSansSC.otf';
+          else if (fontUrl.endsWith('.woff2')) fontName = 'NotoSansSC.woff2';
+          else if (fontUrl.endsWith('.woff')) fontName = 'NotoSansSC.woff';
+          pdf.addFileToVFS(fontName, base64Font);
+          pdf.addFont(fontName, 'NotoSansSC', 'normal');
+          pdf.setFont('NotoSansSC', 'normal');
+          logger.debug('从CDN加载中文字体成功:', fontUrl);
+          return true;
+        }
+      } catch (urlError) {
+        logger.warn(`字体URL加载失败 ${fontUrl}:`, urlError.message);
+        continue; // 尝试下一个URL
       }
-      
-      const fontData = await response.arrayBuffer();
-      pdf.addFileToVFS('NotoSansSC-Regular.ttf', fontData);
-      pdf.addFont('NotoSansSC-Regular.ttf', 'NotoSansSC', 'normal');
-      pdf.setFont('NotoSansSC', 'normal');
-      console.log('从网络加载中文字体成功');
-      return true;
-    } catch (networkError) {
-      console.warn('从网络加载字体失败, 使用回退字体:', networkError);
-      // 尝试使用系统内置字体
-      pdf.setFont('helvetica', 'normal');
-      return false;
     }
+
+    // 所有CDN源均失败，使用回退字体
+    logger.warn('所有字体CDN源均不可用, 使用回退字体');
+    pdf.setFont('helvetica', 'normal');
+    return false;
   } catch (error) {
-    console.warn('加载中文字体失败:', error);
+    logger.warn('加载中文字体失败:', error);
     // 使用默认字体作为回退
     pdf.setFont('helvetica', 'normal');
     return false;
@@ -53,12 +75,16 @@ const loadChineseFont = async (pdf) => {
 
 /**
  * 基础PDF导出函数
+ * 性能优化: 使用动态导入jsPDF库
  * @param {Object} data - 导出数据
  * @param {string} filename - 文件名
  * @returns {jsPDF} - PDF实例
  */
 export const exportToPDF = async (data, filename = '导出文档') => {
   try {
+    // 动态导入jsPDF库
+    const jsPDF = await loadJsPDF();
+
     const doc = new jsPDF({
       orientation: 'p',
       unit: 'pt',
@@ -75,13 +101,14 @@ export const exportToPDF = async (data, filename = '导出文档') => {
     // 返回文档对象供进一步处理
     return doc;
   } catch (error) {
-    console.error('PDF导出初始化错误:', error);
+    logger.error('PDF导出初始化错误:', error);
     throw error;
   }
 };
 
 /**
  * 优化的HTML到PDF转换函数，支持大型文档和分页
+ * 性能优化: 使用动态导入jsPDF和html2canvas库
  * @param {HTMLElement} element - HTML元素
  * @param {Object} options - 配置选项
  * @returns {Promise<boolean>} - 是否成功
@@ -105,7 +132,13 @@ export const optimizedHtmlToPdf = async (element, options = {}) => {
   }
 
   try {
-    debug && console.log(`开始转换HTML到PDF: ${filename}`);
+    debug && logger.debug(`开始转换HTML到PDF: ${filename}`);
+
+    // 动态导入jsPDF和html2canvas库
+    const [jsPDF, html2canvas] = await Promise.all([
+      loadJsPDF(),
+      loadHtml2Canvas()
+    ]);
 
     // 克隆元素以避免修改原始元素
     const container = element.cloneNode(true);
@@ -132,7 +165,7 @@ export const optimizedHtmlToPdf = async (element, options = {}) => {
     // 获取内容尺寸
     const contentHeight = container.scrollHeight;
     const contentWidth = container.scrollWidth;
-    debug && console.log(`内容总高度: ${contentHeight}px, 宽度: ${contentWidth}px`);
+    debug && logger.debug(`内容总高度: ${contentHeight}px, 宽度: ${contentWidth}px`);
 
     // 创建PDF文档
     const pdf = new jsPDF({
@@ -148,11 +181,11 @@ export const optimizedHtmlToPdf = async (element, options = {}) => {
     // 获取PDF页面尺寸
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = pdf.internal.pageSize.getHeight();
-    debug && console.log(`PDF页面尺寸: ${pdfWidth}px x ${pdfHeight}px`);
+    debug && logger.debug(`PDF页面尺寸: ${pdfWidth}px x ${pdfHeight}px`);
 
     // 计算页数
     const numPages = Math.ceil(contentHeight / chunkSize);
-    debug && console.log(`预计页数: ${numPages}`);
+    debug && logger.debug(`预计页数: ${numPages}`);
 
     // 处理大型文档，分页生成
     for (let page = 0; page < numPages; page++) {
@@ -165,7 +198,7 @@ export const optimizedHtmlToPdf = async (element, options = {}) => {
       const remainingHeight = contentHeight - yStart;
       const currentChunkHeight = Math.min(chunkSize, remainingHeight);
 
-      debug && console.log(`处理第${page + 1}页, 起始位置: ${yStart}px, 高度: ${currentChunkHeight}px`);
+      debug && logger.debug(`处理第${page + 1}页, 起始位置: ${yStart}px, 高度: ${currentChunkHeight}px`);
 
       // 临时设置容器样式，只显示当前页内容
       container.style.height = `${contentHeight}px`;
@@ -208,7 +241,7 @@ export const optimizedHtmlToPdf = async (element, options = {}) => {
       
       pdf.addImage(imgData, 'JPEG', xOffset, 0, finalWidth, finalHeight, '', 'FAST');
 
-      debug && console.log(`第${page + 1}页已添加到PDF`);
+      debug && logger.debug(`第${page + 1}页已添加到PDF`);
     }
 
     // 移除临时元素
@@ -216,10 +249,10 @@ export const optimizedHtmlToPdf = async (element, options = {}) => {
 
     // 保存PDF
     pdf.save(filename);
-    debug && console.log(`PDF成功保存: ${filename}`);
+    debug && logger.debug(`PDF成功保存: ${filename}`);
     return true;
   } catch (error) {
-    console.error('HTML转PDF错误:', error);
+    logger.error('HTML转PDF错误:', error);
     throw new Error(`PDF生成失败: ${error.message}`);
   }
 };
@@ -241,14 +274,14 @@ export const exportQuotationToPDF = async (quotation, filename = '报价单') =>
     
     if (previewElement) {
       // 如果已有预览元素，则直接使用
-      console.log('使用现有预览元素导出PDF');
+      logger.debug('使用现有预览元素导出PDF');
       return await optimizedHtmlToPdf(previewElement, {
         filename: `${filename}.pdf`,
         debug: false
       });
     } else {
       // 从quotationGenerator创建预览
-      console.log('创建临时预览元素导出PDF');
+      logger.debug('创建临时预览元素导出PDF');
       // 导入createQuotationPreview函数
       const { createQuotationPreview } = await import('./quotationGenerator');
       
@@ -271,7 +304,7 @@ export const exportQuotationToPDF = async (quotation, filename = '报价单') =>
       }
     }
   } catch (error) {
-    console.error('导出报价单PDF错误:', error);
+    logger.error('导出报价单PDF错误:', error);
     throw error;
   }
 };
@@ -302,7 +335,7 @@ export const exportAgreementToPDF = async (agreement, filename = '技术协议')
       lineHeight: '1.5'
     });
   } catch (error) {
-    console.error('导出技术协议PDF错误:', error);
+    logger.error('导出技术协议PDF错误:', error);
     throw error;
   }
 };
@@ -332,7 +365,7 @@ export const exportContractToPDF = async (contract, filename = '销售合同') =
       debug: false
     });
   } catch (error) {
-    console.error('导出合同PDF错误:', error);
+    logger.error('导出合同PDF错误:', error);
     throw error;
   }
 };
@@ -365,7 +398,7 @@ export const exportHtmlContentToPDF = async (htmlContent, filename = 'document',
       document.body.removeChild(tempContainer);
     }
   } catch (error) {
-    console.error('导出HTML内容PDF错误:', error);
+    logger.error('导出HTML内容PDF错误:', error);
     throw error;
   }
 };
@@ -380,7 +413,7 @@ export const exportHtmlContentToPDF = async (htmlContent, filename = 'document',
  */
 export const printHtmlContent = (element, options = {}) => {
   if (!element) {
-    console.error('打印失败: 未提供有效的DOM元素');
+    logger.error('打印失败: 未提供有效的DOM元素');
     return;
   }
   

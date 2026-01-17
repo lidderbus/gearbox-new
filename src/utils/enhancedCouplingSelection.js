@@ -1,9 +1,12 @@
 // src/utils/enhancedCouplingSelection.js
-import { 
-  getRecommendedCouplingInfo, 
-  couplingWorkFactorMap, 
-  getTemperatureFactor, 
-  couplingSpecificationsMap
+import {
+  getRecommendedCouplingInfo,
+  couplingWorkFactorMap,
+  getWorkFactor,
+  getTemperatureFactor,
+  couplingSpecificationsMap,
+  ScoringMode,
+  getScoringWeights
 } from '../data/gearboxMatchingMaps';
 import { calculateFactoryPrice, calculateMarketPrice, getStandardDiscountRate } from './priceManager';
 import { safeParseFloat } from './dataHelpers';
@@ -55,17 +58,25 @@ export const enhancedCouplingSelection = (
 
   // 获取工况选项
   const workCondition = options.workCondition || "III类:扭矩变化中等";
+  const workFactorMode = options.workFactorMode || 'FACTORY';  // 工况系数模式: 'FACTORY' | 'JB_CCS'
+  const scoringMode = options.scoringMode || ScoringMode.BALANCED;  // 评分模式: 'SAFETY' | 'ECONOMIC' | 'BALANCED'
   const temperature = options.temperature || 30;
+
+  // 获取动态评分权重
+  const weightSettings = getScoringWeights(scoringMode);
   const hasCover = options.hasCover || false;
 
-  // 计算工况系数和温度系数
-  const kFactor = couplingWorkFactorMap[workCondition] || couplingWorkFactorMap.default;
+  console.log(`Scoring Mode: ${scoringMode}, Weights: T=${weightSettings.torqueMargin}, R=${weightSettings.recommendation}, S=${weightSettings.speedMargin}, P=${weightSettings.price}, W=${weightSettings.weight}`);
+
+  // 计算工况系数和温度系数 (支持双模式: 厂家标准/JB-CCS船级社标准)
+  const kFactor = getWorkFactor(workCondition, workFactorMode);
   const stFactor = getTemperatureFactor(temperature);
+  const isJbCcsMode = workFactorMode === 'JB_CCS';
 
   // 计算所需联轴器扭矩 (kN·m)
   const requiredCouplingTorque_kNm = (engineTorque * kFactor * stFactor) / 1000;
 
-  console.log(`Required Coupling Torque (kN·m): ${requiredCouplingTorque_kNm.toFixed(3)} (Engine Torque: ${engineTorque?.toFixed(2) || 'N/A'} N·m, K: ${kFactor.toFixed(2)}, St: ${stFactor.toFixed(2)})`);
+  console.log(`Required Coupling Torque (kN·m): ${requiredCouplingTorque_kNm.toFixed(3)} (Mode: ${isJbCcsMode ? 'JB/CCS' : '厂家'}, Engine Torque: ${engineTorque?.toFixed(2) || 'N/A'} N·m, K: ${kFactor.toFixed(2)}, St: ${stFactor.toFixed(2)})`);
 
   // 获取齿轮箱推荐的联轴器信息
   const { 
@@ -172,65 +183,68 @@ export const enhancedCouplingSelection = (
     const torqueMargin = ((fixedTorque_kNm / requiredCouplingTorque_kNm) - 1) * 100;
     const speedMarginPercent = ((couplingMaxSpeed / maxEngineSpeed) - 1) * 100;
 
-    // 初始评分计算
-    // 1. 扭矩余量评分 (25分) - 新的评分标准，更友好地处理低余量
+    // 初始评分计算 - 使用动态权重
+    // 1. 扭矩余量评分 (weightSettings.torqueMargin分) - 新的评分标准，更友好地处理低余量
+    const maxTorqueScore = weightSettings.torqueMargin;
     let torqueMarginScore = 0;
     let torqueMarginExplanation = '';
-    
+
     if (torqueMargin >= 10 && torqueMargin <= 30) {
-      torqueMarginScore = 25; // 理想范围
+      torqueMarginScore = maxTorqueScore; // 理想范围 (100%)
       torqueMarginExplanation = '理想扭矩余量(10-30%)';
     } else if (torqueMargin > 30 && torqueMargin <= 50) {
-      torqueMarginScore = 20; // 较高但合理
+      torqueMarginScore = maxTorqueScore * 0.8; // 较高但合理 (80%)
       torqueMarginExplanation = '扭矩余量较高(30-50%)';
     } else if (torqueMargin > 50) {
-      torqueMarginScore = 18; // 过高
+      torqueMarginScore = maxTorqueScore * 0.72; // 过高 (72%)
       torqueMarginExplanation = '扭矩余量过高(>50%)';
     } else if (torqueMargin >= 5 && torqueMargin < 10) {
-      torqueMarginScore = 22; // 接近理想但略低
+      torqueMarginScore = maxTorqueScore * 0.88; // 接近理想但略低 (88%)
       torqueMarginExplanation = '扭矩余量可接受(5-10%)';
     } else if (torqueMargin >= 0 && torqueMargin < 5) {
-      torqueMarginScore = 18; // 较低但可用
+      torqueMarginScore = maxTorqueScore * 0.72; // 较低但可用 (72%)
       torqueMarginExplanation = '扭矩余量较低(0-5%)';
     } else if (torqueMargin >= -1 && torqueMargin < 0) {
-      torqueMarginScore = 15; // 非常低，但在允许范围内
+      torqueMarginScore = maxTorqueScore * 0.6; // 非常低，但在允许范围内 (60%)
       torqueMarginExplanation = '扭矩余量临界(接近0%)';
     }
 
-    // 2. 推荐匹配评分 (30分)
+    // 2. 推荐匹配评分 (weightSettings.recommendation分)
+    const maxRecommendScore = weightSettings.recommendation;
     let recommendationScore = 0;
     let recommendationExplanation = '';
-    
+
     if (recommendedModel && coupling.model === recommendedModel) {
-      recommendationScore = 30;
+      recommendationScore = maxRecommendScore; // 完全匹配 (100%)
       recommendationExplanation = '完全匹配推荐型号';
     } else if (recommendedPrefix && coupling.model.startsWith(recommendedPrefix)) {
-      recommendationScore = 25;
+      recommendationScore = maxRecommendScore * 0.83; // 前缀匹配 (83%)
       recommendationExplanation = '匹配推荐前缀';
     } else {
-      recommendationScore = 10;
+      recommendationScore = maxRecommendScore * 0.33; // 无匹配 (33%)
       recommendationExplanation = '无特定推荐匹配';
     }
 
-    // 3. 速度余量评分 (15分)
+    // 3. 速度余量评分 (weightSettings.speedMargin分)
+    const maxSpeedScore = weightSettings.speedMargin;
     let speedMarginScore = 0;
     let speedMarginExplanation = '';
-    
+
     if (speedMarginPercent >= 0 && speedMarginPercent <= 20) {
-      speedMarginScore = 15;
+      speedMarginScore = maxSpeedScore; // 理想范围 (100%)
       speedMarginExplanation = '理想速度余量(0-20%)';
     } else if (speedMarginPercent > 20 && speedMarginPercent <= 50) {
-      speedMarginScore = 13;
+      speedMarginScore = maxSpeedScore * 0.87; // 较高 (87%)
       speedMarginExplanation = '速度余量较高(20-50%)';
     } else if (speedMarginPercent > 50) {
-      speedMarginScore = 10;
+      speedMarginScore = maxSpeedScore * 0.67; // 过高 (67%)
       speedMarginExplanation = '速度余量过高(>50%)';
     }
 
-    // 4. 成本评分 (20分) - 稍后标准化
+    // 4. 成本评分 (weightSettings.price分) - 稍后标准化
     const basePrice = coupling.basePrice || coupling.price || 0;
-    
-    // 5. 重量评分 (10分) - 稍后标准化
+
+    // 5. 重量评分 (weightSettings.weight分) - 稍后标准化
     const weight = coupling.weight || 0;
 
     // 记录当前联轴器的评分细节
@@ -238,32 +252,32 @@ export const enhancedCouplingSelection = (
       torqueMargin: {
         value: torqueMargin,
         score: torqueMarginScore,
-        maxScore: 25,
+        maxScore: maxTorqueScore,
         explanation: torqueMarginExplanation
       },
       recommendation: {
-        value: recommendedModel && coupling.model === recommendedModel ? '完全匹配' : 
+        value: recommendedModel && coupling.model === recommendedModel ? '完全匹配' :
                (recommendedPrefix && coupling.model.startsWith(recommendedPrefix) ? '前缀匹配' : '无特定推荐'),
         score: recommendationScore,
-        maxScore: 30,
+        maxScore: maxRecommendScore,
         explanation: recommendationExplanation
       },
       speedMargin: {
         value: speedMarginPercent,
         score: speedMarginScore,
-        maxScore: 15,
+        maxScore: maxSpeedScore,
         explanation: speedMarginExplanation
       },
       price: {
         value: basePrice,
         score: 0, // 稍后标准化
-        maxScore: 20,
+        maxScore: weightSettings.price,
         explanation: '待评估'
       },
       weight: {
         value: weight,
         score: 0, // 稍后标准化
-        maxScore: 10,
+        maxScore: weightSettings.weight,
         explanation: '待评估'
       }
     };
@@ -308,16 +322,19 @@ export const enhancedCouplingSelection = (
     const priceRange = maxPrice - minPrice;
     const weightRange = maxWeight - minWeight;
 
-    // 标准化评分
+    // 标准化评分 (使用动态权重)
+    const maxPriceScore = weightSettings.price;
+    const maxWeightScore = weightSettings.weight;
+
     eligibleCouplings.forEach(c => {
       let priceScore = 0;
       let priceExplanation = '';
-      
+
       if (priceRange > 0 && (c.basePrice || c.price || 0) > 0) {
-        priceScore = 20 * (1 - (((c.basePrice || c.price) - minPrice) / priceRange) || 0);
+        priceScore = maxPriceScore * (1 - (((c.basePrice || c.price) - minPrice) / priceRange) || 0);
         priceExplanation = `价格评分标准化 (${c.basePrice || c.price}元)`;
       } else if ((c.basePrice || c.price || 0) > 0) {
-        priceScore = 20;
+        priceScore = maxPriceScore;
         priceExplanation = '单一价格或零价格范围';
       } else {
         priceScore = 0;
@@ -326,12 +343,12 @@ export const enhancedCouplingSelection = (
 
       let weightScore = 0;
       let weightExplanation = '';
-      
+
       if (weightRange > 0 && (c.weight || 0) > 0) {
-        weightScore = 10 * (1 - (((c.weight || 0) - minWeight) / weightRange) || 0);
+        weightScore = maxWeightScore * (1 - (((c.weight || 0) - minWeight) / weightRange) || 0);
         weightExplanation = `重量评分标准化 (${c.weight}kg)`;
       } else if ((c.weight || 0) > 0) {
-        weightScore = 10;
+        weightScore = maxWeightScore;
         weightExplanation = '单一重量或零重量范围';
       } else {
         weightScore = 0;
@@ -494,15 +511,11 @@ export const enhancedCouplingSelection = (
     warning: warning,
     selectionSettings: {
       workCondition,
+      workFactorMode,
+      scoringMode,
       temperature,
       hasCover,
-      weightSettings: {
-        torqueMargin: 25,
-        recommendation: 30,
-        speedMargin: 15,
-        price: 20,
-        weight: 10
-      }
+      weightSettings: weightSettings
     }
   };
 };

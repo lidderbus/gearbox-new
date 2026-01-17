@@ -1,0 +1,275 @@
+/* SingleEngineDiagramEnhanced.css */
+/* 单机推进旋向示意图 - 工业蓝图风格 */
+/* 版本: v2.0 (2025-12-26) */
+
+/* ===== 导入工业风格字体 - 使用国内CDN镜像 ===== */
+@import url('https://fonts.loli.net/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+/* ===== 容器样式 ===== */
+.single-engine-diagram-enhanced {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(0, 180, 216, 0.1),
+    inset 0 0 60px rgba(0, 180, 216, 0.03);
+  background: linear-gradient(135deg, #0a1628 0%, #0d1f3c 50%, #0a1628 100%);
+}
+
+.diagram-svg {
+  display: block;
+}
+
+/* ===== 标题样式 ===== */
+.diagram-title {
+  font-family: 'Orbitron', 'Microsoft YaHei', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  fill: #00f5d4;
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px rgba(0, 245, 212, 0.5);
+}
+
+.diagram-subtitle {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  fill: rgba(0, 180, 216, 0.5);
+  letter-spacing: 4px;
+}
+
+/* ===== 组件标签样式 ===== */
+.component-label-main {
+  font-family: 'Rajdhani', 'Microsoft YaHei', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  fill: #ffffff;
+  letter-spacing: 1px;
+}
+
+.component-label-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  fill: rgba(0, 180, 216, 0.6);
+  letter-spacing: 2px;
+}
+
+/* ===== 齿轮箱特殊标签 ===== */
+.gearbox-model {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  fill: #2ecc71;
+  letter-spacing: 2px;
+}
+
+.gearbox-stage {
+  font-family: 'Rajdhani', 'Microsoft YaHei', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  fill: rgba(46, 204, 113, 0.9);
+}
+
+.gearbox-stage-sub {
+  font-family: 'Rajdhani', 'Microsoft YaHei', sans-serif;
+  font-size: 10px;
+  fill: rgba(46, 204, 113, 0.6);
+}
+
+/* ===== 旋转指示器样式 ===== */
+.rotation-label {
+  font-family: 'Rajdhani', 'Microsoft YaHei', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  fill: rgba(255, 255, 255, 0.8);
+  letter-spacing: 1px;
+}
+
+.rotation-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.rotation-value.cw {
+  fill: #00f5d4;
+}
+
+.rotation-value.ccw {
+  fill: #ff6b6b;
+}
+
+/* ===== 船首标签 ===== */
+.label-text {
+  font-family: 'Rajdhani', 'Microsoft YaHei', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  fill: rgba(0, 180, 216, 0.8);
+}
+
+.label-text-small {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  fill: rgba(0, 180, 216, 0.5);
+  letter-spacing: 1px;
+}
+
+/* ===== 图例样式 ===== */
+.legend-title {
+  font-family: 'Rajdhani', 'Microsoft YaHei', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  fill: rgba(0, 180, 216, 0.8);
+  letter-spacing: 1px;
+}
+
+.legend-text {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  fill: rgba(255, 255, 255, 0.7);
+}
+
+/* ===== 旋转动画 ===== */
+@keyframes rotate-clockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotate-counterclockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes shaft-flow-cw {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(30px); }
+}
+
+@keyframes shaft-flow-ccw {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-30px); }
+}
+
+/* 旋转箭头动画 */
+.rotating-arrow.rotate-cw {
+  animation: rotate-clockwise 3s linear infinite;
+  transform-origin: center;
+}
+
+.rotating-arrow.rotate-ccw {
+  animation: rotate-counterclockwise 3s linear infinite;
+  transform-origin: center;
+}
+
+/* 螺旋桨旋转动画 */
+.propeller-blades.spin-cw {
+  animation: rotate-clockwise 2s linear infinite;
+  transform-origin: center;
+}
+
+.propeller-blades.spin-ccw {
+  animation: rotate-counterclockwise 2s linear infinite;
+  transform-origin: center;
+}
+
+/* 齿轮装饰脉冲动画 */
+.gear-decoration {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* 轴纹理流动动画 */
+.shaft-texture.rotate-cw {
+  animation: shaft-flow-cw 1s linear infinite;
+}
+
+.shaft-texture.rotate-ccw {
+  animation: shaft-flow-ccw 1s linear infinite;
+}
+
+/* ===== 悬停效果 ===== */
+.engine-group:hover rect,
+.gearbox-group:hover rect,
+.propeller-group:hover circle {
+  filter: brightness(1.2);
+  transition: filter 0.3s ease;
+}
+
+.rotation-indicator:hover .rotating-arrow {
+  animation-duration: 1.5s;
+}
+
+/* ===== 响应式设计 ===== */
+@media (max-width: 768px) {
+  .diagram-title {
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+
+  .diagram-subtitle {
+    font-size: 8px;
+  }
+
+  .component-label-main {
+    font-size: 12px;
+  }
+
+  .gearbox-model {
+    font-size: 14px;
+  }
+
+  .rotation-label,
+  .rotation-value {
+    font-size: 10px;
+  }
+}
+
+/* ===== 深色主题适配 ===== */
+@media (prefers-color-scheme: dark) {
+  .single-engine-diagram-enhanced {
+    box-shadow:
+      0 4px 30px rgba(0, 0, 0, 0.6),
+      0 0 60px rgba(0, 180, 216, 0.15);
+  }
+}
+
+/* ===== 打印样式 ===== */
+@media print {
+  .single-engine-diagram-enhanced {
+    box-shadow: none;
+    border: 2px solid #333;
+  }
+
+  .rotating-arrow,
+  .propeller-blades,
+  .shaft-texture {
+    animation: none !important;
+  }
+}
+
+/* ===== 高对比度模式 ===== */
+@media (prefers-contrast: high) {
+  .diagram-title {
+    fill: #ffffff;
+  }
+
+  .component-label-main {
+    fill: #ffffff;
+    font-weight: 700;
+  }
+}
+
+/* ===== 减少动画模式 ===== */
+@media (prefers-reduced-motion: reduce) {
+  .rotating-arrow,
+  .propeller-blades,
+  .shaft-texture,
+  .gear-decoration {
+    animation: none !important;
+  }
+}

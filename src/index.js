@@ -6,7 +6,10 @@ import AppWrapper from './AppWrapper';
 // 导入并使用来自 repair.js 的更完整的数据加载和修复函数
 import { loadAndRepairData } from './utils/repair'; // <--- CHANGED IMPORT
 import DarkModeProvider from './contexts/DarkModeContext';
+import { SelectionConfigProvider } from './contexts/SelectionConfigContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import reportWebVitals from './reportWebVitals';
+import * as serviceWorkerRegistration from './utils/serviceWorkerRegistration';
 
 const Root = () => {
   const [appData, setAppData] = useState(null);
@@ -48,13 +51,28 @@ const Root = () => {
     initializeApp();
   }, []);
 
-  // 加载状态UI
-  if (loadingStatus === 'loading' || loadingStatus === 'initializing') {
+  // 加载状态UI - 只有 'ready' 和 'error' 才退出加载状态
+  // repair.js 的 onProgress 会发送多个中间状态，都应显示加载中
+  if (loadingStatus !== 'ready' && loadingStatus !== 'error') {
+    // 显示友好的状态文本
+    const getStatusText = (status) => {
+      const statusMap = {
+        'initializing': '正在初始化...',
+        'loading': '正在加载数据...',
+        'checking local storage': '正在检查本地数据...',
+        'loading external data': '正在加载外部数据...',
+        'applying overrides': '正在应用配置...',
+        'applying fixes': '正在修复数据...',
+        'validating': '正在验证数据...'
+      };
+      return statusMap[status] || `${status}...`;
+    };
+
     return (
       <div className="app-loading">
         <div className="loading-spinner"></div>
         <div className="loading-text">
-          {loadingStatus === 'initializing' ? '正在初始化...' : '正在加载数据...'}
+          {getStatusText(loadingStatus)}
         </div>
       </div>
     );
@@ -76,9 +94,13 @@ const Root = () => {
   // 正常渲染应用
   return (
     <React.StrictMode>
-      <DarkModeProvider>
-        <AppWrapper initialData={appData} setAppData={setAppData} />
-      </DarkModeProvider>
+      <ErrorBoundary>
+        <DarkModeProvider>
+          <SelectionConfigProvider>
+            <AppWrapper initialData={appData} setAppData={setAppData} />
+          </SelectionConfigProvider>
+        </DarkModeProvider>
+      </ErrorBoundary>
     </React.StrictMode>
   );
 };
@@ -88,3 +110,20 @@ const root = createRoot(rootElement);
 root.render(<Root />);
 
 reportWebVitals();
+
+// 注册 Service Worker (仅生产环境)
+serviceWorkerRegistration.register({
+  onSuccess: (registration) => {
+    console.log('[App] Service Worker registered successfully');
+  },
+  onUpdate: (registration) => {
+    console.log('[App] New version available! Refresh to update.');
+    // 可选: 显示更新提示
+    if (window.confirm('新版本已就绪，是否刷新页面？')) {
+      serviceWorkerRegistration.skipWaiting();
+    }
+  },
+  onError: (error) => {
+    console.warn('[App] Service Worker registration failed:', error);
+  }
+});

@@ -70,9 +70,9 @@ export const selectCompetitorProducts = (power, speed, targetRatio, manufacturer
     // 转速范围检查
     if (speed < p.speedRange[0] || speed > p.speedRange[1]) return false;
 
-    // 速比匹配检查 (容差20%)
+    // 速比匹配检查 (容差10%)
     const hasMatchingRatio = p.ratios.some(r =>
-      Math.abs(r - targetRatio) / targetRatio <= 0.2
+      Math.abs(r - targetRatio) / targetRatio <= 0.10
     );
     if (!hasMatchingRatio) return false;
 

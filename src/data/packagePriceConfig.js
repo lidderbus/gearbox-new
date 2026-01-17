@@ -11,119 +11,119 @@ export const gwPackagePriceConfigs = [
     recommendedCoupling: 'HGT3020 IIID',
     recommendedPump: '2CY7.5/2.5D',
     packagePrice: 180000, // 18万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC45.49',
     recommendedCoupling: 'HGT4020 IIID',
     recommendedPump: '2CY7.5/2.5D',
     packagePrice: 275000, // 27.5万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC45.52',
     recommendedCoupling: 'HGT4020 IIID',
     recommendedPump: '2CY7.5/2.5D',
     packagePrice: 330000, // 33万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC49.54',
     recommendedCoupling: 'HGT4020 IIID',
     recommendedPump: '2CY14.2/2.5D',
     packagePrice: 385000, // 38.5万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC49.59',
     recommendedCoupling: 'HGT5020 IIID',
     recommendedPump: '2CY14.2/2.5D',
     packagePrice: 430000, // 43万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC52.59',
     recommendedCoupling: 'HGT5020 IIID',
     recommendedPump: '2CY14.2/2.5D',
     packagePrice: 510000, // 51万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC52.62',
     recommendedCoupling: 'HGT5020 IIID',
     recommendedPump: '2CY14.2/2.5D',
     packagePrice: 530000, // 53万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC60.66',
     recommendedCoupling: 'HGT6320 IIID',
     recommendedPump: '2CY19.2/2.5D',
     packagePrice: 720000, // 72万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC60.74',
     recommendedCoupling: 'HGT6320 IIID',
     recommendedPump: '2CY19.2/2.5D',
     packagePrice: 820000, // 82万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC63.71',
     recommendedCoupling: 'HGT6320 IIID',
     recommendedPump: '2CY24.8/2.5D',
     packagePrice: 860000, // 86万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC66.75',
     recommendedCoupling: 'HGT8020 IIID',
     recommendedPump: '2CY24.8/2.5D',
     packagePrice: 960000, // 96万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC70.76',
     recommendedCoupling: 'HGT10020 IIID',
     recommendedPump: '2CY24.8/2.5D',
     packagePrice: 1050000, // 105万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC70.82',
     recommendedCoupling: 'HGT10020 IIID',
     recommendedPump: '2CY24.8/2.5D',
     packagePrice: 1120000, // 112万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC70.85',
     recommendedCoupling: 'HGT12520 IIID',
     recommendedPump: '2CY24.8/2.5D',
-    packagePrice: 1420000, // 142万
-    effectiveDate: new Date('2025-03-07')
+    packagePrice: 1390000, // 139万 (2026年调价)
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC75.90',
     recommendedCoupling: 'HGT12520 IIID',
     recommendedPump: '2CY24.8/2.5D',
     packagePrice: 1490000, // 149万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC78.88',
     recommendedCoupling: 'HGT12520 IIID',
     recommendedPump: '2CY24.8/2.5D',
     packagePrice: 1520000, // 152万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   },
   {
     gearboxModel: 'GWC78.96',
     recommendedCoupling: 'HGT12520 IIID',
     recommendedPump: '2CY24.8/2.5D',
     packagePrice: 1630000, // 163万
-    effectiveDate: new Date('2025-03-07')
+    effectiveDate: new Date('2026-01-01')
   }
 ];
 
@@ -173,7 +173,7 @@ export const getGWPackagePriceConfig = (gearboxModel) => {
       return {
         gearboxModel: normalizedModel,
         isSmallGWModel: true,
-        effectiveDate: new Date('2025-03-07')
+        effectiveDate: new Date('2026-01-01')
         // 小型号需要严格按照销售政策，不使用打包价
       };
     }

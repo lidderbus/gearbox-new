@@ -1,6 +1,7 @@
 // src/utils/dataAdapter.js
 import { safeParseFloat } from './dataHelpers';
 import { getStandardDiscountRate, calculateFactoryPrice, calculateMarketPrice } from './priceManager';
+import { estimateGearboxPrice } from './priceEstimator';
 
 export function adaptBasicData(rawData) {
   if (!rawData) return createEmptyData();
@@ -48,7 +49,15 @@ function adaptGearboxItem(item) {
   adapted.inputSpeedRange = ensureValidSpeedRange(adapted.inputSpeedRange);
   adapted.ratios = ensureValidRatios(adapted.ratios);
   adapted.transferCapacity = ensureMatchingCapacityArray(adapted.transferCapacity, adapted.ratios);
-  
+
+  // 同步 transmissionCapacityPerRatio 数组长度（防御性处理）
+  if (item.transmissionCapacityPerRatio) {
+    adapted.transmissionCapacityPerRatio = ensureMatchingCapacityArray(
+      item.transmissionCapacityPerRatio,
+      adapted.ratios
+    );
+  }
+
   // 确保其他技术参数
   adapted.thrust = safeParseFloat(adapted.thrust) || 0;
   adapted.centerDistance = safeParseFloat(adapted.centerDistance) || 0;
@@ -102,19 +111,32 @@ function adaptPumpItem(item) {
 
 function ensureValidSpeedRange(range) {
   if (Array.isArray(range) && range.length === 2) {
-    return [
-      safeParseFloat(range[0]) || 1000,
-      safeParseFloat(range[1]) || 2500
-    ];
+    let min = safeParseFloat(range[0]) || 1000;
+    let max = safeParseFloat(range[1]) || 2500;
+    // 确保 min < max，如果反了则交换
+    if (min >= max) {
+      if (min > max) {
+        [min, max] = [max, min]; // 交换
+      } else {
+        // min === max 的情况，扩展范围
+        max = min + 1500;
+      }
+    }
+    return [min, max];
   }
   return [1000, 2500]; // 默认转速范围
 }
 
 function ensureValidRatios(ratios) {
   if (Array.isArray(ratios)) {
-    return ratios.map(r => safeParseFloat(r)).filter(r => r > 0);
+    const validRatios = ratios.map(r => safeParseFloat(r)).filter(r => r > 0);
+    // 如果没有有效的减速比，提供默认值
+    if (validRatios.length === 0) {
+      return [2.0]; // 默认减速比
+    }
+    return validRatios;
   }
-  return [];
+  return [2.0]; // 默认减速比
 }
 
 function ensureMatchingCapacityArray(capacity, ratios) {
@@ -157,18 +179,40 @@ function convertTorqueToKNm(item) {
 }
 
 function adaptPriceFields(item) {
-  item.basePrice = safeParseFloat(item.basePrice || item.price) || 10000;
+  let rawPrice = safeParseFloat(item.basePrice || item.price);
+
+  // 如果价格为0或无效，使用价格估算器
+  if (!rawPrice || rawPrice <= 0) {
+    const estimated = estimateGearboxPrice(item);
+    if (estimated) {
+      item.basePrice = estimated.basePrice;
+      item.price = estimated.basePrice;
+      item.discountRate = estimated.discountRate;
+      item.factoryPrice = estimated.factoryPrice;
+      item.marketPrice = estimated.marketPrice;
+      item.packagePrice = estimated.factoryPrice;
+      item.priceSource = estimated.source;
+      item.priceConfidence = estimated.confidence;
+      return;
+    }
+    // 估算失败时使用默认值
+    rawPrice = 10000;
+  }
+
+  item.basePrice = rawPrice;
   item.price = item.basePrice;
   item.discountRate = safeParseFloat(item.discountRate) || getStandardDiscountRate(item.model);
-  
+
   // 如果折扣率是百分比格式，转换为小数
   if (item.discountRate > 1) {
     item.discountRate = item.discountRate / 100;
   }
-  
+
   item.factoryPrice = calculateFactoryPrice(item);
   item.marketPrice = calculateMarketPrice(item, item.factoryPrice);
   item.packagePrice = item.factoryPrice;
+  item.priceSource = 'known';
+  item.priceConfidence = 1.0;
 }
 
 function createEmptyData() {

@@ -1,7 +1,9 @@
 // src/components/CouplingSelectionResultComponent.js - 增强版本
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card, Row, Col, Table, Badge, Button, Alert, ProgressBar } from 'react-bootstrap';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import { getSeriesInfo, getSeriesImages } from '../data/couplingSeriesInfo';
+import { getMatchingGearboxes } from '../data/couplingGearboxMatching';
 
 /**
  * 联轴器选型结果组件 - 增强版
@@ -10,6 +12,9 @@ import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recha
 const CouplingSelectionResultComponent = ({
   couplingResult,
   engineTorque,
+  enginePower,       // 发动机功率 (kW)
+  engineSpeed,       // 发动机转速 (rpm)
+  selectedGearbox,   // 选中的齿轮箱型号
   workCondition,
   temperature,
   hasCover,
@@ -21,6 +26,25 @@ const CouplingSelectionResultComponent = ({
   // 状态初始化
   const [showDetails, setShowDetails] = useState(false);
   const [showAllOptions, setShowAllOptions] = useState(false);
+  const [showSeriesInfo, setShowSeriesInfo] = useState(false);
+
+  // 打开高弹选型系统页面
+  const openCouplingSelectionPage = useCallback(() => {
+    const params = new URLSearchParams();
+    if (enginePower) params.append('power', enginePower);
+    if (engineSpeed) params.append('speed', engineSpeed);
+    if (selectedGearbox) params.append('gearbox', selectedGearbox);
+    if (engineTorque) params.append('torque', engineTorque);
+    if (workCondition) params.append('condition', workCondition);
+    if (hasCover) params.append('cover', hasCover ? '1' : '0');
+
+    const url = `/coupling-selection-enhanced.html${params.toString() ? '?' + params.toString() : ''}`;
+    window.open(url, '_blank');
+  }, [enginePower, engineSpeed, selectedGearbox, engineTorque, workCondition, hasCover]);
+
+  // 获取当前联轴器的系列信息
+  const currentSeriesInfo = couplingResult?.model ? getSeriesInfo(couplingResult.model) : null;
+  const matchingGearboxes = couplingResult?.model ? getMatchingGearboxes(couplingResult.model) : [];
   
   // 创建联轴器扭矩组成饼图数据
   const createCouplingTorquePieData = () => {
@@ -335,14 +359,79 @@ const CouplingSelectionResultComponent = ({
                 {couplingResult.warning}
               </Alert>
             )}
-            
-            {onReset && (
-              <div className="d-flex justify-content-end mt-3">
+
+            {/* 系列信息展示 */}
+            {currentSeriesInfo && (
+              <div className="mt-3">
+                <Button
+                  variant="link"
+                  className="p-0"
+                  onClick={() => setShowSeriesInfo(!showSeriesInfo)}
+                  style={{ color: colors?.primary }}
+                >
+                  <i className={`bi bi-${showSeriesInfo ? 'chevron-up' : 'chevron-down'} me-1`}></i>
+                  {showSeriesInfo ? '隐藏系列信息' : '查看系列信息'}
+                </Button>
+
+                {showSeriesInfo && (
+                  <Card className="mt-2" style={{ backgroundColor: colors?.card || '#f8f9fa', borderColor: colors?.border }}>
+                    <Card.Body>
+                      <h6 style={{ color: colors?.headerText }}>{currentSeriesInfo.name}</h6>
+                      <p className="text-muted small mb-2">{currentSeriesInfo.description}</p>
+
+                      {currentSeriesInfo.features && currentSeriesInfo.features.length > 0 && (
+                        <div className="mb-3">
+                          <strong className="small">产品特性:</strong>
+                          <ul className="small mb-0 ps-3">
+                            {currentSeriesInfo.features.slice(0, 4).map((feature, idx) => (
+                              <li key={idx}>{feature}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {matchingGearboxes.length > 0 && (
+                        <div className="mb-2">
+                          <strong className="small">适配齿轮箱: </strong>
+                          <span className="small">{matchingGearboxes.join(', ')}</span>
+                        </div>
+                      )}
+
+                      {currentSeriesInfo.detailUrl && (
+                        <a
+                          href={currentSeriesInfo.detailUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="small"
+                        >
+                          <i className="bi bi-box-arrow-up-right me-1"></i>
+                          查看官网详情
+                        </a>
+                      )}
+                    </Card.Body>
+                  </Card>
+                )}
+              </div>
+            )}
+
+            {/* 操作按钮区域 */}
+            <div className="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+              <Button
+                variant="success"
+                size="sm"
+                onClick={openCouplingSelectionPage}
+                title="打开高弹联轴器选型系统，获取更详细的产品信息和图纸"
+              >
+                <i className="bi bi-link-45deg me-1"></i>
+                进入高弹选型系统
+              </Button>
+
+              {onReset && (
                 <Button variant="outline-primary" size="sm" onClick={onReset}>
                   <i className="bi bi-arrow-repeat me-1"></i> 重新选型
                 </Button>
-              </div>
-            )}
+              )}
+            </div>
           </>
         )}
       </Card.Body>

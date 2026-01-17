@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Alert, Card, Badge } from 'react-bootstrap';
 import AgreementGenerator from './AgreementGenerator';
 import ErrorBoundary from './ErrorBoundary'; // 导入错误边界组件
-import { exportHtmlContentToPDF, printHtmlContent } from '../utils/pdfExportUtils';
+import { optimizedHtmlToPdf, printHtmlContent } from '../utils/pdfExportUtils';
 import { needsStandbyPump } from '../utils/enhancedPumpSelection';
 
 /**
@@ -17,7 +17,8 @@ const TechnicalAgreementView = ({
   colors,
   theme,
   onNavigateToQuotation,
-  onNavigateToContract
+  onNavigateToContract,
+  onSpecialRequirementsChange = () => {}  // 新增: 用于与合同同步特殊订货要求
 }) => {
   const [agreement, setAgreement] = useState(null);
   const [error, setError] = useState('');
@@ -130,8 +131,11 @@ const TechnicalAgreementView = ({
         throw new Error('无法找到预览内容');
       }
       
-      // 构建文件名，包含语言信息
-      let filename = `${projectInfo?.projectName || '齿轮箱'}_技术协议`;
+      // 构建文件名，包含语言信息 - 确保是字符串，避免 [object Object]
+      const projectName = typeof projectInfo?.projectName === 'string'
+        ? projectInfo.projectName
+        : (projectInfo?.projectName?.toString() || '齿轮箱');
+      let filename = `${projectName}_技术协议`;
       if (agreement.language === 'bilingual') {
         filename += '_中英文对照';
       } else if (agreement.language === 'en') {
@@ -139,18 +143,16 @@ const TechnicalAgreementView = ({
       } else {
         filename += '_中文版';
       }
-      
+
       // 添加延迟确保内容渲染完成
       setTimeout(() => {
-        // 导出PDF
-        exportHtmlContentToPDF(previewElement, {
+        // 导出PDF - 使用 optimizedHtmlToPdf 正确处理 DOM 元素
+        optimizedHtmlToPdf(previewElement, {
           filename: `${filename}.pdf`,
           orientation: 'portrait',
           format: 'a4',
-          margin: { top: 20, right: 20, bottom: 20, left: 20 },
           scale: 1.5,
-          useCORS: true,
-          allowTaint: true
+          debug: false
         })
         .then(() => {
           setSuccess('技术协议已导出为PDF格式');
@@ -356,6 +358,7 @@ const TechnicalAgreementView = ({
                   colors={colors}
                   theme={theme}
                   onGenerated={handleAgreementGenerated}
+                  onSpecialRequirementsChange={onSpecialRequirementsChange}
                 />
               </ErrorBoundary>
             </Card.Body>

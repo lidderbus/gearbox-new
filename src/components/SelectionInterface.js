@@ -100,10 +100,15 @@ const SelectionInterface = () => {
       if (result.success && result.result) {
         const savedResult = saveSelectionToHistory(
           result.result,
-          { 
-            name: `选型 ${new Date().toLocaleString()}`,
-            date: new Date().toISOString(),
-            type: selectedGearboxType 
+          {
+            projectName: `选型 ${new Date().toLocaleString()}`,
+            customerName: '',
+            projectNumber: '',
+            contactPerson: '',
+            contactPhone: '',
+            contactEmail: '',
+            engineModel: '',
+            selectionType: selectedGearboxType || 'single'
           },
           { gearbox: result.result.gearbox, coupling: result.result.coupling, pump: result.result.pump },
           { power: numericRequirements.motorPower, speed: numericRequirements.motorSpeed },

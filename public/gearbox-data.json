@@ -303,6 +303,11 @@
         4.45
       ],
       "transferCapacity": [
+        0.11,
+        0.11,
+        0.11,
+        0.11,
+        0.11,
         0.11
       ],
       "thrust": 30,
@@ -327,6 +332,8 @@
         3.5
       ],
       "transferCapacity": [
+        0.004,
+        0.004,
         0.004
       ],
       "thrust": 1.8,
@@ -353,6 +360,10 @@
         3.83
       ],
       "transferCapacity": [
+        0.012,
+        0.012,
+        0.012,
+        0.012,
         0.012
       ],
       "thrust": 3.5,
@@ -378,6 +389,9 @@
         4
       ],
       "transferCapacity": [
+        0.0199,
+        0.0199,
+        0.0199,
         0.0199
       ],
       "thrust": 5,
@@ -408,6 +422,14 @@
         5.81
       ],
       "transferCapacity": [
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
         0.1
       ],
       "thrust": 29.4,
@@ -726,6 +748,16 @@
         7.05
       ],
       "transferCapacity": [
+        35,
+        35,
+        35,
+        35,
+        35,
+        35,
+        35,
+        35,
+        35,
+        35,
         35
       ],
       "thrust": 1400,
@@ -751,6 +783,10 @@
         4.05
       ],
       "transferCapacity": [
+        0.44,
+        0.44,
+        0.44,
+        0.44,
         0.44
       ],
       "thrust": 80,
@@ -783,13 +819,24 @@
       "thrust": 175,
       "standardCenterDistance": 1460,
       "controlType": "双机并车",
-      "transferCapacity": 0,
-      "weight": 0,
+      "transferCapacity": [
+        1.12,
+        1.12,
+        1.12,
+        1.12,
+        1.12,
+        1.12,
+        1.12,
+        1.12,
+        1.12
+      ],
+      "weight": 10600,
       "basePrice": 0,
       "price": 0,
       "discountRate": 0.1,
       "factoryPrice": 0,
-      "dimensions": "-"
+      "dimensions": "-",
+      "centerDistance": 1460
     },
     {
       "model": "2GWH4100",
@@ -812,13 +859,24 @@
       "thrust": 450,
       "standardCenterDistance": 2300,
       "controlType": "双机并车",
-      "transferCapacity": 0,
-      "weight": 0,
+      "transferCapacity": [
+        4.24,
+        4.24,
+        4.24,
+        4.24,
+        4.24,
+        4.24,
+        4.24,
+        4.24,
+        4.24
+      ],
+      "weight": 41000,
       "basePrice": 0,
       "price": 0,
       "discountRate": 0.1,
       "factoryPrice": 0,
-      "dimensions": "-"
+      "dimensions": "-",
+      "centerDistance": 2300
     },
     {
       "model": "2GWH7050",
@@ -841,13 +899,24 @@
       "thrust": 750,
       "standardCenterDistance": 2700,
       "controlType": "双机并车",
-      "transferCapacity": 0,
-      "weight": 0,
+      "transferCapacity": [
+        7.43,
+        7.43,
+        7.43,
+        7.43,
+        7.43,
+        7.43,
+        7.43,
+        7.43,
+        7.43
+      ],
+      "weight": 70500,
       "basePrice": 0,
       "price": 0,
       "discountRate": 0.1,
       "factoryPrice": 0,
-      "dimensions": "-"
+      "dimensions": "-",
+      "centerDistance": 2700
     }
   ],
   "hcmGearboxes": [
@@ -1112,6 +1181,9 @@
         3
       ],
       "transferCapacity": [
+        0.0985,
+        0.0985,
+        0.0985,
         0.0985
       ],
       "thrust": 16,
@@ -1137,6 +1209,8 @@
         2.5
       ],
       "transferCapacity": [
+        0.5062,
+        0.5062,
         0.5062
       ],
       "thrust": 50,
@@ -1462,6 +1536,16 @@
         5.96
       ],
       "transferCapacity": [
+        1.466,
+        1.466,
+        1.466,
+        1.466,
+        1.466,
+        1.466,
+        1.466,
+        1.466,
+        1.466,
+        1.466,
         1.466
       ],
       "thrust": 110,
@@ -1967,6 +2051,17 @@
         3000
       ],
       "transferCapacity": [
+        0.331,
+        0.331,
+        0.331,
+        0.331,
+        0.331,
+        0.331,
+        0.331,
+        0.331,
+        0.331,
+        0.331,
+        0.331,
         0.331
       ],
       "_mainTransferCapacity": 0.331,
@@ -1974,12 +2069,13 @@
         1000,
         2500
       ],
-      "weight": 0,
+      "weight": 900,
       "basePrice": 0,
       "price": 0,
       "discountRate": 0.16,
       "factoryPrice": 0,
-      "dimensions": "-"
+      "dimensions": "-",
+      "centerDistance": 264
     },
     {
       "model": "HC600P",
@@ -2016,6 +2112,10 @@
         3000
       ],
       "transferCapacity": [
+        0.49,
+        0.49,
+        0.49,
+        0.49,
         0.49
       ],
       "_mainTransferCapacity": 0.49,
@@ -2023,12 +2123,13 @@
         1000,
         2500
       ],
-      "weight": 0,
+      "weight": 1500,
       "basePrice": 0,
       "price": 0,
       "discountRate": 0.12,
       "factoryPrice": 0,
-      "dimensions": "-"
+      "dimensions": "-",
+      "centerDistance": 320
     },
     {
       "model": "HC1200P",
@@ -2079,6 +2180,17 @@
         2500
       ],
       "transferCapacity": [
+        0.93,
+        0.93,
+        0.93,
+        0.93,
+        0.93,
+        0.93,
+        0.93,
+        0.93,
+        0.93,
+        0.93,
+        0.93,
         0.93
       ],
       "_mainTransferCapacity": 0.93,
@@ -2086,12 +2198,13 @@
         1000,
         2500
       ],
-      "weight": 0,
+      "weight": 2100,
       "basePrice": 0,
       "price": 0,
       "discountRate": 0.16,
       "factoryPrice": 0,
-      "dimensions": "-"
+      "dimensions": "-",
+      "centerDistance": 380
     },
     {
       "model": "HCS138",
@@ -2100,6 +2213,11 @@
         2500
       ],
       "transferCapacity": [
+        0.11,
+        0.11,
+        0.11,
+        0.11,
+        0.11,
         0.11
       ],
       "thrust": 30,
@@ -2170,6 +2288,11 @@
         2500
       ],
       "transferCapacity": [
+        0.257,
+        0.257,
+        0.257,
+        0.257,
+        0.257,
         0.257
       ],
       "thrust": 50,
@@ -2245,6 +2368,8 @@
         5
       ],
       "transferCapacity": [
+        0.14,
+        0.14,
         0.14
       ],
       "thrust": 55,
@@ -2268,6 +2393,7 @@
         2.84
       ],
       "transferCapacity": [
+        0.735,
         0.735
       ],
       "thrust": 100,
@@ -2293,6 +2419,9 @@
         3
       ],
       "transferCapacity": [
+        1.03,
+        1.03,
+        1.03,
         1.03
       ],
       "thrust": 110,
@@ -2318,6 +2447,9 @@
         2.76
       ],
       "transferCapacity": [
+        1.204,
+        1.204,
+        1.204,
         1.204
       ],
       "thrust": 120,
@@ -2341,6 +2473,7 @@
         3.24
       ],
       "transferCapacity": [
+        1.204,
         1.204
       ],
       "thrust": 120,
@@ -2387,6 +2520,8 @@
         3.23
       ],
       "transferCapacity": [
+        0.735,
+        0.735,
         0.735
       ],
       "thrust": 100,
@@ -2415,6 +2550,10 @@
         4
       ],
       "transferCapacity": [
+        0.57,
+        0.57,
+        0.57,
+        0.57,
         0.57
       ],
       "thrust": 100,
@@ -2441,6 +2580,10 @@
         3.95
       ],
       "transferCapacity": [
+        0.96,
+        0.96,
+        0.96,
+        0.96,
         0.96
       ],
       "thrust": 140,
@@ -2467,6 +2610,10 @@
         3.95
       ],
       "transferCapacity": [
+        17.5,
+        17.5,
+        17.5,
+        17.5,
         17.5
       ],
       "thrust": 1400,
@@ -2493,6 +2640,10 @@
         3.95
       ],
       "transferCapacity": [
+        2.825,
+        2.825,
+        2.825,
+        2.825,
         2.825
       ],
       "thrust": 290,
@@ -2520,6 +2671,11 @@
         4.48
       ],
       "transferCapacity": [
+        7.2,
+        7.2,
+        7.2,
+        7.2,
+        7.2,
         7.2
       ],
       "thrust": 730,
@@ -2543,6 +2699,7 @@
         8
       ],
       "transferCapacity": [
+        2.12,
         2.12
       ],
       "thrust": 350,

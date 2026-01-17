@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 2; // 应用程序数据版本号
+export const APP_DATA_VERSION = 4; // v4: 新增HCM/HCAM/HCVM系列型号及传递能力修正 (2026-01-07)
 
 export const DEFAULTS = {
     gearbox: {

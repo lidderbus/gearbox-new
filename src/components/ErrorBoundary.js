@@ -9,11 +9,13 @@ import { Alert, Button } from 'react-bootstrap';
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      hasError: false, 
-      error: null, 
+    this.state = {
+      hasError: false,
+      error: null,
       errorInfo: null,
-      key: 0 // 用于强制重新渲染
+      key: 0, // 用于强制重新渲染
+      retryCount: 0, // 重试次数
+      maxRetries: 3 // 最大重试次数
     };
   }
   
@@ -32,12 +34,18 @@ class ErrorBoundary extends React.Component {
   }
   
   handleRetry = () => {
+    // 检查是否已达到最大重试次数
+    if (this.state.retryCount >= this.state.maxRetries) {
+      console.error('ErrorBoundary: 已达到最大重试次数 (' + this.state.maxRetries + ')');
+      return;
+    }
     // 重置错误状态并增加key以强制重新渲染子组件
     this.setState(prevState => ({
       hasError: false,
       error: null,
       errorInfo: null,
-      key: prevState.key + 1
+      key: prevState.key + 1,
+      retryCount: prevState.retryCount + 1
     }));
   }
   
@@ -59,9 +67,15 @@ class ErrorBoundary extends React.Component {
             </details>
           </Alert>
           <div className="mt-3">
-            <Button variant="primary" onClick={this.handleRetry}>
+            <Button
+              variant="primary"
+              onClick={this.handleRetry}
+              disabled={this.state.retryCount >= this.state.maxRetries}
+            >
               <i className="bi bi-arrow-repeat me-2"></i>
-              重试
+              {this.state.retryCount >= this.state.maxRetries
+                ? '已达最大重试次数'
+                : `重试 (${this.state.retryCount}/${this.state.maxRetries})`}
             </Button>
             {this.props.fallback && (
               <div className="mt-3">

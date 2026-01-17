@@ -3,8 +3,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Card, Table, Alert, Badge, Spinner, Tab, Tabs } from 'react-bootstrap';
-import { selectFlexibleCoupling } from '../../utils/selectionAlgorithm';
-import { couplingWorkFactorMap, getTemperatureFactor } from '../../data/gearboxMatchingMaps';
+import { selectFlexibleCoupling } from '../../utils/couplingSelection';
+import { couplingWorkFactorMap, getTemperatureFactor, getWorkFactor, WorkFactorMode } from '../../data/gearboxMatchingMaps';
 
 /**
  * 联轴器选择器组件
@@ -29,6 +29,7 @@ const CouplingSelector = ({
 }) => {
   // 状态
   const [workCondition, setWorkCondition] = useState(initialValues.workCondition || "III类:扭矩变化中等");
+  const [workFactorMode, setWorkFactorMode] = useState(initialValues.workFactorMode || WorkFactorMode.FACTORY);
   const [temperature, setTemperature] = useState(initialValues.temperature || "30");
   const [hasCover, setHasCover] = useState(initialValues.hasCover || false);
   const [engineTorque, setEngineTorque] = useState(0);
@@ -54,15 +55,16 @@ const CouplingSelector = ({
       // 计算发动机扭矩 (N·m)
       const torque = (engineData.power * 9550) / engineData.speed;
       setEngineTorque(torque);
-      
+
       // 计算所需联轴器扭矩
-      calculateRequiredTorque(torque, workCondition, temperature);
+      calculateRequiredTorque(torque, workCondition, temperature, workFactorMode);
     }
-  }, [engineData, workCondition, temperature]);
+  }, [engineData, workCondition, temperature, workFactorMode]);
 
   // 计算所需联轴器扭矩 (kN·m)
-  const calculateRequiredTorque = (torque, condition, temp) => {
-    const kFactor = couplingWorkFactorMap[condition] || couplingWorkFactorMap.default;
+  const calculateRequiredTorque = (torque, condition, temp, mode) => {
+    // 使用双模式工况系数: 厂家标准 或 JB/CCS船级社标准
+    const kFactor = getWorkFactor(condition, mode);
     const stFactor = getTemperatureFactor(parseFloat(temp));
     const requiredCouplingTorque = torque * kFactor * stFactor / 1000;
     setRequiredTorque(requiredCouplingTorque);
@@ -95,9 +97,12 @@ const CouplingSelector = ({
         engineTorque,
         gearboxData.model,
         couplingsData,
+        null,  // couplingSpecificationsMap - 使用默认
         workCondition,
         parseFloat(temperature),
-        hasCover
+        hasCover,
+        engineData?.speed,  // engineSpeed
+        workFactorMode  // 工况系数模式: FACTORY | JB_CCS
       );
       
       setSelectionResult(result);
@@ -165,7 +170,39 @@ const CouplingSelector = ({
             工况影响联轴器的工作负荷系数
           </Form.Text>
         </Form.Group>
-        
+
+        {/* 工况系数标准选择 */}
+        <Form.Group className="mb-3">
+          <Form.Label style={{ color: colors.text }}>工况系数标准</Form.Label>
+          <div>
+            <Form.Check
+              inline
+              type="radio"
+              label="厂家标准"
+              name="workFactorMode"
+              id="mode-factory"
+              checked={workFactorMode === WorkFactorMode.FACTORY}
+              onChange={() => setWorkFactorMode(WorkFactorMode.FACTORY)}
+              style={{ color: colors.text }}
+            />
+            <Form.Check
+              inline
+              type="radio"
+              label="JB/CCS船级社标准"
+              name="workFactorMode"
+              id="mode-jb-ccs"
+              checked={workFactorMode === WorkFactorMode.JB_CCS}
+              onChange={() => setWorkFactorMode(WorkFactorMode.JB_CCS)}
+              style={{ color: colors.text }}
+            />
+          </div>
+          <Form.Text style={{ color: colors.muted }}>
+            {workFactorMode === WorkFactorMode.JB_CCS
+              ? 'JB/ZQ4383-86标准，系数较高，推荐用于CCS船级社认证项目'
+              : '厂家标准，系数较低，适用于一般工业应用'}
+          </Form.Text>
+        </Form.Group>
+
         {/* 温度设置 */}
         <Form.Group className="mb-3">
           <Form.Label style={{ color: colors.text }}>工作温度 (°C)</Form.Label>

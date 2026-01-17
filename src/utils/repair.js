@@ -1,6 +1,9 @@
 // src/utils/repair.js
 // 系统数据修复与初始化工具
 
+// 导入日志工具
+import { logger } from '../config/logging';
+
 // Import fixData functions that are used directly in repair.js
 import {
     fixSpecialGearboxData,
@@ -24,6 +27,10 @@ import {
     getStandardDiscountRate // 尽管在 fixData 中使用，在这里导入也没问题
 } from './priceManager'; // 假设 priceManager.js 导出这些函数
 
+// 环境检测：仅在开发环境输出警告信息
+const isDev = process.env.NODE_ENV === 'development';
+const logWarn = isDev ? (...args) => logger.warn(...args) : () => {};
+
 // Re-implement ensureCollections function
 export const ensureCollections = (data) => {
   if (!data) return {}; // 如果数据为空，返回空对象
@@ -45,7 +52,7 @@ export const ensureCollections = (data) => {
   // 确保每个集合都存在，如果不存在则初始化为空数组
   collections.forEach(collection => {
     if (!Array.isArray(result[collection])) {
-      console.log(`repair.js::ensureCollections: Initializing missing collection ${collection} as empty array`);
+      logger.debug(`repair.js::ensureCollections: Initializing missing collection ${collection} as empty array`);
       result[collection] = [];
     }
   });
@@ -84,7 +91,7 @@ export const mergeDataCollections = (source, target) => {
       }
     } else {
        // Handle source items without a model - log a warning
-       console.warn("repair.js::mergeDataCollections: Skipping item without a model:", sourceItem);
+       logger.warn("repair.js::mergeDataCollections: Skipping item without a model:", sourceItem);
     }
   });
 
@@ -110,16 +117,17 @@ export const mergeEnhancedData = (source, target, options = {}) => {
   // Define collections that should be merged using the mergeDataCollections logic
   const mergeableCollections = [
       'hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes',
-      'hcqGearboxes', 'gcGearboxes', 'hcxGearboxes', 'hcaGearboxes', 'hcvGearboxes', 'mvGearboxes', 'otherGearboxes', // Add all gearbox collections
+      'hcqGearboxes', 'gcGearboxes', 'hcxGearboxes', 'hcaGearboxes', 'hcvGearboxes', 'mvGearboxes',
+      'hcdGearboxes', 'hclGearboxes', 'hctGearboxes', 'hcsGearboxes', 'hcgGearboxes', // 新增系列
+      'otherGearboxes', 'othersGearboxes', // 支持两种命名
       'flexibleCouplings', 'standbyPumps', // These are also mergeable collections
-      // '_priceHistory', // Removed if not stored/merged as a collection directly in data
   ];
 
   Object.keys(source).forEach(key => {
     // Handle specific prioritized collections from options
     if (options[key] && Array.isArray(options[key])) {
        // If the collection exists in options, use the merge logic with options data having highest priority
-        console.log(`repair.js::mergeEnhancedData: Merging prioritized collection: ${key}`);
+        logger.debug(`repair.js::mergeEnhancedData: Merging prioritized collection: ${key}`);
        // Use the mergeDataCollections helper to merge the arrays
        // The result variable is modified IN PLACE here
        result[key] = mergeDataCollections(source[key], result[key]); // Merge source into existing result
@@ -156,7 +164,7 @@ export const mergeEnhancedData = (source, target, options = {}) => {
  * Initialize data repair tools. (Not used in loadAndRepairData directly)
  */
 export const initializeDataRepair = () => {
-  console.log('repair.js: initializeDataRepair called.');
+  logger.debug('repair.js: initializeDataRepair called.');
 };
 
 
@@ -169,7 +177,7 @@ export const initializeDataRepair = () => {
  * @throws {Error} If critical errors occurred during repair or validation.
  */
 export const loadAndRepairData = async (options = {}) => {
-  console.log('repair.js: Starting data loading and repair process...');
+  logger.log('repair.js: Starting data loading and repair process...');
   const { onProgress, initialDataOverrides = {} } = options;
 
   try {
@@ -179,12 +187,12 @@ export const loadAndRepairData = async (options = {}) => {
     let workingData = {};
     if (embeddedGearboxData) {
          workingData = JSON.parse(JSON.stringify(embeddedGearboxData)); // Deep copy
-         console.log("repair.js: Loaded base embedded gearbox data.");
+         logger.debug("repair.js: Loaded base embedded gearbox data.");
      } else {
-         console.error("repair.js: embeddedGearboxData is not defined!");
+         logger.error("repair.js: embeddedGearboxData is not defined!");
          // Fallback to an empty structure with default version
          workingData = { _version: APP_DATA_VERSION };
-         console.warn("repair.js: Used empty structure as base data fallback.");
+         logger.warn("repair.js: Used empty structure as base data fallback.");
      }
 
     // Explicitly add accessories from their files to the base data
@@ -193,7 +201,7 @@ export const loadAndRepairData = async (options = {}) => {
     workingData.flexibleCouplings = mergeDataCollections(flexibleCouplings, workingData.flexibleCouplings);
     workingData.standbyPumps = mergeDataCollections(standbyPumps, workingData.standbyPumps);
 
-    console.log(`repair.js: Added/Merged ${workingData.flexibleCouplings.length} couplings and ${workingData.standbyPumps.length} pumps from source files.`);
+    logger.debug(`repair.js: Added/Merged ${workingData.flexibleCouplings.length} couplings and ${workingData.standbyPumps.length} pumps from source files.`);
 
 
     onProgress?.('checking local storage');
@@ -203,17 +211,24 @@ export const loadAndRepairData = async (options = {}) => {
     if (storedDataJsonRevised) {
         try {
             storedDataRevised = JSON.parse(storedDataJsonRevised);
-            // Optional: Version compatibility check can be added here if needed
-            console.log(`repair.js: Found localStorage data.`);
+            // Version compatibility check - clear stale data if version mismatch
+            const storedVersion = storedDataRevised?._version || 0;
+            if (storedVersion < APP_DATA_VERSION) {
+                logger.warn(`repair.js: localStorage data version (${storedVersion}) is older than current (${APP_DATA_VERSION}), clearing stale data.`);
+                storedDataRevised = null;
+                localStorage.removeItem('appData');
+            } else {
+                logger.debug(`repair.js: Found localStorage data with version ${storedVersion}.`);
+            }
         } catch (e) {
-            console.warn('repair.js: Failed to parse localStorage data, will discard.', e);
+            logger.warn('repair.js: Failed to parse localStorage data, will discard.', e);
             storedDataRevised = null; // Discard invalid stored data
             localStorage.removeItem('appData'); // Clear problematic data
         }
     }
 
      if (storedDataRevised) {
-         console.log("repair.js: Merging data from localStorage.");
+         logger.debug("repair.js: Merging data from localStorage.");
          // Prioritize storedDataRevised over base (embedded + file accessories)
          workingData = mergeEnhancedData(storedDataRevised, workingData);
      }
@@ -221,25 +236,26 @@ export const loadAndRepairData = async (options = {}) => {
 
     onProgress?.('loading external data');
     // 3. Merge from external gearbox-data.json if available
+    // 使用绝对路径确保从任何路由都能正确加载数据
     try {
-      const response = await fetch('./gearbox-data.json');
+      const response = await fetch('/gearbox-app/gearbox-data.json');
       if (response.ok) {
         const externalData = await response.json();
-        console.log("repair.js: Successfully loaded external gearbox-data.json");
+        logger.debug("repair.js: Successfully loaded external gearbox-data.json");
         // Prioritize externalData over current workingData (base + stored)
         workingData = mergeEnhancedData(externalData, workingData);
       } else {
-        console.warn("repair.js: Could not load external gearbox-data.json, status:", response.status);
+        logger.warn("repair.js: Could not load external gearbox-data.json, status:", response.status);
       }
     } catch (fetchError) {
-      console.warn("repair.js: Fetching external data file failed:", fetchError);
+      logger.warn("repair.js: Fetching external data file failed:", fetchError);
     }
 
 
     onProgress?.('applying overrides');
     // 4. Merge data from initialDataOverrides (highest priority)
     if (initialDataOverrides && Object.keys(initialDataOverrides).length > 0) {
-        console.log("repair.js: Merging data from initialDataOverrides (highest priority).");
+        logger.debug("repair.js: Merging data from initialDataOverrides (highest priority).");
         // Prioritize overrides over current workingData
         workingData = mergeEnhancedData(initialDataOverrides, workingData, initialDataOverrides); // Pass overrides also as options for prioritized collections
     }
@@ -247,38 +263,38 @@ export const loadAndRepairData = async (options = {}) => {
 
     onProgress?.('applying fixes');
     // 5. Apply Data Fixes in a logical order
-    console.log("repair.js: Applying data fixes...");
+    logger.log("repair.js: Applying data fixes...");
     const allRepairWarnings = [];
     const allRepairErrors = []; // Collect errors from critical fixes
 
     // Step 5.1: Ensure all expected collections are arrays - essential before iterating or processing collections
     let repairedData = ensureCollections(workingData); // <-- Correctly assign to repairedData
-    console.log("repair.js: Ensured all data collections are initialized.");
+    logger.debug("repair.js: Ensured all data collections are initialized.");
 
 
     // Step 5.2: Apply special gearbox fixes
     repairedData = fixSpecialGearboxData(repairedData);
-    console.log("repair.js: Applied special gearbox fixes.");
+    logger.debug("repair.js: Applied special gearbox fixes.");
 
     // Step 5.3: Ensure core gearbox numeric fields have valid numbers/defaults
      const gearboxNumericFixResult = ensureGearboxNumericFields(repairedData);
      repairedData = gearboxNumericFixResult.data;
-     if (gearboxNumericFixResult.warnings && gearboxNumericFixResult.warnings.length > 0) { allRepairWarnings.push(...gearboxNumericFixResult.warnings); console.warn("repair.js: Warnings during gearbox numeric field fixing:", gearboxNumericFixResult.warnings); }
-      console.log(`repair.js: Ensured gearbox numeric fields (patched ${gearboxNumericFixResult.patched} items).`);
+     if (gearboxNumericFixResult.warnings && gearboxNumericFixResult.warnings.length > 0) { allRepairWarnings.push(...gearboxNumericFixResult.warnings); logWarn("repair.js: Warnings during gearbox numeric field fixing:", gearboxNumericFixResult.warnings); }
+      logger.debug(`repair.js: Ensured gearbox numeric fields (patched ${gearboxNumericFixResult.patched} items).`);
 
     // Step 5.4: Fix gearbox capacity array lengths and basic validity
     const capacityFixResult = fixGearboxCapacityArrays(repairedData);
     repairedData = capacityFixResult.data;
-    if (capacityFixResult.warnings && capacityFixResult.warnings.length > 0) { allRepairWarnings.push(...capacityFixResult.warnings); console.warn("repair.js: Warnings during capacity array fixing:", capacityFixResult.warnings); }
-    console.log(`repair.js: Applied capacity array fixes (patched ${capacityFixResult.patched} items).`);
+    if (capacityFixResult.warnings && capacityFixResult.warnings.length > 0) { allRepairWarnings.push(...capacityFixResult.warnings); logWarn("repair.js: Warnings during capacity array fixing:", capacityFixResult.warnings); }
+    logger.debug(`repair.js: Applied capacity array fixes (patched ${capacityFixResult.patched} items).`);
 
 
     // Step 5.5: Fix Accessories data (Couplings torque/speed/weight, Pumps flow/pressure/power/weight) - Must be AFTER collections are arrays
     const accessoryFixResult = fixAccessories(repairedData);
     repairedData = accessoryFixResult.data;
-    if (accessoryFixResult.warnings && accessoryFixResult.warnings.length > 0) { allRepairWarnings.push(...accessoryFixResult.warnings); console.warn("repair.js: Warnings during accessory fixing:", accessoryFixResult.warnings); }
-     if (accessoryFixResult.errors && accessoryFixResult.errors.length > 0) { allRepairErrors.push(...accessoryFixResult.errors); console.error("repair.js: Critical errors during accessory fixing:", accessoryFixResult.errors); }
-    console.log(`repair.js: Applied accessory fixes (patched ${accessoryFixResult.summary?.totalPatched || 0} items), errors: ${accessoryFixResult.errors?.length || 0}`);
+    if (accessoryFixResult.warnings && accessoryFixResult.warnings.length > 0) { allRepairWarnings.push(...accessoryFixResult.warnings); logWarn("repair.js: Warnings during accessory fixing:", accessoryFixResult.warnings); }
+     if (accessoryFixResult.errors && accessoryFixResult.errors.length > 0) { allRepairErrors.push(...accessoryFixResult.errors); logger.error("repair.js: Critical errors during accessory fixing:", accessoryFixResult.errors); }
+    logger.debug(`repair.js: Applied accessory fixes (patched ${accessoryFixResult.summary?.totalPatched || 0} items), errors: ${accessoryFixResult.errors?.length || 0}`);
 
 
     // Step 5.6: Process and fix price data
@@ -286,26 +302,26 @@ export const loadAndRepairData = async (options = {}) => {
     repairedData = priceFixResult.data;
      if (priceFixResult.results?.warnings) allRepairWarnings.push(...priceFixResult.results.warnings);
      if (priceFixResult.results?.errors) allRepairErrors.push(...priceFixResult.results.errors);
-     if (priceFixResult.results?.corrected > 0) { console.log(`repair.js: Applied general price data processing (corrected ${priceFixResult.results.corrected} items).`); } else { console.log(`repair.js: General price data processing complete (0 items corrected).`); }
+     if (priceFixResult.results?.corrected > 0) { logger.debug(`repair.js: Applied general price data processing (corrected ${priceFixResult.results.corrected} items).`); } else { logger.debug(`repair.js: General price data processing complete (0 items corrected).`); }
 
 
     // Step 5.7: Apply specific model price overrides
     repairedData = fixSpecificModelPrices(repairedData);
-    console.log("repair.js: Applied specific model price overrides.");
+    logger.debug("repair.js: Applied specific model price overrides.");
 
 
     onProgress?.('adapting data');
     // 6. Data Adaptation
-    console.log("repair.js: Adapting data structure...");
+    logger.debug("repair.js: Adapting data structure...");
     const adaptedData = adaptEnhancedData(repairedData);
 
 
     onProgress?.('validating data');
     // 7. Final Validation of the adapted data
-    console.log("repair.js: Performing final data validation...");
+    logger.log("repair.js: Performing final data validation...");
     const validationResult = validateDatabase(adaptedData);
     if (!validationResult.success) {
-        console.error("repair.js: Final data validation failed!", validationResult);
+        logger.error("repair.js: Final data validation failed!", validationResult);
         const finalErrors = [...allRepairErrors];
         Object.keys(validationResult.details).forEach(key => {
             if (validationResult.details[key].invalidItems.length > 0) {
@@ -322,16 +338,16 @@ export const loadAndRepairData = async (options = {}) => {
         if (finalErrors.length > 0) {
             const validationError = new Error(`Data validation failed: ${validationResult.message}. Found ${validationResult.summary.invalid} validation errors and ${allRepairErrors.length} repair errors.`);
             validationError.details = { validation: validationResult, repairErrors: finalErrors, repairWarnings: allRepairWarnings };
-            console.error(validationError);
+            logger.error(validationError);
             throw validationError;
         } else {
-             console.warn("repair.js: Validation reported warnings but no critical errors found in data. Proceeding.", validationResult);
-             if (allRepairWarnings.length > 0) { console.warn("repair.js: Total repair warnings:", allRepairWarnings); }
+             logWarn("repair.js: Validation reported warnings but no critical errors found in data. Proceeding.", validationResult);
+             if (allRepairWarnings.length > 0) { logWarn("repair.js: Total repair warnings:", allRepairWarnings); }
         }
     } else {
-        console.log(`repair.js: Final data validation successful. ${validationResult.summary.warnings} warnings.`);
-         if (validationResult.summary.warnings > 0) { console.warn("repair.js: Validation warnings:", validationResult.details); }
-          if (allRepairWarnings.length > 0) { console.warn("repair.js: Total repair warnings:", allRepairWarnings); }
+        logger.log(`repair.js: Final data validation successful. ${validationResult.summary.warnings} warnings.`);
+         if (validationResult.summary.warnings > 0) { logWarn("repair.js: Validation warnings:", validationResult.details); }
+          if (allRepairWarnings.length > 0) { logWarn("repair.js: Total repair warnings:", allRepairWarnings); }
     }
 
 
@@ -345,20 +361,20 @@ export const loadAndRepairData = async (options = {}) => {
         adaptedData.metadata._lastRepairErrors = allRepairErrors;
     }
 
-    console.log(`repair.js: Data repair complete. Final version: ${adaptedData._version}`);
+    logger.log(`repair.js: Data repair complete. Final version: ${adaptedData._version}`);
 
     try {
       localStorage.setItem('appData', JSON.stringify(adaptedData));
-      console.log("repair.js: Successfully saved repaired data to localStorage.");
+      logger.debug("repair.js: Successfully saved repaired data to localStorage.");
     } catch (saveError) {
-      console.error("repair.js: Failed to save repaired data to localStorage:", saveError);
+      logger.error("repair.js: Failed to save repaired data to localStorage:", saveError);
     }
 
     onProgress?.('ready');
     return adaptedData;
 
   } catch (error) {
-    console.error('repair.js: CRITICAL ERROR caught during data load/repair process:', error);
+    logger.error('repair.js: CRITICAL ERROR caught during data load/repair process:', error);
      if (!error.details) { error.details = { message: error.message }; }
     throw error;
   }
