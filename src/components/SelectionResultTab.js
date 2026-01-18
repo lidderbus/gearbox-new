@@ -57,7 +57,12 @@ const SelectionResultTab = ({
             engineConfiguration: requirementData.engineConfiguration,
             inputRotation: requirementData.inputRotation,
             outputRotation: requirementData.outputRotation,
-            propellerConfig: requirementData.propellerConfig
+            propellerConfig: requirementData.propellerConfig,
+            // 双机旋向配置
+            portEngineRotation: requirementData.portEngineRotation,
+            starboardEngineRotation: requirementData.starboardEngineRotation,
+            portUseReverse: requirementData.portUseReverse,
+            starboardUseReverse: requirementData.starboardUseReverse
           }}
         />
 

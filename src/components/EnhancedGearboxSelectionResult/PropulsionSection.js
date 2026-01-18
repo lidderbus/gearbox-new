@@ -28,7 +28,12 @@ const PropulsionSection = ({
     engineConfiguration = 'single',
     inputRotation = 'clockwise',
     outputRotation = 'clockwise',
-    propellerConfig = 'outward'
+    propellerConfig = 'outward',
+    // 双机旋向配置
+    portEngineRotation = null,
+    starboardEngineRotation = null,
+    portUseReverse = false,
+    starboardUseReverse = false
   } = propulsionConfig;
 
   const isDualEngine = engineConfiguration === 'dual';
@@ -122,6 +127,10 @@ const PropulsionSection = ({
                 <TwinEngineArrangementDiagram
                   gearboxType={gearboxSeries}
                   propellerConfig={propellerConfig}
+                  portEngineRotation={portEngineRotation}
+                  starboardEngineRotation={starboardEngineRotation}
+                  portUseReverse={portUseReverse}
+                  starboardUseReverse={starboardUseReverse}
                   width={350}
                   height={300}
                 />
