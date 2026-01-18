@@ -155,24 +155,45 @@ th {
     padding: 0;
     font-size: 12px;
   }
-  
+
   .agreement-title {
     font-size: 20px;
   }
-  
+
   .agreement-section h2 {
     font-size: 16px;
   }
-  
+
   /* 避免在元素之间分页 */
   .party, .agreement-section {
     page-break-inside: avoid;
   }
-  
+
+  /* 示意图容器不分页 */
+  .arrangement-diagram-container {
+    page-break-inside: avoid;
+    min-height: 400px;
+  }
+
+  /* 表格不分页 */
+  table, .info-table {
+    page-break-inside: avoid;
+  }
+
+  /* 信息行组不分页 */
+  .info-row {
+    page-break-inside: avoid;
+  }
+
   /* 设置分页前的最小行数 */
   p, li {
     orphans: 3;
     widows: 3;
+  }
+
+  /* 在主要章节前允许分页 */
+  .agreement-section {
+    page-break-before: auto;
   }
 }
 

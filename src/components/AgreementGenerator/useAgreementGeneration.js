@@ -110,7 +110,14 @@ const prepareTemplateData = ({
     engineModel: editableInfo.engineModel || ship.engineModel || engine.model || '',
     enginePower: editableInfo.enginePower || engine.power || projectInfo?.power || '',
     engineSpeed: editableInfo.engineSpeed || engine.speed || projectInfo?.speed || '',
-    engineRotation: editableInfo.engineRotation || engine.rotation || seriesDefaults.engineRotation || '顺时针',
+    // 主机旋向 - 优先从propulsionConfig读取，兼容旧数据
+    engineRotation: (() => {
+      const propulsionConfig = editableInfo.propulsionConfig || projectInfo?.propulsionConfig || {};
+      if (propulsionConfig.inputRotation) {
+        return propulsionConfig.inputRotation === 'counterclockwise' ? '逆时针' : '顺时针';
+      }
+      return editableInfo.engineRotation || engine.rotation || seriesDefaults.engineRotation || '顺时针';
+    })(),
     flywheelSpec: editableInfo.flywheelSpec || ship.flywheelSpec || '',
 
     // 主机转向选择
@@ -216,16 +223,28 @@ const prepareTemplateData = ({
 
     // HCT模板特有
     powerArrangement: '柴油机——高弹联轴器——齿轮箱——螺旋桨',
-    arrangementDiagram: renderToStaticMarkup(
-      <TwinEngineArrangementDiagram
-        gearboxType={gearbox.model?.match(/^(GWC|GWL|HC|HCT|HCM|HCD|DT)/i)?.[1]?.toUpperCase() || 'GWC'}
-        propellerConfig="outward"
-        width={650}
-        height={380}
-      />
-    ),
+    // 从可编辑信息中获取推进系统配置
+    arrangementDiagram: (() => {
+      const propulsionConfig = editableInfo.propulsionConfig || projectInfo?.propulsionConfig || {};
+      return renderToStaticMarkup(
+        <TwinEngineArrangementDiagram
+          gearboxType={gearbox.model?.match(/^(GWC|GWL|HC|HCT|HCM|HCD|DT)/i)?.[1]?.toUpperCase() || 'GWC'}
+          propellerConfig={propulsionConfig.propellerConfig || 'outward'}
+          portEngineRotation={propulsionConfig.portEngineRotation || null}
+          starboardEngineRotation={propulsionConfig.starboardEngineRotation || null}
+          portUseReverse={propulsionConfig.portUseReverse || false}
+          starboardUseReverse={propulsionConfig.starboardUseReverse || false}
+          width={650}
+          height={380}
+        />
+      );
+    })(),
     gearboxFunctions: '具有减速、倒顺离合和承受螺旋桨推力的功能',
-    inputRotation: '顺时针',
+    // 旋向配置 - 优先使用可编辑信息中的配置
+    inputRotation: (() => {
+      const propulsionConfig = editableInfo.propulsionConfig || projectInfo?.propulsionConfig || {};
+      return propulsionConfig.inputRotation === 'counterclockwise' ? '逆时针' : '顺时针';
+    })(),
     outputRotation: '详见排列图示',
     propellerThrust: gearbox.maxPropellerThrust || gearboxParams.maxPropellerThrust || '',
     reversalTime: seriesDefaults.reversalTime || seriesDefaults.directionChangeTime || '10',

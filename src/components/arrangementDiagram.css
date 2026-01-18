@@ -65,6 +65,8 @@
   padding: 10px;
   background-color: #fafafa;
   border-radius: 4px;
+  min-height: 400px;
+  overflow: visible;
 }
 
 .arrangement-diagram-container .diagram-title {
@@ -78,4 +80,19 @@
 .agreement-content .twin-engine-diagram {
   margin: 10px auto;
   display: block;
+}
+
+/* PDF导出和打印时的容器样式 */
+@media print {
+  .arrangement-diagram-container {
+    page-break-inside: avoid;
+    min-height: 400px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+  }
+
+  .arrangement-diagram-container svg {
+    max-width: 100%;
+    height: auto;
+  }
 }

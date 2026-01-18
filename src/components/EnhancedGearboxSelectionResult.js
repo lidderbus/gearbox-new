@@ -8,6 +8,8 @@ import ProductThumbnail from './ProductThumbnail';
 import ProductImageModal from './ProductImageModal';
 import { SeriesCharacteristicsBadge } from './SelectionGuidelines';
 import { DataCompletenessBadge } from './selection/GearboxScorer';
+import { useIsMobile } from '../hooks/useIsMobile';
+import SwipeableResultCards from './responsive/SwipeableResultCards';
 
 // 导入子组件
 import {
@@ -124,6 +126,24 @@ const EnhancedGearboxSelectionResult = ({
       }));
     }
   }, [couplingResult, pumpResult]);
+
+  // Mobile/Tablet responsive layout
+  const { isMobile, isTablet } = useIsMobile();
+  const useResponsiveLayout = isMobile || isTablet;
+
+  // 移动端使用滑动卡片视图
+  if (useResponsiveLayout) {
+    return (
+      <SwipeableResultCards
+        result={result}
+        selectedIndex={selectedIndex}
+        onSelectGearbox={onSelectGearbox}
+        onGenerateQuotation={onGenerateQuotation}
+        onGenerateAgreement={onGenerateAgreement}
+        onBack={() => window.history.back()}
+      />
+    );
+  }
 
   // 如果没有结果，提前返回
   if (!result || !result.recommendations || result.recommendations.length === 0) {

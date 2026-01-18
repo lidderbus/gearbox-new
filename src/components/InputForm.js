@@ -6,6 +6,8 @@ import HybridConfigPanel from './HybridConfigPanel';
 import WeightConfigPanel from './WeightConfigPanel';
 import ToleranceConfigPanel from './ToleranceConfigPanel';
 import SmartHintsPanel from './SmartHintsPanel';
+import { useIsMobile } from '../hooks/useIsMobile';
+import ResponsiveSelectionForm from './responsive/ResponsiveSelectionForm';
 
 /**
  * Input form component for gearbox selection
@@ -44,6 +46,27 @@ const InputForm = ({
   selectionDiagnostics = null,
   showConfigPanels = true
 }) => {
+  // Mobile/Tablet responsive layout
+  const { isMobile, isTablet } = useIsMobile();
+  const useResponsiveLayout = isMobile || isTablet;
+
+  if (useResponsiveLayout) {
+    return (
+      <ResponsiveSelectionForm
+        engineData={engineData}
+        setEngineData={setEngineData}
+        requirementData={requirementData}
+        setRequirementData={setRequirementData}
+        projectInfo={projectInfo}
+        setProjectInfo={setProjectInfo}
+        gearboxType={gearboxType}
+        setGearboxType={setGearboxType}
+        onSelect={onSelect}
+        loading={loading}
+      />
+    );
+  }
+
   // Handlers
   const handleEngineDataChange = (field, value) => {
     if (value === '' || (!isNaN(value) && parseFloat(value) >= 0)) {

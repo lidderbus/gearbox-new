@@ -104,6 +104,9 @@ const TwinEngineArrangementDiagram = ({
     const startX = cx - (arrowLength / 2) * direction;
     const endX = cx + (arrowLength / 2) * direction;
 
+    // 字体样式
+    const textStyle = { fontFamily: "'Microsoft YaHei', 'SimSun', 'PingFang SC', sans-serif" };
+
     return (
       <g>
         {/* 组件标签 - 放在箭头上方 */}
@@ -114,6 +117,8 @@ const TwinEngineArrangementDiagram = ({
           fill={colors.text}
           fontSize="12"
           fontWeight="bold"
+          className="diagram-text"
+          style={textStyle}
         >
           {label}
         </text>
@@ -146,6 +151,8 @@ const TwinEngineArrangementDiagram = ({
           fill={colors.text}
           fontSize="13"
           fontWeight="bold"
+          className="diagram-text"
+          style={textStyle}
         >
           {clockwise ? '顺时针' : '逆时针'}
         </text>
@@ -155,6 +162,8 @@ const TwinEngineArrangementDiagram = ({
           textAnchor="middle"
           fill={colors.text}
           fontSize="11"
+          className="diagram-text"
+          style={textStyle}
         >
           {clockwise ? '(CW) →' : '(CCW) ←'}
         </text>
@@ -172,6 +181,9 @@ const TwinEngineArrangementDiagram = ({
     // 齿轮箱颜色 - 使用倒档时显示不同颜色
     const gearboxColor = useReverse ? '#FF9800' : colors.gearbox;  // 倒档时橙色
     const gearboxStroke = useReverse ? '#E65100' : '#5FB318';
+
+    // 字体样式
+    const textStyle = { fontFamily: "'Microsoft YaHei', 'SimSun', 'PingFang SC', sans-serif" };
 
     return (
       <g>
@@ -193,6 +205,8 @@ const TwinEngineArrangementDiagram = ({
           fill={colors.text}
           fontSize="14"
           fontWeight="bold"
+          className="diagram-text"
+          style={textStyle}
         >
           {sideName}
         </text>
@@ -218,6 +232,8 @@ const TwinEngineArrangementDiagram = ({
           fill="white"
           fontSize="13"
           fontWeight="bold"
+          className="diagram-text"
+          style={textStyle}
         >
           {gearboxType}
         </text>
@@ -228,6 +244,8 @@ const TwinEngineArrangementDiagram = ({
           fill={useReverse ? '#E65100' : colors.text}
           fontSize="10"
           fontWeight={useReverse ? 'bold' : 'normal'}
+          className="diagram-text"
+          style={textStyle}
         >
           {getGearboxStateText(useReverse)}
         </text>
@@ -266,6 +284,9 @@ const TwinEngineArrangementDiagram = ({
     );
   };
 
+  // 字体样式定义 - 确保PDF导出时字体正确渲染
+  const fontStyle = "font-family: 'Microsoft YaHei', 'SimSun', 'PingFang SC', 'SimHei', sans-serif;";
+
   return (
     <svg
       viewBox={`0 0 ${width} ${height}`}
@@ -280,6 +301,16 @@ const TwinEngineArrangementDiagram = ({
         borderRadius: '8px'
       }}
     >
+      {/* 内嵌字体定义 - 使用本地字体，避免Google Fonts在中国被阻断 */}
+      <defs>
+        <style type="text/css">
+          {`
+            .diagram-text {
+              font-family: 'Microsoft YaHei', 'SimSun', 'PingFang SC', 'SimHei', 'STHeiti', sans-serif !important;
+            }
+          `}
+        </style>
+      </defs>
       {/* 背景 */}
       <rect width={width} height={height} fill={colors.background} />
 
@@ -291,6 +322,8 @@ const TwinEngineArrangementDiagram = ({
         fill={colors.text}
         fontSize="18"
         fontWeight="bold"
+        className="diagram-text"
+        style={{ fontFamily: "'Microsoft YaHei', 'SimSun', 'PingFang SC', sans-serif" }}
       >
         双机旋向示意图 ({configText}配置)
       </text>
@@ -317,6 +350,8 @@ const TwinEngineArrangementDiagram = ({
         textAnchor="middle"
         fill="#999999"
         fontSize="11"
+        className="diagram-text"
+        style={{ fontFamily: "'Microsoft YaHei', 'SimSun', 'PingFang SC', sans-serif" }}
       >
         船舶中线
       </text>
@@ -329,7 +364,15 @@ const TwinEngineArrangementDiagram = ({
           points="0,0 20,-14 20,14"
           fill={colors.text}
         />
-        <text x="25" y="5" fill={colors.text} fontSize="12" fontWeight="bold">
+        <text
+          x="25"
+          y="5"
+          fill={colors.text}
+          fontSize="12"
+          fontWeight="bold"
+          className="diagram-text"
+          style={{ fontFamily: "'Microsoft YaHei', 'SimSun', 'PingFang SC', sans-serif" }}
+        >
           船首
         </text>
       </g>

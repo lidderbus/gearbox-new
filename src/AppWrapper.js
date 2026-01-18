@@ -49,8 +49,8 @@ const AppContent = ({ appData, setAppData }) => {
   // Check if user is admin
   const isAdmin = user && (user.role === userRoles.ADMIN || user.role === userRoles.SUPER_ADMIN);
 
-  // 是否显示移动端界面
-  const showMobileApp = isMobile && !forceDesktop;
+  // 是否显示移动端界面 (已禁用，统一使用完整版)
+  const showMobileApp = false; // isMobile && !forceDesktop;
 
   if (authLoading) {
     return (

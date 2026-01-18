@@ -1,0 +1,248 @@
+/* ResponsiveSelectionForm.css - Mobile optimized selection form */
+
+.responsive-form {
+  padding: 16px;
+  padding-bottom: 80px; /* Space for sticky button */
+}
+
+/* Core params section */
+.core-params {
+  background: var(--card-bg, #fff);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.core-params-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-color, #333);
+}
+
+/* Input row - horizontal layout */
+.input-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.input-group-responsive {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group-responsive label {
+  font-size: 12px;
+  color: var(--muted-color, #666);
+  margin-bottom: 4px;
+}
+
+.input-group-responsive input,
+.input-group-responsive select {
+  height: 48px;
+  font-size: 16px; /* Prevents iOS zoom */
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 8px;
+  padding: 0 12px;
+  background: var(--input-bg, #fff);
+  color: var(--text-color, #333);
+}
+
+.input-group-responsive input:focus,
+.input-group-responsive select:focus {
+  outline: none;
+  border-color: var(--primary-color, #0d6efd);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+/* Gearbox type selector - full width */
+.gearbox-type-selector {
+  margin-bottom: 16px;
+}
+
+.gearbox-type-selector select {
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 8px;
+  padding: 0 12px;
+  background: var(--input-bg, #fff);
+  color: var(--text-color, #333);
+}
+
+/* Quick ratio buttons */
+.quick-ratios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.quick-ratio-btn {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 18px;
+  border: 1px solid var(--border-color, #ddd);
+  background: var(--card-bg, #fff);
+  color: var(--text-color, #333);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quick-ratio-btn:active {
+  background: var(--primary-color, #0d6efd);
+  color: #fff;
+  border-color: var(--primary-color, #0d6efd);
+}
+
+.quick-ratio-btn.selected {
+  background: var(--primary-color, #0d6efd);
+  color: #fff;
+  border-color: var(--primary-color, #0d6efd);
+}
+
+/* Collapsible sections */
+.collapsible-section {
+  background: var(--card-bg, #fff);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.collapsible-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.collapsible-header:active {
+  background: var(--hover-bg, #f5f5f5);
+}
+
+.collapsible-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-color, #333);
+}
+
+.collapsible-badge {
+  font-size: 12px;
+  color: var(--muted-color, #999);
+  margin-left: 8px;
+}
+
+.collapsible-icon {
+  font-size: 12px;
+  color: var(--muted-color, #999);
+  transition: transform 0.3s;
+}
+
+.collapsible-icon.open {
+  transform: rotate(180deg);
+}
+
+.collapsible-content {
+  padding: 0 16px 16px;
+}
+
+/* Form fields in collapsible */
+.form-field {
+  margin-bottom: 12px;
+}
+
+.form-field:last-child {
+  margin-bottom: 0;
+}
+
+.form-field label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted-color, #666);
+  margin-bottom: 4px;
+}
+
+.form-field input {
+  width: 100%;
+  height: 44px;
+  font-size: 16px;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 8px;
+  padding: 0 12px;
+  background: var(--input-bg, #fff);
+  color: var(--text-color, #333);
+}
+
+/* Sticky submit button */
+.sticky-submit {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
+  background: var(--card-bg, #fff);
+  border-top: 1px solid var(--border-color, #eee);
+  z-index: 100;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary-color, #0d6efd);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.submit-btn:disabled {
+  background: var(--muted-color, #ccc);
+  cursor: not-allowed;
+}
+
+.submit-btn:not(:disabled):active {
+  opacity: 0.9;
+}
+
+/* Dark theme support */
+[data-theme="dark"] .core-params,
+[data-theme="dark"] .collapsible-section {
+  background: var(--card-bg-dark, #1e1e1e);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .input-group-responsive input,
+[data-theme="dark"] .input-group-responsive select,
+[data-theme="dark"] .gearbox-type-selector select,
+[data-theme="dark"] .form-field input {
+  background: var(--input-bg-dark, #2d2d2d);
+  border-color: var(--border-color-dark, #444);
+  color: var(--text-color-dark, #eee);
+}
+
+[data-theme="dark"] .quick-ratio-btn {
+  background: var(--card-bg-dark, #2d2d2d);
+  border-color: var(--border-color-dark, #444);
+  color: var(--text-color-dark, #eee);
+}
+
+[data-theme="dark"] .sticky-submit {
+  background: var(--card-bg-dark, #1e1e1e);
+  border-color: var(--border-color-dark, #333);
+}

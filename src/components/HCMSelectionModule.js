@@ -10,7 +10,7 @@
  */
 
 import React, { useState, useMemo, useCallback } from 'react';
-import { completeGearboxData } from '../data/completeGearboxData';
+import completeGearboxData from '../data/completeGearboxData';
 import { engineMatchingCases, getMatchingCasesByEngine, getMatchingCasesByGearbox } from '../data/hcmEngineMatching';
 import { gearboxToCouplingPrefixMap } from '../data/gearboxMatchingMaps';
 

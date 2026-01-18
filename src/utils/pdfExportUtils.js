@@ -26,17 +26,20 @@ const loadChineseFont = async (pdf) => {
       return true;
     }
     
-    // 否则尝试从网络加载字体 - 使用多个CDN源作为备选
+    // 否则尝试从本地服务器加载字体 (不使用外部CDN，避免在中国被封锁)
     const fontUrls = [
       // 本地服务器字体 - 最可靠
-      '/fonts/NotoSansSC-Regular.ttf',
-      // Google Fonts 直接链接
-      'https://fonts.gstatic.com/s/notosanssc/v39/k3kCo84MPvpLmixcA63oeAL7Iqp5IZJF9bmaG9_FnYw.ttf'
+      '/fonts/NotoSansSC-Regular.ttf'
     ];
 
     for (const fontUrl of fontUrls) {
       try {
-        const response = await fetch(fontUrl);
+        // 添加超时控制，避免字体加载阻塞
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000); // 3秒超时
+
+        const response = await fetch(fontUrl, { signal: controller.signal });
+        clearTimeout(timeoutId);
 
         if (response.ok) {
           const fontData = await response.arrayBuffer();
@@ -118,13 +121,14 @@ export const optimizedHtmlToPdf = async (element, options = {}) => {
     orientation = 'portrait',
     format = 'a4',
     filename = 'document.pdf',
-    scale = 2,
-    quality = 0.95,
+    scale = 1.5,  // 降低scale以减少内存消耗 (原值2)
+    quality = 0.92,  // 略微降低质量以减少内存 (原值0.95)
     chunkSize = 1100, // 每页像素高度
     fontSize = '14px',
     lineHeight = '1.5',
-    fontFamily = "'Noto Sans SC', 'Microsoft YaHei', 'SimSun', sans-serif",
-    debug = false
+    fontFamily = "'Microsoft YaHei', 'SimSun', 'PingFang SC', 'SimHei', sans-serif",
+    debug = false,
+    timeout = 30000  // 单页渲染超时时间 (毫秒)
   } = options;
 
   if (!element) {
@@ -159,8 +163,32 @@ export const optimizedHtmlToPdf = async (element, options = {}) => {
     // 将容器添加到文档
     document.body.appendChild(container);
 
-    // 等待样式应用
+    // 等待样式应用和字体加载
     await new Promise(resolve => setTimeout(resolve, 300));
+
+    // 等待SVG字体加载完成 (添加超时保护，避免被阻塞的外部字体影响)
+    try {
+      const fontReadyTimeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('字体加载超时')), 3000)
+      );
+      await Promise.race([document.fonts.ready, fontReadyTimeout]);
+      debug && logger.debug('字体加载完成');
+    } catch (fontError) {
+      logger.warn('字体加载等待超时，继续处理:', fontError.message);
+    }
+
+    // 预处理SVG元素，确保字体正确渲染
+    const svgElements = container.querySelectorAll('svg');
+    svgElements.forEach(svg => {
+      // 强制设置SVG文本元素的字体
+      const textElements = svg.querySelectorAll('text');
+      textElements.forEach(text => {
+        text.style.fontFamily = "'Microsoft YaHei', 'SimSun', 'PingFang SC', 'SimHei', sans-serif";
+      });
+    });
+
+    // 额外等待SVG渲染
+    await new Promise(resolve => setTimeout(resolve, 200));
 
     // 获取内容尺寸
     const contentHeight = container.scrollHeight;
@@ -208,38 +236,68 @@ export const optimizedHtmlToPdf = async (element, options = {}) => {
       container.style.clipPath = `inset(${yStart}px 0px ${contentHeight - yStart - currentChunkHeight}px 0px)`;
       container.style.webkitClipPath = `inset(${yStart}px 0px ${contentHeight - yStart - currentChunkHeight}px 0px)`;
 
-      // 使用html2canvas捕获当前页
-      const pageCanvas = await html2canvas(container, {
-        scale: scale,
-        useCORS: true,
-        logging: false,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        windowWidth: contentWidth,
-        height: currentChunkHeight,
-        y: yStart
-      });
+      // 使用html2canvas捕获当前页 (添加超时保护)
+      let pageCanvas;
+      try {
+        const html2canvasPromise = html2canvas(container, {
+          scale: scale,
+          useCORS: true,
+          logging: false,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          windowWidth: contentWidth,
+          height: currentChunkHeight,
+          y: yStart,
+          // SVG相关选项 - 禁用foreignObject以提高兼容性
+          foreignObjectRendering: false,  // 禁用以减少内存消耗
+          removeContainer: true,          // 允许移除容器以释放内存
+          // 字体相关
+          onclone: (clonedDoc) => {
+            // 在克隆文档中设置字体样式
+            const svgTexts = clonedDoc.querySelectorAll('svg text');
+            svgTexts.forEach(text => {
+              text.style.fontFamily = "'Microsoft YaHei', 'SimSun', 'PingFang SC', 'SimHei', sans-serif";
+            });
+          }
+        });
+
+        // 添加超时保护
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error(`第${page + 1}页渲染超时`)), timeout)
+        );
+
+        pageCanvas = await Promise.race([html2canvasPromise, timeoutPromise]);
+      } catch (canvasError) {
+        logger.error(`第${page + 1}页canvas渲染失败:`, canvasError.message);
+        // 跳过失败的页面，继续处理其他页
+        continue;
+      }
 
       // 添加到PDF
       const imgData = pageCanvas.toDataURL('image/jpeg', quality);
-      
+
       // 计算缩放比例，保持图像宽高比
       const scaleFactor = pdfWidth / pageCanvas.width;
       const scaledHeight = pageCanvas.height * scaleFactor;
-      
+
       // 如果生成的图像高度超过PDF页面，进行额外缩放
       let finalHeight = scaledHeight;
       let finalWidth = pdfWidth;
-      
+
       if (scaledHeight > pdfHeight) {
         const extraScale = pdfHeight / scaledHeight;
         finalHeight = pdfHeight;
         finalWidth = pdfWidth * extraScale;
       }
-      
+
       const xOffset = (pdfWidth - finalWidth) / 2; // 居中
-      
+
       pdf.addImage(imgData, 'JPEG', xOffset, 0, finalWidth, finalHeight, '', 'FAST');
+
+      // 内存清理: 释放canvas资源
+      pageCanvas.width = 0;
+      pageCanvas.height = 0;
+      pageCanvas = null;
 
       debug && logger.debug(`第${page + 1}页已添加到PDF`);
     }
