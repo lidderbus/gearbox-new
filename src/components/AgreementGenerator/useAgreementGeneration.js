@@ -1,6 +1,6 @@
 // src/components/AgreementGenerator/useAgreementGeneration.js
 // 技术协议生成逻辑 - 自定义Hook
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { getAgreementTemplate, fillTemplate, TemplateType } from '../../utils/agreementTemplateManager';
 import { generateBilingualAgreement } from '../../utils/bilingualTemplates';
 import { getSeriesDefaults, extractGearboxParams, extractEngineParams } from '../../utils/seriesDefaultParams';

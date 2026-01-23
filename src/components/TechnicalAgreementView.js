@@ -326,16 +326,16 @@ const TechnicalAgreementView = ({
                 <div>
                   {agreement && (
                     <>
-                      <Button variant="outline-primary" size="sm" className="me-2" onClick={exportToWord}>
+                      <Button variant="outline-primary" size="sm" className="me-2" onClick={exportToWord} disabled={loading}>
                         <i className="bi bi-file-earmark-word me-1"></i> 导出Word
                       </Button>
-                      <Button variant="outline-danger" size="sm" className="me-2" onClick={exportToPDF}>
-                        <i className="bi bi-file-earmark-pdf me-1"></i> 导出PDF
+                      <Button variant="outline-danger" size="sm" className="me-2" onClick={exportToPDF} disabled={loading}>
+                        {loading ? <><i className="bi bi-hourglass-split me-1"></i> 导出中...</> : <><i className="bi bi-file-earmark-pdf me-1"></i> 导出PDF</>}
                       </Button>
-                      <Button variant="outline-secondary" size="sm" className="me-2" onClick={handlePrint}>
+                      <Button variant="outline-secondary" size="sm" className="me-2" onClick={handlePrint} disabled={loading}>
                         <i className="bi bi-printer me-1"></i> 打印
                       </Button>
-                      <Button variant="outline-secondary" size="sm" className="me-2" onClick={copyToClipboard}>
+                      <Button variant="outline-secondary" size="sm" className="me-2" onClick={copyToClipboard} disabled={loading}>
                         <i className="bi bi-clipboard me-1"></i> 复制内容
                       </Button>
                     </>
