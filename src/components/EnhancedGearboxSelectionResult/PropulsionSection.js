@@ -66,7 +66,7 @@ const PropulsionSection = ({
                   <Badge bg={inputRotation === 'clockwise' ? 'success' : 'info'}>
                     {rotationText(inputRotation)}
                   </Badge>
-                  <small className="d-block text-muted mt-1">从发动机端看</small>
+                  <small className="d-block text-muted mt-1">站在船尾向发动机方向看</small>
                 </td>
               </tr>
               <tr>
@@ -75,7 +75,7 @@ const PropulsionSection = ({
                   <Badge bg={outputRotation === 'clockwise' ? 'success' : 'info'}>
                     {rotationText(outputRotation)}
                   </Badge>
-                  <small className="d-block text-muted mt-1">从螺旋桨端看</small>
+                  <small className="d-block text-muted mt-1">站在船尾向发动机方向看</small>
                 </td>
               </tr>
               <tr>

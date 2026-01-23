@@ -167,7 +167,7 @@ const PropulsionConfigSelector = ({
             <Form.Group className="mb-3">
               <Form.Label style={{ color: colors.text }}>
                 <strong>输入端旋向</strong>
-                <small className="d-block text-muted">（从发动机端看）</small>
+                <small className="d-block text-muted">（站在船尾向发动机方向看）</small>
               </Form.Label>
               <ButtonGroup className="w-100">
                 <Button
@@ -195,7 +195,7 @@ const PropulsionConfigSelector = ({
             <Form.Group className="mb-3">
               <Form.Label style={{ color: colors.text }}>
                 <strong>输出端旋向</strong>
-                <small className="d-block text-muted">（从螺旋桨端看）</small>
+                <small className="d-block text-muted">（站在船尾向发动机方向看）</small>
               </Form.Label>
               <ButtonGroup className="w-100">
                 <Button
@@ -262,7 +262,7 @@ const PropulsionConfigSelector = ({
             <Form.Group className="mb-4">
               <Form.Label style={{ color: colors.text, fontWeight: 'bold' }}>
                 左右主机（柴油机）旋向
-                <small className="d-block text-muted">（从发动机端看）</small>
+                <small className="d-block text-muted">（站在船尾向发动机方向看）</small>
               </Form.Label>
               <Row>
                 <Col md={6}>
