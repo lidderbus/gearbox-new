@@ -1,9 +1,11 @@
 // src/utils/dataLoader.js
-import { embeddedGearboxData } from '../data/embeddedData';
-import { flexibleCouplings } from '../data/flexibleCouplings';
-import { standbyPumps } from '../data/standbyPumps';
+// 性能优化: 使用动态导入实现数据懒加载
+// import { embeddedGearboxData } from '../data/embeddedData';  // 改为动态导入
+// import { flexibleCouplings } from '../data/flexibleCouplings'; // 改为动态导入
+// import { standbyPumps } from '../data/standbyPumps';          // 改为动态导入
 import { adaptBasicData } from './dataAdapter';
 import { validateCriticalData } from './dataValidator';
+import { logger } from '../config/logging';
 import {
   processPriceData,
   fixSpecificModelPrices,
@@ -14,12 +16,27 @@ import { loadQuickData, loadRemainingData, loadFullData, getLoadingStatus } from
 
 export async function loadAndPrepareData(options = {}) {
   const { onProgress } = options;
-  
+
   try {
-    // 1. 加载基础数据
+    // 1. 动态加载基础数据 (性能优化: 按需加载)
     onProgress?.('loading base data');
-    console.log("DataLoader: 加载基础数据...");
-    
+    logger.debug("DataLoader: 动态加载基础数据...");
+
+    const startTime = performance.now();
+
+    // 并行加载所有数据文件
+    const [embeddedModule, couplingsModule, pumpsModule] = await Promise.all([
+      import(/* webpackChunkName: "gearbox-data" */ '../data/embeddedData'),
+      import(/* webpackChunkName: "coupling-data" */ '../data/flexibleCouplings'),
+      import(/* webpackChunkName: "pump-data" */ '../data/standbyPumps')
+    ]);
+
+    const embeddedGearboxData = embeddedModule.embeddedGearboxData;
+    const flexibleCouplings = couplingsModule.flexibleCouplings;
+    const standbyPumps = pumpsModule.standbyPumps;
+
+    logger.debug(`DataLoader: 数据加载完成, 耗时${(performance.now() - startTime).toFixed(0)}ms`);
+
     let baseData = {
       ...embeddedGearboxData,
       flexibleCouplings: flexibleCouplings || [],
@@ -43,7 +60,7 @@ export async function loadAndPrepareData(options = {}) {
         baseData = mergeData(baseData, externalData);
       }
     } catch (error) {
-      console.warn("DataLoader: 外部数据加载失败，使用基础数据", error);
+      logger.warn("DataLoader: 外部数据加载失败，使用基础数据", error);
     }
     
     // 4. 基础数据适配
@@ -59,7 +76,7 @@ export async function loadAndPrepareData(options = {}) {
     onProgress?.('validating data');
     const validation = validateCriticalData(finalData);
     if (!validation.success) {
-      console.warn("DataLoader: 验证发现问题，但继续运行:", validation.issues);
+      logger.warn("DataLoader: 验证发现问题，但继续运行:", validation.issues);
     }
     
     // 7. 保存到本地
@@ -68,14 +85,26 @@ export async function loadAndPrepareData(options = {}) {
     return finalData;
     
   } catch (error) {
-    console.error("DataLoader: 加载过程出错", error);
-    // 返回最小可用数据
-    return {
-      ...embeddedGearboxData,
-      flexibleCouplings: [],
-      standbyPumps: [],
-      _error: error.message
-    };
+    logger.error("DataLoader: 加载过程出错", error);
+    // 返回最小可用数据 - 尝试动态加载失败时返回空结构
+    try {
+      const { embeddedGearboxData } = await import(
+        /* webpackChunkName: "gearbox-data" */
+        '../data/embeddedData'
+      );
+      return {
+        ...embeddedGearboxData,
+        flexibleCouplings: [],
+        standbyPumps: [],
+        _error: error.message
+      };
+    } catch {
+      return {
+        flexibleCouplings: [],
+        standbyPumps: [],
+        _error: error.message
+      };
+    }
   }
 }
 
@@ -88,10 +117,10 @@ function loadFromLocalStorage() {
       if (parsed._version === 2) {
         return parsed;
       }
-      console.warn("DataLoader: 本地存储版本不匹配，忽略");
+      logger.warn("DataLoader: 本地存储版本不匹配，忽略");
     }
   } catch (error) {
-    console.warn("DataLoader: 读取本地存储失败", error);
+    logger.warn("DataLoader: 读取本地存储失败", error);
   }
   return null;
 }
@@ -104,7 +133,7 @@ function saveToLocalStorage(data) {
     };
     localStorage.setItem('gearboxAppData', JSON.stringify(toSave));
   } catch (error) {
-    console.warn("DataLoader: 保存到本地存储失败", error);
+    logger.warn("DataLoader: 保存到本地存储失败", error);
   }
 }
 
@@ -113,11 +142,11 @@ async function loadExternalData() {
     const response = await fetch('./gearbox-data.json');
     if (response.ok) {
       const data = await response.json();
-      console.log("DataLoader: 成功加载外部数据文件");
+      logger.debug("DataLoader: 成功加载外部数据文件");
       return data;
     }
   } catch (error) {
-    console.warn("DataLoader: 外部数据文件加载失败", error);
+    logger.warn("DataLoader: 外部数据文件加载失败", error);
   }
   return null;
 }
@@ -173,10 +202,17 @@ export async function loadQuickModeData(options = {}) {
 
   try {
     onProgress?.('quick loading HC series');
-    console.log("DataLoader: 快速加载模式启动...");
+    logger.debug("DataLoader: 快速加载模式启动...");
 
-    // 1. 快速加载HC系列
-    const quickData = await loadQuickData();
+    // 1. 并行加载HC系列和联轴器/备用泵数据
+    const [quickData, couplingsModule, pumpsModule] = await Promise.all([
+      loadQuickData(),
+      import(/* webpackChunkName: "coupling-data" */ '../data/flexibleCouplings'),
+      import(/* webpackChunkName: "pump-data" */ '../data/standbyPumps')
+    ]);
+
+    const flexibleCouplings = couplingsModule.flexibleCouplings;
+    const standbyPumps = pumpsModule.standbyPumps;
 
     // 2. 添加联轴器和备用泵数据
     const baseData = {
@@ -191,16 +227,16 @@ export async function loadQuickModeData(options = {}) {
     const priceFixResult = processPriceData(adaptedData);
     const finalData = fixSpecificModelPrices(priceFixResult.data);
 
-    // 4. 后台加载剩余数据
+    // 4. 后台加载剩余数据 (使用闭包保存联轴器和备用泵引用)
     setTimeout(() => {
       loadRemainingData(
         (loaded, total, series) => {
-          console.log(`DataLoader: 后台加载进度 ${loaded}/${total} - ${series}`);
+          logger.debug(`DataLoader: 后台加载进度 ${loaded}/${total} - ${series}`);
         },
         (fullData) => {
-          console.log("DataLoader: 后台加载完成");
+          logger.debug("DataLoader: 后台加载完成");
           if (onBackgroundComplete) {
-            // 重新处理完整数据
+            // 重新处理完整数据 (使用闭包中的联轴器和备用泵)
             const fullBaseData = {
               ...fullData,
               flexibleCouplings: flexibleCouplings || [],
@@ -218,7 +254,7 @@ export async function loadQuickModeData(options = {}) {
     return finalData;
 
   } catch (error) {
-    console.error("DataLoader: 快速加载失败，回退到完整加载", error);
+    logger.error("DataLoader: 快速加载失败，回退到完整加载", error);
     return loadAndPrepareData(options);
   }
 }

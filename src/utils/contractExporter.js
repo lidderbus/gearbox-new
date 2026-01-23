@@ -4,14 +4,30 @@
  * 提供导出合同为PDF和Word格式的功能
  */
 
-import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
+// 性能优化: 改为动态导入
+// import { jsPDF } from 'jspdf';
+// import 'jspdf-autotable';
 import { saveAs } from 'file-saver';
-import { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, HeadingLevel, AlignmentType, WidthType, BorderStyle } from 'docx';
-import NotoSansSCFont from '../fonts/NotoSansSC-Regular-normal';
+// import { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, HeadingLevel, AlignmentType, WidthType, BorderStyle } from 'docx';
+// import NotoSansSCFont from '../fonts/NotoSansSC-Regular-normal';
 // 移除有问题的导入
 // import { PDFGenerationErrorHandler } from './dataValidator';
 import { convertToChinaNum } from './numberConverter';
+
+// 动态加载 jsPDF
+async function loadJsPDF() {
+  const [{ jsPDF }, autotable, fontModule] = await Promise.all([
+    import(/* webpackChunkName: "jspdf" */ 'jspdf'),
+    import(/* webpackChunkName: "jspdf-autotable" */ 'jspdf-autotable'),
+    import(/* webpackChunkName: "fonts" */ '../fonts/NotoSansSC-Regular-normal')
+  ]);
+  return { jsPDF, NotoSansSCFont: fontModule.default };
+}
+
+// 动态加载 docx
+async function loadDocx() {
+  return await import(/* webpackChunkName: "docx" */ 'docx');
+}
 
 // 创建自定义错误处理器类
 class PDFErrorHandler {
@@ -152,21 +168,24 @@ export class PDFExporter extends ExportManager {
     try {
       this.reset();
       this.updateStatus('preparing', 10);
-      
+
       // 验证合同数据
       if (!contract || !contract.success) {
         throw new Error('合同数据无效');
       }
-      
+
+      // 动态加载 jsPDF 和字体
+      const { jsPDF, NotoSansSCFont } = await loadJsPDF();
+
       // 创建PDF实例
       const doc = new jsPDF({
         orientation: 'p', // 纵向
         unit: 'mm',
         format: 'a4',
       });
-      
+
       this.updateStatus('generating', 20);
-      
+
       // 添加中文字体支持
       try {
         doc.addFileToVFS('NotoSansSC-Regular-normal.ttf', NotoSansSCFont.font);
@@ -359,14 +378,17 @@ export class WordExporter extends ExportManager {
     try {
       this.reset();
       this.updateStatus('preparing', 10);
-      
+
       // 验证合同数据
       if (!contract || !contract.success) {
         throw new Error('合同数据无效');
       }
-      
+
+      // 动态加载 docx
+      const { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, HeadingLevel, AlignmentType, WidthType, BorderStyle } = await loadDocx();
+
       this.updateStatus('generating', 30);
-      
+
       // 创建Document
       const doc = new Document({
         styles: {

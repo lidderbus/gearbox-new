@@ -9,13 +9,15 @@
  * - 真实配机案例参考
  */
 
-import React, { useState, useMemo, useCallback } from 'react';
-import completeGearboxData from '../data/completeGearboxData';
-import { engineMatchingCases, getMatchingCasesByEngine, getMatchingCasesByGearbox } from '../data/hcmEngineMatching';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+// 性能优化: 改为动态导入
+// import completeGearboxData from '../data/completeGearboxData';
+import { getMatchingCasesByGearbox } from '../data/hcmEngineMatching';
 import { gearboxToCouplingPrefixMap } from '../data/gearboxMatchingMaps';
 
-// 提取HCM系列数据
-const getHCMGearboxes = () => {
+// 提取HCM系列数据 (现在接受data参数)
+const getHCMGearboxes = (completeGearboxData) => {
+  if (!completeGearboxData) return [];
   const hcmData = completeGearboxData.hcmGearboxes || [];
   return hcmData.filter(g =>
     g.model && (
@@ -72,8 +74,29 @@ const HCMSelectionModule = () => {
   const [selectedGearbox, setSelectedGearbox] = useState(null);
   const [showCases, setShowCases] = useState(false);
 
+  // 性能优化: 动态加载数据
+  const [completeGearboxData, setCompleteGearboxData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const module = await import(
+          /* webpackChunkName: "complete-gearbox-data" */
+          '../data/completeGearboxData'
+        );
+        setCompleteGearboxData(module.default || module);
+      } catch (error) {
+        console.error('HCMSelectionModule: 数据加载失败', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
   // 获取HCM数据
-  const hcmGearboxes = useMemo(() => getHCMGearboxes(), []);
+  const hcmGearboxes = useMemo(() => getHCMGearboxes(completeGearboxData), [completeGearboxData]);
 
   // 计算传递能力需求
   const requiredCapacity = useMemo(() => {
@@ -191,6 +214,15 @@ const HCMSelectionModule = () => {
     });
     setSelectedGearbox(null);
   };
+
+  // 加载中显示
+  if (loading) {
+    return (
+      <div className="hcm-selection-module" style={{ ...styles.container, textAlign: 'center', padding: '48px' }}>
+        <p>正在加载HCM系列数据...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="hcm-selection-module" style={styles.container}>

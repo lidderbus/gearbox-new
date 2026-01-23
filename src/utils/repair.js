@@ -1,5 +1,6 @@
 // src/utils/repair.js
 // 系统数据修复与初始化工具
+// 性能优化: 使用动态导入实现数据懒加载
 
 // 导入日志工具
 import { logger } from '../config/logging';
@@ -13,10 +14,10 @@ import {
 // Import other utilities
 import { validateDatabase } from './dataValidator'; // 确保导入路径正确
 import { adaptEnhancedData } from './dataAdapter'; // 确保导入路径正确
-// import { initialData } from '../data/initialData'; // 假设这个文件可能包含一些基础数据 - 如果 embeddedData 是主要来源，可能不需要
-import { embeddedGearboxData } from '../data/embeddedData'; // 使用命名导入嵌入式数据
-import { flexibleCouplings } from '../data/flexibleCouplings'; // <--- 导入附件数据文件
-import { standbyPumps } from '../data/standbyPumps';     // <--- 导入附件数据文件
+// 性能优化: 数据文件改为动态导入，不再使用静态导入
+// import { embeddedGearboxData } from '../data/embeddedData';
+// import { flexibleCouplings } from '../data/flexibleCouplings';
+// import { standbyPumps } from '../data/standbyPumps';
 import { fixAccessories, ensureGearboxNumericFields } from './fixAccessories'; // <--- 导入新修复函数
 import { APP_DATA_VERSION } from '../config'; // 假设 APP_DATA_VERSION 在 config.js 中定义
 
@@ -26,6 +27,61 @@ import {
     fixSpecificModelPrices,
     getStandardDiscountRate // 尽管在 fixData 中使用，在这里导入也没问题
 } from './priceManager'; // 假设 priceManager.js 导出这些函数
+
+// 缓存动态导入的数据，避免重复加载
+let cachedEmbeddedData = null;
+let cachedFlexibleCouplings = null;
+let cachedStandbyPumps = null;
+
+/**
+ * 动态加载嵌入式齿轮箱数据
+ * @returns {Promise<Object>} 齿轮箱数据
+ */
+async function loadEmbeddedGearboxData() {
+  if (cachedEmbeddedData) {
+    return cachedEmbeddedData;
+  }
+  const startTime = performance.now();
+  const module = await import(
+    /* webpackChunkName: "gearbox-data" */
+    '../data/embeddedData'
+  );
+  cachedEmbeddedData = module.embeddedGearboxData;
+  logger.debug(`repair.js: 动态加载齿轮箱数据完成, 耗时${(performance.now() - startTime).toFixed(0)}ms`);
+  return cachedEmbeddedData;
+}
+
+/**
+ * 动态加载联轴器数据
+ * @returns {Promise<Array>} 联轴器数据
+ */
+async function loadFlexibleCouplings() {
+  if (cachedFlexibleCouplings) {
+    return cachedFlexibleCouplings;
+  }
+  const module = await import(
+    /* webpackChunkName: "coupling-data" */
+    '../data/flexibleCouplings'
+  );
+  cachedFlexibleCouplings = module.flexibleCouplings;
+  return cachedFlexibleCouplings;
+}
+
+/**
+ * 动态加载备用泵数据
+ * @returns {Promise<Array>} 备用泵数据
+ */
+async function loadStandbyPumps() {
+  if (cachedStandbyPumps) {
+    return cachedStandbyPumps;
+  }
+  const module = await import(
+    /* webpackChunkName: "pump-data" */
+    '../data/standbyPumps'
+  );
+  cachedStandbyPumps = module.standbyPumps;
+  return cachedStandbyPumps;
+}
 
 // 环境检测：仅在开发环境输出警告信息
 const isDev = process.env.NODE_ENV === 'development';
@@ -177,17 +233,19 @@ export const initializeDataRepair = () => {
  * @throws {Error} If critical errors occurred during repair or validation.
  */
 export const loadAndRepairData = async (options = {}) => {
-  logger.log('repair.js: Starting data loading and repair process...');
+  logger.log('repair.js: Starting data loading and repair process (lazy loading mode)...');
   const { onProgress, initialDataOverrides = {} } = options;
 
   try {
     onProgress?.('initializing');
 
-    // 1. Start with base embedded data + explicitly loaded accessories
+    // 1. 动态加载基础数据 (性能优化: 按需加载)
     let workingData = {};
+    onProgress?.('loading gearbox data');
+    const embeddedGearboxData = await loadEmbeddedGearboxData();
     if (embeddedGearboxData) {
          workingData = JSON.parse(JSON.stringify(embeddedGearboxData)); // Deep copy
-         logger.debug("repair.js: Loaded base embedded gearbox data.");
+         logger.debug("repair.js: Loaded base embedded gearbox data via dynamic import.");
      } else {
          logger.error("repair.js: embeddedGearboxData is not defined!");
          // Fallback to an empty structure with default version
@@ -195,13 +253,20 @@ export const loadAndRepairData = async (options = {}) => {
          logger.warn("repair.js: Used empty structure as base data fallback.");
      }
 
+    // 2. 动态加载附件数据 (并行加载以提高性能)
+    onProgress?.('loading accessories data');
+    const [flexibleCouplings, standbyPumps] = await Promise.all([
+      loadFlexibleCouplings(),
+      loadStandbyPumps()
+    ]);
+
     // Explicitly add accessories from their files to the base data
     // Use mergeDataCollections to add/merge from files into the base structure
     // ensureCollections will make sure these keys exist as arrays later if they weren't already
     workingData.flexibleCouplings = mergeDataCollections(flexibleCouplings, workingData.flexibleCouplings);
     workingData.standbyPumps = mergeDataCollections(standbyPumps, workingData.standbyPumps);
 
-    logger.debug(`repair.js: Added/Merged ${workingData.flexibleCouplings.length} couplings and ${workingData.standbyPumps.length} pumps from source files.`);
+    logger.debug(`repair.js: Added/Merged ${workingData.flexibleCouplings.length} couplings and ${workingData.standbyPumps.length} pumps from dynamic imports.`);
 
 
     onProgress?.('checking local storage');

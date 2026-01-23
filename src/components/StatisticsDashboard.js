@@ -1,13 +1,47 @@
-import React, { useMemo } from 'react';
-import { Card, Row, Col, Badge, Table } from 'react-bootstrap';
+import React, { useMemo, useState, useEffect } from 'react';
+import { Card, Row, Col, Badge, Table, Spinner } from 'react-bootstrap';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import completeGearboxData from '../data/completeGearboxData';
-import flexibleCouplingsData from '../data/flexibleCouplings';
-import standbyPumpsData from '../data/standbyPumps';
+// 性能优化: 改为动态导入
+// import completeGearboxData from '../data/completeGearboxData';
+// import flexibleCouplingsData from '../data/flexibleCouplings';
+// import standbyPumpsData from '../data/standbyPumps';
 
 const StatisticsDashboard = () => {
+  // 数据状态
+  const [completeGearboxData, setCompleteGearboxData] = useState(null);
+  const [flexibleCouplingsData, setFlexibleCouplingsData] = useState([]);
+  const [standbyPumpsData, setStandbyPumpsData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // 性能优化: 动态加载数据
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [gearboxModule, couplingsModule, pumpsModule] = await Promise.all([
+          import(/* webpackChunkName: "complete-gearbox-data" */ '../data/completeGearboxData'),
+          import(/* webpackChunkName: "coupling-data" */ '../data/flexibleCouplings'),
+          import(/* webpackChunkName: "pump-data" */ '../data/standbyPumps')
+        ]);
+
+        setCompleteGearboxData(gearboxModule.default || gearboxModule);
+        setFlexibleCouplingsData(couplingsModule.flexibleCouplings || couplingsModule.default || []);
+        setStandbyPumpsData(pumpsModule.standbyPumps || pumpsModule.default || []);
+      } catch (error) {
+        console.error('StatisticsDashboard: 数据加载失败', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
   // 统计齿轮箱数据
   const gearboxStats = useMemo(() => {
+    if (!completeGearboxData) {
+      return { total: 0, seriesCount: {}, powerRanges: {}, priceRanges: {} };
+    }
+
     const allGearboxes = [
       ...(completeGearboxData.hcGearboxes || []),
       ...(completeGearboxData.gwGearboxes || []),
@@ -72,7 +106,7 @@ const StatisticsDashboard = () => {
     });
 
     return { total, seriesCount, powerRanges, priceRanges };
-  }, []);
+  }, [completeGearboxData]);
 
   // 统计联轴器数据
   const couplingStats = useMemo(() => {
@@ -85,7 +119,7 @@ const StatisticsDashboard = () => {
     const seriesCount = {};
     allCouplings.forEach(coupling => {
       // 提取系列名称 (例如: "HGTH2" -> "HGTH", "HGTL1.8A" -> "HGTL")
-      const match = coupling.model.match(/^([A-Z]+)/);
+      const match = coupling.model?.match(/^([A-Z]+)/);
       if (match) {
         const series = match[1];
         seriesCount[series] = (seriesCount[series] || 0) + 1;
@@ -93,7 +127,7 @@ const StatisticsDashboard = () => {
     });
 
     return { total, seriesCount };
-  }, []);
+  }, [flexibleCouplingsData]);
 
   // 统计备用泵数据
   const pumpStats = useMemo(() => {
@@ -109,7 +143,7 @@ const StatisticsDashboard = () => {
     });
 
     return { total, typeCount };
-  }, []);
+  }, [standbyPumpsData]);
 
   // 图表颜色
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#ff7c7c', '#a4de6c'];
@@ -131,6 +165,16 @@ const StatisticsDashboard = () => {
     name,
     数量: value
   }));
+
+  // 加载中显示
+  if (loading) {
+    return (
+      <div className="statistics-dashboard p-3 text-center">
+        <Spinner animation="border" variant="primary" />
+        <p className="mt-2">正在加载统计数据...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="statistics-dashboard p-3">

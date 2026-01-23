@@ -1,5 +1,16 @@
 // src/utils/optimizedDataImport.js
-import * as XLSX from 'xlsx';
+// 性能优化: 改为动态导入 xlsx
+// import * as XLSX from 'xlsx';
+
+// xlsx模块缓存
+let xlsxModule = null;
+
+// 动态加载 xlsx
+async function loadXLSX() {
+  if (xlsxModule) return xlsxModule;
+  xlsxModule = await import(/* webpackChunkName: "xlsx" */ 'xlsx');
+  return xlsxModule;
+}
 
 // 主导入函数，用于处理各种格式的数据文件
 export const importData = async (file) => {
@@ -176,9 +187,12 @@ const importDataFromJson = async (file) => {
 
 // 从Excel文件导入数据
 const importDataFromExcel = async (file) => {
+  // 预先加载 XLSX 模块
+  const XLSX = await loadXLSX();
+
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    
+
     reader.onload = (e) => {
       try {
         const data = e.target.result;

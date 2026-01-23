@@ -3,7 +3,13 @@
 
 import React, { useState } from 'react';
 import { Modal, Form, Button, Alert, Spinner } from 'react-bootstrap';
-import * as XLSX from 'xlsx';
+// 性能优化: 改为动态导入
+// import * as XLSX from 'xlsx';
+
+// 动态加载 xlsx
+async function loadXLSX() {
+  return await import(/* webpackChunkName: "xlsx" */ 'xlsx');
+}
 
 const ExportDialog = ({
   show,
@@ -36,6 +42,9 @@ const ExportDialog = ({
     setIsExporting(true);
 
     try {
+      // 动态加载 xlsx
+      const XLSX = await loadXLSX();
+
       const data = getExportData();
 
       if (data.length === 0) {

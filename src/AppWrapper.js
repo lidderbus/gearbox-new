@@ -1,5 +1,5 @@
 // src/AppWrapper.js
-import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { userRoles } from './auth/roles';
@@ -12,10 +12,10 @@ import UserManagementView from './components/UserManagementView'; // Import User
 import DatabaseManagementView from './components/DatabaseManagementView'; // Import DatabaseManagementView
 // import DarkModeProvider from './contexts/DarkModeContext'; // Assuming DarkModeProvider is needed
 // import { flexibleCouplings } from './data/flexibleCouplings'; // Not needed here
-import { useIsMobile } from './hooks/useIsMobile';
+// import { useIsMobile } from './hooks/useIsMobile'; // 移动端功能已禁用
 
-// 懒加载移动端应用
-const MobileApp = lazy(() => import('./components/mobile/MobileApp'));
+// 懒加载移动端应用 (已禁用)
+// const MobileApp = lazy(() => import('./components/mobile/MobileApp'));
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -35,22 +35,18 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const AppContent = ({ appData, setAppData }) => {
-  const { currentUser, user, isAuthenticated, loading: authLoading, logout } = useAuth();
-  const { isMobile } = useIsMobile();
-
-  // 强制桌面模式状态 (用户可以选择在移动端使用桌面版)
-  const [forceDesktop, setForceDesktop] = useState(() => {
-    if (typeof localStorage !== 'undefined') {
-      return localStorage.getItem('forceDesktop') === 'true';
-    }
-    return false;
-  });
+  const { currentUser, user, isAuthenticated, loading: authLoading } = useAuth();
+  // 移动端功能已禁用，以下代码保留以备将来启用
+  // const { isMobile } = useIsMobile();
+  // const [forceDesktop, setForceDesktop] = useState(() => {
+  //   if (typeof localStorage !== 'undefined') {
+  //     return localStorage.getItem('forceDesktop') === 'true';
+  //   }
+  //   return false;
+  // });
 
   // Check if user is admin
   const isAdmin = user && (user.role === userRoles.ADMIN || user.role === userRoles.SUPER_ADMIN);
-
-  // 是否显示移动端界面 (已禁用，统一使用完整版)
-  const showMobileApp = false; // isMobile && !forceDesktop;
 
   if (authLoading) {
     return (
@@ -63,14 +59,6 @@ const AppContent = ({ appData, setAppData }) => {
 
   const userIsAuthenticated = isAuthenticated && (currentUser || user);
 
-  // 移动端加载占位符
-  const MobileLoadingFallback = () => (
-    <div className="loading-container">
-      <div className="loading-spinner"></div>
-      <p>加载移动端界面...</p>
-    </div>
-  );
-
   return (
     <Routes>
       <Route path="/login" element={userIsAuthenticated ? <Navigate to="/" replace /> : <LoginPage />} />
@@ -81,30 +69,14 @@ const AppContent = ({ appData, setAppData }) => {
            <Route path="/database" element={<DatabaseManagementView appData={appData} setAppData={setAppData} />} />
          </>
       )}
-      {/* Main application route - 根据设备类型渲染不同界面 */}
+      {/* Main application route - 桌面端需要登录 */}
       <Route
         path="/*"
         element={
-          showMobileApp ? (
-            // 移动端免登录访问
-            <Suspense fallback={<MobileLoadingFallback />}>
-              <MobileApp
-                user={user || currentUser}
-                onLogout={logout}
-                gearboxDatabase={appData?.gearboxDatabase || []}
-                onSwitchToDesktop={() => {
-                  setForceDesktop(true);
-                  localStorage.setItem('forceDesktop', 'true');
-                }}
-              />
-            </Suspense>
+          userIsAuthenticated ? (
+            <App appData={appData} setAppData={setAppData} />
           ) : (
-            // 桌面端需要登录
-            userIsAuthenticated ? (
-              <App appData={appData} setAppData={setAppData} />
-            ) : (
-              <Navigate to="/login" replace state={{ from: window.location.pathname }} />
-            )
+            <Navigate to="/login" replace state={{ from: window.location.pathname }} />
           )
         }
       />

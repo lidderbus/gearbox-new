@@ -1,9 +1,10 @@
 // src/components/AgreementGenerator/AgreementOptionsForm.js
 // 协议选项配置表单组件
-import React from 'react';
-import { Form, Card, Row, Col } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Form, Card, Row, Col, Spinner } from 'react-bootstrap';
 import { TemplateType, LanguageType } from '../../utils/agreementTemplateManager';
-import { flexibleCouplings } from '../../data/flexibleCouplings';
+// 性能优化: 改为动态导入
+// import { flexibleCouplings } from '../../data/flexibleCouplings';
 
 /**
  * 协议选项配置表单
@@ -22,8 +23,35 @@ const AgreementOptionsForm = ({
   setSelectedCouplingModel,
   recommendedCouplingModel,
   options,
-  onOptionChange
+  onOptionChange,
+  couplings: propCouplings  // 可选：从父组件传入
 }) => {
+  // 性能优化: 动态加载联轴器数据
+  const [flexibleCouplings, setFlexibleCouplings] = useState(propCouplings || []);
+  const [couplingsLoading, setCouplingsLoading] = useState(!propCouplings);
+
+  useEffect(() => {
+    if (propCouplings) {
+      setFlexibleCouplings(propCouplings);
+      setCouplingsLoading(false);
+      return;
+    }
+
+    const loadCouplings = async () => {
+      try {
+        const module = await import(
+          /* webpackChunkName: "coupling-data" */
+          '../../data/flexibleCouplings'
+        );
+        setFlexibleCouplings(module.flexibleCouplings || []);
+      } catch (error) {
+        console.error('AgreementOptionsForm: 联轴器数据加载失败', error);
+      } finally {
+        setCouplingsLoading(false);
+      }
+    };
+    loadCouplings();
+  }, [propCouplings]);
   return (
     <>
       {/* 模板类型和语言选择 */}
@@ -139,17 +167,24 @@ const AgreementOptionsForm = ({
         <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label>联轴器型号</Form.Label>
-            <Form.Select
-              value={selectedCouplingModel}
-              onChange={(e) => setSelectedCouplingModel(e.target.value)}
-            >
-              <option value="">主机厂配</option>
-              {flexibleCouplings.map(coupling => (
-                <option key={coupling.model} value={coupling.model}>
-                  {coupling.model} ({coupling.torque}kNm)
-                </option>
-              ))}
-            </Form.Select>
+            {couplingsLoading ? (
+              <div className="d-flex align-items-center">
+                <Spinner animation="border" size="sm" className="me-2" />
+                <span>加载联轴器数据...</span>
+              </div>
+            ) : (
+              <Form.Select
+                value={selectedCouplingModel}
+                onChange={(e) => setSelectedCouplingModel(e.target.value)}
+              >
+                <option value="">主机厂配</option>
+                {flexibleCouplings.map(coupling => (
+                  <option key={coupling.model} value={coupling.model}>
+                    {coupling.model} ({coupling.torque}kNm)
+                  </option>
+                ))}
+              </Form.Select>
+            )}
             <Form.Text className="text-muted">
               推荐联轴器：{recommendedCouplingModel || '未选择'}
             </Form.Text>

@@ -3,14 +3,19 @@
 // 版本: v1.0 (2025-12-14)
 // 支持齿轮箱匹配、参数选型、型号浏览三种模式
 
-import React, { useState, useCallback, useMemo } from 'react';
-import { Card, Row, Col, Form, Button, Table, Alert, Badge, Tabs, Tab, InputGroup } from 'react-bootstrap';
-import { standbyPumps, pumpCategories, pumpSeriesInfo } from '../data/standbyPumps';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import { Card, Row, Col, Form, Button, Table, Alert, Badge, Tabs, Tab, InputGroup, Spinner } from 'react-bootstrap';
+// 性能优化: 改为动态导入
+// import { standbyPumps, pumpCategories, pumpSeriesInfo } from '../data/standbyPumps';
 import {
   selectPumpByParameters,
   selectPumpByGearbox,
   needsStandbyPump,
-  formatPumpInfo
+  formatPumpInfo,
+  loadStandbyPumpsData,
+  getStandbyPumps,
+  getPumpCategories,
+  getPumpSeriesInfo
 } from '../utils/pumpSelectionAlgorithm';
 
 const PumpSelectionView = ({
@@ -20,6 +25,29 @@ const PumpSelectionView = ({
   theme = 'light',
   colors = {}
 }) => {
+  // 性能优化: 动态加载数据状态
+  const [dataLoading, setDataLoading] = useState(true);
+  const [standbyPumpsData, setStandbyPumpsData] = useState([]);
+  const [pumpCategories, setPumpCategories] = useState({});
+  const [pumpSeriesInfo, setPumpSeriesInfo] = useState({});
+
+  // 动态加载数据
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await loadStandbyPumpsData();
+        setStandbyPumpsData(data.standbyPumps || []);
+        setPumpCategories(data.pumpCategories || {});
+        setPumpSeriesInfo(data.pumpSeriesInfo || {});
+      } catch (error) {
+        console.error('PumpSelectionView: 数据加载失败', error);
+      } finally {
+        setDataLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
   // 选型模式
   const [selectionMode, setSelectionMode] = useState('auto');
 
@@ -37,8 +65,8 @@ const PumpSelectionView = ({
 
   // 获取泵列表
   const pumpList = useMemo(() => {
-    return appData?.standbyPumps || standbyPumps;
-  }, [appData]);
+    return appData?.standbyPumps || standbyPumpsData;
+  }, [appData, standbyPumpsData]);
 
   // 自动匹配 - 基于齿轮箱
   const autoMatchResult = useMemo(() => {
@@ -92,7 +120,7 @@ const PumpSelectionView = ({
     const categoryPumps = pumpCategories[browseCategory];
     if (!categoryPumps) return pumpList;
     return pumpList.filter(p => categoryPumps.includes(p.model));
-  }, [pumpList, browseCategory]);
+  }, [pumpList, browseCategory, pumpCategories]);
 
   // 样式
   const cardStyle = {

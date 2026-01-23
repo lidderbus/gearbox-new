@@ -343,21 +343,24 @@ function LoadingFallback() {
 /**
  * 齿轮箱3D预览主组件
  */
-function Gearbox3DPreview({ gearboxData, className = '' }) {
+function Gearbox3DPreview({ gearbox, gearboxData, className = '' }) {
   const [viewAngle, setViewAngle] = useState('iso');
   const [rotating, setRotating] = useState(true);
 
+  // 兼容两种props名称: gearbox 或 gearboxData
+  const data = gearbox || gearboxData;
+
   // 确定系列和主题
   const series = useMemo(() => {
-    if (!gearboxData?.model) return 'DEFAULT';
-    const model = gearboxData.model.toUpperCase();
+    if (!data?.model) return 'DEFAULT';
+    const model = data.model.toUpperCase();
     if (model.startsWith('HCM')) return 'HCM';
     if (model.startsWith('HCD')) return 'HCD';
     if (model.startsWith('HCQ')) return 'HCQ';
     if (model.startsWith('GW')) return 'GW';
     if (model.startsWith('HC')) return 'HC';
     return 'DEFAULT';
-  }, [gearboxData]);
+  }, [data]);
 
   const theme = SERIES_THEMES[series] || SERIES_THEMES.DEFAULT;
 
@@ -367,8 +370,8 @@ function Gearbox3DPreview({ gearboxData, className = '' }) {
         <div className="d-flex align-items-center">
           <i className="bi bi-box me-2"></i>
           <span className="fw-bold">3D预览</span>
-          {gearboxData?.model && (
-            <Badge bg="primary" className="ms-2">{gearboxData.model}</Badge>
+          {data?.model && (
+            <Badge bg="primary" className="ms-2">{data.model}</Badge>
           )}
         </div>
         <div className="d-flex gap-2">
@@ -387,7 +390,7 @@ function Gearbox3DPreview({ gearboxData, className = '' }) {
         <Suspense fallback={<LoadingFallback />}>
           <Canvas shadows>
             <Scene
-              gearboxData={gearboxData}
+              gearboxData={data}
               viewAngle={viewAngle}
               rotating={rotating}
               theme={theme}

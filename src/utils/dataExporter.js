@@ -1,5 +1,11 @@
 // src/utils/dataExporter.js
-import * as XLSX from 'xlsx';
+// 性能优化: 改为动态导入 xlsx
+// import * as XLSX from 'xlsx';
+
+// 动态加载 xlsx
+async function loadXLSX() {
+  return await import(/* webpackChunkName: "xlsx" */ 'xlsx');
+}
 
 export const exportDataToJson = (data, filename = 'gearbox-data') => {
   try {
@@ -30,8 +36,11 @@ export const exportDataToJson = (data, filename = 'gearbox-data') => {
   }
 };
 
-export const exportDataToExcel = (data, filename = 'gearbox-data') => {
+export const exportDataToExcel = async (data, filename = 'gearbox-data') => {
   try {
+    // 动态加载 xlsx
+    const XLSX = await loadXLSX();
+
     // 创建工作簿
     const wb = XLSX.utils.book_new();
     
@@ -83,8 +92,11 @@ export const exportDataToExcel = (data, filename = 'gearbox-data') => {
 };
 
 // 导出当前选择的齿轮箱数据
-export const exportSelectionToExcel = (selectionResult, filename = 'gearbox-selection') => {
+export const exportSelectionToExcel = async (selectionResult, filename = 'gearbox-selection') => {
   try {
+    // 动态加载 xlsx
+    const XLSX = await loadXLSX();
+
     // 创建工作簿
     const wb = XLSX.utils.book_new();
     

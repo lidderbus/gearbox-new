@@ -5,7 +5,7 @@
 
 import React, { useState, useMemo } from 'react';
 import {
-  checkBladeStrength,
+  // checkBladeStrength, // 保留以备将来使用
   checkCavitation,
   checkClassificationCompliance,
   compareClassificationSocieties,

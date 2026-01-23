@@ -2,8 +2,32 @@
 // 联轴器选型服务 - 封装选型算法并提供简洁API
 
 import { enhancedCouplingSelection } from '../utils/enhancedCouplingSelection';
-import { flexibleCouplings } from '../data/flexibleCouplings';
+// 性能优化: 改为动态导入
+// import { flexibleCouplings } from '../data/flexibleCouplings';
 import { couplingWorkFactorMap, getTemperatureFactor, getWorkFactor, WorkFactorMode, ScoringMode, getScoringWeights } from '../data/gearboxMatchingMaps';
+
+// 缓存动态加载的联轴器数据
+let cachedFlexibleCouplings = null;
+
+/**
+ * 动态加载联轴器数据
+ */
+async function loadFlexibleCouplings() {
+  if (cachedFlexibleCouplings) return cachedFlexibleCouplings;
+  const module = await import(
+    /* webpackChunkName: "coupling-data" */
+    '../data/flexibleCouplings'
+  );
+  cachedFlexibleCouplings = module.flexibleCouplings || [];
+  return cachedFlexibleCouplings;
+}
+
+/**
+ * 获取联轴器数据 (同步，需先调用loadFlexibleCouplings)
+ */
+export function getFlexibleCouplings() {
+  return cachedFlexibleCouplings || [];
+}
 
 /**
  * 工况选项配置
@@ -131,7 +155,7 @@ export const selectCouplingStandalone = (params) => {
   };
 
   // 调用增强版选型算法 (传入workFactorMode)
-  const result = enhancedCouplingSelection(mockGearboxResult, flexibleCouplings, {
+  const result = enhancedCouplingSelection(mockGearboxResult, getFlexibleCouplings(), {
     workCondition,
     workFactorMode,
     temperature,
@@ -162,7 +186,7 @@ export const selectCouplingStandalone = (params) => {
  * @returns {Object} 选型结果
  */
 export const selectCouplingFromGearbox = (gearboxSelectionResult, options = {}) => {
-  return enhancedCouplingSelection(gearboxSelectionResult, flexibleCouplings, options);
+  return enhancedCouplingSelection(gearboxSelectionResult, getFlexibleCouplings(), options);
 };
 
 /**
@@ -197,7 +221,7 @@ export const getCouplingSeriesInfo = (model) => {
  * 获取所有联轴器数据
  * @returns {Array} 联轴器数据数组
  */
-export const getAllCouplings = () => flexibleCouplings;
+export const getAllCouplings = () => getFlexibleCouplings();
 
 /**
  * 按型号搜索联轴器
@@ -205,9 +229,10 @@ export const getAllCouplings = () => flexibleCouplings;
  * @returns {Array} 匹配的联轴器数组
  */
 export const searchCouplings = (keyword) => {
-  if (!keyword) return flexibleCouplings;
+  const couplings = getFlexibleCouplings();
+  if (!keyword) return couplings;
   const upperKeyword = keyword.toUpperCase();
-  return flexibleCouplings.filter(c =>
+  return couplings.filter(c =>
     c.model.toUpperCase().includes(upperKeyword) ||
     (c.notes && c.notes.includes(keyword))
   );
@@ -220,11 +245,14 @@ export const searchCouplings = (keyword) => {
  */
 export const getCouplingByModel = (model) => {
   if (!model) return null;
-  return flexibleCouplings.find(c => c.model === model) || null;
+  return getFlexibleCouplings().find(c => c.model === model) || null;
 };
 
 // 重新导出ScoringMode供其他组件使用
 export { ScoringMode, getScoringWeights };
+
+// 导出数据加载函数
+export { loadFlexibleCouplings };
 
 export default {
   selectCouplingStandalone,
@@ -235,6 +263,8 @@ export default {
   getAllCouplings,
   searchCouplings,
   getCouplingByModel,
+  loadFlexibleCouplings,
+  getFlexibleCouplings,
   WORK_CONDITIONS,
   QUICK_TEMPLATES,
   ScoringMode,

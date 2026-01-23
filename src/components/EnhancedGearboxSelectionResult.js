@@ -10,6 +10,7 @@ import { SeriesCharacteristicsBadge } from './SelectionGuidelines';
 import { DataCompletenessBadge } from './selection/GearboxScorer';
 import { useIsMobile } from '../hooks/useIsMobile';
 import SwipeableResultCards from './responsive/SwipeableResultCards';
+import { getManualInfo } from '../data/gearboxManuals';
 
 // 导入子组件
 import {
@@ -350,7 +351,20 @@ const EnhancedGearboxSelectionResult = ({
                       选中齿轮箱: {selectedGearbox.model}
                       <DataCompletenessBadge gearbox={selectedGearbox} className="ms-2" />
                     </h5>
-                    <small style={{ color: '#666' }}>点击图片查看大图和技术图纸</small>
+                    <div className="d-flex align-items-center gap-2">
+                      <small style={{ color: '#666' }}>点击图片查看大图和技术图纸</small>
+                      {getManualInfo(selectedGearbox.model) && (
+                        <Button
+                          variant="outline-info"
+                          size="sm"
+                          onClick={() => window.open(getManualInfo(selectedGearbox.model).path, '_blank')}
+                          title={getManualInfo(selectedGearbox.model).title}
+                        >
+                          <i className="bi bi-file-earmark-pdf me-1"></i>
+                          查看说明书
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
                 {/* 系列特性徽章 - 杭齿选型手册2025版 */}
@@ -510,9 +524,20 @@ const EnhancedGearboxSelectionResult = ({
                                 variant="outline-primary"
                                 size="sm"
                                 onClick={() => onSelectGearbox(index)}
+                                className="me-1"
                               >
                                 选择
                               </Button>
+                              {getManualInfo(gearbox.model) && (
+                                <Button
+                                  variant="outline-info"
+                                  size="sm"
+                                  onClick={() => window.open(getManualInfo(gearbox.model).path, '_blank')}
+                                  title={getManualInfo(gearbox.model).title}
+                                >
+                                  <i className="bi bi-file-earmark-pdf"></i>
+                                </Button>
+                              )}
                             </td>
                           </tr>
                         ))}
@@ -719,16 +744,60 @@ const EnhancedGearboxSelectionResult = ({
           </Alert>
         )}
 
+        {/* 说明书快速链接汇总 */}
+        {(() => {
+          const manualsAvailable = recommendations
+            .slice(0, 5)
+            .map(g => ({ model: g.model, manual: getManualInfo(g.model) }))
+            .filter(item => item.manual);
+
+          if (manualsAvailable.length > 0) {
+            return (
+              <Card className="mt-3" style={{ backgroundColor: colors?.headerBg, borderColor: colors?.border }}>
+                <Card.Body className="py-2">
+                  <div className="d-flex align-items-center flex-wrap gap-2">
+                    <span style={{ color: colors?.headerText, fontWeight: 500 }}>
+                      <i className="bi bi-book me-2"></i>
+                      说明书快速链接:
+                    </span>
+                    {manualsAvailable.map(({ model, manual }) => (
+                      <Button
+                        key={model}
+                        variant={model === selectedGearbox.model ? "info" : "outline-info"}
+                        size="sm"
+                        onClick={() => window.open(manual.path, '_blank')}
+                        title={manual.title}
+                      >
+                        <i className="bi bi-file-earmark-pdf me-1"></i>
+                        {model}
+                      </Button>
+                    ))}
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      onClick={() => window.location.hash = '#manuals'}
+                      title="查看全部说明书"
+                    >
+                      更多...
+                    </Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            );
+          }
+          return null;
+        })()}
+
         <div className="d-flex justify-content-end mt-4">
-          <Button 
-            variant="outline-primary" 
+          <Button
+            variant="outline-primary"
             onClick={onGenerateQuotation}
             className="me-2"
           >
             <i className="bi bi-currency-yen me-1"></i> 生成报价单
           </Button>
-          <Button 
-            variant="outline-success" 
+          <Button
+            variant="outline-success"
             onClick={onGenerateAgreement}
           >
             <i className="bi bi-file-earmark-text me-1"></i> 生成技术协议

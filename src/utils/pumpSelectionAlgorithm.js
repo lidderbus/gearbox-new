@@ -3,7 +3,50 @@
 // 版本: v1.0 (2025-12-14)
 // 支持基于流量、压力参数的独立选型，以及齿轮箱匹配选型
 
-import { standbyPumps, pumpCategories, pumpSeriesInfo } from '../data/standbyPumps';
+// 性能优化: 改为动态导入
+// import { standbyPumps, pumpCategories, pumpSeriesInfo } from '../data/standbyPumps';
+
+// 缓存动态加载的数据
+let cachedStandbyPumps = [];
+let cachedPumpCategories = {};
+let cachedPumpSeriesInfo = {};
+
+/**
+ * 动态加载备用泵数据
+ */
+export async function loadStandbyPumpsData() {
+  if (cachedStandbyPumps.length > 0) {
+    return { standbyPumps: cachedStandbyPumps, pumpCategories: cachedPumpCategories, pumpSeriesInfo: cachedPumpSeriesInfo };
+  }
+  const module = await import(
+    /* webpackChunkName: "pump-data" */
+    '../data/standbyPumps'
+  );
+  cachedStandbyPumps = module.standbyPumps || [];
+  cachedPumpCategories = module.pumpCategories || {};
+  cachedPumpSeriesInfo = module.pumpSeriesInfo || {};
+  return { standbyPumps: cachedStandbyPumps, pumpCategories: cachedPumpCategories, pumpSeriesInfo: cachedPumpSeriesInfo };
+}
+
+/**
+ * 获取备用泵数据 (同步，需先调用loadStandbyPumpsData)
+ */
+export function getStandbyPumps() {
+  return cachedStandbyPumps;
+}
+
+export function getPumpCategories() {
+  return cachedPumpCategories;
+}
+
+export function getPumpSeriesInfo() {
+  return cachedPumpSeriesInfo;
+}
+
+// 兼容性: 提供默认变量供同步代码使用
+const standbyPumps = [];  // 将在运行时被缓存填充
+const pumpCategories = {};
+const pumpSeriesInfo = {};
 
 /**
  * 根据流量和压力需求选择备用泵
@@ -12,10 +55,12 @@ import { standbyPumps, pumpCategories, pumpSeriesInfo } from '../data/standbyPum
  * @param {number} requirements.pressureRequired - 所需压力 (MPa)
  * @param {string} requirements.applicationType - 应用类型: general/control/emergency/dt-electric
  * @param {string} requirements.seriesPreference - 系列偏好: 2CY-D/2CYA/null
- * @param {Array} pumpList - 备用泵列表 (可选，默认使用内置数据)
+ * @param {Array} pumpList - 备用泵列表 (可选，默认使用缓存数据)
  * @returns {Object} - 选型结果
  */
-export const selectPumpByParameters = (requirements, pumpList = standbyPumps) => {
+export const selectPumpByParameters = (requirements, pumpList = null) => {
+  // 使用传入的列表或缓存的数据
+  const pumps = pumpList || getStandbyPumps();
   const {
     flowRequired,
     pressureRequired,
@@ -40,7 +85,7 @@ export const selectPumpByParameters = (requirements, pumpList = standbyPumps) =>
     };
   }
 
-  let candidates = [...pumpList];
+  let candidates = [...pumps];
 
   // 根据应用类型筛选系列
   if (applicationType === 'dt-electric' || seriesPreference === '2CYA') {
@@ -65,7 +110,7 @@ export const selectPumpByParameters = (requirements, pumpList = standbyPumps) =>
         ? '未找到满足需求的DT系列电动泵，请调整参数或选择其他系列'
         : '未找到满足需求的备用泵，请调整流量或压力参数',
       recommendations: [],
-      suggestion: calculateSuggestion(flowRequired, pressureRequired, pumpList)
+      suggestion: calculateSuggestion(flowRequired, pressureRequired, pumps)
     };
   }
 
@@ -289,16 +334,6 @@ export const needsStandbyPump = (gearboxModel, options = {}) => {
 };
 
 /**
- * 获取泵分类信息
- */
-export const getPumpCategories = () => pumpCategories;
-
-/**
- * 获取泵系列信息
- */
-export const getPumpSeriesInfo = () => pumpSeriesInfo;
-
-/**
  * 格式化泵信息用于显示
  */
 export const formatPumpInfo = (pump) => {
@@ -310,7 +345,7 @@ export const formatPumpInfo = (pump) => {
     ...pump,
     displayName: pump.model,
     typeLabel: isElectric ? '电动备用泵' : '齿轮备用泵',
-    seriesLabel: pumpSeriesInfo[pump.series]?.name || pump.series,
+    seriesLabel: cachedPumpSeriesInfo[pump.series]?.name || pump.series,
     specSummary: `${pump.flow} L/min, ${pump.pressure} MPa, ${pump.motorPower} kW`,
     priceDisplay: pump.marketPrice ? `${pump.marketPrice.toLocaleString()}` : '-'
   };

@@ -11,6 +11,12 @@ import ErrorBoundary from './components/ErrorBoundary';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './utils/serviceWorkerRegistration';
 
+// Sentry 错误监控
+import { initSentry } from './config/sentry';
+
+// 初始化 Sentry (应在渲染前调用)
+initSentry();
+
 const Root = () => {
   const [appData, setAppData] = useState(null);
   const [loadingError, setLoadingError] = useState(null);
@@ -109,7 +115,30 @@ const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 root.render(<Root />);
 
-reportWebVitals();
+// Web Vitals 性能监控
+reportWebVitals((metric) => {
+  // 发送到 Google Analytics (如果已配置)
+  if (window.gtag) {
+    window.gtag('event', metric.name, {
+      event_category: 'Web Vitals',
+      event_label: metric.id,
+      value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
+      non_interaction: true,
+    });
+  }
+
+  // 发送到 Sentry 作为自定义测量 (如果已配置)
+  if (process.env.REACT_APP_SENTRY_DSN) {
+    import('@sentry/react').then((Sentry) => {
+      Sentry.setMeasurement(metric.name, metric.value, metric.name === 'CLS' ? '' : 'millisecond');
+    }).catch(() => {});
+  }
+
+  // 开发环境下输出到控制台
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[Web Vitals] ${metric.name}:`, Math.round(metric.value), metric.rating);
+  }
+});
 
 // 注册 Service Worker (仅生产环境)
 serviceWorkerRegistration.register({

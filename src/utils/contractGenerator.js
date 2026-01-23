@@ -1,10 +1,27 @@
 // src/utils/contractGenerator.js
-import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
+// 性能优化: 改为动态导入 jspdf 和 docx
+// import { jsPDF } from 'jspdf';
+// import 'jspdf-autotable';
 import { saveAs } from 'file-saver';
-import { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, HeadingLevel, AlignmentType, WidthType, BorderStyle } from 'docx';
-import NotoSansSCFont from '../fonts/NotoSansSC-Regular-normal';
+// import { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, HeadingLevel, AlignmentType, WidthType, BorderStyle } from 'docx';
+// import NotoSansSCFont from '../fonts/NotoSansSC-Regular-normal';
 import { convertToChinaNum } from './numberConverter'; // 假设你有一个数字转中文的工具
+
+// 动态加载 jsPDF
+async function loadJsPDF() {
+  const [{ jsPDF }, autotable, fontModule] = await Promise.all([
+    import(/* webpackChunkName: "jspdf" */ 'jspdf'),
+    import(/* webpackChunkName: "jspdf-autotable" */ 'jspdf-autotable'),
+    import(/* webpackChunkName: "fonts" */ '../fonts/NotoSansSC-Regular-normal')
+  ]);
+  return { jsPDF, NotoSansSCFont: fontModule.default };
+}
+
+// 动态加载 docx
+async function loadDocx() {
+  const docx = await import(/* webpackChunkName: "docx" */ 'docx');
+  return docx;
+}
 
 /**
  * 生成销售合同
@@ -143,6 +160,9 @@ export const generateContract = (selectionResult, projectInfo, selectedComponent
  */
 export const exportContractToPDF = async (contract, filename = 'contract') => {
   try {
+    // 动态加载 jsPDF
+    const { jsPDF, NotoSansSCFont } = await loadJsPDF();
+
     // 创建PDF实例
     const doc = new jsPDF({
       orientation: 'p', // 纵向
@@ -281,10 +301,13 @@ export const exportContractToPDF = async (contract, filename = 'contract') => {
  * 导出合同为Word格式
  * @param {Object} contract - 合同数据
  * @param {string} filename - 导出文件名
- * @returns {boolean} - 导出结果
+ * @returns {Promise<boolean>} - 导出结果
  */
-export const exportContractToWord = (contract, filename = 'contract') => {
+export const exportContractToWord = async (contract, filename = 'contract') => {
   try {
+    // 动态加载 docx
+    const { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, HeadingLevel, AlignmentType, WidthType, BorderStyle } = await loadDocx();
+
     // 创建Document
     const doc = new Document({
       styles: {
