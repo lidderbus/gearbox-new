@@ -67,6 +67,12 @@ const EngineMatchingCases = lazy(() => import('./components/EngineMatchingCases'
 // 产品中心 - 综合产品库 (2026-01-11新增)
 const ProductCenter = lazy(() => import('./components/ProductCenter'));
 
+// 说明书库 - 产品说明书浏览 (2026-01-20新增)
+const ManualLibrary = lazy(() => import('./components/ManualLibrary'));
+
+// 技术协议模板库 - 历史技术协议模板 (2026-01-22新增)
+const TemplateLibrary = lazy(() => import('./components/TemplateLibrary'));
+
 // 上海公司审计整改模块 (2026-01-15新增)
 const InventoryManagement = lazy(() => import('./components/InventoryManagement'));
 const ReceivablesManagement = lazy(() => import('./components/ReceivablesManagement'));
@@ -795,6 +801,7 @@ function App({ appData: initialAppData, setAppData }) {
                     <TechnicalAgreementView
                       selectionResult={selectionResult}
                       projectInfo={projectInfo}
+                      requirementData={requirementData}
                       selectedComponents={selectedComponents}
                       colors={colors}
                       theme={theme}
@@ -962,6 +969,32 @@ function App({ appData: initialAppData, setAppData }) {
               <Col>
                 <Suspense fallback={<LazyLoadFallback />}>
                   <OutlineDrawingQuery
+                    theme={theme}
+                    colors={colors}
+                  />
+                </Suspense>
+              </Col>
+            </Row>
+          </Tab>
+
+          <Tab eventKey="manuals" title={<span><i className="bi bi-book me-1"></i>说明书库</span>}>
+            <Row>
+              <Col>
+                <Suspense fallback={<LazyLoadFallback />}>
+                  <ManualLibrary
+                    theme={theme}
+                    colors={colors}
+                  />
+                </Suspense>
+              </Col>
+            </Row>
+          </Tab>
+
+          <Tab eventKey="templates" title={<span><i className="bi bi-file-earmark-text me-1"></i>协议模板库</span>}>
+            <Row>
+              <Col>
+                <Suspense fallback={<LazyLoadFallback />}>
+                  <TemplateLibrary
                     theme={theme}
                     colors={colors}
                   />

@@ -102,6 +102,7 @@ const templateReducer = (state, action) => {
 const AgreementGenerator = ({
   selectionResult,
   projectInfo,
+  requirementData,
   selectedComponents,
   colors,
   theme,
@@ -213,12 +214,13 @@ const AgreementGenerator = ({
     loading,
     error,
     generateAgreement,
-    clearError,
+    // clearError, // 暂未使用，保留以备将来使用
     getTemplateDataForRequirements
   } = useAgreementGeneration({
     selectedComponents,
     selectionResult,
     projectInfo,
+    requirementData,
     editableInfo,
     options,
     specialRequirements,

@@ -22,6 +22,7 @@ const prepareTemplateData = ({
   selectedComponents,
   selectionResult,
   projectInfo,
+  requirementData,
   editableInfo,
   options,
   specialRequirements,
@@ -112,7 +113,7 @@ const prepareTemplateData = ({
     engineSpeed: editableInfo.engineSpeed || engine.speed || projectInfo?.speed || '',
     // 主机旋向 - 优先从propulsionConfig读取，兼容旧数据
     engineRotation: (() => {
-      const propulsionConfig = editableInfo.propulsionConfig || projectInfo?.propulsionConfig || {};
+      const propulsionConfig = editableInfo.propulsionConfig || requirementData || projectInfo?.propulsionConfig || {};
       if (propulsionConfig.inputRotation) {
         return propulsionConfig.inputRotation === 'counterclockwise' ? '逆时针' : '顺时针';
       }
@@ -225,7 +226,7 @@ const prepareTemplateData = ({
     powerArrangement: '柴油机——高弹联轴器——齿轮箱——螺旋桨',
     // 从可编辑信息中获取推进系统配置
     arrangementDiagram: (() => {
-      const propulsionConfig = editableInfo.propulsionConfig || projectInfo?.propulsionConfig || {};
+      const propulsionConfig = editableInfo.propulsionConfig || requirementData || projectInfo?.propulsionConfig || {};
       return renderToStaticMarkup(
         <TwinEngineArrangementDiagram
           gearboxType={gearbox.model?.match(/^(GWC|GWL|HC|HCT|HCM|HCD|DT)/i)?.[1]?.toUpperCase() || 'GWC'}
@@ -242,7 +243,7 @@ const prepareTemplateData = ({
     gearboxFunctions: '具有减速、倒顺离合和承受螺旋桨推力的功能',
     // 旋向配置 - 优先使用可编辑信息中的配置
     inputRotation: (() => {
-      const propulsionConfig = editableInfo.propulsionConfig || projectInfo?.propulsionConfig || {};
+      const propulsionConfig = editableInfo.propulsionConfig || requirementData || projectInfo?.propulsionConfig || {};
       return propulsionConfig.inputRotation === 'counterclockwise' ? '逆时针' : '顺时针';
     })(),
     outputRotation: '详见排列图示',
@@ -321,6 +322,7 @@ const useAgreementGeneration = ({
   selectedComponents,
   selectionResult,
   projectInfo,
+  requirementData,
   editableInfo,
   options,
   specialRequirements,
@@ -391,6 +393,7 @@ const useAgreementGeneration = ({
       selectedComponents,
       selectionResult,
       projectInfo,
+      requirementData,
       editableInfo,
       options,
       specialRequirements,
@@ -423,7 +426,7 @@ const useAgreementGeneration = ({
       data: templateData,
       bilingualLayout: bilingualLayout
     };
-  }, [selectedComponents, selectionResult, projectInfo, editableInfo, options, specialRequirements, specialRequirementsFormat, selectedCouplingModel, templateType, bilingualLayout]);
+  }, [selectedComponents, selectionResult, projectInfo, requirementData, editableInfo, options, specialRequirements, specialRequirementsFormat, selectedCouplingModel, templateType, bilingualLayout]);
 
   // 生成单语种技术协议
   const generateSingleLanguageAgreementContent = useCallback(() => {
@@ -443,6 +446,7 @@ const useAgreementGeneration = ({
       selectedComponents,
       selectionResult,
       projectInfo,
+      requirementData,
       editableInfo,
       options,
       specialRequirements,
@@ -466,7 +470,7 @@ const useAgreementGeneration = ({
       options: { ...options },
       data: templateData
     };
-  }, [language, options, selectedComponents, selectionResult, projectInfo, editableInfo, specialRequirements, specialRequirementsFormat, templateType, selectedCouplingModel]);
+  }, [language, options, selectedComponents, selectionResult, projectInfo, requirementData, editableInfo, specialRequirements, specialRequirementsFormat, templateType, selectedCouplingModel]);
 
   // 生成协议
   const generateAgreement = useCallback(() => {

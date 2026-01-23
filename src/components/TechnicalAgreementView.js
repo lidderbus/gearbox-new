@@ -13,6 +13,7 @@ import { needsStandbyPump } from '../utils/enhancedPumpSelection';
 const TechnicalAgreementView = ({
   selectionResult,
   projectInfo,
+  requirementData,
   selectedComponents,
   colors,
   theme,
@@ -354,6 +355,7 @@ const TechnicalAgreementView = ({
                 <AgreementGenerator
                   selectionResult={selectionResult}
                   projectInfo={projectInfo}
+                  requirementData={requirementData}
                   selectedComponents={selectedComponents}
                   colors={colors}
                   theme={theme}
