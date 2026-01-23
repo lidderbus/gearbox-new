@@ -134,7 +134,7 @@ const BrandDetailPanel = ({ brandId, themeColors = {} }) => {
           </Row>
           <Row className="mt-1">
             <Col xs={6}>
-              <strong>功率范围:</strong> {config.powerRange.min}-{config.powerRange.max} kW
+              <strong>功率范围:</strong> {config?.powerRange?.min || 0}-{config?.powerRange?.max || 0} kW
             </Col>
             <Col xs={6}>
               <strong>混动支持:</strong> {config.hybridSupport.available ? '是' : '否'}
@@ -329,7 +329,7 @@ const BrandSelector = ({
                             {cfg?.isPrimary && <Badge bg="warning" text="dark" className="ms-1" style={{ fontSize: '0.6rem' }}>主</Badge>}
                           </td>
                           <td style={{ padding: '6px', textAlign: 'center', borderBottom: '1px solid #E5E7EB' }}>
-                            {cfg?.powerRange.min}-{cfg?.powerRange.max} kW
+                            {cfg?.powerRange?.min || 0}-{cfg?.powerRange?.max || 0} kW
                           </td>
                           <td style={{ padding: '6px', textAlign: 'center', borderBottom: '1px solid #E5E7EB' }}>
                             {cfg?.hybridSupport.available ? (

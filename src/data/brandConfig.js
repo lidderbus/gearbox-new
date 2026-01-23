@@ -386,16 +386,18 @@ export const BRAND_CONFIG = {
 };
 
 // 品牌列表 (用于UI展示)
-export const BRAND_LIST = Object.values(BRAND_CONFIG).map(brand => ({
-  id: brand.id,
-  name: brand.name,
-  shortName: brand.shortName,
-  shortNameEN: brand.shortNameEN,
-  country: brand.country,
-  isPrimary: brand.isPrimary,
-  powerRange: brand.powerRange,
-  hybridSupport: brand.hybridSupport.available
-}));
+export const BRAND_LIST = Object.values(BRAND_CONFIG)
+  .filter(brand => brand && brand.id)
+  .map(brand => ({
+    id: brand.id,
+    name: brand.name,
+    shortName: brand.shortName,
+    shortNameEN: brand.shortNameEN,
+    country: brand.country,
+    isPrimary: brand.isPrimary,
+    powerRange: brand.powerRange,
+    hybridSupport: brand.hybridSupport?.available || false
+  }));
 
 // 按国家分组的品牌
 export const BRANDS_BY_COUNTRY = {
@@ -409,12 +411,14 @@ export const HYBRID_ENABLED_BRANDS = Object.values(BRAND_CONFIG)
   .map(brand => brand.id);
 
 // 品牌功率范围比较
-export const BRAND_POWER_COMPARISON = Object.values(BRAND_CONFIG).map(brand => ({
-  id: brand.id,
-  name: brand.shortName,
-  minPower: brand.powerRange.min,
-  maxPower: brand.powerRange.max
-})).sort((a, b) => a.maxPower - b.maxPower);
+export const BRAND_POWER_COMPARISON = Object.values(BRAND_CONFIG)
+  .filter(brand => brand && brand.powerRange)
+  .map(brand => ({
+    id: brand.id,
+    name: brand.shortName,
+    minPower: brand.powerRange.min,
+    maxPower: brand.powerRange.max
+  })).sort((a, b) => a.maxPower - b.maxPower);
 
 /**
  * 获取品牌配置
@@ -452,7 +456,7 @@ export function getBrandHybridModes(brandId) {
  */
 export function getBrandsForPower(power) {
   return Object.values(BRAND_CONFIG)
-    .filter(brand => power >= brand.powerRange.min && power <= brand.powerRange.max)
+    .filter(brand => brand && brand.powerRange && power >= brand.powerRange.min && power <= brand.powerRange.max)
     .map(brand => brand.id);
 }
 

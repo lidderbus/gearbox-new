@@ -2,12 +2,18 @@
 // 创建于: 2025-12-15
 // 功能: 展示192个DWG外形图的技术参数统计、系列分布和数据表格
 
-import React, { useState, useMemo, useCallback } from 'react';
-import { Container, Row, Col, Card, Table, Badge, Form, Button, InputGroup, Tabs, Tab, ProgressBar, Alert } from 'react-bootstrap';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { Container, Row, Col, Card, Table, Badge, Form, Button, InputGroup, Tabs, Tab, ProgressBar, Alert, Spinner } from 'react-bootstrap';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import * as XLSX from 'xlsx';
+// 性能优化: 改为动态导入
+// import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { dwgTechParams, dwgDataStats, getMatchedModels, getUnmatchedModels, getAllGearboxes, getAllCouplings, getSeriesList } from '../data/dwgTechParams';
+// import { dwgTechParams, dwgDataStats, getMatchedModels, getUnmatchedModels, getAllGearboxes, getAllCouplings, getSeriesList } from '../data/dwgTechParams';
+
+// 动态加载 xlsx
+async function loadXLSX() {
+  return await import(/* webpackChunkName: "xlsx" */ 'xlsx');
+}
 
 // 颜色配置
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#FFC658', '#8DD1E1', '#A4DE6C', '#D0ED57'];
@@ -33,9 +39,39 @@ const DwgDataDashboard = () => {
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [selectAll, setSelectAll] = useState(false);
 
+  // 性能优化: 动态加载数据状态
+  const [dataLoading, setDataLoading] = useState(true);
+  const [dwgTechParams, setDwgTechParams] = useState({});
+  const [dwgDataStats, setDwgDataStats] = useState({ total: 0, totalFiles: 0, gearbox: 0, coupling: 0, matched: 0, unmatched: 0, seriesStats: {}, paramCoverage: {} });
+  const [seriesListData, setSeriesListData] = useState([]);
+  const [unmatchedModels, setUnmatchedModels] = useState([]);
+  const [allCouplings, setAllCouplings] = useState([]);
+
+  // 动态加载数据
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const module = await import(
+          /* webpackChunkName: "dwg-data" */
+          '../data/dwgTechParams'
+        );
+        setDwgTechParams(module.dwgTechParams || {});
+        setDwgDataStats(module.dwgDataStats || { total: 0, totalFiles: 0, gearbox: 0, coupling: 0, matched: 0, unmatched: 0, seriesStats: {} });
+        setSeriesListData(module.getSeriesList ? module.getSeriesList() : []);
+        setUnmatchedModels(module.getUnmatchedModels ? module.getUnmatchedModels() : []);
+        setAllCouplings(module.getAllCouplings ? module.getAllCouplings() : []);
+      } catch (error) {
+        console.error('DwgDataDashboard: 数据加载失败', error);
+      } finally {
+        setDataLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
   // 获取所有数据
-  const allData = useMemo(() => Object.values(dwgTechParams), []);
-  const seriesList = useMemo(() => getSeriesList(), []);
+  const allData = useMemo(() => Object.values(dwgTechParams), [dwgTechParams]);
+  const seriesList = useMemo(() => seriesListData, [seriesListData]);
 
   // 统计数据
   const stats = useMemo(() => ({
@@ -45,12 +81,12 @@ const DwgDataDashboard = () => {
     coupling: dwgDataStats.coupling,
     matched: dwgDataStats.matched,
     unmatched: dwgDataStats.unmatched,
-    matchRate: ((dwgDataStats.matched / dwgDataStats.gearbox) * 100).toFixed(1)
-  }), []);
+    matchRate: dwgDataStats.gearbox > 0 ? ((dwgDataStats.matched / dwgDataStats.gearbox) * 100).toFixed(1) : '0'
+  }), [dwgDataStats]);
 
   // 系列分布数据 (用于饼图)
   const seriesChartData = useMemo(() => {
-    return Object.entries(dwgDataStats.seriesStats)
+    return Object.entries(dwgDataStats.seriesStats || {})
       .map(([name, data]) => ({
         name: name === 'OTHER' || name === 'other' ? '其他' : name,
         value: data.count,
@@ -63,16 +99,17 @@ const DwgDataDashboard = () => {
 
   // 参数覆盖率数据 (用于柱状图)
   const coverageChartData = useMemo(() => {
-    const gearboxCount = dwgDataStats.gearbox;
+    const gearboxCount = dwgDataStats.gearbox || 1;  // 避免除以0
+    const coverage = dwgDataStats.paramCoverage || {};
     return [
-      { name: '功率范围', value: dwgDataStats.paramCoverage.powerRange, percent: ((dwgDataStats.paramCoverage.powerRange / gearboxCount) * 100).toFixed(1) },
-      { name: '转速范围', value: dwgDataStats.paramCoverage.speedRange, percent: ((dwgDataStats.paramCoverage.speedRange / gearboxCount) * 100).toFixed(1) },
-      { name: '速比', value: dwgDataStats.paramCoverage.ratios, percent: ((dwgDataStats.paramCoverage.ratios / gearboxCount) * 100).toFixed(1) },
-      { name: '推力', value: dwgDataStats.paramCoverage.thrust, percent: ((dwgDataStats.paramCoverage.thrust / gearboxCount) * 100).toFixed(1) },
-      { name: '重量', value: dwgDataStats.paramCoverage.weight, percent: ((dwgDataStats.paramCoverage.weight / gearboxCount) * 100).toFixed(1) },
-      { name: '尺寸', value: dwgDataStats.paramCoverage.dimensions, percent: ((dwgDataStats.paramCoverage.dimensions / gearboxCount) * 100).toFixed(1) }
+      { name: '功率范围', value: coverage.powerRange || 0, percent: ((coverage.powerRange || 0) / gearboxCount * 100).toFixed(1) },
+      { name: '转速范围', value: coverage.speedRange || 0, percent: ((coverage.speedRange || 0) / gearboxCount * 100).toFixed(1) },
+      { name: '速比', value: coverage.ratios || 0, percent: ((coverage.ratios || 0) / gearboxCount * 100).toFixed(1) },
+      { name: '推力', value: coverage.thrust || 0, percent: ((coverage.thrust || 0) / gearboxCount * 100).toFixed(1) },
+      { name: '重量', value: coverage.weight || 0, percent: ((coverage.weight || 0) / gearboxCount * 100).toFixed(1) },
+      { name: '尺寸', value: coverage.dimensions || 0, percent: ((coverage.dimensions || 0) / gearboxCount * 100).toFixed(1) }
     ];
-  }, []);
+  }, [dwgDataStats]);
 
   // 过滤和排序数据
   const filteredData = useMemo(() => {
@@ -254,7 +291,10 @@ const DwgDataDashboard = () => {
   }, [filteredData, selectedRows]);
 
   // 导出Excel
-  const exportExcel = useCallback((exportSelected = false) => {
+  const exportExcel = useCallback(async (exportSelected = false) => {
+    // 动态加载 xlsx
+    const XLSX = await loadXLSX();
+
     const dataToExport = exportSelected && selectedRows.size > 0
       ? filteredData.filter(item => selectedRows.has(item.model))
       : filteredData;
@@ -340,6 +380,16 @@ const DwgDataDashboard = () => {
     }
     return null;
   };
+
+  // 数据加载中
+  if (dataLoading) {
+    return (
+      <Container fluid className="py-5 text-center">
+        <Spinner animation="border" variant="primary" />
+        <p className="mt-3 text-muted">加载DWG数据...</p>
+      </Container>
+    );
+  }
 
   return (
     <Container fluid className="py-4">
@@ -764,7 +814,7 @@ const DwgDataDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {getUnmatchedModels().map((item, index) => (
+                  {unmatchedModels.map((item, index) => (
                     <tr key={item.model}>
                       <td>{index + 1}</td>
                       <td><strong>{item.model}</strong></td>
@@ -803,7 +853,7 @@ const DwgDataDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {getAllCouplings().map((item, index) => (
+                  {allCouplings.map((item, index) => (
                     <tr key={item.model}>
                       <td>{index + 1}</td>
                       <td><strong>{item.model}</strong></td>

@@ -6,31 +6,40 @@ import {
   gearboxDwgDrawings,
   couplingDwgDrawings,
   getDwgDownloadUrl,
-  getShareCADPreviewUrl,
-  dwgSeriesInfo
+  getShareCADPreviewUrl
+  // dwgSeriesInfo // 暂未使用，保留以备将来扩展
 } from '../data/dwgDrawings';
 
 /**
  * 根据型号匹配DWG外形图
  * @param {string} model - 齿轮箱或联轴器型号
  * @param {string} type - 'gearbox' 或 'coupling'
- * @returns {Array} - 匹配的DWG文件列表
+ * @returns {Object} - { drawings: Array, isSeriesFallback: boolean, requestedModel: string }
  */
 const getDrawingsForModel = (model, type = 'gearbox') => {
-  if (!model) return [];
+  const emptyResult = { drawings: [], isSeriesFallback: false, requestedModel: model };
+  if (!model) return emptyResult;
 
   const dataSource = type === 'gearbox' ? gearboxDwgDrawings : couplingDwgDrawings;
   const normalizedModel = model.toUpperCase().trim();
 
   // 1. 精确匹配
   if (dataSource[normalizedModel]) {
-    return dataSource[normalizedModel];
+    return {
+      drawings: dataSource[normalizedModel],
+      isSeriesFallback: false,
+      requestedModel: model
+    };
   }
 
   // 2. 去除后缀匹配 (如 HCM400A -> HCM400)
   const baseModel = normalizedModel.replace(/[A-Z]$/, '');
   if (dataSource[baseModel]) {
-    return dataSource[baseModel];
+    return {
+      drawings: dataSource[baseModel],
+      isSeriesFallback: false,
+      requestedModel: model
+    };
   }
 
   // 3. 模糊匹配 - 查找包含型号的条目
@@ -41,19 +50,52 @@ const getDrawingsForModel = (model, type = 'gearbox') => {
     }
   });
 
-  return fuzzyMatches;
+  if (fuzzyMatches.length > 0) {
+    return {
+      drawings: fuzzyMatches,
+      isSeriesFallback: false,
+      requestedModel: model
+    };
+  }
+
+  // 4. 系列级匹配 (新增) - 提取系列前缀，匹配同系列图纸作为参考
+  const seriesMatch = normalizedModel.match(/^([A-Z]+)/);
+  if (seriesMatch) {
+    const series = seriesMatch[1];
+    const seriesDrawings = [];
+    const matchedModels = new Set();
+
+    Object.keys(dataSource).forEach(key => {
+      if (key.startsWith(series)) {
+        matchedModels.add(key);
+        dataSource[key].forEach(drawing => {
+          seriesDrawings.push({
+            ...drawing,
+            originalModel: key  // 记录原始型号
+          });
+        });
+      }
+    });
+
+    if (seriesDrawings.length > 0) {
+      return {
+        drawings: seriesDrawings,
+        isSeriesFallback: true,
+        requestedModel: model,
+        matchedModels: Array.from(matchedModels)
+      };
+    }
+  }
+
+  return emptyResult;
 };
 
-/**
- * 提取型号的系列名称
- * @param {string} model - 型号
- * @returns {string} - 系列名称
- */
-const extractSeries = (model) => {
-  if (!model) return '';
-  const match = model.match(/^([A-Z]+)/i);
-  return match ? match[1].toUpperCase() : '';
-};
+// 暂未使用，保留以备将来扩展
+// const extractSeries = (model) => {
+//   if (!model) return '';
+//   const match = model.match(/^([A-Z]+)/i);
+//   return match ? match[1].toUpperCase() : '';
+// };
 
 /**
  * 技术协议外形图展示组件
@@ -70,25 +112,29 @@ const AgreementDrawingSection = ({
   const [previewError, setPreviewError] = useState(null);
 
   // 获取齿轮箱外形图
-  const gearboxDrawings = useMemo(() => {
+  const gearboxDrawingsResult = useMemo(() => {
     return getDrawingsForModel(gearboxModel, 'gearbox');
   }, [gearboxModel]);
 
   // 获取联轴器外形图
-  const couplingDrawings = useMemo(() => {
+  const couplingDrawingsResult = useMemo(() => {
     return getDrawingsForModel(couplingModel, 'coupling');
   }, [couplingModel]);
 
-  // 获取系列信息
-  const gearboxSeriesInfo = useMemo(() => {
-    const series = extractSeries(gearboxModel);
-    return dwgSeriesInfo[series] || { name: series, description: '未知系列' };
-  }, [gearboxModel]);
+  // 提取drawings数组以便于使用
+  const gearboxDrawings = gearboxDrawingsResult.drawings;
+  const couplingDrawings = couplingDrawingsResult.drawings;
 
-  const couplingSeriesInfoData = useMemo(() => {
-    const series = extractSeries(couplingModel);
-    return dwgSeriesInfo[series] || { name: series, description: '未知系列' };
-  }, [couplingModel]);
+  // 获取系列信息 (暂未使用，保留以备将来扩展)
+  // const gearboxSeriesInfo = useMemo(() => {
+  //   const series = extractSeries(gearboxModel);
+  //   return dwgSeriesInfo[series] || { name: series, description: '未知系列' };
+  // }, [gearboxModel]);
+
+  // const couplingSeriesInfoData = useMemo(() => {
+  //   const series = extractSeries(couplingModel);
+  //   return dwgSeriesInfo[series] || { name: series, description: '未知系列' };
+  // }, [couplingModel]);
 
   // 处理预览
   const handlePreview = useCallback((drawing) => {
@@ -126,6 +172,11 @@ const AgreementDrawingSection = ({
         </div>
         <small className="text-muted">
           <Badge bg="secondary" className="me-2">{drawing.series}</Badge>
+          {drawing.originalModel && (
+            <Badge bg="warning" text="dark" className="me-2">
+              参考: {drawing.originalModel}
+            </Badge>
+          )}
           <span className="me-2">{drawing.fileSize}</span>
           <span>{drawing.updateDate}</span>
         </small>
@@ -249,14 +300,29 @@ const AgreementDrawingSection = ({
               </h6>
 
               {gearboxDrawings.length > 0 ? (
-                <ListGroup variant="flush" style={{ maxHeight: '250px', overflow: 'auto' }}>
-                  {gearboxDrawings.map((drawing, index) => renderDrawingItem(drawing, index))}
-                </ListGroup>
+                <>
+                  {gearboxDrawingsResult.isSeriesFallback && (
+                    <Alert variant="warning" className="mb-2 py-2">
+                      <small>
+                        <i className="bi bi-info-circle me-1"></i>
+                        未找到 <strong>{gearboxModel}</strong> 的专属外形图，以下为同系列参考图纸
+                        {gearboxDrawingsResult.matchedModels && (
+                          <span className="ms-1">
+                            ({gearboxDrawingsResult.matchedModels.join(', ')})
+                          </span>
+                        )}
+                      </small>
+                    </Alert>
+                  )}
+                  <ListGroup variant="flush" style={{ maxHeight: '250px', overflow: 'auto' }}>
+                    {gearboxDrawings.map((drawing, index) => renderDrawingItem(drawing, index))}
+                  </ListGroup>
+                </>
               ) : (
                 <Alert variant="info" className="mb-0">
                   <i className="bi bi-info-circle me-2"></i>
                   {gearboxModel
-                    ? `未找到 ${gearboxModel} 的外形图，请联系技术部门获取`
+                    ? `未找到 ${gearboxModel} 的外形图，也未找到同系列参考图纸`
                     : '请先选择齿轮箱型号'}
                 </Alert>
               )}
@@ -273,14 +339,29 @@ const AgreementDrawingSection = ({
               </h6>
 
               {couplingDrawings.length > 0 ? (
-                <ListGroup variant="flush" style={{ maxHeight: '200px', overflow: 'auto' }}>
-                  {couplingDrawings.map((drawing, index) => renderDrawingItem(drawing, index))}
-                </ListGroup>
+                <>
+                  {couplingDrawingsResult.isSeriesFallback && (
+                    <Alert variant="warning" className="mb-2 py-2">
+                      <small>
+                        <i className="bi bi-info-circle me-1"></i>
+                        未找到 <strong>{couplingModel}</strong> 的专属外形图，以下为同系列参考图纸
+                        {couplingDrawingsResult.matchedModels && (
+                          <span className="ms-1">
+                            ({couplingDrawingsResult.matchedModels.join(', ')})
+                          </span>
+                        )}
+                      </small>
+                    </Alert>
+                  )}
+                  <ListGroup variant="flush" style={{ maxHeight: '200px', overflow: 'auto' }}>
+                    {couplingDrawings.map((drawing, index) => renderDrawingItem(drawing, index))}
+                  </ListGroup>
+                </>
               ) : (
                 <Alert variant="info" className="mb-0">
                   <i className="bi bi-info-circle me-2"></i>
                   {couplingModel
-                    ? `未找到 ${couplingModel} 的外形图`
+                    ? `未找到 ${couplingModel} 的外形图，也未找到同系列参考图纸`
                     : '请先选择联轴器型号'}
                 </Alert>
               )}
