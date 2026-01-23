@@ -330,10 +330,40 @@ const useQuotationHandlers = ({
             usingSpecialPackagePrice = true;
             specialPackagePrice = gwConfig.packagePrice;
           } else {
-            const marketPrice = gearbox.marketPrice || gearbox.factoryPrice * 1.15;
+            let marketPrice = gearbox.marketPrice || gearbox.factoryPrice * 1.15;
+            let factoryPrice = gearbox.factoryPrice || marketPrice * 0.85;
+
+            // 检查是否需要将配件价格包含在齿轮箱价格中
+            let includedAccessoriesPrice = 0;
+
+            // 检查联轴器是否包含在齿轮箱价格中
+            if (updatedQuotation.options?.includeCouplingInGearbox && selectedComponents.coupling) {
+              const couplingPrice = selectedComponents.coupling.marketPrice ||
+                                   selectedComponents.coupling.factoryPrice * 1.15 || 0;
+              includedAccessoriesPrice += couplingPrice;
+              console.log("更新价格: 联轴器价格包含在齿轮箱中:", couplingPrice);
+            }
+
+            // 检查备用泵是否包含在齿轮箱价格中
+            if (updatedQuotation.options?.includePumpInGearbox &&
+                updatedQuotation.options?.needsPump &&
+                selectedComponents.pump) {
+              const pumpPrice = selectedComponents.pump.marketPrice ||
+                               selectedComponents.pump.factoryPrice * 1.15 || 0;
+              includedAccessoriesPrice += pumpPrice;
+              console.log("更新价格: 备用泵价格包含在齿轮箱中:", pumpPrice);
+            }
+
+            // 将配件价格加到齿轮箱价格中
+            if (includedAccessoriesPrice > 0) {
+              marketPrice += includedAccessoriesPrice;
+              factoryPrice += includedAccessoriesPrice * 0.88; // 估算工厂价
+              console.log("更新价格: 齿轮箱含配件总价:", marketPrice);
+            }
+
             item.prices.market = marketPrice;
-            item.prices.factory = gearbox.factoryPrice || marketPrice * 0.85;
-            item.prices.package = gearbox.factoryPrice || marketPrice * 0.85;
+            item.prices.factory = factoryPrice;
+            item.prices.package = factoryPrice;
           }
         }
 
