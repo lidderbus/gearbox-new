@@ -175,12 +175,14 @@ export const getStandardDiscountRate = (
   switch (productType) {
     case 'gearbox':
       if (model.startsWith('HC')) {
-        // HC系列分级折扣
-        if (model.includes('1000') || model.includes('1200') || model.includes('1400')) {
+        // HC系列分级折扣 — 提取型号中的数字进行范围判断，避免子串误匹配
+        const hcNumMatch = model.match(/HC[A-Z]*(\d+)/);
+        const hcNumber = hcNumMatch ? parseInt(hcNumMatch[1], 10) : 0;
+        if (hcNumber >= 1000) {
           return PRICE_CONSTANTS.SERIES_DISCOUNT_RATES.HC_1000_PLUS;
-        } else if (model.includes('800')) {
+        } else if (hcNumber >= 800) {
           return PRICE_CONSTANTS.SERIES_DISCOUNT_RATES.HC_800;
-        } else if (model.includes('600')) {
+        } else if (hcNumber >= 600) {
           return PRICE_CONSTANTS.SERIES_DISCOUNT_RATES.HC_600;
         }
         return PRICE_CONSTANTS.SERIES_DISCOUNT_RATES.HC_STANDARD;
@@ -273,7 +275,8 @@ export const calculateMarketPrice = (
       (typeof item.basePrice === 'number' && typeof item.discountRate === 'number'
         ? item.basePrice * (1 - item.discountRate)
         : 0);
-    const minimumPrice = factoryPrice * 0.9;
+    // 确保市场价不低于工厂价
+    const minimumPrice = factoryPrice;
     const calculatedMarketPrice = packagePrice
       ? packagePrice * PRICE_CONSTANTS.MARKET_PRICE_MULTIPLIER
       : factoryPrice * PRICE_CONSTANTS.MARKET_PRICE_MULTIPLIER;

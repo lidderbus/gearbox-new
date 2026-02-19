@@ -119,7 +119,7 @@ export const embeddedGearboxData = {
       "model": "MB170",
       "inputSpeedRange": [1500, 2500],
       "ratios": [1.97, 2.52, 3.04, 3.54, 3.96, 4.5, 5.06, 5.47, 5.88],
-      "transferCapacity": [0.039, 0.039, 0.039, 0.039, 0.031, 0.031, 0.027, 0.027], // Note: Capacity array length mismatch with ratios, will be fixed by repair
+      "transferCapacity": [0.039, 0.039, 0.039, 0.039, 0.039, 0.031, 0.031, 0.027, 0.027], // Fixed: aligned with ratios array (9 elements)
       "thrust": 16,
       "centerDistance": 170,
       "weight": 240,
@@ -2527,12 +2527,12 @@ export const embeddedGearboxData = {
       "model": "GWC70.85", // Found in discounts-2022.txt and OCR Doc 3 P1
       "inputSpeedRange": [300, 1000], "ratios": [2.02, 2.50, 3.03, 3.45, 4.11, 4.55, 5.04, 5.47, 5.95, 6.48, 6.96, 7.48], "transferCapacity": [21.00, 16.88, 13.98, 12.31, 10.37, 9.35, 8.46, 7.78, 7.14, 6.56, 6.12, 5.68], // Note: 12 capacities
       "thrust": 1100, "centerDistance": 850, "weight": 29000, "controlType": "气控/电控", "dimensions": "-", "efficiency": 0.97, // Added Centre Dist
-      "basePrice": 1620000, // From discounts-2022.txt
-      "price": 1620000,
-      "discountRate": 0.10, // From discounts-2022.txt 下浮10%
-      "factoryPrice": 1458000, // From discounts-2022.txt 优惠后价格
-      "packagePrice": 1420000, // From OCR Doc 3 P1 (142 万) - Lower than discounted price? Keep package price if provided.
-      "marketPrice": 1656818.18, // Market price still calculated from factory price
+      "basePrice": 1470000, // 2026官方价格 杭齿集公[2026]30号
+      "price": 1470000,
+      "discountRate": 0.10,
+      "factoryPrice": 1323000,
+      "packagePrice": 1323000,
+      "marketPrice": 1503409.09,
       "notes": "电控或气控、无罩、无飞轮、监控仪 (打包价 142 万)" // Added note
     },
      {
@@ -2693,16 +2693,16 @@ export const embeddedGearboxData = {
         "notes": "电控或气控、无罩、无飞轮、B1型监控" // From OCR Doc 1 P7
      },
      {
-        "model": "SGW49.54", // Found on OCR Doc 1 P7. Assumed related to GWC49.54
-        "inputSpeedRange": [400, 1400], "ratios": [1.94, 2.46, 2.92, 3.45, 3.95, 4.53, 4.91, 5.48, 6.00], "transferCapacity": [5.500, 4.540, 3.827, 3.240, 2.825, 2.462, 2.273, 2.036, 1.861], // Note: 9 capacities
-        "thrust": 290, "centerDistance": 490, "weight": 7900, "controlType": "气控/电控", "dimensions": "1783*1340*1925", "efficiency": 0.97,
-        "basePrice": 520000, // From OCR Doc 1 P7
+        "model": "SGW49.54", // 数据来源: completeGearboxData.js (杭齿厂选型手册2025版5月版)
+        "inputSpeedRange": [400, 880], "ratios": [3.39], "transferCapacity": [2.92],
+        "thrust": 3.588, "centerDistance": 284, "weight": null, "controlType": "气控/电控", "dimensions": null, "efficiency": 0.97,
+        "basePrice": 520000,
         "price": 520000,
-        "discountRate": 0.10, // From OCR Doc 1 P7 下浮10%
-        "factoryPrice": 468000, // Calculated
+        "discountRate": 0.10,
+        "factoryPrice": 468000,
         "packagePrice": 468000,
-        "marketPrice": 531818.18, // Calculated
-        "notes": "电控或气控、无罩、无飞轮、B1型监控" // From OCR Doc 1 P7
+        "marketPrice": 531818.18,
+        "notes": "电控或气控、无罩、无飞轮、B1型监控"
      }
   ],
    // --- HCM 系列 (基于 OCR Doc 1 P8-9 全国统一售价) ---

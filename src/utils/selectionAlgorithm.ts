@@ -446,6 +446,9 @@ export const selectGearbox = (
   }
 
   // --- Calculate required capacity and torque ---
+  if (engineSpeed <= 0) {
+    return { success: false, message: '发动机转速必须大于0（除零保护）', recommendations: [] };
+  }
   const requiredTransferCapacity = enginePower / engineSpeed;
   const engineTorque_Nm = (enginePower * 9550) / engineSpeed;
   logger.log(`计算参数: Required Capacity=${requiredTransferCapacity.toFixed(6)} kW/rpm, Engine Torque=${engineTorque_Nm.toFixed(2)} N·m`);
@@ -490,7 +493,11 @@ export const selectGearbox = (
 
     // Check speed range
     if (Array.isArray(gearbox.inputSpeedRange) && gearbox.inputSpeedRange.length === 2) {
-      const [minSpeed, maxSpeed] = gearbox.inputSpeedRange;
+      // 防御性检查：确保 min < max，若数据反转则自动交换
+      let [minSpeed, maxSpeed] = gearbox.inputSpeedRange;
+      if (minSpeed > maxSpeed) {
+        [minSpeed, maxSpeed] = [maxSpeed, minSpeed];
+      }
       if (engineSpeed < minSpeed || engineSpeed > maxSpeed) {
         DEBUG_LOG(`Skipping ${gearbox.model}: Speed ${engineSpeed} outside range [${minSpeed}, ${maxSpeed}]`);
         rejectionReasons.speedRange++;
@@ -608,12 +615,13 @@ export const selectGearbox = (
         capacity = tc;
       }
     }
-    // 4. transferCapacity 数组存在但索引不匹配时使用第一个值
+    // 4. transferCapacity 数组存在但索引不匹配时使用最接近的有效索引
     else if (!capacity && Array.isArray(gearbox.transferCapacity) && gearbox.transferCapacity.length > 0) {
-      const tc = gearbox.transferCapacity[0];
+      const clampedIndex = Math.min(bestRatioIndex, gearbox.transferCapacity.length - 1);
+      const tc = gearbox.transferCapacity[clampedIndex];
       if (typeof tc === 'number') {
         capacity = tc;
-        logger.warn(`Gearbox ${gearbox.model} using fallback transferCapacity[0] due to index mismatch`);
+        logger.warn(`Gearbox ${gearbox.model} using fallback transferCapacity[${clampedIndex}] (ratioIndex=${bestRatioIndex}, arrayLen=${gearbox.transferCapacity.length})`);
       }
     }
     // 5. 无有效数据则跳过
@@ -753,9 +761,11 @@ export const selectGearbox = (
       // 对近似匹配进行评分和排序
       nearMatches.forEach(match => {
         let score = 0;
+        let scoringDimensions = 0;  // 动态计算参与评分的维度数
 
         // 按减速比偏差评分
         if (match.ratioDiffPercent !== undefined) {
+          scoringDimensions++;
           if (match.ratioDiffPercent <= MAX_RATIO_DIFF_PERCENT) {
             score += 100 - match.ratioDiffPercent * 2;
           } else {
@@ -765,6 +775,7 @@ export const selectGearbox = (
 
         // 按容量余量评分
         if (match.capacityMargin !== undefined) {
+          scoringDimensions++;
           if (match.capacityMargin >= 0 && match.capacityMargin <= MAX_CAPACITY_MARGIN) {
             score += 100 - Math.abs(match.capacityMargin - 15) * 2;
           } else if (match.capacityMargin < 0) {
@@ -776,6 +787,7 @@ export const selectGearbox = (
 
         // 按推力要求评分
         if (thrustRequirement > 0) {
+          scoringDimensions++;
           if (match.thrustMet === true) {
             score += 100;
           } else if (match.thrust !== undefined) {
@@ -789,7 +801,7 @@ export const selectGearbox = (
           score += 20;
         }
 
-        match.score = score / 3;
+        match.score = scoringDimensions > 0 ? score / scoringDimensions : 0;
 
         // 确保价格字段
         const gbBasePrice = match.basePrice || match.price || 0;

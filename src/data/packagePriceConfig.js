@@ -101,7 +101,7 @@ export const gwPackagePriceConfigs = [
     gearboxModel: 'GWC70.85',
     recommendedCoupling: 'HGT12520 IIID',
     recommendedPump: '2CY24.8/2.5D',
-    packagePrice: 1390000, // 139万 (2026年调价)
+    packagePrice: 1390000, // 139万 (2026年官方打包价)
     effectiveDate: new Date('2026-01-01')
   },
   {

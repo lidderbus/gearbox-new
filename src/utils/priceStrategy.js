@@ -134,10 +134,10 @@ export const calculatePriceWithStrategy = (component, strategyId = 'default') =>
       result.factoryPrice *= discountFactor;
     }
     
-    // 更新折扣率
-    if (typeof result.discountRate === 'number') {
-      // 确保折扣率在0-1之间
-      result.discountRate = Math.max(0, Math.min(1, result.discountRate + (1 - discountFactor)));
+    // 更新折扣率 — 基于实际价格反算有效折扣率，替换而非叠加
+    if (typeof result.discountRate === 'number' && typeof result.basePrice === 'number' && result.basePrice > 0) {
+      const effectiveRate = 1 - (result.factoryPrice / result.basePrice);
+      result.discountRate = Math.max(0, Math.min(1, effectiveRate));
     }
     
     return result;
