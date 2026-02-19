@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Card, Row, Col, Badge } from 'react-bootstrap';
-import { AXIS_ALIGNMENT_OPTIONS, OFFSET_DIRECTION_OPTIONS } from '../config/shaftArrangementConfig';
+import { AXIS_ALIGNMENT_OPTIONS, OFFSET_DIRECTION_OPTIONS, REVERSING_FUNCTION_OPTIONS } from '../config/shaftArrangementConfig';
 
 /**
  * 轴布置示意图 (内联SVG)
@@ -31,32 +31,22 @@ const ShaftDiagram = ({ type, size = 48 }) => {
         <text x={half} y={s - 2} textAnchor="middle" fontSize="7" fill="#888">水平</text>
       </svg>
     ),
-    'vertical-down': (
+    'vertical-offset': (
       <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`}>
-        <line x1={half} y1="6" x2={half} y2={s - 10} stroke="#666" strokeWidth="2" />
+        <line x1={half} y1="6" x2={half} y2={half} stroke="#666" strokeWidth="2" />
+        <line x1={half} y1={half} x2={half} y2={s - 10} stroke="#666" strokeWidth="2" />
         <circle cx={half} cy="10" r="5" fill="#4a90d9" stroke="#2c5f9e" strokeWidth="1.5" />
         <circle cx={half} cy={s - 14} r="5" fill="#e8a838" stroke="#c08520" strokeWidth="1.5" />
-        <line x1={half - 4} y1={s - 14} x2={half + 4} y2={s - 14} stroke="#c08520" strokeWidth="1" />
-        <text x={half} y={s - 2} textAnchor="middle" fontSize="7" fill="#888">向下</text>
+        <text x={half} y={s - 2} textAnchor="middle" fontSize="7" fill="#888">垂直</text>
       </svg>
     ),
-    'k-shape': (
+    'diagonal-offset': (
       <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`}>
-        <line x1="8" y1={half} x2={half} y2={half} stroke="#666" strokeWidth="2" />
-        <line x1={half} y1={half} x2={s - 8} y2={half - 10} stroke="#666" strokeWidth="2" />
-        <line x1={half} y1={half} x2={s - 8} y2={half + 10} stroke="#666" strokeWidth="1.5" strokeDasharray="3,2" />
-        <circle cx="12" cy={half} r="5" fill="#4a90d9" stroke="#2c5f9e" strokeWidth="1.5" />
-        <circle cx={s - 12} cy={half - 10} r="5" fill="#e8a838" stroke="#c08520" strokeWidth="1.5" />
-        <text x={half} y={s - 2} textAnchor="middle" fontSize="7" fill="#888">K型</text>
-      </svg>
-    ),
-    'l-shape': (
-      <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`}>
-        <line x1="8" y1={half - 4} x2={half} y2={half - 4} stroke="#666" strokeWidth="2" />
-        <line x1={half} y1={half - 4} x2={half} y2={s - 10} stroke="#666" strokeWidth="2" />
-        <circle cx="12" cy={half - 4} r="5" fill="#4a90d9" stroke="#2c5f9e" strokeWidth="1.5" />
-        <circle cx={half} cy={s - 14} r="5" fill="#e8a838" stroke="#c08520" strokeWidth="1.5" />
-        <text x={half} y={s - 2} textAnchor="middle" fontSize="7" fill="#888">L型</text>
+        <line x1="8" y1="10" x2={half} y2={half} stroke="#666" strokeWidth="2" />
+        <line x1={half} y1={half} x2={s - 8} y2={s - 14} stroke="#666" strokeWidth="2" />
+        <circle cx="10" cy="12" r="5" fill="#4a90d9" stroke="#2c5f9e" strokeWidth="1.5" />
+        <circle cx={s - 10} cy={s - 16} r="5" fill="#e8a838" stroke="#c08520" strokeWidth="1.5" />
+        <text x={half} y={s - 2} textAnchor="middle" fontSize="7" fill="#888">角向</text>
       </svg>
     )
   };
@@ -68,14 +58,14 @@ const ShaftDiagram = ({ type, size = 48 }) => {
  * 轴布置选择器组件
  *
  * @param {Object} props
- * @param {{ axisAlignment: string, offsetDirection: string }} props.value - 当前值
+ * @param {{ axisAlignment: string, offsetDirection: string, reversingFunction: string }} props.value - 当前值
  * @param {Function} props.onChange - 值变更回调
  * @param {Object} props.colors - 主题颜色
  * @param {string} props.gearboxType - 当前选择的齿轮箱类型
  * @param {boolean} props.disabled - 是否禁用
  */
 const ShaftArrangementSelector = ({
-  value = { axisAlignment: 'any', offsetDirection: 'any' },
+  value = { axisAlignment: 'any', offsetDirection: 'any', reversingFunction: 'any' },
   onChange,
   colors = {},
   gearboxType = '',
@@ -84,9 +74,18 @@ const ShaftArrangementSelector = ({
   const isGW = gearboxType === 'GW' || gearboxType === 'auto';
   const isEccentric = value.axisAlignment === 'eccentric';
 
+  const handleReversingChange = (reversingFunction) => {
+    if (disabled) return;
+    onChange({
+      ...value,
+      reversingFunction
+    });
+  };
+
   const handleAlignmentChange = (alignment) => {
     if (disabled) return;
     onChange({
+      ...value,
       axisAlignment: alignment,
       offsetDirection: alignment === 'eccentric' ? (value.offsetDirection || 'any') : 'any'
     });
@@ -136,8 +135,59 @@ const ShaftArrangementSelector = ({
     padding: '8px 12px'
   });
 
+  const reversingCardStyle = (isSelected) => ({
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    border: `2px solid ${isSelected ? '#6f42c1' : (colors.border || '#dee2e6')}`,
+    backgroundColor: isSelected ? (colors.card === '#2d3748' ? '#3d2d5e' : '#f0e6ff') : (colors.card || '#fff'),
+    borderRadius: '6px',
+    transition: 'all 0.2s ease',
+    opacity: disabled ? 0.6 : 1,
+    padding: '8px 12px'
+  });
+
   return (
     <div>
+      {/* 倒顺功能选择 */}
+      <div style={{
+        padding: '10px',
+        backgroundColor: colors.inputBg || '#f8f9fa',
+        borderRadius: '6px',
+        border: `1px solid ${colors.border || '#dee2e6'}`,
+        marginBottom: '8px'
+      }}>
+        <div style={{ fontSize: '0.8rem', color: colors.muted || '#6c757d', marginBottom: '8px' }}>
+          <i className="bi bi-arrow-left-right me-1"></i>
+          倒顺功能:
+        </div>
+        <Row className="g-2">
+          {REVERSING_FUNCTION_OPTIONS.map(opt => (
+            <Col key={opt.value} xs={4}>
+              <div
+                style={reversingCardStyle(value.reversingFunction === opt.value)}
+                onClick={() => handleReversingChange(opt.value)}
+                role="button"
+                tabIndex={0}
+                aria-label={opt.label}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleReversingChange(opt.value); }}
+              >
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{
+                    fontSize: '0.85rem',
+                    fontWeight: value.reversingFunction === opt.value ? 'bold' : 'normal',
+                    color: colors.text || '#212529'
+                  }}>
+                    {opt.label}
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: colors.muted || '#6c757d', marginTop: '2px' }}>
+                    {opt.description}
+                  </div>
+                </div>
+              </div>
+            </Col>
+          ))}
+        </Row>
+      </div>
+
       {/* 第一层: 同心/异心选择 */}
       <Row className="g-2 mb-2">
         {AXIS_ALIGNMENT_OPTIONS.map(opt => (
@@ -168,8 +218,8 @@ const ShaftArrangementSelector = ({
                 </div>
                 <div style={{ fontSize: '0.75rem', color: colors.muted || '#6c757d', marginTop: '2px' }}>
                   {opt.value === 'any' && '自动匹配'}
-                  {opt.value === 'concentric' && 'GWC系列'}
-                  {opt.value === 'eccentric' && 'GWS/D/H/K/L'}
+                  {opt.value === 'concentric' && 'GWC/GWL'}
+                  {opt.value === 'eccentric' && 'GWS/D/H/K'}
                 </div>
               </div>
             </div>
@@ -238,7 +288,7 @@ const ShaftArrangementSelector = ({
           color: colors.muted || '#6c757d'
         }}>
           <i className="bi bi-info-circle me-1"></i>
-          同心布置: 输入轴与输出轴同轴线，仅匹配GWC子系列
+          同心布置: 输入轴与输出轴同轴线，匹配GWC/GWL子系列
         </div>
       )}
     </div>
@@ -260,28 +310,30 @@ export const ShaftArrangementBadge = ({ model }) => {
   const bgMap = {
     'concentric': 'primary',
     'horizontal-offset': 'info',
-    'vertical-down': 'warning',
-    'k-shape': 'secondary',
-    'l-shape': 'dark',
+    'vertical-offset': 'warning',
+    'diagonal-offset': 'secondary',
     'unknown': 'light'
   };
 
   const textMap = {
     'concentric': undefined,
     'horizontal-offset': undefined,
-    'vertical-down': 'dark',
-    'k-shape': undefined,
-    'l-shape': undefined,
+    'vertical-offset': 'dark',
+    'diagonal-offset': undefined,
     'unknown': 'dark'
   };
 
   const arrangementLabels = {
     'concentric': '同心',
     'horizontal-offset': '水平偏置',
-    'vertical-down': '垂直向下',
-    'k-shape': 'K型',
-    'l-shape': 'L型',
+    'vertical-offset': '垂直偏置',
+    'diagonal-offset': '角向偏置',
     'unknown': '未知'
+  };
+
+  const reversingLabels = {
+    'with-reverse': '倒顺',
+    'no-reverse': '离合'
   };
 
   const transmissionLabels = {
@@ -313,6 +365,14 @@ export const ShaftArrangementBadge = ({ model }) => {
       >
         {arrangementLabels[info.shaftArrangement] || info.shaftArrangement}
       </Badge>
+      {info.reversingFunction && (
+        <Badge
+          bg={info.reversingFunction === 'with-reverse' ? 'danger' : 'success'}
+          style={{ fontSize: '0.75em' }}
+        >
+          {reversingLabels[info.reversingFunction] || info.reversingFunction}
+        </Badge>
+      )}
       <Badge bg="light" text="dark" style={{ fontSize: '0.75em' }}>
         {transmissionLabels[info.transmissionType] || info.transmissionType}
       </Badge>

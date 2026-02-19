@@ -3,6 +3,8 @@
  * 描述: 增强版备用泵选型功能，严格符合官方配置标准
  */
 
+import { getRecommendedPump } from '../data/gearboxMatchingMaps';
+
 /**
  * 精确的齿轮箱与备用泵对应关系
  * 基于官方提供的匹配表
@@ -231,9 +233,85 @@ export const enhancedSelectPump = (gearboxModel, pumpList, options = {}) => {
   // 标准化齿轮箱型号（去除空格和转为大写）
   const normalizedModel = gearboxModel.toUpperCase().trim();
 
-  // 识别齿轮箱系列
+  // ===== 优先使用精确映射表 (gearboxMatchingMaps) =====
+  // 该映射表包含每个GW子系列(GWC/GWS/GWD/GWH/GWK/GWL)的独立泵映射
+  const mapRecommendation = getRecommendedPump(normalizedModel);
+  if (mapRecommendation) {
+    console.log(`从映射表找到推荐泵型号: ${mapRecommendation} (齿轮箱: ${normalizedModel})`);
+
+    // 在泵列表中查找该型号
+    const exactMatch = findExactPumpMatch(mapRecommendation, pumpList);
+    if (exactMatch) {
+      // 确保价格字段存在
+      const basePrice = exactMatch.basePrice || exactMatch.price || 0;
+      const discountRate = exactMatch.discountRate || getStandardDiscountRate(exactMatch.model);
+      const factoryPrice = exactMatch.factoryPrice || (basePrice * discountRate);
+      const marketPrice = exactMatch.marketPrice || (factoryPrice / (getStandardDiscountRate(exactMatch.model) * 0.85));
+
+      return {
+        success: true,
+        model: exactMatch.model,
+        flow: exactMatch.flow || 0,
+        pressure: exactMatch.pressure || 0,
+        motorPower: exactMatch.motorPower || 0,
+        weight: exactMatch.weight || 0,
+        basePrice,
+        price: basePrice,
+        discountRate,
+        factoryPrice,
+        marketPrice,
+        score: 100,
+        matchType: '映射表精确匹配',
+        matchInfo: `从官方对照表匹配 ${normalizedModel} → ${mapRecommendation}`,
+        message: `已为齿轮箱 ${gearboxModel} 选择备用泵: ${exactMatch.model}`,
+        recommendations: [{ ...exactMatch, score: 100, matchType: '映射表精确匹配', matchInfo: `从官方对照表匹配`, requiresPump: true }],
+        requiresPump: true
+      };
+    }
+
+    // 映射表有推荐但泵列表中找不到精确匹配，尝试模糊匹配
+    const fuzzyMatches = findFuzzyPumpMatches(mapRecommendation, pumpList);
+    if (fuzzyMatches.length > 0) {
+      const bestFuzzy = fuzzyMatches[0].pump;
+      const basePrice = bestFuzzy.basePrice || bestFuzzy.price || 0;
+      const discountRate = bestFuzzy.discountRate || getStandardDiscountRate(bestFuzzy.model);
+      const factoryPrice = bestFuzzy.factoryPrice || (basePrice * discountRate);
+      const marketPrice = bestFuzzy.marketPrice || (factoryPrice / (getStandardDiscountRate(bestFuzzy.model) * 0.85));
+
+      return {
+        success: true,
+        model: bestFuzzy.model,
+        flow: bestFuzzy.flow || 0,
+        pressure: bestFuzzy.pressure || 0,
+        motorPower: bestFuzzy.motorPower || 0,
+        weight: bestFuzzy.weight || 0,
+        basePrice,
+        price: basePrice,
+        discountRate,
+        factoryPrice,
+        marketPrice,
+        score: fuzzyMatches[0].similarity,
+        matchType: '映射表模糊匹配',
+        matchInfo: `推荐 ${mapRecommendation}，最近匹配 ${bestFuzzy.model}`,
+        message: `已为齿轮箱 ${gearboxModel} 选择备用泵: ${bestFuzzy.model}`,
+        recommendations: fuzzyMatches.map(m => ({ ...m.pump, score: m.similarity, matchType: '映射表模糊匹配', requiresPump: true })),
+        requiresPump: true
+      };
+    }
+
+    console.log(`映射表推荐 ${mapRecommendation} 但在泵列表中未找到，回退到范围规则...`);
+  }
+
+  // ===== 回退: 基于范围的规则匹配 =====
+
+  // 识别齿轮箱系列（将GW子系列统一为GW）
   const seriesMatch = normalizedModel.match(/^([A-Z]+)/);
-  const gearboxSeries = seriesMatch ? seriesMatch[1] : null;
+  let gearboxSeries = seriesMatch ? seriesMatch[1] : null;
+
+  // GW子系列 (GWC, GWS, GWD, GWH, GWK, GWL) 统一映射到 GW 规则
+  if (gearboxSeries && gearboxSeries.startsWith('GW') && gearboxSeries.length > 2) {
+    gearboxSeries = 'GW';
+  }
 
   console.log(`识别的齿轮箱系列: ${gearboxSeries || '未识别'}`);
 
@@ -252,8 +330,8 @@ export const enhancedSelectPump = (gearboxModel, pumpList, options = {}) => {
         let modelValue;
 
         if (gearboxSeries === 'GW') {
-          // GW系列通常格式为GWxx.yy
-          const gwMatch = normalizedModel.match(/GW(\d+\.\d+)/);
+          // GW系列格式为GW[C/S/D/H/K/L]xx.yy 或 GWxx.yy
+          const gwMatch = normalizedModel.match(/GW[CSDHLK]?(\d+\.?\d*)/);
           modelValue = gwMatch ? parseFloat(gwMatch[1]) : null;
         } else {
           // 其他系列通常格式为XX数字
@@ -270,8 +348,8 @@ export const enhancedSelectPump = (gearboxModel, pumpList, options = {}) => {
           let lowerValue, upperValue;
 
           if (gearboxSeries === 'GW') {
-            const lowerMatch = lowerBound.match(/GW(\d+\.\d+)/);
-            const upperMatch = upperBound.match(/GW(\d+\.\d+)/);
+            const lowerMatch = lowerBound.match(/GW[CSDHLK]?(\d+\.?\d*)/);
+            const upperMatch = upperBound.match(/GW[CSDHLK]?(\d+\.?\d*)/);
             lowerValue = lowerMatch ? parseFloat(lowerMatch[1]) : 0;
             upperValue = upperMatch ? parseFloat(upperMatch[1]) : Infinity;
           } else {

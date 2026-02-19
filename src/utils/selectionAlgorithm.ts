@@ -64,7 +64,8 @@ interface InterfaceMatch {
  */
 interface ShaftArrangementFilter {
   axisAlignment?: 'any' | 'concentric' | 'eccentric';  // 同心/异心
-  offsetDirection?: 'any' | 'horizontal-offset' | 'vertical-down' | 'k-shape' | 'l-shape';  // 偏置方向
+  offsetDirection?: 'any' | 'vertical-offset' | 'horizontal-offset' | 'diagonal-offset';  // 偏置方向
+  reversingFunction?: 'any' | 'with-reverse' | 'no-reverse';  // 倒顺功能
 }
 
 /**
@@ -515,7 +516,10 @@ export const selectGearbox = (
     }
 
     // Check shaft arrangement match
-    if (options.shaftArrangement && options.shaftArrangement.axisAlignment && options.shaftArrangement.axisAlignment !== 'any') {
+    if (options.shaftArrangement && (
+      (options.shaftArrangement.axisAlignment && options.shaftArrangement.axisAlignment !== 'any') ||
+      (options.shaftArrangement.reversingFunction && options.shaftArrangement.reversingFunction !== 'any')
+    )) {
       const shaftMatch = matchesShaftArrangement(gearbox.model, options.shaftArrangement as any);
       if (!shaftMatch.matched) {
         DEBUG_LOG(`Skipping ${gearbox.model}: Shaft arrangement mismatch - ${shaftMatch.reason}`);
@@ -918,7 +922,10 @@ export const selectGearbox = (
     }
 
     // 7. Shaft Arrangement Match Score
-    if (options.shaftArrangement && options.shaftArrangement.axisAlignment && options.shaftArrangement.axisAlignment !== 'any') {
+    if (options.shaftArrangement && (
+      (options.shaftArrangement.axisAlignment && options.shaftArrangement.axisAlignment !== 'any') ||
+      (options.shaftArrangement.reversingFunction && options.shaftArrangement.reversingFunction !== 'any')
+    )) {
       // 已经通过了过滤，说明匹配成功，加满分
       score += W_SHAFT;
       logger.debug(`齿轮箱 ${gearbox.model} 轴布置匹配，加分${W_SHAFT}分`);

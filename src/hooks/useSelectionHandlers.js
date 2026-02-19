@@ -342,10 +342,13 @@ const useSelectionHandlers = ({
         ratio: selectionParams.targetRatio
       });
 
-      // 解析轴布置选择
+      // 解析轴布置选择（含倒顺功能维度）
       const shaftFilter = (() => {
         const arr = requirementData.shaftArrangement;
-        if (!arr || arr.axisAlignment === 'any') return undefined;
+        if (!arr) return undefined;
+        const hasAxisFilter = arr.axisAlignment && arr.axisAlignment !== 'any';
+        const hasReversingFilter = arr.reversingFunction && arr.reversingFunction !== 'any';
+        if (!hasAxisFilter && !hasReversingFilter) return undefined;
         return arr;
       })();
 

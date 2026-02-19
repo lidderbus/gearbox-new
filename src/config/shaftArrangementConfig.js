@@ -10,37 +10,43 @@ export const SUB_SERIES_MAP = {
     transmissionType: '2-stage',
     rotationRelation: 'same',
     shaftArrangement: 'concentric',
-    label: 'GWC 同心布置'
+    reversingFunction: 'with-reverse',
+    label: 'GWC 同中心（倒顺）'
   },
   GWS: {
     transmissionType: '1-stage',
     rotationRelation: 'reverse',
-    shaftArrangement: 'horizontal-offset',
-    label: 'GWS 垂直异中心'
+    shaftArrangement: 'vertical-offset',
+    reversingFunction: 'with-reverse',
+    label: 'GWS 垂直异中心（倒顺）'
   },
   GWD: {
     transmissionType: '1-stage',
     rotationRelation: 'reverse',
-    shaftArrangement: 'vertical-down',
-    label: 'GWD 角向异中心'
+    shaftArrangement: 'diagonal-offset',
+    reversingFunction: 'with-reverse',
+    label: 'GWD 角向异中心（倒顺）'
   },
   GWH: {
     transmissionType: '1-stage',
     rotationRelation: 'reverse',
     shaftArrangement: 'horizontal-offset',
-    label: 'GWH 水平异中心'
+    reversingFunction: 'with-reverse',
+    label: 'GWH 水平异中心（倒顺）'
   },
   GWK: {
     transmissionType: '1-stage',
     rotationRelation: 'reverse',
-    shaftArrangement: 'k-shape',
-    label: 'GWK 垂直异中心'
+    shaftArrangement: 'vertical-offset',
+    reversingFunction: 'no-reverse',
+    label: 'GWK 垂直异中心（离合）'
   },
   GWL: {
     transmissionType: '2-stage',
     rotationRelation: 'same',
-    shaftArrangement: 'l-shape',
-    label: 'GWL L型/直角'
+    shaftArrangement: 'concentric',
+    reversingFunction: 'no-reverse',
+    label: 'GWL 同中心（离合）'
   },
   // 非GW系列 — 固定布置方式
   HC: {
@@ -128,10 +134,18 @@ export const AXIS_ALIGNMENT_OPTIONS = [
  */
 export const OFFSET_DIRECTION_OPTIONS = [
   { value: 'any', label: '不限方向', description: '自动匹配所有异心子系列', subSeries: [] },
-  { value: 'horizontal-offset', label: '水平偏置', description: '输入输出轴水平方向偏置', subSeries: ['GWS', 'GWH'] },
-  { value: 'vertical-down', label: '垂直向下', description: '输出轴在输入轴正下方', subSeries: ['GWD'] },
-  { value: 'k-shape', label: 'K型布置', description: 'K型空间布置结构', subSeries: ['GWK'] },
-  { value: 'l-shape', label: 'L型/直角', description: '输入输出轴成直角或L型布置', subSeries: ['GWL'] }
+  { value: 'vertical-offset', label: '垂直偏置', description: '输入输出轴垂直方向偏置', subSeries: ['GWS', 'GWK'] },
+  { value: 'horizontal-offset', label: '水平偏置', description: '输入输出轴水平方向偏置', subSeries: ['GWH'] },
+  { value: 'diagonal-offset', label: '角向偏置', description: '输入输出轴对角方向偏置', subSeries: ['GWD'] }
+];
+
+/**
+ * 倒顺功能选项
+ */
+export const REVERSING_FUNCTION_OPTIONS = [
+  { value: 'any', label: '不限', description: '不限制倒顺功能' },
+  { value: 'with-reverse', label: '需要倒顺', description: '固定螺距桨(FPP)，需齿轮箱提供倒顺功能', subSeries: ['GWC', 'GWD', 'GWS', 'GWH'] },
+  { value: 'no-reverse', label: '仅离合减速', description: '可调螺距桨(CPP)或有其他换向手段', subSeries: ['GWL', 'GWK'] }
 ];
 
 /**
@@ -139,22 +153,39 @@ export const OFFSET_DIRECTION_OPTIONS = [
  */
 export const SHAFT_ARRANGEMENT_OPTIONS = [
   { value: 'any', label: '自动选择', group: 'auto' },
-  { value: 'concentric', label: '同心布置 (GWC)', group: 'concentric' },
-  { value: 'horizontal-offset', label: '水平偏置 (GWS/GWH)', group: 'eccentric' },
-  { value: 'vertical-down', label: '垂直向下 (GWD)', group: 'eccentric' },
-  { value: 'k-shape', label: 'K型布置 (GWK)', group: 'eccentric' },
-  { value: 'l-shape', label: 'L型/直角 (GWL)', group: 'eccentric' }
+  { value: 'concentric', label: '同心布置 (GWC/GWL)', group: 'concentric' },
+  { value: 'vertical-offset', label: '垂直偏置 (GWS/GWK)', group: 'eccentric' },
+  { value: 'horizontal-offset', label: '水平偏置 (GWH)', group: 'eccentric' },
+  { value: 'diagonal-offset', label: '角向偏置 (GWD)', group: 'eccentric' }
 ];
+
+/**
+ * 旧版偏置方向值 → 新版的向后兼容映射
+ */
+const OFFSET_DIRECTION_COMPAT_MAP = {
+  'vertical-down': 'diagonal-offset',  // GWD
+  'k-shape': 'vertical-offset',        // GWK
+  // 'l-shape' 在eccentric上下文中无意义（GWL实为同中心），不映射
+};
 
 /**
  * 检查齿轮箱是否匹配指定的轴布置过滤条件
  *
  * @param {string} model - 齿轮箱型号
- * @param {{ axisAlignment: string, offsetDirection: string }} filter - 过滤条件
+ * @param {{ axisAlignment: string, offsetDirection: string, reversingFunction: string }} filter - 过滤条件
  * @returns {{ matched: boolean, reason?: string }}
  */
 export function matchesShaftArrangement(model, filter) {
-  if (!filter || filter.axisAlignment === 'any') {
+  if (!filter) {
+    return { matched: true };
+  }
+
+  const axisAlignment = filter.axisAlignment || 'any';
+  const offsetDirection = filter.offsetDirection || 'any';
+  const reversingFunction = filter.reversingFunction || 'any';
+
+  // 所有维度都是 'any' → 不过滤
+  if (axisAlignment === 'any' && reversingFunction === 'any') {
     return { matched: true };
   }
 
@@ -169,31 +200,33 @@ export function matchesShaftArrangement(model, filter) {
     return { matched: true };
   }
 
-  // 同心布置筛选
-  if (filter.axisAlignment === 'concentric') {
-    if (info.shaftArrangement === 'concentric') {
-      return { matched: true };
+  // 检查倒顺功能维度
+  if (reversingFunction !== 'any') {
+    if (info.reversingFunction !== reversingFunction) {
+      const funcLabel = reversingFunction === 'with-reverse' ? '倒顺' : '离合';
+      return { matched: false, reason: `${info.label} 不匹配${funcLabel}功能要求` };
     }
-    return { matched: false, reason: `${info.label} 不是同心布置` };
   }
 
-  // 异心布置筛选
-  if (filter.axisAlignment === 'eccentric') {
+  // 检查轴线对齐维度
+  if (axisAlignment === 'concentric') {
+    if (info.shaftArrangement !== 'concentric') {
+      return { matched: false, reason: `${info.label} 不是同心布置` };
+    }
+  } else if (axisAlignment === 'eccentric') {
     // 同心的不匹配异心
     if (info.shaftArrangement === 'concentric') {
       return { matched: false, reason: `${info.label} 是同心布置，不是异心布置` };
     }
 
     // 检查具体偏置方向
-    if (filter.offsetDirection && filter.offsetDirection !== 'any') {
-      if (info.shaftArrangement === filter.offsetDirection) {
-        return { matched: true };
+    if (offsetDirection && offsetDirection !== 'any') {
+      // 向后兼容旧值
+      const normalizedDir = OFFSET_DIRECTION_COMPAT_MAP[offsetDirection] || offsetDirection;
+      if (info.shaftArrangement !== normalizedDir) {
+        return { matched: false, reason: `${info.label} 不匹配偏置方向 ${offsetDirection}` };
       }
-      return { matched: false, reason: `${info.label} 不匹配偏置方向 ${filter.offsetDirection}` };
     }
-
-    // 异心 + 不限方向
-    return { matched: true };
   }
 
   return { matched: true };
