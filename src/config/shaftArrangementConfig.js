@@ -13,28 +13,28 @@ export const SUB_SERIES_MAP = {
     label: 'GWC 同心布置'
   },
   GWS: {
-    transmissionType: '2-stage',
-    rotationRelation: 'same',
+    transmissionType: '1-stage',
+    rotationRelation: 'reverse',
     shaftArrangement: 'horizontal-offset',
-    label: 'GWS 水平直出'
+    label: 'GWS 垂直异中心'
   },
   GWD: {
-    transmissionType: '2-stage',
-    rotationRelation: 'same',
+    transmissionType: '1-stage',
+    rotationRelation: 'reverse',
     shaftArrangement: 'vertical-down',
-    label: 'GWD 垂直向下'
+    label: 'GWD 角向异中心'
   },
   GWH: {
-    transmissionType: '2-stage',
-    rotationRelation: 'same',
+    transmissionType: '1-stage',
+    rotationRelation: 'reverse',
     shaftArrangement: 'horizontal-offset',
-    label: 'GWH 水平偏置'
+    label: 'GWH 水平异中心'
   },
   GWK: {
-    transmissionType: '2-stage',
-    rotationRelation: 'same',
+    transmissionType: '1-stage',
+    rotationRelation: 'reverse',
     shaftArrangement: 'k-shape',
-    label: 'GWK K型布置'
+    label: 'GWK 垂直异中心'
   },
   GWL: {
     transmissionType: '2-stage',

@@ -243,6 +243,17 @@ export const fixGearboxCapacityArrays = (data) => {
                    patched++;
                 }
                 // If capacity array exists, has correct length, and all values are valid/positive, do nothing.
+
+                // 检查 maxPower 与 transmissionCapacityPerRatio 的一致性
+                if (item.maxPower > 0 && item.maxSpeed > 0 && Array.isArray(item.transmissionCapacityPerRatio)) {
+                  const maxTcpr = Math.max(...item.transmissionCapacityPerRatio);
+                  const expectedMaxPower = Math.round(maxTcpr * item.maxSpeed);
+                  if (item.maxPower > expectedMaxPower * 3) {
+                    console.warn(`fixData: ${item.model} maxPower ${item.maxPower} 与传递能力不一致，修正为 ${expectedMaxPower}`);
+                    item.maxPower = expectedMaxPower;
+                    patched++;
+                  }
+                }
             });
         }
         // If collection doesn't exist or isn't an array, ensureCollections handles it.
