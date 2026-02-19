@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 4; // v4: 新增HCM/HCAM/HCVM系列型号及传递能力修正 (2026-01-07)
+export const APP_DATA_VERSION = 5; // v5: GWK/GWL/GWD/GWH传递能力全面修复, gearbox-data.json格式修正 (2026-02-19)
 
 export const DEFAULTS = {
     gearbox: {
