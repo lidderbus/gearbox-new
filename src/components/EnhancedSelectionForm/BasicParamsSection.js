@@ -3,11 +3,11 @@
 
 import React from 'react';
 import { Card, Form, Row, Col } from 'react-bootstrap';
-import { FORM_OPTIONS } from './useEnhancedSelectionForm';
+import ShaftArrangementSelector from '../ShaftArrangementSelector';
 
 /**
  * 基本参数区块
- * 包含: 布置方式、主机功率、主机转速、速比
+ * 包含: 轴布置方式、主机功率、主机转速、速比
  */
 const BasicParamsSection = ({
   formData,
@@ -22,28 +22,33 @@ const BasicParamsSection = ({
     borderColor: colors.inputBorder || '#ced4da'
   };
 
+  // 处理arrangement兼容性 — 旧版可能是字符串
+  const arrangementValue = (() => {
+    const arr = formData.arrangement;
+    if (!arr || typeof arr === 'string') {
+      return { axisAlignment: 'any', offsetDirection: 'any' };
+    }
+    return arr;
+  })();
+
   return (
     <Card className="mb-4" style={{ backgroundColor: colors.card || '#fff', borderColor: colors.border || '#dee2e6' }}>
       <Card.Header style={{ backgroundColor: colors.headerBg || '#f8f9fa', color: colors.headerText || '#212529' }}>
         <strong>基本参数</strong>
       </Card.Header>
       <Card.Body>
-        <Row>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>布置方式</Form.Label>
-              <Form.Select
-                value={formData.arrangement}
-                onChange={(e) => updateField('arrangement', e.target.value)}
-                style={inputStyle}
-              >
-                {FORM_OPTIONS.arrangement.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Col>
+        {/* 轴布置方式选择器 */}
+        <Form.Group className="mb-3">
+          <Form.Label>轴布置方式</Form.Label>
+          <ShaftArrangementSelector
+            value={arrangementValue}
+            onChange={(val) => updateField('arrangement', val)}
+            colors={colors}
+            gearboxType="GW"
+          />
+        </Form.Group>
 
+        <Row>
           <Col md={6}>
             <Form.Group className="mb-3">
               <Form.Label>
@@ -62,9 +67,7 @@ const BasicParamsSection = ({
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
-        </Row>
 
-        <Row>
           <Col md={6}>
             <Form.Group className="mb-3">
               <Form.Label>
@@ -83,7 +86,9 @@ const BasicParamsSection = ({
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
+        </Row>
 
+        <Row>
           <Col md={6}>
             <Form.Group className="mb-3">
               <Form.Label>

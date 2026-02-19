@@ -2,7 +2,9 @@
 // 齿轮箱评分器组件 - 计算和展示齿轮箱的匹配分数，提供透明的选型理由
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Card, Table, ProgressBar, Alert, Badge } from 'react-bootstrap';
+import { Card, Table, ProgressBar, Alert, Badge, Button, Row, Col, Collapse } from 'react-bootstrap';
+import ScoreRadarChart from './ScoreRadarChart';
+import { deriveShaftArrangement } from '../../config/shaftArrangementConfig';
 
 /**
  * 齿轮箱评分器组件
@@ -29,6 +31,8 @@ const GearboxScorer = ({
   colors = {},
   compact = false
 }) => {
+  const [showDetailedScore, setShowDetailedScore] = useState(false);
+
   // 评分状态
   const [scores, setScores] = useState({
     ratioMatch: 0,       // 减速比匹配 (0-30分)
@@ -308,8 +312,48 @@ const GearboxScorer = ({
   return (
     <Card style={{ backgroundColor: colors.card, borderColor: colors.border }}>
       <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>
-        <i className="bi bi-graph-up me-2"></i>
-        选型评分: {gearbox.model}
+        <div className="d-flex justify-content-between align-items-center flex-wrap">
+          <span>
+            <i className="bi bi-graph-up me-2"></i>
+            选型评分: {gearbox.model}
+          </span>
+          {(() => {
+            const shaftInfo = deriveShaftArrangement(gearbox.model);
+            if (!shaftInfo) return null;
+            const arrangementLabels = {
+              'concentric': '同心', 'horizontal-offset': '水平偏置',
+              'vertical-down': '垂直向下', 'k-shape': 'K型', 'l-shape': 'L型', 'unknown': ''
+            };
+            const bgMap = {
+              'concentric': 'primary', 'horizontal-offset': 'info',
+              'vertical-down': 'warning', 'k-shape': 'secondary', 'l-shape': 'dark'
+            };
+            return (
+              <span className="d-inline-flex gap-1 flex-wrap">
+                {shaftInfo.subSeries && (
+                  <Badge bg="outline-secondary" style={{
+                    border: '1px solid currentColor', backgroundColor: 'transparent', fontSize: '0.75em'
+                  }}>
+                    {shaftInfo.subSeries}
+                  </Badge>
+                )}
+                {arrangementLabels[shaftInfo.shaftArrangement] && (
+                  <Badge bg={bgMap[shaftInfo.shaftArrangement] || 'secondary'}
+                    text={shaftInfo.shaftArrangement === 'vertical-down' ? 'dark' : undefined}
+                    style={{ fontSize: '0.75em' }}>
+                    {arrangementLabels[shaftInfo.shaftArrangement]}
+                  </Badge>
+                )}
+                <Badge bg="light" text="dark" style={{ fontSize: '0.75em' }}>
+                  {shaftInfo.transmissionType === '2-stage' ? '2级传动' : '1级传动'}
+                </Badge>
+                <Badge bg="light" text="dark" style={{ fontSize: '0.75em' }}>
+                  {shaftInfo.rotationRelation === 'same' ? '同向旋转' : '反向旋转'}
+                </Badge>
+              </span>
+            );
+          })()}
+        </div>
       </Card.Header>
       <Card.Body>
         {/* 警告信息 */}
@@ -358,6 +402,137 @@ const GearboxScorer = ({
             className="mt-2"
           />
         </div>
+
+        {/* Detailed scoring toggle */}
+        <div className="text-center mb-3">
+          <Button
+            variant="outline-secondary"
+            size="sm"
+            onClick={() => setShowDetailedScore(!showDetailedScore)}
+          >
+            <i className={`bi bi-${showDetailedScore ? 'chevron-up' : 'bar-chart-line'} me-1`}></i>
+            {showDetailedScore ? '收起详细评分' : '显示详细评分'}
+          </Button>
+        </div>
+
+        <Collapse in={showDetailedScore}>
+          <div>
+            {(() => {
+              // Display-only 5-dimension scoring (does NOT affect sorting)
+              const DISPLAY_WEIGHTS = { capacity: 30, ratio: 25, price: 20, weight: 15, thrust: 10 };
+
+              const calcDisplayScores = () => {
+                const ds = { capacity: 0, ratio: 0, price: 0, weight: 0, thrust: 0 };
+
+                // Capacity: 10-20% margin = 100, degrade outward
+                const cm = gearbox.capacityMargin ?? details.capacityMargin;
+                if (cm !== undefined && cm !== null) {
+                  if (cm >= 10 && cm <= 20) ds.capacity = 100;
+                  else if (cm >= 5 && cm < 10) ds.capacity = 70;
+                  else if (cm > 20 && cm <= 35) ds.capacity = 80;
+                  else if (cm > 35) ds.capacity = 50;
+                  else if (cm >= 0) ds.capacity = 40;
+                  else ds.capacity = 0;
+                }
+
+                // Ratio: <=2% = 100
+                const rd = gearbox.ratioDiffPercent ?? details.ratioDiff;
+                if (rd !== undefined && rd !== null) {
+                  if (rd <= 2) ds.ratio = 100;
+                  else if (rd <= 5) ds.ratio = 80;
+                  else if (rd <= 10) ds.ratio = 60;
+                  else ds.ratio = 30;
+                }
+
+                // Price: rank in candidates
+                const price = gearbox.marketPrice || gearbox.price || 0;
+                if (price > 0 && allResults.length > 0) {
+                  const prices = allResults.filter(r => (r.marketPrice || r.price) > 0).map(r => r.marketPrice || r.price).sort((a, b) => a - b);
+                  if (prices.length > 0) {
+                    const rank = prices.findIndex(p => p >= price);
+                    ds.price = Math.round(100 - (rank / prices.length) * 100);
+                  } else ds.price = 50;
+                } else ds.price = 0;
+
+                // Weight: lighter is better (relative to candidates)
+                const w = gearbox.weight || 0;
+                if (w > 0 && allResults.length > 0) {
+                  const weights = allResults.filter(r => r.weight > 0).map(r => r.weight).sort((a, b) => a - b);
+                  if (weights.length > 0) {
+                    const rank = weights.findIndex(wt => wt >= w);
+                    ds.weight = Math.round(100 - (rank / weights.length) * 100);
+                  } else ds.weight = 50;
+                } else ds.weight = 50;
+
+                // Thrust
+                if (!requiredThrust || requiredThrust <= 0) {
+                  ds.thrust = 100;
+                } else {
+                  const t = gearbox.thrust || 0;
+                  if (t >= requiredThrust) {
+                    const margin = ((t - requiredThrust) / requiredThrust) * 100;
+                    ds.thrust = margin <= 50 ? 100 : 80;
+                  } else {
+                    ds.thrust = Math.round((t / requiredThrust) * 60);
+                  }
+                }
+
+                return ds;
+              };
+
+              const displayScores = calcDisplayScores();
+              const weightedTotal = Object.keys(DISPLAY_WEIGHTS).reduce((sum, key) => {
+                return sum + (displayScores[key] * DISPLAY_WEIGHTS[key] / 100);
+              }, 0);
+
+              const dimensionLabels = {
+                capacity: '传递能力匹配',
+                ratio: '减速比匹配',
+                price: '价格经济性',
+                weight: '重量/尺寸',
+                thrust: '推力满足度',
+              };
+
+              return (
+                <Row className="mb-3">
+                  <Col md={7}>
+                    <Table bordered size="sm" style={{ color: colors.text, fontSize: '0.85rem' }}>
+                      <thead>
+                        <tr>
+                          <th>维度</th>
+                          <th>权重</th>
+                          <th>得分</th>
+                          <th>加权</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Object.entries(DISPLAY_WEIGHTS).map(([key, weight]) => (
+                          <tr key={key}>
+                            <td>{dimensionLabels[key]}</td>
+                            <td>{weight}%</td>
+                            <td>{displayScores[key]}</td>
+                            <td>{(displayScores[key] * weight / 100).toFixed(1)}</td>
+                          </tr>
+                        ))}
+                        <tr className="table-info">
+                          <td colSpan={3}><strong>展示评分合计</strong></td>
+                          <td><strong>{weightedTotal.toFixed(1)}</strong></td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                    <small className="text-muted">
+                      <i className="bi bi-info-circle me-1"></i>
+                      此为展示评分，不影响排序。实际排序由选型算法综合计算。
+                    </small>
+                  </Col>
+                  <Col md={5} className="d-flex align-items-center justify-content-center">
+                    <ScoreRadarChart scores={displayScores} />
+                  </Col>
+                </Row>
+              );
+            })()}
+          </div>
+        </Collapse>
 
         {/* 分项评分 */}
         <h6 style={{ color: colors.headerText }}>分项明细</h6>

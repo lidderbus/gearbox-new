@@ -2,6 +2,7 @@
 // 增强选型表单主组件
 
 import React, { useState } from 'react';
+import { toast } from '../../utils/toast';
 import { Container, Row, Col, Button, Alert, Card, Spinner, Modal, Table, Badge } from 'react-bootstrap';
 import { useEnhancedSelectionForm } from './useEnhancedSelectionForm';
 import { loadJsPDF } from '../../utils/dynamicImports';
@@ -90,13 +91,21 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
 
     // 验证必填参数
     if (!enginePower || !engineSpeed || !ratio) {
-      alert('请先填写主机功率、主机转速和速比');
+      toast.warning('请先填写主机功率、主机转速和速比');
       return;
     }
 
     setIsCalculating(true);
 
     try {
+      // 解析轴布置选择
+      const arrangementFilter = (() => {
+        const arr = formData.arrangement;
+        if (!arr || typeof arr === 'string') return undefined;
+        if (arr.axisAlignment === 'any') return undefined;
+        return arr;
+      })();
+
       // 构建选型需求
       const requirements = {
         motorPower: parseFloat(enginePower),
@@ -108,7 +117,9 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
         // 接口筛选选项
         interfaceType: formData.interfaceType || '无要求',
         interfaceSpec: formData.interfaceSpec || '',
-        interfaceFilterMode: formData.interfaceFilterMode || 'prefer'
+        interfaceFilterMode: formData.interfaceFilterMode || 'prefer',
+        // 轴布置筛选选项
+        shaftArrangement: arrangementFilter
       };
 
       // 调用自动选型
@@ -143,11 +154,11 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
       setSelectionResult(result);
 
       if (!result.success || result.recommendations.length === 0) {
-        alert('未找到匹配的齿轮箱，请调整参数后重试');
+        toast.warning('未找到匹配的齿轮箱，请调整参数后重试');
       }
     } catch (error) {
       console.error('选型计算失败:', error);
-      alert('选型计算失败: ' + error.message);
+      toast.error('选型计算失败: ' + error.message);
     } finally {
       setIsCalculating(false);
     }
@@ -239,7 +250,7 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
       setTimeout(() => setSubmitSuccess(false), 10000);
     } catch (error) {
       console.error('提交失败:', error);
-      alert('提交失败: ' + error.message);
+      toast.error('提交失败: ' + error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -706,7 +717,7 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
 
     } catch (error) {
       console.error('PDF导出失败:', error);
-      alert('PDF导出失败: ' + error.message);
+      toast.error('PDF导出失败: ' + error.message);
     } finally {
       setIsSubmitting(false);
     }

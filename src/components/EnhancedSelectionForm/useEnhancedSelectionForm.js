@@ -29,7 +29,7 @@ const getDefaultFormData = () => ({
   interfaceSpec: "",          // 接口规格
 
   // === 基本参数 ===
-  arrangement: "无要求",      // 布置方式
+  arrangement: { axisAlignment: 'any', offsetDirection: 'any' },  // 轴布置方式
   enginePower: "",            // 主机功率 (kW)
   engineSpeed: "",            // 主机转速 (rpm)
   ratio: "",                  // 速比
@@ -136,12 +136,14 @@ export const FORM_OPTIONS = {
     { value: "产品检验证书", label: "产品检验证书" }
   ],
 
-  // 布置方式选项
+  // 轴布置方式选项 (结构化选择，见ShaftArrangementSelector组件)
   arrangement: [
-    { value: "无要求", label: "无要求" },
-    { value: "立式", label: "立式" },
-    { value: "卧式", label: "卧式" },
-    { value: "倾斜式", label: "倾斜式" }
+    { value: "any", label: "自动选择" },
+    { value: "concentric", label: "同心布置 (GWC)" },
+    { value: "horizontal-offset", label: "水平偏置 (GWS/GWH)" },
+    { value: "vertical-down", label: "垂直向下 (GWD)" },
+    { value: "k-shape", label: "K型布置 (GWK)" },
+    { value: "l-shape", label: "L型/直角 (GWL)" }
   ],
 
   // 监控系统选项
@@ -404,8 +406,19 @@ export const useEnhancedSelectionForm = () => {
     ]});
 
     // 基本参数
+    const arrangementLabel = (() => {
+      const arr = formData.arrangement;
+      if (!arr || typeof arr === 'string') return arr || '自动选择';
+      if (arr.axisAlignment === 'any') return '自动选择';
+      if (arr.axisAlignment === 'concentric') return '同心布置';
+      if (arr.axisAlignment === 'eccentric') {
+        const dirLabels = { 'any': '不限方向', 'horizontal-offset': '水平偏置', 'vertical-down': '垂直向下', 'k-shape': 'K型', 'l-shape': 'L型' };
+        return `异心布置 - ${dirLabels[arr.offsetDirection] || '不限方向'}`;
+      }
+      return '自动选择';
+    })();
     summary.push({ group: '基本参数', items: [
-      { label: '布置方式', value: formData.arrangement },
+      { label: '轴布置方式', value: arrangementLabel },
       { label: '主机功率', value: formData.enginePower ? `${formData.enginePower} kW` : '-' },
       { label: '主机转速', value: formData.engineSpeed ? `${formData.engineSpeed} rpm` : '-' },
       { label: '速比', value: formData.ratio || '-' }

@@ -10,6 +10,7 @@ import { userRoles } from './auth/roles';
 import './App.css';
 import ModernNavBar from './components/ModernNavBar';
 import { suppressRepairWarnings, logger } from './config/logging';
+import { toast } from './utils/toast';
 import { needsStandbyPump } from './utils/enhancedPumpSelection';
 import { correctDatabase } from './utils/dataCorrector';
 import { correctPriceData } from './utils/priceManager';
@@ -19,8 +20,12 @@ import BatchPriceAdjustment from './components/BatchPriceAdjustment';
 import { getGWPackagePriceConfig } from './data/packagePriceConfig';
 import { enhanceGearboxData } from './utils/gearboxDataEnhancer';
 import { useSelectionConfig } from './contexts/SelectionConfigContext';
+import { SelectionResultProvider } from './contexts/SelectionResultContext';
 import PriceWarningBanner from './components/PriceWarningBanner';
 import FeedbackWidget from './components/FeedbackWidget';
+import ToastContainer from './components/ToastContainer';
+import SidebarNav from './components/SidebarNav';
+import { useInIframe } from './hooks/useInIframe';
 import ComparisonResultModal from './components/ComparisonResultModal';
 import InputParametersTab from './components/InputParametersTab';
 import AppHeader from './components/AppHeader';
@@ -73,6 +78,9 @@ const ManualLibrary = lazy(() => import('./components/ManualLibrary'));
 // 技术协议模板库 - 历史技术协议模板 (2026-01-22新增)
 const TemplateLibrary = lazy(() => import('./components/TemplateLibrary'));
 
+// 首页Dashboard (2026-02-18新增)
+const HomeView = lazy(() => import('./components/HomeView'));
+
 // 上海公司审计整改模块 (2026-01-15新增)
 const InventoryManagement = lazy(() => import('./components/InventoryManagement'));
 const ReceivablesManagement = lazy(() => import('./components/ReceivablesManagement'));
@@ -117,14 +125,14 @@ const forceReset = () => {
     });
     logger.log("Cookies已清除");
 
-    alert("所有本地数据和设置已清除，页面将在3秒后重新加载...");
+    toast.success("所有本地数据和设置已清除，页面将在3秒后重新加载...");
 
     setTimeout(() => {
       window.location.href = window.location.pathname + "?reset=" + new Date().getTime();
     }, 3000);
   } catch (error) {
     logger.error("重置过程出错:", error);
-    alert("重置过程出错: " + error.message + "。尝试手动刷新页面。");
+    toast.error("重置过程出错: " + error.message + "。尝试手动刷新页面。");
     window.location.reload();
   }
 };
@@ -173,7 +181,9 @@ function App({ appData: initialAppData, setAppData }) {
     portEngineRotation: null,           // null=自动, 'clockwise', 'counterclockwise'
     starboardEngineRotation: null,
     portUseReverse: false,
-    starboardUseReverse: false
+    starboardUseReverse: false,
+    // 轴布置方式
+    shaftArrangement: { axisAlignment: 'any', offsetDirection: 'any' }
   });
   const [projectInfo, setProjectInfo] = useState({
     projectName: '',
@@ -194,7 +204,8 @@ function App({ appData: initialAppData, setAppData }) {
   const [contract, setContract] = useState(null);
   // 技术协议特殊订货要求 - 用于与合同同步
   const [agreementSpecialRequirements, setAgreementSpecialRequirements] = useState('');
-  const [activeTab, setActiveTab] = useState('input');
+  const [activeTab, setActiveTab] = useState('home');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectionHistory, setSelectionHistory] = useState([]);
   const [theme, setTheme] = useState('light');
   const [selectedGearboxIndex, setSelectedGearboxIndex] = useState(0);
@@ -270,14 +281,16 @@ function App({ appData: initialAppData, setAppData }) {
   // Hash-based navigation sync with activeTab
   useEffect(() => {
     const pathToTab = {
-      '/': 'input',
+      '/': 'home',
+      '/home': 'home',
       '/selection': 'input',
       '/comparison': 'result',
       '/pump-selection': 'pump-selection',
       '/coupling-selection': 'coupling-selection',
       '/technical': 'agreement',
       '/quotation': 'quotation',
-      '/cummins': 'cummins'
+      '/cummins': 'cummins',
+      '/drawings': 'drawings'
     };
 
     const handleHashChange = () => {
@@ -308,6 +321,7 @@ function App({ appData: initialAppData, setAppData }) {
   }, [isAuthenticated, location, navigate]);
 
   const isAdmin = user && (user.role === userRoles.ADMIN || user.role === userRoles.SUPER_ADMIN);
+  const inIframe = useInIframe();
 
   const workConditionOptions = useMemo(() => [
     'I类:扭矩变化很小',
@@ -680,38 +694,72 @@ function App({ appData: initialAppData, setAppData }) {
     '&:focus': { borderColor: colors.primary, boxShadow: `0 0 0 0.2rem ${colors.focusRing}` }
   }), [colors]);
 
+  const selectionContextValue = useMemo(() => ({
+    selectedGearbox: selectedComponents.gearbox,
+    engineData,
+    requirementData,
+    selectionResult,
+    couplingResult: selectedComponents.coupling,
+    pumpResult: selectedComponents.pump,
+  }), [selectedComponents, engineData, requirementData, selectionResult]);
+
   if (location.pathname === '/users' || location.pathname === '/database' || location.pathname === '/login') {
     return null;
   }
 
   return (
+    <SelectionResultProvider value={selectionContextValue}>
     <div className="App">
-      <PriceWarningBanner />
-      <ModernNavBar activeTab={activeTab} onNavigate={setActiveTab} />
+      {!inIframe && <PriceWarningBanner />}
+      {!inIframe && <ModernNavBar activeTab={activeTab} onNavigate={setActiveTab} />}
       <Container fluid className="app-container">
-        <AppHeader
-          user={user}
-          isAdmin={isAdmin}
-          logout={logout}
-          theme={theme}
-          toggleTheme={toggleTheme}
-          colors={colors}
-          loading={loading}
-          error={error}
-          success={success}
-          setError={setError}
-          setSuccess={setSuccess}
-          setShowDiagnosticPanel={setShowDiagnosticPanel}
-          appDataState={appDataState}
-        />
+        {!inIframe && (
+          <AppHeader
+            user={user}
+            isAdmin={isAdmin}
+            logout={logout}
+            theme={theme}
+            toggleTheme={toggleTheme}
+            colors={colors}
+            loading={loading}
+            error={error}
+            success={success}
+            setError={setError}
+            setSuccess={setSuccess}
+            setShowDiagnosticPanel={setShowDiagnosticPanel}
+            appDataState={appDataState}
+          />
+        )}
 
       {appDataState && Object.keys(appDataState).length > 0 && (
+      <div style={{ display: 'flex', gap: 0 }}>
+      {!inIframe && (
+        <SidebarNav
+          activeTab={activeTab}
+          onNavigate={setActiveTab}
+          collapsed={sidebarCollapsed}
+          onToggle={() => setSidebarCollapsed((c) => !c)}
+        />
+      )}
+      <div style={{ flex: 1, minWidth: 0 }}>
       <Tabs
         activeKey={activeTab}
         onSelect={(k) => setActiveTab(k)}
-        className="mb-4"
+        className="mb-4 d-none"
         style={{ borderBottomColor: colors.border }}
       >
+          <Tab eventKey="home" title={<span><i className="bi bi-house-door me-1"></i>首页</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <HomeView
+                appData={appDataState}
+                colors={colors}
+                theme={theme}
+                onNavigate={setActiveTab}
+                selectionHistory={selectionHistory}
+              />
+            </Suspense>
+          </Tab>
+
           <Tab eventKey="input" title={<span><i className="bi bi-input-cursor-text me-1"></i>输入参数</span>}>
             <InputParametersTab
               engineData={engineData}
@@ -761,8 +809,8 @@ function App({ appData: initialAppData, setAppData }) {
             </Suspense>
           </Tab>
 
-          <Tab eventKey="quotation" title={<span><i className="bi bi-currency-yen me-1"></i>报价单</span>} disabled={!quotation}>
-              {quotation && (
+          <Tab eventKey="quotation" title={<span><i className="bi bi-currency-yen me-1"></i>报价单</span>}>
+              {quotation ? (
                   <Row>
                       <Col>
                         {/* 增强选项区域 */}
@@ -774,7 +822,7 @@ function App({ appData: initialAppData, setAppData }) {
                           onUpdatePrices={handleUpdateQuotationPrices}
                           colors={colors}
                         />
-                        
+
                         <Suspense fallback={<LazyLoadFallback />}>
                           <QuotationView
                             quotation={quotation}
@@ -790,6 +838,19 @@ function App({ appData: initialAppData, setAppData }) {
                         </Suspense>
                       </Col>
                   </Row>
+              ) : (
+                <div className="d-flex justify-content-center align-items-center py-5">
+                  <Card style={{ maxWidth: 400, backgroundColor: colors.card, borderColor: colors.border, textAlign: 'center' }}>
+                    <Card.Body className="py-5">
+                      <i className="bi bi-file-earmark-x" style={{ fontSize: '3rem', color: colors.muted }}></i>
+                      <h5 className="mt-3" style={{ color: colors.text }}>暂无报价单</h5>
+                      <p style={{ color: colors.muted }}>请先完成齿轮箱选型，再生成报价单</p>
+                      <Button variant="primary" onClick={() => setActiveTab('input')}>
+                        <i className="bi bi-input-cursor-text me-2"></i>去选型
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                </div>
               )}
         </Tab>
 
@@ -891,6 +952,8 @@ function App({ appData: initialAppData, setAppData }) {
               <Col>
                 <Suspense fallback={<LazyLoadFallback />}>
                   <BatchSelectionView
+                    colors={colors}
+                    theme={theme}
                     onSelectionComplete={(results) => {
                       logger.log('批量选型完成:', results);
                       // 刷新历史记录
@@ -1165,6 +1228,8 @@ function App({ appData: initialAppData, setAppData }) {
             </Row>
           </Tab>
         </Tabs>
+      </div>
+      </div>
       )}
 
       {/* 批量价格调整对话框 */}
@@ -1257,8 +1322,10 @@ function App({ appData: initialAppData, setAppData }) {
 
       {/* 用户反馈浮动按钮 */}
       <FeedbackWidget position="bottom-right" />
+      <ToastContainer />
       </Container>
     </div>
+    </SelectionResultProvider>
   );
 }
 

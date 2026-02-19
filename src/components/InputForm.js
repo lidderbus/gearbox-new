@@ -1,11 +1,12 @@
 // components/InputForm.js
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Row, Col, Card, Spinner } from 'react-bootstrap';
 import SelectionGuidelines, { HelpTooltip, SeriesCharacteristicsBadge } from './SelectionGuidelines';
 import HybridConfigPanel from './HybridConfigPanel';
 import WeightConfigPanel from './WeightConfigPanel';
 import ToleranceConfigPanel from './ToleranceConfigPanel';
 import SmartHintsPanel from './SmartHintsPanel';
+import ShaftArrangementSelector from './ShaftArrangementSelector';
 import { useIsMobile } from '../hooks/useIsMobile';
 import ResponsiveSelectionForm from './responsive/ResponsiveSelectionForm';
 
@@ -44,8 +45,14 @@ const InputForm = ({
   hybridConfig = null,
   setHybridConfig = null,
   selectionDiagnostics = null,
-  showConfigPanels = true
+  showConfigPanels = true,
+  shaftArrangement = null,
+  setShaftArrangement = null
 }) => {
+  // 内部轴布置状态 (当外部未提供时使用)
+  const [internalShaftArrangement, setInternalShaftArrangement] = useState({ axisAlignment: 'any', offsetDirection: 'any' });
+  const effectiveShaftArrangement = shaftArrangement || internalShaftArrangement;
+  const effectiveSetShaftArrangement = setShaftArrangement || setInternalShaftArrangement;
   // Mobile/Tablet responsive layout
   const { isMobile, isTablet } = useIsMobile();
   const useResponsiveLayout = isMobile || isTablet;
@@ -151,6 +158,22 @@ const InputForm = ({
               </Form>
             </Card.Body>
           </Card>
+          {/* 轴布置方式 - GW和auto模式下显示 */}
+          {(gearboxType === 'GW' || gearboxType === 'auto') && (
+            <Card className="mb-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+              <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText, borderBottomColor: colors.border }}>
+                轴布置方式
+              </Card.Header>
+              <Card.Body style={{ padding: '1.5rem' }}>
+                <ShaftArrangementSelector
+                  value={effectiveShaftArrangement}
+                  onChange={effectiveSetShaftArrangement}
+                  colors={colors}
+                  gearboxType={gearboxType}
+                />
+              </Card.Body>
+            </Card>
+          )}
           <Card className="mb-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
             <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText, borderBottomColor: colors.border }}>
               选型要求

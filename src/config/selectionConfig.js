@@ -6,11 +6,12 @@
 
 // ========== 默认评分权重 ==========
 export const DEFAULT_SCORING_WEIGHTS = {
-  costEffectiveness: 45,  // 性价比权重
+  costEffectiveness: 37,  // 性价比权重
   ratioMatch: 25,         // 速比匹配权重
   capacityMargin: 15,     // 能力余量权重
   thrustSatisfy: 10,      // 推力满足权重
-  specialPackage: 5       // 特价打包权重
+  specialPackage: 5,      // 特价打包权重
+  shaftMatch: 8           // 轴布置匹配权重
 };
 
 // ========== 预设配置 ==========
@@ -26,11 +27,12 @@ export const PRESET_CONFIGURATIONS = {
     label: '性价比优先',
     description: '优先考虑价格因素，适合预算敏感项目',
     weights: {
-      costEffectiveness: 55,
+      costEffectiveness: 47,
       ratioMatch: 20,
       capacityMargin: 12,
       thrustSatisfy: 8,
-      specialPackage: 5
+      specialPackage: 5,
+      shaftMatch: 8
     }
   },
   precisionPriority: {
@@ -38,11 +40,12 @@ export const PRESET_CONFIGURATIONS = {
     label: '精度优先',
     description: '优先考虑速比精确匹配，适合高精度应用',
     weights: {
-      costEffectiveness: 25,
+      costEffectiveness: 17,
       ratioMatch: 35,
       capacityMargin: 25,
       thrustSatisfy: 10,
-      specialPackage: 5
+      specialPackage: 5,
+      shaftMatch: 8
     }
   },
   performancePriority: {
@@ -50,11 +53,12 @@ export const PRESET_CONFIGURATIONS = {
     label: '性能优先',
     description: '优先考虑能力余量和推力，适合重载工况',
     weights: {
-      costEffectiveness: 20,
+      costEffectiveness: 12,
       ratioMatch: 25,
       capacityMargin: 30,
       thrustSatisfy: 20,
-      specialPackage: 5
+      specialPackage: 5,
+      shaftMatch: 8
     }
   }
 };
@@ -139,7 +143,7 @@ export const DEFAULT_TOLERANCES = {
  */
 export function validateWeights(weights) {
   const errors = [];
-  const requiredKeys = ['costEffectiveness', 'ratioMatch', 'capacityMargin', 'thrustSatisfy', 'specialPackage'];
+  const requiredKeys = ['costEffectiveness', 'ratioMatch', 'capacityMargin', 'thrustSatisfy', 'specialPackage', 'shaftMatch'];
 
   // 检查必需字段
   for (const key of requiredKeys) {
@@ -168,7 +172,7 @@ export function validateWeights(weights) {
  * @returns {Object} - 归一化后的权重
  */
 export function normalizeWeights(weights) {
-  const keys = ['costEffectiveness', 'ratioMatch', 'capacityMargin', 'thrustSatisfy', 'specialPackage'];
+  const keys = ['costEffectiveness', 'ratioMatch', 'capacityMargin', 'thrustSatisfy', 'specialPackage', 'shaftMatch'];
   const total = keys.reduce((sum, key) => sum + (weights[key] || 0), 0);
 
   if (total === 0) {

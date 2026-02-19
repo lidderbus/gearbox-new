@@ -342,6 +342,13 @@ const useSelectionHandlers = ({
         ratio: selectionParams.targetRatio
       });
 
+      // 解析轴布置选择
+      const shaftFilter = (() => {
+        const arr = requirementData.shaftArrangement;
+        if (!arr || arr.axisAlignment === 'any') return undefined;
+        return arr;
+      })();
+
       if (gearboxType === 'auto') {
         // 自动选型模式，传递完整选项
         result = autoSelectGearbox(
@@ -361,7 +368,9 @@ const useSelectionHandlers = ({
             // 接口筛选选项
             interfaceType: requirementData.interfaceType || '无要求',
             interfaceSpec: requirementData.interfaceSpec || '',
-            interfaceFilterMode: requirementData.interfaceFilterMode || 'prefer'
+            interfaceFilterMode: requirementData.interfaceFilterMode || 'prefer',
+            // 轴布置筛选选项
+            shaftArrangement: shaftFilter
           },
           appDataState
         );
@@ -391,7 +400,9 @@ const useSelectionHandlers = ({
             // 接口筛选选项
             interfaceType: requirementData.interfaceType || '无要求',
             interfaceSpec: requirementData.interfaceSpec || '',
-            interfaceFilterMode: requirementData.interfaceFilterMode || 'prefer'
+            interfaceFilterMode: requirementData.interfaceFilterMode || 'prefer',
+            // 轴布置筛选选项
+            shaftArrangement: shaftFilter
           }
         );
 

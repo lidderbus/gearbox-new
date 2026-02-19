@@ -22,6 +22,7 @@ import {
 import { safeParseFloat } from './dataHelpers';
 import { selectFlexibleCoupling, selectStandbyPump, fixCouplingTorque } from './couplingSelection';
 import { getGWPackagePriceConfig, checkPackageMatch } from '../data/packagePriceConfig';
+import { deriveShaftArrangement, matchesShaftArrangement } from '../config/shaftArrangementConfig';
 
 // 导入类型定义
 import type {
@@ -59,6 +60,14 @@ interface InterfaceMatch {
 }
 
 /**
+ * 轴布置过滤条件
+ */
+interface ShaftArrangementFilter {
+  axisAlignment?: 'any' | 'concentric' | 'eccentric';  // 同心/异心
+  offsetDirection?: 'any' | 'horizontal-offset' | 'vertical-down' | 'k-shape' | 'l-shape';  // 偏置方向
+}
+
+/**
  * 选型配置选项
  */
 interface SelectionOptions {
@@ -74,6 +83,8 @@ interface SelectionOptions {
   interfaceType?: 'sae' | 'domestic' | '无要求';  // 接口类型
   interfaceSpec?: string;                          // 接口规格 (如 SAE14寸、φ450)
   interfaceFilterMode?: 'prefer' | 'strict';       // 筛选模式: prefer(优先) | strict(严格)
+  // 轴布置筛选选项
+  shaftArrangement?: ShaftArrangementFilter;
 }
 
 /**
@@ -94,6 +105,7 @@ interface ScoringWeights {
   capacityMargin?: number;
   thrustSatisfy?: number;
   specialPackage?: number;
+  shaftMatch?: number;
 }
 
 /**
@@ -106,6 +118,7 @@ interface RejectionReasons {
   capacityTooHigh: number;
   thrustInsufficient: number;
   interfaceMismatch: number;  // 接口不匹配
+  shaftMismatch: number;      // 轴布置不匹配
 }
 
 /**
@@ -182,6 +195,8 @@ interface AutoSelectRequirements {
   interfaceType?: 'sae' | 'domestic' | '无要求';
   interfaceSpec?: string;
   interfaceFilterMode?: 'prefer' | 'strict';
+  // 轴布置筛选选项
+  shaftArrangement?: ShaftArrangementFilter;
 }
 
 /**
@@ -441,7 +456,8 @@ export const selectGearbox = (
     capacityTooLow: 0,
     capacityTooHigh: 0,
     thrustInsufficient: 0,
-    interfaceMismatch: 0  // 接口不匹配
+    interfaceMismatch: 0,  // 接口不匹配
+    shaftMismatch: 0       // 轴布置不匹配
   };
 
   // --- 接口筛选参数 ---
@@ -494,6 +510,17 @@ export const selectGearbox = (
         DEBUG_LOG(`Skipping ${gearbox.model}: Interface ${interfaceType} ${interfaceSpec} not matched`);
         rejectionReasons.interfaceMismatch++;
         failureReason = `接口 ${interfaceType} ${interfaceSpec} 不匹配`;
+        continue;
+      }
+    }
+
+    // Check shaft arrangement match
+    if (options.shaftArrangement && options.shaftArrangement.axisAlignment && options.shaftArrangement.axisAlignment !== 'any') {
+      const shaftMatch = matchesShaftArrangement(gearbox.model, options.shaftArrangement as any);
+      if (!shaftMatch.matched) {
+        DEBUG_LOG(`Skipping ${gearbox.model}: Shaft arrangement mismatch - ${shaftMatch.reason}`);
+        rejectionReasons.shaftMismatch++;
+        failureReason = `轴布置不匹配: ${shaftMatch.reason}`;
         continue;
       }
     }
@@ -806,6 +833,7 @@ export const selectGearbox = (
             case 'capacityTooHigh': return '传递能力余量过大';
             case 'thrustInsufficient': return '推力要求不满足';
             case 'interfaceMismatch': return `接口(${interfaceSpec})不匹配`;
+            case 'shaftMismatch': return '轴布置方式不匹配';
             default: return reason;
           }
         })
@@ -834,11 +862,12 @@ export const selectGearbox = (
 
   // --- 可配置评分权重 ---
   const scoringWeights = options.scoringWeights || DEFAULT_SCORING_WEIGHTS;
-  const W_COST = scoringWeights.costEffectiveness || 45;
+  const W_COST = scoringWeights.costEffectiveness || 37;
   const W_RATIO = scoringWeights.ratioMatch || 25;
   const W_CAPACITY = scoringWeights.capacityMargin || 15;
   const W_THRUST = scoringWeights.thrustSatisfy || 10;
   const W_PACKAGE = scoringWeights.specialPackage || 5;
+  const W_SHAFT = scoringWeights.shaftMatch || 8;
 
   // --- Score the matching gearboxes ---
   const scoredGearboxes = matchingGearboxes.map(gearbox => {
@@ -848,7 +877,8 @@ export const selectGearbox = (
     if (gearbox.capacityMargin >= 5 && gearbox.capacityMargin <= 20) score += W_CAPACITY;
     else if (gearbox.capacityMargin > 20 && gearbox.capacityMargin <= 30) score += W_CAPACITY * 0.93;
     else if (gearbox.capacityMargin > 30 && gearbox.capacityMargin <= MAX_CAPACITY_MARGIN) score += W_CAPACITY * 0.8;
-    else if (gearbox.capacityMargin >= 0 && gearbox.capacityMargin < 5) score += W_CAPACITY * 0.67;
+    else if (gearbox.capacityMargin >= 3 && gearbox.capacityMargin < 5) score += W_CAPACITY * 0.45;
+    else if (gearbox.capacityMargin >= 0 && gearbox.capacityMargin < 3) score += W_CAPACITY * 0.15;
 
     // 2. Ratio Match Score
     if (gearbox.ratioDiffPercent <= 3) score += W_RATIO;
@@ -885,6 +915,16 @@ export const selectGearbox = (
         score -= W_INTERFACE * 0.5;
         logger.debug(`齿轮箱 ${gearbox.model} 接口需转接，扣分${W_INTERFACE * 0.5}分`);
       }
+    }
+
+    // 7. Shaft Arrangement Match Score
+    if (options.shaftArrangement && options.shaftArrangement.axisAlignment && options.shaftArrangement.axisAlignment !== 'any') {
+      // 已经通过了过滤，说明匹配成功，加满分
+      score += W_SHAFT;
+      logger.debug(`齿轮箱 ${gearbox.model} 轴布置匹配，加分${W_SHAFT}分`);
+    } else {
+      // 无轴布置要求时给基础分
+      score += W_SHAFT * 0.5;
     }
 
     gearbox.score = score;
