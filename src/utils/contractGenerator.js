@@ -106,7 +106,14 @@ export const generateContract = (selectionResult, projectInfo, selectedComponent
     transportFeeArrangement: '运费由乙方承担',
     packagingStandard: '符合长途运输的包装',
     packagingFeeArrangement: '包装费包含在总价中',
-    paymentMethod: '买方签收后30天内支付全部款项',
+    paymentMethod: priceInfo.paymentMethod || '买方签收后30天内支付全部款项',
+    paymentMethodOptions: [
+      '买方签收后30天内支付全部款项',
+      '合同签订后30%预付款，发货前付清全款',
+      '合同签订后30%预付款，货到验收合格后30天内付清余款',
+      '合同签订后50%预付款，安装调试完毕后付清余款',
+      '信用证（L/C）支付'
+    ],
     disputeResolution: '争议解决方式：双方协商解决，协商不成，提交上海仲裁委员会仲裁。',
     // 使用从技术协议传入的特殊订货要求，保持与技术协议同步
     specialRequirements: priceInfo.specialRequirements || '无',

@@ -222,6 +222,23 @@ const prepareTemplateData = ({
     // 服务信息
     servicePhone: seriesDefaults.servicePhone || '0571-82673888',
 
+    // GWS系列特有 - 备用泵和控制箱参数
+    backupPumpModel: gearbox.backupPumpModel || seriesDefaults.backupPumpModel || '2CYA-1.1/0.8D(TS11)',
+    backupPumpFlowRate: gearbox.backupPumpFlowRate || seriesDefaults.backupPumpFlowRate || '1.1',
+    backupPumpPressure: gearbox.backupPumpPressure || seriesDefaults.backupPumpPressure || '0.8',
+    backupPumpMotorPower: gearbox.backupPumpMotorPower || seriesDefaults.backupPumpMotorPower || '0.55',
+    backupPumpMotorVoltage: gearbox.backupPumpMotorVoltage || seriesDefaults.backupPumpMotorVoltage || 'AC380V/50Hz',
+    backupPumpMotorProtection: gearbox.backupPumpMotorProtection || seriesDefaults.backupPumpMotorProtection || 'IP44',
+    backupPumpMotorInsulation: gearbox.backupPumpMotorInsulation || seriesDefaults.backupPumpMotorInsulation || 'F级',
+
+    // GWS系列特有 - 备用泵启停控制参数
+    backupPumpStartPressure: gearbox.backupPumpStartPressure || seriesDefaults.backupPumpStartPressure || '0.03',
+    backupPumpStopPressure: gearbox.backupPumpStopPressure || seriesDefaults.backupPumpStopPressure || '0.4',
+    backupPumpControlBoxFeatures: gearbox.backupPumpControlBoxFeatures || seriesDefaults.backupPumpControlBoxFeatures || '具备自动启停功能',
+
+    // GWS系列特有 - 联轴器扭矩
+    couplingTorque: selectedComponents?.coupling?.torque || '',
+
     // HCT模板特有
     powerArrangement: '柴油机——高弹联轴器——齿轮箱——螺旋桨',
     // 从可编辑信息中获取推进系统配置
@@ -296,6 +313,7 @@ const ensureTitle = (content, templateType) => {
 
   const titleMap = {
     [TemplateType.GWC]: 'GWC系列船用齿轮箱技术协议',
+    [TemplateType.GWS]: 'GWS系列船用齿轮箱技术协议',
     [TemplateType.HCT]: 'HCT系列船用齿轮箱技术协议',
     [TemplateType.HC]: 'HC系列船用齿轮箱技术协议',
     [TemplateType.DT]: 'DT系列船用齿轮箱技术协议',
@@ -478,6 +496,17 @@ const useAgreementGeneration = ({
     setError('');
 
     try {
+      // 必填字段验证
+      const missingFields = [];
+      if (!editableInfo?.shipOwner?.trim()) missingFields.push('船东名称');
+      if (!editableInfo?.engineModel?.trim()) missingFields.push('主机型号');
+      if (!selectedComponents?.gearbox?.model) missingFields.push('齿轮箱型号(请先完成选型)');
+      if (missingFields.length > 0) {
+        setError(`请补充必填信息: ${missingFields.join('、')}`);
+        setLoading(false);
+        return null;
+      }
+
       let generatedAgreement;
 
       if (isBilingual) {

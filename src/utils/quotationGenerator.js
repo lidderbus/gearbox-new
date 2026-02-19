@@ -12,6 +12,17 @@ import { getGWPackagePriceConfig, checkPackageMatch } from '../data/packagePrice
 import { needsStandbyPump } from '../utils/enhancedPumpSelection';
 
 /**
+ * 供方信息配置 — 集中管理，便于维护
+ */
+export const DEFAULT_SELLER_INFO = {
+    name: "上海前进齿轮经营有限公司",
+    address: "上海市浦东新区浦东大道2123号3B-1室",
+    phone: "021-58208956",
+    bank: "中国银行上海市益民支行",
+    account: "452759227880"
+};
+
+/**
  * 生成报价单数据
  * @param {Object} selectionResult - 选型结果对象
  * @param {Object} projectInfo - 项目信息
@@ -131,18 +142,22 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
     const includeCouplingInGearbox = !finalOptions.showCouplingPrice && selectedComponents.coupling;
     const includePumpInGearbox = !finalOptions.showPumpPrice && selectedComponents.pump && effectiveIncludePump;
     
-    // 计算需要包含在齿轮箱价格中的配件价格总和
-    let includedAccessoriesPrice = 0;
-    
+    // 计算需要包含在齿轮箱价格中的配件价格总和（市场价和工厂价分别累计）
+    let includedAccessoriesMarketPrice = 0;
+    let includedAccessoriesFactoryPrice = 0;
+
     if (includeCouplingInGearbox && priceInfo.componentPrices.coupling) {
-        includedAccessoriesPrice += priceInfo.componentPrices.coupling.marketPrice || 0;
+        includedAccessoriesMarketPrice += priceInfo.componentPrices.coupling.marketPrice || 0;
+        includedAccessoriesFactoryPrice += priceInfo.componentPrices.coupling.factoryPrice || priceInfo.componentPrices.coupling.marketPrice || 0;
         console.log("联轴器价格包含在齿轮箱中:", priceInfo.componentPrices.coupling.marketPrice);
     }
-    
+
     if (includePumpInGearbox && priceInfo.componentPrices.pump) {
-        includedAccessoriesPrice += priceInfo.componentPrices.pump.marketPrice || 0;
+        includedAccessoriesMarketPrice += priceInfo.componentPrices.pump.marketPrice || 0;
+        includedAccessoriesFactoryPrice += priceInfo.componentPrices.pump.factoryPrice || priceInfo.componentPrices.pump.marketPrice || 0;
         console.log("备用泵价格包含在齿轮箱中:", priceInfo.componentPrices.pump.marketPrice);
     }
+    const includedAccessoriesPrice = includedAccessoriesMarketPrice; // 向后兼容
     
     // 添加齿轮箱（可能包含配件价格）
     const gearbox = selectedComponents.gearbox;
@@ -164,11 +179,11 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
         gearboxFactoryPrice = typeof gearboxPrices.factoryPrice === 'number' ? gearboxPrices.factoryPrice : 0;
         gearboxPackagePrice = typeof gearboxPrices.packagePrice === 'number' ? gearboxPrices.packagePrice : 0;
         
-        // 如果包含配件价格，则增加齿轮箱价格
-        if (includedAccessoriesPrice > 0) {
-            gearboxMarketPrice += includedAccessoriesPrice;
-            gearboxFactoryPrice += includedAccessoriesPrice * 0.88; // 估算工厂价
-            gearboxPackagePrice += includedAccessoriesPrice * 0.88; // 估算包装价
+        // 如果包含配件价格，使用实际工厂价而非估算系数
+        if (includedAccessoriesMarketPrice > 0) {
+            gearboxMarketPrice += includedAccessoriesMarketPrice;
+            gearboxFactoryPrice += includedAccessoriesFactoryPrice;
+            gearboxPackagePrice += includedAccessoriesFactoryPrice;
         }
     }
     
@@ -335,13 +350,7 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
             phone: projectInfo?.contactPhone || '',
             address: projectInfo?.customerAddress || ''
         },
-        sellerInfo: {
-            name: "上海前进齿轮经营有限公司",
-            address: "上海市浦东新区浦东大道2123号3B-1室",
-            phone: "021-58208956",
-            bank: "中国银行上海市益民支行",
-            account: "452759227880"
-        },
+        sellerInfo: { ...DEFAULT_SELLER_INFO },
         items,
         usingSpecialPackagePrice,
         specialPackageConfig,

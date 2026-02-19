@@ -334,30 +334,35 @@ const useQuotationHandlers = ({
             let factoryPrice = gearbox.factoryPrice || marketPrice * 0.85;
 
             // 检查是否需要将配件价格包含在齿轮箱价格中
-            let includedAccessoriesPrice = 0;
+            let includedAccessoriesMarketPrice = 0;
+            let includedAccessoriesFactoryPrice = 0;
 
             // 检查联轴器是否包含在齿轮箱价格中
             if (updatedQuotation.options?.includeCouplingInGearbox && selectedComponents.coupling) {
-              const couplingPrice = selectedComponents.coupling.marketPrice ||
+              const couplingMarket = selectedComponents.coupling.marketPrice ||
                                    selectedComponents.coupling.factoryPrice * 1.15 || 0;
-              includedAccessoriesPrice += couplingPrice;
-              console.log("更新价格: 联轴器价格包含在齿轮箱中:", couplingPrice);
+              const couplingFactory = selectedComponents.coupling.factoryPrice || couplingMarket * 0.9;
+              includedAccessoriesMarketPrice += couplingMarket;
+              includedAccessoriesFactoryPrice += couplingFactory;
+              console.log("更新价格: 联轴器价格包含在齿轮箱中:", couplingMarket);
             }
 
             // 检查备用泵是否包含在齿轮箱价格中
             if (updatedQuotation.options?.includePumpInGearbox &&
                 updatedQuotation.options?.needsPump &&
                 selectedComponents.pump) {
-              const pumpPrice = selectedComponents.pump.marketPrice ||
+              const pumpMarket = selectedComponents.pump.marketPrice ||
                                selectedComponents.pump.factoryPrice * 1.15 || 0;
-              includedAccessoriesPrice += pumpPrice;
-              console.log("更新价格: 备用泵价格包含在齿轮箱中:", pumpPrice);
+              const pumpFactory = selectedComponents.pump.factoryPrice || pumpMarket * 0.9;
+              includedAccessoriesMarketPrice += pumpMarket;
+              includedAccessoriesFactoryPrice += pumpFactory;
+              console.log("更新价格: 备用泵价格包含在齿轮箱中:", pumpMarket);
             }
 
-            // 将配件价格加到齿轮箱价格中
-            if (includedAccessoriesPrice > 0) {
-              marketPrice += includedAccessoriesPrice;
-              factoryPrice += includedAccessoriesPrice * 0.88; // 估算工厂价
+            // 将配件价格加到齿轮箱价格中（使用实际工厂价）
+            if (includedAccessoriesMarketPrice > 0) {
+              marketPrice += includedAccessoriesMarketPrice;
+              factoryPrice += includedAccessoriesFactoryPrice;
               console.log("更新价格: 齿轮箱含配件总价:", marketPrice);
             }
 
