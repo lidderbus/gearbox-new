@@ -10,3 +10,4 @@ export { default as AnalysisResultPanel } from './AnalysisResultPanel';
 export { default as CriticalSpeedTable } from './CriticalSpeedTable';
 export { default as TorsionalChart } from './TorsionalChart';
 export { default as SmartFixSuggestions } from './SmartFixSuggestions';
+export { default as ModeShapeChart } from './ModeShapeChart';

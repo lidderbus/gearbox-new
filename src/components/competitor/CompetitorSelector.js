@@ -13,6 +13,8 @@ import {
   selectCompetitorProducts,
   formatPrice
 } from '../../utils/competitorAnalysis';
+import { manufacturerColors } from '../../data/competitorData';
+import { FreshnessDot } from './DataFreshnessIndicator';
 
 const CompetitorSelector = ({
   selectedProducts,
@@ -25,6 +27,7 @@ const CompetitorSelector = ({
 }) => {
   const [activeManufacturer, setActiveManufacturer] = useState(null);
   const [selectionMode, setSelectionMode] = useState('browse'); // 'browse' | 'match'
+  const [searchQuery, setSearchQuery] = useState('');
 
   const manufacturers = useMemo(() => getAllManufacturers(), []);
 
@@ -50,13 +53,6 @@ const CompetitorSelector = ({
 
   const isProductSelected = (product) => {
     return selectedProducts.some(p => p.model === product.model);
-  };
-
-  const manufacturerColors = {
-    CZCG: '#dc3545',
-    NGC: '#198754',
-    ZF: '#0d6efd',
-    HANGCHI: '#fd7e14'
   };
 
   return (
@@ -123,9 +119,27 @@ const CompetitorSelector = ({
               </Col>
             </Row>
 
+            {/* 搜索框 */}
+            <Row className="mb-2">
+              <Col>
+                <Form.Control
+                  size="sm"
+                  type="text"
+                  placeholder="搜索型号名称..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </Col>
+            </Row>
+
             {/* 产品列表 */}
             <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-              {productsBySeries.map(group => (
+              {productsBySeries.map(group => ({
+                ...group,
+                products: group.products.filter(p =>
+                  !searchQuery || p.model.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+              })).filter(group => group.products.length > 0).map(group => (
                 <div key={`${group.manufacturer}-${group.series}`} className="mb-3">
                   <div className="d-flex align-items-center mb-2">
                     <Badge
@@ -139,7 +153,7 @@ const CompetitorSelector = ({
                   <ListGroup variant="flush">
                     {group.products.map(product => (
                       <ListGroup.Item
-                        key={product.model}
+                        key={`${product.manufacturer}-${product.model}`}
                         action
                         active={isProductSelected(product)}
                         onClick={() => handleProductToggle(product)}
@@ -155,6 +169,7 @@ const CompetitorSelector = ({
                       >
                         <div>
                           <strong>{product.model}</strong>
+                          <FreshnessDot model={product.model} />
                           <small className="text-muted ms-2">
                             {product.powerRange[0]}-{product.powerRange[1]}kW
                           </small>
@@ -198,7 +213,7 @@ const CompetitorSelector = ({
               <ListGroup variant="flush" style={{ maxHeight: '350px', overflowY: 'auto' }}>
                 {matchedProducts.map(product => (
                   <ListGroup.Item
-                    key={product.model}
+                    key={`${product.manufacturer}-${product.model}`}
                     action
                     active={isProductSelected(product)}
                     onClick={() => handleProductToggle(product)}
@@ -255,7 +270,7 @@ const CompetitorSelector = ({
             <div className="d-flex gap-2 flex-wrap">
               {selectedProducts.map(p => (
                 <Badge
-                  key={p.model}
+                  key={`${p.manufacturer}-${p.model}`}
                   bg="secondary"
                   className="d-flex align-items-center py-2 px-3"
                   style={{ backgroundColor: manufacturerColors[p.manufacturer] }}

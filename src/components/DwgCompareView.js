@@ -5,7 +5,8 @@ import {
 import {
   gearboxDwgDrawings,
   couplingDwgDrawings,
-  getDwgDownloadUrl
+  getDwgDownloadUrl,
+  getShareCADPreviewUrl
 } from '../data/outlineDrawings';
 
 // 尝试导入技术参数数据
@@ -166,8 +167,7 @@ const DwgCompareView = () => {
   const getPreviewUrl = (data, fileIndex) => {
     if (!data || !data.files || !data.files[fileIndex]) return null;
     const file = data.files[fileIndex];
-    const downloadUrl = getDwgDownloadUrl(file.filePath);
-    return `//sharecad.org/cadframe/load?url=${encodeURIComponent(downloadUrl)}`;
+    return getShareCADPreviewUrl(file.filePath);
   };
 
   // 渲染型号选择器

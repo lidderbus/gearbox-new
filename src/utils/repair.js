@@ -276,14 +276,27 @@ export const loadAndRepairData = async (options = {}) => {
     if (storedDataJsonRevised) {
         try {
             storedDataRevised = JSON.parse(storedDataJsonRevised);
+
+            // Detect corrupted coupling torque data (cumulative conversion bug)
+            if (Array.isArray(storedDataRevised?.flexibleCouplings) && storedDataRevised.flexibleCouplings.length > 0) {
+              const firstTorque = storedDataRevised.flexibleCouplings[0]?.torque;
+              if (typeof firstTorque === 'number' && firstTorque < 0.01 && firstTorque > 0) {
+                logger.warn(`repair.js: Detected corrupted coupling torque data (value=${firstTorque}), clearing localStorage to force reload.`);
+                storedDataRevised = null;
+                localStorage.removeItem('appData');
+              }
+            }
+
             // Version compatibility check - clear stale data if version mismatch
-            const storedVersion = storedDataRevised?._version || 0;
-            if (storedVersion < APP_DATA_VERSION) {
+            if (storedDataRevised) {
+              const storedVersion = storedDataRevised?._version || 0;
+              if (storedVersion < APP_DATA_VERSION) {
                 logger.warn(`repair.js: localStorage data version (${storedVersion}) is older than current (${APP_DATA_VERSION}), clearing stale data.`);
                 storedDataRevised = null;
                 localStorage.removeItem('appData');
-            } else {
+              } else {
                 logger.debug(`repair.js: Found localStorage data with version ${storedVersion}.`);
+              }
             }
         } catch (e) {
             logger.warn('repair.js: Failed to parse localStorage data, will discard.', e);
@@ -303,7 +316,7 @@ export const loadAndRepairData = async (options = {}) => {
     // 3. Merge from external gearbox-data.json if available
     // 使用绝对路径确保从任何路由都能正确加载数据
     try {
-      const response = await fetch('/gearbox-app/gearbox-data.json');
+      const response = await fetch('/gearbox-app/gearbox-data.json?v=' + Date.now());
       if (response.ok) {
         const externalData = await response.json();
         logger.debug("repair.js: Successfully loaded external gearbox-data.json");

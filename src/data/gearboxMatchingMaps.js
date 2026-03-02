@@ -1269,7 +1269,25 @@ export const getRecommendedPump = (gearboxModel) => {
     }
   }
 
-  return matchedPump;
+  if (matchedPump) return matchedPump;
+
+  // GW系列前缀归一化：GWH/GWD/GWK/GWL → GWC，复用GWC系列泵映射
+  if (/^GW[DHKL]/.test(gearboxModel)) {
+    const normalizedModel = gearboxModel.replace(/^GW[DHKL]/, 'GWC');
+    if (gearboxToPumpMap[normalizedModel]) {
+      return gearboxToPumpMap[normalizedModel];
+    }
+    // 归一化后也尝试前缀匹配
+    for (const prefix of prefixKeys) {
+      if (normalizedModel.startsWith(prefix) && prefix.length > longestPrefixMatch.length) {
+        longestPrefixMatch = prefix;
+        matchedPump = gearboxToPumpMap[prefix];
+      }
+    }
+    return matchedPump;
+  }
+
+  return null;
 };
 
 /**

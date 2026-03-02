@@ -1,5 +1,6 @@
 // src/components/EnhancedGearboxSelectionResult.js
 import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
+import { toast } from '../utils/toast';
 import { Card, Row, Col, Table, Badge, Button, Tabs, Tab, Alert, Form, ListGroup } from 'react-bootstrap';
 import { ResponsiveContainer, PieChart, Pie, Tooltip, Legend } from 'recharts';
 import { needsStandbyPump } from '../utils/enhancedPumpSelection';
@@ -11,6 +12,12 @@ import { DataCompletenessBadge } from './selection/GearboxScorer';
 import { useIsMobile } from '../hooks/useIsMobile';
 import SwipeableResultCards from './responsive/SwipeableResultCards';
 import { getManualInfo } from '../data/gearboxManuals';
+import { formatPrice } from '../utils/priceFormatter';
+import MarginIndicator from './selection/MarginIndicator';
+import RecommendationReasonCard from './selection/RecommendationReasonCard';
+import CapacityCalculationCard from './selection/CapacityCalculationCard';
+import { exportSelectionSummary } from '../utils/selectionSummaryExport';
+import { calculatePowerRange, extractSeriesFromModel } from '../utils/gearboxDataEnhancer';
 
 // 导入子组件
 import {
@@ -44,6 +51,7 @@ const EnhancedGearboxSelectionResult = ({
   const [activeTab, setActiveTab] = useState('details');
   const [comparisonMode, setComparisonMode] = useState(false);
   const [comparedGearboxes, setComparedGearboxes] = useState([]);
+  const [showLowScore, setShowLowScore] = useState(false);
   const [selectedAccessories, setSelectedAccessories] = useState({
     coupling: null,
     pump: null
@@ -183,7 +191,7 @@ const EnhancedGearboxSelectionResult = ({
       if (comparedGearboxes.length < 4) {
         setComparedGearboxes([...comparedGearboxes, gearbox]);
       } else {
-        alert('最多可以比较4个齿轮箱');
+        toast.warning('最多可以比较4个齿轮箱');
       }
     }
   };
@@ -372,8 +380,43 @@ const EnhancedGearboxSelectionResult = ({
                   seriesType={selectedGearbox.model}
                   style={{ marginBottom: '12px' }}
                 />
+                <RecommendationReasonCard
+                  selectedGearbox={selectedGearbox}
+                  allRecommendations={recommendations}
+                  targetRatio={result.targetRatio}
+                />
+                <CapacityCalculationCard
+                  power={result.enginePower}
+                  speed={result.engineSpeed}
+                  gearboxCapacity={selectedGearbox.selectedCapacity}
+                  workCondition={result.workCondition}
+                />
                 <Table striped bordered style={{ backgroundColor: colors?.card || 'white', color: colors?.text || '#333', borderColor: colors?.border || '#ddd' }}>
                   <tbody>
+                    <tr>
+                      <td>功率范围</td>
+                      <td>
+                        {(() => {
+                          if (selectedGearbox.minPower && selectedGearbox.maxPower)
+                            return `${selectedGearbox.minPower} - ${selectedGearbox.maxPower} kW`;
+                          const pr = calculatePowerRange(
+                            selectedGearbox.transmissionCapacityPerRatio || selectedGearbox.transferCapacity,
+                            selectedGearbox.inputSpeedRange
+                          );
+                          return pr.minPower != null ? `${pr.minPower} - ${pr.maxPower} kW` : '-';
+                        })()}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>转速范围</td>
+                      <td>
+                        {selectedGearbox.minSpeed && selectedGearbox.maxSpeed
+                          ? `${selectedGearbox.minSpeed} - ${selectedGearbox.maxSpeed} r/min`
+                          : Array.isArray(selectedGearbox.inputSpeedRange) && selectedGearbox.inputSpeedRange.length === 2
+                            ? `${selectedGearbox.inputSpeedRange[0]} - ${selectedGearbox.inputSpeedRange[1]} r/min`
+                            : '-'}
+                      </td>
+                    </tr>
                     <tr>
                       <td>传递能力</td>
                       <td>
@@ -401,8 +444,19 @@ const EnhancedGearboxSelectionResult = ({
                         ) : (
                           <Badge bg="success" className="ms-2">合适</Badge>
                         )}
+                        <MarginIndicator margin={selectedGearbox.capacityMargin} />
                       </td>
                     </tr>
+                    {selectedGearbox.capacityMargin !== undefined && selectedGearbox.capacityMargin < 5 && (
+                      <tr>
+                        <td colSpan={2} style={{ padding: 0 }}>
+                          <Alert variant="warning" className="mb-0 py-2" style={{ borderRadius: 0 }}>
+                            <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>余量不足警告：</strong>传递能力余量仅 {selectedGearbox.capacityMargin.toFixed(1)}%，低于5%安全阈值，建议选择更大型号或降低输入功率。
+                          </Alert>
+                        </td>
+                      </tr>
+                    )}
                     <tr>
                       <td>输入转速</td>
                       <td>{result.engineSpeed || selectedGearbox.inputSpeed} r/min</td>
@@ -463,7 +517,7 @@ const EnhancedGearboxSelectionResult = ({
                     </tr>
                     <tr>
                       <td>价格</td>
-                      <td>{(selectedGearbox.marketPrice || 0).toLocaleString()} 元</td>
+                      <td>{formatPrice(selectedGearbox.marketPrice)}</td>
                     </tr>
                     {isPartialMatch && selectedGearbox.failureReason && (
                       <tr className="table-warning">
@@ -477,76 +531,100 @@ const EnhancedGearboxSelectionResult = ({
                 <ValidationWarnings validation={validationResults.gearbox} type="gearbox" />
               </Col>
               <Col md={6}>
-                <h5 style={{ color: colors?.headerText || '#333' }}>其他推荐齿轮箱 ({Math.min(recommendations.length - 1, 10)}/{recommendations.length - 1})</h5>
-                <div className="table-responsive">
-                  <Table striped bordered hover size="sm" style={{ backgroundColor: colors?.card || 'white', color: colors?.text || '#333', borderColor: colors?.border || '#ddd' }}>
-                    <thead>
-                      <tr>
-                        <th>型号</th>
-                        <th>减速比</th>
-                        <th>传递能力</th>
-                        <th>操作</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {recommendations
-                        .map((gearbox, index) => ({ gearbox, index }))
-                        .filter(({ index }) => index !== selectedIndex)
-                        .slice(0, 10)
-                        .map(({ gearbox, index }) => (
-                          <tr key={gearbox.model + index} className={gearbox.isPartialMatch ? 'table-warning' : ''}>
-                            <td>
-                              {gearbox.model}
-                              {gearbox.isPartialMatch && <Badge bg="warning" className="ms-1">部分</Badge>}
-                              <DataCompletenessBadge gearbox={gearbox} className="ms-1" size="sm" />
-                            </td>
-                            <td>
-                              {gearbox.selectedRatio?.toFixed(2) || gearbox.ratio?.toFixed(2) || '-'}
-                              {gearbox.ratioDiffPercent && (
-                                <small className="d-block text-muted">
-                                  偏差: {gearbox.ratioDiffPercent.toFixed(1)}%
-                                </small>
-                              )}
-                            </td>
-                            <td>
-                              {gearbox.selectedCapacity?.toFixed(4) ||
-                               (typeof gearbox.power === 'object'
-                                ? gearbox.power.standard
-                                : gearbox.power || '-')}
-                              {gearbox.capacityMargin && (
-                                <small className="d-block text-muted">
-                                  余量: {gearbox.capacityMargin.toFixed(1)}%
-                                </small>
-                              )}
-                            </td>
-                            <td>
-                              <Button
-                                variant="outline-primary"
-                                size="sm"
-                                onClick={() => onSelectGearbox(index)}
-                                className="me-1"
-                              >
-                                选择
-                              </Button>
-                              {getManualInfo(gearbox.model) && (
-                                <Button
-                                  variant="outline-info"
-                                  size="sm"
-                                  onClick={() => window.open(getManualInfo(gearbox.model).path, '_blank')}
-                                  title={getManualInfo(gearbox.model).title}
-                                >
-                                  <i className="bi bi-file-earmark-pdf"></i>
-                                </Button>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </Table>
-                  {recommendations.length - 1 > 10 && (
-                    <small className="text-muted">显示前10个推荐，共{recommendations.length - 1}个可选型号</small>
-                  )}
-                </div>
+                {(() => {
+                  const others = recommendations
+                    .map((gearbox, index) => ({ gearbox, index }))
+                    .filter(({ index }) => index !== selectedIndex);
+                  const highScore = others.filter(({ gearbox }) => (gearbox.score || 0) >= 60).slice(0, 10);
+                  const lowScore = others.filter(({ gearbox }) => (gearbox.score || 0) < 60).slice(0, 10);
+
+                  const renderRow = ({ gearbox, index }) => (
+                    <tr key={gearbox.model + index} className={gearbox.isPartialMatch ? 'table-warning' : ''}>
+                      <td>
+                        {gearbox.model}
+                        {gearbox.isPartialMatch && <Badge bg="warning" className="ms-1">部分</Badge>}
+                        <DataCompletenessBadge gearbox={gearbox} className="ms-1" size="sm" />
+                      </td>
+                      <td>{gearbox.series || extractSeriesFromModel(gearbox.model)}</td>
+                      <td>
+                        {gearbox.selectedRatio?.toFixed(2) || gearbox.ratio?.toFixed(2) || '-'}
+                        {gearbox.ratioDiffPercent && (
+                          <small className="d-block text-muted">
+                            偏差: {gearbox.ratioDiffPercent.toFixed(1)}%
+                          </small>
+                        )}
+                      </td>
+                      <td>
+                        {gearbox.selectedCapacity?.toFixed(4) ||
+                         (typeof gearbox.power === 'object'
+                          ? gearbox.power.standard
+                          : gearbox.power || '-')}
+                        {gearbox.capacityMargin && (
+                          <small className="d-block text-muted">
+                            余量: {gearbox.capacityMargin.toFixed(1)}%
+                          </small>
+                        )}
+                      </td>
+                      <td>
+                        <Button
+                          variant="outline-primary"
+                          size="sm"
+                          onClick={() => onSelectGearbox(index)}
+                          className="me-1"
+                        >
+                          选择
+                        </Button>
+                        {getManualInfo(gearbox.model) && (
+                          <Button
+                            variant="outline-info"
+                            size="sm"
+                            onClick={() => window.open(getManualInfo(gearbox.model).path, '_blank')}
+                            title={getManualInfo(gearbox.model).title}
+                          >
+                            <i className="bi bi-file-earmark-pdf"></i>
+                          </Button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+
+                  return (
+                    <>
+                      <h5 style={{ color: colors?.headerText || '#333' }}>其他推荐齿轮箱 ({Math.min(recommendations.length - 1, 10)}/{recommendations.length - 1})</h5>
+                      <div className="table-responsive">
+                        <Table striped bordered hover size="sm" style={{ backgroundColor: colors?.card || 'white', color: colors?.text || '#333', borderColor: colors?.border || '#ddd' }}>
+                          <thead>
+                            <tr>
+                              <th>型号</th>
+                              <th>系列</th>
+                              <th>减速比</th>
+                              <th>传递能力</th>
+                              <th>操作</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {highScore.map(renderRow)}
+                            {showLowScore && lowScore.map(renderRow)}
+                          </tbody>
+                        </Table>
+                        {lowScore.length > 0 && (
+                          <Button
+                            variant="outline-secondary"
+                            size="sm"
+                            className="mb-2"
+                            onClick={() => setShowLowScore(!showLowScore)}
+                          >
+                            <i className={`bi bi-chevron-${showLowScore ? 'up' : 'down'} me-1`}></i>
+                            {showLowScore ? '收起低匹配度候选' : `展开 ${lowScore.length} 个低匹配度候选 (评分<60)`}
+                          </Button>
+                        )}
+                        {recommendations.length - 1 > 10 && (
+                          <small className="text-muted d-block">显示前10个推荐，共{recommendations.length - 1}个可选型号</small>
+                        )}
+                      </div>
+                    </>
+                  );
+                })()}
               </Col>
             </Row>
           </Tab>
@@ -623,6 +701,7 @@ const EnhancedGearboxSelectionResult = ({
                 
                 <h6 className="mt-4" style={{ color: colors?.headerText }}>高弹联轴器</h6>
                 {couplingResult && couplingResult.success ? (
+                  <>
                   <ListGroup>
                     <ListGroup.Item style={{ backgroundColor: colors?.card, color: colors?.text, borderColor: colors?.border }}>
                       <div className="d-flex justify-content-between align-items-center">
@@ -637,6 +716,19 @@ const EnhancedGearboxSelectionResult = ({
                       </div>
                     </ListGroup.Item>
                   </ListGroup>
+                  {/* Downgrade suggestion when margin > 50% */}
+                  {couplingResult.torqueMargin > 50 && couplingResult.recommendations?.length > 1 && (() => {
+                    const better = couplingResult.recommendations.find(
+                      c => c.model !== couplingResult.model && c.torqueMargin >= 15 && c.torqueMargin <= 35
+                    );
+                    return better ? (
+                      <Alert variant="info" className="mt-2 mb-0 py-2">
+                        <i className="bi bi-lightbulb me-1"></i>
+                        当前余量 {couplingResult.torqueMargin.toFixed(1)}% 偏高，建议选用 <strong>{better.model}</strong> (余量 {better.torqueMargin.toFixed(1)}%)，更经济适配
+                      </Alert>
+                    ) : null;
+                  })()}
+                  </>
                 ) : (
                   <Alert variant="warning">未找到合适的联轴器</Alert>
                 )}
@@ -677,16 +769,16 @@ const EnhancedGearboxSelectionResult = ({
                       <tbody>
                         <tr>
                           <td width="40%">齿轮箱价格</td>
-                          <td>{(selectedGearbox.marketPrice || 0).toLocaleString()} 元</td>
+                          <td>{formatPrice(selectedGearbox.marketPrice)}</td>
                         </tr>
                         <tr>
                           <td>联轴器价格</td>
-                          <td>{(couplingResult?.marketPrice || 0).toLocaleString()} 元</td>
+                          <td>{formatPrice(couplingResult?.marketPrice)}</td>
                         </tr>
                         {needsPumpFlag && (
                           <tr>
                             <td>备用泵价格</td>
-                            <td>{(pumpResult?.marketPrice || 0).toLocaleString()} 元</td>
+                            <td>{formatPrice(pumpResult?.marketPrice)}</td>
                           </tr>
                         )}
                         <tr className="table-info">
@@ -717,7 +809,7 @@ const EnhancedGearboxSelectionResult = ({
                               label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
                             >
                             </Pie>
-                            <Tooltip formatter={(value) => value.toLocaleString() + ' 元'} />
+                            <Tooltip formatter={(value) => formatPrice(value)} />
                             <Legend />
                           </PieChart>
                         </ResponsiveContainer>
@@ -788,7 +880,35 @@ const EnhancedGearboxSelectionResult = ({
           return null;
         })()}
 
+        {/* Quick navigation to related modules */}
+        <Card className="mt-3 mb-3" style={{ backgroundColor: '#f8f9fa' }}>
+          <Card.Body className="py-2">
+            <small className="text-muted d-block mb-2">快捷导航到相关分析模块:</small>
+            <div className="d-flex flex-wrap gap-2">
+              <Button variant="outline-info" size="sm" onClick={() => { window.location.hash = '#energy'; }}>
+                <i className="bi bi-lightning-charge me-1"></i>能效分析
+              </Button>
+              <Button variant="outline-info" size="sm" onClick={() => { window.location.hash = '#torsional'; }}>
+                <i className="bi bi-activity me-1"></i>扭振分析
+              </Button>
+              <Button variant="outline-info" size="sm" onClick={() => { window.location.hash = '#coupling-selection'; }}>
+                <i className="bi bi-link-45deg me-1"></i>联轴器选型
+              </Button>
+              <Button variant="outline-info" size="sm" onClick={() => { window.location.hash = '#pump-selection'; }}>
+                <i className="bi bi-droplet me-1"></i>备用泵选型
+              </Button>
+            </div>
+          </Card.Body>
+        </Card>
+
         <div className="d-flex justify-content-end mt-4">
+          <Button
+            variant="outline-secondary"
+            onClick={() => exportSelectionSummary(selectedGearbox, result)}
+            className="me-2"
+          >
+            <i className="bi bi-printer me-1"></i> 导出摘要
+          </Button>
           <Button
             variant="outline-primary"
             onClick={onGenerateQuotation}

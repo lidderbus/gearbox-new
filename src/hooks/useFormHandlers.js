@@ -32,7 +32,9 @@ const useFormHandlers = ({
     const optionalNonNeg = ['thrustRequirement', 'temperature'];
 
     if (requiredPos.includes(fieldName)) {
-      if (value === '' || value === null || isNaN(numValue) || numValue <= 0) return 'invalid';
+      // Pristine: empty field shows no validation feedback
+      if (value === '' || value === null || value === undefined || value === 0) return 'valid';
+      if (isNaN(numValue) || numValue <= 0) return 'invalid';
       if ((fieldName === 'enginePower' && numValue > 5000) ||
           (fieldName === 'engineSpeed' && numValue > 3000) ||
           (fieldName === 'targetRatio' && numValue > 20)) return 'warning';
@@ -56,6 +58,14 @@ const useFormHandlers = ({
 
   // 表单整体验证
   const isFormValid = useCallback(() => {
+    // Required fields must have positive values (separate from display validation)
+    const p = parseFloat(engineData.power);
+    const s = parseFloat(engineData.speed);
+    const r = parseFloat(requirementData.targetRatio);
+    if (!p || p <= 0 || !s || s <= 0 || !r || r <= 0) {
+      return { isValid: false, warnings: 0 };
+    }
+
     const states = [
       getFieldValidationState('enginePower', engineData.power),
       getFieldValidationState('engineSpeed', engineData.speed),

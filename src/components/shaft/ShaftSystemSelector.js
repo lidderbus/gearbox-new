@@ -2,6 +2,7 @@
 // 轴系配件选型界面
 
 import React, { useState, useCallback } from 'react';
+import { toast } from '../../utils/toast';
 import { Card, Row, Col, Form, Button, Table, Alert, Badge, Tabs, Tab } from 'react-bootstrap';
 import {
   intermediateBearings,
@@ -60,7 +61,7 @@ const ShaftSystemSelector = ({ colors = {}, theme = 'light', onSystemSelect }) =
   // 估算轴径
   const handleEstimateDiameter = () => {
     if (!power || !speed) {
-      alert('请输入功率和转速');
+      toast.warning('请输入功率和转速');
       return;
     }
     const diameter = estimateShaftDiameter(parseFloat(power), parseFloat(speed));
@@ -140,17 +141,42 @@ const ShaftSystemSelector = ({ colors = {}, theme = 'light', onSystemSelect }) =
         </Card.Header>
         <Card.Body>
           <Row className="mb-3">
-            <Col md={6}>
+            <Col md={4}>
               <Alert variant="info" className="py-2 mb-2">
-                <small><strong>计算轴径:</strong> {calculatedDiameter} mm</small>
+                <small>
+                  <strong>计算轴径</strong><br/>
+                  <span style={{fontSize: '1.2em'}}>{calculatedDiameter} mm</span><br/>
+                  <span className="text-muted">d = C×(P/n)<sup>1/3</sup></span>
+                </small>
               </Alert>
             </Col>
-            <Col md={6}>
+            <Col md={4}>
               <Alert variant="info" className="py-2 mb-2">
-                <small><strong>计算扭矩:</strong> {calculatedTorque} kN.m</small>
+                <small>
+                  <strong>计算扭矩</strong><br/>
+                  <span style={{fontSize: '1.2em'}}>{calculatedTorque} kN.m</span><br/>
+                  <span className="text-muted">T = 9550×P/n</span>
+                </small>
+              </Alert>
+            </Col>
+            <Col md={4}>
+              <Alert variant={parseFloat(calculatedTorque) > 20 ? 'warning' : 'success'} className="py-2 mb-2">
+                <small>
+                  <strong>推荐材料</strong><br/>
+                  <span style={{fontSize: '1.2em'}}>{parseFloat(calculatedTorque) > 50 ? '42CrMo钢' : parseFloat(calculatedTorque) > 20 ? '40Cr钢' : '45号钢'}</span><br/>
+                  <span className="text-muted">{parseFloat(calculatedTorque) > 50 ? 'Rm≥1080MPa' : parseFloat(calculatedTorque) > 20 ? 'Rm≥785MPa' : 'Rm≥600MPa'}</span>
+                </small>
               </Alert>
             </Col>
           </Row>
+          {selectedBearing && calculatedDiameter && (
+            selectedBearing.shaftDiameterRange[0] > calculatedDiameter || selectedBearing.shaftDiameterRange[1] < calculatedDiameter
+          ) && (
+            <Alert variant="warning" className="py-2 mb-2">
+              <i className="bi bi-exclamation-triangle me-2"></i>
+              <small><strong>轴径匹配警告:</strong> 计算轴径 {calculatedDiameter}mm 不在所选轴承 {selectedBearing.model} 适配范围 {selectedBearing.shaftDiameterRange.join('-')}mm 内</small>
+            </Alert>
+          )}
 
           <Table size="sm" bordered>
             <thead>

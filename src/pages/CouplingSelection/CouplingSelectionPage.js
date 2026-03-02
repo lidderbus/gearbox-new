@@ -321,7 +321,7 @@ const CouplingSelectionPage = ({
         {!embedded && (
           <div className="text-center mt-4 text-muted">
             <small>
-              高弹性联轴器智能选型系统 V1.0 |
+              高弹性联轴器智能选型系统 v9.0 |
               数据来源: flexibleCouplings |
               算法: enhancedCouplingSelection
             </small>

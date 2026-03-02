@@ -3,43 +3,59 @@
  * 技术协议外形图选择器组件
  * 支持从外形图库中选择多个外形图，用于技术协议生成
  */
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Modal, Button, Row, Col, ListGroup, Badge, Form, Alert, Card } from 'react-bootstrap';
 import {
   gearboxDwgDrawings,
   couplingDwgDrawings,
-  getShareCADPreviewUrl
-} from '../data/dwgDrawings';
+  getPdfPreviewUrl,
+  getDwgFilesForModel
+} from '../data/outlineDrawings';
 
 /**
- * 根据型号匹配DWG外形图
+ * 根据型号匹配DWG外形图（多级匹配）
+ * 使用统一的 getDwgFilesForModel 做精确+大小写不敏感匹配，
+ * 再补充模糊匹配和系列级回退
  */
 const getDrawingsForModel = (model, type = 'gearbox') => {
   if (!model) return [];
 
+  // 1. 精确匹配 + 大小写不敏感（使用统一函数）
+  const exactResult = getDwgFilesForModel(model, type);
+  if (exactResult.length > 0) return exactResult;
+
   const dataSource = type === 'gearbox' ? gearboxDwgDrawings : couplingDwgDrawings;
   const normalizedModel = model.toUpperCase().trim();
 
-  // 1. 精确匹配
-  if (dataSource[normalizedModel]) {
-    return dataSource[normalizedModel];
-  }
-
   // 2. 去除后缀匹配 (如 HCM400A -> HCM400)
   const baseModel = normalizedModel.replace(/[A-Z]$/, '');
-  if (dataSource[baseModel]) {
-    return dataSource[baseModel];
-  }
+  const baseResult = getDwgFilesForModel(baseModel, type);
+  if (baseResult.length > 0) return baseResult;
 
   // 3. 模糊匹配
   const fuzzyMatches = [];
   Object.keys(dataSource).forEach(key => {
-    if (key.includes(normalizedModel) || normalizedModel.includes(key)) {
+    const upperKey = key.toUpperCase();
+    if (upperKey.includes(normalizedModel) || normalizedModel.includes(upperKey)) {
       fuzzyMatches.push(...dataSource[key]);
     }
   });
+  if (fuzzyMatches.length > 0) return fuzzyMatches;
 
-  return fuzzyMatches;
+  // 4. 系列级回退 — 提取系列前缀，匹配同系列图纸作为参考
+  const seriesMatch = normalizedModel.match(/^([A-Z]+)/);
+  if (seriesMatch) {
+    const series = seriesMatch[1];
+    const seriesDrawings = [];
+    Object.keys(dataSource).forEach(key => {
+      if (key.toUpperCase().startsWith(series)) {
+        dataSource[key].forEach(d => seriesDrawings.push({ ...d, originalModel: key }));
+      }
+    });
+    if (seriesDrawings.length > 0) return seriesDrawings;
+  }
+
+  return [];
 };
 
 /**
@@ -57,6 +73,15 @@ const AgreementDrawingSelector = ({
   const [selectedDrawings, setSelectedDrawings] = useState(() => {
     return initialSelected.map(d => d.filePath || d);
   });
+
+  // 当 modal 打开或 initialSelected 变化时，同步选中状态
+  useEffect(() => {
+    if (show) {
+      setSelectedDrawings(initialSelected.map(d => d.filePath || d));
+      setViewMode('list');
+      setPreviewDrawing(null);
+    }
+  }, [show, initialSelected]);
 
   // 预览的外形图
   const [previewDrawing, setPreviewDrawing] = useState(null);
@@ -77,10 +102,10 @@ const AgreementDrawingSelector = ({
   // 所有可用外形图
   const allDrawings = useMemo(() => {
     return [
-      ...gearboxDrawings.map(d => ({ ...d, type: 'gearbox' })),
-      ...couplingDrawings.map(d => ({ ...d, type: 'coupling' }))
+      ...gearboxDrawings.map(d => ({ ...d, type: 'gearbox', model: gearboxModel })),
+      ...couplingDrawings.map(d => ({ ...d, type: 'coupling', model: couplingModel }))
     ];
-  }, [gearboxDrawings, couplingDrawings]);
+  }, [gearboxDrawings, couplingDrawings, gearboxModel, couplingModel]);
 
   // 检查外形图是否已选中
   const isSelected = useCallback((drawing) => {
@@ -208,7 +233,7 @@ const AgreementDrawingSelector = ({
   const renderPreviewView = () => {
     if (!previewDrawing) return null;
 
-    const previewUrl = getShareCADPreviewUrl(previewDrawing.filePath);
+    const previewUrl = getPdfPreviewUrl(previewDrawing.filePath);
 
     return (
       <div>

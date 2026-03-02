@@ -16,7 +16,8 @@ import {
  */
 const BasicInfoForm = ({
   editableInfo,
-  onInfoChange
+  onInfoChange,
+  templateType
 }) => {
   return (
     <Card className="mb-3">
@@ -96,6 +97,112 @@ const BasicInfoForm = ({
             </Form.Group>
           </Col>
         </Row>
+
+        {/* HCQ模板专属 - 船舶尺寸 */}
+        {templateType === 'HCQ' && (
+          <Row className="mb-3">
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label>船舶总长 (m)</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={editableInfo.shipLength || ''}
+                  onChange={(e) => onInfoChange('shipLength', e.target.value)}
+                  placeholder="如：68.5"
+                />
+              </Form.Group>
+            </Col>
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label>船宽 (m)</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={editableInfo.shipWidth || ''}
+                  onChange={(e) => onInfoChange('shipWidth', e.target.value)}
+                  placeholder="如：12.8"
+                />
+              </Form.Group>
+            </Col>
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label>型深 (m)</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={editableInfo.shipDepth || ''}
+                  onChange={(e) => onInfoChange('shipDepth', e.target.value)}
+                  placeholder="如：5.2"
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+        )}
+
+        {/* GWC模板 - 船舶制造/设计/注册信息 */}
+        {(templateType === 'GWC' || templateType === 'HCQ') && (
+          <Row className="mb-3">
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label>船舶制造单位</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={editableInfo.shipManufacturer || ''}
+                  onChange={(e) => onInfoChange('shipManufacturer', e.target.value)}
+                  placeholder="请输入制造单位"
+                />
+              </Form.Group>
+            </Col>
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label>设计单位</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={editableInfo.shipDesigner || ''}
+                  onChange={(e) => onInfoChange('shipDesigner', e.target.value)}
+                  placeholder="请输入设计单位"
+                />
+              </Form.Group>
+            </Col>
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label>船级社注册号</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={editableInfo.registrationNumber || ''}
+                  onChange={(e) => onInfoChange('registrationNumber', e.target.value)}
+                  placeholder="请输入注册号"
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+        )}
+
+        {/* DT模板 - 协议编号和设计院 */}
+        {templateType === 'DT' && (
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>协议编号</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={editableInfo.agreementNumber || ''}
+                  onChange={(e) => onInfoChange('agreementNumber', e.target.value)}
+                  placeholder="请输入协议编号"
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>设计院（丙方）</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={editableInfo.designInstitute || ''}
+                  onChange={(e) => onInfoChange('designInstitute', e.target.value)}
+                  placeholder="请输入设计院名称"
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+        )}
 
         {/* 船检要求 */}
         <h6 className="text-muted mb-3">
@@ -227,6 +334,37 @@ const BasicInfoForm = ({
             </Form.Group>
           </Col>
         </Row>
+        {/* HCQ - 柴油机制造厂 / GWC - 交货时间 */}
+        {(templateType === 'HCQ' || templateType === 'GWC') && (
+          <Row className="mb-2">
+            {templateType === 'HCQ' && (
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label>柴油机制造厂</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editableInfo.engineManufacturer || ''}
+                    onChange={(e) => onInfoChange('engineManufacturer', e.target.value)}
+                    placeholder="如：潍柴动力"
+                  />
+                </Form.Group>
+              </Col>
+            )}
+            {templateType === 'GWC' && (
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label>交货时间</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editableInfo.deliveryTime || ''}
+                    onChange={(e) => onInfoChange('deliveryTime', e.target.value)}
+                    placeholder="如：合同签订后60天"
+                  />
+                </Form.Group>
+              </Col>
+            )}
+          </Row>
+        )}
       </Card.Body>
     </Card>
   );

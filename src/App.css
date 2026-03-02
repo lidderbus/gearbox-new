@@ -166,15 +166,87 @@
     padding: var(--spacing-md);
     padding-top: 70px;
   }
-  
+
   .app-header h1 {
     font-size: var(--text-2xl);
   }
-  
+
   .selection-form,
   .main-content,
   .result-container {
     padding: var(--spacing-md);
+  }
+}
+
+/* iPhone / Mobile (<768px) */
+@media (max-width: 767px) {
+  .app-container {
+    padding: 8px;
+    padding-top: 56px;
+  }
+
+  .app-header {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .app-header h1 {
+    font-size: 1.2rem;
+  }
+
+  /* 表格全局可滚动 */
+  .table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 卡片/表单间距紧凑 */
+  .selection-form,
+  .main-content,
+  .result-container {
+    padding: 12px;
+  }
+
+  .card {
+    margin-bottom: 8px;
+  }
+
+  /* Bootstrap Row/Col 强制全宽 */
+  .row > [class*="col-md-"],
+  .row > [class*="col-lg-"] {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  /* iOS 安全区 */
+  .App {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+}
+
+/* Tablet responsive (768-1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .comparison-table-container {
+    overflow-x: auto;
+  }
+  .comparison-table {
+    min-width: 600px;
+    font-size: 0.85rem;
+  }
+  .history-toolbar .row {
+    flex-direction: column;
+  }
+  .history-toolbar .col-md-3,
+  .history-toolbar .col-md-2 {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  .pump-section table td:first-child {
+    width: 40%;
+  }
+  .selection-history-manager {
+    max-height: none;
   }
 }
 

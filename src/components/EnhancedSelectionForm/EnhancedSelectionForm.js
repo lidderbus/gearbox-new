@@ -67,13 +67,18 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
     updatePTO,
     updateClassification,
     toggleOutputRequirement,
+    selectAllOutputRequirements,
     addAttachment,
     removeAttachment,
     validateForm,
+    validateField,
     resetForm,
     saveDraft,
     getFormSummary,
-    setIsSubmitting
+    setIsSubmitting,
+    saveToHistory,
+    loadFromHistory,
+    getHistory,
   } = useEnhancedSelectionForm();
 
   // 预览模态框状态
@@ -239,9 +244,13 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
       const result = await submitInquiry(inquiryData);
 
       console.log('询单提交成功:', result);
-      setSubmittedInquiryId(result.inquiryId);
+      const inquiryId = result.inquiryId;
+      setSubmittedInquiryId(inquiryId);
       setSubmitSuccess(true);
       setShowPreview(false);
+
+      // 保存到本地询单历史
+      saveToHistory(inquiryId);
 
       // 清除本地草稿
       localStorage.removeItem('enhancedSelectionFormDraft');
@@ -923,20 +932,45 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
                 {/* 填写进度 */}
                 <div style={{ color: colors.text }}>
                   <h6>填写进度</h6>
-                  <ul style={{ paddingLeft: '20px', color: colors.muted }}>
-                    <li style={{ color: formData.enginePower ? '#28a745' : colors.muted }}>
-                      {formData.enginePower ? '✓' : '○'} 主机功率
-                    </li>
-                    <li style={{ color: formData.engineSpeed ? '#28a745' : colors.muted }}>
-                      {formData.engineSpeed ? '✓' : '○'} 主机转速
-                    </li>
-                    <li style={{ color: formData.ratio ? '#28a745' : colors.muted }}>
-                      {formData.ratio ? '✓' : '○'} 速比
-                    </li>
-                    <li style={{ color: formData.outputRequirements?.length > 0 ? '#28a745' : colors.muted }}>
-                      {formData.outputRequirements?.length > 0 ? '✓' : '○'} 输出要求
-                    </li>
-                  </ul>
+                  {(() => {
+                    const checks = [
+                      { done: !!formData.enginePower, label: '主机功率', required: true },
+                      { done: !!formData.engineSpeed, label: '主机转速', required: true },
+                      { done: !!formData.ratio, label: '速比', required: true },
+                      { done: formData.outputRequirements?.length > 0, label: '输出要求', required: true },
+                      { done: !!formData.customerName, label: '客户名称', required: false },
+                      { done: !!formData.projectName, label: '项目名称', required: false },
+                      { done: !!formData.engineBrand && formData.engineBrand !== '潍柴', label: '主机品牌', required: false },
+                      { done: !!formData.engineModel, label: '主机型号', required: false },
+                    ];
+                    const requiredDone = checks.filter(c => c.required && c.done).length;
+                    const requiredTotal = checks.filter(c => c.required).length;
+                    const totalDone = checks.filter(c => c.done).length;
+                    const pct = Math.round((requiredDone / requiredTotal) * 100);
+                    return (
+                      <>
+                        <div className="mb-2" style={{ fontSize: '0.85em' }}>
+                          <div className="d-flex justify-content-between">
+                            <span>必填 {requiredDone}/{requiredTotal}</span>
+                            <span>{pct}%</span>
+                          </div>
+                          <div style={{ height: 6, backgroundColor: theme === 'dark' ? '#4a5568' : '#e2e8f0', borderRadius: 3, overflow: 'hidden' }}>
+                            <div style={{ height: '100%', width: `${pct}%`, backgroundColor: pct === 100 ? '#28a745' : '#0d6efd', transition: 'width 0.3s' }} />
+                          </div>
+                        </div>
+                        <ul style={{ paddingLeft: '20px', color: colors.muted, fontSize: '0.9em' }}>
+                          {checks.map((c, i) => (
+                            <li key={i} style={{ color: c.done ? '#28a745' : colors.muted }}>
+                              {c.done ? '\u2713' : '\u25CB'} {c.label} {c.required && <span style={{ color: '#dc3545', fontSize: '0.7em' }}>*</span>}
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="text-muted" style={{ fontSize: '0.8em' }}>
+                          总完成度: {totalDone}/{checks.length}
+                        </div>
+                      </>
+                    );
+                  })()}
                 </div>
 
                 {/* 选型结果 */}

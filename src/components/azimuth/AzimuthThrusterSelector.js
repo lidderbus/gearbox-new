@@ -2,7 +2,8 @@
 // 全回转舵桨选型界面
 
 import React, { useState, useCallback } from 'react';
-import { Card, Row, Col, Form, Button, Table, Alert, Badge, Tabs, Tab } from 'react-bootstrap';
+import { toast } from '../../utils/toast';
+import { Card, Row, Col, Form, Button, Table, Alert, Badge, Tabs, Tab, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { azimuthThrusters, slewingDrives, azimuthControlSystems } from '../../data/azimuthThrusterData';
 import {
   selectAzimuthThruster,
@@ -48,10 +49,13 @@ const AzimuthThrusterSelector = ({ colors = {}, theme = 'light', onSystemSelect 
     borderBottom: `1px solid ${colors.border || '#dee2e6'}`
   };
 
+  // 推力计算结果详情
+  const [thrustCalcDetail, setThrustCalcDetail] = useState(null);
+
   // 计算推力需求
   const handleCalculateThrust = () => {
     if (!windArea && !vesselLength) {
-      alert('请输入受风面积或船长');
+      toast.warning('请输入受风面积或船长');
       return;
     }
 
@@ -62,6 +66,8 @@ const AzimuthThrusterSelector = ({ colors = {}, theme = 'light', onSystemSelect 
     });
 
     setThrust(result.totalRequired);
+    setThrustCalcDetail(result);
+    toast.success(`计算完成: 所需推力 ${result.totalRequired} kN`);
   };
 
   // 执行选型
@@ -236,34 +242,52 @@ const AzimuthThrusterSelector = ({ colors = {}, theme = 'light', onSystemSelect 
                       <Form.Control
                         type="number"
                         value={thrust}
-                        onChange={(e) => setThrust(e.target.value)}
+                        onChange={(e) => { setThrust(e.target.value); setThrustCalcDetail(null); }}
                         placeholder="例如: 80"
                       />
                     </Col>
                     <Col xs="auto">
-                      <Button variant="outline-secondary" size="sm" onClick={handleCalculateThrust}>
-                        计算
-                      </Button>
+                      <OverlayTrigger placement="top" overlay={<Tooltip>根据受风面积和设计风速计算风载推力需求</Tooltip>}>
+                        <Button variant="outline-info" size="sm" onClick={handleCalculateThrust}>
+                          <i className="bi bi-calculator me-1"></i>风载计算
+                        </Button>
+                      </OverlayTrigger>
                     </Col>
                   </Row>
+                  {thrustCalcDetail && (
+                    <Alert variant="light" className="mt-2 mb-0 py-1 px-2" style={{fontSize: '0.8em', border: '1px solid #dee2e6'}}>
+                      <strong>计算公式:</strong> F = 0.5 × Cd × ρ × A × V²
+                      <br />
+                      <span className="text-muted">
+                        Cd=1.2(风压系数) | ρ=1.225 kg/m³(空气密度) | A={windArea || '?'} m² | V={windSpeed} m/s
+                      </span>
+                      <br />
+                      <strong>结果: {thrustCalcDetail.totalRequired} kN</strong> (含1.2安全系数)
+                    </Alert>
+                  )}
                 </Form.Group>
 
                 <Form.Group className="mb-3">
                   <Form.Label>系列</Form.Label>
                   <Form.Select value={series} onChange={(e) => setSeries(e.target.value)}>
                     <option value="">全部系列</option>
-                    <option value="ZP">ZP - Z形传动</option>
-                    <option value="LP">LP - L形传动</option>
-                    <option value="EP">EP - 电驱吊舱</option>
+                    <option value="ZP">ZP - Z形传动 (机械传动，高效率)</option>
+                    <option value="LP">LP - L形传动 (紧凑布局，适合受限空间)</option>
+                    <option value="EP">EP - 电驱吊舱 (电力推进，低噪声)</option>
                   </Form.Select>
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>DP等级</Form.Label>
+                  <Form.Label>
+                    DP等级
+                    <OverlayTrigger placement="right" overlay={<Tooltip>DP(动力定位): Basic=常规操纵; DP1=单系统动力定位(IMO Class 1); DP2=冗余系统动力定位(IMO Class 2/3)</Tooltip>}>
+                      <i className="bi bi-question-circle text-muted ms-1" style={{cursor: 'help'}}></i>
+                    </OverlayTrigger>
+                  </Form.Label>
                   <Form.Select value={dpLevel} onChange={(e) => setDpLevel(e.target.value)}>
-                    <option value="Basic">基础型</option>
-                    <option value="DP1">DP1</option>
-                    <option value="DP2">DP2</option>
+                    <option value="Basic">基础型 - 常规操纵</option>
+                    <option value="DP1">DP1 - 单系统定位</option>
+                    <option value="DP2">DP2 - 冗余定位 (IMO Class 2/3)</option>
                   </Form.Select>
                 </Form.Group>
 
@@ -273,23 +297,48 @@ const AzimuthThrusterSelector = ({ colors = {}, theme = 'light', onSystemSelect 
                     <option value="">不限</option>
                     <option value="港作拖轮">港作拖轮</option>
                     <option value="工作船">工作船</option>
-                    <option value="AHTS">AHTS</option>
-                    <option value="OSV">OSV/PSV</option>
-                    <option value="调查船">调查船</option>
+                    <option value="AHTS">AHTS (三用工作船)</option>
+                    <option value="OSV">OSV/PSV (平台供应船)</option>
+                    <option value="调查船">调查船/科考船</option>
                   </Form.Select>
                 </Form.Group>
 
                 <hr />
-                <small className="text-muted">推力计算辅助参数:</small>
+                <small className="text-muted">
+                  <i className="bi bi-wind me-1"></i>推力计算辅助参数 (用于风载推力估算):
+                </small>
 
-                <Form.Group className="mb-2">
+                <Form.Group className="mb-2 mt-2">
                   <Form.Label><small>受风面积 (m²)</small></Form.Label>
-                  <Form.Control size="sm" type="number" value={windArea} onChange={(e) => setWindArea(e.target.value)} />
+                  <Form.Control
+                    size="sm"
+                    type="number"
+                    value={windArea}
+                    onChange={(e) => setWindArea(e.target.value)}
+                    placeholder="拖轮80-200, OSV 300-800, 客船1000+"
+                  />
+                  <Form.Text className="text-muted" style={{fontSize: '0.75em'}}>
+                    典型值: 拖轮 80~200 | 工作船 200~500 | AHTS 300~800
+                  </Form.Text>
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label><small>设计风速 (m/s)</small></Form.Label>
-                  <Form.Control size="sm" type="number" value={windSpeed} onChange={(e) => setWindSpeed(e.target.value)} />
+                  <Form.Label>
+                    <small>设计风速 (m/s)</small>
+                    <OverlayTrigger placement="right" overlay={<Tooltip>依据DNV-ST-0111: DP操作典型设计风速为15-25 m/s (约30-50节)。IMO MSC.1/Circ.1580推荐25.7 m/s作为极端工况。</Tooltip>}>
+                      <i className="bi bi-question-circle text-muted ms-1" style={{cursor: 'help', fontSize: '0.8em'}}></i>
+                    </OverlayTrigger>
+                  </Form.Label>
+                  <Form.Control
+                    size="sm"
+                    type="number"
+                    value={windSpeed}
+                    onChange={(e) => setWindSpeed(e.target.value)}
+                    min={5} max={40}
+                  />
+                  <Form.Text className="text-muted" style={{fontSize: '0.75em'}}>
+                    蒲氏5级≈10 | 6级≈13 | 7级≈17 | 8级≈21 | 9级≈25 m/s
+                  </Form.Text>
                 </Form.Group>
 
                 <div className="d-grid gap-2">

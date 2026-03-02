@@ -85,6 +85,12 @@ const AnalysisResultPanel = ({ result, colors = {}, theme = 'light' }) => {
                     <td className="fw-bold">工作转速:</td>
                     <td>{input?.operatingSpeed || 0} rpm</td>
                   </tr>
+                  {result.gearRatio > 1 && (
+                    <tr>
+                      <td className="fw-bold">输出转速:</td>
+                      <td>{result.outputSpeed?.toFixed(0) || '-'} rpm (i={result.gearRatio}, i²={((result.gearRatio||1)**2).toFixed(2)})</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </Col>
@@ -130,6 +136,9 @@ const AnalysisResultPanel = ({ result, colors = {}, theme = 'light' }) => {
                 criticalSpeeds={criticalSpeeds}
                 operatingSpeed={input?.operatingSpeed || 0}
                 avoidanceChecks={avoidanceChecks}
+                naturalFrequencyHz={naturalFrequency ? parseFloat(naturalFrequency.frequency) : 0}
+                gearRatio={result.gearRatio || 1}
+                barredSpeedRanges={result.barredSpeedRanges || []}
                 colors={colors}
                 theme={theme}
               />

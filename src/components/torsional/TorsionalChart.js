@@ -1,184 +1,195 @@
 /**
- * 扭振分析图表组件
- * 使用Recharts绘制临界转速柱状图和工作转速参考线
+ * Campbell图组件 — 交互式ECharts实现
+ *
+ * X轴=转速(rpm), Y轴=频率(Hz)
+ * 对角线=各阶激励频率线, 水平线=固有频率
+ * 红点=共振交叉点, 黄色竖线=工作转速
+ * 危险区间半透明红色阴影
  */
 import React, { useMemo } from 'react';
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ReferenceLine,
-  ReferenceArea,
-  Cell
-} from 'recharts';
+import ReactECharts from 'echarts-for-react';
 
 const TorsionalChart = ({
   criticalSpeeds = [],
   operatingSpeed = 0,
   avoidanceChecks = [],
+  naturalFrequencyHz = 0,
+  gearRatio = 1,
+  barredSpeedRanges = [],
   colors = {},
   theme = 'light'
 }) => {
-  // 准备图表数据
-  const chartData = useMemo(() => {
-    return criticalSpeeds.map((cs, index) => {
-      const check = avoidanceChecks[index] || {};
+  const option = useMemo(() => {
+    // 从criticalSpeeds提取固有频率
+    const fn = naturalFrequencyHz || (criticalSpeeds[0]
+      ? criticalSpeeds[0].criticalSpeed * criticalSpeeds[0].order / 60
+      : 0);
+
+    if (!fn || fn <= 0) return null;
+
+    // 输出转速(用于X轴范围)
+    const outputSpeed = gearRatio > 1 ? operatingSpeed / gearRatio : operatingSpeed;
+    const maxSpeed = Math.max(outputSpeed * 1.6, 1500);
+    const speedStep = 25;
+
+    // 激励阶次
+    const orders = [...new Set(criticalSpeeds.map(cs => cs.order))].sort((a, b) => a - b);
+    const maxFreq = fn * 1.8;
+
+    // 颜色
+    const isDark = theme === 'dark';
+    const textColor = isDark ? '#e0e0e0' : '#333';
+    const gridColor = isDark ? '#444' : '#e0e0e0';
+    const orderColors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'];
+
+    // 生成激励线数据
+    const excitationSeries = orders.map((order, idx) => {
+      const data = [];
+      for (let spd = 0; spd <= maxSpeed; spd += speedStep) {
+        const freq = order * spd / 60;
+        if (freq <= maxFreq) data.push([spd, freq]);
+      }
       return {
-        name: `${cs.order}阶`,
-        order: cs.order,
-        criticalSpeed: cs.criticalSpeed,
-        lowerLimit: check.lowerLimit || cs.criticalSpeed * 0.8,
-        upperLimit: check.upperLimit || cs.criticalSpeed * 1.2,
-        inDangerZone: check.inDangerZone || false
+        name: `${order}阶激励`,
+        type: 'line',
+        data,
+        lineStyle: { width: 2, color: orderColors[idx % orderColors.length] },
+        symbol: 'none',
+        z: 2
       };
     });
-  }, [criticalSpeeds, avoidanceChecks]);
 
-  // 计算Y轴范围
-  const yAxisMax = useMemo(() => {
-    const maxSpeed = Math.max(
-      operatingSpeed,
-      ...chartData.map(d => d.criticalSpeed)
-    );
-    return Math.ceil(maxSpeed * 1.2 / 500) * 500;
-  }, [chartData, operatingSpeed]);
+    // 固有频率水平线
+    const fnLine = {
+      name: `fn = ${fn.toFixed(1)} Hz`,
+      type: 'line',
+      data: [[0, fn], [maxSpeed, fn]],
+      lineStyle: { width: 2.5, color: '#ef4444', type: 'solid' },
+      symbol: 'none',
+      z: 3
+    };
 
-  // 自定义Tooltip
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div
-          style={{
-            backgroundColor: theme === 'light' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(33, 33, 33, 0.95)',
-            border: `1px solid ${colors.border || '#ccc'}`,
-            padding: '10px',
-            borderRadius: '5px',
-            boxShadow: '0 2px 5px rgba(0,0,0,0.15)'
-          }}
-        >
-          <p style={{ color: colors.text, fontWeight: 'bold', margin: '0 0 5px 0' }}>
-            {label}激励
-          </p>
-          <p style={{ color: '#8884d8', margin: '2px 0' }}>
-            临界转速: {data.criticalSpeed} rpm
-          </p>
-          <p style={{ color: '#82ca9d', margin: '2px 0' }}>
-            危险区间: {data.lowerLimit} ~ {data.upperLimit} rpm
-          </p>
-          {data.inDangerZone && (
-            <p style={{ color: '#ff4444', fontWeight: 'bold', margin: '5px 0 0 0' }}>
-              工作转速在共振区间内!
-            </p>
-          )}
-        </div>
-      );
-    }
-    return null;
-  };
+    // 共振交叉点
+    const intersections = criticalSpeeds.map(cs => {
+      const check = avoidanceChecks.find(a => a.order === cs.order);
+      return {
+        value: [cs.criticalSpeed, fn],
+        order: cs.order,
+        inDanger: check?.inDangerZone || false
+      };
+    }).filter(p => p.value[0] > 0 && p.value[0] <= maxSpeed);
 
-  if (!chartData || chartData.length === 0) {
+    const intersectionSeries = {
+      name: '共振点',
+      type: 'scatter',
+      data: intersections.map(p => ({
+        value: p.value,
+        itemStyle: { color: p.inDanger ? '#ef4444' : '#f59e0b' }
+      })),
+      symbolSize: 12,
+      z: 10,
+      label: {
+        show: true,
+        formatter: (p) => {
+          const pt = intersections[p.dataIndex];
+          return pt ? `${pt.order}阶\n${Math.round(pt.value[0])}rpm` : '';
+        },
+        position: 'top',
+        fontSize: 10,
+        color: textColor
+      }
+    };
+
+    // 危险区间(barredSpeedRanges)阴影
+    const markAreas = barredSpeedRanges.map(range => ([
+      { xAxis: range.min, itemStyle: { color: 'rgba(239,68,68,0.12)' } },
+      { xAxis: range.max }
+    ]));
+
+    // 工作转速竖线
+    const workingSpeedLine = {
+      name: `工作转速`,
+      type: 'line',
+      data: [[outputSpeed, 0], [outputSpeed, maxFreq]],
+      lineStyle: { width: 2.5, color: '#fbbf24', type: 'dashed' },
+      symbol: 'none',
+      z: 5,
+      markArea: markAreas.length > 0 ? { silent: true, data: markAreas } : undefined
+    };
+
+    return {
+      backgroundColor: 'transparent',
+      title: {
+        text: 'Campbell 图',
+        subtext: `固有频率 fn = ${fn.toFixed(2)} Hz | 工作转速 ${Math.round(outputSpeed)} rpm`,
+        left: 'center',
+        textStyle: { color: textColor, fontSize: 14 },
+        subtextStyle: { color: isDark ? '#aaa' : '#666', fontSize: 11 }
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: (p) => {
+          if (p.seriesType === 'scatter') {
+            return `<b>共振点</b><br/>转速: ${Math.round(p.value[0])} rpm<br/>频率: ${p.value[1].toFixed(1)} Hz`;
+          }
+          if (p.seriesType === 'line' && p.value) {
+            return `${p.seriesName}<br/>转速: ${Math.round(p.value[0])} rpm<br/>频率: ${p.value[1].toFixed(1)} Hz`;
+          }
+          return '';
+        }
+      },
+      legend: {
+        data: [...excitationSeries.map(s => s.name), fnLine.name, '共振点'],
+        bottom: 0,
+        textStyle: { color: textColor, fontSize: 10 },
+        itemWidth: 16, itemHeight: 8
+      },
+      grid: { left: 60, right: 30, top: 65, bottom: 50 },
+      xAxis: {
+        type: 'value',
+        name: '转速 (rpm)',
+        nameLocation: 'middle',
+        nameGap: 28,
+        min: 0, max: maxSpeed,
+        axisLabel: { color: textColor },
+        axisLine: { lineStyle: { color: gridColor } },
+        splitLine: { lineStyle: { color: gridColor, type: 'dashed' } }
+      },
+      yAxis: {
+        type: 'value',
+        name: '频率 (Hz)',
+        nameLocation: 'middle',
+        nameGap: 45,
+        min: 0, max: Math.ceil(maxFreq / 10) * 10,
+        axisLabel: { color: textColor },
+        axisLine: { lineStyle: { color: gridColor } },
+        splitLine: { lineStyle: { color: gridColor, type: 'dashed' } }
+      },
+      series: [
+        ...excitationSeries,
+        fnLine,
+        intersectionSeries,
+        workingSpeedLine
+      ]
+    };
+  }, [criticalSpeeds, operatingSpeed, avoidanceChecks, naturalFrequencyHz, gearRatio, barredSpeedRanges, theme, colors]);
+
+  if (!option) {
     return (
       <div className="text-muted text-center py-5">
-        暂无图表数据
+        暂无图表数据，请先执行分析
       </div>
     );
   }
 
   return (
-    <div className="torsional-chart">
-      <h6 className="mb-2" style={{ color: colors.headerText || colors.text }}>
-        临界转速分布图
-      </h6>
-
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart
-          data={chartData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke={theme === 'dark' ? '#444' : '#eee'}
-          />
-          <XAxis
-            dataKey="name"
-            tick={{ fill: colors.text || '#666' }}
-            axisLine={{ stroke: colors.border || '#ccc' }}
-          />
-          <YAxis
-            domain={[0, yAxisMax]}
-            tick={{ fill: colors.text || '#666' }}
-            axisLine={{ stroke: colors.border || '#ccc' }}
-            label={{
-              value: '转速 (rpm)',
-              angle: -90,
-              position: 'insideLeft',
-              fill: colors.text || '#666'
-            }}
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Legend />
-
-          {/* 临界转速柱状图 */}
-          <Bar
-            dataKey="criticalSpeed"
-            name="临界转速"
-            radius={[4, 4, 0, 0]}
-          >
-            {chartData.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={entry.inDangerZone ? '#ff4444' : '#8884d8'}
-              />
-            ))}
-          </Bar>
-
-          {/* 工作转速参考线 */}
-          <ReferenceLine
-            y={operatingSpeed}
-            stroke="#ff7300"
-            strokeWidth={2}
-            strokeDasharray="5 5"
-            label={{
-              value: `工作转速 ${operatingSpeed} rpm`,
-              position: 'right',
-              fill: '#ff7300',
-              fontSize: 12
-            }}
-          />
-
-          {/* 危险区间参考区域 (显示0.8倍和1.2倍区间) */}
-          <ReferenceLine
-            y={operatingSpeed * 0.8}
-            stroke="#28a745"
-            strokeDasharray="3 3"
-            strokeOpacity={0.5}
-          />
-          <ReferenceLine
-            y={operatingSpeed * 1.2}
-            stroke="#28a745"
-            strokeDasharray="3 3"
-            strokeOpacity={0.5}
-          />
-        </BarChart>
-      </ResponsiveContainer>
-
-      <div className="d-flex justify-content-center gap-4 mt-2">
-        <small className="text-muted">
-          <span style={{ color: '#8884d8' }}>■</span> 临界转速 (安全)
-        </small>
-        <small className="text-muted">
-          <span style={{ color: '#ff4444' }}>■</span> 临界转速 (危险)
-        </small>
-        <small className="text-muted">
-          <span style={{ color: '#ff7300' }}>━</span> 工作转速
-        </small>
-      </div>
+    <div className="torsional-campbell-chart">
+      <ReactECharts
+        option={option}
+        style={{ height: 380, width: '100%' }}
+        theme={theme === 'dark' ? 'dark' : undefined}
+        notMerge={true}
+      />
     </div>
   );
 };

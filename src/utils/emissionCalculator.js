@@ -358,7 +358,9 @@ export const compareFuelEmissions = (power, hours) => {
       name: CARBON_FACTORS[fuelType]?.name || fuelType,
       fuelConsumption: Math.round(fuel * 10) / 10 + ' t',
       co2: emissions.emissions.CO2.value + ' t',
+      nox: emissions.emissions.NOx.value + ' t',
       sox: emissions.emissions.SOx.value + ' t',
+      pm: emissions.emissions.PM.value + ' t',
       fuelCost: Math.round(fuel * (FUEL_PRICES[fuelType] || 700)) + ' USD',
       carbonCost: Math.round(emissions.emissions.CO2.value * CARBON_PRICES.euETS) + ' USD'
     };

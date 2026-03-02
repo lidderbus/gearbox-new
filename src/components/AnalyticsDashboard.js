@@ -25,8 +25,14 @@ const EVENT_LABELS = {
  * 简单的柱状图组件 (纯CSS实现)
  */
 const SimpleBarChart = ({ data, maxHeight = 120 }) => {
-  if (!data || data.length === 0) {
-    return <div className="text-muted text-center py-4">暂无数据</div>;
+  if (!data || data.length === 0 || data.every(d => d.count === 0)) {
+    return (
+      <div className="text-muted text-center py-4">
+        <i className="bi bi-graph-up d-block mb-2" style={{ fontSize: '2rem', opacity: 0.4 }}></i>
+        <div>开始使用系统后将自动记录使用数据</div>
+        <small>切换页面、完成选型、生成报价等操作都会被记录</small>
+      </div>
+    );
   }
 
   const maxCount = Math.max(...data.map(d => d.count), 1);
@@ -294,17 +300,13 @@ const AnalyticsDashboard = () => {
             </Card.Header>
             <Card.Body>
               <Row>
-                <Col xs={4}>
+                <Col xs={6}>
                   <small className="text-muted d-block">设备类型</small>
                   <span>{summary.device?.isMobile ? '移动端' : '桌面端'}</span>
                 </Col>
-                <Col xs={4}>
+                <Col xs={6}>
                   <small className="text-muted d-block">浏览器</small>
                   <span>{summary.device?.browser || '未知'}</span>
-                </Col>
-                <Col xs={4}>
-                  <small className="text-muted d-block">屏幕分辨率</small>
-                  <span>{summary.device?.screen || '未知'}</span>
                 </Col>
               </Row>
             </Card.Body>

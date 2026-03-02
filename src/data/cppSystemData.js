@@ -530,7 +530,7 @@ export const cppGearboxes = [
     weight: 5200,
     oilDistributorMount: "front",
     ptoOutput: { position: "top", maxPower: 2750, speed: 1500, ratio: "1:1" },
-    applicablePropellers: ["HS080", "HI-710"],
+    applicablePropellers: ["HS-080", "HI-710"],
     dimensions: "待补充",
     oilCapacity: 400,
     centerDistance: 668,
@@ -795,7 +795,7 @@ export const cppGearboxes = [
     weight: 6500,
     oilDistributorMount: "front",
     ptoOutput: { position: "top", maxPower: 350, speed: "1:1" },
-    applicablePropellers: ["HI-710", "HF-710", "HS080"],
+    applicablePropellers: ["HI-710", "HF-710", "HS-080"],
     dimensions: "1600x1750x2000",
     oilCapacity: 500,
     basePrice: 980000,
@@ -920,7 +920,7 @@ export const cppGearboxes = [
     thrust: 280,
     weight: 8500,
     oilDistributorMount: "front",
-    applicablePropellers: ["HI-710", "HF-710", "HS080"],
+    applicablePropellers: ["HI-710", "HF-710", "HS-080"],
     dimensions: "1800x1900x2200",
     oilCapacity: 600,
     basePrice: 1200000,
@@ -1818,9 +1818,9 @@ export const cppPropellers = [
     notes: "CCS船级社认证，中功率高速船，不锈钢材料"
   },
 
-  // === HS080 - 重载型桨毂 (4500方耙吸船专用) ===
+  // === HS-080 - 重载型桨毂 (4500方耙吸船专用) ===
   {
-    model: "HS080",
+    model: "HS-080",
     series: "HS",
     type: "heavy-duty-hub",
     description: "重载型可调桨桨毂，适用于大型挖泥船",
@@ -1867,7 +1867,7 @@ export const cppPropellers = [
     // CCS认证
     classification: {
       society: "CCS",
-      certificate: "MC2024-HS080",
+      certificate: "MC2024-HS-080",
       iceClass: "IC",
       valid: "2027-12-31"
     },
@@ -1937,7 +1937,7 @@ export const oilDistributors = [
   {
     model: "OD-660",
     alias: "HOD160",  // Parker内部型号
-    description: "大型配油器，适用于GCS660/HS080系统",
+    description: "大型配油器，适用于GCS660/HS-080系统",
     applicableGearboxes: ["GCS660"],
     maxPressure: 9,   // MPa (90bar)
     pressureBar: 90,  // bar，保留原值供参考

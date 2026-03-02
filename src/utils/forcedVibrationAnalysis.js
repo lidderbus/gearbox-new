@@ -107,41 +107,41 @@ export const PROPELLER_HARMONIC_COEFFICIENTS = {
 };
 
 // ============================================================
-// 许用应力计算（CCS规范）
+// 许用应力计算（IACS UR M68 术语: T1=连续, T2=瞬态）
 // ============================================================
 
 /**
  * 计算轴的许用扭振应力
- * 基于中国船级社《钢质海船入级规范》
+ * T1 = 持续运行许用应力 (continuous)
+ * T2 = T1 × 1.7 瞬态许用应力 (transient) — IACS UR M68
  *
  * @param {string} shaftType - 轴类型 ('intermediate' | 'propeller')
  * @param {number} tensileStrength - 抗拉强度 Rm (MPa)
- * @param {string} operatingCondition - 运行条件 ('continuous' | 'transient')
+ * @param {string} operatingCondition - 运行条件 ('continuous'=T1 | 'transient'=T2)
  * @returns {number} 许用应力 (N/mm²)
  */
 export function calculateAllowableStress(shaftType, tensileStrength, operatingCondition = 'continuous') {
   const Rm = tensileStrength;
-  let tau_c; // 持续许用应力
+  let T1; // 持续许用应力
 
   if (shaftType === 'intermediate') {
-    // 中间轴: τ_c = 18 + Rm/36
-    tau_c = 18 + Rm / 36;
+    // 中间轴: T1 = 18 + Rm/36
+    T1 = 18 + Rm / 36;
   } else if (shaftType === 'propeller') {
-    // 螺旋桨轴: τ_c = 18 × √(560/(Rm+160)) + Rm/48
-    tau_c = 18 * Math.sqrt(560 / (Rm + 160)) + Rm / 48;
+    // 螺旋桨轴: T1 = 18 × √(560/(Rm+160)) + Rm/48
+    T1 = 18 * Math.sqrt(560 / (Rm + 160)) + Rm / 48;
   } else {
-    // 默认使用中间轴公式
-    tau_c = 18 + Rm / 36;
+    T1 = 18 + Rm / 36;
   }
 
-  // 瞬时许用应力系数
-  const transientFactor = 1.7;
+  // T2 = T1 × 1.7 (IACS UR M68)
+  const TRANSIENT_FACTOR = 1.7;
 
   if (operatingCondition === 'transient') {
-    return tau_c * transientFactor;
+    return T1 * TRANSIENT_FACTOR;
   }
 
-  return tau_c;
+  return T1;
 }
 
 /**
@@ -478,12 +478,16 @@ export function runForcedVibrationAnalysis(systemInput, freeVibrationResults) {
   // 验证结果
   const verification = verifyResults(combinedResults, allowableStress, speedRange);
 
+  // 识别禁止转速区间 (Barred Speed Ranges)
+  const barredSpeedRanges = identifyBarredSpeedRanges(combinedResults, allowableStress, speedStep);
+
   return {
     combinedResults,
     allowableStress,
     chartData,
     verification,
     excitationOrders,
+    barredSpeedRanges,
     timestamp: new Date().toISOString()
   };
 }
@@ -930,29 +934,143 @@ function verifyResults(combinedResults, allowableStress, speedRange) {
 }
 
 // ============================================================
+// T1/T2 许用应力 (IACS UR M68 术语)
+// ============================================================
+
+/**
+ * 计算T1 (连续许用应力) 和 T2 (瞬态许用应力)
+ * 对齐 IACS UR M68 标准术语:
+ *   T1 = τ_c (continuous allowable)
+ *   T2 = T1 × 1.7 (transient allowable)
+ *
+ * @param {string} shaftType - 'intermediate' | 'propeller'
+ * @param {number} tensileStrength - Rm (MPa)
+ * @returns {{ T1: number, T2: number }}
+ */
+export function calculateT1T2(shaftType, tensileStrength) {
+  const T1 = calculateAllowableStress(shaftType, tensileStrength, 'continuous');
+  const T2 = T1 * 1.7;
+  return { T1, T2 };
+}
+
+// ============================================================
+// 禁止转速区间识别
+// ============================================================
+
+/**
+ * 扫描全转速范围，找出应力超过T1的转速区间
+ *
+ * @param {Object[]} combinedResults - runForcedVibrationAnalysis().combinedResults
+ * @param {Object} allowableStress - 许用应力
+ * @param {string} shaftKey - 'intermediateShaftStress' | 'propellerShaftStress'
+ * @param {number} allowableValue - T1许用值
+ * @returns {Array<{start: number, end: number, maxStress: number}>}
+ */
+/**
+ * 识别禁止转速区间 (Barred Speed Ranges)
+ * 扫描全转速范围，找出应力超过T1的转速区间
+ *
+ * @param {Object[]} combinedResults - 各转速点分析结果
+ * @param {Object} allowableStress - 许用应力 {intermediateShaft:{continuous}, propellerShaft:{continuous}}
+ * @param {number} speedStep - 转速步长(用于区间扩展)
+ * @returns {Object[]} barredSpeedRanges [{min, max, shaftType, maxStress}]
+ */
+export function identifyBarredSpeedRanges(combinedResults, allowableStress, speedStep = 10) {
+  if (!combinedResults || !allowableStress) return [];
+  const ranges = [];
+  let currentRange = null;
+
+  for (const result of combinedResults) {
+    const intLimit = allowableStress.intermediateShaft?.continuous || 999;
+    const propLimit = allowableStress.propellerShaft?.continuous || 999;
+    const intExceeded = (result.intermediateShaftStress || 0) > intLimit;
+    const propExceeded = (result.propellerShaftStress || 0) > propLimit;
+    const exceeded = intExceeded || propExceeded;
+
+    if (exceeded && !currentRange) {
+      currentRange = {
+        min: Math.max(result.speed - speedStep, 0),
+        max: result.speed,
+        shaftType: intExceeded ? 'intermediate' : 'propeller',
+        maxStress: Math.max(result.intermediateShaftStress || 0, result.propellerShaftStress || 0)
+      };
+    } else if (exceeded && currentRange) {
+      currentRange.max = result.speed;
+      currentRange.maxStress = Math.max(currentRange.maxStress,
+        result.intermediateShaftStress || 0, result.propellerShaftStress || 0);
+    } else if (!exceeded && currentRange) {
+      currentRange.max += speedStep;
+      ranges.push(currentRange);
+      currentRange = null;
+    }
+  }
+  if (currentRange) ranges.push(currentRange);
+  return ranges;
+}
+
+// ============================================================
+// 螺旋桨阻尼计算
+// ============================================================
+
+/**
+ * Archer法螺旋桨阻尼
+ * dp = P / (2π × n²)
+ *
+ * @param {number} power - 功率 (kW)
+ * @param {number} speed - 转速 (rpm)
+ * @returns {number} 阻尼系数 (N·m·s/rad)
+ */
+export function calculatePropellerDampingArcher(power, speed) {
+  if (speed <= 0) return 0;
+  const P_watts = power * 1000;
+  const n_rps = speed / 60;
+  return P_watts / (2 * Math.PI * n_rps * n_rps);
+}
+
+/**
+ * Schwaneke经验法螺旋桨阻尼
+ * dp = 0.6 × P / (2π × n²)  (经验修正系数0.6)
+ *
+ * @param {number} power - 功率 (kW)
+ * @param {number} speed - 转速 (rpm)
+ * @returns {number} 阻尼系数 (N·m·s/rad)
+ */
+export function calculatePropellerDampingSchwaneke(power, speed) {
+  return 0.6 * calculatePropellerDampingArcher(power, speed);
+}
+
+/**
+ * 计算螺旋桨阻尼 (统一入口)
+ * @param {number} power - 功率 (kW)
+ * @param {number} speed - 转速 (rpm)
+ * @param {'Archer'|'Schwaneke'} method - 计算方法
+ * @returns {number} 阻尼系数
+ */
+export function calculatePropellerDamping(power, speed, method = 'Archer') {
+  if (method === 'Schwaneke') return calculatePropellerDampingSchwaneke(power, speed);
+  return calculatePropellerDampingArcher(power, speed);
+}
+
+// ============================================================
 // 导出
 // ============================================================
 
 export default {
-  // 激励系数数据
   DIESEL_HARMONIC_COEFFICIENTS,
   ELECTRIC_MOTOR_HARMONICS,
   PROPELLER_HARMONIC_COEFFICIENTS,
-
-  // 许用应力
   calculateAllowableStress,
   calculateAllAllowableStresses,
-
-  // 激励扭矩
+  calculateT1T2,
   calculateDieselExcitationTorque,
   calculateElectricExcitationTorque,
   calculatePropellerExcitationTorque,
-
-  // 强迫响应
   calculateForcedResponse,
   calculateTorsionalStress,
   calculateStressFromAmplitude,
-
-  // 完整分析
-  runForcedVibrationAnalysis
+  runForcedVibrationAnalysis,
+  identifyBarredSpeedRanges,
+  calculatePropellerDamping,
+  calculatePropellerDampingArcher,
+  calculatePropellerDampingSchwaneke
 };

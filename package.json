@@ -1,8 +1,14 @@
 {
   "name": "gearbox-selection-system",
-  "version": "1.0.0",
+  "version": "9.0.0",
   "private": true,
-  "homepage": "/gearbox-app",
+  "main": "build/electron.js",
+  "homepage": "/gearbox-app/",
+  "author": {
+    "name": "Gearbox Selection",
+    "email": "support@gearbox.example.com"
+  },
+  "description": "齿轮箱选型系统 - 专业齿轮箱产品选型工具",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -22,6 +28,7 @@
     "echarts": "^6.0.0",
     "echarts-for-react": "^3.0.5",
     "file-saver": "2.0.5",
+    "fuse.js": "^7.1.0",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.3",
     "jspdf": "2.5.1",
@@ -48,7 +55,50 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "electron:build": "npm run build && electron-builder --win",
+    "electron:build:mac": "npm run build && electron-builder --mac",
+    "electron:build:all": "npm run build && electron-builder --win --mac"
+  },
+  "build": {
+    "appId": "com.gearbox.selector",
+    "productName": "齿轮箱选型系统",
+    "copyright": "Copyright © 2024 Gearbox Selection",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/logo512.png",
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "齿轮箱选型系统",
+      "language": "2052"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "build/logo512.png",
+      "category": "public.app-category.productivity"
+    }
   },
   "eslintConfig": {
     "extends": [
@@ -75,6 +125,8 @@
     "@types/papaparse": "^5.3.15",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8",
     "playwright": "^1.57.0",
     "source-map-explorer": "^2.5.3",
     "typescript": "^5.9.3",

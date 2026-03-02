@@ -533,72 +533,68 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
  * @returns {string} 中文大写金额
  */
 export function numberToChinese(n) {
-    if (typeof n !== 'number') {
+    if (typeof n !== 'number' || isNaN(n)) {
         return '零元整';
     }
-    
-    const fraction = ['角', '分'];
+
     const digit = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
-    const unit = [
-        ['元', '万', '亿'],
-        ['', '拾', '佰', '仟']
-    ];
-    
     const head = n < 0 ? '负' : '';
     n = Math.abs(n);
-    
-    let s = '';
-    
-    // 处理小数部分
-    const decimalPart = Math.floor(n * 100 % 100);
+
+    // 处理小数部分（角/分）
+    let decimalStr = '';
+    const decimalPart = Math.round(n * 100) % 100;
     if (decimalPart > 0) {
-        const decimalStr = decimalPart.toString().padStart(2, '0');
-        s += digit[parseInt(decimalStr[0])] + fraction[0];
-        if (decimalStr[1] !== '0') {
-            s += digit[parseInt(decimalStr[1])] + fraction[1];
-        }
+        const jiao = Math.floor(decimalPart / 10);
+        const fen = decimalPart % 10;
+        if (jiao > 0) decimalStr += digit[jiao] + '角';
+        if (fen > 0) decimalStr += digit[fen] + '分';
     } else {
-        s = '整';
+        decimalStr = '整';
     }
-    
+
     // 处理整数部分
     const integerPart = Math.floor(n);
-    if (integerPart > 0) {
-        let integerStr = integerPart.toString();
-        const length = integerStr.length;
-        
-        for (let i = 0; i < length; i++) {
-            const pos = length - i - 1;
-            const unitPos = pos % 4;
-            const currDigit = parseInt(integerStr[i]);
-            
-            if (currDigit !== 0) {
-                if (i > 0 && integerStr[i-1] === '0') {
-                    s = '零' + s;
-                }
-                s = digit[currDigit] + unit[1][unitPos] + s;
-            } else {
-                if (unitPos === 0 && pos > 0) {
-                    // 处理万亿等
-                    if (integerStr[i-1] !== '0') {
-                        s = unit[0][Math.floor(pos / 4)] + s;
-                    }
-                } else if (i > 0 && integerStr[i-1] !== '0' && unitPos !== 0) {
-                    s = '零' + s;
-                }
-            }
-            
-            if (unitPos === 0 && pos > 0) {
-                if (parseInt(integerStr.substr(Math.max(0, i - unitPos), unitPos + 1)) > 0) {
-                    s = unit[0][Math.floor(pos / 4)] + s;
-                }
-            }
-        }
-    } else {
-        s = '零' + s;
+    if (integerPart === 0) {
+        return head + '零元' + decimalStr;
     }
-    
-    return head + s;
+
+    const integerStr = integerPart.toString();
+    const len = integerStr.length;
+    let result = '';
+    let zeroFlag = false; // 是否需要插入"零"
+
+    for (let i = 0; i < len; i++) {
+        const d = parseInt(integerStr[i]);
+        const pos = len - i - 1; // 从右数的位置: 0=个, 1=十, 2=百, 3=千, 4=万...
+        const sectionPos = pos % 4; // 在当前节内的位置: 0=个/万/亿, 1=十, 2=百, 3=千
+
+        if (d !== 0) {
+            if (zeroFlag) {
+                result += '零';
+                zeroFlag = false;
+            }
+            result += digit[d];
+            if (sectionPos === 1) result += '拾';
+            else if (sectionPos === 2) result += '佰';
+            else if (sectionPos === 3) result += '仟';
+        } else {
+            zeroFlag = true;
+        }
+
+        // 在每节末尾（pos为4的倍数）添加节权
+        if (sectionPos === 0) {
+            zeroFlag = false;
+            if (pos >= 8) result += '亿';
+            else if (pos >= 4) result += '万';
+        }
+    }
+
+    // 去除可能多余的万/亿（当整节为0时）
+    result = result.replace(/零万/, '万').replace(/零亿/, '亿');
+    result = result.replace(/亿万/, '亿');
+
+    return head + result + '元' + decimalStr;
 }
 
 /**
@@ -634,7 +630,7 @@ export function addCustomItemToQuotation(quotation, itemData) {
         prices: {
             factory: parseFloat(itemData.factoryPrice) || 0,
             package: parseFloat(itemData.packagePrice) || 0,
-            market: parseFloat(itemData.marketPrice) || parseFloat(itemData.price) || 0
+            market: parseFloat(itemData.marketPrice) || parseFloat(itemData.unitPrice) || parseFloat(itemData.price) || 0
         },
         selectedPrice: 'market',
         get unitPrice() {

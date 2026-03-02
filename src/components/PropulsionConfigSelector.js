@@ -2,8 +2,8 @@
 // 推进配置选择器 - 单机/双机、输入输出旋向选择
 // 版本: v1.0 (2025-12-14)
 
-import React, { useCallback, useMemo } from 'react';
-import { Card, Form, ButtonGroup, Button, Row, Col, Alert } from 'react-bootstrap';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import { Card, Form, ButtonGroup, Button, Row, Col, Alert, Modal } from 'react-bootstrap';
 import TwinEngineDiagramEnhanced from './TwinEngineDiagramEnhanced';
 import SingleEngineDiagramEnhanced from './SingleEngineDiagramEnhanced';
 
@@ -15,8 +15,10 @@ const PropulsionConfigSelector = ({
   onChange,
   gearboxType = 'HC',
   theme = 'light',
-  colors = {}
+  colors = {},
+  onRotationConflictChange
 }) => {
+  const [rotationAcknowledged, setRotationAcknowledged] = useState(false);
   // 默认配置
   const currentConfig = useMemo(() => ({
     engineConfiguration: config.engineConfiguration || 'single',
@@ -102,6 +104,27 @@ const PropulsionConfigSelector = ({
     }
     return null;
   }, [currentConfig.inputRotation, currentConfig.outputRotation, currentConfig.engineConfiguration, gearboxType, calculateExpectedOutput]);
+
+  // Reset acknowledgement when rotation changes
+  useEffect(() => {
+    setRotationAcknowledged(false);
+  }, [currentConfig.inputRotation, currentConfig.outputRotation]);
+
+  // Notify parent of conflict state
+  useEffect(() => {
+    if (onRotationConflictChange) {
+      onRotationConflictChange(!!rotationWarning && !rotationAcknowledged);
+    }
+  }, [rotationWarning, rotationAcknowledged, onRotationConflictChange]);
+
+  // Auto-fix handler for rotation conflict
+  const handleAutoFixRotation = useCallback(() => {
+    const inputCW = currentConfig.inputRotation === 'clockwise';
+    const is2Stage = gearboxType?.toUpperCase()?.startsWith('GWC');
+    const expectedOutputCW = is2Stage ? inputCW : !inputCW;
+    handleConfigChange('outputRotation', expectedOutputCW ? 'clockwise' : 'counterclockwise');
+    setRotationAcknowledged(false);
+  }, [currentConfig.inputRotation, gearboxType, handleConfigChange]);
 
   // 样式
   const cardStyle = {
@@ -219,11 +242,42 @@ const PropulsionConfigSelector = ({
           </Col>
         </Row>
 
-        {/* 旋向警告提示 */}
-        {rotationWarning && (
+        {/* Rotation conflict modal */}
+        <Modal
+          show={!!rotationWarning && !rotationAcknowledged}
+          backdrop="static"
+          keyboard={false}
+          centered
+        >
+          <Modal.Header className="bg-danger text-white">
+            <Modal.Title>
+              <i className="bi bi-exclamation-triangle-fill me-2"></i>
+              旋向冲突
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>{rotationWarning}</p>
+            <p className="mb-1"><strong>传动类型说明:</strong></p>
+            <ul className="mb-0">
+              <li>HC/HCT/DT/HCM/HCQ 等: 1级传动，输入输出<strong>反向</strong></li>
+              <li>GWC/GWS 系列: 2级传动，输入输出<strong>同向</strong></li>
+            </ul>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="success" onClick={handleAutoFixRotation}>
+              <i className="bi bi-magic me-1"></i>自动修正
+            </Button>
+            <Button variant="outline-secondary" onClick={() => setRotationAcknowledged(true)}>
+              我已了解，保持当前设置
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* Inline warning indicator (when acknowledged) */}
+        {rotationWarning && rotationAcknowledged && (
           <Alert variant="warning" className="mb-3 py-2">
             <i className="bi bi-exclamation-triangle me-2"></i>
-            <small>{rotationWarning}</small>
+            <small>{rotationWarning} (已确认)</small>
           </Alert>
         )}
 

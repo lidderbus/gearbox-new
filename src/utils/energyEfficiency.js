@@ -425,17 +425,39 @@ const getRatingDescription = (rating) => {
  * @param {number} distance - 年航行距离 (海里)
  * @returns {Object} CII计算结果
  */
-export const calculateCII = (annualCO2, capacity, distance) => {
-  // CII = 年度CO2排放 / (容量 × 距离)
-  const attainedCII = (annualCO2 * 1000000) / (capacity * distance); // g CO2 / t·nm
+export const calculateCII = (annualCO2OrParams, capacity, distance) => {
+  let co2, cap, dist;
+  if (typeof annualCO2OrParams === 'object' && annualCO2OrParams !== null) {
+    ({ annualCO2: co2, capacity: cap, distance: dist } = annualCO2OrParams);
+  } else {
+    co2 = annualCO2OrParams; cap = capacity; dist = distance;
+  }
+
+  if (!cap || !dist || cap <= 0 || dist <= 0) {
+    return { attainedCII: 0, rating: 'N/A', value: 0, unit: 'g CO₂/t·nm' };
+  }
+
+  // CII = annual CO2 emissions / (capacity × distance)
+  const attainedCII = (co2 * 1000000) / (cap * dist); // g CO2 / t·nm
+  const rounded = Math.round(attainedCII * 1000) / 1000;
+
+  // CII rating based on attained value
+  let rating = 'C';
+  if (rounded <= 5) rating = 'A';
+  else if (rounded <= 10) rating = 'B';
+  else if (rounded <= 15) rating = 'C';
+  else if (rounded <= 20) rating = 'D';
+  else rating = 'E';
 
   return {
-    attainedCII: Math.round(attainedCII * 1000) / 1000,
+    attainedCII: rounded,
+    rating,
+    value: rounded,
     unit: 'g CO₂/t·nm',
     inputs: {
-      annualCO2: annualCO2 + ' t',
-      capacity: capacity + ' DWT',
-      distance: distance + ' nm'
+      annualCO2: co2 + ' t',
+      capacity: cap + ' DWT',
+      distance: dist + ' nm'
     }
   };
 };

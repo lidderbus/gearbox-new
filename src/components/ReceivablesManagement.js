@@ -107,6 +107,29 @@ const ReceivablesManagement = ({ colors = {}, theme = 'light' }) => {
   const customerSummary = useMemo(() =>
     summarizeByCustomer(receivables), [receivables]);
 
+  // 坏账计提明细
+  const provisionDetail = useMemo(() => {
+    const categories = [
+      { key: 'current', label: '1年以内', rate: 0.05, variant: 'success' },
+      { key: 'oneToTwo', label: '1-2年', rate: 0.20, variant: 'warning' },
+      { key: 'twoToThree', label: '2-3年', rate: 0.50, variant: 'info' },
+      { key: 'overThree', label: '3年以上', rate: 1.00, variant: 'danger' }
+    ];
+    const result = categories.map(cat => {
+      const items = receivables.filter(r => {
+        const days = calculateAgingDays(r.invoiceDate);
+        if (cat.key === 'current') return days < 365;
+        if (cat.key === 'oneToTwo') return days >= 365 && days < 730;
+        if (cat.key === 'twoToThree') return days >= 730 && days < 1095;
+        return days >= 1095;
+      });
+      const amount = items.reduce((sum, r) => sum + r.balance, 0);
+      return { ...cat, count: items.length, amount, provision: amount * cat.rate };
+    });
+    const totalProvision = result.reduce((sum, r) => sum + r.provision, 0);
+    return { categories: result, totalProvision };
+  }, [receivables]);
+
   // 过滤应收账款列表
   const filteredReceivables = useMemo(() => {
     return receivables.filter(item => {
@@ -145,6 +168,29 @@ const ReceivablesManagement = ({ colors = {}, theme = 'light' }) => {
     if (!selectedReceivable || !collectionResult) {
       showAlert('danger', '请填写催收结果');
       return;
+    }
+
+    // Validate promised date
+    if (promisedDate) {
+      const promised = new Date(promisedDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (promised < today) {
+        showAlert('warning', '承诺还款日期不能早于今天');
+        return;
+      }
+    }
+    // Validate promised amount
+    if (promisedAmount) {
+      const amt = parseFloat(promisedAmount);
+      if (amt <= 0) {
+        showAlert('danger', '承诺还款金额必须大于0');
+        return;
+      }
+      if (selectedReceivable && amt > selectedReceivable.balance) {
+        showAlert('danger', `承诺还款金额不能超过未收余额 ¥${selectedReceivable.balance.toLocaleString()}`);
+        return;
+      }
     }
 
     const record = createCollectionRecord({
@@ -383,6 +429,11 @@ const ReceivablesManagement = ({ colors = {}, theme = 'light' }) => {
                       >
                         <i className="bi bi-telephone"></i>
                       </Button>
+                    )}
+                    {collectionRecords.some(r => r.receivableId === item.id && r.promisedDate && new Date(r.promisedDate) >= new Date()) && (
+                      <Badge bg="info" className="ms-1" title="有待跟进承诺">
+                        <i className="bi bi-clock"></i>
+                      </Badge>
                     )}
                   </td>
                 </tr>
@@ -687,6 +738,46 @@ const ReceivablesManagement = ({ colors = {}, theme = 'light' }) => {
 
       {/* 账龄分析 */}
       {renderAgingChart()}
+
+      {/* 坏账计提明细 */}
+      <Card className="shadow-sm mb-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+        <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>
+          <i className="bi bi-calculator me-2"></i>坏账计提明细
+        </Card.Header>
+        <Card.Body>
+          <Table bordered size="sm" style={{ color: colors.text }}>
+            <thead style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>
+              <tr>
+                <th>账龄分类</th>
+                <th className="text-center">笔数</th>
+                <th className="text-end">应收金额</th>
+                <th className="text-center">计提比例</th>
+                <th className="text-end">计提金额</th>
+              </tr>
+            </thead>
+            <tbody>
+              {provisionDetail.categories.map(cat => (
+                <tr key={cat.key}>
+                  <td><Badge bg={cat.variant}>{cat.label}</Badge></td>
+                  <td className="text-center">{cat.count}</td>
+                  <td className="text-end">¥{cat.amount.toLocaleString()}</td>
+                  <td className="text-center">{(cat.rate * 100).toFixed(0)}%</td>
+                  <td className="text-end text-danger">¥{cat.provision.toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>
+              <tr className="fw-bold">
+                <td>合计</td>
+                <td className="text-center">{provisionDetail.categories.reduce((s, c) => s + c.count, 0)}</td>
+                <td className="text-end">¥{provisionDetail.categories.reduce((s, c) => s + c.amount, 0).toLocaleString()}</td>
+                <td className="text-center">-</td>
+                <td className="text-end text-danger">¥{provisionDetail.totalProvision.toLocaleString()}</td>
+              </tr>
+            </tfoot>
+          </Table>
+        </Card.Body>
+      </Card>
 
       {/* 标签页 */}
       <Tabs activeKey={activeTab} onSelect={setActiveTab} className="mb-3">

@@ -140,19 +140,5 @@ reportWebVitals((metric) => {
   }
 });
 
-// 注册 Service Worker (仅生产环境)
-serviceWorkerRegistration.register({
-  onSuccess: (registration) => {
-    console.log('[App] Service Worker registered successfully');
-  },
-  onUpdate: (registration) => {
-    console.log('[App] New version available! Refresh to update.');
-    // 可选: 显示更新提示
-    if (window.confirm('新版本已就绪，是否刷新页面？')) {
-      serviceWorkerRegistration.skipWaiting();
-    }
-  },
-  onError: (error) => {
-    console.warn('[App] Service Worker registration failed:', error);
-  }
-});
+// 注销 Service Worker，清除旧缓存
+serviceWorkerRegistration.unregister();

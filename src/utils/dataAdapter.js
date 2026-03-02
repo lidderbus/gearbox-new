@@ -48,15 +48,10 @@ function adaptGearboxItem(item) {
   adapted.model = String(adapted.model).trim();
   adapted.inputSpeedRange = ensureValidSpeedRange(adapted.inputSpeedRange);
   adapted.ratios = ensureValidRatios(adapted.ratios);
-  adapted.transferCapacity = ensureMatchingCapacityArray(adapted.transferCapacity, adapted.ratios);
-
-  // 同步 transmissionCapacityPerRatio 数组长度（防御性处理）
-  if (item.transmissionCapacityPerRatio) {
-    adapted.transmissionCapacityPerRatio = ensureMatchingCapacityArray(
-      item.transmissionCapacityPerRatio,
-      adapted.ratios
-    );
-  }
+  // 优先使用 transmissionCapacityPerRatio（数据文件字段），回退到 transferCapacity（运行时字段）
+  const sourceCapacity = item.transmissionCapacityPerRatio || item.transferCapacity;
+  adapted.transferCapacity = ensureMatchingCapacityArray(sourceCapacity, adapted.ratios);
+  adapted.transmissionCapacityPerRatio = adapted.transferCapacity;
 
   // 确保其他技术参数
   adapted.thrust = safeParseFloat(adapted.thrust) || 0;
@@ -164,18 +159,21 @@ function ensureMatchingCapacityArray(capacity, ratios) {
 
 function convertTorqueToKNm(item) {
   let torque = safeParseFloat(item.torque);
-  
+
   if (torque && item.torqueUnit) {
-    const unit = item.torqueUnit.toLowerCase();
-    if (unit.includes('nm') || unit.includes('n·m')) {
-      torque = torque / 1000; // 转换为kN·m
+    const unit = item.torqueUnit.toLowerCase().trim();
+    // Exact match to avoid 'kn·m' matching 'n·m' substring
+    const isNm = (unit === 'nm' || unit === 'n·m' || unit === 'n.m' || unit === 'n*m');
+    if (isNm) {
+      torque = torque / 1000; // N·m → kN·m
     }
+    // 'kn·m', 'knm', 'kn.m' etc. already in kN·m, no conversion needed
   } else if (torque > 1000) {
-    // 大于1000可能是N·m，转换
+    // No unit specified but value > 1000, likely N·m
     torque = torque / 1000;
   }
-  
-  return torque || 5.0; // 默认值
+
+  return torque || 5.0; // default
 }
 
 function adaptPriceFields(item) {

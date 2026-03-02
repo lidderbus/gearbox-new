@@ -30,7 +30,16 @@ const prepareTemplateData = ({
   selectedCouplingModel
 }) => {
   const gearbox = selectedComponents?.gearbox || {};
-  const engine = selectionResult?.engineData || {};
+  // selectionResult 的主机数据在顶层字段 .enginePower/.engineSpeed，不在 .engineData 子对象
+  const engine = {
+    power: selectionResult?.enginePower || selectionResult?.engineData?.power || '',
+    speed: selectionResult?.engineSpeed || selectionResult?.engineData?.speed || '',
+    model: selectionResult?.engineModel || selectionResult?.engineData?.model || '',
+    rotation: selectionResult?.engineRotation || selectionResult?.engineData?.rotation || '',
+    minStableSpeed: selectionResult?.minStableSpeed || selectionResult?.engineData?.minStableSpeed || '',
+    minStableSpeedType: selectionResult?.minStableSpeedType || selectionResult?.engineData?.minStableSpeedType || '',
+    minStableSpeedOther: selectionResult?.minStableSpeedOther || selectionResult?.engineData?.minStableSpeedOther || '',
+  };
   const ship = projectInfo || {};
 
   // 获取系列默认参数并与选型数据合并
@@ -51,8 +60,8 @@ const prepareTemplateData = ({
     regulationsList: regulationsListHtml,
 
     // DT系列特有字段
-    agreementNumber: ship.agreementNumber || '',
-    designInstitute: ship.designInstitute || ship.designer || '',
+    agreementNumber: editableInfo.agreementNumber || ship.agreementNumber || '',
+    designInstitute: editableInfo.designInstitute || ship.designInstitute || ship.designer || '',
     outputDirection: seriesDefaults.outputDirection || '相反',
 
     // 电动滑油泵详细参数（DT系列特有）
@@ -69,10 +78,10 @@ const prepareTemplateData = ({
     shipOwner: editableInfo.shipOwner || ship.customerName || '',
     shipyard: editableInfo.shipyard || ship.shipyard || '',
     shipType: editableInfo.shipType || ship.shipType || '',
-    shipManufacturer: ship.shipManufacturer || '',
+    shipManufacturer: editableInfo.shipManufacturer || ship.shipManufacturer || '',
     shipProjectNumber: editableInfo.projectNumber || ship.projectNumber || '',
-    shipDesigner: ship.designer || '',
-    registrationNumber: ship.registrationNumber || '',
+    shipDesigner: editableInfo.shipDesigner || ship.designer || '',
+    registrationNumber: editableInfo.registrationNumber || ship.registrationNumber || '',
     shipName: editableInfo.shipName || ship.shipName || ship.projectName || '',
 
     // 船检类型 - 优先使用editableInfo中的选择
@@ -98,6 +107,19 @@ const prepareTemplateData = ({
       return items.length > 0
         ? '<ol>' + items.map(item => `<li>${item}</li>`).join('') + '</ol>'
         : '无';
+    })(),
+    // 动态船检证书名称（用于技术文件清单表格）
+    classificationCertificateName: (() => {
+      const classType = editableInfo.classificationType || ship.classificationType || ship.classification || ClassificationType.NONE;
+      const req = getCertificateRequirements(classType);
+      if (!req || !req.society) return '船检产品证书';
+      return `${req.society}船检产品证书`;
+    })(),
+    classificationCertificateNameEn: (() => {
+      const classType = editableInfo.classificationType || ship.classificationType || ship.classification || ClassificationType.NONE;
+      const req = getCertificateRequirements(classType);
+      if (!req || !req.society) return 'Ship Inspection Product Certificate';
+      return `${req.society} Ship Inspection Product Certificate`;
     })(),
     // 船检验收要求
     inspectionRequirement: (() => {
@@ -142,7 +164,7 @@ const prepareTemplateData = ({
     arrangement: gearbox.arrangement || '水平排列（输入、输出轴水平中心距：0mm，垂直中心距：0mm）',
     inputCoupling: '主机厂配高弹联轴器',
     quantity: ship.quantity || seriesDefaults.quantity || '1',
-    deliveryTime: ship.deliveryTime || '',
+    deliveryTime: editableInfo.deliveryTime || ship.deliveryTime || '',
 
     // 监控系统
     standardMonitoring: (gearbox.monitoringSystem === 'STANDARD' || !gearbox.monitoringSystem) ? 'checked' : '',
@@ -166,7 +188,19 @@ const prepareTemplateData = ({
 
     // 技术参数
     transmissionCapacity: gearbox.transmissionCapacity || gearboxParams.transmissionCapacity || '',
+    // 倒车传递能力：通常为正车的80%左右
+    reverseTransmissionCapacity: gearbox.reverseTransmissionCapacity || (() => {
+      const tc = gearbox.transmissionCapacity || gearboxParams.transmissionCapacity;
+      if (tc) {
+        const numVal = parseFloat(tc);
+        if (!isNaN(numVal)) return (numVal * 0.8).toFixed(2);
+      }
+      return '';
+    })(),
     maxInputSpeed: gearbox.maxInputSpeed || gearboxParams.maxInputSpeed || '',
+    minInputSpeed: gearbox.minInputSpeed || gearboxParams.minInputSpeed || '0',
+    // 外形尺寸（长×宽×高）
+    dimensions: gearbox.dimensions || gearboxParams.dimensions || '',
     lubricationOilPressure: gearbox.lubricationOilPressure || seriesDefaults.lubricationOilPressure || '0.04～0.4',
     maxPropellerThrust: gearbox.maxPropellerThrust || gearboxParams.maxPropellerThrust || '',
     centerDistance: gearbox.centerDistance || gearboxParams.centerDistance || '',
@@ -174,11 +208,17 @@ const prepareTemplateData = ({
     oilCapacity: gearbox.oilCapacity || gearboxParams.oilCapacity || '',
     oilGrade: gearbox.oilGrade || seriesDefaults.oilGrade || 'CD30 或 CD40',
     coolingWaterInletTemperature: gearbox.coolingWaterInletTemperature || seriesDefaults.coolingWaterInletTemperature || '32',
+    // 冷却水温度（HCT模板别名）
+    coolingWaterTemperature: gearbox.coolingWaterInletTemperature || seriesDefaults.coolingWaterTemperature || seriesDefaults.coolingWaterInletTemperature || '32',
     coolingWaterVolume: gearbox.coolingWaterVolume || gearboxParams.coolingWaterVolume || '',
+    coolingWaterFlow: gearbox.coolingWaterVolume || gearboxParams.coolingWaterVolume || '',
     coolingWaterPressure: gearbox.coolingWaterPressure || seriesDefaults.coolingWaterPressure || '0.35',
     mechanicalEfficiency: gearbox.mechanicalEfficiency || seriesDefaults.mechanicalEfficiency || '96',
     forwardDirection: '',
-    weight: gearbox.weight || '',
+    weight: gearbox.weight || gearboxParams.weight || '',
+    // 净重（HCT模板别名，同weight）
+    netWeight: gearbox.weight || gearboxParams.weight || '',
+    signalOutput: seriesDefaults.signalOutput || '无源开关量信号',
 
     // 倾斜度
     longitudinalInclination: gearbox.longitudinalInclination || seriesDefaults.longitudinalInclination || '10',
@@ -190,6 +230,9 @@ const prepareTemplateData = ({
     installationMethod: gearbox.installationMethod || seriesDefaults.installationMethod || '与船体基座为刚性安装',
     lubricationOilPump: gearbox.lubricationOilPump || seriesDefaults.lubricationOilPump || '',
     overhaulTime: gearbox.overhaulTime || seriesDefaults.overhaulTime || '10000',
+    // 大修期别名（HCT用overhaul, HCQ用overhaulPeriod）
+    overhaul: gearbox.overhaulTime || seriesDefaults.overhaul || seriesDefaults.overhaulTime || '10000',
+    overhaulPeriod: gearbox.overhaulTime || seriesDefaults.overhaulPeriod || seriesDefaults.overhaulTime || '10000',
     nameplateSpecification: gearbox.nameplateSpecification || seriesDefaults.nameplateSpecification || '不锈钢，黑底白字阳文，中英文对照',
     instrumentsAndAlarms: gearbox.instrumentsAndAlarms || seriesDefaults.instrumentsAndAlarms || '',
 
@@ -201,6 +244,36 @@ const prepareTemplateData = ({
     approvalPeriod: (options.approvalPeriod || seriesDefaults.approvalPeriod || 10).toString(),
     feedbackPeriod: (options.feedbackPeriod || seriesDefaults.feedbackPeriod || 10).toString(),
     warrantyPeriod: options.warrantyPeriod || seriesDefaults.warrantyPeriod || '十二个月',
+    // GWS模板用warrantyText
+    warrantyText: seriesDefaults.warrantyText || options.warrantyPeriod || seriesDefaults.warrantyPeriod || '十二个月',
+
+    // HC模板特有 - 船厂/设计院合并字段
+    shipyardOrDesigner: editableInfo.shipyard || ship.shipyard || ship.designer || '',
+
+    // HCT模板特有 - 别名字段
+    controlSystem: (() => {
+      if (gearbox.controlType === 'MANUAL') return '手动操纵';
+      if (gearbox.controlType === 'PNEUMATIC') return '气动操纵';
+      return `电控操纵 DC${gearbox.controlVoltage || seriesDefaults.controlVoltage || '24'}V`;
+    })(),
+    classificationSociety: getClassificationDisplayName(editableInfo.classificationType || ship.classificationType || ship.classification || ClassificationType.NONE),
+    gearboxRatedSpeed: editableInfo.engineSpeed || engine.speed || projectInfo?.speed || '',
+
+    // HCQ模板特有 - 船舶尺寸和柴油机信息
+    shipLength: editableInfo.shipLength || ship.shipLength || '',
+    shipWidth: editableInfo.shipWidth || ship.shipWidth || '',
+    shipDepth: editableInfo.shipDepth || ship.shipDepth || '',
+    engineManufacturer: editableInfo.engineManufacturer || ship.engineManufacturer || '',
+
+    // GWC模板 - 附加供货项
+    additionalDeliveryItems: seriesDefaults.additionalDeliveryItems || '',
+
+    // HCQ模板 - 操纵系统（controlType别名）
+    controlType: (() => {
+      if (gearbox.controlType === 'MANUAL') return '手控操纵';
+      if (gearbox.controlType === 'PNEUMATIC') return '气控操纵';
+      return `电控操纵 DC${gearbox.controlVoltage || seriesDefaults.controlVoltage || '24'}V`;
+    })(),
 
     // 特殊订货要求
     specialRequirements: specialRequirements || '无',
@@ -257,7 +330,7 @@ const prepareTemplateData = ({
         />
       );
     })(),
-    gearboxFunctions: '具有减速、倒顺离合和承受螺旋桨推力的功能',
+    gearboxFunctions: seriesDefaults.gearboxFunction || seriesDefaults.gearboxFunctions || '具有减速、倒顺离合和承受螺旋桨推力的功能',
     // 旋向配置 - 优先使用可编辑信息中的配置
     inputRotation: (() => {
       const propulsionConfig = editableInfo.propulsionConfig || requirementData || projectInfo?.propulsionConfig || {};
@@ -281,9 +354,11 @@ const prepareTemplateData = ({
 };
 
 /**
- * 格式化特殊订货要求为HTML列表
+ * 格式化特殊订货要求为HTML
+ * @param {string} specialRequirements - 特殊要求文本（换行分隔）
+ * @param {string} format - 格式：'numbered'(编号列表), 'bullet'(项目符号), 'plain'(纯文本)
  */
-const formatSpecialRequirements = (specialRequirements) => {
+const formatSpecialRequirements = (specialRequirements, format = 'numbered') => {
   if (!specialRequirements || specialRequirements.trim() === '') {
     return '无';
   }
@@ -292,6 +367,12 @@ const formatSpecialRequirements = (specialRequirements) => {
     const reqLines = specialRequirements.split('\n').filter(line => line.trim() !== '');
     if (reqLines.length > 0) {
       const reqListItems = reqLines.map((line, index) => `<li key="req-${index}">${line.trim()}</li>`).join('');
+      if (format === 'bullet') {
+        return '<ul class="special-requirements-list">' + reqListItems + '</ul>';
+      } else if (format === 'plain') {
+        return reqLines.map(line => `<p>${line.trim()}</p>`).join('');
+      }
+      // 默认编号列表
       return '<ol class="special-requirements-list">' + reqListItems + '</ol>';
     }
   } catch (reqError) {
@@ -360,7 +441,10 @@ const useAgreementGeneration = ({
   const getTemplateDataForRequirements = useCallback(() => {
     try {
       const gearbox = selectedComponents?.gearbox || {};
-      const engine = selectionResult?.engineData || {};
+      const engine = {
+        power: selectionResult?.enginePower || selectionResult?.engineData?.power || '',
+        speed: selectionResult?.engineSpeed || selectionResult?.engineData?.speed || '',
+      };
 
       return {
         maxInputSpeed: (gearbox.maxInputSpeed || engine.speed || '1800').toString(),
@@ -473,7 +557,7 @@ const useAgreementGeneration = ({
     });
 
     // 格式化特殊订货要求
-    templateData.specialRequirements = formatSpecialRequirements(specialRequirements);
+    templateData.specialRequirements = formatSpecialRequirements(specialRequirements, specialRequirementsFormat);
 
     // 填充模板
     let content = fillTemplate(template, templateData);
@@ -501,6 +585,8 @@ const useAgreementGeneration = ({
       if (!editableInfo?.shipOwner?.trim()) missingFields.push('船东名称');
       if (!editableInfo?.engineModel?.trim()) missingFields.push('主机型号');
       if (!selectedComponents?.gearbox?.model) missingFields.push('齿轮箱型号(请先完成选型)');
+      if (!editableInfo?.enginePower) missingFields.push('主机额定功率');
+      if (!editableInfo?.engineSpeed) missingFields.push('主机额定转速');
       if (missingFields.length > 0) {
         setError(`请补充必填信息: ${missingFields.join('、')}`);
         setLoading(false);

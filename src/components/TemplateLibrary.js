@@ -35,13 +35,20 @@ const TemplateLibrary = ({ colors, theme }) => {
     return templates;
   }, [activeCategory, searchTerm]);
 
-  // 打开模板 (使用 Google Docs Viewer 在线预览)
-  const openTemplate = (path) => {
-    // 构建完整URL用于Google Docs Viewer
+  // 打开模板 (PDF直接浏览器打开, DOC/DOCX触发下载)
+  const openTemplate = (template) => {
     const baseUrl = window.location.origin;
-    const fullUrl = `${baseUrl}${path}`;
-    const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fullUrl)}&embedded=true`;
-    window.open(viewerUrl, '_blank');
+    const fullUrl = `${baseUrl}${template.path}`;
+    if (template.type === 'pdf') {
+      window.open(fullUrl, '_blank');
+    } else {
+      const a = document.createElement('a');
+      a.href = fullUrl;
+      a.download = template.filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
   };
 
   // 获取文件类型图标
@@ -188,11 +195,11 @@ const TemplateLibrary = ({ colors, theme }) => {
                           <Button
                             variant="primary"
                             size="sm"
-                            onClick={() => openTemplate(template.path)}
+                            onClick={() => openTemplate(template)}
                             className="me-2"
                           >
-                            <i className="bi bi-eye me-1"></i>
-                            查看
+                            <i className={`bi ${template.type === 'pdf' ? 'bi-eye' : 'bi-download'} me-1`}></i>
+                            {template.type === 'pdf' ? '查看' : '下载'}
                           </Button>
                           <Button
                             variant="outline-secondary"
@@ -222,7 +229,7 @@ const TemplateLibrary = ({ colors, theme }) => {
                         borderColor: colors?.border,
                         cursor: 'pointer'
                       }}
-                      onClick={() => openTemplate(template.path)}
+                      onClick={() => openTemplate(template)}
                     >
                       <Card.Body className="text-center">
                         <div className="mb-3">

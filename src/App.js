@@ -3,7 +3,7 @@
 
 // === 所有import语句必须放在文件最前面 ===
 import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useRef } from 'react';
-import { Container, Row, Col, Button, Card, Tab, Tabs, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Button, Card, Tab, Tabs, Spinner, Offcanvas, Alert } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { userRoles } from './auth/roles';
@@ -25,6 +25,8 @@ import PriceWarningBanner from './components/PriceWarningBanner';
 import FeedbackWidget from './components/FeedbackWidget';
 import ToastContainer from './components/ToastContainer';
 import SidebarNav from './components/SidebarNav';
+import { useIsMobile } from './hooks/useIsMobile';
+import { trackPageView, trackFeature } from './utils/analytics';
 import { useInIframe } from './hooks/useInIframe';
 import ComparisonResultModal from './components/ComparisonResultModal';
 import InputParametersTab from './components/InputParametersTab';
@@ -56,6 +58,7 @@ const AnalyticsDashboard = lazy(() => import('./components/AnalyticsDashboard'))
 const CouplingSelectionPage = lazy(() => import('./pages/CouplingSelection/CouplingSelectionPage'));
 const TorsionalAnalysis = lazy(() => import('./components/torsional/TorsionalAnalysis'));
 const EnergyDashboard = lazy(() => import('./components/EnergyDashboard'));
+const DocumentDashboard = lazy(() => import('./components/DocumentDashboard'));
 
 // 新增推进系统模块 (性能优化: lazy加载)
 const CPPSelectionView = lazy(() => import('./components/cpp/CPPSelectionView'));
@@ -204,8 +207,23 @@ function App({ appData: initialAppData, setAppData }) {
   const [contract, setContract] = useState(null);
   // 技术协议特殊订货要求 - 用于与合同同步
   const [agreementSpecialRequirements, setAgreementSpecialRequirements] = useState('');
-  const [activeTab, setActiveTab] = useState('home');
+  const [activeTab, setActiveTabRaw] = useState('home');
+  const tabToPathRef = useRef({});
+  const setActiveTab = useCallback((tab) => {
+    setActiveTabRaw(tab);
+    trackPageView(tab);
+    // Reverse sync: update URL hash when tab changes
+    const path = tabToPathRef.current[tab];
+    if (path) {
+      const newHash = '#' + path;
+      if (window.location.hash !== newHash) {
+        window.history.replaceState(null, '', newHash);
+      }
+    }
+  }, []);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const { isMobile } = useIsMobile();
   const [selectionHistory, setSelectionHistory] = useState([]);
   const [theme, setTheme] = useState('light');
   const [selectedGearboxIndex, setSelectedGearboxIndex] = useState(0);
@@ -267,6 +285,12 @@ function App({ appData: initialAppData, setAppData }) {
     setError
   });
 
+  // 初始化页面浏览追踪
+  useEffect(() => {
+    trackPageView('home');
+    trackFeature('app_init');
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
@@ -279,25 +303,63 @@ function App({ appData: initialAppData, setAppData }) {
   }, [theme]);
 
   // Hash-based navigation sync with activeTab
-  useEffect(() => {
-    const pathToTab = {
-      '/': 'home',
-      '/home': 'home',
-      '/selection': 'input',
-      '/comparison': 'result',
-      '/pump-selection': 'pump-selection',
-      '/coupling-selection': 'coupling-selection',
-      '/technical': 'agreement',
-      '/quotation': 'quotation',
-      '/cummins': 'cummins',
-      '/drawings': 'drawings'
-    };
+  const pathToTab = useMemo(() => ({
+    '/': 'home',
+    '/home': 'home',
+    '/selection': 'input',
+    '/input': 'input',
+    '/comparison': 'result',
+    '/result': 'result',
+    '/batch': 'batch',
+    '/pump-selection': 'pump-selection',
+    '/coupling-selection': 'coupling-selection',
+    '/coupling-system': 'coupling-system',
+    '/cummins': 'cummins',
+    '/inquiry': 'inquiry',
+    '/quotation': 'quotation',
+    '/technical': 'agreement',
+    '/agreement': 'agreement',
+    '/contract': 'contract',
+    '/drawings': 'drawings',
+    '/manuals': 'manuals',
+    '/templates': 'templates',
+    '/engine-cases': 'engine-cases',
+    '/torsional': 'torsional',
+    '/energy': 'energy',
+    '/statistics': 'statistics',
+    '/analytics': 'analytics',
+    '/competitor': 'competitor',
+    '/query': 'query',
+    '/product-center': 'product-center',
+    '/history': 'history',
+    '/hcm-selection': 'hcm-selection',
+    '/cpp': 'cpp',
+    '/azimuth': 'azimuth',
+    '/thruster': 'thruster',
+    '/shaft': 'shaft',
+    '/inventory': 'inventory',
+    '/receivables': 'receivables',
+  }), []);
 
+  const tabToPath = useMemo(() => {
+    const map = {};
+    Object.entries(pathToTab).forEach(([path, tab]) => {
+      if (!map[tab]) map[tab] = path; // first mapping wins
+    });
+    return map;
+  }, [pathToTab]);
+
+  // Keep ref in sync so setActiveTab callback can access without dependency
+  useEffect(() => {
+    tabToPathRef.current = tabToPath;
+  }, [tabToPath]);
+
+  useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '') || '/';
       const tab = pathToTab[hash];
       if (tab) {
-        setActiveTab(tab);
+        setActiveTabRaw(tab);
       }
     };
 
@@ -307,7 +369,7 @@ function App({ appData: initialAppData, setAppData }) {
     // Listen for hash changes (browser back/forward)
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
+  }, [pathToTab]);
 
   useEffect(() => {
     if (!isAuthenticated && location.pathname !== '/login') {
@@ -711,7 +773,14 @@ function App({ appData: initialAppData, setAppData }) {
     <SelectionResultProvider value={selectionContextValue}>
     <div className="App">
       {!inIframe && <PriceWarningBanner />}
-      {!inIframe && <ModernNavBar activeTab={activeTab} onNavigate={setActiveTab} />}
+      {!inIframe && (
+        <ModernNavBar
+          activeTab={activeTab}
+          onNavigate={setActiveTab}
+          isMobile={isMobile}
+          onMenuToggle={() => setMobileSidebarOpen(true)}
+        />
+      )}
       <Container fluid className="app-container">
         {!inIframe && (
           <AppHeader
@@ -733,13 +802,34 @@ function App({ appData: initialAppData, setAppData }) {
 
       {appDataState && Object.keys(appDataState).length > 0 && (
       <div style={{ display: 'flex', gap: 0 }}>
-      {!inIframe && (
+      {!inIframe && !isMobile && (
         <SidebarNav
           activeTab={activeTab}
           onNavigate={setActiveTab}
           collapsed={sidebarCollapsed}
           onToggle={() => setSidebarCollapsed((c) => !c)}
         />
+      )}
+      {!inIframe && isMobile && (
+        <Offcanvas
+          show={mobileSidebarOpen}
+          onHide={() => setMobileSidebarOpen(false)}
+          placement="start"
+          style={{ width: 260 }}
+        >
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>导航菜单</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body style={{ padding: 0 }}>
+            <SidebarNav
+              activeTab={activeTab}
+              onNavigate={setActiveTab}
+              collapsed={false}
+              onToggle={() => {}}
+              onItemClick={() => setMobileSidebarOpen(false)}
+            />
+          </Offcanvas.Body>
+        </Offcanvas>
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
       <Tabs
@@ -840,22 +930,40 @@ function App({ appData: initialAppData, setAppData }) {
                   </Row>
               ) : (
                 <div className="d-flex justify-content-center align-items-center py-5">
-                  <Card style={{ maxWidth: 400, backgroundColor: colors.card, borderColor: colors.border, textAlign: 'center' }}>
-                    <Card.Body className="py-5">
-                      <i className="bi bi-file-earmark-x" style={{ fontSize: '3rem', color: colors.muted }}></i>
-                      <h5 className="mt-3" style={{ color: colors.text }}>暂无报价单</h5>
-                      <p style={{ color: colors.muted }}>请先完成齿轮箱选型，再生成报价单</p>
-                      <Button variant="primary" onClick={() => setActiveTab('input')}>
-                        <i className="bi bi-input-cursor-text me-2"></i>去选型
-                      </Button>
+                  <Card style={{ maxWidth: 520, backgroundColor: colors.card, borderColor: colors.border }}>
+                    <Card.Body className="py-4 text-center">
+                      <i className="bi bi-currency-yen" style={{ fontSize: '3rem', color: colors.primary || '#2e7d32' }}></i>
+                      <h4 className="mt-3" style={{ color: colors.text }}>报价单</h4>
+                      <p style={{ color: colors.muted }}>
+                        您可以通过选型结果自动生成报价单，也可以从历史记录中加载已保存的报价单。
+                      </p>
+                      <div className="d-flex gap-2 justify-content-center flex-wrap mt-3">
+                        <Button variant="primary" onClick={() => setActiveTab('input')}>
+                          <i className="bi bi-gear me-1"></i>从选型生成
+                        </Button>
+                        <Button variant="outline-primary" onClick={() => setShowQuotationHistoryModal(true)}>
+                          <i className="bi bi-clock-history me-1"></i>历史报价单
+                        </Button>
+                        <Button variant="outline-secondary" onClick={() => setActiveTab('product-center')}>
+                          <i className="bi bi-box-seam me-1"></i>浏览产品库
+                        </Button>
+                      </div>
+                      <hr className="my-3" />
+                      <h6 style={{ color: colors.text }}>报价单包含的主要内容：</h6>
+                      <Row className="text-start mt-2" style={{ color: colors.muted, fontSize: '0.9rem' }}>
+                        <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>齿轮箱型号及价格</Col>
+                        <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>配套联轴器</Col>
+                        <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>备用泵及附件</Col>
+                        <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>打包优惠价格</Col>
+                      </Row>
                     </Card.Body>
                   </Card>
                 </div>
               )}
         </Tab>
 
-          <Tab eventKey="agreement" title={<span><i className="bi bi-file-earmark-text me-1"></i>技术协议</span>} disabled={!selectionResult}>
-            {selectionResult && (
+          <Tab eventKey="agreement" title={<span><i className="bi bi-file-earmark-text me-1"></i>技术协议</span>}>
+            {selectionResult ? (
               <Row>
                 <Col>
                   <Suspense fallback={<LazyLoadFallback />}>
@@ -873,11 +981,45 @@ function App({ appData: initialAppData, setAppData }) {
                   </Suspense>
                 </Col>
               </Row>
+            ) : (
+              <div className="d-flex justify-content-center align-items-center py-5">
+                <Card style={{ maxWidth: 560, backgroundColor: colors.card, borderColor: colors.border }}>
+                  <Card.Body className="py-4 text-center">
+                    <i className="bi bi-file-earmark-text" style={{ fontSize: '3rem', color: colors.primary || '#2e7d32' }}></i>
+                    <h4 className="mt-3" style={{ color: colors.text }}>技术协议生成</h4>
+                    <p style={{ color: colors.muted, maxWidth: 400, margin: '0 auto' }}>
+                      技术协议是齿轮箱订货前的重要技术文件，包含产品规格、性能参数、验收标准等关键信息。
+                    </p>
+                    <Alert variant="info" className="mt-3 text-start" style={{ maxWidth: 420, margin: '0 auto' }}>
+                      <i className="bi bi-info-circle me-2"></i>
+                      生成技术协议前，请先完成齿轮箱选型以确定产品型号和配置参数。
+                    </Alert>
+                    <div className="d-flex gap-2 justify-content-center mt-3 flex-wrap">
+                      <Button variant="primary" onClick={() => setActiveTab('input')}>
+                        <i className="bi bi-gear me-1"></i>去选型
+                      </Button>
+                      <Button variant="outline-primary" onClick={() => setActiveTab('templates')}>
+                        <i className="bi bi-file-earmark-text me-1"></i>浏览模板库
+                      </Button>
+                    </div>
+                    <hr className="my-3" />
+                    <h6 style={{ color: colors.text }}>技术协议包含的主要内容：</h6>
+                    <Row className="text-start mt-2" style={{ color: colors.muted, fontSize: '0.9rem' }}>
+                      <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>产品型号及规格</Col>
+                      <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>性能参数及曲线</Col>
+                      <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>外形尺寸图</Col>
+                      <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>配套联轴器信息</Col>
+                      <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>船检要求及证书</Col>
+                      <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>质量保证条款</Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              </div>
             )}
           </Tab>
 
-          <Tab eventKey="contract" title={<span><i className="bi bi-file-earmark-ruled me-1"></i>销售合同</span>} disabled={!contract}>
-            {contract && (
+          <Tab eventKey="contract" title={<span><i className="bi bi-file-earmark-ruled me-1"></i>销售合同</span>}>
+            {contract ? (
               <Row>
                 <Col>
                      <Card className="mb-4 shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
@@ -908,7 +1050,53 @@ function App({ appData: initialAppData, setAppData }) {
                       </Card>
                   </Col>
                 </Row>
-              )}
+            ) : (
+              <div className="d-flex justify-content-center align-items-center py-5">
+                <Card style={{ maxWidth: 560, backgroundColor: colors.card, borderColor: colors.border }}>
+                  <Card.Body className="py-4 text-center">
+                    <i className="bi bi-file-earmark-ruled" style={{ fontSize: '3rem', color: colors.primary || '#2e7d32' }}></i>
+                    <h4 className="mt-3" style={{ color: colors.text }}>销售合同生成</h4>
+                    <p style={{ color: colors.muted, maxWidth: 420, margin: '0 auto' }}>
+                      销售合同基于报价单和技术协议自动生成，包含产品明细、价格条款、交货条件、质量保证等完整合同内容。
+                    </p>
+                    <Alert variant="info" className="mt-3 text-start" style={{ maxWidth: 420, margin: '0 auto' }}>
+                      <i className="bi bi-info-circle me-2"></i>
+                      生成销售合同前，请先完成以下步骤：
+                      <ol className="mb-0 mt-1 ps-3" style={{ fontSize: '0.85rem' }}>
+                        <li>完成齿轮箱选型</li>
+                        <li>生成报价单（确定价格）</li>
+                        <li>在技术协议页面点击"生成合同"</li>
+                      </ol>
+                    </Alert>
+                    <div className="d-flex gap-2 justify-content-center mt-3 flex-wrap">
+                      {!selectionResult ? (
+                        <Button variant="primary" onClick={() => setActiveTab('input')}>
+                          <i className="bi bi-gear me-1"></i>去选型
+                        </Button>
+                      ) : !quotation ? (
+                        <Button variant="primary" onClick={() => setActiveTab('quotation')}>
+                          <i className="bi bi-currency-yen me-1"></i>生成报价单
+                        </Button>
+                      ) : (
+                        <Button variant="primary" onClick={() => handleGenerateContract()}>
+                          <i className="bi bi-file-earmark-ruled me-1"></i>生成销售合同
+                        </Button>
+                      )}
+                    </div>
+                    <hr className="my-3" />
+                    <h6 style={{ color: colors.text }}>销售合同包含的主要内容：</h6>
+                    <Row className="text-start mt-2" style={{ color: colors.muted, fontSize: '0.9rem' }}>
+                      <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>合同编号与日期</Col>
+                      <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>甲乙方信息</Col>
+                      <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>产品明细与价格</Col>
+                      <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>交货与运输条款</Col>
+                      <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>质量验收标准</Col>
+                      <Col xs={6} className="mb-1"><i className="bi bi-check-circle text-success me-1"></i>违约与争议条款</Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              </div>
+            )}
           </Tab>
 
           <Tab eventKey="query" title={<span><i className="bi bi-search me-1"></i>数据查询</span>}>
@@ -1086,6 +1274,20 @@ function App({ appData: initialAppData, setAppData }) {
             </Row>
           </Tab>
 
+          <Tab eventKey="doc-dashboard" title={<span><i className="bi bi-archive me-1"></i>文档管理</span>}>
+            <Row>
+              <Col>
+                <Suspense fallback={<LazyLoadFallback />}>
+                  <DocumentDashboard
+                    colors={colors}
+                    theme={theme}
+                    onNavigate={(tab) => setActiveTab(tab)}
+                  />
+                </Suspense>
+              </Col>
+            </Row>
+          </Tab>
+
           <Tab eventKey="torsional" title={<span><i className="bi bi-activity me-1"></i>扭振分析</span>}>
             <Row>
               <Col>
@@ -1093,6 +1295,8 @@ function App({ appData: initialAppData, setAppData }) {
                   <TorsionalAnalysis
                     colors={colors}
                     theme={theme}
+                    selectionResult={selectionResult}
+                    engineData={engineData}
                   />
                 </Suspense>
               </Col>
@@ -1104,8 +1308,9 @@ function App({ appData: initialAppData, setAppData }) {
               <Col>
                 <Suspense fallback={<LazyLoadFallback />}>
                   <EnergyDashboard
-                    gearbox={selectionResult?.results?.[0] || null}
+                    gearbox={selectionResult?.recommendations?.[0] || selectionResult?.results?.[0] || null}
                     engineData={engineData}
+                    shipData={{}}
                     hybridConfig={hybridConfig}
                     colors={colors}
                   />
@@ -1175,6 +1380,8 @@ function App({ appData: initialAppData, setAppData }) {
                   <CompetitorComparisonView
                     colors={colors}
                     hangchiData={allGearboxes}
+                    selectionResult={selectionResult}
+                    engineData={engineData}
                   />
                 </Suspense>
               </Col>

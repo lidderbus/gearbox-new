@@ -1,6 +1,7 @@
 // src/components/DataQuery.js - 完整修改版本
-import React, { useState, useEffect } from 'react';
-import { Card, Table, Form, Button, Alert, Row, Col, InputGroup } from 'react-bootstrap';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Card, Table, Form, Button, Alert, Row, Col, InputGroup, Pagination } from 'react-bootstrap';
+import { toast } from '../utils/toast';
 
 /**
  * 数据查询组件
@@ -12,6 +13,10 @@ const DataQuery = ({ appData, theme, colors }) => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortField, setSortField] = useState('model');
+  const [sortOrder, setSortOrder] = useState('asc');
+  const PAGE_SIZE = 20;
 
   const dataTypeOptions = [
     { value: 'hcGearboxes', label: 'HC系列齿轮箱' },
@@ -60,6 +65,11 @@ const DataQuery = ({ appData, theme, colors }) => {
       return;
     }
 
+    if (searchKeyword.trim() === '' && searchResults.length === 0) {
+      toast.warning('请输入搜索关键词');
+      return;
+    }
+
     let results = [...appData[dataType]];
 
     // 应用关键词过滤
@@ -104,14 +114,10 @@ const DataQuery = ({ appData, theme, colors }) => {
       });
     }
 
-    // 默认按型号排序
-    results.sort((a, b) => {
-      if (!a.model) return 1;
-      if (!b.model) return -1;
-      return a.model.localeCompare(b.model);
-    });
+    // Default sort by model, will be overridden by column sort
 
     setSearchResults(results);
+    setCurrentPage(1);
   };
 
   // 清空搜索
@@ -119,6 +125,7 @@ const DataQuery = ({ appData, theme, colors }) => {
     setSearchKeyword('');
     setSearchResults([]);
     setSelectedItem(null);
+    setCurrentPage(1);
   };
 
   // 查看详情
@@ -191,6 +198,7 @@ const DataQuery = ({ appData, theme, colors }) => {
     // 当数据类型变更时重置搜索结果
     setSearchResults([]);
     setSelectedItem(null);
+    setCurrentPage(1);
   }, [dataType]);
 
   const getTableHeaders = () => {
@@ -202,6 +210,67 @@ const DataQuery = ({ appData, theme, colors }) => {
       return ['型号', '流量 (L/min)', '压力 (MPa)', '功率 (kW)', '重量 (kg)', '价格 (元)', '操作'];
     }
     return [];
+  };
+
+  // Column sorting
+  const sortedResults = useMemo(() => {
+    if (!searchResults.length) return [];
+    const sorted = [...searchResults];
+    sorted.sort((a, b) => {
+      let valA, valB;
+      switch (sortField) {
+        case 'model': valA = a.model || ''; valB = b.model || ''; break;
+        case 'weight': valA = parseFloat(a.weight) || 0; valB = parseFloat(b.weight) || 0; break;
+        case 'price': valA = parseFloat(a.price || a.marketPrice) || 0; valB = parseFloat(b.price || b.marketPrice) || 0; break;
+        case 'thrust': valA = parseFloat(a.maxThrust || a.thrust) || 0; valB = parseFloat(b.maxThrust || b.thrust) || 0; break;
+        default: valA = a.model || ''; valB = b.model || '';
+      }
+      if (typeof valA === 'string') return sortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+      return sortOrder === 'asc' ? valA - valB : valB - valA;
+    });
+    return sorted;
+  }, [searchResults, sortField, sortOrder]);
+
+  // Pagination
+  const paginatedResults = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return sortedResults.slice(start, start + PAGE_SIZE);
+  }, [sortedResults, currentPage]);
+  const totalPages = Math.ceil(sortedResults.length / PAGE_SIZE);
+
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortOrder('asc');
+    }
+    setCurrentPage(1);
+  };
+
+  // CSV export
+  const handleExportCSV = () => {
+    if (sortedResults.length === 0) return;
+    const headers = getTableHeaders().filter(h => h !== '操作');
+    const rows = sortedResults.map(item => {
+      if (dataType.includes('Gearboxes')) {
+        const ratios = Array.isArray(item.ratios) ? item.ratios.join('/') : (item.ratio || '-');
+        const capacity = Array.isArray(item.transferCapacity) ? item.transferCapacity.join('/') : (item.transferCapacity || '-');
+        return [item.model || '-', ratios, capacity, formatInputSpeedRange(item.inputSpeedRange), item.maxThrust || item.thrust || '-', item.centerDistance || '-', item.weight || '-', item.price || item.marketPrice || '-'];
+      } else if (dataType === 'flexibleCouplings') {
+        return [item.model || '-', item.torque || item.maxTorque || '-', item.maxSpeed || '-', item.weight || '-', item.price || item.marketPrice || '-'];
+      } else {
+        return [item.model || '-', item.flow || '-', item.pressure || '-', item.power || '-', item.weight || '-', item.price || item.marketPrice || '-'];
+      }
+    });
+    const csv = '\uFEFF' + [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `数据查询_${dataTypeOptions.find(o => o.value === dataType)?.label || dataType}_${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -270,20 +339,39 @@ const DataQuery = ({ appData, theme, colors }) => {
             </Col>
           </Row>
 
-          {searchResults.length > 0 ? (
+          {sortedResults.length > 0 ? (
             <div className="mt-4">
-              <h6 style={{ color: colors?.headerText }}>查询结果 ({searchResults.length})</h6>
-              <div className="table-responsive">
+              <div className="d-flex justify-content-between align-items-center">
+                <h6 className="mb-0" style={{ color: colors?.headerText }}>查询结果 ({sortedResults.length})</h6>
+                <Button variant="outline-success" size="sm" onClick={handleExportCSV} title="导出CSV">
+                  <i className="bi bi-file-earmark-spreadsheet me-1"></i>导出CSV
+                </Button>
+              </div>
+              <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
                 <Table bordered hover size="sm" style={{ color: colors?.text, borderColor: colors?.border }}>
                   <thead style={{ backgroundColor: colors?.headerBg, color: colors?.headerText }}>
                     <tr>
-                      {getTableHeaders().map((header, index) => (
-                        <th key={index} className="text-center">{header}</th>
-                      ))}
+                      {getTableHeaders().map((header, index) => {
+                        const sortableFields = dataType.includes('Gearboxes')
+                          ? { 0: 'model', 6: 'weight', 7: 'price', 4: 'thrust' }
+                          : dataType === 'flexibleCouplings'
+                          ? { 0: 'model', 3: 'weight', 4: 'price' }
+                          : { 0: 'model', 4: 'weight', 5: 'price' };
+                        const field = sortableFields[index];
+                        return (
+                          <th key={index} className="text-center" style={field ? { cursor: 'pointer', whiteSpace: 'nowrap', minWidth: '80px' } : { whiteSpace: 'nowrap', minWidth: '80px' }}
+                            onClick={field ? () => handleSort(field) : undefined}>
+                            {header}
+                            {field && sortField === field && (
+                              <span className="ms-1">{sortOrder === 'asc' ? '\u2191' : '\u2193'}</span>
+                            )}
+                          </th>
+                        );
+                      })}
                     </tr>
                   </thead>
                   <tbody>
-                    {searchResults.flatMap((item, index) => {
+                    {paginatedResults.flatMap((item, index) => {
                       // 处理减速比和传递能力数据，确保一行一对应
                       const ratioAndPowerData = processRatioAndPowerData(item);
                       
@@ -395,6 +483,31 @@ const DataQuery = ({ appData, theme, colors }) => {
                   </tbody>
                 </Table>
               </div>
+              {totalPages > 1 && (
+                <div className="d-flex justify-content-between align-items-center mt-3">
+                  <small className="text-muted">
+                    显示 {(currentPage - 1) * PAGE_SIZE + 1}-{Math.min(currentPage * PAGE_SIZE, sortedResults.length)} / 共 {sortedResults.length} 条
+                  </small>
+                  <Pagination size="sm" className="mb-0">
+                    <Pagination.First onClick={() => setCurrentPage(1)} disabled={currentPage === 1} />
+                    <Pagination.Prev onClick={() => setCurrentPage(p => p - 1)} disabled={currentPage === 1} />
+                    {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
+                      let page;
+                      if (totalPages <= 7) { page = i + 1; }
+                      else if (currentPage <= 4) { page = i + 1; }
+                      else if (currentPage >= totalPages - 3) { page = totalPages - 6 + i; }
+                      else { page = currentPage - 3 + i; }
+                      return (
+                        <Pagination.Item key={page} active={page === currentPage} onClick={() => setCurrentPage(page)}>
+                          {page}
+                        </Pagination.Item>
+                      );
+                    })}
+                    <Pagination.Next onClick={() => setCurrentPage(p => p + 1)} disabled={currentPage === totalPages} />
+                    <Pagination.Last onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages} />
+                  </Pagination>
+                </div>
+              )}
             </div>
           ) : (
             searchKeyword.trim() !== '' && (

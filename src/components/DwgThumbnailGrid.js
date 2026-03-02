@@ -6,7 +6,8 @@ import {
 import {
   gearboxDwgDrawings,
   couplingDwgDrawings,
-  getDwgDownloadUrl
+  getDwgDownloadUrl,
+  getShareCADPreviewUrl
 } from '../data/outlineDrawings';
 import {
   isFavorite,
@@ -60,8 +61,7 @@ const ThumbnailCard = ({ model, files, type, onSelect, onToggleFavorite, isSelec
   // 使用ShareCAD获取预览URL
   const previewUrl = useMemo(() => {
     if (!firstFile) return null;
-    const downloadUrl = getDwgDownloadUrl(firstFile.filePath);
-    return `//sharecad.org/cadframe/load?url=${encodeURIComponent(downloadUrl)}`;
+    return getShareCADPreviewUrl(firstFile.filePath);
   }, [firstFile]);
 
   // iframe加载完成

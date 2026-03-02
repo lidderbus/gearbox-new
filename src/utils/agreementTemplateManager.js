@@ -12,12 +12,14 @@ import {
   hctChineseTemplate,
   hcChineseTemplate,
   dtChineseTemplate,
-  hcqChineseTemplate
+  hcqChineseTemplate,
+  gwsChineseTemplate
 } from './agreementTemplates';
 
 // 协议模板类型枚举
 export const TemplateType = {
   GWC: 'GWC',     // GWC系列船用齿轮箱
+  GWS: 'GWS',     // GWS系列船用齿轮箱（电控双机备用泵启停）
   HCT: 'HCT',     // HCT系列船用齿轮箱
   HC: 'HC',       // HC系列船用齿轮箱
   DT: 'DT',       // DT系列船用齿轮箱
@@ -45,6 +47,9 @@ export const getAgreementTemplate = (templateType, language, options = {}) => {
   switch (templateType) {
     case TemplateType.GWC:
       template = language === LanguageType.ENGLISH ? gwcEnglishTemplate : gwcChineseTemplate;
+      break;
+    case TemplateType.GWS:
+      template = gwsChineseTemplate; // GWS系列（电控双机备用泵启停）
       break;
     case TemplateType.HCT:
       template = hctChineseTemplate;
@@ -127,7 +132,11 @@ export const fillTemplate = (template, data) => {
     result = result.replace(regex, value || '');
   });
   
-  // 清除未替换的变量
+  // 清除未替换的变量（清除前记录日志以便排查）
+  const unmatched = result.match(/\{\{([^}]+)\}\}/g);
+  if (unmatched && unmatched.length > 0) {
+    console.warn('[协议模板] 未替换的变量:', unmatched.map(m => m.replace(/[{}]/g, '')));
+  }
   result = result.replace(/{{.*?}}/g, '');
   
   return result;

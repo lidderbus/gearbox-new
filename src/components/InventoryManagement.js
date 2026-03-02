@@ -36,6 +36,20 @@ const InventoryManagement = ({ colors = {}, theme = 'light' }) => {
   // 警告和错误
   const [alert, setAlert] = useState({ show: false, variant: '', message: '' });
 
+  // P19: 预警阈值配置
+  const [showThresholdModal, setShowThresholdModal] = useState(false);
+  const [globalThreshold, setGlobalThreshold] = useState(5);
+
+  // P20: 库存盘点
+  const [auditData, setAuditData] = useState({});
+  const [auditOperator, setAuditOperator] = useState('');
+
+  // P21: 代管方信息
+  const [consignorName, setConsignorName] = useState('');
+  const [consignorContact, setConsignorContact] = useState('');
+  const [consignorPhone, setConsignorPhone] = useState('');
+  const [consignorContract, setConsignorContract] = useState('');
+
   // 初始化数据
   useEffect(() => {
     const savedInventory = localStorage.getItem('shanghai_inventory');
@@ -112,6 +126,10 @@ const InventoryManagement = ({ colors = {}, theme = 'light' }) => {
     setStockQuantity('');
     setStockReason('');
     setStockOperator('');
+    setConsignorName('');
+    setConsignorContact('');
+    setConsignorPhone('');
+    setConsignorContract('');
     setShowStockModal(true);
   }, []);
 
@@ -168,6 +186,57 @@ const InventoryManagement = ({ colors = {}, theme = 'light' }) => {
       `${stockModalType === DocumentType.STOCK_IN ? '入库' : '出库'}成功! 单据号: ${document.documentNo}`
     );
   }, [selectedItem, stockQuantity, stockModalType, stockOperator, stockReason, inventory, showAlert]);
+
+  // P19: 应用预警阈值
+  const handleApplyThreshold = useCallback(() => {
+    const threshold = parseInt(globalThreshold);
+    if (isNaN(threshold) || threshold < 0) {
+      showAlert('danger', '请输入有效的阈值');
+      return;
+    }
+    setInventory(prev => prev.map(item => ({ ...item, minStock: threshold })));
+    setShowThresholdModal(false);
+    showAlert('success', `预警阈值已设置为 ${threshold}，已应用到全部 ${inventory.length} 个库存项目`);
+  }, [globalThreshold, inventory.length, showAlert]);
+
+  // P20: 提交盘点
+  const handleSubmitAudit = useCallback(() => {
+    const adjustments = [];
+    Object.entries(auditData).forEach(([itemId, actualQty]) => {
+      const qty = parseInt(actualQty);
+      if (isNaN(qty)) return;
+      const item = inventory.find(i => i.id === itemId);
+      if (!item || qty === item.quantity) return;
+      const diff = qty - item.quantity;
+      adjustments.push({ itemId, item, diff, actualQty: qty });
+    });
+    if (adjustments.length === 0) {
+      showAlert('info', '没有需要调整的差异');
+      return;
+    }
+    if (!window.confirm(`共 ${adjustments.length} 项差异，确认提交盘点结果？`)) return;
+    const newDocs = [];
+    adjustments.forEach(({ item, diff }) => {
+      const doc = createStockDocument({
+        type: diff > 0 ? DocumentType.STOCK_IN : DocumentType.STOCK_OUT,
+        inventoryId: item.id,
+        sku: item.sku,
+        productName: item.name,
+        quantity: Math.abs(diff),
+        operator: auditOperator || '盘点',
+        reason: `盘点${diff > 0 ? '盘盈' : '盘亏'}`
+      });
+      newDocs.push(doc);
+    });
+    setInventory(prev => prev.map(item => {
+      const adj = adjustments.find(a => a.itemId === item.id);
+      if (!adj) return item;
+      return { ...item, quantity: adj.actualQty, lastUpdated: new Date().toISOString() };
+    }));
+    setStockDocuments(prev => [...newDocs, ...prev]);
+    setAuditData({});
+    showAlert('success', `盘点完成，${adjustments.length} 项调整已生成单据`);
+  }, [auditData, inventory, auditOperator, showAlert]);
 
   // 渲染统计卡片
   const renderStatsCards = () => (
@@ -350,6 +419,7 @@ const InventoryManagement = ({ colors = {}, theme = 'light' }) => {
                   <Badge bg={item.ownership === InventoryOwnership.OWNED ? 'primary' : 'secondary'}>
                     {item.ownership === InventoryOwnership.OWNED ? '自有' : '代管'}
                   </Badge>
+                  {item.consignor?.name && <div><small className="text-muted">{item.consignor.name}</small></div>}
                 </td>
                 <td>{item.location}</td>
                 <td className={`text-end ${item.quantity < 0 ? 'text-danger fw-bold' : ''}`}>
@@ -514,6 +584,41 @@ const InventoryManagement = ({ colors = {}, theme = 'light' }) => {
               placeholder="请输入出入库原因"
             />
           </Form.Group>
+
+          {selectedItem?.ownership === 'consigned' && (
+            <>
+              <hr />
+              <h6 className="text-muted">代管方信息</h6>
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>委托方名称</Form.Label>
+                    <Form.Control type="text" value={consignorName} onChange={e => setConsignorName(e.target.value)} placeholder="委托方公司名称" />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>联系人</Form.Label>
+                    <Form.Control type="text" value={consignorContact} onChange={e => setConsignorContact(e.target.value)} placeholder="联系人姓名" />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>联系电话</Form.Label>
+                    <Form.Control type="text" value={consignorPhone} onChange={e => setConsignorPhone(e.target.value)} placeholder="联系电话" />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>合同编号</Form.Label>
+                    <Form.Control type="text" value={consignorContract} onChange={e => setConsignorContract(e.target.value)} placeholder="代管合同编号" />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </>
+          )}
         </Form>
       </Modal.Body>
       <Modal.Footer>
@@ -576,6 +681,11 @@ const InventoryManagement = ({ colors = {}, theme = 'light' }) => {
             )}
           </span>
         }>
+          <div className="mb-3 text-end">
+            <Button size="sm" variant="outline-primary" onClick={() => setShowThresholdModal(true)}>
+              <i className="bi bi-gear me-1"></i>设置预警阈值
+            </Button>
+          </div>
           <Row>
             <Col md={6}>
               <Card className="shadow-sm border-danger mb-3">
@@ -637,10 +747,95 @@ const InventoryManagement = ({ colors = {}, theme = 'light' }) => {
             </Col>
           </Row>
         </Tab>
+        <Tab eventKey="audit" title={<span><i className="bi bi-clipboard-check me-1"></i>库存盘点</span>}>
+          <Card className="shadow-sm" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+            <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>
+              <Row className="align-items-center">
+                <Col md={4}>
+                  <Form.Control size="sm" placeholder="盘点人" value={auditOperator} onChange={e => setAuditOperator(e.target.value)} />
+                </Col>
+                <Col md={4} className="text-center">
+                  <small className="text-muted">填写实际数量后提交，差异将自动生成调整单据</small>
+                </Col>
+                <Col md={4} className="text-end">
+                  <Button size="sm" variant="primary" onClick={handleSubmitAudit}>
+                    <i className="bi bi-check-circle me-1"></i>提交盘点
+                  </Button>
+                </Col>
+              </Row>
+            </Card.Header>
+            <Card.Body style={{ maxHeight: '500px', overflowY: 'auto' }}>
+              <Table striped hover size="sm">
+                <thead className="sticky-top bg-light">
+                  <tr>
+                    <th>物料编码</th>
+                    <th>产品名称</th>
+                    <th>型号</th>
+                    <th className="text-end">系统数量</th>
+                    <th className="text-center">实际数量</th>
+                    <th className="text-end">差异</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inventory.map(item => {
+                    const actual = auditData[item.id];
+                    const diff = actual !== undefined && actual !== '' ? parseInt(actual) - item.quantity : null;
+                    return (
+                      <tr key={item.id} className={diff && diff !== 0 ? (diff > 0 ? 'table-success' : 'table-danger') : ''}>
+                        <td><code>{item.sku}</code></td>
+                        <td>{item.name}</td>
+                        <td>{item.model}</td>
+                        <td className="text-end">{item.quantity} {item.unit}</td>
+                        <td style={{ width: '120px' }}>
+                          <Form.Control
+                            type="number"
+                            size="sm"
+                            className="text-center"
+                            placeholder={String(item.quantity)}
+                            value={auditData[item.id] || ''}
+                            onChange={e => setAuditData(prev => ({ ...prev, [item.id]: e.target.value }))}
+                          />
+                        </td>
+                        <td className={`text-end fw-bold ${diff > 0 ? 'text-success' : diff < 0 ? 'text-danger' : ''}`}>
+                          {diff !== null && diff !== 0 ? (diff > 0 ? '+' : '') + diff : '-'}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card>
+        </Tab>
       </Tabs>
 
       {/* 出入库Modal */}
       {renderStockModal()}
+
+      {/* P19: 预警阈值设置Modal */}
+      <Modal show={showThresholdModal} onHide={() => setShowThresholdModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title><i className="bi bi-gear me-2"></i>设置预警阈值</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group className="mb-3">
+            <Form.Label>全局低库存预警阈值</Form.Label>
+            <Form.Control
+              type="number"
+              min="0"
+              value={globalThreshold}
+              onChange={e => setGlobalThreshold(e.target.value)}
+            />
+            <Form.Text className="text-muted">
+              当库存数量 &le; 此阈值时触发低库存预警，将应用到全部 {inventory.length} 个库存项目
+            </Form.Text>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowThresholdModal(false)}>取消</Button>
+          <Button variant="primary" onClick={handleApplyThreshold}>应用到全部</Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

@@ -2,7 +2,8 @@
 // CPP可调桨系统选型主界面
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { Card, Row, Col, Form, Button, Table, Alert, Badge, Tabs, Tab, InputGroup } from 'react-bootstrap';
+import { toast } from '../../utils/toast';
+import { Card, Row, Col, Form, Button, Table, Alert, Badge, Tabs, Tab, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { cppGearboxes, cppPropellers, oilDistributors, cppHydraulicUnits, vesselTypes, CAVITATION_PREVENTION_TECHNOLOGIES } from '../../data/cppSystemData';
 import {
   selectCPPGearbox,
@@ -243,7 +244,7 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
   // 导出PDF
   const handleExportPDF = async () => {
     if (!selectionResult || !selectionResult.success) {
-      alert('请先完成选型后再导出');
+      toast.warning('请先完成选型后再导出');
       return;
     }
 
@@ -410,7 +411,7 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
       });
     } catch (error) {
       console.error('PDF导出失败:', error);
-      alert('PDF导出失败: ' + error.message);
+      toast.error('PDF导出失败: ' + error.message);
     }
   };
 
@@ -606,8 +607,8 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
               </Badge>
             )}
           </div>
-          <Button variant="outline-secondary" size="sm" onClick={() => setSelectedGearbox(null)}>
-            <i className="bi bi-arrow-left me-1"></i>返回浏览
+          <Button variant="outline-secondary" size="sm" onClick={() => setSelectedGearbox(null)} title="取消选择此齿轮箱">
+            <i className="bi bi-x-circle me-1"></i>取消选择
           </Button>
         </Card.Header>
         <Card.Body>
@@ -659,8 +660,8 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
               {propeller.type === 'heavy-duty' ? '重载型' : propeller.type === 'high-speed' ? '高速型' : '通用型'}
             </Badge>
           </div>
-          <Button variant="outline-secondary" size="sm" onClick={() => setSelectedPropeller(null)}>
-            <i className="bi bi-arrow-left me-1"></i>返回浏览
+          <Button variant="outline-secondary" size="sm" onClick={() => setSelectedPropeller(null)} title="取消选择此调距桨">
+            <i className="bi bi-x-circle me-1"></i>取消选择
           </Button>
         </Card.Header>
         <Card.Body>
@@ -741,8 +742,11 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
                     type="number"
                     value={power}
                     onChange={(e) => setPower(e.target.value)}
-                    placeholder="例如: 800"
+                    placeholder="50 ~ 20,000"
+                    min={50} max={20000}
+                    isInvalid={power !== '' && (parseFloat(power) < 50 || parseFloat(power) > 20000)}
                   />
+                  <Form.Control.Feedback type="invalid">功率范围: 50 ~ 20,000 kW</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group className="mb-3">
@@ -751,8 +755,11 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
                     type="number"
                     value={speed}
                     onChange={(e) => setSpeed(e.target.value)}
-                    placeholder="例如: 1500"
+                    placeholder="300 ~ 3,600"
+                    min={300} max={3600}
+                    isInvalid={speed !== '' && (parseFloat(speed) < 300 || parseFloat(speed) > 3600)}
                   />
+                  <Form.Control.Feedback type="invalid">转速范围: 300 ~ 3,600 rpm</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group className="mb-3">
@@ -762,8 +769,11 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
                     step="0.1"
                     value={targetRatio}
                     onChange={(e) => setTargetRatio(e.target.value)}
-                    placeholder="例如: 3.5"
+                    placeholder="1.5 ~ 12"
+                    min={1.5} max={12}
+                    isInvalid={targetRatio !== '' && (parseFloat(targetRatio) < 1.5 || parseFloat(targetRatio) > 12)}
                   />
+                  <Form.Control.Feedback type="invalid">减速比范围: 1.5 ~ 12</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group className="mb-3">
@@ -792,7 +802,13 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
                     ))}
                   </Form.Select>
                   <Form.Text className="text-muted">
-                    伴流系数: {currentVesselType.wakeCoefficient} | 推力减额: {currentVesselType.thrustDeduction}
+                    <OverlayTrigger placement="right" overlay={<Tooltip>伴流系数(w): 螺旋桨处水流速度与船速之比的修正系数，受船体形状影响。w越大表示桨盘面处水流速度越低。</Tooltip>}>
+                      <span style={{cursor: 'help', borderBottom: '1px dashed #6c757d'}}>伴流系数: {currentVesselType.wakeCoefficient}</span>
+                    </OverlayTrigger>
+                    {' | '}
+                    <OverlayTrigger placement="right" overlay={<Tooltip>推力减额(t): 螺旋桨工作时因加速水流降低了船体压力，导致阻力增大的修正系数。t越大表示推力损失越多。</Tooltip>}>
+                      <span style={{cursor: 'help', borderBottom: '1px dashed #6c757d'}}>推力减额: {currentVesselType.thrustDeduction}</span>
+                    </OverlayTrigger>
                   </Form.Text>
                 </Form.Group>
 
@@ -805,8 +821,11 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
                         step="0.1"
                         value={propellerDiameter}
                         onChange={(e) => setPropellerDiameter(e.target.value)}
-                        placeholder="例如: 2.5"
+                        placeholder="0.5 ~ 8.0"
+                        min={0.5} max={8}
+                        isInvalid={propellerDiameter !== '' && (parseFloat(propellerDiameter) < 0.5 || parseFloat(propellerDiameter) > 8)}
                       />
+                      <Form.Control.Feedback type="invalid">直径范围: 0.5 ~ 8.0 m</Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                   <Col>
@@ -817,8 +836,11 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
                         step="0.5"
                         value={vesselSpeed}
                         onChange={(e) => setVesselSpeed(e.target.value)}
-                        placeholder="例如: 12"
+                        placeholder="3 ~ 35"
+                        min={3} max={35}
+                        isInvalid={vesselSpeed !== '' && (parseFloat(vesselSpeed) < 3 || parseFloat(vesselSpeed) > 35)}
                       />
+                      <Form.Control.Feedback type="invalid">航速范围: 3 ~ 35 节</Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -830,8 +852,11 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
                     step="0.5"
                     value={propellerDepth}
                     onChange={(e) => setPropellerDepth(e.target.value)}
-                    placeholder="例如: 3"
+                    placeholder="0.5 ~ 15"
+                    min={0.5} max={15}
+                    isInvalid={propellerDepth !== '' && propellerDepth !== '3' && (parseFloat(propellerDepth) < 0.5 || parseFloat(propellerDepth) > 15)}
                   />
+                  <Form.Control.Feedback type="invalid">桨沉深范围: 0.5 ~ 15 m</Form.Control.Feedback>
                   <Form.Text className="text-muted">
                     螺旋桨中心距水面深度，用于空泡校核
                   </Form.Text>
@@ -860,8 +885,11 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
                         type="number"
                         value={deadweight}
                         onChange={(e) => setDeadweight(e.target.value)}
-                        placeholder="例如: 5000"
+                        placeholder="100 ~ 300,000"
+                        min={100} max={300000}
+                        isInvalid={deadweight !== '' && deadweight !== '5000' && (parseFloat(deadweight) < 100 || parseFloat(deadweight) > 300000)}
                       />
+                      <Form.Control.Feedback type="invalid">载重吨范围: 100 ~ 300,000</Form.Control.Feedback>
                       <Form.Text className="text-muted">
                         用于EEXI/CII计算
                       </Form.Text>
@@ -870,9 +898,17 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
                 </Row>
 
                 <div className="d-grid gap-2">
-                  <Button variant="primary" onClick={handleSelection}>
+                  <Button
+                    variant="primary"
+                    onClick={handleSelection}
+                    disabled={!power || !speed || !targetRatio ||
+                      (power && (parseFloat(power) < 50 || parseFloat(power) > 20000)) ||
+                      (speed && (parseFloat(speed) < 300 || parseFloat(speed) > 3600)) ||
+                      (targetRatio && (parseFloat(targetRatio) < 1.5 || parseFloat(targetRatio) > 12))
+                    }
+                  >
                     <i className="bi bi-search me-2"></i>
-                    开始选型
+                    {(!power || !speed || !targetRatio) ? '请填写必填参数 (*)' : '开始选型'}
                   </Button>
                   <Button variant="outline-secondary" onClick={handleReset}>
                     <i className="bi bi-arrow-counterclockwise me-2"></i>
@@ -924,32 +960,57 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
 
         {/* 右侧：结果展示 */}
         <Col lg={8}>
+          {/* 已选分析对象指示条 */}
+          {(selectedGearbox || selectedPropeller) && (
+            <Alert variant="info" className="py-2 mb-2 d-flex align-items-center justify-content-between">
+              <div>
+                <i className="bi bi-check2-square me-2"></i>
+                <strong>已选分析对象: </strong>
+                {selectedGearbox && (
+                  <Badge bg="primary" className="me-2">
+                    <i className="bi bi-gear me-1"></i>{selectedGearbox.model}
+                  </Badge>
+                )}
+                {selectedPropeller && (
+                  <Badge bg="success" className="me-1">
+                    <i className="bi bi-fan me-1"></i>{selectedPropeller.model}
+                  </Badge>
+                )}
+                {!selectedGearbox && <span className="text-muted me-2">(未选齿轮箱)</span>}
+                {!selectedPropeller && <span className="text-muted">(未选调距桨)</span>}
+              </div>
+              <Button variant="outline-secondary" size="sm" onClick={() => { setSelectedGearbox(null); setSelectedPropeller(null); }}>
+                <i className="bi bi-x-lg me-1"></i>清除选择
+              </Button>
+            </Alert>
+          )}
+
           <Tabs activeKey={browseTab} onSelect={(k) => setBrowseTab(k)} className="mb-3">
-            <Tab eventKey="gearbox" title={<><i className="bi bi-gear me-1"></i>齿轮箱</>}>
-              {selectedGearbox ? (
-                <>
-                  {renderRecommendationsList()}
-                  {renderGearboxCard(selectedGearbox, selectionResult?.recommendations?.[0]?.matchInfo)}
-                </>
-              ) : (
-                <Card style={cardStyle}>
-                  <Card.Body>
-                    <div className="d-flex justify-content-between align-items-center mb-2">
-                      <h5 className="mb-0">CPP齿轮箱型号浏览</h5>
-                      <Button
-                        variant={compareMode ? 'primary' : 'outline-secondary'}
-                        size="sm"
-                        onClick={() => setCompareMode(!compareMode)}
-                      >
-                        <i className="bi bi-columns-gap me-1"></i>
-                        {compareMode ? '退出对比' : '开启对比'}
-                      </Button>
-                    </div>
-                    {compareItems.length > 0 && renderCompareTable()}
-                    <Table striped bordered hover size="sm">
-                      <thead>
+            <Tab eventKey="gearbox" title={<><i className="bi bi-gear me-1"></i>齿轮箱{selectedGearbox ? ' \u2713' : ''}</>}>
+              {selectionResult?.recommendations && renderRecommendationsList()}
+              <Card style={cardStyle}>
+                <Card.Body>
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <h5 className="mb-0">
+                      CPP齿轮箱型号浏览
+                      <small className="text-muted ms-2" style={{fontSize: '0.7em'}}>点击行或选择radio按钮选定分析对象</small>
+                    </h5>
+                    <Button
+                      variant={compareMode ? 'primary' : 'outline-secondary'}
+                      size="sm"
+                      onClick={() => setCompareMode(!compareMode)}
+                    >
+                      <i className="bi bi-columns-gap me-1"></i>
+                      {compareMode ? '退出对比' : '开启对比'}
+                    </Button>
+                  </div>
+                  {compareItems.length > 0 && renderCompareTable()}
+                  <div style={{maxHeight: '420px', overflowY: 'auto'}}>
+                    <Table bordered hover size="sm" className="mb-0">
+                      <thead style={{position: 'sticky', top: 0, zIndex: 1, backgroundColor: '#f8f9fa'}}>
                         <tr>
-                          {compareMode && <th style={{width: '40px'}}>对比</th>}
+                          <th style={{width: '45px'}} className="text-center">选择</th>
+                          {compareMode && <th style={{width: '40px'}} className="text-center">对比</th>}
                           <th>型号</th>
                           <th>系列</th>
                           <th>最大功率</th>
@@ -959,55 +1020,86 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {cppGearboxes.map((g, idx) => (
-                          <tr key={idx} style={{cursor: 'pointer'}} onClick={() => !compareMode && setSelectedGearbox(g)}>
-                            {compareMode && (
-                              <td className="text-center" onClick={(e) => { e.stopPropagation(); toggleCompareItem(g, 'gearbox'); }}>
+                        {cppGearboxes.map((g, idx) => {
+                          const isSelected = selectedGearbox?.model === g.model;
+                          return (
+                            <tr
+                              key={idx}
+                              style={{
+                                cursor: 'pointer',
+                                backgroundColor: isSelected ? '#cfe2ff' : undefined,
+                                borderLeft: isSelected ? '3px solid #0d6efd' : '3px solid transparent'
+                              }}
+                              onClick={() => setSelectedGearbox(g)}
+                            >
+                              <td className="text-center" onClick={(e) => e.stopPropagation()}>
                                 <Form.Check
-                                  type="checkbox"
-                                  checked={isInCompare(g.model, 'gearbox')}
-                                  onChange={() => {}}
-                                  disabled={!isInCompare(g.model, 'gearbox') && compareItems.length >= 4}
+                                  type="radio"
+                                  name="gearboxSelect"
+                                  checked={isSelected}
+                                  onChange={() => setSelectedGearbox(g)}
                                 />
                               </td>
-                            )}
-                            <td><strong>{g.model}</strong></td>
-                            <td><Badge bg="info">{g.series}</Badge></td>
-                            <td>{g.maxPower} kW</td>
-                            <td>{g.ratios?.join(', ')}</td>
-                            <td>{g.thrust} kN</td>
-                            <td className="text-danger">{formatPrice(g.marketPrice)}</td>
-                          </tr>
-                        ))}
+                              {compareMode && (
+                                <td className="text-center" onClick={(e) => { e.stopPropagation(); toggleCompareItem(g, 'gearbox'); }}>
+                                  <Form.Check
+                                    type="checkbox"
+                                    checked={isInCompare(g.model, 'gearbox')}
+                                    onChange={() => {}}
+                                    disabled={!isInCompare(g.model, 'gearbox') && compareItems.length >= 4}
+                                  />
+                                </td>
+                              )}
+                              <td><strong>{g.model}</strong> {isSelected && <i className="bi bi-check-circle-fill text-primary ms-1"></i>}</td>
+                              <td><Badge bg="info">{g.series}</Badge></td>
+                              <td>{g.maxPower} kW</td>
+                              <td style={{fontSize: '0.85em'}}>{g.ratios?.join(', ')}</td>
+                              <td>{g.thrust} kN</td>
+                              <td className="text-danger">{formatPrice(g.marketPrice)}</td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </Table>
-                  </Card.Body>
-                </Card>
-              )}
+                  </div>
+                </Card.Body>
+              </Card>
+              {selectedGearbox && renderGearboxCard(selectedGearbox, selectionResult?.recommendations?.find(r => r.gearbox.model === selectedGearbox.model)?.matchInfo)}
             </Tab>
 
-            <Tab eventKey="propeller" title={<><i className="bi bi-fan me-1"></i>调距桨</>}>
-              {selectedPropeller ? (
-                renderPropellerCard(selectedPropeller)
-              ) : (
-                <Card style={cardStyle}>
-                  <Card.Body>
-                    <div className="d-flex justify-content-between align-items-center mb-2">
-                      <h5 className="mb-0">调距桨型号浏览</h5>
-                      <Button
-                        variant={compareMode ? 'primary' : 'outline-secondary'}
-                        size="sm"
-                        onClick={() => setCompareMode(!compareMode)}
-                      >
-                        <i className="bi bi-columns-gap me-1"></i>
-                        {compareMode ? '退出对比' : '开启对比'}
-                      </Button>
-                    </div>
-                    {compareItems.length > 0 && renderCompareTable()}
-                    <Table striped bordered hover size="sm">
-                      <thead>
+            <Tab eventKey="propeller" title={<><i className="bi bi-fan me-1"></i>调距桨{selectedPropeller ? ' \u2713' : ''}</>}>
+              {/* CPP-9: 调距桨系列类型说明 */}
+              <Alert variant="light" className="py-2 mb-2" style={{fontSize: '0.85em', border: '1px solid #dee2e6'}}>
+                <strong><i className="bi bi-info-circle me-1"></i>系列说明: </strong>
+                <Badge bg="danger" className="me-1">HI</Badge> <strong>重载型</strong> - 适用于拖轮、AHTS、工程船等重负荷场景，高强度铜合金叶片
+                <span className="mx-2">|</span>
+                <Badge bg="success" className="me-1">HF</Badge> <strong>通用型</strong> - 适用于一般船舶，经济高效，优化低速性能
+                <span className="mx-2">|</span>
+                <Badge bg="warning" text="dark" className="me-1">HS</Badge> <strong>特种型</strong> - 适用于耙吸船、挖泥船等特种船舶，超大直径重载桨毂
+              </Alert>
+              <Card style={cardStyle}>
+                <Card.Body>
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <h5 className="mb-0">
+                      调距桨型号浏览
+                      <small className="text-muted ms-2" style={{fontSize: '0.7em'}}>点击行选定分析对象</small>
+                    </h5>
+                    <Button
+                      variant={compareMode ? 'primary' : 'outline-secondary'}
+                      size="sm"
+                      onClick={() => setCompareMode(!compareMode)}
+                    >
+                      <i className="bi bi-columns-gap me-1"></i>
+                      {compareMode ? '退出对比' : '开启对比'}
+                    </Button>
+                  </div>
+                  {compareItems.length > 0 && renderCompareTable()}
+                  <div style={{maxHeight: '420px', overflowY: 'auto'}}>
+                    <Table bordered hover size="sm" className="mb-0">
+                      <thead style={{position: 'sticky', top: 0, zIndex: 1, backgroundColor: '#f8f9fa'}}>
                         <tr>
-                          {compareMode && <th style={{width: '40px'}}>对比</th>}
+                          <th style={{width: '45px'}} className="text-center">选择</th>
+                          {compareMode && <th style={{width: '40px'}} className="text-center">对比</th>}
                           <th>型号</th>
                           <th>系列</th>
                           <th>类型</th>
@@ -1017,31 +1109,52 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {cppPropellers.map((p, idx) => (
-                          <tr key={idx} style={{cursor: 'pointer'}} onClick={() => !compareMode && setSelectedPropeller(p)}>
-                            {compareMode && (
-                              <td className="text-center" onClick={(e) => { e.stopPropagation(); toggleCompareItem(p, 'propeller'); }}>
+                        {cppPropellers.map((p, idx) => {
+                          const isSelected = selectedPropeller?.model === p.model;
+                          const typeLabel = p.type === 'heavy-duty' ? '重载' : p.type === 'heavy-duty-hub' ? '特种重载' : p.type === 'high-speed' ? '高速' : '通用';
+                          return (
+                            <tr
+                              key={idx}
+                              style={{
+                                cursor: 'pointer',
+                                backgroundColor: isSelected ? '#d1e7dd' : undefined,
+                                borderLeft: isSelected ? '3px solid #198754' : '3px solid transparent'
+                              }}
+                              onClick={() => setSelectedPropeller(p)}
+                            >
+                              <td className="text-center" onClick={(e) => e.stopPropagation()}>
                                 <Form.Check
-                                  type="checkbox"
-                                  checked={isInCompare(p.model, 'propeller')}
-                                  onChange={() => {}}
-                                  disabled={!isInCompare(p.model, 'propeller') && compareItems.length >= 4}
+                                  type="radio"
+                                  name="propellerSelect"
+                                  checked={isSelected}
+                                  onChange={() => setSelectedPropeller(p)}
                                 />
                               </td>
-                            )}
-                            <td><strong>{p.model}</strong></td>
-                            <td><Badge bg="warning" text="dark">{p.series}</Badge></td>
-                            <td>{p.type === 'heavy-duty' ? '重载' : p.type === 'high-speed' ? '高速' : '通用'}</td>
-                            <td>{p.diameterRange?.join(' - ')} m</td>
-                            <td>{p.maxPower} kW</td>
-                            <td className="text-danger">{formatPrice(p.marketPrice)}</td>
-                          </tr>
-                        ))}
+                              {compareMode && (
+                                <td className="text-center" onClick={(e) => { e.stopPropagation(); toggleCompareItem(p, 'propeller'); }}>
+                                  <Form.Check
+                                    type="checkbox"
+                                    checked={isInCompare(p.model, 'propeller')}
+                                    onChange={() => {}}
+                                    disabled={!isInCompare(p.model, 'propeller') && compareItems.length >= 4}
+                                  />
+                                </td>
+                              )}
+                              <td><strong>{p.model}</strong> {isSelected && <i className="bi bi-check-circle-fill text-success ms-1"></i>}</td>
+                              <td><Badge bg={p.series === 'HI' ? 'danger' : p.series === 'HS' ? 'warning' : 'success'} text={p.series === 'HS' ? 'dark' : undefined}>{p.series}</Badge></td>
+                              <td>{typeLabel}</td>
+                              <td>{p.diameterRange?.join(' - ')} m</td>
+                              <td>{p.maxPower} kW</td>
+                              <td className="text-danger">{formatPrice(p.marketPrice)}</td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </Table>
-                  </Card.Body>
-                </Card>
-              )}
+                  </div>
+                </Card.Body>
+              </Card>
+              {selectedPropeller && renderPropellerCard(selectedPropeller)}
             </Tab>
 
             <Tab eventKey="accessories" title={<><i className="bi bi-box me-1"></i>配套设备</>}>

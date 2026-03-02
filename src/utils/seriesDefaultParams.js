@@ -341,6 +341,126 @@ export const hctSeriesDefaults = {
   appearance: '杭齿灰'
 };
 
+// GWS系列默认参数 (电控双机备用泵启停系列)
+// 数据来源：GWS49.61齿轮箱技术协议（电控 双机 备用泵启停及控制箱）上前2026.1.29.doc
+export const gwsSeriesDefaults = {
+  // 基本功能描述
+  gearboxFunction: '倒顺离合、减速、承受螺旋桨推力',
+  transmissionType: '圆柱斜齿轮三轴五齿轮传动',
+  clutchType: '液压湿式多片摩擦离合器',
+  inputCouplingType: '高弹性联轴器',
+
+  // 润滑系统参数
+  lubricationOilPressure: '0.15～0.45',
+  maxOilTemperature: 80,
+  oilGrade: 'HC-11、HQ-10 或 SAE30',
+  workingOilPressure: '1.3～1.6',
+
+  // 冷却系统参数
+  coolingWaterInletTemperature: 32,
+  coolingWaterPressure: 0.35,
+  minCoolingWaterFlow: 2, // t/h
+
+  // 性能参数
+  mechanicalEfficiency: 96,
+  outputDirection: '相反',
+  directionChangeTime: 8, // 秒，可调节
+
+  // 排列方式 - GWS系列特有（输入输出垂直异心）
+  arrangement: '输入输出垂直异心（中心距615mm）',
+  inputOutputOffset: 615, // mm，输入输出中心距
+
+  // 安装参数
+  longitudinalInclination: 10,
+  transverseInclination: 15,
+  longitudinalShaking: 7.5,
+  transverseShaking: 22.5,
+  installationMethod: '齿轮箱支架与主机底座安装在同一刚性支撑上',
+
+  // 环境条件
+  storageTemperature: '-15°C ~ +45°C',
+  operatingTemperature: '-15°C ~ +45°C',
+  seawaterTemperature: '-1°C ~ +32°C',
+  relativeHumidity: '+35°C, 90%',
+  workingInclination: '纵倾10°、横倾15°',
+
+  // 维护参数
+  overhaulTime: 10000,
+  nameplateSpecification: '不锈钢，黑底白字阳文，中英文对照',
+
+  // 控制系统 - GWS系列特有（电控带机旁手动）
+  controlType: '电控带机旁手动',
+  controlTypeOptions: '电控带机旁手动',
+  controlVoltage: 24, // DC24V
+
+  // 仪表与报警 - GWS系列特有（8个报警控制器含备用泵启停）
+  instrumentsAndAlarms: '润滑油压表、润滑油温表、工作油压力表各1只；滑油低压报警、油温高报警、工作油压力低报警控制器各1只；正车、倒车、空车指示控制器各1只；备用泵启停控制器1只',
+  workingOilPressureAlarm: 1.1,
+  lubOilPressureAlarm: 0.1,
+  oilTemperatureAlarm: 75,
+
+  // 备用泵启停参数 - GWS系列特有
+  backupPumpStartPressure: 0.03, // MPa，启动压力
+  backupPumpStopPressure: 0.4,   // MPa，停止压力
+  backupPumpAutoControl: true,   // 自动启停功能
+
+  // 电动备用泵参数 - GWS系列特有
+  backupPumpModel: '2CYA-1.1/0.8D(TS11)',
+  backupPumpFlowRate: 1.1, // m³/h
+  backupPumpPressure: 0.8, // MPa
+  backupPumpMotorPower: 0.55, // kW
+  backupPumpMotorVoltage: 'AC380V/50Hz',
+  backupPumpMotorProtection: 'IP44',
+  backupPumpMotorInsulation: 'F级',
+
+  // 备用泵控制箱 - GWS系列特有
+  backupPumpControlBox: true, // 每台电动泵配控制箱1只
+  backupPumpControlBoxFeatures: '具备自动启停功能',
+
+  // 信号输出
+  signalOutput: '直流无源开关量信号',
+
+  // 联轴器
+  couplingManufacturer: '杭州前进联轴器有限公司',
+  couplingConnections: '是',
+
+  // 法规与规范
+  regulations: [
+    '中国船级社《钢质海船入级规范》及修改通报',
+    '中华人民共和国海事局《船舶法定检验技术规则》',
+    '中国船级社《材料与焊接规范》及修改通报'
+  ],
+
+  // 质量保证参数
+  approvalPeriod: 10,
+  feedbackPeriod: 10,
+  warrantyPeriod: 12, // 月
+  warrantyText: '船艇完工交付之日起12个月',
+
+  // 供货数量 - GWS系列支持双机配置
+  quantity: 2,
+  supportsDualEngine: true,
+
+  // 随机附件清单
+  deliveryItems: [
+    { name: '齿轮箱', quantity: '按需' },
+    { name: '滑油泵（内置）', quantity: '1台/齿轮箱' },
+    { name: '滑油滤油器', quantity: '1只/齿轮箱' },
+    { name: '滑油冷却器', quantity: '1只/齿轮箱' },
+    { name: '电控换向阀', quantity: '1只/齿轮箱' },
+    { name: '工作压力表', note: '提供开关量信号' },
+    { name: '正车/倒车/空车指示控制器', note: '提供开关量信号' },
+    { name: '滑油低压报警/油温高报警', note: '提供开关量信号' },
+    { name: '电动备用泵', quantity: '1台/齿轮箱' },
+    { name: '备用泵控制箱', quantity: '1只/电动泵' },
+    { name: '备用泵启停控制器', quantity: '1只/齿轮箱' },
+    { name: 'CCS证书、合格证、说明书、装箱清单', quantity: '1套' }
+  ],
+
+  // 外观
+  appearance: '杭齿灰'
+};
+
 // HCQ系列默认参数（高扭矩大功率系列）
 // 数据来源：HCQ700型船用齿轮箱使用说明书
 export const hcqSeriesDefaults = {
@@ -438,6 +558,9 @@ export const getSeriesDefaults = (model) => {
   if (modelUpper.startsWith('DT')) {
     return { ...dtSeriesDefaults };
   }
+  if (modelUpper.startsWith('GWS')) {
+    return { ...gwsSeriesDefaults };
+  }
   if (modelUpper.startsWith('GWC') || modelUpper.startsWith('GWL')) {
     return { ...gwcSeriesDefaults };
   }
@@ -466,6 +589,7 @@ export const getSeriesName = (model) => {
   const modelUpper = model.toUpperCase();
 
   if (modelUpper.startsWith('DT')) return 'DT';
+  if (modelUpper.startsWith('GWS')) return 'GWS';
   if (modelUpper.startsWith('GWC')) return 'GWC';
   if (modelUpper.startsWith('GWL')) return 'GWL';
   if (modelUpper.startsWith('HCT')) return 'HCT';
@@ -509,12 +633,14 @@ export const extractGearboxParams = (gearboxData) => {
   return {
     gearboxModel: gearboxData.model,
     maxInputSpeed: gearboxData.maxSpeed,
+    minInputSpeed: gearboxData.minSpeed,
     centerDistance: gearboxData.centerDistance,
     maxPropellerThrust: gearboxData.thrust,
     oilCapacity: gearboxData.oilCapacity,
     coolingWaterVolume: gearboxData.coolingWaterFlow,
     transmissionCapacity: gearboxData.transmissionCapacity,
-    weight: gearboxData.weight
+    weight: gearboxData.weight,
+    dimensions: gearboxData.dimensions,
   };
 };
 
@@ -535,6 +661,7 @@ export const extractEngineParams = (projectInfo) => {
 
 export default {
   dtSeriesDefaults,
+  gwsSeriesDefaults,
   gwcSeriesDefaults,
   hcSeriesDefaults,
   hctSeriesDefaults,

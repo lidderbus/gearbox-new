@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import ThemeToggle from './ThemeToggle';
 
-const ModernNavBar = ({ activeTab, onNavigate }) => {
+const ModernNavBar = ({ activeTab, onNavigate, isMobile, onMenuToggle }) => {
   const navItems = [
-    { href: '#/', label: '首页', icon: '🏠', tabKey: 'input' },
+    { href: '#/', label: '首页', icon: '🏠', tabKey: 'home' },
     { href: '#/selection', label: '齿轮箱选型', icon: '⚙️', tabKey: 'input' },
     { href: '#/comparison', label: '型号比较', icon: '📊', tabKey: 'result' },
     { href: '#/pump-selection', label: '备用泵选型', icon: '💧', tabKey: 'pump-selection' },
@@ -29,6 +29,15 @@ const ModernNavBar = ({ activeTab, onNavigate }) => {
   return (
     <nav className="nav-modern">
       <div className="nav-container">
+        {isMobile && (
+          <button
+            className="mobile-hamburger"
+            onClick={onMenuToggle}
+            aria-label="打开菜单"
+          >
+            ☰
+          </button>
+        )}
         <div className="nav-brand">
           船用齿轮箱选型系统
         </div>
@@ -46,6 +55,7 @@ const ModernNavBar = ({ activeTab, onNavigate }) => {
           ))}
           <ThemeToggle />
         </div>
+        {isMobile && <ThemeToggle />}
       </div>
     </nav>
   );

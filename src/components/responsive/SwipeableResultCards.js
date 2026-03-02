@@ -3,6 +3,7 @@ import React, { useState, useCallback } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { Collapse } from 'react-bootstrap';
 import './SwipeableResultCards.css';
+import { calculatePowerRange } from '../../utils/gearboxDataEnhancer';
 
 /**
  * Swipeable result cards for mobile view
@@ -130,13 +131,21 @@ const SwipeableResultCards = ({
                   <div className="spec-item">
                     <span className="spec-label">功率范围</span>
                     <span className="spec-value">
-                      {gearbox.minPower || gearbox.powerRange?.min || '-'} - {gearbox.maxPower || gearbox.powerRange?.max || '-'} kW
+                      {(() => {
+                        if (gearbox.minPower && gearbox.maxPower)
+                          return `${gearbox.minPower} - ${gearbox.maxPower} kW`;
+                        const pr = calculatePowerRange(
+                          gearbox.transmissionCapacityPerRatio || gearbox.transferCapacity,
+                          gearbox.inputSpeedRange
+                        );
+                        return pr.minPower != null ? `${pr.minPower} - ${pr.maxPower} kW` : '-';
+                      })()}
                     </span>
                   </div>
                   <div className="spec-item">
                     <span className="spec-label">转速范围</span>
                     <span className="spec-value">
-                      {gearbox.minSpeed || gearbox.speedRange?.min || '-'} - {gearbox.maxSpeed || gearbox.speedRange?.max || '-'} rpm
+                      {gearbox.minSpeed || gearbox.speedRange?.min || (Array.isArray(gearbox.inputSpeedRange) ? gearbox.inputSpeedRange[0] : '-')} - {gearbox.maxSpeed || gearbox.speedRange?.max || (Array.isArray(gearbox.inputSpeedRange) ? gearbox.inputSpeedRange[1] : '-')} rpm
                     </span>
                   </div>
                   <div className="spec-item">

@@ -6,22 +6,34 @@ import { Modal, Badge, Button, Alert } from 'react-bootstrap';
 
 // 分类图标映射
 const categoryIcons = {
-  pump: 'bi-droplet',
+  pump: 'bi-droplet-half',
   valve: 'bi-sliders',
   cooling: 'bi-snow',
-  control: 'bi-gear',
+  control: 'bi-gear-wide-connected',
   safety: 'bi-shield-check',
-  testing: 'bi-clipboard-check'
+  testing: 'bi-clipboard-check',
+  structure: 'bi-diagram-3',
+  installation: 'bi-tools',
+  lubrication: 'bi-droplet',
+  accessories: 'bi-box-seam',
+  maintenance: 'bi-wrench-adjustable',
+  troubleshooting: 'bi-exclamation-diamond'
 };
 
 // 分类名称映射
 const categoryNames = {
-  pump: '液压泵',
-  valve: '阀组',
+  pump: '泵与液压',
+  valve: '阀门与管路',
   cooling: '冷却系统',
   control: '控制系统',
   safety: '安全要求',
-  testing: '测试验收'
+  testing: '测试验收',
+  structure: '产品结构',
+  installation: '安装校正',
+  lubrication: '润滑系统',
+  accessories: '附件规格',
+  maintenance: '维护保养',
+  troubleshooting: '故障排除'
 };
 
 // 分类颜色映射
@@ -31,7 +43,13 @@ const categoryColors = {
   cooling: 'success',
   control: 'warning',
   safety: 'danger',
-  testing: 'secondary'
+  testing: 'secondary',
+  structure: 'dark',
+  installation: 'primary',
+  lubrication: 'info',
+  accessories: 'success',
+  maintenance: 'warning',
+  troubleshooting: 'danger'
 };
 
 /**
@@ -184,20 +202,40 @@ const ClauseDetailModal = ({ show, onHide, clause, colors }) => {
           </div>
         )}
 
-        {/* 关键词 */}
-        <div className="clause-detail-section">
-          <h6>
-            <i className="bi bi-tags me-2"></i>
-            关键词
-          </h6>
-          <div>
-            {clause.keywords && clause.keywords.map((keyword, idx) => (
-              <Badge key={idx} bg="secondary" className="me-1 mb-1">
-                {keyword}
-              </Badge>
-            ))}
+        {/* 技术参数 */}
+        {clause.technicalParams && Object.keys(clause.technicalParams).length > 0 && (
+          <div className="clause-detail-section">
+            <h6>
+              <i className="bi bi-speedometer2 me-2"></i>
+              技术参数
+            </h6>
+            <div className="p-2 rounded" style={{ backgroundColor: colors?.inputBg || '#f0f7ff', fontSize: '0.9rem' }}>
+              {Object.entries(clause.technicalParams).map(([key, value], idx) => (
+                <div key={idx} className="d-flex mb-1">
+                  <span className="text-muted me-2" style={{ minWidth: '120px' }}>{key}:</span>
+                  <span style={{ color: colors?.text }}><strong>{String(value)}</strong></span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* 关键词 */}
+        {clause.keywords && clause.keywords.length > 0 && (
+          <div className="clause-detail-section">
+            <h6>
+              <i className="bi bi-tags me-2"></i>
+              关键词
+            </h6>
+            <div>
+              {clause.keywords.map((keyword, idx) => (
+                <Badge key={idx} bg="secondary" className="me-1 mb-1">
+                  {keyword}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 参考标准 */}
         {clause.references && clause.references.length > 0 && (
@@ -217,15 +255,26 @@ const ClauseDetailModal = ({ show, onHide, clause, colors }) => {
           </div>
         )}
 
-        {/* 使用记录 */}
-        {clause.lastUsed && (
-          <div className="clause-detail-section mb-0">
+        {/* 数据来源与重要性 */}
+        <div className="clause-detail-section mb-0 d-flex justify-content-between align-items-center">
+          {clause.source && (
+            <small className="text-muted">
+              <i className="bi bi-journal-text me-1"></i>
+              来源: {clause.source}
+            </small>
+          )}
+          {clause.importance && (
+            <Badge bg={clause.importance === 'critical' ? 'danger' : clause.importance === 'mandatory' ? 'primary' : 'secondary'}>
+              {clause.importance === 'critical' ? '关键' : clause.importance === 'mandatory' ? '必须' : clause.importance === 'conditional' ? '条件性' : '推荐'}
+            </Badge>
+          )}
+          {clause.lastUsed && (
             <small className="text-muted">
               <i className="bi bi-clock-history me-1"></i>
               最近使用: {clause.lastUsed}
             </small>
-          </div>
-        )}
+          )}
+        </div>
       </Modal.Body>
 
       <Modal.Footer

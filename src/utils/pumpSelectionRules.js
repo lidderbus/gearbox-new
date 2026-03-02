@@ -45,6 +45,7 @@ const hcSeriesPumpRules = [
 
 /**
  * DT系列齿轮箱与备用泵对应关系
+ * 更新日期: 2026-01-30 - 添加DT4300/DT10000大型号
  */
 const dtSeriesPumpRules = [
   {
@@ -56,8 +57,46 @@ const dtSeriesPumpRules = [
     pumpModel: '2CYA-1.7/0.8D'
   },
   {
-    range: ['DT1500', 'DT2400'],
+    range: ['DT1500', 'DT10000'],
     pumpModel: '2CYA-2.2/1D'
+  }
+];
+
+/**
+ * GC系列齿轮箱与备用泵对应关系
+ * 新增日期: 2026-01-30
+ */
+const gcSeriesPumpRules = [
+  {
+    range: ['GC100', 'GC500'],
+    pumpModel: '2CY-7.5/2.5D'
+  },
+  {
+    range: ['GC501', 'GC1000'],
+    pumpModel: '2CY-14.2/2.5D'
+  },
+  {
+    range: ['GC1001', 'GC9999'],
+    pumpModel: '2CY-24.8/2.5D'
+  }
+];
+
+/**
+ * MV/MA/MB系列齿轮箱与备用泵对应关系
+ * 新增日期: 2026-01-30
+ */
+const mvSeriesPumpRules = [
+  {
+    range: ['MV100', 'MV200'],
+    pumpModel: '2CY-7.5/2.5D'
+  },
+  {
+    range: ['MA100', 'MA200'],
+    pumpModel: '2CY-7.5/2.5D'
+  },
+  {
+    range: ['MB100', 'MB300'],
+    pumpModel: '2CY-7.5/2.5D'
   }
 ];
 
@@ -92,17 +131,26 @@ export const enhancedSelectPump = (gearboxModel, pumpList) => {
   // 确定齿轮箱系列
   let targetPumpModel = null;
   
-  // 检查GW系列
-  if (normalizedModel.startsWith('GW')) {
+  // 检查GW系列 (包括SGW, 2GWH变体)
+  if (normalizedModel.startsWith('GW') || normalizedModel.startsWith('SGW') || normalizedModel.startsWith('2GWH')) {
     targetPumpModel = findMatchingPumpForGWModel(normalizedModel);
-  } 
-  // 检查HC系列
+  }
+  // 检查GC系列 (包括GCH, GCS, GCSE变体)
+  else if (normalizedModel.startsWith('GC') || normalizedModel.startsWith('GCH') ||
+           normalizedModel.startsWith('GCS') || normalizedModel.startsWith('GCSE')) {
+    targetPumpModel = findMatchingPumpForGCModel(normalizedModel);
+  }
+  // 检查HC系列 (包括HCD, HCT, HCM, HCQ, HCA, HCV, HCX, HCL变体)
   else if (normalizedModel.startsWith('HC')) {
     targetPumpModel = findMatchingPumpForHCModel(normalizedModel);
-  } 
+  }
   // 检查DT系列
   else if (normalizedModel.startsWith('DT')) {
     targetPumpModel = findMatchingPumpForDTModel(normalizedModel);
+  }
+  // 检查MV/MA/MB系列
+  else if (normalizedModel.startsWith('MV') || normalizedModel.startsWith('MA') || normalizedModel.startsWith('MB')) {
+    targetPumpModel = findMatchingPumpForMVModel(normalizedModel);
   }
   
   // 如果没有找到匹配的型号，返回错误
@@ -166,40 +214,51 @@ function findMatchingPumpForGWModel(gearboxModel) {
 
 /**
  * 根据HC系列齿轮箱型号查找匹配的备用泵型号
+ * 更新日期: 2026-01-30 - 支持所有HC变体(HCD, HCT, HCM, HCQ, HCA, HCV, HCX, HCL等)
  */
 function findMatchingPumpForHCModel(gearboxModel) {
-  // 尝试提取HC系列号码
-  const match = gearboxModel.match(/HC(\d+)/);
-  if (!match) return null;
-  
+  // 尝试提取HC系列号码 (支持所有HC变体)
+  const match = gearboxModel.match(/HC[A-Z]*(\d+)/i);
+  if (!match) {
+    // 如果没有数字，返回默认泵
+    return hcSeriesPumpRules[1].pumpModel;
+  }
+
   const seriesNumber = parseInt(match[1]);
-  
+
+  // 小型号 (< 1000) 使用默认泵
+  if (seriesNumber < 1000) {
+    return hcSeriesPumpRules[1].pumpModel;  // 2CY-7.5/2.5D
+  }
   // 检查是否在1000-1200系列范围内
-  if (seriesNumber >= 1000 && seriesNumber <= 1200) {
-    return hcSeriesPumpRules[0].pumpModel;
+  else if (seriesNumber >= 1000 && seriesNumber <= 1200) {
+    return hcSeriesPumpRules[0].pumpModel;  // 2CY-5/2.5D
   }
   // 检查是否在1400-2000系列范围内
   else if (seriesNumber >= 1400 && seriesNumber <= 2000) {
+    return hcSeriesPumpRules[1].pumpModel;  // 2CY-7.5/2.5D
+  }
+  // 检查是否为2700系列或更大
+  else if (seriesNumber >= 2700) {
+    return hcSeriesPumpRules[2].pumpModel;  // 2CY-14.2/2.5D
+  }
+  // 1200-1400之间使用默认泵
+  else {
     return hcSeriesPumpRules[1].pumpModel;
   }
-  // 检查是否为2700系列
-  else if (seriesNumber >= 2700 && seriesNumber < 2800) {
-    return hcSeriesPumpRules[2].pumpModel;
-  }
-  
-  return null;
 }
 
 /**
  * 根据DT系列齿轮箱型号查找匹配的备用泵型号
+ * 更新日期: 2026-01-30 - 扩展范围至DT10000
  */
 function findMatchingPumpForDTModel(gearboxModel) {
   // 尝试提取DT系列号码
   const match = gearboxModel.match(/DT(\d+)/);
   if (!match) return null;
-  
+
   const seriesNumber = parseInt(match[1]);
-  
+
   // 根据系列号码范围匹配对应的泵型号
   if (seriesNumber >= 180 && seriesNumber <= 770) {
     return dtSeriesPumpRules[0].pumpModel;
@@ -207,11 +266,48 @@ function findMatchingPumpForDTModel(gearboxModel) {
   else if (seriesNumber >= 900 && seriesNumber <= 1400) {
     return dtSeriesPumpRules[1].pumpModel;
   }
-  else if (seriesNumber >= 1500 && seriesNumber <= 2400) {
+  else if (seriesNumber >= 1500 && seriesNumber <= 10000) {
+    // DT1500-DT10000 使用最大规格电动泵
     return dtSeriesPumpRules[2].pumpModel;
   }
-  
+
   return null;
+}
+
+/**
+ * 根据GC系列齿轮箱型号查找匹配的备用泵型号
+ * 新增日期: 2026-01-30
+ * 支持: GC, GCH, GCS, GCSE 变体
+ */
+function findMatchingPumpForGCModel(gearboxModel) {
+  // 尝试提取数字部分
+  const match = gearboxModel.match(/GC[A-Z]*(\d+)/i);
+  if (!match) {
+    // 如果没有数字，返回默认泵
+    return gcSeriesPumpRules[0].pumpModel;
+  }
+
+  const seriesNumber = parseInt(match[1]);
+
+  // 根据数字范围匹配对应的泵型号
+  if (seriesNumber <= 500) {
+    return gcSeriesPumpRules[0].pumpModel;
+  }
+  else if (seriesNumber <= 1000) {
+    return gcSeriesPumpRules[1].pumpModel;
+  }
+  else {
+    return gcSeriesPumpRules[2].pumpModel;
+  }
+}
+
+/**
+ * 根据MV/MA/MB系列齿轮箱型号查找匹配的备用泵型号
+ * 新增日期: 2026-01-30
+ */
+function findMatchingPumpForMVModel(gearboxModel) {
+  // MV/MA/MB系列都使用相同的默认泵
+  return mvSeriesPumpRules[0].pumpModel;
 }
 
 /**
@@ -246,8 +342,11 @@ function findPumpInList(targetModel, pumpList) {
 }
 
 // 导出规则，以便在其他地方可能需要直接引用
+// 更新日期: 2026-01-30 - 添加GC, MV系列规则
 export const pumpMatchingRules = {
   GW: gwSeriesPumpRules,
   HC: hcSeriesPumpRules,
-  DT: dtSeriesPumpRules
+  DT: dtSeriesPumpRules,
+  GC: gcSeriesPumpRules,
+  MV: mvSeriesPumpRules
 };

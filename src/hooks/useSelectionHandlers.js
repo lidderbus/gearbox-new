@@ -8,6 +8,7 @@ import { getGWPackagePriceConfig } from '../data/packagePriceConfig';
 import { enhancedSelectPump, needsStandbyPump } from '../utils/enhancedPumpSelection';
 import enhancedCouplingSelection from '../utils/enhancedCouplingSelection';
 import { selectGearbox, autoSelectGearbox } from '../utils/selectionAlgorithm';
+import { trackSelection, trackFeature } from '../utils/analytics';
 
 /**
  * 选型相关处理函数 Hook
@@ -500,6 +501,10 @@ const useSelectionHandlers = ({
           });
 
           logger.log("选型结果已保存到历史记录");
+          trackSelection(
+            { power: engineData.power, speed: engineData.speed, ratio: requirementData.targetRatio },
+            result.recommendations || []
+          );
         } catch (historyError) {
           logger.warn("保存选型历史失败:", historyError);
         }

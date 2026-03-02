@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 5; // v5: GWK/GWL/GWD/GWH传递能力全面修复, gearbox-data.json格式修正 (2026-02-19)
+export const APP_DATA_VERSION = 15; // v15: 数据管理子模块全面改进 - 分页/排序/CSV导出、历史200条、HCM余量进度条、图片HTTPS、库存盘点/阈值、坏账计提明细 (2026-02-21)
 
 export const DEFAULTS = {
     gearbox: {

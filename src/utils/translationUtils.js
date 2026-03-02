@@ -1,7 +1,44 @@
 // src/utils/translationUtils.js
 
-import { technicalTerminology } from './bilingualTemplates';
 import { specialRequirementTemplates } from './specialRequirementTemplates';
+
+// 基础技术术语库（原计划从 bilingualTemplates 导入，但该模块无此导出）
+const technicalTerminology = {
+  '齿轮箱': 'Gearbox',
+  '船用齿轮箱': 'Marine Gearbox',
+  '减速比': 'Reduction Ratio',
+  '传递能力': 'Transmission Capacity',
+  '倒车传递能力': 'Reverse Transmission Capacity',
+  '额定功率': 'Rated Power',
+  '额定转速': 'Rated Speed',
+  '输入转速': 'Input Speed',
+  '螺旋桨推力': 'Propeller Thrust',
+  '机械效率': 'Mechanical Efficiency',
+  '中心距': 'Center Distance',
+  '润滑油': 'Lubricating Oil',
+  '润滑油压': 'Lubricating Oil Pressure',
+  '工作油压': 'Working Oil Pressure',
+  '机油容量': 'Oil Capacity',
+  '机油牌号': 'Oil Grade',
+  '冷却水': 'Cooling Water',
+  '冷却水量': 'Cooling Water Volume',
+  '冷却水压力': 'Cooling Water Pressure',
+  '最高油温': 'Maximum Oil Temperature',
+  '联轴器': 'Coupling',
+  '高弹联轴器': 'Highly Elastic Coupling',
+  '离合器': 'Clutch',
+  '操纵系统': 'Control System',
+  '大修期': 'Overhaul Period',
+  '外形尺寸': 'Overall Dimensions',
+  '净重': 'Net Weight',
+  '船检': 'Ship Inspection',
+  '船级社': 'Classification Society',
+  '技术协议': 'Technical Agreement',
+  '质量保证': 'Quality Assurance',
+  '三包期': 'Warranty Period',
+  '备用泵': 'Standby Pump',
+  '电动备用泵': 'Electric Standby Pump',
+};
 
 /**
  * 将中文技术术语翻译为英文

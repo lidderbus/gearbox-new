@@ -2,6 +2,7 @@
 // 侧推器选型界面
 
 import React, { useState, useCallback } from 'react';
+import { toast } from '../../utils/toast';
 import { Card, Row, Col, Form, Button, Table, Alert, Badge, Tabs, Tab } from 'react-bootstrap';
 import {
   electricThrusters,
@@ -52,10 +53,13 @@ const ThrusterSelector = ({ colors = {}, theme = 'light', onSystemSelect }) => {
     borderBottom: `1px solid ${colors.border || '#dee2e6'}`
   };
 
+  // 推力计算结果
+  const [thrustCalcResult, setThrustCalcResult] = useState(null);
+
   // 计算推力需求
   const handleCalculateThrust = () => {
     if (!windArea && !vesselLength) {
-      alert('请输入受风面积或船长');
+      toast.warning('请输入受风面积或船长');
       return;
     }
 
@@ -66,16 +70,18 @@ const ThrusterSelector = ({ colors = {}, theme = 'light', onSystemSelect }) => {
     });
 
     setThrust(result.thrustPerThruster);
+    setThrustCalcResult(result);
   };
 
   // 根据功率估算推力
   const handleEstimateThrust = () => {
     if (!power) {
-      alert('请先输入功率');
+      toast.warning('请先输入功率');
       return;
     }
     const estimated = estimateThrustFromPower(parseFloat(power), thrusterType || 'fixed-pitch-electric');
     setThrust(estimated.toFixed(1));
+    setThrustCalcResult({ method: 'power', power: parseFloat(power), estimated: estimated.toFixed(1) });
   };
 
   // 执行选型
@@ -286,7 +292,7 @@ const ThrusterSelector = ({ colors = {}, theme = 'light', onSystemSelect }) => {
                     </Col>
                     <Col xs="auto">
                       <Button variant="outline-secondary" size="sm" onClick={handleCalculateThrust}>
-                        计算
+                        风载计算
                       </Button>
                     </Col>
                   </Row>
@@ -305,7 +311,7 @@ const ThrusterSelector = ({ colors = {}, theme = 'light', onSystemSelect }) => {
                     </Col>
                     <Col xs="auto">
                       <Button variant="outline-secondary" size="sm" onClick={handleEstimateThrust}>
-                        估算
+                        功率估算
                       </Button>
                     </Col>
                   </Row>
@@ -370,13 +376,30 @@ const ThrusterSelector = ({ colors = {}, theme = 'light', onSystemSelect }) => {
 
                 <Form.Group className="mb-2">
                   <Form.Label><small>受风面积 (m²)</small></Form.Label>
-                  <Form.Control size="sm" type="number" value={windArea} onChange={(e) => setWindArea(e.target.value)} />
+                  <Form.Control size="sm" type="number" value={windArea} onChange={(e) => setWindArea(e.target.value)} placeholder="拖轮80-200, 工作船200-500" />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label><small>设计风速 (m/s)</small></Form.Label>
+                  <Form.Label><small>设计风速 (m/s) <Badge bg="secondary" className="ms-1">6级风=13m/s</Badge></small></Form.Label>
                   <Form.Control size="sm" type="number" value={windSpeed} onChange={(e) => setWindSpeed(e.target.value)} />
                 </Form.Group>
+
+                {thrustCalcResult && (
+                  <Alert variant="info" className="py-2 mb-3">
+                    <small>
+                      {thrustCalcResult.method === 'power' ? (
+                        <><strong>功率估算:</strong> {thrustCalcResult.power}kW × 0.145 ≈ {thrustCalcResult.estimated} kN</>
+                      ) : (
+                        <>
+                          <strong>风载推力:</strong> F = 0.5×Cd×ρ×A×V²<br/>
+                          风力 {thrustCalcResult.windForce?.toFixed?.(1) || '-'} kN,
+                          安全系数1.3 → 需 {thrustCalcResult.totalRequired?.toFixed?.(1) || '-'} kN
+                          {thrustCalcResult.recommendedCount > 1 && <><br/>建议 {thrustCalcResult.recommendedCount} 台, 每台 {thrustCalcResult.thrustPerThruster?.toFixed?.(1) || '-'} kN</>}
+                        </>
+                      )}
+                    </small>
+                  </Alert>
+                )}
 
                 <div className="d-grid gap-2">
                   <Button variant="primary" onClick={handleSelection}>

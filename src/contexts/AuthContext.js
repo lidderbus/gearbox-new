@@ -54,9 +54,9 @@ const hashPassword = (password) => {
 // 用户凭据配置 (从环境变量获取哈希值)
 // 注意: 在 .env.local 中配置 REACT_APP_ADMIN_HASH 和 REACT_APP_USER_HASH
 const getUserCredentials = () => {
-  // 默认哈希值 (所有账户密码: 66666 的 SHA-256)
+  // 默认哈希值 (admin密码: Gbox@2024!, user密码: 66666 的 SHA-256)
   // 生产环境建议通过环境变量配置新密码的哈希值
-  const defaultAdminHash = '1a7648bc484b3d9ed9e2226d223a6193d64e5e1fcacd97868adec665fe12b924';
+  const defaultAdminHash = '769a098ee73b0a72b7a7b710817464c245b98e4be563a400c9e067f1573ff140';
   const defaultUserHash = '1a7648bc484b3d9ed9e2226d223a6193d64e5e1fcacd97868adec665fe12b924';
 
   return {

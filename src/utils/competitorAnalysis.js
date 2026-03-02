@@ -11,6 +11,12 @@ import {
   hangchiAdvantages,
   comparisonDimensions
 } from '../data/competitorData';
+import {
+  productFreshnessData,
+  techDimensionsTemplate,
+  segmentSalesPitches,
+  DATA_VERSION
+} from '../data/competitorDataEnhanced';
 
 /**
  * 根据杭齿型号查找对标竞品
@@ -516,6 +522,114 @@ export const deleteCompetitorComparison = (comparisonId) => {
  * @param {Array} competitorList - 竞品列表
  * @returns {Object} 可用于报价单附件的数据
  */
+/**
+ * 计算增强版优势（10+维度）
+ */
+export const calculateEnhancedAdvantages = (hangchiProduct, competitor) => {
+  const base = calculateAdvantages(hangchiProduct, competitor);
+
+  // 技术维度评分
+  const hangchiTech = techDimensionsTemplate['HANGCHI'] || {};
+  const compTech = techDimensionsTemplate[competitor.manufacturer] || {};
+
+  let techScore = 0;
+  if (hangchiTech.digitalMonitoring && !compTech.digitalMonitoring) techScore += 1;
+  if (hangchiTech.hybridReady === true && compTech.hybridReady !== true) techScore += 1;
+  if (hangchiTech.propellerType === 'both' && compTech.propellerType !== 'both') techScore += 1;
+  const effMap = { premium: 3, high: 2, standard: 1 };
+  const hEff = effMap[hangchiTech.efficiencyClass] || 1;
+  const cEff = effMap[compTech.efficiencyClass] || 1;
+  if (hEff > cEff) techScore += 1;
+
+  const envLen = (hangchiTech.environmentalCompliance || []).length;
+  const cEnvLen = (compTech.environmentalCompliance || []).length;
+  if (envLen > cEnvLen) techScore += 0.5;
+
+  base.techScore = techScore;
+  base.overallScore += techScore * 0.5;
+
+  // 环保合规评分
+  base.environmentalScore = envLen;
+  if (envLen >= 2) {
+    base.highlights.push('环保认证齐全');
+    base.overallScore += 0.5;
+  }
+
+  // 生命周期成本优势（简化版，完整版在tcoCalculator）
+  base.lifecycleCostAdvantage = base.priceAdvantage?.isAdvantage;
+
+  return base;
+};
+
+/**
+ * 生成分段定制销售话术
+ */
+export const generateSegmentPitch = (hangchiProduct, competitor, segmentId) => {
+  const basePitches = generateSalesPitch(hangchiProduct, competitor);
+  const segmentPitchList = segmentSalesPitches?.[segmentId] || [];
+
+  // 合并通用话术和分段话术
+  const merged = [...basePitches];
+  segmentPitchList.forEach(sp => {
+    merged.push({
+      category: '场景',
+      pitch: sp.pitch,
+      keyPoints: sp.keyPoints
+    });
+  });
+
+  return merged;
+};
+
+/**
+ * 获取数据新鲜度报告
+ */
+export const getDataFreshnessReport = () => {
+  const now = new Date();
+  const entries = Object.entries(productFreshnessData || {});
+  let confirmed = 0, estimate = 0, outdated = 0, noData = 0;
+
+  entries.forEach(([, data]) => {
+    if (!data.lastVerified) { noData++; return; }
+    const [year, month] = data.lastVerified.split('-').map(Number);
+    const monthsAgo = (now.getFullYear() - year) * 12 + (now.getMonth() + 1 - month);
+    if (monthsAgo <= 12 && data.priceConfidence === 'confirmed') confirmed++;
+    else if (monthsAgo <= 24) estimate++;
+    else outdated++;
+  });
+
+  return {
+    total: entries.length,
+    confirmed,
+    estimate,
+    outdated,
+    noData,
+    dataVersion: DATA_VERSION.version,
+    lastUpdate: DATA_VERSION.lastFullUpdate,
+    healthPercent: entries.length > 0 ? Math.round(confirmed / entries.length * 100) : 0
+  };
+};
+
+/**
+ * 获取过期产品列表
+ */
+export const getStaleProducts = (maxMonths = 24) => {
+  const now = new Date();
+  const stale = [];
+  Object.entries(productFreshnessData || {}).forEach(([model, data]) => {
+    if (!data.lastVerified) {
+      stale.push({ model, months: null, confidence: 'unknown' });
+      return;
+    }
+    const [year, month] = data.lastVerified.split('-').map(Number);
+    const monthsAgo = (now.getFullYear() - year) * 12 + (now.getMonth() + 1 - month);
+    if (monthsAgo > maxMonths) {
+      stale.push({ model, months: monthsAgo, confidence: data.priceConfidence });
+    }
+  });
+  return stale;
+};
+
 export const generateQuotationAttachment = (hangchiProduct, competitorList) => {
   const report = generateComparisonReport(hangchiProduct, competitorList);
   const radarData = generateRadarData(hangchiProduct, competitorList);

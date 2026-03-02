@@ -1,5 +1,5 @@
 // src/data/gearboxPricing.js
-// 齿轮箱价格表数据，从2024年价格清单导入
+// 齿轮箱价格表数据，依据杭齿集公[2026]30号文件 (2026-01-01起执行)
 
 // 价格折扣率映射表 - 基于型号前缀的默认下浮比例
 export const discountRateMap = {
@@ -29,8 +29,15 @@ export const discountRateMap = {
   // HCL系列
   'HCL': 0.12, // HCL系列下浮12%
   
-  // GW系列
-  'GWC': 0.10, // GW系列下浮10%
+  // GW系列 (全系列下浮10%)
+  // 备注: GWS/GWD/GWH出厂价=GWC同规格×95%, GWL/GWK出厂价=GWC同规格×92%
+  'GWC': 0.10,
+  'GWS': 0.10,
+  'GWD': 0.10,
+  'GWH': 0.10,
+  'GWL': 0.10,
+  'GWK': 0.10,
+  'SGW': 0.10,
   
   // DT系列
   'DT': 0.10, // DT系列下浮10%
@@ -101,7 +108,8 @@ export const gearboxPriceData = [
   { model: 'HCT600A/1', basePrice: 75000, discountRate: 0.12, discountedPrice: 66000 },
   { model: 'HCD800', basePrice: 86100, discountRate: 0.08, discountedPrice: 79212 },
   { model: 'HCT800', basePrice: 98000, discountRate: 0.08, discountedPrice: 90160 },
-  { model: 'HCT800/1', basePrice: 137200, discountRate: 0.08, discountedPrice: 126224 },
+  { model: 'HCT800/1 (6.91-17.91)', basePrice: 128600, discountRate: 0.08, discountedPrice: 118312 },
+  { model: 'HCT800/1 (20.12, 22.11)', basePrice: 137200, discountRate: 0.08, discountedPrice: 126224 },
   { model: 'HCT800/2', basePrice: 150200, discountRate: 0.08, discountedPrice: 138184 },
   { model: 'HCT800/3', basePrice: 170800, discountRate: 0.08, discountedPrice: 157136 },
   { model: 'HCW800', basePrice: 173900, discountRate: 0.08, discountedPrice: 159988 },
@@ -162,8 +170,8 @@ export const gearboxPriceData = [
   { model: 'GWC66.75(2-6:1)', basePrice: 1050000, discountRate: 0.10, discountedPrice: 945000 },
   { model: 'GWC70.76(2-6:1)', basePrice: 1100000, discountRate: 0.10, discountedPrice: 990000 },
   { model: 'GWC70.76C(2-6:1)带PT', basePrice: 1150000, discountRate: 0.10, discountedPrice: 1035000 },
-  { model: 'GWC70.85(2-6:1)', basePrice: 1620000, discountRate: 0.10, discountedPrice: 1458000 },
-  { model: 'GWC70.85A(2-6:1)带PT', basePrice: 1670000, discountRate: 0.10, discountedPrice: 1503000 },
+  { model: 'GWC70.85(2-6:1)', basePrice: 1470000, discountRate: 0.10, discountedPrice: 1323000 },
+  { model: 'GWC70.85A(2-6:1)带PT', basePrice: 1520000, discountRate: 0.10, discountedPrice: 1368000 },
   { model: 'GWC75.90(2-6:1)', basePrice: 1800000, discountRate: 0.10, discountedPrice: 1620000 },
   { model: 'GWC75.90(2-6:1)带PTO', basePrice: 1850000, discountRate: 0.10, discountedPrice: 1665000 },
   { model: 'GWC78.88(2-6:1)', basePrice: 1670000, discountRate: 0.10, discountedPrice: 1503000 },
@@ -207,22 +215,39 @@ export const gearboxPriceData = [
   { model: 'GWC66.75', basePrice: 1050000, discountRate: 0.1, discountedPrice: 945000.0 },
   { model: 'GWC70.76', basePrice: 1100000, discountRate: 0.1, discountedPrice: 990000.0 },
   { model: 'GWC70.82', basePrice: 1200000, discountRate: 0.1, discountedPrice: 1080000.0 },
-  { model: 'GWC70.85', basePrice: 1620000, discountRate: 0.1, discountedPrice: 1458000.0 },
+  { model: 'GWC70.85', basePrice: 1470000, discountRate: 0.1, discountedPrice: 1323000.0 },
   { model: 'GWC75.90', basePrice: 1800000, discountRate: 0.1, discountedPrice: 1620000.0 },
   { model: 'GWC78.88', basePrice: 1670000, discountRate: 0.1, discountedPrice: 1503000.0 },
   { model: 'GWC78.96', basePrice: 1800000, discountRate: 0.1, discountedPrice: 1620000.0 },
-  { model: 'GWS42.45', basePrice: 175000, discountRate: 0.1, discountedPrice: 157500.0 },
-  { model: 'GWS45.49', basePrice: 260000, discountRate: 0.1, discountedPrice: 234000.0 },
-  { model: 'GWS49.54', basePrice: 380000, discountRate: 0.1, discountedPrice: 342000.0 },
-  { model: 'GWS52.59', basePrice: 520000, discountRate: 0.1, discountedPrice: 468000.0 },
+  // GWS系列 = GWC×95% (杭齿集公[2026]30号备注2)
+  { model: 'GWS28.30', basePrice: 68875, discountRate: 0.1, discountedPrice: 61988 },
+  { model: 'GWS30.32', basePrice: 86260, discountRate: 0.1, discountedPrice: 77634 },
+  { model: 'GWS32.35', basePrice: 98610, discountRate: 0.1, discountedPrice: 88749 },
+  { model: 'GWS36.39', basePrice: 117610, discountRate: 0.1, discountedPrice: 105849 },
+  { model: 'GWS39.41', basePrice: 146110, discountRate: 0.1, discountedPrice: 131499 },
+  { model: 'GWS42.45', basePrice: 176510, discountRate: 0.1, discountedPrice: 158859 },
+  { model: 'GWS45.49', basePrice: 262010, discountRate: 0.1, discountedPrice: 235809 },
+  { model: 'GWS45.52', basePrice: 304000, discountRate: 0.1, discountedPrice: 273600 },
+  { model: 'GWS49.54', basePrice: 382470, discountRate: 0.1, discountedPrice: 344223 },
+  { model: 'GWS49.59', basePrice: 437000, discountRate: 0.1, discountedPrice: 393300 },
+  { model: 'GWS52.59', basePrice: 517750, discountRate: 0.1, discountedPrice: 465975 },
+  { model: 'GWS52.62', basePrice: 546250, discountRate: 0.1, discountedPrice: 491625 },
+  { model: 'GWS60.66', basePrice: 760000, discountRate: 0.1, discountedPrice: 684000 },
+  { model: 'GWS60.74', basePrice: 874000, discountRate: 0.1, discountedPrice: 786600 },
+  { model: 'GWS63.71', basePrice: 902500, discountRate: 0.1, discountedPrice: 812250 },
+  { model: 'GWS66.75', basePrice: 997500, discountRate: 0.1, discountedPrice: 897750 },
+  { model: 'GWS70.76', basePrice: 1045000, discountRate: 0.1, discountedPrice: 940500 },
+  { model: 'GWS70.85', basePrice: 1396500, discountRate: 0.1, discountedPrice: 1256850 },
+  { model: 'GWS75.90', basePrice: 1710000, discountRate: 0.1, discountedPrice: 1539000 },
+  { model: 'GWS78.88', basePrice: 1586500, discountRate: 0.1, discountedPrice: 1427850 },
   { model: 'HC1400', basePrice: 120000, discountRate: 0.06, discountedPrice: 112800.0 },
-  { model: 'HC200', basePrice: 21000, discountRate: 0.16, discountedPrice: 17640.0 },
+  { model: 'HC200', basePrice: 27200, discountRate: 0, discountedPrice: 27200 },
   { model: 'HC300', basePrice: 24600, discountRate: 0.16, discountedPrice: 20664.0 },
   { model: 'HC600', basePrice: 52000, discountRate: 0.12, discountedPrice: 45760.0 },
   { model: 'HC800', basePrice: 86100, discountRate: 0.08, discountedPrice: 79212.0 },
-  { model: 'HCA138', basePrice: 19000, discountRate: 0.16, discountedPrice: 15960.0 },
+  { model: 'HCA138', basePrice: 34000, discountRate: 0, discountedPrice: 34000 },
   { model: 'HCA200', basePrice: 23000, discountRate: 0.16, discountedPrice: 19320.0 },
-  { model: 'HCA300', basePrice: 29000, discountRate: 0.16, discountedPrice: 24360.0 },
+  { model: 'HCA300', basePrice: 66900, discountRate: 0, discountedPrice: 66900 },
   { model: 'HCA400', basePrice: 36000, discountRate: 0.16, discountedPrice: 30240.0 },
   { model: 'HCD200', basePrice: 23500, discountRate: 0.16, discountedPrice: 19740.0 },
   { model: 'HCD300', basePrice: 32000, discountRate: 0.16, discountedPrice: 26880.0 },
@@ -239,17 +264,114 @@ export const gearboxPriceData = [
   { model: 'HCM450', basePrice: 45000, discountRate: 0.1, discountedPrice: 40500.0 },
   { model: 'HCM500', basePrice: 48000, discountRate: 0.1, discountedPrice: 43200.0 },
   { model: 'HCM600', basePrice: 55000, discountRate: 0.1, discountedPrice: 49500.0 },
-  { model: 'HCQ1000', basePrice: 88000, discountRate: 0.1, discountedPrice: 79200.0 },
-  { model: 'HCQ138', basePrice: 18500, discountRate: 0.1, discountedPrice: 16650.0 },
+  { model: 'HCQ1000', basePrice: 184000, discountRate: 0, discountedPrice: 184000 },
+  { model: 'HCQ138', basePrice: 27600, discountRate: 0, discountedPrice: 27600 },
   { model: 'HCQ200', basePrice: 22000, discountRate: 0.1, discountedPrice: 19800.0 },
-  { model: 'HCQ300', basePrice: 28000, discountRate: 0.1, discountedPrice: 25200.0 },
+  { model: 'HCQ300', basePrice: 42000, discountRate: 0, discountedPrice: 42000 },
   { model: 'HCQ400', basePrice: 35000, discountRate: 0.1, discountedPrice: 31500.0 },
   { model: 'HCQ500', basePrice: 42000, discountRate: 0.1, discountedPrice: 37800.0 },
-  { model: 'HCQ502', basePrice: 43500, discountRate: 0.1, discountedPrice: 39150.0 },
+  { model: 'HCQ502', basePrice: 78800, discountRate: 0, discountedPrice: 78800 },
   { model: 'HCQ600', basePrice: 52000, discountRate: 0.1, discountedPrice: 46800.0 },
-  { model: 'HCQ700', basePrice: 62000, discountRate: 0.1, discountedPrice: 55800.0 },
+  { model: 'HCQ700', basePrice: 118000, discountRate: 0, discountedPrice: 118000 },
   { model: 'HCQ800', basePrice: 75000, discountRate: 0.1, discountedPrice: 67500.0 },
   { model: 'HCQW', basePrice: 65000, discountRate: 0.1, discountedPrice: 58500.0 },
   { model: 'HCT400', basePrice: 48000, discountRate: 0.16, discountedPrice: 40320.0 },
-  { model: 'HCT600', basePrice: 68000, discountRate: 0.12, discountedPrice: 59840.0 }
-]; 
+  { model: 'HCT600', basePrice: 68000, discountRate: 0.12, discountedPrice: 59840.0 },
+
+  // SGW系列 (2026年新增)
+  { model: 'SGW39.41', basePrice: 245000, discountRate: 0.10, discountedPrice: 220500 },
+  { model: 'SGW42.45', basePrice: 273000, discountRate: 0.10, discountedPrice: 245700 },
+  { model: 'SGW49.54', basePrice: 520000, discountRate: 0.10, discountedPrice: 468000 },
+
+  // 轻型高速船用齿轮箱 — 全国统一售价 (discountRate=0, 2026年新增/更新)
+  { model: 'HC038A(带微动)', basePrice: 16380, discountRate: 0, discountedPrice: 16380 },
+  { model: 'HC038A(不带微动)', basePrice: 14280, discountRate: 0, discountedPrice: 14280 },
+  { model: 'HC65', basePrice: 12000, discountRate: 0, discountedPrice: 12000 },
+  { model: 'HC200P', basePrice: 31700, discountRate: 0, discountedPrice: 31700 },
+  { model: 'HC201', basePrice: 30600, discountRate: 0, discountedPrice: 30600 },
+  { model: 'HCV120', basePrice: 33500, discountRate: 0, discountedPrice: 33500 },
+  { model: 'HCV230', basePrice: 51000, discountRate: 0, discountedPrice: 51000 },
+  { model: 'MV100', basePrice: 31700, discountRate: 0, discountedPrice: 31700 },
+  { model: 'HCQ100', basePrice: 28000, discountRate: 0, discountedPrice: 28000 },
+  { model: 'HCA301', basePrice: 66900, discountRate: 0, discountedPrice: 66900 },
+  { model: 'HCA302', basePrice: 66900, discountRate: 0, discountedPrice: 66900 },
+  { model: 'HCQ401', basePrice: 63500, discountRate: 0, discountedPrice: 63500 },
+  { model: 'HCQ402', basePrice: 75300, discountRate: 0, discountedPrice: 75300 },
+  { model: 'HCQ501', basePrice: 76000, discountRate: 0, discountedPrice: 76000 },
+  { model: 'HCQH700', basePrice: 118000, discountRate: 0, discountedPrice: 118000 },
+  { model: 'HCQ701', basePrice: 163000, discountRate: 0, discountedPrice: 163000 },
+  { model: 'HCA700', basePrice: 163000, discountRate: 0, discountedPrice: 163000 },
+  { model: 'HCA701', basePrice: 163000, discountRate: 0, discountedPrice: 163000 },
+  { model: 'HCQH1000', basePrice: 184000, discountRate: 0, discountedPrice: 184000 },
+  { model: 'HCQ1001', basePrice: 205000, discountRate: 0, discountedPrice: 205000 },
+  { model: 'HCQ1400', basePrice: 210000, discountRate: 0, discountedPrice: 210000 },
+  { model: 'HCQH1600', basePrice: 249000, discountRate: 0, discountedPrice: 249000 },
+  { model: 'HCQ1600', basePrice: 249000, discountRate: 0, discountedPrice: 249000 },
+  { model: 'HCQ1601', basePrice: 307000, discountRate: 0, discountedPrice: 307000 },
+  { model: 'HCA1400', basePrice: 360000, discountRate: 0, discountedPrice: 360000 },
+  { model: 'HCAM1400', basePrice: 360000, discountRate: 0, discountedPrice: 360000 },
+  { model: 'HCA1401', basePrice: 412000, discountRate: 0, discountedPrice: 412000 },
+  { model: 'HCM1400', basePrice: 412000, discountRate: 0, discountedPrice: 412000 }
+];
+
+// ===== GW系列定价规则 (杭齿集公[2026]30号) =====
+// GWC: 官方出厂价(含税), 下浮10%
+// GWS/GWD/GWH: 出厂价 = GWC同规格 × 95%, 下浮10%
+// GWL/GWK: 出厂价 = GWC同规格 × 92%, 下浮10%
+// SGW: 独立定价, 下浮10%
+export const gwPricingFactors = {
+  GWS: 0.95,
+  GWD: 0.95,
+  GWH: 0.95,
+  GWL: 0.92,
+  GWK: 0.92,
+};
+
+// GWC基准价格表(2026官方出厂价)
+export const gwcBasePrices = {
+  '28.30': 72500,
+  '30.32': 90800,
+  '32.35': 103800,
+  '36.39': 123800,
+  '39.41': 153800,
+  '42.45': 185800,
+  '45.49': 275800,
+  '45.52': 320000,
+  '49.54': 402600,
+  '49.59': 460000,
+  '49.59A': 495000,
+  '52.59': 545000,
+  '52.59A': 575000,
+  '52.62': 575000,
+  '60.66': 800000,
+  '60.66A': 830000,
+  '60.74': 920000,
+  '60.74B': 1010000,
+  '63.71': 950000,
+  '66.75': 1050000,
+  '70.76': 1100000,
+  '70.76C': 1150000,
+  '70.85': 1470000,
+  '70.85A': 1520000,
+  '75.90': 1800000,
+  '78.88': 1670000,
+  '78.88A': 1740000,
+};
+
+/**
+ * 根据GW系列型号计算出厂价
+ * @param {string} model - 型号，如 GWD49.54, GWK60.66
+ * @returns {number|null} 出厂价(含税)，无法计算则返回null
+ */
+export function getGwSeriesPrice(model) {
+  if (!model) return null;
+  const m = model.match(/^(GW[CSDHLK])(.+)$/);
+  if (!m) return null;
+  const [, prefix, spec] = m;
+  if (prefix === 'GWC') return gwcBasePrices[spec] || null;
+  const factor = gwPricingFactors[prefix];
+  if (!factor) return null;
+  const basePrice = gwcBasePrices[spec];
+  if (!basePrice) return null;
+  return Math.round(basePrice * factor);
+}

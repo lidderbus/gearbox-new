@@ -5531,44 +5531,7 @@ const completeGearboxData = [
         "weight": 11000,
         "image": "/images/gearbox/Advance-GWC.webp"
     },
-    {
-        "model": "GWC52.62GWL52.62",
-        "series": "GW",
-        "minSpeed": 400,
-        "maxSpeed": 565,
-        "ratios": [
-            2.02,
-            2.46,
-            3.02,
-            3.45,
-            4.06,
-            4.52,
-            5.04,
-            5.46,
-            5.95,
-            6.49,
-            6.94
-        ],
-        "transmissionCapacityPerRatio": [
-            7.798,
-            6.404,
-            5.216,
-            4.566,
-            3.88,
-            3.485,
-            3.126,
-            2.885,
-            2.648,
-            2.427,
-            2.27
-        ],
-        "thrust": 300,
-        "centerDistance": 119,
-        "source": "杭齿厂选型手册2025版5月版",
-        "minPower": 908,
-        "maxPower": 4406,
-        "powerSource": "传动能力计算"
-    },
+    /* GWC52.62GWL52.62 合并型号已删除，独立条目 GWC52.62 和 GWL52.62 已存在 */
     {
         "model": "GWC56.61",
         "series": "GW",
@@ -6018,46 +5981,7 @@ const completeGearboxData = [
         "weight": 23000,
         "image": "/images/gearbox/Advance-GWC.webp"
     },
-    {
-        "model": "GWC70.82GWL70.82",
-        "series": "GW",
-        "minSpeed": 300,
-        "maxSpeed": 465,
-        "ratios": [
-            2.05,
-            2.53,
-            3.09,
-            3.58,
-            3.95,
-            4.57,
-            5.04,
-            5.58,
-            6.17,
-            6.5,
-            6.98,
-            7.49
-        ],
-        "transmissionCapacityPerRatio": [
-            17.646,
-            14.297,
-            11.692,
-            10.088,
-            9.15,
-            7.902,
-            7.161,
-            6.481,
-            5.878,
-            5.57,
-            5.193,
-            4.84
-        ],
-        "thrust": 780,
-        "centerDistance": 2320,
-        "source": "杭齿厂选型手册2025版5月版",
-        "minPower": 26,
-        "maxPower": 4255,
-        "powerSource": "传动能力计算"
-    },
+    /* GWC70.82GWL70.82 合并型号已删除，独立条目 GWC70.82 和 GWL70.82 已存在 */
     {
         "model": "GWC70.85",
         "series": "GW",
@@ -6145,44 +6069,7 @@ const completeGearboxData = [
         "weight": 34000,
         "image": "/images/gearbox/Advance-GWC.webp"
     },
-    {
-        "model": "GWC75.90GWL75.90",
-        "series": "GW",
-        "minSpeed": 200,
-        "maxSpeed": 465,
-        "ratios": [
-            2.01,
-            2.51,
-            3.01,
-            3.51,
-            4,
-            4.43,
-            5.04,
-            5.47,
-            6.02,
-            6.51,
-            6.99
-        ],
-        "transmissionCapacityPerRatio": [
-            22.423,
-            17.966,
-            15,
-            12.833,
-            11.282,
-            10.171,
-            8.945,
-            8.239,
-            7.485,
-            6.922,
-            6.448
-        ],
-        "thrust": 980,
-        "centerDistance": 3431,
-        "source": "杭齿厂选型手册2025版5月版",
-        "minPower": 200,
-        "maxPower": 3704,
-        "powerSource": "传动能力计算"
-    },
+    /* GWC75.90GWL75.90 合并型号已删除，独立条目 GWC75.90 和 GWL75.90 已存在 */
     {
         "model": "GWC78.88",
         "series": "GW",

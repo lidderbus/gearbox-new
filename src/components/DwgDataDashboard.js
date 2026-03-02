@@ -84,18 +84,27 @@ const DwgDataDashboard = () => {
     matchRate: dwgDataStats.gearbox > 0 ? ((dwgDataStats.matched / dwgDataStats.gearbox) * 100).toFixed(1) : '0'
   }), [dwgDataStats]);
 
-  // 系列分布数据 (用于饼图)
+  // 系列分布数据 (用于饼图) — 超过10个系列合并为"其他"
   const seriesChartData = useMemo(() => {
-    return Object.entries(dwgDataStats.seriesStats || {})
+    const entries = Object.entries(dwgDataStats.seriesStats || {})
       .map(([name, data]) => ({
         name: name === 'OTHER' || name === 'other' ? '其他' : name,
         value: data.count,
         files: data.files,
         matched: data.matched
       }))
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 10); // 取前10个系列
-  }, []);
+      .sort((a, b) => b.value - a.value);
+
+    if (entries.length <= 10) return entries;
+
+    const top9 = entries.slice(0, 9);
+    const rest = entries.slice(9);
+    const otherValue = rest.reduce((sum, e) => sum + e.value, 0);
+    const otherFiles = rest.reduce((sum, e) => sum + (e.files || 0), 0);
+    const otherMatched = rest.reduce((sum, e) => sum + (e.matched || 0), 0);
+    top9.push({ name: `其他(${rest.length}个)`, value: otherValue, files: otherFiles, matched: otherMatched });
+    return top9;
+  }, [dwgDataStats]);
 
   // 参数覆盖率数据 (用于柱状图)
   const coverageChartData = useMemo(() => {

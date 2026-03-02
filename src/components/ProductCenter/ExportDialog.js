@@ -2,6 +2,7 @@
 // 导出选项对话框
 
 import React, { useState } from 'react';
+import { toast } from '../../utils/toast';
 import { Modal, Form, Button, Alert, Spinner } from 'react-bootstrap';
 // 性能优化: 改为动态导入
 // import * as XLSX from 'xlsx';
@@ -48,7 +49,7 @@ const ExportDialog = ({
       const data = getExportData();
 
       if (data.length === 0) {
-        alert('没有可导出的数据');
+        toast.warning('没有可导出的数据');
         return;
       }
 
@@ -119,7 +120,7 @@ const ExportDialog = ({
       onHide();
     } catch (error) {
       console.error('导出失败:', error);
-      alert('导出失败: ' + error.message);
+      toast.error('导出失败: ' + error.message);
     } finally {
       setIsExporting(false);
     }

@@ -27,8 +27,9 @@ export const register = async (options = {}) => {
 
   try {
     const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+    const scopeUrl = process.env.PUBLIC_URL || '/';
     const registration = await navigator.serviceWorker.register(swUrl, {
-      scope: process.env.PUBLIC_URL || '/'
+      scope: scopeUrl.endsWith('/') ? scopeUrl : scopeUrl + '/'
     });
 
     console.log('[SW] Service Worker registered:', registration.scope);

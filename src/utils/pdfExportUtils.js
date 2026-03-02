@@ -274,7 +274,7 @@ export const optimizedHtmlToPdf = async (element, options = {}) => {
       }
 
       // 添加到PDF
-      const imgData = pageCanvas.toDataURL('image/jpeg', quality);
+      const imgData = pageCanvas.toDataURL('image/png');
 
       // 计算缩放比例，保持图像宽高比
       const scaleFactor = pdfWidth / pageCanvas.width;
@@ -292,7 +292,7 @@ export const optimizedHtmlToPdf = async (element, options = {}) => {
 
       const xOffset = (pdfWidth - finalWidth) / 2; // 居中
 
-      pdf.addImage(imgData, 'JPEG', xOffset, 0, finalWidth, finalHeight, '', 'FAST');
+      pdf.addImage(imgData, 'PNG', xOffset, 0, finalWidth, finalHeight);
 
       // 内存清理: 释放canvas资源
       pageCanvas.width = 0;

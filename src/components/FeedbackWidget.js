@@ -4,6 +4,7 @@
 import React, { useState, useCallback } from 'react';
 import { Modal, Button, Form, Badge } from 'react-bootstrap';
 import { Analytics, EVENTS } from '../utils/analytics';
+import { toast } from '../utils/toast';
 
 /**
  * 反馈类型配置
@@ -109,7 +110,7 @@ const FeedbackWidget = ({ position = 'bottom-right' }) => {
     e.preventDefault();
 
     if (!formData.title.trim()) {
-      alert('请输入反馈标题');
+      toast.warning('请输入反馈标题');
       return;
     }
 
@@ -153,7 +154,7 @@ const FeedbackWidget = ({ position = 'bottom-right' }) => {
         setShowSuccess(false);
       }, 2000);
     } else {
-      alert('保存反馈失败，请稍后重试');
+      toast.error('保存反馈失败，请稍后重试');
     }
   }, [formData]);
 

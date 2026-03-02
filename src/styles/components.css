@@ -336,24 +336,50 @@
   transform: rotate(180deg);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Responsive Design - Mobile (<768px) */
+@media (max-width: 767px) {
   .nav-container {
-    flex-direction: column;
-    padding: var(--spacing-sm);
+    flex-direction: row;
+    padding: 8px 12px;
+    height: 56px;
   }
-  
+
   .nav-links {
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
+    display: none;
   }
-  
+
+  .nav-brand {
+    font-size: 1rem;
+    flex: 1;
+  }
+
+  /* 汉堡按钮 */
+  .mobile-hamburger {
+    display: flex;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
   .modern-card-body {
     padding: var(--spacing-md);
   }
-  
+
   .table-modern {
     font-size: var(--text-sm);
+  }
+}
+
+/* Desktop (>=768px) */
+@media (min-width: 768px) {
+  .mobile-hamburger {
+    display: none;
   }
 }

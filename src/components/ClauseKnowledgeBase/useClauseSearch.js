@@ -7,17 +7,18 @@ import {
   searchClauses,
   getClauseStats
 } from '../../utils/clauseSearch';
+import clauseKbData from '../../data/clause-kb.json';
 
 /**
  * 条款搜索自定义Hook
  * 管理条款数据加载、搜索状态和结果
  */
 const useClauseSearch = () => {
-  // 数据状态
-  const [clauses, setClauses] = useState([]);
-  const [categories, setCategories] = useState([]);
+  // 数据状态 - 直接从导入的JSON初始化
+  const [clauses] = useState(clauseKbData.clauses || []);
+  const [categories] = useState(clauseKbData.categories || []);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
 
   // 搜索状态
   const [searchTerm, setSearchTerm] = useState('');
@@ -35,40 +36,18 @@ const useClauseSearch = () => {
   // 对比视图状态
   const [showCompare, setShowCompare] = useState(false);
 
-  // 加载条款数据
+  // 初始化搜索引擎
   useEffect(() => {
-    const loadClauseData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+    // 初始化Fuse.js搜索引擎
+    createClauseSearchEngine(clauses);
 
-        const response = await fetch('/gearbox-app/knowledge-base/clause-kb.json');
-        if (!response.ok) {
-          throw new Error(`加载失败: ${response.status}`);
-        }
+    // 初始显示全部
+    setSearchResults(
+      clauses.map(item => ({ item, score: 0, matches: [] }))
+    );
 
-        const data = await response.json();
-
-        setClauses(data.clauses || []);
-        setCategories(data.categories || []);
-
-        // 初始化搜索引擎
-        createClauseSearchEngine(data.clauses || []);
-
-        // 初始显示全部
-        setSearchResults(
-          (data.clauses || []).map(item => ({ item, score: 0, matches: [] }))
-        );
-      } catch (err) {
-        console.error('加载条款数据失败:', err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadClauseData();
-  }, []);
+    setLoading(false);
+  }, [clauses]);
 
   // 执行搜索
   const search = useCallback((query, options = {}) => {

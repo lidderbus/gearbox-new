@@ -1750,20 +1750,20 @@ export const initialData = {
     },
     {
       model: "SGW49.54",
-      inputSpeedRange: [400, 1400],
-      ratios: [1.94, 2.46, 2.92, 3.45, 3.95, 4.53, 4.91, 5.48, 6],
-      transferCapacity: [5.5, 4.54, 3.827, 3.24, 2.825, 2.462, 2.273, 2.036, 1.861],
-      thrust: 290,
-      centerDistance: 490,
-      weight: 7900,
-      price: 0,
+      inputSpeedRange: [400, 880],
+      ratios: [3.39],
+      transferCapacity: [2.92],
+      thrust: 3.588,
+      centerDistance: 284,
+      weight: null,
+      price: 520000,
       controlType: "气控/电控",
-      dimensions: "1783*1340*1925",
-      basePrice: 0,
-      discountRate: 0,
-      factoryPrice: 0,
-      packagePrice: 0,
-      marketPrice: 0
+      dimensions: null,
+      basePrice: 520000,
+      discountRate: 0.10,
+      factoryPrice: 468000,
+      packagePrice: 468000,
+      marketPrice: 531818.18
     }
   ],
 

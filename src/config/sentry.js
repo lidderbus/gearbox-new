@@ -34,7 +34,7 @@ export const initSentry = () => {
       environment: process.env.NODE_ENV || 'development',
 
       // 版本标识 (可从 package.json 获取)
-      release: `gearbox-app@${process.env.REACT_APP_VERSION || '1.0.0'}`,
+      release: `gearbox-app@${process.env.REACT_APP_VERSION || '9.0.0'}`,
 
       // 采样率 (生产环境收集10%的事务)
       tracesSampleRate: isProduction ? 0.1 : 1.0,

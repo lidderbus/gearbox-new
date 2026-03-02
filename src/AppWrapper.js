@@ -12,10 +12,9 @@ import UserManagementView from './components/UserManagementView'; // Import User
 import DatabaseManagementView from './components/DatabaseManagementView'; // Import DatabaseManagementView
 // import DarkModeProvider from './contexts/DarkModeContext'; // Assuming DarkModeProvider is needed
 // import { flexibleCouplings } from './data/flexibleCouplings'; // Not needed here
-// import { useIsMobile } from './hooks/useIsMobile'; // 移动端功能已禁用
+import { useIsMobile } from './hooks/useIsMobile';
 
-// 懒加载移动端应用 (已禁用)
-// const MobileApp = lazy(() => import('./components/mobile/MobileApp'));
+const MobileApp = React.lazy(() => import('./components/mobile/MobileApp'));
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -36,14 +35,13 @@ const GlobalStyle = createGlobalStyle`
 
 const AppContent = ({ appData, setAppData }) => {
   const { currentUser, user, isAuthenticated, loading: authLoading } = useAuth();
-  // 移动端功能已禁用，以下代码保留以备将来启用
-  // const { isMobile } = useIsMobile();
-  // const [forceDesktop, setForceDesktop] = useState(() => {
-  //   if (typeof localStorage !== 'undefined') {
-  //     return localStorage.getItem('forceDesktop') === 'true';
-  //   }
-  //   return false;
-  // });
+  const { isMobile } = useIsMobile();
+  const [forceDesktop, setForceDesktop] = React.useState(() => {
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem('forceDesktop') === 'true';
+    }
+    return false;
+  });
 
   // Check if user is admin
   const isAdmin = user && (user.role === userRoles.ADMIN || user.role === userRoles.SUPER_ADMIN);
@@ -69,7 +67,7 @@ const AppContent = ({ appData, setAppData }) => {
            <Route path="/database" element={<DatabaseManagementView appData={appData} setAppData={setAppData} />} />
          </>
       )}
-      {/* Main application route - 桌面端需要登录 */}
+      {/* Main application route */}
       <Route
         path="/*"
         element={

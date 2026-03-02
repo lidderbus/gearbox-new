@@ -199,6 +199,17 @@ export const calculateEEXI = (params) => {
     return { success: false, message: '参考航速必须大于0' };
   }
 
+  // 中文船型名→英文键映射
+  const SHIP_TYPE_CN_MAP = {
+    '散货船': 'bulkCarrier', '油轮': 'tanker', '集装箱船': 'containerShip',
+    '杂货船': 'generalCargo', '冷藏船': 'reefer', '滚装货船': 'roRoCargoShip',
+    '滚装客船': 'roRoPassengerShip', 'LNG运输船': 'lngCarrier', '邮轮': 'cruiseShip',
+    '拖轮': 'generalCargo', '渔船': 'generalCargo', '工程船': 'generalCargo',
+    'PSV': 'generalCargo', 'AHTS': 'generalCargo', '挖泥船': 'generalCargo',
+    '客船': 'roRoPassengerShip', '货船': 'generalCargo'
+  };
+  const resolvedShipType = SHIP_TYPE_CN_MAP[shipType] || shipType;
+
   // 获取燃料参数
   const fuelData = CO2_EMISSION_FACTORS[fuelType] || CO2_EMISSION_FACTORS['HFO'];
   const cf = fuelData.factor;  // CO2排放系数 kg CO2/kg fuel
@@ -207,7 +218,7 @@ export const calculateEEXI = (params) => {
   const sfc = specificFuelConsumption || getSFCByFuelType(fuelType);
 
   // 获取船型参考线
-  const shipTypeData = EEXI_REFERENCE_LINES[shipType];
+  const shipTypeData = EEXI_REFERENCE_LINES[resolvedShipType];
   if (!shipTypeData) {
     return { success: false, message: `未知船型: ${shipType}` };
   }

@@ -3,6 +3,7 @@
 import React from 'react';
 import { Table, Badge, Alert } from 'react-bootstrap';
 import ValidationWarnings from './ValidationWarnings';
+import { formatPrice } from '../../utils/priceFormatter';
 
 /**
  * 备用泵信息展示组件
@@ -37,6 +38,11 @@ const PumpInfoSection = ({
         {pumpResult && pumpResult.message && (
           <p className="mt-2 mb-0"><small>{pumpResult.message}</small></p>
         )}
+        <hr className="my-2" />
+        <small>
+          <i className="bi bi-telephone me-1"></i>
+          技术支持: 0571-83802269 / 0571-83802268
+        </small>
       </Alert>
     );
   }
@@ -65,6 +71,18 @@ const PumpInfoSection = ({
           </Badge>
         )}
       </h6>
+      {pumpResult.matchType === '默认选择' && (
+        <Alert variant="warning" className="py-2 mb-2">
+          <i className="bi bi-exclamation-circle me-1"></i>
+          <small>泵为默认推荐，建议联系技术支持确认。电话: 0571-83802269</small>
+        </Alert>
+      )}
+      {pumpResult.matchType && pumpResult.matchType.includes('模糊') && (
+        <Alert variant="info" className="py-2 mb-2">
+          <i className="bi bi-info-circle me-1"></i>
+          <small>基于流量计算推荐，建议订货前联系技术支持确认型号。</small>
+        </Alert>
+      )}
       <Table bordered size="sm" style={{ backgroundColor: colors?.card, color: colors?.text, borderColor: colors?.border }}>
         <tbody>
           <tr>
@@ -101,7 +119,7 @@ const PumpInfoSection = ({
           </tr>
           <tr>
             <td>市场价</td>
-            <td className="text-danger fw-bold">{(pumpResult.marketPrice || 0).toLocaleString()} 元</td>
+            <td className="text-danger fw-bold">{formatPrice(pumpResult.marketPrice)}</td>
           </tr>
           <tr>
             <td>配套依据</td>
@@ -154,7 +172,7 @@ const PumpInfoSection = ({
                   <td>{alt.flow} L/min</td>
                   <td>{alt.pressure} MPa</td>
                   <td>{alt.motorPower} kW</td>
-                  <td>{(alt.marketPrice || 0).toLocaleString()} 元</td>
+                  <td>{formatPrice(alt.marketPrice)}</td>
                 </tr>
               ))}
             </tbody>

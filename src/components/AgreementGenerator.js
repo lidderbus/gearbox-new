@@ -9,6 +9,7 @@ import TemplateSelectionModal from './TemplateSelectionModal';
 import AgreementDrawingSection from './AgreementDrawingSection';
 import AgreementDrawingSelector from './AgreementDrawingSelector';
 import AgreementGuideMenu from './AgreementGuideMenu';
+import { getDwgFilesForModel } from '../data/outlineDrawings';
 import '../styles/agreementTemplates.css';
 import '../styles/bilingualStyles.css';
 // 导入子组件和Hook
@@ -141,10 +142,23 @@ const AgreementGenerator = ({
     enginePower: '',
     engineSpeed: '',
     engineRotation: '顺时针',
-    flywheelSpec: ''
+    flywheelSpec: '',
+    // HCQ模板专属 - 船舶尺寸和柴油机信息
+    shipLength: '',
+    shipWidth: '',
+    shipDepth: '',
+    engineManufacturer: '',
+    // GWC模板 - 船舶制造/设计/注册信息
+    shipManufacturer: '',
+    shipDesigner: '',
+    registrationNumber: '',
+    deliveryTime: '',
+    // DT模板 - 协议编号和设计院
+    agreementNumber: '',
+    designInstitute: '',
   });
 
-  // 从props初始化可编辑信息 (仅首次加载时)
+  // 从projectInfo初始化船东/船厂等信息 (仅首次)
   const initializedRef = useRef(false);
   useEffect(() => {
     if (!initializedRef.current && projectInfo) {
@@ -156,15 +170,41 @@ const AgreementGenerator = ({
         shipType: projectInfo.shipType || '',
         shipName: projectInfo.projectName || projectInfo.shipName || '',
         classificationType: projectInfo.classificationType || ClassificationType.NONE,
-        engineModel: projectInfo.engineModel || selectionResult?.engineData?.model || '',
-        enginePower: projectInfo.power || selectionResult?.engineData?.power || '',
-        engineSpeed: projectInfo.speed || selectionResult?.engineData?.speed || '',
-        engineRotation: selectionResult?.engineData?.rotation || '顺时针',
+        engineModel: projectInfo.engineModel || '',
         flywheelSpec: projectInfo.flywheelSpec || ''
       }));
       initializedRef.current = true;
     }
-  }, [projectInfo, selectionResult]);
+  }, [projectInfo]);
+
+  // 从选型结果自动填入主机参数（选型完成或切换齿轮箱时更新）
+  const prevAutoFilledRef = useRef({ enginePower: '', engineSpeed: '', engineModel: '' });
+  useEffect(() => {
+    const gearbox = selectedComponents?.gearbox;
+    if (!gearbox) return;
+
+    const newPower = String(selectionResult?.enginePower || gearbox.power || '');
+    const newSpeed = String(selectionResult?.engineSpeed || gearbox.speed || '');
+    const newModel = projectInfo?.engineModel || '';
+    const newRatio = String(gearbox.reductionRatio || gearbox.ratio || selectionResult?.targetRatio || '');
+
+    setEditableInfo(prev => {
+      const updated = { ...prev };
+      // 仅在字段为空或仍是上次自动填入的值时才更新（尊重用户手动编辑）
+      if (!prev.enginePower || prev.enginePower === prevAutoFilledRef.current.enginePower) {
+        updated.enginePower = newPower;
+      }
+      if (!prev.engineSpeed || prev.engineSpeed === prevAutoFilledRef.current.engineSpeed) {
+        updated.engineSpeed = newSpeed;
+      }
+      if (!prev.engineModel || prev.engineModel === prevAutoFilledRef.current.engineModel) {
+        updated.engineModel = newModel;
+      }
+      return updated;
+    });
+
+    prevAutoFilledRef.current = { enginePower: newPower, engineSpeed: newSpeed, engineModel: newModel };
+  }, [selectedComponents?.gearbox, selectionResult, projectInfo?.engineModel]);
 
   // 处理基本信息变更
   const handleEditableInfoChange = useCallback((field, value) => {
@@ -202,6 +242,23 @@ const AgreementGenerator = ({
   // 外形图选择器状态
   const [showDrawingSelector, setShowDrawingSelector] = useState(false);
   const [selectedDrawings, setSelectedDrawings] = useState([]);
+  const prevGearboxModelRef = useRef(null);
+
+  // 当齿轮箱型号变化时，自动预加载对应图纸
+  useEffect(() => {
+    const gearboxModel = selectedComponents?.gearbox?.model;
+    if (gearboxModel) {
+      const modelChanged = prevGearboxModelRef.current !== null && prevGearboxModelRef.current !== gearboxModel;
+      prevGearboxModelRef.current = gearboxModel;
+      const files = getDwgFilesForModel(gearboxModel, 'gearbox');
+      if (files.length > 0) {
+        const drawings = files.map(file => ({ ...file, model: gearboxModel, type: 'gearbox' }));
+        setSelectedDrawings(prev => (prev.length === 0 || modelChanged) ? drawings : prev);
+      } else if (modelChanged) {
+        setSelectedDrawings([]);
+      }
+    }
+  }, [selectedComponents?.gearbox?.model]);
 
   // 向导菜单状态
   const [showGuideMenu, setShowGuideMenu] = useState(true);
@@ -237,17 +294,24 @@ const AgreementGenerator = ({
   useEffect(() => {
     try {
       if (selectedComponents?.gearbox?.model) {
-        const model = selectedComponents.gearbox.model;
-        if (model.startsWith('GWC') || model.startsWith('GWL')) {
+        const model = selectedComponents.gearbox.model.toUpperCase();
+        if (model.startsWith('GWS')) {
+          setTemplateType(TemplateType.GWS);
+        } else if (model.startsWith('GWC') || model.startsWith('GWL') || model.startsWith('GWK') ||
+                   model.startsWith('GWH') || model.startsWith('GWD')) {
           setTemplateType(TemplateType.GWC);
-        } else if (model.startsWith('HCT')) {
+        } else if (model.startsWith('HCT') || model.startsWith('HCM')) {
           setTemplateType(TemplateType.HCT);
+        } else if (model.startsWith('HCQ')) {
+          setTemplateType(TemplateType.HCQ);
+        } else if (model.startsWith('HCD')) {
+          setTemplateType(TemplateType.HCD);
         } else if (model.startsWith('HC')) {
           setTemplateType(TemplateType.HC);
         } else if (model.startsWith('DT')) {
           setTemplateType(TemplateType.DT);
-        } else if (model.startsWith('HCD')) {
-          setTemplateType(TemplateType.HCD);
+        } else if (model.startsWith('SGW')) {
+          setTemplateType(TemplateType.GWS);
         }
       }
     } catch (error) {
@@ -443,6 +507,7 @@ const AgreementGenerator = ({
               <BasicInfoForm
                 editableInfo={editableInfo}
                 onInfoChange={handleEditableInfoChange}
+                templateType={templateType}
               />
 
               {/* 第3步：特殊订货要求 - 使用子组件 */}
@@ -579,6 +644,7 @@ const AgreementGenerator = ({
             <AgreementPreview
               agreement={agreement}
               projectInfo={projectInfo}
+              selectedDrawings={selectedDrawings}
             />
           </Tab>
         </Tabs>

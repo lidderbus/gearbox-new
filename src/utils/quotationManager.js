@@ -67,7 +67,32 @@ export const loadSavedQuotation = (quotationId) => {
       console.error('找不到指定的保存报价单:', quotationId);
       return null;
     }
-    
+
+    // 重建 getter（JSON序列化后getter丢失）
+    if (savedQuotation.data && Array.isArray(savedQuotation.data.items)) {
+      savedQuotation.data.items = savedQuotation.data.items.map(item => {
+        if (item.prices && item.selectedPrice && typeof item.unitPrice !== 'function') {
+          const restored = { ...item };
+          Object.defineProperty(restored, 'unitPrice', {
+            get() { return this.prices[this.selectedPrice] || 0; },
+            enumerable: true, configurable: true
+          });
+          Object.defineProperty(restored, 'amount', {
+            get() { return this.unitPrice * this.quantity; },
+            enumerable: true, configurable: true
+          });
+          return restored;
+        }
+        return item;
+      });
+      // 重算总金额
+      const total = savedQuotation.data.items.reduce((sum, item) => {
+        const amt = typeof item.amount === 'number' ? item.amount : 0;
+        return sum + amt;
+      }, 0);
+      if (total > 0) savedQuotation.data.totalAmount = total;
+    }
+
     return savedQuotation;
   } catch (error) {
     console.error("加载保存报价单错误:", error);

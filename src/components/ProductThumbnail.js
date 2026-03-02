@@ -158,7 +158,7 @@ function getImageUrl(model, type = 'gearbox', size = 'thumbnail') {
     if (size === 'technical' && drawingData.dimensions) return drawingData.dimensions;
   }
 
-  // 2. 模糊匹配（去除后缀如A, B, P等）
+  // 2. Fuzzy match: strip trailing letter (HC300A → HC300)
   const baseModel = model.replace(/[A-Z]$/, '');
   if (baseModel !== model) {
     const baseDrawing = drawingSource[baseModel];
@@ -169,7 +169,29 @@ function getImageUrl(model, type = 'gearbox', size = 'thumbnail') {
     }
   }
 
-  // 3. 回退到系列默认图片
+  // 3. Strip slash suffix (HC1200/1 → HC1200)
+  const noSlashModel = model.replace(/\/\d+$/, '');
+  if (noSlashModel !== model) {
+    const slashDrawing = drawingSource[noSlashModel];
+    if (slashDrawing) {
+      if (size === 'large' && slashDrawing.mainView) return slashDrawing.mainView;
+      if (size === 'thumbnail' && slashDrawing.thumbnail) return slashDrawing.thumbnail;
+      if (size === 'technical' && slashDrawing.dimensions) return slashDrawing.dimensions;
+    }
+  }
+
+  // 4. Strip trailing letter variants (HCT800A → HCT800)
+  const noLetterVariant = model.replace(/[A-Z]+$/, '');
+  if (noLetterVariant !== model && noLetterVariant !== baseModel) {
+    const variantDrawing = drawingSource[noLetterVariant];
+    if (variantDrawing) {
+      if (size === 'large' && variantDrawing.mainView) return variantDrawing.mainView;
+      if (size === 'thumbnail' && variantDrawing.thumbnail) return variantDrawing.thumbnail;
+      if (size === 'technical' && variantDrawing.dimensions) return variantDrawing.dimensions;
+    }
+  }
+
+  // 5. Fall back to series default image
   const series = extractSeries(model, type);
 
   if (type === 'coupling') {
@@ -284,11 +306,17 @@ function ProductThumbnail({
         }}
       >
         {isLoading && !imageError && (
-          <div style={placeholderStyle}>加载中...</div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className="spinner-border spinner-border-sm text-secondary" role="status" style={{ width: Math.max(16, size * 0.25), height: Math.max(16, size * 0.25) }}>
+              <span className="visually-hidden">加载中...</span>
+            </div>
+          </div>
         )}
         {imageError && (
-          <div style={placeholderStyle}>
-            {type === 'coupling' ? '联轴器' : '齿轮箱'}
+          <div style={{ ...placeholderStyle, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+            <i className="bi bi-gear-fill" style={{ fontSize: size > 60 ? '1.5rem' : '1rem', color: '#bbb' }}></i>
+            <span style={{ fontSize: '10px', color: '#aaa' }}>{extractSeries(model, type)}</span>
+            <span style={{ fontSize: '9px', color: '#ccc', background: '#f0f0f0', borderRadius: '3px', padding: '0 4px' }}>暂无产品图</span>
           </div>
         )}
         <img
@@ -316,10 +344,17 @@ function getFullImageData(model, type = 'gearbox') {
   // 精确匹配
   let drawingData = drawingSource[model];
 
-  // 模糊匹配
+  // Fuzzy match: strip trailing letter
   if (!drawingData) {
-    const baseModel = model.replace(/[A-Z]$/, '');
-    drawingData = drawingSource[baseModel];
+    drawingData = drawingSource[model.replace(/[A-Z]$/, '')];
+  }
+  // Strip slash suffix (HC1200/1 → HC1200)
+  if (!drawingData) {
+    drawingData = drawingSource[model.replace(/\/\d+$/, '')];
+  }
+  // Strip trailing letter variants (HCT800A → HCT800)
+  if (!drawingData) {
+    drawingData = drawingSource[model.replace(/[A-Z]+$/, '')];
   }
 
   if (drawingData) {

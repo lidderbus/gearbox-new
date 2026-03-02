@@ -184,7 +184,7 @@ export const getGWPackagePriceConfig = (gearboxModel) => {
 
 // 辅助函数：从型号中提取数值部分
 const extractModelNumber = (model) => {
-  const matches = model.match(/GW[CS]?(\d+\.\d+)/i);
+  const matches = model.match(/GW[CSDHKL]?(\d+\.\d+)/i);
   return matches ? parseFloat(matches[1]) : 999; // 默认返回一个大数值
 };
 

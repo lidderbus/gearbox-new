@@ -13,7 +13,9 @@ import {
   formatDelivery,
   getManufacturerInfo
 } from '../../utils/competitorAnalysis';
-import { hangchiAdvantages } from '../../data/competitorData';
+import { hangchiAdvantages, manufacturerColors } from '../../data/competitorData';
+import { techDimensionsTemplate } from '../../data/competitorDataEnhanced';
+import { FreshnessDot } from './DataFreshnessIndicator';
 import { formatPowerRange } from '../../utils/gearboxDataEnhancer';
 
 const ComparisonTable = ({
@@ -30,13 +32,6 @@ const ComparisonTable = ({
       </div>
     );
   }
-
-  const manufacturerColors = {
-    CZCG: '#dc3545',
-    NGC: '#198754',
-    ZF: '#0d6efd',
-    HANGCHI: '#fd7e14'
-  };
 
   // 计算每个竞品的优势
   const competitorAdvantages = competitors.map(comp =>
@@ -89,11 +84,11 @@ const ComparisonTable = ({
               <th
                 key={comp.model}
                 style={{
-                  backgroundColor: manufacturerColors[comp.manufacturer],
+                  backgroundColor: manufacturerColors[comp.manufacturer] || '#666',
                   minWidth: '180px'
                 }}
               >
-                <div>{getManufacturerInfo(comp.manufacturer)?.shortName}</div>
+                <div>{getManufacturerInfo(comp.manufacturer)?.shortName} <FreshnessDot model={comp.model} /></div>
                 <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>
                   {comp.model}
                 </div>
@@ -294,13 +289,17 @@ const ComparisonTable = ({
           <tr>
             <td>售后响应</td>
             <td style={{ backgroundColor: 'rgba(25, 135, 84, 0.1)' }}>
-              <strong className="text-success">24小时</strong>
+              <strong className="text-success">{hangchiAdvantages.serviceAdvantage.responseTime}小时</strong>
             </td>
-            {competitors.map(comp => (
-              <td key={comp.model} className="text-muted">
-                {comp.manufacturer === 'ZF' ? '48-72小时' : '24-48小时'}
-              </td>
-            ))}
+            {competitors.map(comp => {
+              const info = getManufacturerInfo(comp.manufacturer);
+              const isImport = ['ZF', 'Reintjes', 'TwinDisc', 'MassonMarine'].includes(comp.manufacturer);
+              return (
+                <td key={comp.model} className="text-muted">
+                  {isImport ? '48-72小时' : '24-48小时'}
+                </td>
+              );
+            })}
           </tr>
           <tr>
             <td>服务网点</td>
@@ -309,27 +308,58 @@ const ComparisonTable = ({
                 全国{hangchiAdvantages.serviceAdvantage.servicePoints}个
               </strong>
             </td>
-            {competitors.map(comp => (
-              <td key={comp.model} className="text-muted">
-                {comp.manufacturer === 'ZF'
-                  ? '进口配件周期长'
-                  : comp.manufacturer === 'CZCG'
-                    ? '20+服务点'
-                    : '10+服务点'}
-              </td>
-            ))}
+            {competitors.map(comp => {
+              const isImport = ['ZF', 'Reintjes', 'TwinDisc', 'MassonMarine'].includes(comp.manufacturer);
+              const isDomesticLarge = ['CZCG', 'NGC'].includes(comp.manufacturer);
+              return (
+                <td key={comp.model} className="text-muted">
+                  {isImport ? '进口配件周期长' : isDomesticLarge ? '20+服务点' : '10+服务点'}
+                </td>
+              );
+            })}
           </tr>
           <tr>
             <td>配件供应</td>
             <td style={{ backgroundColor: 'rgba(25, 135, 84, 0.1)' }}>
-              <strong className="text-success">国产现货</strong>
+              <strong className="text-success">{hangchiAdvantages.serviceAdvantage.spareParts}</strong>
             </td>
-            {competitors.map(comp => (
-              <td key={comp.model} className="text-muted">
-                {comp.manufacturer === 'ZF' ? '进口4-8周' : '国产1-2周'}
-              </td>
-            ))}
+            {competitors.map(comp => {
+              const isImport = ['ZF', 'Reintjes', 'TwinDisc', 'MassonMarine'].includes(comp.manufacturer);
+              return (
+                <td key={comp.model} className="text-muted">
+                  {isImport ? '进口4-8周' : '国产1-2周'}
+                </td>
+              );
+            })}
           </tr>
+
+          {/* 技术对比组 */}
+          <tr className="table-secondary">
+            <td colSpan={2 + competitors.length}>
+              <strong><i className="bi bi-cpu me-2"></i>技术特性</strong>
+            </td>
+          </tr>
+          {(() => {
+            const hangchiTech = techDimensionsTemplate?.['HANGCHI'] || {};
+            const techRows = [
+              { key: 'propellerType', label: '螺旋桨支持', format: v => v === 'both' ? 'FPP+CPP' : v || '-' },
+              { key: 'digitalMonitoring', label: '数字监控', format: v => v === true ? '✓ 支持' : v === 'partial' ? '◐ 部分' : '✗' },
+              { key: 'hybridReady', label: '混动兼容', format: v => v === true ? '✓ 支持' : v === 'partial' ? '◐ 部分' : '✗' },
+              { key: 'efficiencyClass', label: '效率等级', format: v => ({ premium: '卓越', high: '优良', standard: '标准' }[v] || '-') },
+            ];
+            return techRows.map(row => (
+              <tr key={row.key}>
+                <td>{row.label}</td>
+                <td style={{ backgroundColor: 'rgba(253, 126, 20, 0.05)' }}>
+                  {row.format(hangchiTech[row.key])}
+                </td>
+                {competitors.map(comp => {
+                  const compTech = techDimensionsTemplate?.[comp.manufacturer] || {};
+                  return <td key={comp.model}>{row.format(compTech[row.key])}</td>;
+                })}
+              </tr>
+            ));
+          })()}
 
           {/* 优势汇总 */}
           {showAdvantages && (

@@ -53,10 +53,10 @@ const ANGLE_OPTIONS = [
 
 // 系列说明
 const SERIES_INFO = {
-  'HCM': { name: 'HCM标准型', description: '铝合金箱体，标准输出', color: '#1890ff' },
-  'HCAM': { name: 'HCAM倾角型', description: '输入输出倾角布置', color: '#52c41a' },
-  'HCVM': { name: 'HCVM同侧型', description: '输入输出同侧倾角', color: '#faad14' },
-  'HCRM': { name: 'HCRM特殊型', description: '特殊结构设计', color: '#722ed1' }
+  'HCM': { name: 'HCM标准型', description: '标准型 - 直线布置，适用于常规高速艇', color: '#1890ff' },
+  'HCAM': { name: 'HCAM倾角型', description: '倾角型 - 输出轴带倾角，适用于V型布置推进系统', color: '#52c41a' },
+  'HCVM': { name: 'HCVM同侧型', description: '同侧型 - 输入输出同侧，适用于空间受限船艇', color: '#faad14' },
+  'HCRM': { name: 'HCRM特殊型', description: '特殊型 - 特殊需求定制', color: '#722ed1' }
 };
 
 const HCMSelectionModule = () => {
@@ -234,7 +234,8 @@ const HCMSelectionModule = () => {
       {/* 系列说明 */}
       <div style={styles.seriesLegend}>
         {Object.entries(SERIES_INFO).map(([key, info]) => (
-          <span key={key} style={{ ...styles.seriesTag, backgroundColor: info.color }}>
+          <span key={key} style={{ ...styles.seriesTag, backgroundColor: info.color, position: 'relative', cursor: 'help' }}
+            title={info.description}>
             {info.name}
           </span>
         ))}
@@ -415,14 +416,24 @@ const HCMSelectionModule = () => {
                     <td style={styles.td}>
                       {g.zfEquivalent || '-'}
                     </td>
-                    <td style={styles.td}>
+                    <td style={{ ...styles.td, minWidth: '120px' }}>
                       {g.margin !== undefined ? (
-                        <span style={{
-                          color: g.margin >= 0 && g.margin <= 50 ? '#52c41a' :
-                                 g.margin > 50 ? '#faad14' : '#ff4d4f'
-                        }}>
-                          {g.margin >= 0 ? '+' : ''}{g.margin.toFixed(1)}%
-                        </span>
+                        <div>
+                          <div style={{
+                            display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '2px',
+                            color: g.margin < 0 ? '#ff4d4f' : g.margin <= 20 ? '#52c41a' : g.margin <= 50 ? '#faad14' : '#ff4d4f'
+                          }}>
+                            <span>{g.margin >= 0 ? '+' : ''}{g.margin.toFixed(1)}%</span>
+                          </div>
+                          <div style={{ height: '6px', backgroundColor: '#f0f0f0', borderRadius: '3px', overflow: 'hidden' }}>
+                            <div style={{
+                              width: `${Math.min(Math.max(g.margin, 0), 100)}%`,
+                              height: '100%',
+                              borderRadius: '3px',
+                              backgroundColor: g.margin < 0 ? '#ff4d4f' : g.margin <= 20 ? '#52c41a' : g.margin <= 50 ? '#faad14' : '#ff4d4f'
+                            }} />
+                          </div>
+                        </div>
                       ) : '-'}
                     </td>
                     <td style={styles.td}>
@@ -441,6 +452,9 @@ const HCMSelectionModule = () => {
               })}
             </tbody>
           </table>
+        </div>
+        <div style={{ marginTop: '8px', fontSize: '12px', color: '#999' }}>
+          <i>余量 = (额定能力 - 实际需求) / 实际需求 × 100%。绿色(0-20%): 最佳匹配，黄色(20-50%): 可用，红色(负数或&gt;50%): 不推荐</i>
         </div>
       </div>
 

@@ -21,7 +21,7 @@ import {
 } from '../utils/energyEfficiency';
 
 import {
-  calculateAnnualFuelConsumption,
+  calculateFuelConsumption,
   calculateEmissions,
   calculateCarbonFootprint,
   calculateCarbonCost,
@@ -82,9 +82,12 @@ const EEDIRatingBadge = ({ rating, size = 'normal' }) => {
 };
 
 /**
- * CII等级仪表盘
+ * CII等级仪表盘 - 带A-E色带标注
  */
 const CIIGaugeMeter = ({ rating, value }) => {
+  const ratingValue = rating === 'A' ? 15 : rating === 'B' ? 35 : rating === 'C' ? 55 : rating === 'D' ? 75 : 92;
+  const ratingColor = rating === 'A' ? '#28a745' : rating === 'B' ? '#5cb85c' : rating === 'C' ? '#f0ad4e' : rating === 'D' ? '#dc3545' : '#c9302c';
+
   const option = {
     series: [{
       type: 'gauge',
@@ -93,53 +96,129 @@ const CIIGaugeMeter = ({ rating, value }) => {
       min: 0,
       max: 100,
       splitNumber: 5,
-      itemStyle: {
-        color: {
-          type: 'linear',
-          x: 0, y: 0, x2: 1, y2: 0,
-          colorStops: [
-            { offset: 0, color: '#28a745' },
-            { offset: 0.4, color: '#f0ad4e' },
-            { offset: 0.6, color: '#fd7e14' },
-            { offset: 0.8, color: '#dc3545' },
-            { offset: 1, color: '#c9302c' }
+      axisLine: {
+        lineStyle: {
+          width: 25,
+          color: [
+            [0.2, '#28a745'],   // A - 优秀 (绿)
+            [0.4, '#5cb85c'],   // B - 良好 (浅绿)
+            [0.6, '#f0ad4e'],   // C - 达标 (黄)
+            [0.8, '#fd7e14'],   // D - 边缘 (橙)
+            [1.0, '#dc3545']    // E - 不合规 (红)
           ]
         }
       },
-      progress: {
-        show: true,
-        width: 20
+      axisTick: {
+        distance: -25,
+        lineStyle: { color: '#fff', width: 1 },
+        length: 5
       },
-      axisLine: {
-        lineStyle: { width: 20 }
+      splitLine: {
+        distance: -25,
+        length: 25,
+        lineStyle: { color: '#fff', width: 2 }
       },
-      axisTick: { show: false },
-      splitLine: { show: false },
-      axisLabel: { show: false },
+      axisLabel: {
+        distance: -18,
+        color: '#999',
+        fontSize: 10,
+        formatter: (val) => {
+          if (val === 10) return 'A';
+          if (val === 30) return 'B';
+          if (val === 50) return 'C';
+          if (val === 70) return 'D';
+          if (val === 90) return 'E';
+          return '';
+        }
+      },
       pointer: {
         icon: 'triangle',
-        length: '60%',
-        width: 8,
-        offsetCenter: [0, '-40%']
+        length: '55%',
+        width: 10,
+        offsetCenter: [0, '-35%'],
+        itemStyle: { color: ratingColor }
       },
       title: {
         offsetCenter: [0, '-10%'],
-        fontSize: 14,
+        fontSize: 12,
         color: '#666'
       },
       detail: {
         valueAnimation: true,
-        offsetCenter: [0, '20%'],
-        fontSize: 24,
+        offsetCenter: [0, '25%'],
+        fontSize: 28,
         fontWeight: 'bold',
-        formatter: () => rating,
-        color: rating === 'A' ? '#28a745' : rating === 'B' ? '#5cb85c' : rating === 'C' ? '#f0ad4e' : '#dc3545'
+        formatter: () => rating || 'N/A',
+        color: ratingColor
       },
-      data: [{ value: value || 50, name: 'CII Rating' }]
+      data: [{ value: value || ratingValue, name: 'CII等级' }]
     }]
   };
 
-  return <ReactECharts option={option} style={{ height: '200px' }} />;
+  return <ReactECharts option={option} style={{ height: '220px' }} />;
+};
+
+/**
+ * 碳成本趋势预测图 — 三情景分析
+ */
+const CarbonCostTrendChart = ({ annualCO2 }) => {
+  const basePrice = 85; // EU ETS当前碳价 $/t
+  const years = Array.from({ length: 10 }, (_, i) => 2025 + i);
+
+  // 三种情景
+  const scenarios = {
+    optimistic: { rate: 0.03, label: '乐观 (年增3%)' },
+    baseline: { rate: 0.05, label: '基准 (年增5%)' },
+    pessimistic: { rate: 0.10, label: '悲观 (年增10%)' }
+  };
+
+  const option = {
+    title: {
+      text: '10年碳成本预测 (三情景)',
+      left: 'center',
+      textStyle: { fontSize: 14, color: '#666' }
+    },
+    tooltip: {
+      trigger: 'axis',
+      formatter: (params) => {
+        let tip = `${params[0].axisValue}年<br/>`;
+        params.forEach(p => {
+          tip += `${p.marker} ${p.seriesName}: $${Math.round(p.value).toLocaleString()}<br/>`;
+        });
+        return tip;
+      }
+    },
+    legend: { bottom: 0 },
+    grid: { left: '3%', right: '4%', bottom: '15%', top: '15%', containLabel: true },
+    xAxis: { type: 'category', data: years.map(String) },
+    yAxis: { type: 'value', name: '年度碳成本 ($)', axisLabel: { formatter: '${value}' } },
+    series: [
+      {
+        name: scenarios.optimistic.label,
+        type: 'line',
+        data: years.map((_, i) => annualCO2 * basePrice * Math.pow(1 + scenarios.optimistic.rate, i)),
+        itemStyle: { color: '#28a745' },
+        lineStyle: { type: 'dashed' }
+      },
+      {
+        name: scenarios.baseline.label,
+        type: 'line',
+        data: years.map((_, i) => annualCO2 * basePrice * Math.pow(1 + scenarios.baseline.rate, i)),
+        itemStyle: { color: '#f0ad4e' },
+        lineStyle: { width: 3 },
+        areaStyle: { opacity: 0.1 }
+      },
+      {
+        name: scenarios.pessimistic.label,
+        type: 'line',
+        data: years.map((_, i) => annualCO2 * basePrice * Math.pow(1 + scenarios.pessimistic.rate, i)),
+        itemStyle: { color: '#dc3545' },
+        lineStyle: { type: 'dashed' }
+      }
+    ]
+  };
+
+  return <ReactECharts option={option} style={{ height: '300px' }} />;
 };
 
 /**
@@ -337,6 +416,9 @@ const EnergyDashboard = ({
   });
 
   const [activeTab, setActiveTab] = useState('overview');
+  const [powerOverride, setPowerOverride] = useState(null);
+  const [calcVersion, setCalcVersion] = useState(0);
+  const [isStale, setIsStale] = useState(false);
 
   // 船舶类型选项
   const shipTypes = {
@@ -358,7 +440,7 @@ const EnergyDashboard = ({
 
   // 计算数据
   const calculatedData = useMemo(() => {
-    const enginePower = parseFloat(engineData.power) || 1000;
+    const enginePower = parseFloat(powerOverride ?? engineData.power) || 1000;
     const engineSpeed = parseFloat(engineData.speed) || 1800;
     const { type, capacity, speed, buildYear, fuelType, annualDistance, annualHours } = localShipData;
 
@@ -376,44 +458,64 @@ const EnergyDashboard = ({
     const attainedEEDI = eediResult?.attainedEEDI || 0;
     const compliance = evaluateEEDICompliance(attainedEEDI, type, parseFloat(capacity), parseInt(buildYear));
 
-    // CII计算
+    // CII计算 — 基于实际燃油消耗计算年度CO2，不使用EEDI反推
+    const ciiAnnualFuelForCO2 = calculateFuelConsumption({
+      power: enginePower,
+      sfc: SFC_REFERENCE.mainEngine.medium,
+      hours: parseFloat(annualHours),
+      loadFactor: 0.75
+    });
+    const ciiCF = CARBON_FACTORS[fuelType]?.CF || 3.206;
+    const ciiAnnualCO2 = ciiAnnualFuelForCO2 * ciiCF;
+
     const ciiResult = calculateCII({
-      annualCO2: attainedEEDI * parseFloat(capacity) * parseFloat(annualDistance) / 1000000,
+      annualCO2: ciiAnnualCO2,
       capacity: parseFloat(capacity),
       distance: parseFloat(annualDistance),
       shipType: type
     });
 
-    // 燃油消耗
-    const annualFuel = calculateAnnualFuelConsumption(
-      enginePower,
-      SFC_REFERENCE.mainEngine.medium,
-      parseFloat(annualHours),
-      0.75
-    );
+    // 燃油消耗 — 使用 calculateFuelConsumption 接收对象参数并返回吨数
+    const annualFuel = calculateFuelConsumption({
+      power: enginePower,
+      sfc: SFC_REFERENCE.mainEngine.medium,
+      hours: parseFloat(annualHours),
+      loadFactor: 0.75
+    });
 
-    // 排放计算
-    const emissions = calculateEmissions(annualFuel, fuelType, {
+    // 排放计算 — calculateEmissions 返回嵌套结构 { emissions: { CO2: {value,unit}, ... } }
+    const emissionResult = calculateEmissions(annualFuel, fuelType, {
       engineType: 'slow',
       inECA: false
     });
 
+    // 提取平面排放值供后续使用
+    const emissionValues = {
+      CO2: emissionResult?.emissions?.CO2?.value || 0,
+      NOx: emissionResult?.emissions?.NOx?.value || 0,
+      SOx: emissionResult?.emissions?.SOx?.value || 0,
+      PM: emissionResult?.emissions?.PM?.value || 0
+    };
+
     // 碳足迹
     const carbonFootprint = calculateCarbonFootprint(
-      emissions.CO2,
+      emissionValues.CO2,
       parseFloat(annualDistance),
       parseFloat(capacity) * 0.7
     );
 
     // 碳成本
-    const carbonCost = calculateCarbonCost(emissions.CO2, 'euETS');
+    const carbonCost = calculateCarbonCost(emissionValues.CO2, 'euETS');
 
-    // 燃油对比 - 将对象转换为数组格式
-    const fuelComparisonRaw = compareFuelEmissions(annualFuel, fuelType);
+    // 燃油对比 — compareFuelEmissions(power, hours) 对比各燃料类型排放
+    const fuelComparisonRaw = compareFuelEmissions(enginePower, parseFloat(annualHours));
     const fuelComparison = fuelComparisonRaw ? Object.entries(fuelComparisonRaw).map(([key, val]) => ({
       fuelType: key,
       fuelName: val.name || key,
       CO2: parseFloat(val.co2) || 0,
+      NOx: parseFloat(val.nox) || 0,
+      SOx: parseFloat(val.sox) || 0,
+      PM: parseFloat(val.pm) || 0,
       annualCost: parseFloat(val.fuelCost) || 0,
       carbonCost: parseFloat(val.carbonCost) || 0,
       fuelConsumption: parseFloat(val.fuelConsumption) || 0
@@ -429,9 +531,9 @@ const EnergyDashboard = ({
       });
     }
 
-    // 安全获取值，防止undefined
-    const safeEmissions = emissions || { CO2: 0, NOx: 0, SOx: 0, PM: 0 };
-    const safeCarbonCost = carbonCost || { cost: 0 };
+    // 安全获取值
+    const safeEmissions = emissionValues;
+    const safeCarbonCost = carbonCost?.primaryCost ? { cost: carbonCost.primaryCost.value || 0 } : { cost: 0 };
     const safeCarbonFootprint = carbonFootprint || { perNauticalMile: 0, perTonMile: 0, perCargoTon: 0 };
     const safeAnnualFuel = annualFuel || 0;
 
@@ -463,10 +565,17 @@ const EnergyDashboard = ({
         cost: safeCarbonCost.cost * (1 - (hybridBenefit.fuelSavings || 0) / 100) / 10000
       } : null
     };
-  }, [engineData, localShipData, hybridConfig]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [engineData, localShipData, hybridConfig, powerOverride, calcVersion]);
 
   const handleInputChange = (field, value) => {
     setLocalShipData(prev => ({ ...prev, [field]: value }));
+    setIsStale(true);
+  };
+
+  const handleRecalculate = () => {
+    setCalcVersion(v => v + 1);
+    setIsStale(false);
   };
 
   return (
@@ -480,7 +589,17 @@ const EnergyDashboard = ({
       >
         <div className="d-flex justify-content-between align-items-center">
           <span>能效与排放分析仪表盘</span>
-          <Badge bg="info">IMO MEPC.333(76)</Badge>
+          <div className="d-flex align-items-center gap-2">
+            {isStale && <Badge bg="warning" text="dark">参数已变更</Badge>}
+            <button
+              className="btn btn-sm btn-outline-light"
+              onClick={handleRecalculate}
+              title="重新计算"
+            >
+              <i className="bi bi-arrow-clockwise me-1"></i>重新计算
+            </button>
+            <Badge bg="info">IMO MEPC.333(76)</Badge>
+          </div>
         </div>
       </Card.Header>
 
@@ -579,12 +698,13 @@ const EnergyDashboard = ({
                   </Col>
                   <Col md={3} sm={6} className="mb-2">
                     <Form.Group>
-                      <Form.Label>主机功率 (kW)</Form.Label>
+                      <Form.Label>主机功率 (kW) {engineData.power && !powerOverride && <Badge bg="info" className="ms-1">来自选型</Badge>}</Form.Label>
                       <Form.Control
-                        type="text"
-                        value={engineData.power || '未设置'}
-                        readOnly
-                        style={{ backgroundColor: colors.inputBg, color: colors.muted }}
+                        type="number"
+                        value={powerOverride ?? engineData.power ?? ''}
+                        placeholder="未设置 (默认1000)"
+                        onChange={(e) => setPowerOverride(e.target.value || null)}
+                        style={{ backgroundColor: colors.inputBg, color: colors.text }}
                       />
                     </Form.Group>
                   </Col>
@@ -634,10 +754,10 @@ const EnergyDashboard = ({
                         基准线: {safeFixed(calculatedData.eedi.referenceLine, 2, 'N/A')}
                       </small>
                       <ProgressBar
-                        now={calculatedData.eedi.margin ? 100 - calculatedData.eedi.margin : 50}
+                        now={calculatedData.eedi.margin ? 100 - (parseFloat(calculatedData.eedi.margin) || 0) : 50}
                         variant={calculatedData.eedi.isCompliant ? 'success' : 'danger'}
                         className="mt-2"
-                        label={`${safeFixed(calculatedData.eedi.margin, 1, '0')}% 余量`}
+                        label={`${safeFixed(parseFloat(calculatedData.eedi.margin) || 0, 1, '0')}% 余量`}
                       />
                     </div>
                     {!calculatedData.eedi.isCompliant && (
@@ -667,6 +787,24 @@ const EnergyDashboard = ({
                       <small className="text-muted">
                         CII值: {safeFixed(calculatedData.cii?.value, 4, 'N/A')} g CO₂/t·nm
                       </small>
+                      <div className="mt-2">
+                        <small className="text-muted d-block">IMO年度CII折减系数:</small>
+                        <div className="d-flex justify-content-center gap-2 mt-1">
+                          {[
+                            { year: 2024, factor: '5%' },
+                            { year: 2025, factor: '7%' },
+                            { year: 2026, factor: '9%' }
+                          ].map(c => (
+                            <Badge
+                              key={c.year}
+                              bg={c.year === new Date().getFullYear() ? 'primary' : 'secondary'}
+                              style={{ fontSize: '0.7rem' }}
+                            >
+                              {c.year}: -{c.factor}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </Card.Body>
                 </Card>
@@ -793,16 +931,16 @@ const EnergyDashboard = ({
                   <Card.Body>
                     <Row>
                       <Col md={4} className="text-center">
-                        <h4>{safeFixed(calculatedData.carbonFootprint?.perNauticalMile, 2)}</h4>
-                        <p className="text-muted">kg CO₂ / 海里</p>
+                        <h4>{safeFixed(calculatedData.carbonFootprint?.perDistance?.value, 2)}</h4>
+                        <p className="text-muted">t CO₂ / 海里</p>
                       </Col>
                       <Col md={4} className="text-center">
-                        <h4>{safeFixed(calculatedData.carbonFootprint?.perTonMile, 4)}</h4>
-                        <p className="text-muted">kg CO₂ / 吨·海里</p>
+                        <h4>{safeFixed(calculatedData.carbonFootprint?.perCargoDistance?.value, 4)}</h4>
+                        <p className="text-muted">g CO₂ / 吨·海里</p>
                       </Col>
                       <Col md={4} className="text-center">
-                        <h4>{safeFixed(calculatedData.carbonFootprint?.perCargoTon, 2)}</h4>
-                        <p className="text-muted">kg CO₂ / 货物吨</p>
+                        <h4>{safeFixed(calculatedData.carbonFootprint?.perCargo?.value, 3)}</h4>
+                        <p className="text-muted">t CO₂ / 货物吨</p>
                       </Col>
                     </Row>
                   </Card.Body>
@@ -846,10 +984,12 @@ const EnergyDashboard = ({
                         <td>{safeFixed(fuel.annualCost / 10000, 1)}</td>
                         <td>
                           {fuel.fuelType === localShipData.fuelType ? '-' : (
-                            <span style={{ color: fuel.CO2 < calculatedData.emissions?.CO2 ? 'green' : 'red' }}>
-                              {fuel.CO2 < calculatedData.emissions?.CO2 ? '↓' : '↑'}
-                              {safeFixed(Math.abs((fuel.CO2 / (calculatedData.emissions?.CO2 || 1) - 1) * 100), 1)}%
-                            </span>
+                            calculatedData.emissions?.CO2 > 0 ? (
+                              <span style={{ color: fuel.CO2 < calculatedData.emissions.CO2 ? 'green' : 'red' }}>
+                                {fuel.CO2 < calculatedData.emissions.CO2 ? '↓' : '↑'}
+                                {safeFixed(Math.abs((fuel.CO2 / calculatedData.emissions.CO2 - 1) * 100), 1)}%
+                              </span>
+                            ) : 'N/A'
                           )}
                         </td>
                       </tr>
@@ -965,7 +1105,9 @@ const EnergyDashboard = ({
                             <td>
                               {market === 'euETS' ? 'EU ETS' :
                                market === 'china' ? '中国碳市场' :
-                               market === 'imoPotential' ? 'IMO预期' : market}
+                               market === 'imoPotential' ? 'IMO预期' :
+                               market === 'voluntary' ? '自愿碳市场' :
+                               market === 'socialCost' ? '社会碳成本' : market}
                             </td>
                             <td>${price}</td>
                             <td>${((calculatedData.emissions?.CO2 || 0) * price).toLocaleString()}</td>
@@ -979,25 +1121,42 @@ const EnergyDashboard = ({
               </Col>
               <Col md={6}>
                 <Card>
-                  <Card.Header>碳成本趋势预测</Card.Header>
+                  <Card.Header>碳成本趋势预测 (三情景)</Card.Header>
                   <Card.Body>
-                    <Alert variant="warning">
-                      <strong>EU ETS 2024执行</strong>
-                      <p className="mb-0 mt-2">
-                        自2024年起，大型船舶纳入EU ETS。
-                        预计2025年碳价将达100-150$/吨。
-                      </p>
+                    <Alert variant="warning" className="py-2">
+                      <small>
+                        <strong>EU ETS 2024执行:</strong> 大型船舶已纳入EU ETS，碳价预计持续上涨。
+                      </small>
                     </Alert>
-                    <div className="mt-3">
-                      <h5>10年碳成本预测</h5>
-                      <p>基于当前排放量，假设碳价年增5%:</p>
-                      <ul>
-                        <li>第1年: ${((calculatedData.emissions?.CO2 || 0) * 85).toLocaleString()}</li>
-                        <li>第5年: ${((calculatedData.emissions?.CO2 || 0) * 85 * Math.pow(1.05, 4)).toLocaleString()}</li>
-                        <li>第10年: ${((calculatedData.emissions?.CO2 || 0) * 85 * Math.pow(1.05, 9)).toLocaleString()}</li>
-                        <li><strong>10年累计: ${((calculatedData.emissions?.CO2 || 0) * 85 * ((Math.pow(1.05, 10) - 1) / 0.05)).toLocaleString()}</strong></li>
-                      </ul>
-                    </div>
+                    <CarbonCostTrendChart annualCO2={calculatedData.emissions?.CO2 || 0} />
+                    <Table size="sm" className="mt-2">
+                      <thead>
+                        <tr>
+                          <th>情景</th>
+                          <th>第1年</th>
+                          <th>第5年</th>
+                          <th>10年累计</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          { name: '乐观', rate: 0.03, color: '#28a745' },
+                          { name: '基准', rate: 0.05, color: '#f0ad4e' },
+                          { name: '悲观', rate: 0.10, color: '#dc3545' }
+                        ].map(s => {
+                          const co2 = calculatedData.emissions?.CO2 || 0;
+                          const sum10 = co2 * 85 * ((Math.pow(1 + s.rate, 10) - 1) / s.rate);
+                          return (
+                            <tr key={s.name}>
+                              <td><span style={{ color: s.color, fontWeight: 'bold' }}>{s.name}</span></td>
+                              <td>${(co2 * 85).toLocaleString()}</td>
+                              <td>${Math.round(co2 * 85 * Math.pow(1 + s.rate, 4)).toLocaleString()}</td>
+                              <td><strong>${Math.round(sum10).toLocaleString()}</strong></td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </Table>
                   </Card.Body>
                 </Card>
               </Col>

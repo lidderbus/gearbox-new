@@ -126,7 +126,9 @@ export const specialModelPrices: Record<string, SpecialModelPrice> = {
 
   // GW系列报告特批
   'J300': { basePrice: 26680, discountRate: 0.22 },
-  'D300A': { basePrice: 32420, discountRate: 0.22 },
+  'D300A': { basePrice: 34520, discountRate: 0.16 }, // 默认用6-7.5:1较保守折扣
+  'D300A (4-5.5:1)': { basePrice: 32420, discountRate: 0.22 },
+  'D300A (6-7.5:1)': { basePrice: 34520, discountRate: 0.16 },
 
   // 某些HC型号有报告特批价格
   'HC1200': { basePrice: 92000, discountRate: 0.14 },
@@ -174,6 +176,8 @@ export const getStandardDiscountRate = (
   // 按产品类型和系列确定标准折扣率
   switch (productType) {
     case 'gearbox':
+      // HCL系列独立折扣率，必须在HC之前判断
+      if (model.startsWith('HCL')) return PRICE_CONSTANTS.SERIES_DISCOUNT_RATES.HCL;
       if (model.startsWith('HC')) {
         // HC系列分级折扣 — 提取型号中的数字进行范围判断，避免子串误匹配
         const hcNumMatch = model.match(/HC[A-Z]*(\d+)/);

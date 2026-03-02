@@ -244,6 +244,14 @@ export const gwcChineseTemplate =
         <div class="info-label">操纵系统:</div>
         <div class="info-value">{{controlTypeOptions}}</div>
       </div>
+      <div class="info-row">
+        <div class="info-label">减速比:</div>
+        <div class="info-value">{{reductionRatio}}：1</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">重量 (约):</div>
+        <div class="info-value">≤{{weight}} kg</div>
+      </div>
     </div>
   </section>
 
@@ -286,7 +294,7 @@ export const gwcChineseTemplate =
   </section>
 
   <section class="agreement-section">
-    <h2>7. 仪表与报警</h2>
+    <h2>6. 仪表与报警</h2>
     <div class="info-table">
       <div class="info-row">
         <div class="info-label">机旁仪表:</div>
@@ -316,7 +324,7 @@ export const gwcChineseTemplate =
   </section>
 
   <section class="agreement-section">
-    <h2>8. 成套配件</h2>
+    <h2>7. 成套配件</h2>
     <div class="info-table">
       <div class="info-row">
         <div class="info-label">高弹联轴器型号:</div>
@@ -348,7 +356,7 @@ export const gwcChineseTemplate =
   </section>
 
   <section id="quality-section" class="agreement-section">
-    <h2>9. 质量保证及服务</h2>
+    <h2>8. 质量保证及服务</h2>
     <div class="content-text">
       <ol>
         <li>在协议生效后{{approvalPeriod}}天内，制造厂向设计院、船厂提供认可资料（外形及安装图、电气接线图），均采用CAD电子版。设计院、船厂在接到认可资料{{feedbackPeriod}}天内意见反馈。</li>
@@ -364,7 +372,7 @@ export const gwcChineseTemplate =
   </section>
 
   <section class="agreement-section">
-    <h2>10. 供货范围（每船）</h2>
+    <h2>9. 供货范围（每船）</h2>
     <div class="content-text">
       <table class="delivery-table">
         <tr>
@@ -401,7 +409,7 @@ export const gwcChineseTemplate =
   </section>
 
   <section id="attachment-section" class="agreement-section">
-    <h2>11. 随机技术资料</h2>
+    <h2>10. 随机技术资料</h2>
     <div class="content-text">
       <table class="docs-table">
         <tr>
@@ -413,7 +421,7 @@ export const gwcChineseTemplate =
         <tr><td>2</td><td>外形安装图</td><td>1份/台</td></tr>
         <tr><td>3</td><td>电气接线图</td><td>1份/台</td></tr>
         <tr><td>4</td><td>产品合格证书</td><td>1份/台</td></tr>
-        <tr><td>5</td><td>CCS船检产品证书</td><td>1份/台</td></tr>
+        <tr><td>5</td><td>{{classificationCertificateName}}</td><td>1份/台</td></tr>
         <tr><td>6</td><td>装箱清单</td><td>1份/台</td></tr>
       </table>
       <p class="note">注：提供4份纸版完工资料/每船及CD盘完工文件。电子版图纸与实物1:1比例绘制。</p>
@@ -421,14 +429,14 @@ export const gwcChineseTemplate =
   </section>
 
   <section class="agreement-section">
-    <h2>12. 特殊订货要求</h2>
+    <h2>11. 特殊订货要求</h2>
     <div class="content-text special-requirements">
       {{specialRequirements}}
     </div>
   </section>
 
   <section class="agreement-section">
-    <h2>13. 未尽事宜</h2>
+    <h2>12. 未尽事宜</h2>
     <div class="content-text">
       <p>未尽事宜友好协商解决。协议中未提及，但是属于设备正常安装、使用或适用的法规规范所要求的附件及备件，将由卖方无偿提供。</p>
     </div>
@@ -562,6 +570,10 @@ export const gwcEnglishTemplate =
         <div class="info-value">{{arrangement}}</div>
       </div>
       <div class="info-row">
+        <div class="info-label">Arrangement Diagram:</div>
+        <div class="info-value arrangement-diagram-container">{{arrangementDiagram}}</div>
+      </div>
+      <div class="info-row">
         <div class="info-label">Input Coupling:</div>
         <div class="info-value">{{inputCoupling}}</div>
       </div>
@@ -669,6 +681,14 @@ export const gwcEnglishTemplate =
       <div class="info-row">
         <div class="info-label">Control System:</div>
         <div class="info-value">{{controlTypeOptions}}</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Reduction Ratio:</div>
+        <div class="info-value">{{reductionRatio}}:1</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Weight (approx.):</div>
+        <div class="info-value">≤{{weight}} kg</div>
       </div>
     </div>
   </section>
@@ -839,7 +859,7 @@ export const gwcEnglishTemplate =
         <tr><td>2</td><td>Outline Installation Drawing</td><td>1 copy/unit</td></tr>
         <tr><td>3</td><td>Electrical Wiring Diagram</td><td>1 copy/unit</td></tr>
         <tr><td>4</td><td>Product Certificate</td><td>1 copy/unit</td></tr>
-        <tr><td>5</td><td>CCS Ship Inspection Product Certificate</td><td>1 copy/unit</td></tr>
+        <tr><td>5</td><td>{{classificationCertificateNameEn}}</td><td>1 copy/unit</td></tr>
         <tr><td>6</td><td>Packing List</td><td>1 copy/unit</td></tr>
       </table>
       <p class="note">Note: 4 copies of paper completion documents per vessel plus CD completion files will be provided. Electronic drawings shall be drawn at 1:1 scale with actual equipment.</p>
@@ -1272,75 +1292,75 @@ export const hcChineseTemplate =
         <div class="info-value">{{reverseTransmissionCapacity}} kW/rpm</div>
       </div>
       <div class="info-row">
-        <div class="info-label">4. 输入转速：</div>
+        <div class="info-label">8. 输入转速：</div>
         <div class="info-value">0～{{maxInputSpeed}}rpm</div>
       </div>
       <div class="info-row">
-        <div class="info-label">5. 输出转向：</div>
+        <div class="info-label">9. 输出转向：</div>
         <div class="info-value">与输入相反</div>
       </div>
       <div class="info-row">
-        <div class="info-label">6. 润滑油压：</div>
+        <div class="info-label">10. 润滑油压：</div>
         <div class="info-value">{{lubricationOilPressure}} MPa</div>
       </div>
       <div class="info-row">
-        <div class="info-label">7. 螺旋桨最大推力：</div>
+        <div class="info-label">11. 螺旋桨最大推力：</div>
         <div class="info-value">{{maxPropellerThrust}} kN</div>
       </div>
       <div class="info-row">
-        <div class="info-label">8. 中心距：</div>
+        <div class="info-label">12. 中心距：</div>
         <div class="info-value">{{centerDistance}} mm</div>
       </div>
       <div class="info-row">
-        <div class="info-label">9. 油温：</div>
+        <div class="info-label">13. 油温：</div>
         <div class="info-value">≤{{maxOilTemperature}}℃</div>
       </div>
       <div class="info-row">
-        <div class="info-label">10. 机油容积：</div>
+        <div class="info-label">14. 机油容积：</div>
         <div class="info-value">约 {{oilCapacity}}L</div>
       </div>
       <div class="info-row">
-        <div class="info-label">11. 机油牌号：</div>
+        <div class="info-label">15. 机油牌号：</div>
         <div class="info-value">{{oilGrade}}</div>
       </div>
       <div class="info-row">
-        <div class="info-label">12. 冷却水进水温度：</div>
+        <div class="info-label">16. 冷却水进水温度：</div>
         <div class="info-value">≤{{coolingWaterInletTemperature}}℃</div>
       </div>
       <div class="info-row">
-        <div class="info-label">13. 冷却水量：</div>
+        <div class="info-label">17. 冷却水量：</div>
         <div class="info-value">≥{{coolingWaterVolume}}t/h,冷却水进口压力≤{{coolingWaterPressure}} MPa</div>
       </div>
       <div class="info-row">
-        <div class="info-label">14. 机械效率：</div>
+        <div class="info-label">18. 机械效率：</div>
         <div class="info-value">≥{{mechanicalEfficiency}}%</div>
       </div>
       <div class="info-row">
-        <div class="info-label">15.（正车）转向：</div>
+        <div class="info-label">19.（正车）转向：</div>
         <div class="info-value">{{forwardDirection}}</div>
       </div>
       <div class="info-row">
-        <div class="info-label">16. 倾斜度：</div>
+        <div class="info-label">20. 倾斜度：</div>
         <div class="info-value">纵倾 {{longitudinalInclination}}°，横倾 {{transverseInclination}}°；纵摇 {{longitudinalShaking}}°，横倾 {{transverseShaking}}°</div>
       </div>
       <div class="info-row">
-        <div class="info-label">17. 安装方式：</div>
+        <div class="info-label">21. 安装方式：</div>
         <div class="info-value">{{installationMethod}}</div>
       </div>
       <div class="info-row">
-        <div class="info-label">18. 电动滑油泵：</div>
+        <div class="info-label">22. 电动滑油泵：</div>
         <div class="info-value">{{lubricationOilPump}}，技术参数以认可资料为准。</div>
       </div>
       <div class="info-row">
-        <div class="info-label">19. 大修时间：</div>
+        <div class="info-label">23. 大修时间：</div>
         <div class="info-value">{{overhaulTime}} 小时</div>
       </div>
       <div class="info-row">
-        <div class="info-label">20. 齿轮箱铭牌材质：</div>
+        <div class="info-label">24. 齿轮箱铭牌材质：</div>
         <div class="info-value">{{nameplateSpecification}}</div>
       </div>
       <div class="info-row">
-        <div class="info-label">21. 仪表与报警：</div>
+        <div class="info-label">25. 仪表与报警：</div>
         <div class="info-value">{{instrumentsAndAlarms}}</div>
       </div>
     </div>
@@ -1764,23 +1784,23 @@ export const hcqChineseTemplate =
     <div class="info-table">
       <div class="info-row">
         <div class="info-label">功能:</div>
-        <div class="info-value">倒顺离合、减速、承受螺旋桨推力</div>
+        <div class="info-value">{{gearboxFunction}}</div>
       </div>
       <div class="info-row">
         <div class="info-label">传动型式:</div>
-        <div class="info-value">圆柱斜齿轮三轴五齿轮传动</div>
+        <div class="info-value">{{transmissionType}}</div>
       </div>
       <div class="info-row">
         <div class="info-label">离合器型式:</div>
-        <div class="info-value">液压湿式多片摩擦离合器</div>
+        <div class="info-value">{{clutchType}}</div>
       </div>
       <div class="info-row">
         <div class="info-label">输入联轴器:</div>
-        <div class="info-value">齿形块联轴器</div>
+        <div class="info-value">{{inputCouplingType}}</div>
       </div>
       <div class="info-row">
         <div class="info-label">额定输入转速:</div>
-        <div class="info-value">1000~2500 rpm</div>
+        <div class="info-value">{{minInputSpeed}}~{{maxInputSpeed}} rpm</div>
       </div>
       <div class="info-row">
         <div class="info-label">输入输出中心距:</div>
@@ -1812,11 +1832,11 @@ export const hcqChineseTemplate =
       </div>
       <div class="info-row">
         <div class="info-label">工作油压:</div>
-        <div class="info-value">{{workingPressure}} MPa</div>
+        <div class="info-value">{{workingOilPressure}} MPa</div>
       </div>
       <div class="info-row">
         <div class="info-label">润滑油压:</div>
-        <div class="info-value">{{lubricationPressure}} MPa</div>
+        <div class="info-value">{{lubricationOilPressure}} MPa</div>
       </div>
       <div class="info-row">
         <div class="info-label">机油牌号:</div>
@@ -1858,23 +1878,23 @@ export const hcqChineseTemplate =
       </div>
       <div class="info-row">
         <div class="info-label">外观:</div>
-        <div class="info-value">杭齿灰</div>
+        <div class="info-value">{{appearance}}</div>
       </div>
       <div class="info-row">
         <div class="info-label">贮存温度:</div>
-        <div class="info-value">-15°C ~ +45°C</div>
+        <div class="info-value">{{storageTemperature}}</div>
       </div>
       <div class="info-row">
         <div class="info-label">使用温度:</div>
-        <div class="info-value">-15°C ~ +45°C</div>
+        <div class="info-value">{{operatingTemperature}}</div>
       </div>
       <div class="info-row">
         <div class="info-label">海水温度:</div>
-        <div class="info-value">-1°C ~ +32°C</div>
+        <div class="info-value">{{seawaterTemperature}}</div>
       </div>
       <div class="info-row">
         <div class="info-label">相对湿度:</div>
-        <div class="info-value">+35°C, 90%</div>
+        <div class="info-value">{{relativeHumidity}}</div>
       </div>
       <div class="info-row">
         <div class="info-label">工作倾斜度:</div>
@@ -1973,6 +1993,384 @@ export const hcqChineseTemplate =
     <h2>九、特殊订货要求</h2>
     <div class="content-text special-requirements">
       {{specialRequirements}}
+    </div>
+  </section>
+</div>`;
+
+// GWS系列模板 - 中文（电控双机备用泵启停及控制箱）
+// 数据来源：GWS49.61齿轮箱技术协议（电控 双机 备用泵启停及控制箱）上前2026.1.29.doc
+export const gwsChineseTemplate =
+`<div class="agreement-container">
+  <h1 class="agreement-title">"GWS"系列船用齿轮箱订货技术协议</h1>
+  <p class="agreement-subtitle">（电控 双机 备用泵启停及控制箱）</p>
+
+  <section class="agreement-header">
+    <div class="parties">
+      <div class="party">
+        <p>船检：{{classificationName}}</p>
+        <p>船号：{{projectNumber}}</p>
+        <p>船名：{{shipName}}</p>
+      </div>
+      <div class="party">
+        <p>船东（甲方）：{{shipOwner}}</p>
+        <p>签字：_______________ 日期：_______________</p>
+      </div>
+      <div class="party">
+        <p>船厂（乙方）：{{shipyard}}</p>
+        <p>签字：_______________ 日期：_______________</p>
+      </div>
+      <div class="party">
+        <p>制造厂（丙方）：杭州前进齿轮箱集团股份有限公司</p>
+        <p>签字：_______________ 日期：_______________</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="agreement-section">
+    <h2>一、柴油机参数</h2>
+    <div class="info-table">
+      <div class="info-row">
+        <div class="info-label">型号：</div>
+        <div class="info-value">{{engineModel}}</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">额定功率：</div>
+        <div class="info-value">{{enginePower}} kW</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">额定转速：</div>
+        <div class="info-value">{{engineSpeed}} r/min</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">输出轴旋转方向（面向飞轮）：</div>
+        <div class="info-value">{{engineRotation}}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="agreement-section">
+    <h2>二、齿轮箱参数</h2>
+    <div class="info-table">
+      <div class="info-row">
+        <div class="info-label">型号：</div>
+        <div class="info-value">{{gearboxModel}}</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">功能：</div>
+        <div class="info-value">{{gearboxFunction}}</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">额定推力：</div>
+        <div class="info-value">{{maxPropellerThrust}} kN</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">减速比：</div>
+        <div class="info-value">{{reductionRatio}}</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">传递能力：</div>
+        <div class="info-value">{{transmissionCapacity}} kW/(r·min⁻¹)</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">输入输出中心距：</div>
+        <div class="info-value">{{centerDistance}} mm（垂直异心）</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">订货数量：</div>
+        <div class="info-value">{{quantity}} 台</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="agreement-section">
+    <h2>三、工作原理</h2>
+    <div class="content-text">
+      <p>{{powerArrangement}}</p>
+      <div class="arrangement-diagram-container">{{arrangementDiagram}}</div>
+    </div>
+  </section>
+
+  <section class="agreement-section">
+    <h2>四、操纵方式</h2>
+    <div class="content-text">
+      <p><strong>操纵方式：</strong>{{controlTypeOptions}}</p>
+      <p><strong>控制电压：</strong>DC{{controlVoltage}}V</p>
+      <p class="note">电控换向阀随齿轮箱成套供货</p>
+    </div>
+  </section>
+
+  <section class="agreement-section">
+    <h2>五、润滑、冷却</h2>
+    <div class="info-table">
+      <div class="info-row">
+        <div class="info-label">最高油温：</div>
+        <div class="info-value">{{maxOilTemperature}}°C</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">机油牌号：</div>
+        <div class="info-value">{{oilGrade}}</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">冷却水用量：</div>
+        <div class="info-value">≥{{minCoolingWaterFlow}} t/h</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">冷却水进口温度：</div>
+        <div class="info-value">{{coolingWaterInletTemperature}}°C</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">冷却水压力：</div>
+        <div class="info-value">{{coolingWaterPressure}} MPa</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">润滑油压力：</div>
+        <div class="info-value">{{lubricationOilPressure}} MPa</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="agreement-section">
+    <h2>六、随机附件</h2>
+    <div class="content-text">
+      <table class="delivery-table">
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>名称</th>
+            <th>数量</th>
+            <th>备注</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>滑油泵（内置）</td>
+            <td>1台/齿轮箱</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>滑油滤油器</td>
+            <td>1只/齿轮箱</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>滑油冷却器</td>
+            <td>1只/齿轮箱</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>电控换向阀</td>
+            <td>1只/齿轮箱</td>
+            <td>DC{{controlVoltage}}V</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="agreement-section">
+    <h2>七、报警装置</h2>
+    <div class="content-text">
+      <table class="delivery-table">
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>名称</th>
+            <th>数量</th>
+            <th>报警整定值</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>润滑油压表</td>
+            <td>1只/齿轮箱</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>润滑油温表</td>
+            <td>1只/齿轮箱</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>工作油压力表</td>
+            <td>1只/齿轮箱</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>滑油低压报警控制器</td>
+            <td>1只/齿轮箱</td>
+            <td>≤{{lubOilPressureAlarm}} MPa</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>油温高报警控制器</td>
+            <td>1只/齿轮箱</td>
+            <td>≥{{highOilTemperatureAlarm}}°C</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>工作油压力低报警控制器</td>
+            <td>1只/齿轮箱</td>
+            <td>≤{{workingOilPressureAlarm}} MPa</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>正车/倒车/空车指示控制器</td>
+            <td>各1只/齿轮箱</td>
+            <td>-</td>
+          </tr>
+          <tr class="highlight-row">
+            <td>8</td>
+            <td><strong>备用泵启停控制器</strong></td>
+            <td>1只/齿轮箱</td>
+            <td><strong>启动 ≤{{backupPumpStartPressure}} MPa / 停止 ≥{{backupPumpStopPressure}} MPa</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note">以上报警控制器均提供直流无源开关量信号</p>
+    </div>
+  </section>
+
+  <section class="agreement-section gws-special-section">
+    <h2>八、高弹联轴器</h2>
+    <div class="info-table">
+      <div class="info-row">
+        <div class="info-label">型号：</div>
+        <div class="info-value">{{couplingModel}}</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">额定扭矩：</div>
+        <div class="info-value">{{couplingTorque}} kNm</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">成套方：</div>
+        <div class="info-value">
+          <div class="checkbox-group">
+            <label><input type="checkbox" {{couplingBySupplier}}> 供方</label>
+            <label><input type="checkbox" {{couplingByDemander}}> 需方</label>
+          </div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">联接件：</div>
+        <div class="info-value">配齐与主机、齿轮箱的联接紧固件</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="agreement-section gws-backup-pump-section">
+    <h2>九、电动备用泵</h2>
+    <div class="info-table">
+      <div class="info-row">
+        <div class="info-label">型号：</div>
+        <div class="info-value">{{backupPumpModel}}</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">流量：</div>
+        <div class="info-value">{{backupPumpFlowRate}} m³/h</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">压力：</div>
+        <div class="info-value">{{backupPumpPressure}} MPa</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">电机功率：</div>
+        <div class="info-value">{{backupPumpMotorPower}} kW</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">电机电压：</div>
+        <div class="info-value">{{backupPumpMotorVoltage}}</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">防护等级：</div>
+        <div class="info-value">{{backupPumpMotorProtection}}</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">绝缘等级：</div>
+        <div class="info-value">{{backupPumpMotorInsulation}}</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">数量：</div>
+        <div class="info-value">{{quantity}} 台（1台/齿轮箱）</div>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">备用泵控制箱</h3>
+    <div class="content-text">
+      <table class="delivery-table">
+        <tr>
+          <td><strong>数量</strong></td>
+          <td>{{quantity}} 只（1只/电动泵）</td>
+        </tr>
+        <tr>
+          <td><strong>功能</strong></td>
+          <td>{{backupPumpControlBoxFeatures}}</td>
+        </tr>
+        <tr>
+          <td><strong>启动条件</strong></td>
+          <td>当润滑油压力降至 {{backupPumpStartPressure}} MPa 时，控制箱自动启动备用泵</td>
+        </tr>
+        <tr>
+          <td><strong>停止条件</strong></td>
+          <td>当润滑油压力恢复至 {{backupPumpStopPressure}} MPa 时，控制箱自动停止备用泵</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="agreement-section">
+    <h2>十、认可图纸</h2>
+    <div class="content-text">
+      <p>协议生效后{{approvalPeriod}}日内，制造厂向甲方提供以下认可资料：</p>
+      <ul>
+        <li>外形及安装图</li>
+        <li>电气接线图</li>
+        <li>管系图</li>
+      </ul>
+      <p>甲方在接到认可资料{{feedbackPeriod}}日内给予意见反馈。</p>
+    </div>
+  </section>
+
+  <section class="agreement-section">
+    <h2>十一、随机文件</h2>
+    <div class="content-text">
+      <ul>
+        <li>产品合格证书</li>
+        <li>使用维护说明书</li>
+        <li>装箱清单</li>
+        <li>{{classificationName}}船检产品证书</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="quality-section" class="agreement-section">
+    <h2>十二、质量保证</h2>
+    <div class="content-text">
+      <p><strong>三包期</strong>：{{warrantyText}}</p>
+      <p><strong>三包条款</strong>：在三包期内，确因设计及制造不良而造成的质量问题，制造厂保证免费提供零件，并派人进行修理和技术服务。</p>
+      <p><strong>服务承诺</strong>：超过三包期后仍提供及时、优质、优惠的服务</p>
+      <p><strong>服务电话</strong>：{{servicePhone}}</p>
+    </div>
+  </section>
+
+  <section class="agreement-section">
+    <h2>十三、特殊订货要求</h2>
+    <div class="content-text special-requirements">
+      {{specialRequirements}}
+    </div>
+  </section>
+
+  <section class="agreement-section">
+    <h2>十四、未尽事宜</h2>
+    <div class="content-text">
+      <p>未尽事宜友好协商解决。本协议作为齿轮箱设计制造、质量检验、交货验收的技术依据，作为订货合同的附件。</p>
     </div>
   </section>
 </div>`;

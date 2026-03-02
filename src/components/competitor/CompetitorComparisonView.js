@@ -5,7 +5,7 @@
  * 整合选型对比、产品浏览、优势分析三大功能
  */
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import {
   Container, Row, Col, Card, Tabs, Tab, Form, Button,
   InputGroup, Alert, Badge, Table
@@ -13,6 +13,10 @@ import {
 import CompetitorSelector from './CompetitorSelector';
 import ComparisonTable from './ComparisonTable';
 import AdvantageReport from './AdvantageReport';
+import TechnologyMatrix from './TechnologyMatrix';
+import TCOCalculator from './TCOCalculator';
+import MarketSegmentView from './MarketSegmentView';
+import DataFreshnessIndicator from './DataFreshnessIndicator';
 import {
   selectCompetitorProducts,
   findEquivalentCompetitors,
@@ -23,7 +27,9 @@ import { formatPowerRange, selectHangchiWithScore } from '../../utils/gearboxDat
 const CompetitorComparisonView = ({
   colors,
   hangchiData = [],
-  onExportPDF
+  onExportPDF,
+  selectionResult = null,
+  engineData = {}
 }) => {
   // 状态管理
   const [activeTab, setActiveTab] = useState('selection');
@@ -34,6 +40,19 @@ const CompetitorComparisonView = ({
   const [power, setPower] = useState('');
   const [speed, setSpeed] = useState('');
   const [ratio, setRatio] = useState('');
+  const [hangchiSearch, setHangchiSearch] = useState('');
+  const [hangchiSeriesFilter, setHangchiSeriesFilter] = useState('');
+
+  // 从选型结果自动填充功率/转速
+  useEffect(() => {
+    if (engineData?.power && !power) {
+      setPower(String(engineData.power));
+    }
+    if (engineData?.speed && !speed) {
+      setSpeed(String(engineData.speed));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [engineData?.power, engineData?.speed]);
 
   // 处理杭齿产品选择
   const handleHangchiSelect = useCallback((product) => {
@@ -45,18 +64,40 @@ const CompetitorComparisonView = ({
     }
   }, []);
 
+  // 杭齿产品系列列表
+  const hangchiSeriesList = useMemo(() => {
+    const seriesSet = new Set();
+    hangchiData.forEach(p => {
+      if (p.series) seriesSet.add(p.series.toUpperCase());
+    });
+    return Array.from(seriesSet).sort();
+  }, [hangchiData]);
+
   // 根据参数筛选杭齿产品 (使用带评分的选型函数)
   const filteredHangchiProducts = useMemo(() => {
-    if (!power || !speed || !ratio) return hangchiData.slice(0, 100);
+    let results;
+    if (power && speed && ratio) {
+      results = selectHangchiWithScore(hangchiData, parseFloat(power), parseFloat(speed), parseFloat(ratio));
+    } else {
+      results = hangchiData;
+    }
 
-    const powerNum = parseFloat(power);
-    const speedNum = parseFloat(speed);
-    const ratioNum = parseFloat(ratio);
+    // 文本搜索
+    if (hangchiSearch) {
+      const searchLower = hangchiSearch.toLowerCase();
+      results = results.filter(p =>
+        (p.model || '').toLowerCase().includes(searchLower) ||
+        (p.series || '').toLowerCase().includes(searchLower)
+      );
+    }
 
-    // 使用带评分的选型函数
-    const results = selectHangchiWithScore(hangchiData, powerNum, speedNum, ratioNum);
+    // 系列筛选
+    if (hangchiSeriesFilter) {
+      results = results.filter(p => (p.series || '').toUpperCase() === hangchiSeriesFilter);
+    }
+
     return results.slice(0, 100);
-  }, [hangchiData, power, speed, ratio]);
+  }, [hangchiData, power, speed, ratio, hangchiSearch, hangchiSeriesFilter]);
 
   // 计算所需传递能力 (用于显示)
   const requiredCapacity = useMemo(() => {
@@ -127,6 +168,9 @@ const CompetitorComparisonView = ({
           </div>
         </Col>
       </Row>
+
+      {/* 数据新鲜度提醒 */}
+      <DataFreshnessIndicator products={selectedCompetitors} />
 
       {/* 快速选型参数栏 */}
       <Card className="mb-4 shadow-sm">
@@ -293,10 +337,34 @@ const CompetitorComparisonView = ({
             <Col lg={4} className="mb-4">
               <Card className="shadow-sm h-100">
                 <Card.Header style={{ backgroundColor: '#fd7e14', color: 'white' }}>
-                  <i className="bi bi-star-fill me-2"></i>
-                  杭齿产品
+                  <div className="d-flex justify-content-between align-items-center">
+                    <span><i className="bi bi-star-fill me-2"></i>杭齿产品</span>
+                    <Badge bg="light" text="dark">{filteredHangchiProducts.length}个</Badge>
+                  </div>
                 </Card.Header>
-                <Card.Body style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                <Card.Body className="p-0">
+                  {/* 搜索与筛选 */}
+                  <div className="p-2 border-bottom bg-light">
+                    <Form.Control
+                      size="sm"
+                      type="text"
+                      placeholder="搜索型号..."
+                      value={hangchiSearch}
+                      onChange={e => setHangchiSearch(e.target.value)}
+                      className="mb-1"
+                    />
+                    <Form.Select
+                      size="sm"
+                      value={hangchiSeriesFilter}
+                      onChange={e => setHangchiSeriesFilter(e.target.value)}
+                    >
+                      <option value="">全部系列</option>
+                      {hangchiSeriesList.map(s => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </Form.Select>
+                  </div>
+                  <div style={{ maxHeight: '420px', overflowY: 'auto', padding: '8px' }}>
                   {filteredHangchiProducts.length > 0 ? (
                     filteredHangchiProducts.map(product => (
                       <div
@@ -331,6 +399,7 @@ const CompetitorComparisonView = ({
                         : '请输入参数或从列表选择产品'}
                     </div>
                   )}
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
@@ -446,7 +515,43 @@ const CompetitorComparisonView = ({
           </Card>
         </Tab>
 
-        {/* Tab 3: 优势报告 */}
+        {/* Tab 3: 技术矩阵 */}
+        <Tab
+          eventKey="techMatrix"
+          title={<span><i className="bi bi-grid-3x3-gap me-2"></i>技术矩阵</span>}
+        >
+          <TechnologyMatrix
+            hangchiProduct={selectedHangchi}
+            competitors={selectedCompetitors}
+            colors={colors}
+          />
+        </Tab>
+
+        {/* Tab 4: TCO分析 */}
+        <Tab
+          eventKey="tco"
+          title={<span><i className="bi bi-calculator me-2"></i>TCO分析</span>}
+        >
+          <TCOCalculator
+            hangchiProduct={selectedHangchi}
+            competitors={selectedCompetitors}
+            colors={colors}
+          />
+        </Tab>
+
+        {/* Tab 5: 市场分析 */}
+        <Tab
+          eventKey="market"
+          title={<span><i className="bi bi-pie-chart me-2"></i>市场分析</span>}
+        >
+          <MarketSegmentView
+            hangchiProduct={selectedHangchi}
+            competitors={selectedCompetitors}
+            colors={colors}
+          />
+        </Tab>
+
+        {/* Tab 6: 优势报告 */}
         <Tab
           eventKey="report"
           title={<span><i className="bi bi-file-earmark-text me-2"></i>优势报告</span>}

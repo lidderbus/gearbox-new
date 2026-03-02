@@ -63,10 +63,12 @@ const AgreementOptionsForm = ({
               value={templateType}
               onChange={(e) => setTemplateType(e.target.value)}
             >
-              <option value={TemplateType.GWC}>GWC/GWL系列</option>
-              <option value={TemplateType.HCT}>HCT系列</option>
+              <option value={TemplateType.GWC}>GWC/GWL/GWK/GWH/GWD系列</option>
+              <option value={TemplateType.GWS}>GWS/SGW系列（电控双机备用泵）</option>
+              <option value={TemplateType.HCT}>HCT/HCM系列</option>
               <option value={TemplateType.HC}>HC系列</option>
-              <option value={TemplateType.DT}>DT系列</option>
+              <option value={TemplateType.HCQ}>HCQ系列（高扭矩大功率）</option>
+              <option value={TemplateType.DT}>DT系列（电推）</option>
               <option value={TemplateType.HCD}>HCD系列</option>
             </Form.Select>
           </Form.Group>

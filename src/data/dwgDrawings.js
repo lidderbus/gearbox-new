@@ -4,7 +4,7 @@
 // 齿轮箱型号: 101 个
 // 联轴器型号: 40 个
 
-export const DWG_BASE_URL = 'http://47.99.181.195';
+export const DWG_BASE_URL = 'https://qj-gearbox.duckdns.org';
 
 // 齿轮箱DWG数据
 export const gearboxDwgDrawings = {
@@ -107,13 +107,13 @@ export const gearboxDwgDrawings = {
     {
       "id": "gcs660-4500tshd",
       "fileName": "GCS660 604 001齿轮箱外形图2025.11.27.dwg",
-      "filePath": "/drawings/GCS660%20604%20001齿轮箱外形图2025.11.27.dwg",
+      "filePath": "/drawings/GCS660 604 001齿轮箱外形图2025.11.27.dwg",
       "fileSize": "1.9MB",
       "updateDate": "2025-11-27",
       "series": "GCS",
       "category": "CPP船用齿轮箱",
       "project": "4500方耙吸船",
-      "notes": "垂直异中心布置，配套HS080桨毂"
+      "notes": "垂直异中心布置，配套HS-080桨毂"
     }
   ],
   "4500TSHD-轴系": [
@@ -2076,11 +2076,28 @@ export const dwgSeriesInfo = {
   'OTHER': { name: '其他型号', description: '其他类型图纸', type: 'other' }
 };
 
-// 获取DWG下载URL
-export const getDwgDownloadUrl = (filePath) => `${DWG_BASE_URL}${filePath}`;
+// 对路径中的每段做 encodeURIComponent，保留 / 分隔符
+const encodeFilePath = (filePath) => {
+  return filePath.split('/').map(segment => segment ? encodeURIComponent(segment) : '').join('/');
+};
+
+// 获取DWG下载URL（路径已编码，适合浏览器直接访问）
+export const getDwgDownloadUrl = (filePath) => `${DWG_BASE_URL}${encodeFilePath(filePath)}`;
+
+// 获取PDF预览URL (DWG已转换为PDF)
+// 例如: /drawings/HC船用齿轮箱外形图2017/xxx.dwg -> /drawings/pdf/HC船用齿轮箱外形图2017/xxx.pdf
+export const getPdfPreviewUrl = (filePath) => {
+  // 将 /drawings/xxx.dwg 转换为 /drawings/pdf/xxx.pdf
+  const pdfPath = filePath
+    .replace('/drawings/', '/drawings/pdf/')
+    .replace(/\.dwg$/i, '.pdf');
+  return `${DWG_BASE_URL}${encodeFilePath(pdfPath)}`;
+};
 
 // 获取ShareCAD预览URL
+// 注意：ShareCAD的url参数需要对完整URL做一次encodeURIComponent，
+// 所以这里用原始拼接（不预编码），让encodeURIComponent统一处理
 export const getShareCADPreviewUrl = (filePath) => {
-  const fileUrl = getDwgDownloadUrl(filePath);
-  return `https://sharecad.org/cadframe/load?url=${encodeURIComponent(fileUrl)}`;
+  const rawUrl = `${DWG_BASE_URL}${filePath}`;
+  return `https://sharecad.org/cadframe/load?url=${encodeURIComponent(rawUrl)}`;
 };

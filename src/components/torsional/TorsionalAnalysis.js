@@ -6,7 +6,7 @@
  * - 简化模式：两质量系统快速校核
  * - 高级模式：多自由度系统完整分析（COMPASS格式）
  */
-import React, { useState, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Card, Button, Form, Row, Col, Tabs, Tab, Spinner, Alert, ButtonGroup, Badge } from 'react-bootstrap';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -18,6 +18,7 @@ import MassInertiaEditor from './MassInertiaEditor';
 import ShaftStiffnessEditor from './ShaftStiffnessEditor';
 import AnalysisResultPanel from './AnalysisResultPanel';
 import SmartFixSuggestions from './SmartFixSuggestions';
+import ModeShapeChart from './ModeShapeChart';
 
 // 高级模式组件
 import SystemLayoutEditor from './SystemLayoutEditor';
@@ -37,10 +38,17 @@ import {
 import { runForcedVibrationAnalysis } from '../../utils/forcedVibrationAnalysis';
 import { generateTorsionalReport, buildReportData } from '../../utils/torsionalPdfGenerator';
 
+// 数据库
+import { getStandardsList, getForbiddenZone } from '../../data/torsionalStandardsDB';
+import { getMaterialList, getCouplingList, getPresetList, getPreset, getCoupling } from '../../data/torsionalMaterialDB';
+import { checkCompliance } from '../../utils/torsionalComplianceChecker';
+
 const TorsionalAnalysis = ({
   colors = {},
   theme = 'light',
-  onAnalysisComplete
+  onAnalysisComplete,
+  selectionResult = null,
+  engineData = {}
 }) => {
   // 分析模式：simple（简化）或 advanced（高级）
   const [analysisMode, setAnalysisMode] = useState('simple');
@@ -54,6 +62,12 @@ const TorsionalAnalysis = ({
   const [advancedResult, setAdvancedResult] = useState(null);
   const [forcedResult, setForcedResult] = useState(null);
 
+  // 新增: 船型预设/规范/材料状态
+  const [selectedPreset, setSelectedPreset] = useState('');
+  const [selectedStandard, setSelectedStandard] = useState('CCS_INLAND_2016');
+  const [selectedMaterial, setSelectedMaterial] = useState('45_STEEL');
+  const [complianceResult, setComplianceResult] = useState(null);
+
   // 共用状态
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -63,6 +77,26 @@ const TorsionalAnalysis = ({
 
   // 图表引用（用于PDF导出）
   const chartInstancesRef = useRef(null);
+
+  // 从选型结果自动填充参数
+  useEffect(() => {
+    if (selectionResult?.recommendations?.[0] && engineData?.speed) {
+      const gb = selectionResult.recommendations[0];
+      const speed = parseFloat(engineData.speed) || 1500;
+      const gearRatio = gb.matchedRatio || gb.ratio || 3.0;
+      setInput(prev => ({
+        ...prev,
+        operatingSpeed: speed,
+        gearRatio: parseFloat(gearRatio) || prev.gearRatio
+      }));
+    }
+  }, [selectionResult, engineData]);
+
+  // 数据库列表
+  const standardsList = useMemo(() => getStandardsList(), []);
+  const materialsList = useMemo(() => getMaterialList(), []);
+  const couplingsList = useMemo(() => getCouplingList(), []);
+  const presetsList = useMemo(() => getPresetList(), []);
 
   // 默认主题色
   const defaultColors = useMemo(() => ({
@@ -95,6 +129,45 @@ const TorsionalAnalysis = ({
   // 更新轴段数组
   const handleShaftsChange = useCallback((shafts) => {
     setInput(prev => ({ ...prev, shafts }));
+    setResult(null);
+    setError(null);
+  }, []);
+
+  // 应用船型预设
+  const handlePresetChange = useCallback((presetKey) => {
+    setSelectedPreset(presetKey);
+    if (!presetKey) return;
+    const preset = getPreset(presetKey);
+    if (!preset) return;
+
+    const coupling = getCoupling(preset.couplingModel);
+    const couplingK = coupling ? coupling.stiffness * 1000 : 5e5; // kNm/rad → N·m/rad
+    const couplingJ = coupling ? coupling.inertia : 0.5;
+
+    setInput(prev => ({
+      ...prev,
+      operatingSpeed: preset.motorSpeed,
+      powerSourceType: 'electric',
+      bladeCount: preset.bladeCount || 4,
+      gearRatio: preset.gearRatio || 1,
+      couplingStiffness: couplingK,
+      couplingInertia: couplingJ,
+      motorPower: preset.motorPower,
+      motorSpeed: preset.motorSpeed,
+      materialStrength: 600,
+      masses: [
+        { name: '电机', J: preset.motorInertia, position: 0 },
+        { name: '联轴器', J: couplingJ, position: 300 },
+        { name: '齿轮箱', J: 0.5, position: 600 },
+        { name: '螺旋桨', J: preset.propellerInertia, position: preset.shaftLength + 600 },
+      ],
+      shafts: [
+        { name: '输入轴', K: couplingK, length: 300, diameter: 80 },
+        { name: '齿轮箱内', K: 5e6, length: 300, diameter: 100 },
+        { name: '艉轴', K: 8.1e10 * Math.PI * Math.pow(preset.shaftDiameter / 1000, 4) / 32 / (preset.shaftLength / 1000),
+          length: preset.shaftLength, diameter: preset.shaftDiameter },
+      ]
+    }));
     setResult(null);
     setError(null);
   }, []);
@@ -141,6 +214,18 @@ const TorsionalAnalysis = ({
       setResult(analysisResult);
       setActiveTab('result');
 
+      // 规范合规性检查
+      const forbiddenZone = getForbiddenZone(selectedStandard);
+      analysisResult.forbiddenZone = forbiddenZone;
+      analysisResult.standardCode = selectedStandard;
+
+      try {
+        const compliance = checkCompliance(analysisResult, input, selectedStandard);
+        setComplianceResult(compliance);
+      } catch (e) {
+        console.warn('Compliance check failed:', e);
+      }
+
       // 回调
       if (onAnalysisComplete) {
         onAnalysisComplete(analysisResult);
@@ -150,7 +235,7 @@ const TorsionalAnalysis = ({
     } finally {
       setLoading(false);
     }
-  }, [input, onAnalysisComplete]);
+  }, [input, onAnalysisComplete, selectedStandard]);
 
   // 重置参数
   const handleReset = useCallback(() => {
@@ -411,6 +496,60 @@ const TorsionalAnalysis = ({
             >
               {/* 参数输入标签页 */}
               <Tab eventKey="input" title="参数输入">
+                {/* 船型预设 + 规范选择 */}
+                <Card className="mb-3" style={cardStyle}>
+                  <Card.Header style={{ backgroundColor: defaultColors.headerBg, color: defaultColors.headerText }}>
+                    船型预设与规范
+                  </Card.Header>
+                  <Card.Body>
+                    <Row>
+                      <Col md={4}>
+                        <Form.Group className="mb-3">
+                          <Form.Label style={{ color: defaultColors.text }}>船型预设 (一键填充)</Form.Label>
+                          <Form.Select
+                            value={selectedPreset}
+                            onChange={(e) => handlePresetChange(e.target.value)}
+                            style={{ backgroundColor: theme === 'dark' ? '#3d3d3d' : '#fff', color: defaultColors.text, borderColor: defaultColors.border }}
+                          >
+                            <option value="">-- 手动输入 --</option>
+                            {presetsList.map(p => (
+                              <option key={p.key} value={p.key}>{p.name}</option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+                      </Col>
+                      <Col md={4}>
+                        <Form.Group className="mb-3">
+                          <Form.Label style={{ color: defaultColors.text }}>规范标准</Form.Label>
+                          <Form.Select
+                            value={selectedStandard}
+                            onChange={(e) => { setSelectedStandard(e.target.value); setResult(null); }}
+                            style={{ backgroundColor: theme === 'dark' ? '#3d3d3d' : '#fff', color: defaultColors.text, borderColor: defaultColors.border }}
+                          >
+                            {standardsList.map(s => (
+                              <option key={s.code} value={s.code}>{s.name}</option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+                      </Col>
+                      <Col md={4}>
+                        <Form.Group className="mb-3">
+                          <Form.Label style={{ color: defaultColors.text }}>轴系材料</Form.Label>
+                          <Form.Select
+                            value={selectedMaterial}
+                            onChange={(e) => { setSelectedMaterial(e.target.value); setResult(null); }}
+                            style={{ backgroundColor: theme === 'dark' ? '#3d3d3d' : '#fff', color: defaultColors.text, borderColor: defaultColors.border }}
+                          >
+                            {materialsList.map(m => (
+                              <option key={m.id} value={m.id}>{m.name} (Rm={m.Rm}MPa)</option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+
                 {/* 基本参数 */}
                 <Card className="mb-3" style={cardStyle}>
                   <Card.Header style={{ backgroundColor: defaultColors.headerBg, color: defaultColors.headerText }}>
@@ -422,18 +561,27 @@ const TorsionalAnalysis = ({
                         <Form.Group className="mb-3">
                           <Form.Label style={{ color: defaultColors.text }}>工作转速 (rpm)</Form.Label>
                           <Form.Control
-                            type="number"
-                            min="100"
-                            max="5000"
-                            step="50"
+                            type="number" min="100" max="5000" step="50"
                             value={input.operatingSpeed}
                             onChange={(e) => handleParamChange('operatingSpeed', e.target.value)}
-                            style={{
-                              backgroundColor: theme === 'dark' ? '#3d3d3d' : '#fff',
-                              color: defaultColors.text,
-                              borderColor: defaultColors.border
-                            }}
+                            style={{ backgroundColor: theme === 'dark' ? '#3d3d3d' : '#fff', color: defaultColors.text, borderColor: defaultColors.border }}
                           />
+                        </Form.Group>
+                      </Col>
+                      <Col md={3}>
+                        <Form.Group className="mb-3">
+                          <Form.Label style={{ color: defaultColors.text }}>减速比 i</Form.Label>
+                          <Form.Control
+                            type="number" min="1" max="10" step="0.01"
+                            value={input.gearRatio || 1}
+                            onChange={(e) => handleParamChange('gearRatio', e.target.value)}
+                            style={{ backgroundColor: theme === 'dark' ? '#3d3d3d' : '#fff', color: defaultColors.text, borderColor: defaultColors.border }}
+                          />
+                          {input.gearRatio > 1 && (
+                            <Form.Text className="text-muted">
+                              输出转速: {(input.operatingSpeed / input.gearRatio).toFixed(0)} rpm | i²={((input.gearRatio||1)**2).toFixed(2)}
+                            </Form.Text>
+                          )}
                         </Form.Group>
                       </Col>
                       <Col md={3}>
@@ -442,11 +590,7 @@ const TorsionalAnalysis = ({
                           <Form.Select
                             value={input.powerSourceType}
                             onChange={(e) => handleParamChange('powerSourceType', e.target.value)}
-                            style={{
-                              backgroundColor: theme === 'dark' ? '#3d3d3d' : '#fff',
-                              color: defaultColors.text,
-                              borderColor: defaultColors.border
-                            }}
+                            style={{ backgroundColor: theme === 'dark' ? '#3d3d3d' : '#fff', color: defaultColors.text, borderColor: defaultColors.border }}
                           >
                             <option value="diesel">柴油机</option>
                             <option value="electric">电动机</option>
@@ -456,43 +600,77 @@ const TorsionalAnalysis = ({
                       <Col md={3}>
                         <Form.Group className="mb-3">
                           <Form.Label style={{ color: defaultColors.text }}>
-                            气缸数 {input.powerSourceType !== 'diesel' && '(仅柴油机)'}
+                            {input.powerSourceType === 'diesel' ? '气缸数' : '螺旋桨叶片数'}
                           </Form.Label>
-                          <Form.Select
-                            value={input.cylinderCount}
-                            onChange={(e) => handleParamChange('cylinderCount', e.target.value)}
-                            disabled={input.powerSourceType !== 'diesel'}
-                            style={{
-                              backgroundColor: theme === 'dark' ? '#3d3d3d' : '#fff',
-                              color: defaultColors.text,
-                              borderColor: defaultColors.border
-                            }}
-                          >
-                            {cylinderOptions.map(n => (
-                              <option key={n} value={n}>{n}缸</option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                      </Col>
-                      <Col md={3}>
-                        <Form.Group className="mb-3">
-                          <Form.Label style={{ color: defaultColors.text }}>螺旋桨叶片数</Form.Label>
-                          <Form.Select
-                            value={input.bladeCount}
-                            onChange={(e) => handleParamChange('bladeCount', e.target.value)}
-                            style={{
-                              backgroundColor: theme === 'dark' ? '#3d3d3d' : '#fff',
-                              color: defaultColors.text,
-                              borderColor: defaultColors.border
-                            }}
-                          >
-                            <option value={3}>3叶</option>
-                            <option value={4}>4叶</option>
-                            <option value={5}>5叶</option>
-                          </Form.Select>
+                          {input.powerSourceType === 'diesel' ? (
+                            <Form.Select
+                              value={input.cylinderCount}
+                              onChange={(e) => handleParamChange('cylinderCount', e.target.value)}
+                              style={{ backgroundColor: theme === 'dark' ? '#3d3d3d' : '#fff', color: defaultColors.text, borderColor: defaultColors.border }}
+                            >
+                              {cylinderOptions.map(n => (
+                                <option key={n} value={n}>{n}缸</option>
+                              ))}
+                            </Form.Select>
+                          ) : (
+                            <Form.Select
+                              value={input.bladeCount}
+                              onChange={(e) => handleParamChange('bladeCount', e.target.value)}
+                              style={{ backgroundColor: theme === 'dark' ? '#3d3d3d' : '#fff', color: defaultColors.text, borderColor: defaultColors.border }}
+                            >
+                              <option value={3}>3叶</option>
+                              <option value={4}>4叶</option>
+                              <option value={5}>5叶</option>
+                            </Form.Select>
+                          )}
                         </Form.Group>
                       </Col>
                     </Row>
+                    {input.powerSourceType === 'diesel' && (
+                      <Row>
+                        <Col md={3}>
+                          <Form.Group className="mb-3">
+                            <Form.Label style={{ color: defaultColors.text }}>螺旋桨叶片数</Form.Label>
+                            <Form.Select
+                              value={input.bladeCount}
+                              onChange={(e) => handleParamChange('bladeCount', e.target.value)}
+                              style={{ backgroundColor: theme === 'dark' ? '#3d3d3d' : '#fff', color: defaultColors.text, borderColor: defaultColors.border }}
+                            >
+                              <option value={3}>3叶</option>
+                              <option value={4}>4叶</option>
+                              <option value={5}>5叶</option>
+                            </Form.Select>
+                          </Form.Group>
+                        </Col>
+                        <Col md={3}>
+                          <Form.Group className="mb-3">
+                            <Form.Label style={{ color: defaultColors.text }}>联轴器型号</Form.Label>
+                            <Form.Select
+                              value={input.couplingModel || ''}
+                              onChange={(e) => {
+                                const model = e.target.value;
+                                const c = getCoupling(model);
+                                if (c) {
+                                  setInput(prev => ({
+                                    ...prev,
+                                    couplingModel: model,
+                                    couplingStiffness: c.stiffness * 1000,
+                                    couplingInertia: c.inertia
+                                  }));
+                                  setResult(null);
+                                }
+                              }}
+                              style={{ backgroundColor: theme === 'dark' ? '#3d3d3d' : '#fff', color: defaultColors.text, borderColor: defaultColors.border }}
+                            >
+                              <option value="">-- 手动 --</option>
+                              {couplingsList.map(c => (
+                                <option key={c.id} value={c.id}>{c.name} ({c.stiffness} kNm/rad)</option>
+                              ))}
+                            </Form.Select>
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    )}
                   </Card.Body>
                 </Card>
 
@@ -522,7 +700,32 @@ const TorsionalAnalysis = ({
               </Tab>
 
               {/* 分析结果标签页 */}
-              <Tab eventKey="result" title="分析结果" disabled={!result}>
+              <Tab eventKey="result" title={<span>分析结果 {complianceResult && (
+                <Badge bg={complianceResult.overallStatus === 'pass' ? 'success' : (complianceResult.overallStatus === 'fail' ? 'danger' : 'warning')} className="ms-1">
+                  {complianceResult.overallLabel}
+                </Badge>
+              )}</span>} disabled={!result}>
+                {/* 合规性摘要 */}
+                {complianceResult && complianceResult.checks && complianceResult.checks.length > 0 && (
+                  <Alert variant={complianceResult.overallStatus === 'pass' ? 'success' : (complianceResult.overallStatus === 'fail' ? 'danger' : 'warning')} className="mb-3">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <span>
+                        <strong>{complianceResult.standardName}</strong> 合规校验:
+                        {' '}{complianceResult.summary.passCount}/{complianceResult.summary.total} 项通过
+                      </span>
+                      {complianceResult.summary.failCount > 0 && (
+                        <Badge bg="danger">{complianceResult.summary.failCount} 项不合规</Badge>
+                      )}
+                    </div>
+                    {complianceResult.checks.filter(c => c.status === 'fail').length > 0 && (
+                      <ul className="mb-0 mt-2">
+                        {complianceResult.checks.filter(c => c.status === 'fail').map((check, idx) => (
+                          <li key={idx}><strong>{check.name}</strong>: {check.description}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </Alert>
+                )}
                 <AnalysisResultPanel
                   result={result}
                   colors={defaultColors}

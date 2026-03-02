@@ -192,7 +192,7 @@ const EnergyEfficiencyPanel = ({
       {/* EEXI面板 */}
       {activeTab === 'eexi' && (
         <div style={styles.tabContent}>
-          {eexiResult ? (
+          {eexiResult && eexiResult.success ? (
             <>
               {/* EEXI仪表盘 */}
               <div style={styles.gaugeContainer}>

@@ -1,7 +1,7 @@
 // src/components/SelectionHistoryManager.js
 // 选型历史记录管理组件
 
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import {
   getSelectionHistory,
   deleteSelectionHistory,
@@ -15,6 +15,7 @@ import {
   backupHistoryToFile,
   restoreHistoryFromFile
 } from '../utils/selectionHistory';
+import { toast } from '../utils/toast';
 
 /**
  * 选型历史管理组件
@@ -38,6 +39,7 @@ const SelectionHistoryManager = ({
   const [expandedEntry, setExpandedEntry] = useState(null);
   const [sortBy, setSortBy] = useState('date'); // date, power, model
   const [sortOrder, setSortOrder] = useState('desc');
+  const [showComparePanel, setShowComparePanel] = useState(false);
   const fileInputRef = React.useRef(null);
 
   // 加载历史记录
@@ -154,13 +156,13 @@ const SelectionHistoryManager = ({
     try {
       const result = backupHistoryToFile();
       if (result.success) {
-        alert(`备份成功！\n文件名: ${result.filename}\n记录数: ${result.data.totalRecords}`);
+        toast.success(`备份成功！文件名: ${result.filename}，记录数: ${result.data.totalRecords}`);
       } else {
-        alert(`备份失败: ${result.error || '未知错误'}`);
+        toast.error(`备份失败: ${result.error || '未知错误'}`);
       }
     } catch (error) {
       console.error('备份失败:', error);
-      alert(`备份失败: ${error.message}`);
+      toast.error(`备份失败: ${error.message}`);
     }
   }, []);
 
@@ -191,14 +193,14 @@ const SelectionHistoryManager = ({
           ? `合并成功！\n恢复了 ${result.restored} 条记录\n当前总数: ${result.total} 条`
           : `覆盖恢复成功！\n恢复了 ${result.restored} 条记录`;
 
-        alert(message);
-        loadHistory(); // 刷新列表
+        toast.success(message);
+        loadHistory();
       } else {
-        alert(`恢复失败: ${result.error || '未知错误'}`);
+        toast.error(`恢复失败: ${result.error || '未知错误'}`);
       }
     } catch (error) {
       console.error('恢复失败:', error);
-      alert(`恢复失败: ${error.message || '未知错误'}`);
+      toast.error(`恢复失败: ${error.message || '未知错误'}`);
     }
 
     // 清空文件选择，允许再次选择同一文件
@@ -229,6 +231,54 @@ const SelectionHistoryManager = ({
       setSelectedEntries(new Set(sortedHistory.map(e => e.id)));
     }
   }, [sortedHistory, selectedEntries.size]);
+
+  // Batch export selected entries to JSON
+  const handleBatchExportJSON = useCallback(() => {
+    if (selectedEntries.size === 0) return;
+    const entriesToExport = sortedHistory.filter(e => selectedEntries.has(e.id));
+    const exportData = {
+      version: '2.0',
+      exportDate: new Date().toISOString(),
+      totalRecords: entriesToExport.length,
+      data: entriesToExport
+    };
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `选型记录_${entriesToExport.length}条_${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success(`已导出 ${entriesToExport.length} 条记录`);
+  }, [selectedEntries, sortedHistory]);
+
+  // Compare selected entries
+  const handleCompare = useCallback(() => {
+    if (selectedEntries.size < 2 || selectedEntries.size > 4) return;
+    setShowComparePanel(true);
+  }, [selectedEntries]);
+
+  const compareData = useMemo(() => {
+    if (!showComparePanel || selectedEntries.size < 2) return [];
+    return sortedHistory.filter(e => selectedEntries.has(e.id)).map(entry => {
+      const gb = entry.selectionResult?.recommendations?.[0] || entry.selectedComponents?.gearbox || {};
+      return {
+        id: entry.id,
+        date: new Date(entry.timestamp).toLocaleDateString('zh-CN'),
+        model: gb.model || '未选型',
+        power: entry.engineData?.power || '-',
+        speed: entry.engineData?.speed || '-',
+        ratio: gb.selectedRatio || gb.ratio || entry.requirementData?.targetRatio || '-',
+        capacity: gb.selectedCapacity ? gb.selectedCapacity.toFixed(6) : '-',
+        margin: gb.capacityMargin !== undefined ? gb.capacityMargin.toFixed(1) + '%' : '-',
+        weight: gb.weight || '-',
+        price: gb.price || gb.basePrice || '-',
+        coupling: entry.selectedComponents?.coupling?.model || '-',
+        pump: entry.selectedComponents?.pump?.model || '-',
+        project: entry.projectInfo?.projectName || '-'
+      };
+    });
+  }, [showComparePanel, selectedEntries, sortedHistory]);
 
   // 加载历史记录到表单
   const handleLoadEntry = useCallback((entry) => {
@@ -352,6 +402,22 @@ const SelectionHistoryManager = ({
                 <i className="bi bi-cloud-arrow-up"></i>
               </button>
               <button
+                className="btn btn-outline-secondary"
+                onClick={handleBatchExportJSON}
+                title="导出选中记录为JSON"
+                disabled={selectedEntries.size === 0}
+              >
+                <i className="bi bi-filetype-json"></i>
+              </button>
+              <button
+                className="btn btn-outline-primary"
+                onClick={handleCompare}
+                title="对比选中的记录(2-4条)"
+                disabled={selectedEntries.size < 2 || selectedEntries.size > 4}
+              >
+                <i className="bi bi-bar-chart-line"></i> 对比({selectedEntries.size})
+              </button>
+              <button
                 className="btn btn-outline-danger"
                 onClick={handleBatchDelete}
                 title="删除选中"
@@ -416,6 +482,41 @@ const SelectionHistoryManager = ({
         </div>
       )}
 
+      {/* Comparison panel */}
+      {showComparePanel && compareData.length >= 2 && (
+        <div className="card mb-3 border-primary">
+          <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center py-2">
+            <span><i className="bi bi-bar-chart-line me-2"></i>选型对比 ({compareData.length}条)</span>
+            <button className="btn btn-sm btn-outline-light" onClick={() => setShowComparePanel(false)}>
+              <i className="bi bi-x-lg"></i>
+            </button>
+          </div>
+          <div className="card-body p-0" style={{ overflowX: 'auto' }}>
+            <table className="table table-sm table-bordered table-hover mb-0" style={{ fontSize: '0.85rem' }}>
+              <thead className="table-light">
+                <tr>
+                  <th>属性</th>
+                  {compareData.map(d => <th key={d.id}>{d.model}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>日期</td>{compareData.map(d => <td key={d.id}>{d.date}</td>)}</tr>
+                <tr><td>项目</td>{compareData.map(d => <td key={d.id}>{d.project}</td>)}</tr>
+                <tr><td>功率 (kW)</td>{compareData.map(d => <td key={d.id}>{d.power}</td>)}</tr>
+                <tr><td>转速 (rpm)</td>{compareData.map(d => <td key={d.id}>{d.speed}</td>)}</tr>
+                <tr><td>减速比</td>{compareData.map(d => <td key={d.id}>{typeof d.ratio === 'number' ? d.ratio.toFixed(2) : d.ratio}</td>)}</tr>
+                <tr><td>传递能力</td>{compareData.map(d => <td key={d.id}>{d.capacity}</td>)}</tr>
+                <tr><td>能力余量</td>{compareData.map(d => <td key={d.id}>{d.margin}</td>)}</tr>
+                <tr><td>重量 (kg)</td>{compareData.map(d => <td key={d.id}>{d.weight}</td>)}</tr>
+                <tr><td>价格 (元)</td>{compareData.map(d => <td key={d.id}>{typeof d.price === 'number' ? d.price.toLocaleString() : d.price}</td>)}</tr>
+                <tr><td>联轴器</td>{compareData.map(d => <td key={d.id}>{d.coupling}</td>)}</tr>
+                <tr><td>备用泵</td>{compareData.map(d => <td key={d.id}>{d.pump}</td>)}</tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {/* 排序和全选控制 */}
       <div className="d-flex justify-content-between align-items-center mb-2">
         <div>
@@ -429,6 +530,7 @@ const SelectionHistoryManager = ({
           <label htmlFor="selectAll" className="form-check-label small">
             全选 ({sortedHistory.length}条)
           </label>
+          <span className="ms-3 text-muted small">{history.length}/200 条记录</span>
         </div>
         <div className="d-flex gap-2">
           <select
@@ -458,9 +560,19 @@ const SelectionHistoryManager = ({
           </div>
         </div>
       ) : sortedHistory.length === 0 ? (
-        <div className="text-center text-muted py-4">
-          <i className="bi bi-inbox fs-1"></i>
-          <p className="mt-2">暂无历史记录</p>
+        <div className="text-center text-muted py-5">
+          <i className="bi bi-inbox" style={{ fontSize: '3rem' }}></i>
+          <h5 className="mt-3">暂无选型历史记录</h5>
+          <p>完成齿轮箱选型后，记录将自动保存到这里</p>
+          <div className="d-flex justify-content-center gap-2 mt-3">
+            <button className="btn btn-outline-primary btn-sm" onClick={handleRestore}>
+              <i className="bi bi-cloud-arrow-up me-1"></i>从备份恢复
+            </button>
+          </div>
+          <small className="d-block mt-3 text-muted">
+            <i className="bi bi-info-circle me-1"></i>
+            系统最多保存200条记录，超出后自动清理最旧记录
+          </small>
         </div>
       ) : (
         <div className="history-list">

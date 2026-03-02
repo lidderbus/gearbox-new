@@ -1,5 +1,5 @@
 // src/components/DiagnosticPanel.js
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Button, ListGroup, Accordion, Alert, Badge } from 'react-bootstrap';
 
 /**
@@ -18,6 +18,16 @@ const DiagnosticPanel = ({ appData, onReset, onHide, colors, theme }) => {
   const [activeKey, setActiveKey] = useState('data-status');
   const [statusMessage, setStatusMessage] = useState('');
   const [showConfirmReset, setShowConfirmReset] = useState(false);
+
+  // Close on Escape key
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Escape') onHide();
+  }, [onHide]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   // 统计数据集合状态
   const getDataStatus = () => {
@@ -288,7 +298,16 @@ const DiagnosticPanel = ({ appData, onReset, onHide, colors, theme }) => {
   };
 
   return (
-    <Card style={panelStyle}>
+    <>
+    {/* Backdrop overlay */}
+    <div
+      onClick={onHide}
+      style={{
+        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.3)', zIndex: 999
+      }}
+    />
+    <Card style={panelStyle} onClick={e => e.stopPropagation()}>
       <div style={headerStyle}>
         <h5 style={{ margin: 0 }}>
           <i className="bi bi-tools me-2"></i>
@@ -593,6 +612,7 @@ const DiagnosticPanel = ({ appData, onReset, onHide, colors, theme }) => {
         </Accordion>
       </Card.Body>
     </Card>
+    </>
   );
 };
 

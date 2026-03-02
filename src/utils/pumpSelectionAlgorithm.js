@@ -231,16 +231,42 @@ export const selectPumpByGearbox = (gearboxModel, pumpList = standbyPumps, optio
 
 /**
  * 根据齿轮箱系列匹配泵
+ * 更新日期: 2026-01-30
+ * 扩展覆盖: GC/GCH/GCS/GCSE, MV/MA/MB, SGW/2GWH, 以及更多HC变体
  */
 function findSeriesMatch(gearboxModel, pumpList) {
-  // 提取系列前缀
+  // 提取系列前缀 - 按匹配优先级排序(长前缀优先)
   const seriesPatterns = [
+    // DT电推系列 → 2CYA电动泵
     { pattern: /^DT(\d+)/, pumpSeries: '2CYA', type: 'electric' },
-    { pattern: /^HC(\d+)/, pumpSeries: '2CY-D', type: 'mechanical' },
+
+    // HC系列所有变体 → 2CY-D机械泵
     { pattern: /^HCD(\d+)/, pumpSeries: '2CY-D', type: 'mechanical' },
     { pattern: /^HCT(\d+)/, pumpSeries: '2CY-D', type: 'mechanical' },
+    { pattern: /^HCM(\d+)/, pumpSeries: '2CY-D', type: 'mechanical' },
+    { pattern: /^HCQ(\d+)/, pumpSeries: '2CY-D', type: 'mechanical' },
+    { pattern: /^HCA(\d+)/, pumpSeries: '2CY-D', type: 'mechanical' },
+    { pattern: /^HCV(\d+)/, pumpSeries: '2CY-D', type: 'mechanical' },
+    { pattern: /^HCX(\d+)/, pumpSeries: '2CY-D', type: 'mechanical' },
+    { pattern: /^HCL(\d+)/, pumpSeries: '2CY-D', type: 'mechanical' },
+    { pattern: /^HC(\d+)/, pumpSeries: '2CY-D', type: 'mechanical' },
+
+    // GC系列所有变体 → 2CY-D机械泵
+    { pattern: /^GCSE/, pumpSeries: '2CY-D', type: 'mechanical' },
+    { pattern: /^GCS/, pumpSeries: '2CY-D', type: 'mechanical' },
+    { pattern: /^GCH/, pumpSeries: '2CY-D', type: 'mechanical' },
+    { pattern: /^GC/, pumpSeries: '2CY-D', type: 'mechanical' },
+
+    // GW系列所有变体 → 2CY-D机械泵
+    { pattern: /^2GWH/, pumpSeries: '2CY-D', type: 'mechanical' },
+    { pattern: /^SGW/, pumpSeries: '2CY-D', type: 'mechanical' },
     { pattern: /^GWC/, pumpSeries: '2CY-D', type: 'mechanical' },
-    { pattern: /^GW/, pumpSeries: '2CY-D', type: 'mechanical' }
+    { pattern: /^GW/, pumpSeries: '2CY-D', type: 'mechanical' },
+
+    // MV系列 → 2CY-D机械泵
+    { pattern: /^MV/, pumpSeries: '2CY-D', type: 'mechanical' },
+    { pattern: /^MA/, pumpSeries: '2CY-D', type: 'mechanical' },
+    { pattern: /^MB/, pumpSeries: '2CY-D', type: 'mechanical' }
   ];
 
   for (const { pattern, pumpSeries, type } of seriesPatterns) {
@@ -287,6 +313,8 @@ function calculateSuggestion(flowReq, pressureReq, pumpList) {
 
 /**
  * 检查齿轮箱是否需要备用泵
+ * 更新日期: 2026-01-30
+ * 扩展支持: GC/GCH/GCS/GCSE, MV/MA/MB, SGW/2GWH
  * @param {string} gearboxModel - 齿轮箱型号
  * @param {Object} options - 选项 { power: number }
  * @returns {boolean}
@@ -297,25 +325,34 @@ export const needsStandbyPump = (gearboxModel, options = {}) => {
   const model = gearboxModel.toUpperCase();
   const { power = 0 } = options;
 
-  // DT系列需要电动备用泵
+  // DT系列需要电动备用泵 (DT180-DT10000)
   if (model.startsWith('DT')) {
     const dtNumber = parseInt(model.replace('DT', ''), 10);
-    // DT180-DT2400 需要备用泵
-    return dtNumber >= 180 && dtNumber <= 2400;
+    return dtNumber >= 180 && dtNumber <= 10000;
   }
 
-  // GW/GWC系列需要备用泵
-  if (model.startsWith('GW') || model.startsWith('GWC')) {
+  // GW系列所有变体需要备用泵 (GW, GWC, SGW, 2GWH)
+  if (model.startsWith('GW') || model.startsWith('GWC') ||
+      model.startsWith('SGW') || model.startsWith('2GWH')) {
     return true;
   }
 
-  // HC系列特定型号需要备用泵
+  // GC系列所有变体需要备用泵 (GC, GCH, GCS, GCSE)
+  if (model.startsWith('GC') || model.startsWith('GCH') ||
+      model.startsWith('GCS') || model.startsWith('GCSE')) {
+    return true;
+  }
+
+  // MV系列所有变体需要备用泵 (MV, MA, MB)
+  if (model.startsWith('MV') || model.startsWith('MA') || model.startsWith('MB')) {
+    return true;
+  }
+
+  // HC系列所有变体需要备用泵
   if (model.startsWith('HC')) {
     const hcNumber = parseInt(model.replace(/HC[A-Z]*/i, ''), 10);
-    // HC1000-1200, HC1400-2000, HC2700 需要备用泵
-    if ((hcNumber >= 1000 && hcNumber <= 1200) ||
-        (hcNumber >= 1400 && hcNumber <= 2000) ||
-        hcNumber === 2700) {
+    // HC系列所有型号都支持备用泵
+    if (hcNumber > 0) {
       return true;
     }
   }
@@ -323,11 +360,6 @@ export const needsStandbyPump = (gearboxModel, options = {}) => {
   // 大功率齿轮箱通常需要备用泵
   if (power >= 600) {
     return true;
-  }
-
-  // HCM/HCQ系列小型号不需要
-  if ((model.startsWith('HCM') || model.startsWith('HCQ')) && power < 300) {
-    return false;
   }
 
   return false;

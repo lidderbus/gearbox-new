@@ -39,7 +39,7 @@ const WORK_CONDITIONS = [
 /**
  * 批量选型视图组件
  */
-const BatchSelectionView = ({ onSelectionComplete }) => {
+const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
   // 状态管理
   const [requirements, setRequirements] = useState([
     { ...DEFAULT_REQUIREMENT, id: Date.now().toString() }
@@ -113,12 +113,17 @@ const BatchSelectionView = ({ onSelectionComplete }) => {
 
     try {
       const result = await autoSelectGearbox(numericReq, initialData);
+      // autoSelectGearbox 返回 { success, recommendations, flexibleCoupling, standbyPump, ... }
+      const bestGearbox = result.recommendations?.[0] || null;
       return {
         requirementId: requirement.id,
         requirementName: requirement.name || '未命名',
         input: numericReq,
         success: result.success,
-        result: result.result,
+        gearbox: bestGearbox ? { model: bestGearbox.model, price: bestGearbox.marketPrice || bestGearbox.price } : null,
+        coupling: result.flexibleCoupling ? { model: result.flexibleCoupling.model, price: result.flexibleCoupling.price } : null,
+        pump: result.standbyPump ? { model: result.standbyPump.model, price: result.standbyPump.price } : null,
+        totalPrice: (bestGearbox?.marketPrice || bestGearbox?.price || 0) + (result.flexibleCoupling?.price || 0) + (result.standbyPump?.price || 0),
         message: result.message,
         timestamp: new Date().toISOString()
       };
@@ -289,10 +294,10 @@ const BatchSelectionView = ({ onSelectionComplete }) => {
   }, [processing, currentIndex, requirements]);
 
   return (
-    <div className="batch-selection-view">
-      <Card className="mb-4">
-        <Card.Header className="d-flex justify-content-between align-items-center">
-          <h5 className="mb-0">批量选型</h5>
+    <div className="batch-selection-view" style={{ backgroundColor: colors?.bg }}>
+      <Card className="mb-4" style={{ backgroundColor: colors?.card, borderColor: colors?.border }}>
+        <Card.Header className="d-flex justify-content-between align-items-center" style={{ backgroundColor: colors?.headerBg, color: colors?.headerText, borderBottomColor: colors?.border }}>
+          <h5 className="mb-0" style={{ color: colors?.headerText }}>批量选型</h5>
           <div>
             <Button
               variant="outline-primary"
@@ -321,8 +326,8 @@ const BatchSelectionView = ({ onSelectionComplete }) => {
           {/* 需求列表 */}
           <div className="requirements-list mb-4">
             {requirements.map((req, index) => (
-              <Card key={req.id} className="mb-2">
-                <Card.Body className="py-2">
+              <Card key={req.id} className="mb-2" style={{ backgroundColor: colors?.card, borderColor: colors?.border }}>
+                <Card.Body className="py-2" style={{ color: colors?.text }}>
                   <Row className="align-items-center">
                     <Col xs={12} md={2}>
                       <Form.Control
@@ -444,7 +449,7 @@ const BatchSelectionView = ({ onSelectionComplete }) => {
 
           {/* 结果表格 */}
           {results.length > 0 && (
-            <Table responsive striped bordered hover size="sm">
+            <Table responsive striped bordered hover size="sm" style={{ backgroundColor: colors?.card, color: colors?.text, borderColor: colors?.border }}>
               <thead>
                 <tr>
                   <th>需求名称</th>
@@ -470,12 +475,12 @@ const BatchSelectionView = ({ onSelectionComplete }) => {
                         {result.success ? '成功' : '失败'}
                       </Badge>
                     </td>
-                    <td>{result.result?.gearbox?.model || '-'}</td>
-                    <td>{result.result?.coupling?.model || '-'}</td>
-                    <td>{result.result?.pump?.model || '-'}</td>
+                    <td>{result.gearbox?.model || '-'}</td>
+                    <td>{result.coupling?.model || '-'}</td>
+                    <td>{result.pump?.model || '-'}</td>
                     <td>
-                      {result.result?.totalPrice
-                        ? formatPrice(result.result.totalPrice)
+                      {result.totalPrice
+                        ? formatPrice(result.totalPrice)
                         : '-'}
                     </td>
                   </tr>
@@ -488,10 +493,10 @@ const BatchSelectionView = ({ onSelectionComplete }) => {
 
       {/* 导入模态框 */}
       <Modal show={showImportModal} onHide={() => setShowImportModal(false)}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton style={{ backgroundColor: colors?.headerBg, color: colors?.headerText }}>
           <Modal.Title>导入选型需求</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{ backgroundColor: colors?.card, color: colors?.text }}>
           <p className="text-muted small">
             格式: 名称,功率(kW),转速(rpm),速比,推力(可选),备注(可选)
             <br />
@@ -505,7 +510,7 @@ const BatchSelectionView = ({ onSelectionComplete }) => {
             onChange={(e) => setImportText(e.target.value)}
           />
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer style={{ backgroundColor: colors?.card, borderTopColor: colors?.border }}>
           <Button variant="secondary" onClick={() => setShowImportModal(false)}>
             取消
           </Button>

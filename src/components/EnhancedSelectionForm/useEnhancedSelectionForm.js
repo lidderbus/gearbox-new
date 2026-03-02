@@ -2,9 +2,18 @@
 // 增强选型表单状态管理Hook
 
 import { useState, useCallback, useEffect } from 'react';
+import { generateDocNumber } from '../../utils/documentNumbering';
+import { inquiryStore } from '../../services/documentStorage';
 
 // 本地存储key
 const STORAGE_KEY = 'enhanced_selection_form_draft';
+
+// 范围限制
+const FIELD_RANGES = {
+  enginePower: { min: 1, max: 10000, unit: 'kW', label: '主机功率' },
+  engineSpeed: { min: 100, max: 5000, unit: 'rpm', label: '主机转速' },
+  ratio: { min: 0.5, max: 10, unit: '', label: '速比' },
+};
 
 // 默认表单数据
 const getDefaultFormData = () => ({
@@ -329,27 +338,50 @@ export const useEnhancedSelectionForm = () => {
     setIsDirty(true);
   }, []);
 
+  // 验证单个字段（实时校验用）
+  const validateField = useCallback((field, value) => {
+    const range = FIELD_RANGES[field];
+    if (range && value !== '' && value != null) {
+      const num = parseFloat(value);
+      if (isNaN(num)) return `${range.label}必须是数字`;
+      if (num < range.min) return `${range.label}不能小于 ${range.min}${range.unit}`;
+      if (num > range.max) return `${range.label}不能大于 ${range.max}${range.unit}`;
+    }
+    return null;
+  }, []);
+
   // 验证表单
   const validateForm = useCallback(() => {
     const newErrors = {};
 
-    // 必填字段验证
+    // 必填字段验证 + 范围校验
     if (!formData.enginePower) {
       newErrors.enginePower = '请输入主机功率';
+    } else {
+      const err = validateField('enginePower', formData.enginePower);
+      if (err) newErrors.enginePower = err;
     }
+
     if (!formData.engineSpeed) {
       newErrors.engineSpeed = '请输入主机转速';
+    } else {
+      const err = validateField('engineSpeed', formData.engineSpeed);
+      if (err) newErrors.engineSpeed = err;
     }
+
     if (!formData.ratio) {
       newErrors.ratio = '请输入速比';
+    } else {
+      const err = validateField('ratio', formData.ratio);
+      if (err) newErrors.ratio = err;
     }
 
     // 客户信息格式验证 (选填，但填写时验证格式)
     if (formData.contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactEmail)) {
       newErrors.contactEmail = '邮箱格式不正确';
     }
-    if (formData.contactPhone && !/^1\d{10}$/.test(formData.contactPhone)) {
-      newErrors.contactPhone = '手机号格式不正确';
+    if (formData.contactPhone && !/^(1\d{10}|0\d{2,3}-?\d{7,8})$/.test(formData.contactPhone)) {
+      newErrors.contactPhone = '电话号码格式不正确（手机或座机）';
     }
 
     // PTO启用时的验证
@@ -369,7 +401,7 @@ export const useEnhancedSelectionForm = () => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [formData]);
+  }, [formData, validateField]);
 
   // 重置表单
   const resetForm = useCallback(() => {
@@ -475,6 +507,52 @@ export const useEnhancedSelectionForm = () => {
     return summary;
   }, [formData]);
 
+  // 全选/取消全选输出需求
+  const selectAllOutputRequirements = useCallback((allOptions) => {
+    const current = formData.outputRequirements || [];
+    const allSelected = allOptions.every(opt => current.includes(opt));
+    setFormData(prev => ({
+      ...prev,
+      outputRequirements: allSelected ? [] : [...allOptions],
+    }));
+    setIsDirty(true);
+  }, [formData.outputRequirements]);
+
+  // 保存询单到历史记录
+  const saveToHistory = useCallback((docNumber) => {
+    const inquiry = {
+      id: docNumber || generateDocNumber('inquiry'),
+      formData: { ...formData },
+      summary: getFormSummary(),
+      status: 'submitted',
+      projectName: formData.projectName || formData.customerName || '未命名',
+      engineInfo: `${formData.enginePower || '?'}kW / ${formData.engineSpeed || '?'}rpm`,
+    };
+    inquiryStore.save(inquiry);
+    return inquiry.id;
+  }, [formData, getFormSummary]);
+
+  // 从历史记录加载
+  const loadFromHistory = useCallback((id) => {
+    const inquiry = inquiryStore.getById(id);
+    if (inquiry?.formData) {
+      setFormData(prev => ({ ...getDefaultFormData(), ...inquiry.formData }));
+      setIsDirty(false);
+      return true;
+    }
+    return false;
+  }, []);
+
+  // 获取询单历史列表
+  const getHistory = useCallback((limit = 20) => {
+    return inquiryStore.getRecent(limit);
+  }, []);
+
+  // 实时字段校验（用于onChange）
+  const getFieldError = useCallback((field, value) => {
+    return validateField(field, value);
+  }, [validateField]);
+
   return {
     // 状态
     formData,
@@ -487,13 +565,20 @@ export const useEnhancedSelectionForm = () => {
     updatePTO,
     updateClassification,
     toggleOutputRequirement,
+    selectAllOutputRequirements,
     addAttachment,
     removeAttachment,
     validateForm,
+    validateField: getFieldError,
     resetForm,
     saveDraft,
     getFormSummary,
-    setIsSubmitting
+    setIsSubmitting,
+
+    // 历史记录
+    saveToHistory,
+    loadFromHistory,
+    getHistory,
   };
 };
 

@@ -3,7 +3,7 @@
 
 import React, { useState, useCallback, useRef, useMemo } from 'react';
 import { Modal, Button, ButtonGroup, Card, Badge, Row, Col, Alert, Tabs, Tab, ListGroup } from 'react-bootstrap';
-import { getDwgDownloadUrl, getShareCADPreviewUrl, getDwgFilesForModel } from '../data/outlineDrawings';
+import { getDwgDownloadUrl, getPdfPreviewUrl, getDwgFilesForModel } from '../data/outlineDrawings';
 
 /**
  * 外形图查看器组件
@@ -137,7 +137,7 @@ const OutlineDrawingViewer = ({
             variant="outline-primary"
             size="sm"
             className="mt-2"
-            onClick={() => window.open(getShareCADPreviewUrl(dwgFiles[0].filePath), '_blank')}
+            onClick={() => window.open(getPdfPreviewUrl(dwgFiles[0].filePath), '_blank')}
           >
             <i className="bi bi-file-earmark-code me-1"></i>
             查看DWG图纸
@@ -151,7 +151,7 @@ const OutlineDrawingViewer = ({
   const renderDwgPreview = (fullscreen = false) => {
     if (!dwgFiles || dwgFiles.length === 0) return null;
 
-    const previewUrl = getShareCADPreviewUrl(dwgFiles[0].filePath);
+    const previewUrl = getPdfPreviewUrl(dwgFiles[0].filePath);
     const height = fullscreen ? '80vh' : (compact ? '200px' : '400px');
 
     return (
@@ -490,7 +490,7 @@ const OutlineDrawingViewer = ({
                       </Button>
                       <Button
                         variant="outline-success"
-                        onClick={() => window.open(getShareCADPreviewUrl(file.filePath), '_blank')}
+                        onClick={() => window.open(getPdfPreviewUrl(file.filePath), '_blank')}
                         title="在ShareCAD中在线预览"
                       >
                         <i className="bi bi-eye me-1"></i>在线预览

@@ -2,7 +2,7 @@
 import { logger } from '../config/logging';
 
 const HISTORY_KEY = 'selectionHistory'; // localStorage 键名
-const MAX_HISTORY_ITEMS = 50; // 最大保存条数
+const MAX_HISTORY_ITEMS = 200; // 最大保存条数
 
 /**
  * 规范化 projectInfo 数据结构

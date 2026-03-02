@@ -52,7 +52,7 @@ export const calculatePowerRange = (capacities, speedRange) => {
  * @param {string} model - 型号名称
  * @returns {string} 系列名称
  */
-const extractSeriesFromModel = (model) => {
+export const extractSeriesFromModel = (model) => {
   if (!model) return 'OTHER';
   const m = String(model).toUpperCase();
 

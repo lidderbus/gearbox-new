@@ -285,64 +285,89 @@ export function checkCriticalSpeedAvoidance(params) {
   };
 }
 /**
- * 执行完整扭振分析
+ * 执行完整扭振分析 (v2.0: 含i²齿轮箱折算)
  *
  * @param {TorsionalSystemInput} input - 扭振系统输入
  * @returns {TorsionalAnalysisResult} 完整分析结果
  */
 export function runTorsionalAnalysis(input) {
-  const { masses, shafts, operatingSpeed, powerSourceType, cylinderCount, bladeCount } = input;
+  const {
+    masses, shafts, operatingSpeed, powerSourceType, cylinderCount, bladeCount,
+    gearRatio = 1, couplingStiffness, couplingInertia = 0,
+    materialStrength, standardCode
+  } = input;
   const warnings = [];
 
-  // 1. 计算等效刚度 (串联)
-  let equivalentStiffness = 0;
+  // 1. 计算轴段等效刚度 (串联)
+  let shaftEquivStiffness = 0;
   if (shafts.length > 0) {
     const stiffnessSum = shafts.reduce((sum, shaft) => sum + (1 / shaft.K), 0);
-    equivalentStiffness = 1 / stiffnessSum;
+    shaftEquivStiffness = 1 / stiffnessSum;
   }
 
-  // 2. 计算总惯量
+  // 2. i² 齿轮箱折算 (能量等效法)
+  const i2 = gearRatio * gearRatio;
+  const motorJ = masses[0]?.J || 5;
+  const propJ = masses[masses.length - 1]?.J || 15;
+
+  let J1, J2, equivalentStiffness;
+  if (gearRatio > 1 && couplingStiffness > 0) {
+    // 电机侧折算到输出侧
+    const motorInertiaReduced = motorJ * i2;
+    const couplingInertiaReduced = couplingInertia * i2;
+    const couplingStiffnessReduced = couplingStiffness * i2;
+
+    J1 = motorInertiaReduced + couplingInertiaReduced;
+    J2 = propJ;
+
+    // 等效刚度: 折算联轴器刚度与轴刚度串联
+    if (couplingStiffnessReduced > 0 && shaftEquivStiffness > 0) {
+      equivalentStiffness = 1 / (1 / couplingStiffnessReduced + 1 / shaftEquivStiffness);
+    } else {
+      equivalentStiffness = couplingStiffnessReduced || shaftEquivStiffness;
+    }
+  } else {
+    // 无齿轮箱: 直接用原始参数
+    J1 = motorJ;
+    J2 = propJ;
+    equivalentStiffness = shaftEquivStiffness;
+  }
+
+  // 3. 计算总惯量
   const totalInertia = masses.reduce((sum, mass) => sum + mass.J, 0);
 
-  // 3. 简化为两质量系统计算固有频率
-  const J1 = masses[0]?.J || 5;  // 发动机端
-  const J2 = masses[masses.length - 1]?.J || 15;  // 螺旋桨端
+  // 4. 两质量系统固有频率
+  const frequencyResult = calculateTwoMassFrequency({ J1, J2, K: equivalentStiffness });
 
-  const frequencyResult = calculateTwoMassFrequency({
-    J1,
-    J2,
-    K: equivalentStiffness,
-  });
-
-  // 4. 获取激励阶次
+  // 5. 获取激励阶次
   let excitationOrders = [];
   if (powerSourceType === 'diesel' && cylinderCount) {
     excitationOrders = DIESEL_EXCITATION_ORDERS[cylinderCount] || [1, 2, 3, 4];
   } else {
     excitationOrders = ELECTRIC_EXCITATION_ORDERS;
   }
-
-  // 添加螺旋桨激励
   if (bladeCount && PROPELLER_EXCITATION_ORDERS[bladeCount]) {
     excitationOrders = [...new Set([...excitationOrders, ...PROPELLER_EXCITATION_ORDERS[bladeCount]])];
   }
 
-  // 5. 计算各阶临界转速
+  // 6. 激励频率基于输出转速
+  const outputSpeed = gearRatio > 1 ? operatingSpeed / gearRatio : operatingSpeed;
+
   const criticalSpeeds = calculateCriticalSpeed({
     naturalFrequency: parseFloat(frequencyResult.frequency),
     excitationOrders,
   });
 
-  // 6. 临界转速避开校核
+  // 7. 临界转速避开校核 (基于输出转速)
   const avoidanceChecks = criticalSpeeds.map(cs =>
     checkCriticalSpeedAvoidance({
-      operatingSpeed,
+      operatingSpeed: outputSpeed,
       criticalSpeed: cs.criticalSpeed,
       order: cs.order,
     })
   );
 
-  // 7. 检查是否有共振风险
+  // 8. 检查是否有共振风险
   const dangerousOrders = avoidanceChecks.filter(check => check.inDangerZone);
   if (dangerousOrders.length > 0) {
     dangerousOrders.forEach(d => {
@@ -359,6 +384,9 @@ export function runTorsionalAnalysis(input) {
     isValid: dangerousOrders.length === 0,
     warnings,
     input,
+    gearRatio,
+    outputSpeed,
+    i2Reduction: gearRatio > 1 ? { i2, J1, J2 } : null,
     timestamp: new Date().toISOString(),
   };
 }

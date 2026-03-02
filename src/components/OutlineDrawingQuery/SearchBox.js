@@ -32,7 +32,7 @@ const SearchBox = ({
             <Form.Control
               type="text"
               className="dwg-search-input"
-              placeholder="输入型号搜索 (如: HC400, HGTHT4) - Ctrl+F快捷搜索"
+              placeholder="输入型号搜索 (如: HC400, HGTHT4, GWC60)"
               value={searchKeyword}
               onChange={onSearch}
               onKeyDown={onSearchSubmit}

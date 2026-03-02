@@ -14,9 +14,10 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # 配置变量
-SERVER_IP="47.111.132.236"
+SERVER_IP="47.99.181.195"
 SERVER_USER="root"
-REMOTE_PATH="/var/www/html/gearbox"
+REMOTE_PATH="/var/www/html/gearbox-app"
+SSH_KEY="/Users/lidder/_已整理/07_配置文件/wxx.pem"
 LOCAL_BUILD_DIR="./build"
 BACKUP_DIR="/var/www/html/backups"
 
@@ -95,7 +96,7 @@ backup_remote() {
 
     BACKUP_NAME="gearbox_backup_$(date +%Y%m%d_%H%M%S)"
 
-    ssh ${SERVER_USER}@${SERVER_IP} << EOF
+    ssh -i "${SSH_KEY}" ${SERVER_USER}@${SERVER_IP} << EOF
         if [ -d "${REMOTE_PATH}" ]; then
             mkdir -p ${BACKUP_DIR}
             cp -r ${REMOTE_PATH} ${BACKUP_DIR}/${BACKUP_NAME}
@@ -120,15 +121,15 @@ deploy_to_server() {
 
     # 创建远程目录
     echo -e "${YELLOW}创建远程目录...${NC}"
-    ssh ${SERVER_USER}@${SERVER_IP} "mkdir -p ${REMOTE_PATH}"
+    ssh -i "${SSH_KEY}" ${SERVER_USER}@${SERVER_IP} "mkdir -p ${REMOTE_PATH}"
 
     # 上传文件
     echo -e "${YELLOW}上传文件...${NC}"
-    rsync -avz --progress ${LOCAL_BUILD_DIR}/ ${SERVER_USER}@${SERVER_IP}:${REMOTE_PATH}/
+    rsync -avz --progress -e "ssh -i ${SSH_KEY}" ${LOCAL_BUILD_DIR}/ ${SERVER_USER}@${SERVER_IP}:${REMOTE_PATH}/
 
     # 设置权限
     echo -e "${YELLOW}设置文件权限...${NC}"
-    ssh ${SERVER_USER}@${SERVER_IP} << EOF
+    ssh -i "${SSH_KEY}" ${SERVER_USER}@${SERVER_IP} << EOF
         chown -R www-data:www-data ${REMOTE_PATH}
         chmod -R 755 ${REMOTE_PATH}
 EOF

@@ -308,10 +308,10 @@ export const translateSpecialRequirements = (requirements) => {
             if (!template) return;
             
             try {
-              // 创建正则表达式，将{{param}}替换为任意字符匹配
+              // 创建正则表达式：先转义特殊字符，再将已转义的占位符替换为捕获组
               const templatePattern = template
-                .replace(/\{\{[^}]+\}\}/g, '(.+?)')
-                .replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'); // 转义正则特殊字符
+                .replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')  // 先转义正则特殊字符
+                .replace(/\\\{\\\{[^\\}]+\\\}\\\}/g, '(.+?)'); // 再将\{\{...\}\}替换为捕获组
               
               const regex = new RegExp(`^${templatePattern}$`);
               const match = trimmedLine.match(regex);
@@ -740,7 +740,7 @@ export const generateSideBySideLayout = (templateData) => {
   `);
   
   // 质保服务部分（可选）
-  if (templateData.includeQualitySection && templateData.includeMaintenanceSection) {
+  if (templateData.includeQualitySection !== false) {
     sections.push(`
       <div class="bilingual-section">
         <div class="row">
@@ -908,7 +908,7 @@ export const generateSequentialLayout = (templateData) => {
   `);
   
   // 质保服务部分
-  if (templateData.includeQualitySection && templateData.includeMaintenanceSection) {
+  if (templateData.includeQualitySection !== false) {
     sections.push(`
       <div class="bilingual-section">
         <h2 class="section-title">4. 质量保证 / Quality Assurance</h2>

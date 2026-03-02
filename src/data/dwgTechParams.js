@@ -1,7 +1,7 @@
 // DWG外形图技术参数数据
 // 自动生成于: 2025-12-15T14:18:29.232Z
 // 总型号数: 141
-// 齿轮箱: 101 (已匹配: 86)
+// 齿轮箱: 101 (已匹配技术参数: 35)
 // 联轴器: 40
 
 // 数据统计
@@ -15,7 +15,7 @@ export const dwgDataStats = {
   seriesStats: {
   "OTHER": {
     "count": 9,
-    "matched": 86,
+    "matched": 0,
     "files": 12
   },
   "other": {

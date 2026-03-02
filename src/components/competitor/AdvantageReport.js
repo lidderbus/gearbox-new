@@ -15,8 +15,11 @@ import {
   formatPrice,
   getManufacturerInfo,
   saveCompetitorComparison,
-  generateQuotationAttachment
+  generateQuotationAttachment,
+  calculateEnhancedAdvantages
 } from '../../utils/competitorAnalysis';
+import { manufacturerColors } from '../../data/competitorData';
+import { techDimensionsTemplate } from '../../data/competitorDataEnhanced';
 
 const AdvantageReport = ({
   hangchiProduct,
@@ -74,13 +77,6 @@ const AdvantageReport = ({
     });
   }, [hangchiProduct, competitors]);
 
-  const manufacturerColors = {
-    CZCG: '#dc3545',
-    NGC: '#198754',
-    ZF: '#0d6efd',
-    HANGCHI: '#fd7e14'
-  };
-
   // 生成报告数据 (即使为空也需要调用以保持hooks顺序)
   const report = useMemo(() => {
     if (!hangchiProduct || !competitors || competitors.length === 0) return null;
@@ -92,10 +88,35 @@ const AdvantageReport = ({
     return generateRadarData(hangchiProduct, competitors);
   }, [hangchiProduct, competitors]);
 
-  // ECharts雷达图配置
+  // ECharts雷达图配置 (8维增强版)
   const radarChartOption = useMemo(() => {
     if (!radarData) return null;
-    const dimensions = radarData.dimensions;
+    // 扩展到8维: 原5维 + 技术得分 + 环保合规 + 生命周期成本
+    const dimensions = [...radarData.dimensions, '技术得分', '环保合规', '生命周期'];
+
+    // 计算增强维度数据
+    const hangchiTech = techDimensionsTemplate?.['HANGCHI'] || {};
+    const getTechScore = (mfg) => {
+      const tech = techDimensionsTemplate?.[mfg] || {};
+      let score = 0;
+      if (tech.propellerType === 'both') score += 20; else if (tech.propellerType) score += 10;
+      if (tech.digitalMonitoring === true) score += 20; else if (tech.digitalMonitoring === 'partial') score += 10;
+      if (tech.hybridReady === true) score += 20; else if (tech.hybridReady === 'partial') score += 10;
+      if (tech.efficiencyClass === 'premium') score += 20; else if (tech.efficiencyClass === 'high') score += 15; else score += 8;
+      if (tech.environmentalCompliance) score += Math.min(tech.environmentalCompliance.length * 7, 20);
+      return score;
+    };
+    const getEnvScore = (mfg) => {
+      const tech = techDimensionsTemplate?.[mfg] || {};
+      return Math.min((tech.environmentalCompliance || []).length * 30, 100);
+    };
+
+    const hangchiEnhanced = [
+      ...radarData.hangchi.data,
+      getTechScore('HANGCHI'),
+      getEnvScore('HANGCHI'),
+      75 // 生命周期成本优势默认75
+    ];
 
     // 构建雷达图指标
     const indicator = dimensions.map(dim => ({
@@ -107,15 +128,20 @@ const AdvantageReport = ({
     const seriesData = [
       {
         name: '杭齿前进',
-        value: radarData.hangchi.data,
-        itemStyle: { color: manufacturerColors.HANGCHI },
+        value: hangchiEnhanced,
+        itemStyle: { color: manufacturerColors?.HANGCHI || '#D4AF37' },
         areaStyle: { opacity: 0.3 },
         lineStyle: { width: 2 }
       },
       ...radarData.competitors.map(comp => ({
         name: comp.name,
-        value: comp.data,
-        itemStyle: { color: manufacturerColors[comp.manufacturer] },
+        value: [
+          ...comp.data,
+          getTechScore(comp.manufacturer),
+          getEnvScore(comp.manufacturer),
+          55 // 竞品生命周期成本默认55
+        ],
+        itemStyle: { color: manufacturerColors?.[comp.manufacturer] || '#999' },
         areaStyle: { opacity: 0.2 },
         lineStyle: { width: 2, type: 'dashed' }
       }))
@@ -667,9 +693,13 @@ const AdvantageReport = ({
             <p className="mb-1">
               本报告由齿轮箱智能选型系统自动生成
             </p>
-            <p className="mb-0">
+            <p className="mb-1">
               <i className="bi bi-globe me-1"></i>
               http://47.99.181.195/gearbox-app/
+            </p>
+            <p className="mb-0" style={{ fontSize: '0.75rem', color: '#999' }}>
+              <i className="bi bi-shield-exclamation me-1"></i>
+              数据可信度声明：竞品价格为市场估算值（标注"估算"），技术参数基于公开资料，市场份额为行业推算。仅供内部销售参考，不作为正式商业报价依据。
             </p>
           </div>
         </Card.Body>

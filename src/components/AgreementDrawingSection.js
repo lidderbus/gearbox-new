@@ -6,9 +6,8 @@ import {
   gearboxDwgDrawings,
   couplingDwgDrawings,
   getDwgDownloadUrl,
-  getShareCADPreviewUrl
-  // dwgSeriesInfo // 暂未使用，保留以备将来扩展
-} from '../data/dwgDrawings';
+  getPdfPreviewUrl
+} from '../data/outlineDrawings';
 
 /**
  * 根据型号匹配DWG外形图
@@ -237,7 +236,7 @@ const AgreementDrawingSection = ({
       );
     }
 
-    const previewUrl = getShareCADPreviewUrl(selectedDrawing.filePath);
+    const previewUrl = getPdfPreviewUrl(selectedDrawing.filePath);
 
     return (
       <div>

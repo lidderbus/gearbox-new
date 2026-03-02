@@ -1,7 +1,7 @@
 /**
  * 齿轮箱-联轴器匹配映射数据
  * 定义每个联轴器型号对应的推荐齿轮箱型号
- * 数据来源: http://47.99.181.195/coupling-selection-enhanced.html
+ * 数据来源: https://qj-gearbox.duckdns.org/coupling-selection-enhanced.html
  */
 
 // 联轴器 -> 齿轮箱 映射

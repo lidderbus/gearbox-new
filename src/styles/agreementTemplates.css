@@ -130,20 +130,20 @@
   color: #666;
 }
 
-/* 表格 */
-table {
+/* 表格 - 限定在协议容器内 */
+.agreement-container table {
   width: 100%;
   border-collapse: collapse;
   margin: 15px 0;
 }
 
-th, td {
+.agreement-container th, .agreement-container td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
 }
 
-th {
+.agreement-container th {
   background-color: #f2f2f2;
   font-weight: bold;
 }
@@ -152,8 +152,11 @@ th {
 @media print {
   .agreement-container {
     box-shadow: none;
-    padding: 0;
     font-size: 12px;
+  }
+
+  @page {
+    margin: 1.5cm;
   }
 
   .agreement-title {

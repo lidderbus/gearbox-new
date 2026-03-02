@@ -71,11 +71,18 @@ class ErrorBoundary extends React.Component {
               variant="primary"
               onClick={this.handleRetry}
               disabled={this.state.retryCount >= this.state.maxRetries}
+              className="me-2"
             >
               <i className="bi bi-arrow-repeat me-2"></i>
               {this.state.retryCount >= this.state.maxRetries
                 ? '已达最大重试次数'
                 : `重试 (${this.state.retryCount}/${this.state.maxRetries})`}
+            </Button>
+            <Button
+              variant="outline-danger"
+              onClick={() => { localStorage.clear(); window.location.reload(); }}
+            >
+              <i className="bi bi-trash me-2"></i>清除缓存重载
             </Button>
             {this.props.fallback && (
               <div className="mt-3">

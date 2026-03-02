@@ -452,7 +452,295 @@ export const gearboxToCouplingMap = {
     withCover: null,
     detachable: null,
     configRules: ['HGT3020ⅢD']
+  },
+  'HCT2700/1': { standard: 'HGTHB16', withCover: null, detachable: null },
+
+  // === 以下为增强版新增映射 (v9.0 合并自HTML版) ===
+
+  // 800系列补充
+  'HCW800': { standard: 'HGTHB5A', withCover: null, detachable: null },
+
+  // 1000系列补充
+  'HCQ1000': { standard: 'HGTHB5A', withCover: null, detachable: null },
+  'HCQH1000': { standard: 'HGTHB5A', withCover: null, detachable: null },
+  'HCQ1001': { standard: 'HGTHB5A', withCover: null, detachable: null },
+
+  // 1100系列补充
+  'HCW1100': { standard: 'HGTHB6.3A', withCover: null, detachable: null },
+
+  // 1200系列补充
+  'HCT1280/2': { standard: 'HGTHB6.3A', withCover: null, detachable: null },
+
+  // 1400系列补充
+  'HCW1400': { standard: 'HGTHB8A', withCover: null, detachable: null },
+  'HCQ1400': { standard: 'HGTHB8A', withCover: null, detachable: null },
+  'HCA1400': { standard: 'HGTHB8A', withCover: null, detachable: null },
+  'HCAM1400': { standard: 'HGTHB8A', withCover: null, detachable: null },
+  'HCA1401': { standard: 'HGTHB8A', withCover: null, detachable: null },
+  'HCM1400': { standard: 'HGTHB8A', withCover: null, detachable: null },
+
+  // 1600系列补充
+  'HCQ1600': { standard: 'HGTHB10A', withCover: null, detachable: null },
+  'HCQH1600': { standard: 'HGTHB10A', withCover: null, detachable: null },
+  'HCQ1601': { standard: 'HGTHB10A', withCover: null, detachable: null },
+
+  // 小型系列
+  '120C': { standard: 'HGTH2', withCover: null, detachable: null },
+  '120B': { standard: 'HGTH2', withCover: null, detachable: null },
+  '135': { standard: 'HGTL1.8A', withCover: null, detachable: null },
+  '135A': { standard: 'HGTL1.8A', withCover: null, detachable: null },
+  'MB270A': { standard: 'HGTL2.2', withCover: null, detachable: null },
+  'HC138': { standard: 'HGTH2', withCover: null, detachable: null },
+  'HCD138': { standard: 'HGTL1.8B', withCover: null, detachable: null },
+  'HC200': { standard: 'HGTL2.2A', withCover: null, detachable: null },
+  'HC201': { standard: 'HGTL2.2', withCover: null, detachable: null },
+
+  // 300系列
+  '300': { standard: 'HGTHT4', withCover: null, detachable: null },
+  'J300': { standard: 'HGTHT4', withCover: null, detachable: null },
+  'HC300': { standard: 'HGTHT4', withCover: null, detachable: null },
+  'D300A': { standard: 'HGTHT4', withCover: null, detachable: null },
+  'T300': { standard: 'HGTHT4', withCover: null, detachable: null },
+  'T300/1': { standard: 'HGTHT4', withCover: null, detachable: null },
+  'HCA300': { standard: 'HGTL3.5Q', withCover: null, detachable: null },
+
+  // 400系列
+  'HC400': { standard: 'HGTHT4.5', withCover: null, detachable: null },
+  'HCD400A': { standard: 'HGTHT4.5', withCover: null, detachable: null },
+  'HCT400A': { standard: 'HGTHT5', withCover: null, detachable: null },
+  'HCT400A/1': { standard: 'HGTHT5', withCover: null, detachable: null },
+
+  // 600系列
+  'HC600A': { standard: 'HGTHT6.3A', withCover: null, detachable: null },
+  'HCD600A': { standard: 'HGTHT6.3A', withCover: null, detachable: null },
+  'HCT600A': { standard: 'HGTHT6.3A', withCover: null, detachable: null },
+  'HCT600A/1': { standard: 'HGTHT6.3A', withCover: null, detachable: null },
+
+  // 700系列
+  'HCQ700': { standard: 'HGTL7.5Q', withCover: null, detachable: null },
+
+  // HCM系列 (高速齿轮箱)
+  'HCM70': { standard: 'HGTHB3.2', withCover: null, detachable: null },
+  'HCM160': { standard: 'HGTHB3.2', withCover: null, detachable: null },
+  'HCM250': { standard: 'HGTHB5', withCover: null, detachable: null },
+  'HCM435': { standard: 'HGTHB6.3', withCover: null, detachable: null },
+  'HCM600': { standard: 'HGT1020', withCover: null, detachable: null },
+  'HCM1250': { standard: 'HGT1620', withCover: null, detachable: null },
+  'HCM1600': { standard: 'HGT2020', withCover: null, detachable: null },
+
+  // DT系列 (电力推进齿轮箱)
+  'DT180': { standard: 'HGTHB3.2', withCover: null, detachable: null },
+  'DT210': { standard: 'HGTHB3.2', withCover: null, detachable: null },
+  'DT240': { standard: 'HGTHB3.2', withCover: null, detachable: null },
+  'DT280': { standard: 'HGTHB3.2', withCover: null, detachable: null },
+  'DT580': { standard: 'HGTHB5', withCover: null, detachable: null },
+  'DT770': { standard: 'HGTHB5', withCover: null, detachable: null },
+  'DT900': { standard: 'HGTHB6.3', withCover: null, detachable: null },
+  'DT1400': { standard: 'HGTHB8', withCover: null, detachable: null },
+  'DT1500': { standard: 'HGTHB10', withCover: null, detachable: null },
+  'DT2400': { standard: 'HGTHB12.5', withCover: null, detachable: null },
+  'DT2500': { standard: 'HGTHB12.5', withCover: null, detachable: null },
+  'DT4000': { standard: 'HGTHB16', withCover: null, detachable: null },
+  'DT4300': { standard: 'HGTHB20', withCover: null, detachable: null },
+
+  // GWC系列 (工程船用齿轮箱)
+  'GWC28.30': { standard: 'HGT2520', withCover: null, detachable: null },
+  'GWC30.32': { standard: 'HGT3020', withCover: null, detachable: null },
+  'GWC32.35': { standard: 'HGT3020', withCover: null, detachable: null },
+  'GWC36.39': { standard: 'HGT4020', withCover: null, detachable: null },
+  'GWC39.41': { standard: 'HGT4020', withCover: null, detachable: null },
+  'GWC42.45': { standard: 'HGT5020', withCover: null, detachable: null },
+  'GWC45.49': { standard: 'HGT6320', withCover: null, detachable: null },
+  'GWC45.52': { standard: 'HGT6320', withCover: null, detachable: null },
+  'GWC49.54': { standard: 'HGT6320', withCover: null, detachable: null },
+  'GWC49.59': { standard: 'HGT8020', withCover: null, detachable: null },
+  'GWC52.59': { standard: 'HGT8020', withCover: null, detachable: null },
+  'GWC52.62': { standard: 'HGT8020', withCover: null, detachable: null },
+  'GWC60.66': { standard: 'HGT10020', withCover: null, detachable: null },
+  'GWC60.74': { standard: 'HGT10020', withCover: null, detachable: null },
+  'GWC63.71': { standard: 'HGT10020', withCover: null, detachable: null },
+  'GWC66.75': { standard: 'HGT12520', withCover: null, detachable: null },
+  'GWC70.76': { standard: 'HGT16020', withCover: null, detachable: null },
+  'GWC70.85': { standard: 'HGT16020', withCover: null, detachable: null },
+  'GWC75.90': { standard: 'HGT16020', withCover: null, detachable: null },
+  'GWC78.88': { standard: 'HGT16020', withCover: null, detachable: null },
+
+  // SGW系列
+  'SGW39.41': { standard: 'HGT4020', withCover: null, detachable: null },
+  'SGW42.45': { standard: 'HGT5020', withCover: null, detachable: null },
+  'SGW49.54': { standard: 'HGT6320', withCover: null, detachable: null },
+
+  // GCH系列 (工程船用齿轮箱)
+  'GCH320': { standard: 'HGT2520', withCover: null, detachable: null },
+  'GCH350': { standard: 'HGT3020', withCover: null, detachable: null },
+  'GCH390': { standard: 'HGT4020', withCover: null, detachable: null },
+  'GCH410': { standard: 'HGT4020', withCover: null, detachable: null },
+  'GCH490': { standard: 'HGT6320', withCover: null, detachable: null },
+  'GCH540': { standard: 'HGT6320', withCover: null, detachable: null },
+  'GCH590': { standard: 'HGT8020', withCover: null, detachable: null },
+  'GCH660': { standard: 'HGT8020', withCover: null, detachable: null },
+  'GCH750': { standard: 'HGT10020', withCover: null, detachable: null },
+  'GCH760': { standard: 'HGT10020', withCover: null, detachable: null },
+  'GCH850': { standard: 'HGT12520', withCover: null, detachable: null },
+  'GCH880': { standard: 'HGT12520', withCover: null, detachable: null },
+  'GCH900': { standard: 'HGT16020', withCover: null, detachable: null },
+  'GCH950': { standard: 'HGT16020', withCover: null, detachable: null },
+  'GCH1000': { standard: 'HGT2020', withCover: null, detachable: null },
+
+  // GCHE系列 (工程船用双速齿轮箱)
+  'GCHE5': { standard: 'HGT4020', withCover: null, detachable: null },
+  'GCHE6': { standard: 'HGT4020', withCover: null, detachable: null },
+  'GCHE9': { standard: 'HGT6320', withCover: null, detachable: null },
+  'GCHE11': { standard: 'HGT6320', withCover: null, detachable: null },
+  'GCHE15': { standard: 'HGT8020', withCover: null, detachable: null },
+  'GCHE20': { standard: 'HGT8020', withCover: null, detachable: null },
+  'GCHE26': { standard: 'HGT10020', withCover: null, detachable: null },
+  'GCHE33': { standard: 'HGT10020', withCover: null, detachable: null },
+  'GCHE44': { standard: 'HGT12520', withCover: null, detachable: null },
+
+  // GCHT系列 (工程船用推力齿轮箱)
+  'GCHT5': { standard: 'HGT2520', withCover: null, detachable: null },
+  'GCHT6': { standard: 'HGT3020', withCover: null, detachable: null },
+  'GCHT9': { standard: 'HGT4020', withCover: null, detachable: null },
+  'GCHT11': { standard: 'HGT4020', withCover: null, detachable: null },
+  'GCHT15': { standard: 'HGT6320', withCover: null, detachable: null },
+  'GCHT20': { standard: 'HGT6320', withCover: null, detachable: null },
+  'GCHT26': { standard: 'HGT8020', withCover: null, detachable: null },
+  'GCHT33': { standard: 'HGT8020', withCover: null, detachable: null },
+  'GCHT44': { standard: 'HGT10020', withCover: null, detachable: null },
+  'GCHT66': { standard: 'HGT10020', withCover: null, detachable: null },
+  'GCHT77': { standard: 'HGT12520', withCover: null, detachable: null },
+  'GCHT91': { standard: 'HGT12520', withCover: null, detachable: null },
+  'GCHT108': { standard: 'HGT16020', withCover: null, detachable: null },
+  'GCHT115': { standard: 'HGT16020', withCover: null, detachable: null },
+  'GCHT135': { standard: 'HGT2020', withCover: null, detachable: null },
+  'GCHT170': { standard: 'HGT2020', withCover: null, detachable: null },
+
+  // GC系列 (工程船用齿轮箱)
+  'GC600': { standard: 'HGT4020', withCover: null, detachable: null },
+  'GC800': { standard: 'HGT6320', withCover: null, detachable: null },
+  'GC1000': { standard: 'HGT8020', withCover: null, detachable: null },
+  'GC1400': { standard: 'HGT10020', withCover: null, detachable: null }
+};
+
+/**
+ * 联轴器动态特性参数 (v9.0 合并自HTML版)
+ * 用于扭振分析计算
+ * - staticStiffness: 静态扭转刚度 (kN·m/rad)
+ * - dynamicStiffness: 动态扭转刚度 (kN·m/rad)
+ * - dampingCoefficient: 阻尼系数
+ * - inertia: 转动惯量 (kg·m²)
+ * - compensation: 偏差补偿能力 (轴向mm/径向mm/角向°)
+ * - rubberType: 橡胶材质
+ * - tempRange: 工作温度范围
+ * - fatigueLife: 设计疲劳寿命 (小时)
+ */
+export const couplingDynamicData = {
+  'HGTL': {
+    staticStiffness: 280,
+    dynamicStiffness: 350,
+    dampingCoefficient: 0.08,
+    inertia: 0.015,
+    compensation: { axial: 3, radial: 1.0, angular: 1.0 },
+    rubberType: 'NBR丁腈橡胶',
+    tempRange: '-20°C ~ +60°C',
+    fatigueLife: 20000,
+    hardness: '55±5 Shore A'
+  },
+  'HGTH': {
+    staticStiffness: 450,
+    dynamicStiffness: 580,
+    dampingCoefficient: 0.10,
+    inertia: 0.035,
+    compensation: { axial: 4, radial: 1.2, angular: 1.2 },
+    rubberType: 'NBR丁腈橡胶',
+    tempRange: '-20°C ~ +60°C',
+    fatigueLife: 20000,
+    hardness: '55±5 Shore A'
+  },
+  'HGTHB': {
+    staticStiffness: 680,
+    dynamicStiffness: 880,
+    dampingCoefficient: 0.12,
+    inertia: 0.065,
+    compensation: { axial: 5, radial: 1.5, angular: 1.5 },
+    rubberType: 'NBR丁腈橡胶',
+    tempRange: '-20°C ~ +60°C',
+    fatigueLife: 20000,
+    hardness: '58±5 Shore A'
+  },
+  'HGTHJB': {
+    staticStiffness: 720,
+    dynamicStiffness: 920,
+    dampingCoefficient: 0.11,
+    inertia: 0.075,
+    compensation: { axial: 4, radial: 1.3, angular: 1.3 },
+    rubberType: 'NBR丁腈橡胶',
+    tempRange: '-20°C ~ +60°C',
+    fatigueLife: 20000,
+    hardness: '58±5 Shore A'
+  },
+  'HGTQ': {
+    staticStiffness: 950,
+    dynamicStiffness: 1200,
+    dampingCoefficient: 0.09,
+    inertia: 0.12,
+    compensation: { axial: 6, radial: 1.8, angular: 1.8 },
+    rubberType: 'CR氯丁橡胶',
+    tempRange: '-30°C ~ +80°C',
+    fatigueLife: 25000,
+    hardness: '60±5 Shore A'
+  },
+  'HGT': {
+    staticStiffness: 1100,
+    dynamicStiffness: 1400,
+    dampingCoefficient: 0.10,
+    inertia: 0.18,
+    compensation: { axial: 8, radial: 2.0, angular: 2.0 },
+    rubberType: 'CR氯丁橡胶',
+    tempRange: '-30°C ~ +80°C',
+    fatigueLife: 25000,
+    hardness: '62±5 Shore A'
+  },
+  'HGTLX': {
+    staticStiffness: 520,
+    dynamicStiffness: 680,
+    dampingCoefficient: 0.07,
+    inertia: 0.045,
+    compensation: { axial: 4, radial: 1.0, angular: 1.0 },
+    rubberType: 'NBR丁腈橡胶',
+    tempRange: '-20°C ~ +60°C',
+    fatigueLife: 18000,
+    hardness: '55±5 Shore A'
   }
+};
+
+/**
+ * 根据联轴器型号获取动态特性数据
+ * @param {string} model - 联轴器型号
+ * @param {number} ratedTorque - 额定扭矩 (kN·m)，用于按比例缩放
+ * @returns {object|null} 动态特性参数
+ */
+export const getCouplingDynamicParams = (model, ratedTorque = null) => {
+  const seriesPrefixes = ['HGTHJB', 'HGTHB', 'HGTHT', 'HGTLX', 'HGTQ', 'HGTL', 'HGTH', 'HGT'];
+  let baseData = null;
+  for (const prefix of seriesPrefixes) {
+    if (model.startsWith(prefix)) {
+      baseData = couplingDynamicData[prefix] || couplingDynamicData['HGTH'];
+      break;
+    }
+  }
+  if (!baseData) return null;
+  if (!ratedTorque) return { ...baseData };
+
+  // Scale by torque ratio (reference: 5 kN·m)
+  const torqueFactor = Math.sqrt(ratedTorque / 5);
+  return {
+    ...baseData,
+    staticStiffness: Math.round(baseData.staticStiffness * torqueFactor),
+    dynamicStiffness: Math.round(baseData.dynamicStiffness * torqueFactor),
+    inertia: baseData.inertia * torqueFactor
+  };
 };
 
 /**
@@ -1187,6 +1475,8 @@ export default {
   gearboxToCouplingMap,
   couplingDetailedModels,
   detailedCouplingMappings,
+  couplingDynamicData,
+  getCouplingDynamicParams,
   couplingTechImages,
   techImageInfo,
   getRecommendedCouplingForGearbox,
