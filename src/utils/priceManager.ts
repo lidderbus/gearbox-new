@@ -93,12 +93,13 @@ export const PRICE_CONSTANTS: PriceConstantsType = {
   },
 
   // 固定价格系列 (全国统一售价)
-  FIXED_PRICE_SERIES: ['HCM', 'HCQ', 'HCX', 'HCA', 'HCV', 'MV'],
+  // HCA 已移除：HCA200/HCA400 有 16% 折扣，仅 HCA138/HCA300 固定价（在 getStandardDiscountRate 中单独处理）
+  FIXED_PRICE_SERIES: ['HCM', 'HCQ', 'HCX', 'HCV', 'MV'],
 
   // 特殊型号折扣率覆盖
   SPECIAL_MODEL_DISCOUNTS: {
     'J300': 0.22,                   // 报告特批
-    'D300A': 0.22,                  // 报告特批
+    'D300A': 0.16,                  // D300A 默认 6-7.5:1，折扣 16%；4-5.5:1 由 specialModelPrices 覆盖
     'HC400': 0.22,                  // 报告特批
     'HCD400A': 0.22,                // 报告特批
     'HC1200': 0.14,                 // 报告特批
@@ -176,6 +177,10 @@ export const getStandardDiscountRate = (
   // 按产品类型和系列确定标准折扣率
   switch (productType) {
     case 'gearbox':
+      // HC200 固定价（全国统一售价）
+      if (model === 'HC200') return 0.0;
+      // HCA138/HCA300 固定价；HCA200/HCA400 按标准 HC 16% 处理
+      if (model === 'HCA138' || model === 'HCA300') return 0.0;
       // HCL系列独立折扣率，必须在HC之前判断
       if (model.startsWith('HCL')) return PRICE_CONSTANTS.SERIES_DISCOUNT_RATES.HCL;
       if (model.startsWith('HC')) {

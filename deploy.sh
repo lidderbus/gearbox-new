@@ -1,86 +1,103 @@
 #!/bin/bash
 
 ###############################################
-# 齿轮箱选型系统 - 云端服务器部署脚本
-# 服务器: 47.111.132.236
+# 齿轮箱选型系统 - 安全部署脚本 (带 chattr 锁定)
+# 服务器: 47.99.181.195
+# 只有持有 deploy token 的机器才能部署
 ###############################################
 
-set -e  # 遇到错误立即退出
+set -e
 
 # 颜色输出
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+CYAN='\033[0;36m'
+NC='\033[0m'
 
 # 配置变量
 SERVER_IP="47.99.181.195"
 SERVER_USER="root"
+SERVER="$SERVER_USER@$SERVER_IP"
 REMOTE_PATH="/var/www/html/gearbox-app"
-SSH_KEY="/Users/lidder/_已整理/07_配置文件/wxx.pem"
+SSH_KEY="$HOME/.ssh/wxx.pem"
+SSH_CMD="ssh -i $SSH_KEY $SERVER"
 LOCAL_BUILD_DIR="./build"
-BACKUP_DIR="/var/www/html/backups"
+TOKEN_FILE="$HOME/.gearbox-deploy-token"
+DEPLOY_SCRIPT="/opt/gearbox-deploy.sh"
 
 echo -e "${GREEN}========================================${NC}"
-echo -e "${GREEN}齿轮箱选型系统 - 云端部署脚本${NC}"
+echo -e "${GREEN}齿轮箱选型系统 - 安全部署${NC}"
 echo -e "${GREEN}========================================${NC}"
 
-# 函数：显示帮助信息
+# 函数：显示帮助
 show_help() {
     echo "使用方法:"
     echo "  ./deploy.sh [选项]"
     echo ""
     echo "选项:"
-    echo "  -h, --help          显示帮助信息"
-    echo "  -b, --build         仅构建，不部署"
-    echo "  -d, --deploy        仅部署，不构建"
-    echo "  -f, --full          完整部署（构建+部署）[默认]"
-    echo "  -s, --subpath PATH  指定子路径（默认: /gearbox）"
-    echo ""
-    echo "示例:"
-    echo "  ./deploy.sh                 # 完整部署"
-    echo "  ./deploy.sh -b              # 仅构建"
-    echo "  ./deploy.sh -s /my-app      # 部署到 /my-app 路径"
+    echo "  -h, --help      显示帮助信息"
+    echo "  -b, --build     仅构建，不部署"
+    echo "  -d, --deploy    仅部署（跳过构建）"
+    echo "  -f, --full      完整部署（构建+部署）[默认]"
+    echo "  --status        查看锁定状态"
+    echo "  --unlock        手动解锁（紧急用）"
+    echo "  --lock          手动锁定"
 }
 
-# 函数：检查依赖
-check_dependencies() {
-    echo -e "${YELLOW}检查依赖...${NC}"
-
-    # 检查 Node.js
-    if ! command -v node &> /dev/null; then
-        echo -e "${RED}错误: 未找到 Node.js${NC}"
+# 函数：读取 deploy token
+load_token() {
+    if [ ! -f "$TOKEN_FILE" ]; then
+        echo -e "${RED}错误: Deploy token 不存在: $TOKEN_FILE${NC}"
+        echo -e "${YELLOW}请联系管理员获取 deploy token${NC}"
         exit 1
     fi
-
-    # 检查 npm
-    if ! command -v npm &> /dev/null; then
-        echo -e "${RED}错误: 未找到 npm${NC}"
+    TOKEN=$(cat "$TOKEN_FILE")
+    if [ -z "$TOKEN" ]; then
+        echo -e "${RED}错误: Deploy token 为空${NC}"
         exit 1
     fi
+}
 
-    # 检查 ssh
-    if ! command -v ssh &> /dev/null; then
-        echo -e "${RED}错误: 未找到 ssh${NC}"
+# 函数：解锁服务器目录
+server_unlock() {
+    echo -e "${YELLOW}解锁服务器目录...${NC}"
+    RESULT=$($SSH_CMD "$DEPLOY_SCRIPT '$TOKEN' unlock" 2>&1)
+    if echo "$RESULT" | grep -q "ERROR"; then
+        echo -e "${RED}解锁失败: $RESULT${NC}"
         exit 1
     fi
+    echo -e "${GREEN}✓ $RESULT${NC}"
+}
 
-    echo -e "${GREEN}✓ 所有依赖检查通过${NC}"
+# 函数：锁定服务器目录
+server_lock() {
+    echo -e "${YELLOW}锁定服务器目录...${NC}"
+    RESULT=$($SSH_CMD "$DEPLOY_SCRIPT '$TOKEN' lock" 2>&1)
+    if echo "$RESULT" | grep -q "ERROR"; then
+        echo -e "${RED}锁定失败: $RESULT${NC}"
+        exit 1
+    fi
+    echo -e "${GREEN}✓ $RESULT${NC}"
+}
+
+# 函数：查看锁定状态
+server_status() {
+    load_token
+    RESULT=$($SSH_CMD "$DEPLOY_SCRIPT '$TOKEN' status" 2>&1)
+    echo -e "${CYAN}服务器状态: $RESULT${NC}"
 }
 
 # 函数：构建项目
 build_project() {
     echo -e "${YELLOW}开始构建项目...${NC}"
 
-    # 检查是否需要安装依赖
     if [ ! -d "node_modules" ]; then
         echo -e "${YELLOW}安装依赖...${NC}"
         npm install
     fi
 
-    # 构建
-    echo -e "${YELLOW}执行构建...${NC}"
-    npm run build
+    CI=false npm run build
 
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}✓ 构建成功${NC}"
@@ -90,167 +107,87 @@ build_project() {
     fi
 }
 
-# 函数：备份服务器上的旧版本
-backup_remote() {
-    echo -e "${YELLOW}备份服务器上的旧版本...${NC}"
-
-    BACKUP_NAME="gearbox_backup_$(date +%Y%m%d_%H%M%S)"
-
-    ssh -i "${SSH_KEY}" ${SERVER_USER}@${SERVER_IP} << EOF
-        if [ -d "${REMOTE_PATH}" ]; then
-            mkdir -p ${BACKUP_DIR}
-            cp -r ${REMOTE_PATH} ${BACKUP_DIR}/${BACKUP_NAME}
-            echo "备份已保存到: ${BACKUP_DIR}/${BACKUP_NAME}"
-        else
-            echo "无需备份，目标目录不存在"
-        fi
-EOF
-
-    echo -e "${GREEN}✓ 备份完成${NC}"
-}
-
-# 函数：部署到服务器
+# 函数：部署到服务器（带锁定保护）
 deploy_to_server() {
-    echo -e "${YELLOW}部署到服务器 ${SERVER_IP}...${NC}"
-
-    # 检查构建目录
     if [ ! -d "${LOCAL_BUILD_DIR}" ]; then
         echo -e "${RED}错误: 构建目录不存在，请先执行构建${NC}"
         exit 1
     fi
 
-    # 创建远程目录
-    echo -e "${YELLOW}创建远程目录...${NC}"
-    ssh -i "${SSH_KEY}" ${SERVER_USER}@${SERVER_IP} "mkdir -p ${REMOTE_PATH}"
+    # 解锁
+    server_unlock
 
-    # 上传文件
-    echo -e "${YELLOW}上传文件...${NC}"
-    rsync -avz --progress -e "ssh -i ${SSH_KEY}" ${LOCAL_BUILD_DIR}/ ${SERVER_USER}@${SERVER_IP}:${REMOTE_PATH}/
+    # 部署（使用 trap 确保异常时也能重新锁定）
+    trap 'echo -e "${RED}部署中断，正在重新锁定...${NC}"; server_lock; exit 1' INT TERM ERR
 
-    # 设置权限
-    echo -e "${YELLOW}设置文件权限...${NC}"
-    ssh -i "${SSH_KEY}" ${SERVER_USER}@${SERVER_IP} << EOF
-        chown -R www-data:www-data ${REMOTE_PATH}
-        chmod -R 755 ${REMOTE_PATH}
-EOF
+    echo -e "${YELLOW}上传文件到 ${SERVER_IP}...${NC}"
+    rsync -avz --delete -e "ssh -i ${SSH_KEY}" ${LOCAL_BUILD_DIR}/ ${SERVER}:${REMOTE_PATH}/
+
+    # 锁定（lock 内含 chown + chmod）
+    server_lock
+
+    trap - INT TERM ERR
 
     echo -e "${GREEN}✓ 部署完成${NC}"
-}
-
-# 函数：配置 Nginx（可选）
-configure_nginx() {
-    echo -e "${YELLOW}是否需要配置 Nginx? (y/n)${NC}"
-    read -r response
-
-    if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-        echo -e "${YELLOW}生成 Nginx 配置...${NC}"
-
-        cat > nginx_gearbox.conf << 'EOF'
-# 齿轮箱选型系统 Nginx 配置
-location /gearbox {
-    alias /var/www/html/gearbox;
-    try_files $uri $uri/ /gearbox/index.html;
-    index index.html;
-
-    # 缓存静态资源
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
-}
-EOF
-
-        echo -e "${GREEN}Nginx 配置已生成：nginx_gearbox.conf${NC}"
-        echo -e "${YELLOW}请将配置添加到服务器的 Nginx 配置文件中${NC}"
-        echo -e "${YELLOW}然后执行: sudo nginx -t && sudo systemctl reload nginx${NC}"
-    fi
 }
 
 # 函数：测试部署
 test_deployment() {
     echo -e "${YELLOW}测试部署...${NC}"
 
-    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${SERVER_IP}/gearbox/)
+    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${SERVER_IP}/gearbox-app/)
 
     if [ "$HTTP_CODE" == "200" ]; then
-        echo -e "${GREEN}✓ 部署测试成功！${NC}"
-        echo -e "${GREEN}访问地址: http://${SERVER_IP}/gearbox/${NC}"
+        echo -e "${GREEN}✓ 部署验证成功 (HTTP 200)${NC}"
     else
-        echo -e "${RED}✗ 部署测试失败 (HTTP ${HTTP_CODE})${NC}"
-        echo -e "${YELLOW}请检查 Nginx 配置和文件权限${NC}"
+        echo -e "${RED}✗ 部署验证失败 (HTTP ${HTTP_CODE})${NC}"
     fi
 }
 
 # 主流程
 main() {
     local MODE="full"
-    local SUBPATH="/gearbox"
 
-    # 解析参数
     while [[ $# -gt 0 ]]; do
         case $1 in
-            -h|--help)
-                show_help
-                exit 0
-                ;;
-            -b|--build)
-                MODE="build"
-                shift
-                ;;
-            -d|--deploy)
-                MODE="deploy"
-                shift
-                ;;
-            -f|--full)
-                MODE="full"
-                shift
-                ;;
-            -s|--subpath)
-                SUBPATH="$2"
-                shift 2
-                ;;
+            -h|--help)    show_help; exit 0 ;;
+            -b|--build)   MODE="build"; shift ;;
+            -d|--deploy)  MODE="deploy"; shift ;;
+            -f|--full)    MODE="full"; shift ;;
+            --status)     server_status; exit 0 ;;
+            --unlock)     load_token; server_unlock; exit 0 ;;
+            --lock)       load_token; server_lock; exit 0 ;;
             *)
                 echo -e "${RED}未知选项: $1${NC}"
-                show_help
-                exit 1
-                ;;
+                show_help; exit 1 ;;
         esac
     done
 
-    # 检查依赖
-    check_dependencies
+    # 加载 token（构建模式不需要）
+    if [ "$MODE" != "build" ]; then
+        load_token
+    fi
 
-    # 根据模式执行
     case $MODE in
         build)
             build_project
             ;;
         deploy)
-            backup_remote
             deploy_to_server
-            configure_nginx
             test_deployment
             ;;
         full)
             build_project
-            backup_remote
             deploy_to_server
-            configure_nginx
             test_deployment
             ;;
     esac
 
+    echo ""
     echo -e "${GREEN}========================================${NC}"
     echo -e "${GREEN}部署流程完成！${NC}"
     echo -e "${GREEN}========================================${NC}"
-    echo ""
-    echo -e "访问地址: ${GREEN}http://${SERVER_IP}${SUBPATH}/${NC}"
-    echo ""
-    echo -e "${YELLOW}提示：${NC}"
-    echo "1. 如果无法访问，请检查 Nginx 配置"
-    echo "2. 确保服务器防火墙允许 80 端口访问"
-    echo "3. 查看部署日志排查问题"
+    echo -e "访问地址: ${CYAN}http://${SERVER_IP}/gearbox-app/${NC}"
 }
 
-# 执行主流程
 main "$@"

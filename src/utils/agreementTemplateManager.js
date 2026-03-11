@@ -129,7 +129,7 @@ export const fillTemplate = (template, data) => {
   // 替换所有 {{变量名}} 格式的变量
   Object.entries(data).forEach(([key, value]) => {
     const regex = new RegExp(`{{\\s*${key}\\s*}}`, 'g');
-    result = result.replace(regex, value || '');
+    result = result.replace(regex, value != null ? String(value) : '');
   });
   
   // 清除未替换的变量（清除前记录日志以便排查）

@@ -76,7 +76,7 @@ const QuotationView = ({
     });
   };
 
-  // 保存报价单
+  // 保存报价单 - 确认保存
   const handleSave = () => {
     if (showSaveForm) {
       onSave && onSave(saveNameInput || undefined);
@@ -85,6 +85,12 @@ const QuotationView = ({
     } else {
       setShowSaveForm(true);
     }
+  };
+
+  // 取消保存
+  const handleCancelSave = () => {
+    setShowSaveForm(false);
+    setSaveNameInput('');
   };
   
   // 打印功能
@@ -525,12 +531,30 @@ const QuotationView = ({
                   >
                     <i className="bi bi-arrow-clockwise me-1"></i> 更新价格
                   </Button>
-                  <Button 
-                    variant="outline-success"
-                    onClick={handleSave}
-                  >
-                    <i className="bi bi-save me-1"></i> {showSaveForm ? '取消' : '保存报价单'}
-                  </Button>
+                  {showSaveForm ? (
+                    <>
+                      <Button
+                        variant="outline-success"
+                        className="me-1"
+                        onClick={handleSave}
+                      >
+                        <i className="bi bi-check-lg me-1"></i> 确认保存
+                      </Button>
+                      <Button
+                        variant="outline-secondary"
+                        onClick={handleCancelSave}
+                      >
+                        <i className="bi bi-x-lg me-1"></i> 取消
+                      </Button>
+                    </>
+                  ) : (
+                    <Button
+                      variant="outline-success"
+                      onClick={handleSave}
+                    >
+                      <i className="bi bi-save me-1"></i> 保存报价单
+                    </Button>
+                  )}
                 </div>
                 <div>
                   <Button 

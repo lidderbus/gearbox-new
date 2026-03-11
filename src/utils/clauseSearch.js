@@ -15,7 +15,7 @@ const fuseOptions = {
   threshold: 0.4,           // 模糊匹配阈值 (0=精确, 1=匹配所有)
   includeScore: true,       // 包含匹配分数
   includeMatches: true,     // 包含匹配位置信息
-  minMatchCharLength: 2,    // 最小匹配字符数
+  minMatchCharLength: 1,    // 最小匹配字符数（支持单汉字搜索）
   ignoreLocation: true,     // 忽略位置权重
   findAllMatches: true      // 查找所有匹配
 };

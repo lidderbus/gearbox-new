@@ -301,6 +301,35 @@ const InputParametersTab = ({
         </Form.Group>
       )}
 
+      {/* 离合器需求 */}
+      <Form.Group className="mb-4" controlId="hasClutch">
+        <Form.Label style={{ color: colors.text, fontWeight: 500 }}>离合器需求</Form.Label>
+        <div className="d-flex gap-2 flex-wrap">
+          {[
+            { value: null,  label: '不限',     icon: 'bi-dash-circle',   desc: '系统自动匹配' },
+            { value: true,  label: '带离合器', icon: 'bi-gear-fill',     desc: 'HC/GW/HCM/GC等，具备正倒车功能' },
+            { value: false, label: '无离合器', icon: 'bi-arrows-expand', desc: 'DT电推专用，直接传动' },
+          ].map(({ value, label, icon, desc }) => {
+            const active = requirementData.hasClutch === value;
+            return (
+              <Button
+                key={String(value)}
+                size="sm"
+                variant={active ? 'primary' : 'outline-secondary'}
+                onClick={() => handleRequirementDataChange({ hasClutch: value })}
+                title={desc}
+              >
+                <i className={`bi ${icon} me-1`}></i>{label}
+              </Button>
+            );
+          })}
+        </div>
+        <div className="field-info mt-1">
+          带离合器：液压湿式多片摩擦离合器，支持正倒车换向（固定螺距桨）；
+          无离合器：DT系列，电推专用直接传动。
+        </div>
+      </Form.Group>
+
       <Suspense fallback={<LazyLoadFallback />}>
         <PropulsionConfigSelector
           config={{ engineConfiguration: requirementData.engineConfiguration, inputRotation: requirementData.inputRotation, outputRotation: requirementData.outputRotation, propellerConfig: requirementData.propellerConfig, portEngineRotation: requirementData.portEngineRotation, starboardEngineRotation: requirementData.starboardEngineRotation, portUseReverse: requirementData.portUseReverse, starboardUseReverse: requirementData.starboardUseReverse }}

@@ -13,13 +13,19 @@ import { logger } from '../config/logging';
  */
 export async function startApp() {
   try {
-    // 只在存在'needReset'标志时清除存储
+    // 只在存在'needReset'标志时清除选型系统存储（保护报价等其他应用数据）
     if (sessionStorage.getItem('needReset') === 'true') {
-      localStorage.clear();
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && !key.startsWith('quote') && !key.startsWith('Quote') && key !== 'gearbox_quotations') {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
       sessionStorage.clear();
-      // 清除标志
       sessionStorage.removeItem('needReset');
-      logger.debug('已重置应用存储');
+      logger.debug(`已重置选型系统存储（清除${keysToRemove.length}个键，保留报价数据）`);
     }
 
     // 性能优化: 并行动态加载数据

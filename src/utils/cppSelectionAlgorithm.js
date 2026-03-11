@@ -94,7 +94,7 @@ export const selectCPPGearbox = (power, speed, targetRatio, options = {}) => {
         ratioDiff: ((Math.abs(selectedRatio - targetRatio) / targetRatio) * 100).toFixed(1),
         outputSpeed: outputSpeed.toFixed(0)
       },
-      score: 100 - margin - (Math.abs(selectedRatio - targetRatio) / targetRatio) * 20
+      score: Math.max(0, 100 - margin - (Math.abs(selectedRatio - targetRatio) / targetRatio) * 20)
     });
   }
 

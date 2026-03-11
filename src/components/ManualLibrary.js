@@ -3,7 +3,7 @@
 // 功能: 浏览、搜索、查看齿轮箱产品说明书
 // 更新时间: 2026-01-20
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Card, Row, Col, Form, InputGroup, Button, Table, Badge, Alert, Tabs, Tab } from 'react-bootstrap';
 import { getAllManuals, getManualInfo } from '../data/gearboxManuals';
 import PDFLoadingModal from './PDFLoadingModal';
@@ -21,6 +21,23 @@ const ManualLibrary = ({ colors, theme }) => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [loadingPdf, setLoadingPdf] = useState(null); // 正在加载的PDF
   const [previewPdf, setPreviewPdf] = useState(null); // 预览的PDF
+
+  // URL参数解析 - 支持从外部链接直接搜索
+  useEffect(() => {
+    try {
+      const hash = window.location.hash;
+      const queryStart = hash.indexOf('?');
+      if (queryStart !== -1) {
+        const params = new URLSearchParams(hash.slice(queryStart + 1));
+        const searchParam = params.get('search');
+        if (searchParam) {
+          setSearchTerm(searchParam);
+        }
+      }
+    } catch (e) {
+      console.warn('解析URL参数失败:', e);
+    }
+  }, []);
 
   // 获取所有说明书数据
   const manuals = useMemo(() => getAllManuals(), []);

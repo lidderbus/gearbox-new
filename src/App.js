@@ -107,15 +107,31 @@ const LazyLoadFallback = () => (
 const forceReset = () => {
   try {
     logger.log("开始强制重置数据...");
-    localStorage.clear();
-    logger.log("localStorage已清除");
+
+    // 只清除选型系统自己的 localStorage 键，保护报价系统等其他应用数据
+    const gearboxKeys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      // 保护报价系统数据: gearbox_quotations, quote_*, QuoteDB 相关键
+      if (key && !key.startsWith('quote') && !key.startsWith('Quote') && key !== 'gearbox_quotations') {
+        gearboxKeys.push(key);
+      }
+    }
+    gearboxKeys.forEach(key => localStorage.removeItem(key));
+    logger.log(`localStorage已清除 ${gearboxKeys.length} 个选型系统键（保留报价数据）`);
 
     sessionStorage.clear();
     logger.log("sessionStorage已清除");
 
+    // 只删除选型系统的 IndexedDB，保护 QuoteDB 等其他应用数据库
+    const PROTECTED_DBS = ['QuoteDB', 'QuoteDatabase'];
     if (window.indexedDB) {
         indexedDB.databases().then(dbs => {
             dbs.forEach(db => {
+                if (PROTECTED_DBS.includes(db.name)) {
+                    logger.log(`跳过受保护的数据库: ${db.name}`);
+                    return;
+                }
                 logger.log(`尝试删除indexedDB数据库 ${db.name}`);
                 indexedDB.deleteDatabase(db.name).onsuccess = () => logger.log(`indexedDB数据库 ${db.name} 已删除`);
                 indexedDB.deleteDatabase(db.name).onerror = (event) => logger.error(`删除indexedDB数据库 ${db.name} 失败`, event.target.error);
@@ -186,7 +202,9 @@ function App({ appData: initialAppData, setAppData }) {
     portUseReverse: false,
     starboardUseReverse: false,
     // 轴布置方式
-    shaftArrangement: { axisAlignment: 'any', offsetDirection: 'any' }
+    shaftArrangement: { axisAlignment: 'any', offsetDirection: 'any' },
+    // 离合器需求
+    hasClutch: null,   // null=不限, true=需要带离合器, false=不需要离合器
   });
   const [projectInfo, setProjectInfo] = useState({
     projectName: '',
@@ -220,6 +238,8 @@ function App({ appData: initialAppData, setAppData }) {
         window.history.replaceState(null, '', newHash);
       }
     }
+    // 切换tab时滚动到页面顶部，避免短页面内容超出视口
+    window.scrollTo(0, 0);
   }, []);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);

@@ -312,10 +312,10 @@ export function runTorsionalAnalysis(input) {
 
   let J1, J2, equivalentStiffness;
   if (gearRatio > 1 && couplingStiffness > 0) {
-    // 电机侧折算到输出侧
-    const motorInertiaReduced = motorJ * i2;
-    const couplingInertiaReduced = couplingInertia * i2;
-    const couplingStiffnessReduced = couplingStiffness * i2;
+    // 电机侧折算到输出侧：除以 i²（能量等效法，高速侧折算到低速侧 ÷i²）
+    const motorInertiaReduced = motorJ / i2;
+    const couplingInertiaReduced = couplingInertia / i2;
+    const couplingStiffnessReduced = couplingStiffness / i2;
 
     J1 = motorInertiaReduced + couplingInertiaReduced;
     J2 = propJ;

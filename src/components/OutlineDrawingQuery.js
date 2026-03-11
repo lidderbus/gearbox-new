@@ -166,6 +166,13 @@ const OutlineDrawingQuery = ({ colors = {}, theme = 'light' }) => {
           if (tab && validTabs.includes(tab)) {
             setActiveTab(tab);
           }
+
+          // 支持 search 参数 - 自动填入搜索关键词并切换到搜索Tab
+          const searchParam = params.get('search');
+          if (searchParam) {
+            setSearchKeyword(searchParam);
+            setActiveTab('search');
+          }
         }
       } catch (e) {
         console.warn('解析URL参数失败:', e);

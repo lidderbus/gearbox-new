@@ -25,3 +25,20 @@ node_modules
 
 # Ignore temporary upload files
 .tmp.driveupload/
+
+# Build artifacts
+build.tar.gz
+/dist
+/installer
+
+# Test output
+/playwright-report
+/test-results
+
+# Backup files
+*.bak
+*.bak.*
+*.backup
+
+# Legacy tests
+/tests/legacy

@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 15; // v15: 数据管理子模块全面改进 - 分页/排序/CSV导出、历史200条、HCM余量进度条、图片HTTPS、库存盘点/阈值、坏账计提明细 (2026-02-21)
+export const APP_DATA_VERSION = 19; // v19: 同步completeGearboxData全部585型号到embeddedData(215→623), 统一数据源 (2026-03-07)
 
 export const DEFAULTS = {
     gearbox: {

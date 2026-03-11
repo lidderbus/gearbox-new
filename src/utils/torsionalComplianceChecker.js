@@ -73,7 +73,7 @@ export function checkCompliance(analysisResult, systemInput, standardCode = 'CCS
 }
 
 function checkShaftDiameter(systemInput, standard) {
-  const { motorPower, motorSpeed, shaftDiameter, materialStrength = 600 } = systemInput;
+  const { motorPower, motorSpeed, propSpeed, shaftDiameter, materialStrength = 600 } = systemInput;
   const formula = standard.shaftFormula;
 
   // CCS公式: d = F × K × [Ne × 560 / ne / (Rm + 160)]^(1/3)
@@ -81,7 +81,8 @@ function checkShaftDiameter(systemInput, standard) {
   if (formula?.coefficients?.F) F = formula.coefficients.F.propellerShaft || 100;
   if (formula?.coefficients?.K) K = formula.coefficients.K.propellerShaft || 1.15;
 
-  const speed = motorSpeed || 1800;
+  // 轴径校核应使用螺旋桨轴转速（低速侧），而非电机转速
+  const speed = propSpeed || motorSpeed || 1800;
   const Rm = materialStrength;
   const minDia = F * K * Math.pow((motorPower * 560) / speed / (Rm + 160), 1 / 3);
   const margin = ((shaftDiameter - minDia) / minDia * 100);

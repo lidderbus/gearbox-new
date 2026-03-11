@@ -658,6 +658,22 @@ export const selectGearbox = (
       continue;
     }
 
+    // 传递能力余量低于安全下限（硬过滤，0-5%余量不推荐）
+    if (capacityMargin < MIN_CAPACITY_MARGIN) {
+      DEBUG_LOG(`Gearbox ${gearbox.model} capacity margin ${capacityMargin.toFixed(1)}% below minimum ${MIN_CAPACITY_MARGIN}%, excluded`);
+      rejectionReasons.capacityTooLow++;
+      const nearMatch: NearMatch = {
+        ...gearbox,
+        selectedRatio: gearbox.ratios[bestRatioIndex],
+        selectedCapacity: capacity,
+        capacityMargin,
+        ratioDiffPercent: bestRatioDiffPercent,
+        failureReason: `传递能力余量 ${capacityMargin.toFixed(1)}% 低于最小要求 ${MIN_CAPACITY_MARGIN}%`
+      };
+      nearMatches.push(nearMatch);
+      continue;
+    }
+
     // 传递能力余量超过上限不显示
     if (capacityMargin > MAX_CAPACITY_MARGIN) {
       DEBUG_LOG(`Gearbox ${gearbox.model} capacity margin ${capacityMargin.toFixed(1)}% exceeds ${MAX_CAPACITY_MARGIN}%, excluded`);
@@ -995,9 +1011,9 @@ export const selectGearbox = (
 
   // --- Sort scored gearboxes ---
   scoredGearboxes.sort((a, b) => {
-    // 1. 性能满足检查
-    const aOk = a.capacityMargin > 0;
-    const bOk = b.capacityMargin > 0;
+    // 1. 性能满足检查（余量>=0视为满足）
+    const aOk = a.capacityMargin >= 0;
+    const bOk = b.capacityMargin >= 0;
     if (aOk !== bOk) return aOk ? -1 : 1;
 
     // 1.5. 接口匹配优先 (有接口要求时)
@@ -1156,9 +1172,9 @@ export const autoSelectGearbox = (
     logger.debug("flexibleCouplings 示例:", appData.flexibleCouplings[0]);
   }
 
-  // Define types to check
+  // Define types to check (SGW 包含在 gwGearboxes 中，已覆盖)
   const availableTypes = (
-    ['HC', 'GW', 'HCM', 'DT', 'HCQ', 'GC'] as const
+    ['HC', 'GW', 'HCM', 'DT', 'HCQ', 'GC', 'HCA', 'HCV', 'HCX', 'MV'] as const
   ).filter(type => {
     const key = `${type.toLowerCase()}Gearboxes` as keyof AppData;
     const data = appData[key];

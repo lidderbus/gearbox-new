@@ -448,15 +448,16 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
         } else {
             result.totalAmount = result.originalAmount;
             result.totalAmountInChinese = numberToChinese(result.totalAmount);
-            
-            // 重新计算税额
+
+            // 重新计算税额（无折扣时含税金额也需同步）
+            result.taxIncludedAmount = result.totalAmount;
             if (finalOptions.taxRate > 0) {
                 result.taxAmount = Math.round(result.totalAmount * (finalOptions.taxRate / 100));
                 result.taxIncludedAmount = result.totalAmount + result.taxAmount;
             }
         }
     }
-    
+
     // 添加安装调试服务项目
     if (finalOptions.includeInstallation && finalOptions.installationCost > 0) {
         const installationItem = {
@@ -503,15 +504,16 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
         } else {
             result.totalAmount = result.originalAmount;
             result.totalAmountInChinese = numberToChinese(result.totalAmount);
-            
-            // 重新计算税额
+
+            // 重新计算税额（无折扣时含税金额也需同步）
+            result.taxIncludedAmount = result.totalAmount;
             if (finalOptions.taxRate > 0) {
                 result.taxAmount = Math.round(result.totalAmount * (finalOptions.taxRate / 100));
                 result.taxIncludedAmount = result.totalAmount + result.taxAmount;
             }
         }
     }
-    
+
     console.log("生成的报价单摘要:", {
         success: result.success,
         itemCount: result.items.length,
@@ -583,8 +585,8 @@ export function numberToChinese(n) {
         }
 
         // 在每节末尾（pos为4的倍数）添加节权
+        // 注意：不在此处重置 zeroFlag，允许跨节传播"零"前缀（如一亿零一千）
         if (sectionPos === 0) {
-            zeroFlag = false;
             if (pos >= 8) result += '亿';
             else if (pos >= 4) result += '万';
         }

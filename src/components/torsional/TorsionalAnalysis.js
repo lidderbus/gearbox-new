@@ -269,7 +269,11 @@ const TorsionalAnalysis = ({
       const freeVibResult = runAdvancedTorsionalAnalysis(advancedInput);
       setAdvancedResult(freeVibResult);
 
-      // 2. 强迫振动分析
+      // 2. 合规校验（高级模式）
+      const compliance = checkCompliance(freeVibResult, advancedInput, selectedStandard);
+      setComplianceResult(compliance);
+
+      // 3. 强迫振动分析
       const forcedVibResult = runForcedVibrationAnalysis(advancedInput, freeVibResult);
       setForcedResult(forcedVibResult);
 

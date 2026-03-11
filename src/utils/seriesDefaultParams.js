@@ -558,6 +558,16 @@ export const getSeriesDefaults = (model) => {
   if (modelUpper.startsWith('DT')) {
     return { ...dtSeriesDefaults };
   }
+  if (modelUpper.startsWith('SGW')) {
+    // SGW 系列：结构与 GWS 类似，使用独立配置（避免备用泵参数误用 GWC 数据）
+    return {
+      ...gwsSeriesDefaults,
+      // SGW 系列特有标识
+      inputCouplingType: '高弹性联轴器',
+      arrangement: '输入输出同心（单级减速）',
+      inputOutputOffset: 0,
+    };
+  }
   if (modelUpper.startsWith('GWS')) {
     return { ...gwsSeriesDefaults };
   }
@@ -589,6 +599,7 @@ export const getSeriesName = (model) => {
   const modelUpper = model.toUpperCase();
 
   if (modelUpper.startsWith('DT')) return 'DT';
+  if (modelUpper.startsWith('SGW')) return 'SGW';
   if (modelUpper.startsWith('GWS')) return 'GWS';
   if (modelUpper.startsWith('GWC')) return 'GWC';
   if (modelUpper.startsWith('GWL')) return 'GWL';

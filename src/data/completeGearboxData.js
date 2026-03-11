@@ -150,15 +150,15 @@ const completeGearboxData = [
         "minSpeed": 750,
         "maxSpeed": 2000,
         "ratios": [
-            2.03,
-            2.59,
-            3.04,
-            3.62,
-            4.11,
-            4.65,
+            2.07,
+            2.48,
+            2.95,
+            3.35,
+            3.83,
+            4.5,
             5.06,
             5.47,
-            5.81
+            5.88
         ],
         "thrust": 29.4,
         "centerDistance": 225,
@@ -209,18 +209,24 @@ const completeGearboxData = [
         "minSpeed": 1000,
         "maxSpeed": 2000,
         "ratios": [
-            2.07,
-            2.48,
-            2.95,
-            3.35,
-            3.83
+            1.97,
+            2.52,
+            3.03,
+            3.54,
+            3.95,
+            4.5,
+            5.06,
+            5.47
         ],
         "transmissionCapacityPerRatio": [
             0.012,
             0.012,
             0.012,
             0.012,
-            0.012
+            0.012,
+            0.011,
+            0.01,
+            0.009
         ],
         "thrust": 3.5,
         "centerDistance": 135,
@@ -244,16 +250,22 @@ const completeGearboxData = [
         "minSpeed": 1000,
         "maxSpeed": 2500,
         "ratios": [
-            2.5,
-            3,
-            3.5,
-            4
+            2.03,
+            2.46,
+            3.04,
+            3.57,
+            4.05,
+            4.39,
+            4.7
         ],
         "transmissionCapacityPerRatio": [
             0.0199,
             0.0199,
             0.019,
-            0.0177
+            0.0177,
+            0.016,
+            0.014,
+            0.013
         ],
         "thrust": 5,
         "centerDistance": 135,
@@ -574,38 +586,34 @@ const completeGearboxData = [
         "minSpeed": 750,
         "maxSpeed": 2500,
         "ratios": [
-            1.87,
-            2.04,
-            2.54,
             3,
-            3.53,
-            4.1,
-            4.47,
-            4.61,
-            4.94,
-            5.44
+            4.05,
+            4.53,
+            5.12,
+            5.5,
+            5.95,
+            6.39,
+            6.82
         ],
         "transmissionCapacityPerRatio": [
-            0.257,
-            0.257,
-            0.257,
+            0.28,
             0.243,
             0.221,
             0.184,
             0.184,
-            0.184,
             0.147,
+            0.133,
             0.125
         ],
-        "thrust": 50,
-        "centerDistance": 264,
+        "thrust": 39.2,
+        "centerDistance": 270,
         "dimensions": "786×930×864",
         "weight": 740,
         "controlType": "推拉软轴/电控/气控",
         "price": 23600,
         "discountRate": 0.16,
         "source": "杭齿厂选型手册2025版5月版",
-        "maxPower": 643,
+        "maxPower": 700,
         "minPower": 94,
         "powerSource": "传动能力计算",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
@@ -635,10 +643,10 @@ const completeGearboxData = [
         "minSpeed": 750,
         "maxSpeed": 2000,
         "ratios": [
-            2.07,
-            2.96,
-            3.44,
-            3.83
+            2.5,
+            3,
+            3.5,
+            4
         ],
         "transmissionCapacityPerRatio": [
             0.0294,
@@ -646,10 +654,10 @@ const completeGearboxData = [
             0.0235,
             0.02
         ],
-        "thrust": 8.8,
-        "centerDistance": 142,
+        "thrust": 5.5,
+        "centerDistance": 125,
         "dimensions": "490×670×620",
-        "weight": 225,
+        "weight": 115,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 8560,
         "discountRate": 0.1,
@@ -1381,16 +1389,16 @@ const completeGearboxData = [
         "minSpeed": 750,
         "maxSpeed": 1500,
         "ratios": [
-            1.52,
-            2,
-            2.39,
-            3,
-            3.44,
-            3.96,
-            4.57,
-            5.05,
-            5.4,
-            5.98
+            1.5,
+            2.03,
+            2.48,
+            2.95,
+            3.57,
+            4.05,
+            4.52,
+            4.99,
+            5.5,
+            5.94
         ],
         "thrust": 60,
         "centerDistance": 264,
@@ -1589,6 +1597,38 @@ const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 100,
         "centerDistance": 320
+    },
+    {
+        "model": "GCH1002L",
+        "series": "GC配变距桨",
+        "minSpeed": 400,
+        "maxSpeed": 600,
+        "ratios": [3.939],
+        "transmissionCapacityPerRatio": [20],
+        "thrust": 800,
+        "centerDistance": 1000,
+        "minPower": 5000,
+        "maxPower": 10000,
+        "powerSource": "项目跟踪数据",
+        "source": "项目跟踪记录-芜湖造船厂试验舰",
+        "note": "特殊型号，左型，8800kW/520rpm，减速比3.939:1，水平异心距1000mm，J检",
+        "image": "/images/gearbox/Advance-GC.webp"
+    },
+    {
+        "model": "GCH1002R",
+        "series": "GC配变距桨",
+        "minSpeed": 400,
+        "maxSpeed": 600,
+        "ratios": [3.939],
+        "transmissionCapacityPerRatio": [20],
+        "thrust": 800,
+        "centerDistance": 1000,
+        "minPower": 5000,
+        "maxPower": 10000,
+        "powerSource": "项目跟踪数据",
+        "source": "项目跟踪记录-芜湖造船厂试验舰",
+        "note": "特殊型号，右型，8800kW/520rpm，减速比3.939:1，水平异心距1000mm，J检",
+        "image": "/images/gearbox/Advance-GC.webp"
     },
     {
         "model": "GCH350",
@@ -5531,7 +5571,6 @@ const completeGearboxData = [
         "weight": 11000,
         "image": "/images/gearbox/Advance-GWC.webp"
     },
-    /* GWC52.62GWL52.62 合并型号已删除，独立条目 GWC52.62 和 GWL52.62 已存在 */
     {
         "model": "GWC56.61",
         "series": "GW",
@@ -5981,7 +6020,6 @@ const completeGearboxData = [
         "weight": 23000,
         "image": "/images/gearbox/Advance-GWC.webp"
     },
-    /* GWC70.82GWL70.82 合并型号已删除，独立条目 GWC70.82 和 GWL70.82 已存在 */
     {
         "model": "GWC70.85",
         "series": "GW",
@@ -6069,7 +6107,6 @@ const completeGearboxData = [
         "weight": 34000,
         "image": "/images/gearbox/Advance-GWC.webp"
     },
-    /* GWC75.90GWL75.90 合并型号已删除，独立条目 GWC75.90 和 GWL75.90 已存在 */
     {
         "model": "GWC78.88",
         "series": "GW",
@@ -12087,6 +12124,22 @@ const completeGearboxData = [
         "dimensions": "2645×2381×1740"
     },
     {
+        "model": "GWS63.78A",
+        "series": "GW",
+        "minSpeed": 400,
+        "maxSpeed": 800,
+        "ratios": [3.5, 4, 4.5, 5, 5.5, 6],
+        "transmissionCapacityPerRatio": [7, 7, 7, 7, 7, 7],
+        "thrust": 500,
+        "centerDistance": 0,
+        "minPower": 2000,
+        "maxPower": 5000,
+        "powerSource": "项目跟踪数据",
+        "source": "项目跟踪记录-九江1000TEU集装箱船",
+        "note": "新型号，数据待完善，3676kW/650rpm",
+        "image": "/images/gearbox/Advance-GW.webp"
+    },
+    {
         "model": "GWS63.71/GWK63.71/GWH63.71/GWD63.71",
         "aliases": [
             "GWS63.71",
@@ -12787,7 +12840,11 @@ const completeGearboxData = [
             2.96,
             3.18,
             3.33,
-            3.55
+            3.55,
+            3.79,
+            4.06,
+            4.2,
+            4.47
         ],
         "thrust": 120,
         "centerDistance": 380,
@@ -12943,7 +13000,11 @@ const completeGearboxData = [
             1.03,
             1.03,
             1.03,
-            1.03
+            1.03,
+            1.03,
+            0.93,
+            0.93,
+            0.93
         ],
         "imageUrl": "/images/gearbox/Advance-1100-1200.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
@@ -13203,7 +13264,11 @@ const completeGearboxData = [
             3,
             3.57,
             4.05,
-            4.45
+            4.45,
+            5.05,
+            5.63,
+            6.06,
+            6.47
         ],
         "thrust": 30,
         "centerDistance": 225,
@@ -13226,7 +13291,11 @@ const completeGearboxData = [
             0.11,
             0.11,
             0.11,
-            0.11
+            0.11,
+            0.099,
+            0.093,
+            0.088,
+            0.084
         ],
         "imageUrl": "/images/gearbox/Advance-HC138-.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
@@ -13253,9 +13322,9 @@ const completeGearboxData = [
         "maxSpeed": 1650,
         "ratios": [
             2.03,
-            2.5,
-            2.96,
-            3.55,
+            2.54,
+            3,
+            3.5,
             4
         ],
         "thrust": 170,
@@ -13494,9 +13563,7 @@ const completeGearboxData = [
             2.52,
             3.13,
             3.52,
-            3.91,
-            4.4,
-            4.5
+            3.91
         ],
         "thrust": 190,
         "centerDistance": 450,
@@ -13572,13 +13639,11 @@ const completeGearboxData = [
         ],
         "transmissionCapacityPerRatio": [
             1.62,
-            1.62,
-            1.62,
-            1.62,
-            1.62,
-            1.62,
+            1.58,
+            1.55,
             1.45,
-            1.4
+            1.35,
+            1.25
         ],
         "imageUrl": "/images/gearbox/Advance-2000.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
@@ -13878,10 +13943,8 @@ const completeGearboxData = [
         "minSpeed": 700,
         "maxSpeed": 2500,
         "ratios": [
-            1.5,
             1.87,
             2.04,
-            2.23,
             2.54,
             3,
             3.53,
@@ -13907,8 +13970,6 @@ const completeGearboxData = [
             2500
         ],
         "transmissionCapacityPerRatio": [
-            0.257,
-            0.257,
             0.257,
             0.257,
             0.257,
@@ -14861,16 +14922,8 @@ const completeGearboxData = [
         "minSpeed": 1000,
         "maxSpeed": 2300,
         "ratios": [
-            1,
-            1.12,
-            1.25,
-            1.41,
             1.5,
-            1.52,
-            1.76,
             1.96,
-            2.04,
-            2.5,
             2.57,
             2.95
         ],
@@ -14890,18 +14943,10 @@ const completeGearboxData = [
             2300
         ],
         "transmissionCapacityPerRatio": [
-            2.95,
-            2.95,
-            2.95,
-            2.95,
-            2.95,
-            2.95,
-            2.95,
-            2.95,
-            2.95,
-            2.95,
-            2.95,
-            2.95
+            0.25,
+            0.235,
+            0.235,
+            0.235
         ],
         "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/96c2d20d-b18b-453f-9f72-17ba24c00a57.png",
@@ -15932,10 +15977,15 @@ const completeGearboxData = [
         "minSpeed": 1000,
         "maxSpeed": 2500,
         "ratios": [
-            5.05,
-            5.63,
-            6.06,
-            6.47
+            2,
+            2.54,
+            3.04,
+            3.52,
+            3.95,
+            4.53,
+            5.12,
+            5.56,
+            5.88
         ],
         "thrust": 40,
         "centerDistance": 296,
@@ -15955,8 +16005,13 @@ const completeGearboxData = [
         "transmissionCapacityPerRatio": [
             0.11,
             0.11,
+            0.11,
+            0.11,
+            0.11,
             0.099,
-            0.093
+            0.088,
+            0.077,
+            0.07
         ],
         "imageUrl": "/images/gearbox/Advance-HC138-.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/e1c6f75e-8c4b-4cfc-9c73-b4ff4c9cd5b8.png",
@@ -15994,7 +16049,9 @@ const completeGearboxData = [
             4.32,
             4.52,
             4.8,
-            5.05
+            5.05,
+            5.5,
+            5.86
         ],
         "thrust": 175,
         "centerDistance": 485,
@@ -16019,7 +16076,9 @@ const completeGearboxData = [
             1.081,
             1.081,
             1.081,
-            1.081
+            1.081,
+            1,
+            0.95
         ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/e1c6f75e-8c4b-4cfc-9c73-b4ff4c9cd5b8.png",
         "introduction": "HCD系列船用齿轮箱适用于大中型船舶推进系统。该系列产品具有大功率传递能力,可承受较大的螺旋桨推力。采用液压湿式多片离合器,换向平稳。",
@@ -16862,19 +16921,19 @@ const completeGearboxData = [
         "minSpeed": 1000,
         "maxSpeed": 1800,
         "ratios": [
-            1.5,
-            1.96,
-            2.45,
-            2.96,
-            3.55,
-            3.94,
-            4.47,
-            5.05,
-            5.56
+            3.96,
+            4.33,
+            4.43,
+            4.7,
+            5,
+            5.53,
+            5.71,
+            5.89,
+            6
         ],
         "thrust": 82,
         "centerDistance": 355,
-        "dimensions": null,
+        "dimensions": "820×1010×1070",
         "weight": 1100,
         "controlType": "推拉软轴/电控/气控",
         "price": 38150,
@@ -16888,15 +16947,15 @@ const completeGearboxData = [
             2100
         ],
         "transmissionCapacityPerRatio": [
+            0.331,
+            0.293,
             0.272,
-            0.272,
-            0.272,
-            0.272,
-            0.272,
-            0.272,
-            0.245,
-            0.216,
-            0.196
+            0.267,
+            0.267,
+            0.267,
+            0.267,
+            0.267,
+            0.267
         ],
         "imageUrl": "/images/gearbox/Advance-HCD400A.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/e1c6f75e-8c4b-4cfc-9c73-b4ff4c9cd5b8.png",
@@ -17329,14 +17388,14 @@ const completeGearboxData = [
         "minSpeed": 600,
         "maxSpeed": 2100,
         "ratios": [
-            2.04,
-            2.52,
-            3.04,
-            3.57,
-            4,
-            4.47,
-            5.05,
-            5.5
+            3,
+            3.43,
+            3.96,
+            4.17,
+            4.39,
+            4.9,
+            5.47,
+            5.89
         ],
         "thrust": 110,
         "centerDistance": 450,
@@ -17356,12 +17415,12 @@ const completeGearboxData = [
         "transmissionCapacityPerRatio": [
             0.52,
             0.52,
-            0.52,
-            0.52,
-            0.52,
+            0.468,
             0.468,
             0.414,
-            0.38
+            0.38,
+            0.35,
+            0.32
         ],
         "imageUrl": "/images/gearbox/Advance-800-1000.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/e1c6f75e-8c4b-4cfc-9c73-b4ff4c9cd5b8.png",
@@ -18068,9 +18127,9 @@ const completeGearboxData = [
             2.48,
             3
         ],
-        "thrust": 0.0887,
-        "centerDistance": 0,
-        "dimensions": "0.0603",
+        "thrust": 16,
+        "centerDistance": 135,
+        "dimensions": null,
         "weight": 63,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 126500,
@@ -18110,9 +18169,9 @@ const completeGearboxData = [
             2.48,
             3
         ],
-        "thrust": 0.1162,
-        "centerDistance": 0,
-        "dimensions": "0.0775",
+        "thrust": 16,
+        "centerDistance": 146,
+        "dimensions": null,
         "weight": 73,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 131000,
@@ -18152,9 +18211,9 @@ const completeGearboxData = [
             2.5,
             2.92
         ],
-        "thrust": 0.1864,
-        "centerDistance": 0,
-        "dimensions": "0.1296",
+        "thrust": 25,
+        "centerDistance": 155,
+        "dimensions": null,
         "weight": 120,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 132875,
@@ -18401,9 +18460,9 @@ const completeGearboxData = [
             2.5,
             2.96
         ],
-        "thrust": 0.9157,
-        "centerDistance": 0,
-        "dimensions": "0.6319",
+        "thrust": 110,
+        "centerDistance": 340,
+        "dimensions": null,
         "weight": 950,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 413750,
@@ -21415,15 +21474,15 @@ const completeGearboxData = [
         "minSpeed": 600,
         "maxSpeed": 1900,
         "ratios": [
-            2.04,
-            2.48,
-            2.95,
-            3.45,
-            3.96,
-            4.39,
-            4.89,
-            5.44,
-            5.94
+            5.05,
+            5.26,
+            5.6,
+            5.98,
+            6.39,
+            6.85,
+            7.35,
+            7.9,
+            8.46
         ],
         "thrust": 150,
         "centerDistance": 500,
@@ -21441,15 +21500,15 @@ const completeGearboxData = [
             1800
         ],
         "transmissionCapacityPerRatio": [
-            1.04,
-            1.04,
-            1.04,
-            1.04,
-            1.04,
-            0.936,
-            0.838,
-            0.754,
-            0.691
+            1.014,
+            1.014,
+            1.014,
+            1.014,
+            1.014,
+            1.014,
+            1.014,
+            1.014,
+            0.846
         ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
         "introduction": "HCT系列船用齿轮箱主要用于中大型船舶推进系统。具有高效率、低噪音、维护方便等特点。采用液压湿式多片离合器,操纵平稳可靠。",
@@ -21485,7 +21544,16 @@ const completeGearboxData = [
             8.55,
             9.16,
             9.57,
-            10.08
+            10.08,
+            10.74,
+            11.05,
+            11.45,
+            12.17,
+            12.53,
+            12.92,
+            13.65,
+            14,
+            14.54
         ],
         "thrust": 220,
         "centerDistance": 580,
@@ -21506,7 +21574,16 @@ const completeGearboxData = [
             1.014,
             1.014,
             1.014,
-            1.014
+            1.014,
+            0.9,
+            0.9,
+            0.9,
+            0.83,
+            0.8,
+            0.78,
+            0.68,
+            0.66,
+            0.65
         ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
         "introduction": "HCT系列船用齿轮箱主要用于中大型船舶推进系统。具有高效率、低噪音、维护方便等特点。采用液压湿式多片离合器,操纵平稳可靠。",
@@ -21754,6 +21831,7 @@ const completeGearboxData = [
         "transmissionCapacity": 19.07,
         "thrust": 220,
         "centerDistance": 722,
+        "dimensions": "1279×1600×2100",
         "maxPower": 2054,
         "minPower": 360,
         "powerSource": "传动能力计算",
@@ -22138,7 +22216,16 @@ const completeGearboxData = [
             7.01,
             7.48,
             7.76,
-            8
+            8,
+            8.57,
+            8.71,
+            8.84,
+            9.05,
+            9.32,
+            9.43,
+            9.643,
+            10.04,
+            11
         ],
         "thrust": 270,
         "centerDistance": 625,
@@ -22163,7 +22250,16 @@ const completeGearboxData = [
             1.62,
             1.62,
             1.62,
-            1.62
+            1.62,
+            1.58,
+            1.55,
+            1.55,
+            1.48,
+            1.42,
+            1.383,
+            1.383,
+            1.34,
+            1.22
         ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
         "introduction": "HCT系列船用齿轮箱主要用于中大型船舶推进系统。具有高效率、低噪音、维护方便等特点。采用液压湿式多片离合器,操纵平稳可靠。",
@@ -22507,6 +22603,38 @@ const completeGearboxData = [
         "weight": 7200
     },
     {
+        "model": "HCTH2650",
+        "series": "HCT",
+        "minSpeed": 600,
+        "maxSpeed": 1500,
+        "ratios": [6.2],
+        "transmissionCapacityPerRatio": [3],
+        "thrust": 400,
+        "centerDistance": 0,
+        "minPower": 1500,
+        "maxPower": 3500,
+        "powerSource": "项目跟踪数据",
+        "source": "项目跟踪记录-芜湖造船厂2#3#栈桥作业船固桨",
+        "note": "特殊型号，三机三桨，配PTO，2940kW/1500rpm，速比6.2:1",
+        "image": "/images/gearbox/Advance-HCT.webp"
+    },
+    {
+        "model": "HCTH2650P",
+        "series": "HCT",
+        "minSpeed": 600,
+        "maxSpeed": 1500,
+        "ratios": [1],
+        "transmissionCapacityPerRatio": [3],
+        "thrust": 0,
+        "centerDistance": 0,
+        "minPower": 1500,
+        "maxPower": 3000,
+        "powerSource": "项目跟踪数据",
+        "source": "项目跟踪记录-芜湖造船厂2#3#栈桥作业船PTO",
+        "note": "PTO版本，2600kW/1500rpm，速比1:1",
+        "image": "/images/gearbox/Advance-HCT.webp"
+    },
+    {
         "model": "HCT3800",
         "series": "HCT",
         "minSpeed": 500,
@@ -22696,9 +22824,9 @@ const completeGearboxData = [
             12.5,
             13.96
         ],
-        "thrust": 82,
-        "centerDistance": 375,
-        "dimensions": "800×1052×1182",
+        "thrust": 120,
+        "centerDistance": 465,
+        "dimensions": "832×1100×1328",
         "weight": 1500,
         "maxPower": 695,
         "minPower": 204,
@@ -22869,15 +22997,15 @@ const completeGearboxData = [
         "ratios": [
             6.06,
             6.49,
-            6.93,
-            7.42,
-            7.96,
-            8.54,
+            6.97,
+            7.51,
+            8.04,
+            8.66,
             9.35
         ],
         "thrust": 90,
         "centerDistance": 415,
-        "dimensions": null,
+        "dimensions": "821×1214×1271",
         "weight": 1650,
         "controlType": "推拉软轴/电控/气控",
         "price": 70900,
@@ -22891,13 +23019,13 @@ const completeGearboxData = [
             2100
         ],
         "transmissionCapacityPerRatio": [
-            0.49,
-            0.46,
-            0.43,
-            0.4,
-            0.37,
-            0.34,
-            0.31
+            0.45,
+            0.419,
+            0.39,
+            0.363,
+            0.338,
+            0.314,
+            0.291
         ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
         "introduction": "HCT系列船用齿轮箱主要用于中大型船舶推进系统。具有高效率、低噪音、维护方便等特点。采用液压湿式多片离合器,操纵平稳可靠。",
@@ -23126,7 +23254,7 @@ const completeGearboxData = [
         ],
         "thrust": 160,
         "centerDistance": 550,
-        "dimensions": "966×1224×1515",
+        "dimensions": "966×1280×1515",
         "weight": 2230,
         "maxPower": 1029,
         "minPower": 290,
@@ -23233,16 +23361,16 @@ const completeGearboxData = [
         "minSpeed": 600,
         "maxSpeed": 2100,
         "ratios": [
-            1.59,
-            2.03,
-            2.48,
-            2.95,
-            3.45,
-            3.94,
-            4.39,
-            4.89,
-            5.44,
-            5.94
+            4.95,
+            5.57,
+            5.68,
+            5.93,
+            6.43,
+            6.86,
+            7.33,
+            7.84,
+            8.4,
+            9
         ],
         "thrust": 140,
         "centerDistance": 450,
@@ -23341,12 +23469,12 @@ const completeGearboxData = [
             0.72,
             0.72,
             0.72,
-            0.72,
-            0.72,
-            0.648,
-            0.58,
-            0.523,
-            0.478
+            0.706,
+            0.654,
+            0.63,
+            0.61,
+            0.566,
+            0.5
         ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
         "introduction": "HCT系列船用齿轮箱主要用于中大型船舶推进系统。具有高效率、低噪音、维护方便等特点。采用液压湿式多片离合器,操纵平稳可靠。",
@@ -23376,7 +23504,19 @@ const completeGearboxData = [
             8.13,
             8.6,
             9.12,
-            9.68
+            9.68,
+            10.3,
+            10.98,
+            11.76,
+            12.43,
+            13.17,
+            13.97,
+            14.85,
+            15.82,
+            16.58,
+            17.91,
+            20.12,
+            22.1
         ],
         "thrust": 220,
         "centerDistance": 582,
@@ -23400,7 +23540,19 @@ const completeGearboxData = [
             0.72,
             0.72,
             0.72,
-            0.72
+            0.72,
+            0.7,
+            0.65,
+            0.58,
+            0.55,
+            0.5,
+            0.48,
+            0.45,
+            0.4,
+            0.4,
+            0.378,
+            0.278,
+            0.278
         ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
         "introduction": "HCT系列船用齿轮箱主要用于中大型船舶推进系统。具有高效率、低噪音、维护方便等特点。采用液压湿式多片离合器,操纵平稳可靠。",
@@ -23424,17 +23576,17 @@ const completeGearboxData = [
         "minSpeed": 600,
         "maxSpeed": 2100,
         "ratios": [
-            1.59,
-            1.77,
-            1.97,
-            2.11,
-            2.29,
-            2.48,
-            2.71,
-            2.95,
-            3.17,
-            3.45,
-            4.39
+            11.52,
+            12.21,
+            12.97,
+            14.08,
+            14.48,
+            14.88,
+            15.48,
+            15.76,
+            16.72,
+            17.78,
+            18.94
         ],
         "thrust": 220,
         "centerDistance": 666,
@@ -23531,15 +23683,15 @@ const completeGearboxData = [
         "transmissionCapacityPerRatio": [
             0.72,
             0.72,
-            0.72,
-            0.72,
-            0.72,
-            0.72,
-            0.72,
-            0.72,
-            0.72,
-            0.72,
-            0.648
+            0.65,
+            0.58,
+            0.553,
+            0.549,
+            0.52,
+            0.503,
+            0.491,
+            0.463,
+            0.435
         ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
         "introduction": "HCT系列船用齿轮箱主要用于中大型船舶推进系统。具有高效率、低噪音、维护方便等特点。采用液压湿式多片离合器,操纵平稳可靠。",
@@ -24218,13 +24370,9 @@ const completeGearboxData = [
         "minSpeed": 1000,
         "maxSpeed": 2500,
         "ratios": [
-            1.64,
-            2.03,
-            2.5,
-            3,
-            3.57,
-            4,
-            4.45
+            1.51,
+            2.02,
+            2.52
         ],
         "maxPower": 193,
         "minPower": 50,
@@ -24241,16 +24389,13 @@ const completeGearboxData = [
         "transmissionCapacityPerRatio": [
             0.077,
             0.077,
-            0.077,
-            0.069,
-            0.062,
-            0.055,
-            0.05
+            0.077
         ],
         "imageUrl": "/images/gearbox/Advance-120C-HCV120.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/96c2d20d-b18b-453f-9f72-17ba24c00a57.png",
         "introduction": "HCV系列船用齿轮箱是V型布置的船用齿轮箱,适用于特殊安装空间要求的船舶。",
-        "dimensions": "861×660×600",
+        "dimensions": "502×600×847",
+        "centerDistance": 393,
         "inputInterfaces": {
             "domestic": [
                 "φ770"
@@ -24304,15 +24449,8 @@ const completeGearboxData = [
         "minSpeed": 1000,
         "maxSpeed": 2200,
         "ratios": [
-            1.06,
-            1.21,
-            1.36,
-            1.46,
             1.49,
-            1.74,
             1.96,
-            2.05,
-            2.38,
             2.48
         ],
         "maxPower": 6490,
@@ -24329,19 +24467,13 @@ const completeGearboxData = [
         "transmissionCapacityPerRatio": [
             2.95,
             2.95,
-            2.95,
-            2.95,
-            2.95,
-            2.95,
-            2.95,
-            2.95,
-            2.95,
             2.95
         ],
         "imageUrl": "/images/gearbox/Advance-200-201-230.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/96c2d20d-b18b-453f-9f72-17ba24c00a57.png",
         "introduction": "HCV系列船用齿轮箱是V型布置的船用齿轮箱,适用于特殊安装空间要求的船舶。",
-        "dimensions": "1029×820×760",
+        "dimensions": "568×820×1020",
+        "centerDistance": 480,
         "inputInterfaces": {
             "domestic": [
                 "φ770"
@@ -24499,20 +24631,24 @@ const completeGearboxData = [
         "minSpeed": 750,
         "maxSpeed": 2500,
         "ratios": [
+            1.5,
+            1.87,
             2.04,
+            2.23,
             2.54,
             3,
-            3.47,
-            3.95
+            3.53
         ],
         "transmissionCapacityPerRatio": [
             0.28,
             0.28,
             0.28,
             0.28,
+            0.28,
+            0.28,
             0.257
         ],
-        "thrust": 60,
+        "thrust": 50,
         "centerDistance": 264,
         "dimensions": "786×930×864",
         "weight": 740,
@@ -24570,13 +24706,15 @@ const completeGearboxData = [
         "minSpeed": 1500,
         "maxSpeed": 3000,
         "ratios": [
-            2.03,
-            2.46,
+            1.97,
+            2.52,
             3.04,
-            3.57,
-            4.05,
-            4.39,
-            4.7
+            3.54,
+            3.96,
+            4.65,
+            5.06,
+            5.47,
+            5.81
         ],
         "thrust": 5.5,
         "centerDistance": 125,
@@ -24595,8 +24733,10 @@ const completeGearboxData = [
             0.018,
             0.016,
             0.014,
-            0.013,
-            0.011
+            0.011,
+            0.01,
+            0.009,
+            0.008
         ],
         "imageUrl": "/images/gearbox/MA.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
@@ -24829,7 +24969,8 @@ const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-HCQ100-MV100A.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "MV系列船用齿轮箱是V型布置版本。",
-        "dimensions": "668×630×586",
+        "dimensions": "485×508×580",
+        "centerDistance": 0,
         "inputInterfaces": {
             "sae": [
                 "SAE1#1.5寸",
@@ -25000,6 +25141,38 @@ const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-GWS.webp"
+    },
+    {
+        "model": "SGWL49.54",
+        "series": "GW",
+        "minSpeed": 600,
+        "maxSpeed": 1500,
+        "ratios": [1.88, 2.05],
+        "transmissionCapacityPerRatio": [5, 5],
+        "thrust": 300,
+        "centerDistance": 0,
+        "minPower": 1500,
+        "maxPower": 3500,
+        "powerSource": "项目跟踪数据",
+        "source": "项目跟踪记录-芜湖造船厂2#3#栈桥作业船",
+        "note": "特殊型号，配舵桨，双速比1.88:1/2.05:1，2940kW/1500rpm",
+        "image": "/images/gearbox/Advance-GW.webp"
+    },
+    {
+        "model": "SGWL52.59",
+        "series": "GW",
+        "minSpeed": 600,
+        "maxSpeed": 1000,
+        "ratios": [1.022, 1.145],
+        "transmissionCapacityPerRatio": [6, 6],
+        "thrust": 350,
+        "centerDistance": 0,
+        "minPower": 2000,
+        "maxPower": 4500,
+        "powerSource": "项目跟踪数据",
+        "source": "项目跟踪记录-芜湖造船厂4#运输船",
+        "note": "特殊型号，配舵桨，双速比1.022:1/1.145:1，3600kW/800rpm",
+        "image": "/images/gearbox/Advance-GW.webp"
     },
     {
         "model": "SGW49.54",

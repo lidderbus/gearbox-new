@@ -144,6 +144,31 @@ export const CII_RATING_BOUNDARIES = {
     lower: 0.88,
     upper: 1.005,
     inferior: 1.12
+  },
+  // 2027-2030年边界系数（IMO MEPC.338(76)，每年约收紧2%）
+  2027: {
+    superior: 0.755,
+    lower: 0.862,
+    upper: 0.985,
+    inferior: 1.098
+  },
+  2028: {
+    superior: 0.740,
+    lower: 0.845,
+    upper: 0.965,
+    inferior: 1.076
+  },
+  2029: {
+    superior: 0.725,
+    lower: 0.828,
+    upper: 0.945,
+    inferior: 1.054
+  },
+  2030: {
+    superior: 0.710,
+    lower: 0.811,
+    upper: 0.925,
+    inferior: 1.032
   }
 };
 
@@ -157,7 +182,7 @@ export const CII_REFERENCE_COEFFICIENTS = {
   containerShip: { a: 1984, c: 0.489 },
   generalCargo: { a: 588, c: 0.3885 },
   reefer: { a: 4600, c: 0.557 },
-  lngCarrier: { a: 14405E7, c: 2.071 },
+  lngCarrier: { a: 14405E4, c: 2.071 },
   roRoCargoShip: { a: 10952, c: 0.637 },
   cruiseShip: { a: 930, c: 0.383 },
   tug: { a: 150, c: 0.25 },
@@ -358,7 +383,7 @@ export const calculateCII = (params) => {
   const ciiReference = ciiCoeff.a * Math.pow(capacity, -ciiCoeff.c);
 
   // 获取年度边界系数
-  const boundaryYear = Math.min(Math.max(year, 2024), 2026);
+  const boundaryYear = Math.min(Math.max(year, 2024), 2030);
   const boundaries = CII_RATING_BOUNDARIES[boundaryYear];
 
   // 计算各等级边界
