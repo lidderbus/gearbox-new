@@ -320,24 +320,18 @@ export const initialData = {
                 2000
             ],
             "ratios": [
-                1.97,
-                2.52,
-                3.03,
-                3.54,
-                3.95,
-                4.5,
-                5.06,
-                5.47
+                2.07,
+                2.48,
+                2.95,
+                3.35,
+                3.83
             ],
             "transferCapacity": [
                 0.012,
                 0.012,
                 0.012,
                 0.012,
-                0.012,
-                0.011,
-                0.01,
-                0.009
+                0.012
             ],
             "thrust": 3.5,
             "centerDistance": 135,
@@ -358,22 +352,16 @@ export const initialData = {
                 2500
             ],
             "ratios": [
-                2.03,
-                2.46,
-                3.04,
-                3.57,
-                4.05,
-                4.39,
-                4.7
+                2.5,
+                3.0,
+                3.5,
+                4.0
             ],
             "transferCapacity": [
                 0.0199,
                 0.0199,
                 0.019,
-                0.0177,
-                0.016,
-                0.014,
-                0.013
+                0.0177
             ],
             "thrust": 5,
             "centerDistance": 135,
@@ -428,15 +416,13 @@ export const initialData = {
                 3000
             ],
             "ratios": [
-                1.97,
-                2.52,
+                2.03,
+                2.46,
                 3.04,
-                3.54,
-                3.96,
-                4.65,
-                5.06,
-                5.47,
-                5.81
+                3.57,
+                4.05,
+                4.39,
+                4.7
             ],
             "transferCapacity": [
                 0.02,
@@ -444,10 +430,8 @@ export const initialData = {
                 0.018,
                 0.016,
                 0.014,
-                0.011,
-                0.01,
-                0.009,
-                0.008
+                0.013,
+                0.011
             ],
             "thrust": 5.5,
             "centerDistance": 125,
@@ -506,10 +490,10 @@ export const initialData = {
                 2000
             ],
             "ratios": [
-                2.5,
-                3,
-                3.5,
-                4
+                2.07,
+                2.96,
+                3.44,
+                3.83
             ],
             "transferCapacity": [
                 0.0294,
@@ -517,9 +501,9 @@ export const initialData = {
                 0.0235,
                 0.02
             ],
-            "thrust": 5.5,
-            "centerDistance": 125,
-            "weight": 115,
+            "thrust": 8.8,
+            "centerDistance": 142,
+            "weight": 225,
             "price": 0,
             "controlType": "推拉软轴",
             "dimensions": "490x670x620",
@@ -672,15 +656,15 @@ export const initialData = {
                 2000
             ],
             "ratios": [
-                2.07,
-                2.48,
-                2.95,
-                3.35,
-                3.83,
-                4.5,
+                2.03,
+                2.59,
+                3.04,
+                3.62,
+                4.11,
+                4.65,
                 5.06,
                 5.47,
-                5.88
+                5.81
             ],
             "transferCapacity": [
                 0.1,
@@ -872,27 +856,31 @@ export const initialData = {
                 2500
             ],
             "ratios": [
-                3,
-                4.05,
-                4.53,
-                5.12,
-                5.5,
-                5.95,
-                6.39,
-                6.82
+                1.87,
+                2.04,
+                2.54,
+                3.0,
+                3.53,
+                4.1,
+                4.47,
+                4.61,
+                4.94,
+                5.44
             ],
             "transferCapacity": [
-                0.28,
+                0.257,
+                0.257,
+                0.257,
                 0.243,
                 0.221,
                 0.184,
                 0.184,
+                0.184,
                 0.147,
-                0.133,
                 0.125
             ],
-            "thrust": 39.2,
-            "centerDistance": 270,
+            "thrust": 50,
+            "centerDistance": 264,
             "weight": 740,
             "price": 0,
             "controlType": "推拉软轴/电控/气控",
@@ -910,24 +898,20 @@ export const initialData = {
                 2500
             ],
             "ratios": [
-                1.5,
-                1.87,
                 2.04,
-                2.23,
                 2.54,
-                3,
-                3.53
+                3.0,
+                3.47,
+                3.95
             ],
             "transferCapacity": [
                 0.28,
                 0.28,
                 0.28,
                 0.28,
-                0.28,
-                0.28,
                 0.257
             ],
-            "thrust": 50,
+            "thrust": 60,
             "centerDistance": 264,
             "weight": 740,
             "price": 0,
