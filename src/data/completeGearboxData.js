@@ -24866,9 +24866,9 @@ const completeGearboxData = [
         "maxPower": 368,
         "minPower": 88,
         "powerSource": "传动能力计算",
-        "price": 36000,
+        "price": 28600,
         "discountRate": 0.1,
-        "priceSource": "系统估算",
+        "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "transmissionCapacityPerRatio": [
             0.147,
