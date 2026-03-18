@@ -1381,16 +1381,15 @@ const completeGearboxData = [
         "minSpeed": 750,
         "maxSpeed": 1500,
         "ratios": [
-            1.5,
-            2.03,
-            2.48,
-            2.95,
-            3.57,
-            4.05,
-            4.52,
-            4.99,
-            5.5,
-            5.94
+            1.52,
+            2.0,
+            2.39,
+            3.0,
+            3.44,
+            3.96,
+            4.57,
+            5.05,
+            5.4
         ],
         "thrust": 60,
         "centerDistance": 264,
@@ -1416,8 +1415,7 @@ const completeGearboxData = [
             0.332,
             0.243,
             0.206,
-            0.173,
-            0.133
+            0.173
         ],
         "transferCapacity": [
             0.634,
@@ -13489,14 +13487,8 @@ const completeGearboxData = [
         "maxSpeed": 2200,
         "ratios": [
             1.48,
-            1.94,
-            2.45,
-            2.96,
-            3.35,
-            4,
-            4.53,
-            5.06,
-            5.47
+            2.0,
+            2.28
         ],
         "thrust": 27.5,
         "centerDistance": 190,
@@ -13514,15 +13506,9 @@ const completeGearboxData = [
             2500
         ],
         "transmissionCapacityPerRatio": [
-            0.131,
-            0.131,
-            0.131,
-            0.131,
-            0.131,
-            0.118,
-            0.106,
-            0.094,
-            0.087
+            0.147,
+            0.147,
+            0.147
         ],
         "imageUrl": "/images/gearbox/Advance-200-201-230.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
@@ -14370,11 +14356,10 @@ const completeGearboxData = [
         "minSpeed": 1000,
         "maxSpeed": 2500,
         "ratios": [
-            2,
+            1.53,
+            2.03,
             2.5,
-            3,
-            3.5,
-            4
+            2.96
         ],
         "maxPower": 93,
         "minPower": 24,
@@ -14389,11 +14374,10 @@ const completeGearboxData = [
         ],
         "weight": 130,
         "transmissionCapacityPerRatio": [
-            0.037,
-            0.034,
-            0.03,
-            0.027,
-            0.024
+            0.048,
+            0.048,
+            0.048,
+            0.044
         ],
         "imageUrl": "/images/gearbox/Advance-HC65.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
@@ -15973,15 +15957,10 @@ const completeGearboxData = [
         "minSpeed": 1000,
         "maxSpeed": 2500,
         "ratios": [
-            2,
-            2.54,
-            3.04,
-            3.52,
-            3.95,
-            4.53,
-            5.12,
-            5.56,
-            5.88
+            5.05,
+            5.63,
+            6.06,
+            6.47
         ],
         "thrust": 40,
         "centerDistance": 296,
@@ -16001,13 +15980,8 @@ const completeGearboxData = [
         "transmissionCapacityPerRatio": [
             0.11,
             0.11,
-            0.11,
-            0.11,
-            0.11,
             0.099,
-            0.088,
-            0.077,
-            0.07
+            0.093
         ],
         "imageUrl": "/images/gearbox/Advance-HC138-.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/e1c6f75e-8c4b-4cfc-9c73-b4ff4c9cd5b8.png",
@@ -21404,16 +21378,15 @@ const completeGearboxData = [
         "minSpeed": 600,
         "maxSpeed": 1900,
         "ratios": [
-            1.59,
-            2.03,
-            2.48,
-            2.95,
-            3.45,
-            3.94,
-            4.39,
-            4.89,
-            5.44,
-            5.94
+            4.94,
+            5.6,
+            5.98,
+            6.39,
+            6.85,
+            7.35,
+            7.9,
+            8.53,
+            8.9
         ],
         "thrust": 150,
         "centerDistance": 500,
@@ -21431,16 +21404,15 @@ const completeGearboxData = [
             2100
         ],
         "transmissionCapacityPerRatio": [
-            0.98,
-            0.98,
-            0.98,
-            0.98,
-            0.98,
-            0.98,
-            0.882,
-            0.79,
-            0.71,
-            0.651
+            0.846,
+            0.846,
+            0.846,
+            0.846,
+            0.835,
+            0.772,
+            0.736,
+            0.682,
+            0.653
         ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
         "introduction": "HCT系列船用齿轮箱主要用于中大型船舶推进系统。具有高效率、低噪音、维护方便等特点。采用液压湿式多片离合器,操纵平稳可靠。",
@@ -22021,14 +21993,13 @@ const completeGearboxData = [
         "minSpeed": 500,
         "maxSpeed": 1650,
         "ratios": [
-            2.04,
-            2.52,
-            3,
-            3.57,
-            4,
-            4.48,
-            5.05,
-            5.5
+            5.55,
+            5.97,
+            6.59,
+            6.99,
+            7.44,
+            7.65,
+            7.92
         ],
         "thrust": 250,
         "centerDistance": 585,
@@ -22046,14 +22017,13 @@ const completeGearboxData = [
             1800
         ],
         "transmissionCapacityPerRatio": [
-            1.538,
-            1.538,
-            1.538,
-            1.538,
-            1.538,
-            1.384,
-            1.23,
-            1.128
+            1.29,
+            1.29,
+            1.29,
+            1.29,
+            1.29,
+            1.29,
+            1.29
         ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
         "introduction": "HCT系列船用齿轮箱主要用于中大型船舶推进系统。具有高效率、低噪音、维护方便等特点。采用液压湿式多片离合器,操纵平稳可靠。",
