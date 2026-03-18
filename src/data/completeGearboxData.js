@@ -1,12 +1,4 @@
-// 齿轮箱完整数据库
-// 更新日期: 2026-02-17 (价格依据杭齿集公[2026]30号文件, 2026-01-01起执行)
-// 总型号数: 595
-// 数据来源: 杭齿厂选型手册2025版5月版 + enhanced_data.json
-// 合并说明: React版536 + HTML版独有59 = 595个型号
-// 图片修复: 为536个型号匹配了专属图片
-// 价格修复: 价格覆盖率91.4%
-
-const completeGearboxData = [
+export const completeGearboxData = [
     {
         "model": "06",
         "series": "other",
@@ -56,7 +48,7 @@ const completeGearboxData = [
         "minPower": 33,
         "powerSource": "选型手册2025",
         "price": 12520,
-        "discountRate": 0.1,
+        "discountRate": 0.12,
         "applications": [
             "拖网渔船",
             "运输船",
@@ -109,7 +101,7 @@ const completeGearboxData = [
         "minPower": 80,
         "powerSource": "选型手册2025",
         "price": 13420,
-        "discountRate": 0.1,
+        "discountRate": 0.12,
         "applications": [
             "拖网渔船",
             "运输船",
@@ -168,7 +160,7 @@ const completeGearboxData = [
         "minPower": 53,
         "powerSource": "选型手册2025",
         "price": 18360,
-        "discountRate": 0.1,
+        "discountRate": 0.16,
         "applications": [
             "拖网渔船",
             "运输船",
@@ -245,9 +237,9 @@ const completeGearboxData = [
         "maxSpeed": 2500,
         "ratios": [
             2.5,
-            3.0,
+            3,
             3.5,
-            4.0
+            4
         ],
         "transmissionCapacityPerRatio": [
             0.0199,
@@ -577,7 +569,7 @@ const completeGearboxData = [
             1.87,
             2.04,
             2.54,
-            3.0,
+            3,
             3.53,
             4.1,
             4.47,
@@ -652,7 +644,7 @@ const completeGearboxData = [
         "weight": 225,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 8560,
-        "discountRate": 0.1,
+        "discountRate": 0.16,
         "priceSource": "2026官方出厂价",
         "maxPower": 59,
         "minPower": 15,
@@ -703,7 +695,7 @@ const completeGearboxData = [
         "weight": 940,
         "controlType": "推拉软轴/电控/气控",
         "price": 32420,
-        "discountRate": 0.22,
+        "discountRate": 0.16,
         "source": "杭齿厂选型手册2025版5月版",
         "maxPower": 643,
         "minPower": 125,
@@ -1382,9 +1374,9 @@ const completeGearboxData = [
         "maxSpeed": 1500,
         "ratios": [
             1.52,
-            2.0,
+            2,
             2.39,
-            3.0,
+            3,
             3.44,
             3.96,
             4.57,
@@ -1593,8 +1585,12 @@ const completeGearboxData = [
         "series": "GC配变距桨",
         "minSpeed": 400,
         "maxSpeed": 600,
-        "ratios": [3.939],
-        "transmissionCapacityPerRatio": [20],
+        "ratios": [
+            3.939
+        ],
+        "transmissionCapacityPerRatio": [
+            20
+        ],
         "thrust": 800,
         "centerDistance": 1000,
         "minPower": 5000,
@@ -1609,8 +1605,12 @@ const completeGearboxData = [
         "series": "GC配变距桨",
         "minSpeed": 400,
         "maxSpeed": 600,
-        "ratios": [3.939],
-        "transmissionCapacityPerRatio": [20],
+        "ratios": [
+            3.939
+        ],
+        "transmissionCapacityPerRatio": [
+            20
+        ],
         "thrust": 800,
         "centerDistance": 1000,
         "minPower": 5000,
@@ -12118,8 +12118,22 @@ const completeGearboxData = [
         "series": "GW",
         "minSpeed": 400,
         "maxSpeed": 800,
-        "ratios": [3.5, 4, 4.5, 5, 5.5, 6],
-        "transmissionCapacityPerRatio": [7, 7, 7, 7, 7, 7],
+        "ratios": [
+            3.5,
+            4,
+            4.5,
+            5,
+            5.5,
+            6
+        ],
+        "transmissionCapacityPerRatio": [
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+        ],
         "thrust": 500,
         "centerDistance": 0,
         "minPower": 2000,
@@ -13487,7 +13501,7 @@ const completeGearboxData = [
         "maxSpeed": 2200,
         "ratios": [
             1.48,
-            2.0,
+            2,
             2.28
         ],
         "thrust": 27.5,
@@ -13732,7 +13746,7 @@ const completeGearboxData = [
         "minPower": 132,
         "powerSource": "传动能力计算",
         "price": 30600,
-        "discountRate": 0.1,
+        "discountRate": 0,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -15824,7 +15838,7 @@ const completeGearboxData = [
         "minPower": 390,
         "powerSource": "传动能力计算",
         "price": 89800,
-        "discountRate": 0.1,
+        "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -16031,7 +16045,7 @@ const completeGearboxData = [
         "minPower": 649,
         "powerSource": "传动能力计算",
         "price": 139000,
-        "discountRate": 0.1,
+        "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -16302,7 +16316,7 @@ const completeGearboxData = [
         "rotationDirection": "相反",
         "source": "杭齿厂选型手册2025版5月版",
         "price": 165400,
-        "discountRate": 0.1,
+        "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "maxPower": 2129,
         "minPower": 525,
@@ -16430,7 +16444,7 @@ const completeGearboxData = [
         "minPower": 972,
         "powerSource": "传动能力计算",
         "price": 206000,
-        "discountRate": 0.1,
+        "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -16634,7 +16648,7 @@ const completeGearboxData = [
         "minPower": 900,
         "powerSource": "传动能力计算",
         "price": 280800,
-        "discountRate": 0.1,
+        "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -17375,7 +17389,7 @@ const completeGearboxData = [
         "minPower": 228,
         "powerSource": "传动能力计算",
         "price": 86100,
-        "discountRate": 0.1,
+        "discountRate": 0.08,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -20071,7 +20085,7 @@ const completeGearboxData = [
         "minPower": 3000,
         "powerSource": "传动能力计算",
         "price": 210000,
-        "discountRate": 0.1,
+        "discountRate": 0,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -21396,7 +21410,7 @@ const completeGearboxData = [
         "minPower": 391,
         "powerSource": "传动能力计算",
         "price": 128960,
-        "discountRate": 0.1,
+        "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -21460,7 +21474,7 @@ const completeGearboxData = [
         "minPower": 415,
         "powerSource": "传动能力计算",
         "price": 143000,
-        "discountRate": 0.1,
+        "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -21756,7 +21770,7 @@ const completeGearboxData = [
         "minPower": 649,
         "powerSource": "传动能力计算",
         "price": 162500,
-        "discountRate": 0.1,
+        "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -22009,7 +22023,7 @@ const completeGearboxData = [
         "minPower": 564,
         "powerSource": "传动能力计算",
         "price": 194800,
-        "discountRate": 0.1,
+        "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -22201,7 +22215,7 @@ const completeGearboxData = [
         "minPower": 972,
         "powerSource": "传动能力计算",
         "price": 238000,
-        "discountRate": 0.1,
+        "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -22406,7 +22420,7 @@ const completeGearboxData = [
         "minPower": 750,
         "powerSource": "传动能力计算",
         "price": 340000,
-        "discountRate": 0.1,
+        "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -22573,8 +22587,12 @@ const completeGearboxData = [
         "series": "HCT",
         "minSpeed": 600,
         "maxSpeed": 1500,
-        "ratios": [6.2],
-        "transmissionCapacityPerRatio": [3],
+        "ratios": [
+            6.2
+        ],
+        "transmissionCapacityPerRatio": [
+            3
+        ],
         "thrust": 400,
         "centerDistance": 0,
         "minPower": 1500,
@@ -22589,8 +22607,12 @@ const completeGearboxData = [
         "series": "HCT",
         "minSpeed": 600,
         "maxSpeed": 1500,
-        "ratios": [1],
-        "transmissionCapacityPerRatio": [3],
+        "ratios": [
+            1
+        ],
+        "transmissionCapacityPerRatio": [
+            3
+        ],
         "thrust": 0,
         "centerDistance": 0,
         "minPower": 1500,
@@ -23344,7 +23366,7 @@ const completeGearboxData = [
         "weight": 2500,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 98000,
-        "discountRate": 0.1,
+        "discountRate": 0.08,
         "priceSource": "2026官方出厂价",
         "maxPower": 1512,
         "minPower": 287,
@@ -24344,7 +24366,7 @@ const completeGearboxData = [
         "minPower": 50,
         "powerSource": "传动能力计算",
         "price": 33500,
-        "discountRate": 0.1,
+        "discountRate": 0,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -24423,7 +24445,7 @@ const completeGearboxData = [
         "minPower": 2950,
         "powerSource": "传动能力计算",
         "price": 51000,
-        "discountRate": 0.1,
+        "discountRate": 0,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "inputSpeedRange": [
@@ -24599,7 +24621,7 @@ const completeGearboxData = [
         "ratios": [
             2.04,
             2.54,
-            3.0,
+            3,
             3.47,
             3.95
         ],
@@ -24766,7 +24788,7 @@ const completeGearboxData = [
         "minPower": 41,
         "powerSource": "传动能力计算",
         "price": 10950,
-        "discountRate": 0.1,
+        "discountRate": 0.12,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "transmissionCapacityPerRatio": [
@@ -24819,7 +24841,7 @@ const completeGearboxData = [
         "minPower": 74,
         "powerSource": "传动能力计算",
         "price": 21300,
-        "discountRate": 0.1,
+        "discountRate": 0.12,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "transmissionCapacityPerRatio": [
@@ -24867,7 +24889,7 @@ const completeGearboxData = [
         "minPower": 88,
         "powerSource": "传动能力计算",
         "price": 28600,
-        "discountRate": 0.1,
+        "discountRate": 0.12,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
         "transmissionCapacityPerRatio": [
@@ -25105,8 +25127,14 @@ const completeGearboxData = [
         "series": "GW",
         "minSpeed": 600,
         "maxSpeed": 1500,
-        "ratios": [1.88, 2.05],
-        "transmissionCapacityPerRatio": [5, 5],
+        "ratios": [
+            1.88,
+            2.05
+        ],
+        "transmissionCapacityPerRatio": [
+            5,
+            5
+        ],
         "thrust": 300,
         "centerDistance": 0,
         "minPower": 1500,
@@ -25121,8 +25149,14 @@ const completeGearboxData = [
         "series": "GW",
         "minSpeed": 600,
         "maxSpeed": 1000,
-        "ratios": [1.022, 1.145],
-        "transmissionCapacityPerRatio": [6, 6],
+        "ratios": [
+            1.022,
+            1.145
+        ],
+        "transmissionCapacityPerRatio": [
+            6,
+            6
+        ],
         "thrust": 350,
         "centerDistance": 0,
         "minPower": 2000,
@@ -25446,5 +25480,3 @@ const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp"
     }
 ];
-
-export default completeGearboxData;
