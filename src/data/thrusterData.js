@@ -66,6 +66,33 @@ export const electricThrusters = [
     factoryPrice: 127600,
     marketPrice: 159500
   },
+  {
+    model: "TF090",
+    series: "TF",
+    type: "fixed-pitch-electric",
+    description: "定距侧向推进器，中小型",
+    propellerDiameter: 900,
+    tunnelInnerDiameter: 920,
+    tunnelOuterDiameter: 955,
+    thrust: 35,
+    tunnelLength: 1000,
+    bladeCount: 4,
+    bladeMaterial: "镍铝青铜",
+    motorPower: 200,
+    motorVoltage: [380, 440],
+    motorFrequency: 50,
+    motorSpeed: 1485,
+    motorProtection: "IP44",
+    frequencyControlled: true,
+    frequencyRange: "0-±50Hz",
+    installPosition: ["bow", "stern"],
+    weight: 2800,
+    basePrice: 195000,
+    discountRate: 0.12,
+    factoryPrice: 171600,
+    marketPrice: 214500,
+    notes: "适用于中小型工程船、内河船"
+  },
   // 技术协议真实型号 TF110
   {
     model: "TF110",

@@ -2039,6 +2039,95 @@ export const vesselTypes = [
   { name: '货船', wakeCoefficient: 0.35, thrustDeduction: 0.28, description: '散货多用途' }
 ];
 
+/**
+ * CPP型号命名映射表
+ * 将CPP数据库的虚拟型号名映射到实际项目中使用的真实型号名
+ * 基于2026年3月销售部项目跟踪Excel数据
+ */
+export const cppModelNameMapping = {
+  gearbox: {
+    'GCS320': {
+      realModels: ['GCS320'],
+      note: '中型渔船、工作船'
+    },
+    'GCS450': {
+      realModels: ['GCS450'],
+      note: '大型渔船、拖轮'
+    },
+    'GCS560': {
+      realModels: ['GCS560'],
+      note: '大型拖轮、工程船'
+    },
+    'GCS660': {
+      realModels: ['GCS660', 'GCS49.61'],
+      note: '已签项目: 1400m车道滚装船(GCS660), 中心距.减速比格式(GCS49.61)',
+      projects: ['1400m车道滚装船']
+    },
+    'GCS710': {
+      realModels: ['GCS710'],
+      note: '大型拖轮、AHTS'
+    },
+    'GCST450': {
+      realModels: ['GCST44', 'GCST44B', 'GCST44C', 'GCST33', 'GCST15', 'GCST11'],
+      note: '覆盖多型号: GCST11(46mAHTS), GCST15(拖网渔船), GCST33(173mLNG), GCST44B/C(工作船/渔船)',
+      projects: ['46mAHTS', '拖网渔船T400K', '173米LNG甲板运输船', '73m工作船', '66m拖网渔船']
+    },
+    'GCST560': {
+      realModels: ['GCST55'],
+      note: '73.8m拖网渔船',
+      projects: ['73.8m拖网渔船']
+    },
+    'GCST710': {
+      realModels: ['GCST710'],
+      note: '大型作业船'
+    }
+  },
+  propeller: {
+    'HF-320': {
+      realModels: ['4HF065'],
+      note: '4HF系列65型'
+    },
+    'HS-320': {
+      realModels: ['4HS070', '4HS085', '4HS095'],
+      note: '4HS系列70/85/95型'
+    },
+    'HS-450': {
+      realModels: ['4HS130'],
+      note: '4HS系列130型'
+    },
+    'HS-080': {
+      realModels: ['HS080', 'HS100', 'HS140'],
+      note: 'HS系列(非4叶)80/100/140型'
+    }
+  }
+};
+
+/**
+ * 根据CPP数据库型号获取真实型号名列表
+ * @param {string} category - 'gearbox' 或 'propeller'
+ * @param {string} dbModel - 数据库中的型号名
+ * @returns {string[]} 真实型号名列表
+ */
+export function getRealModelNames(category, dbModel) {
+  const mapping = cppModelNameMapping[category]?.[dbModel];
+  return mapping ? mapping.realModels : [dbModel];
+}
+
+/**
+ * 根据真实型号名反查CPP数据库型号
+ * @param {string} category - 'gearbox' 或 'propeller'
+ * @param {string} realModel - 真实型号名
+ * @returns {string|null} 数据库中的型号名
+ */
+export function getDBModelName(category, realModel) {
+  const mappings = cppModelNameMapping[category];
+  if (!mappings) return null;
+  for (const [dbModel, info] of Object.entries(mappings)) {
+    if (info.realModels.includes(realModel)) return dbModel;
+  }
+  return null;
+}
+
 // 导出汇总
 export const cppSystemData = {
   gearboxes: cppGearboxes,
@@ -2052,7 +2141,9 @@ export const cppSystemData = {
   co2EmissionFactors: CO2_EMISSION_FACTORS,
   cavitationTechnologies: CAVITATION_PREVENTION_TECHNOLOGIES,
   smartMonitoringSensors: SMART_MONITORING_SENSORS,
-  remoteMonitoringProtocols: REMOTE_MONITORING_PROTOCOLS
+  remoteMonitoringProtocols: REMOTE_MONITORING_PROTOCOLS,
+  // v3.0 命名映射
+  modelNameMapping: cppModelNameMapping
 };
 
 export default cppSystemData;

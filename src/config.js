@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 19; // v19: 同步completeGearboxData全部585型号到embeddedData(215→623), 统一数据源 (2026-03-07)
+export const APP_DATA_VERSION = 21; // v21: CPP型号映射表+TF090侧推数据+实际项目参考 (2026-03-19)
 
 export const DEFAULTS = {
     gearbox: {

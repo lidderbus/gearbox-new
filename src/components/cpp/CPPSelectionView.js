@@ -4,7 +4,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { toast } from '../../utils/toast';
 import { Card, Row, Col, Form, Button, Table, Alert, Badge, Tabs, Tab, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { cppGearboxes, cppPropellers, oilDistributors, cppHydraulicUnits, vesselTypes, CAVITATION_PREVENTION_TECHNOLOGIES } from '../../data/cppSystemData';
+import { cppGearboxes, cppPropellers, oilDistributors, cppHydraulicUnits, vesselTypes, CAVITATION_PREVENTION_TECHNOLOGIES, cppModelNameMapping, getRealModelNames } from '../../data/cppSystemData';
 import {
   selectCPPGearbox,
   selectCPPPropeller,
@@ -569,6 +569,11 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
                   <div>
                     <strong>{rec.gearbox.model}</strong>
                     <Badge bg="info" className="ms-2">{rec.gearbox.series}</Badge>
+                    {cppModelNameMapping.gearbox[rec.gearbox.model]?.realModels?.length > 0 && (
+                      <span className="ms-2" style={{fontSize: '0.8em', color: isSelected ? '#cce5ff' : '#6c757d'}}>
+                        → {cppModelNameMapping.gearbox[rec.gearbox.model].realModels.slice(0, 3).join('/')}
+                      </span>
+                    )}
                     <span className="ms-2 text-muted" style={{fontSize: '0.85em'}}>
                       减速比: {rec.gearbox.selectedRatio}
                     </span>
@@ -617,6 +622,13 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
               <Table size="sm" bordered>
                 <tbody>
                   <tr><td>型号</td><td><strong>{gearbox.model}</strong></td></tr>
+                  {getRealModelNames('gearbox', gearbox.model).length > 1 || getRealModelNames('gearbox', gearbox.model)[0] !== gearbox.model ? (
+                    <tr><td>对应实际型号</td><td>
+                      {getRealModelNames('gearbox', gearbox.model).map((m, i) => (
+                        <Badge key={i} bg="outline-dark" className="me-1 mb-1" style={{border: '1px solid #6c757d', color: '#6c757d'}}>{m}</Badge>
+                      ))}
+                    </td></tr>
+                  ) : null}
                   <tr><td>系列</td><td>{gearbox.series} - {gearbox.type}</td></tr>
                   <tr><td>输入转速范围</td><td>{gearbox.inputSpeedRange?.join(' - ')} rpm</td></tr>
                   <tr><td>最大功率</td><td>{gearbox.maxPower} kW</td></tr>
@@ -641,6 +653,14 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
             </Col>
           </Row>
           {gearbox.notes && <Alert variant="info" className="mb-0 mt-2"><small>{gearbox.notes}</small></Alert>}
+          {cppModelNameMapping.gearbox[gearbox.model]?.projects?.length > 0 && (
+            <Alert variant="success" className="mb-0 mt-2">
+              <small>
+                <i className="bi bi-bookmark-check me-1"></i>
+                <strong>已签项目参考:</strong> {cppModelNameMapping.gearbox[gearbox.model].projects.join('、')}
+              </small>
+            </Alert>
+          )}
         </Card.Body>
       </Card>
     );
