@@ -1,7 +1,7 @@
 // src/components/EngineMatchingExpanded.js
 // 多品牌主机匹配 - 基于选型算法的科学齿轮箱匹配推荐
 import React, { useState, useMemo, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, Table, Badge, InputGroup, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Table, Badge, InputGroup, Spinner, Button } from 'react-bootstrap';
 import { autoSelectGearbox } from '../utils/selectionAlgorithm';
 import { selectCouplingStandalone, loadFlexibleCouplings } from '../services/couplingSelectionService';
 
@@ -25,17 +25,28 @@ const PROP_RPM_MAP = {
   '近海作业船': 450, '货船/拖轮': 350,
   '拖轮/疏浚船': 280, '军用巡逻艇': 900,
   '大型散货船/LNG': 160, '大型集装箱/邮轮': 130,
+  // 补充缺失映射
+  '高速客船/军用': 950, '大型高速客船': 850, '军用舰艇': 850,
+  '游艇/渡轮': 1200, '渔船/客渡船': 500, '拖轮/散货船': 260,
+  '渔船/快艇': 600, '集装箱船/油轮': 170, '拖轮/客船': 350,
+  '大型拖轮/海工': 280, '渔船/游艇': 600, '大型散货船/渡轮': 200,
+  '工作船/渡轮': 420, '工作船/拖轮': 400, '巡逻艇/工程船': 800,
+  '巡逻艇/快艇': 1000, '巡逻艇/工作船': 800,
+  '大型散货船/渔船': 200, '快艇/巡逻艇': 1100,
 };
 function getPropRpm(app) { return PROP_RPM_MAP[app] || 400; }
 
-// 国际竞品齿轮箱参考 (基于功率段)
-function getCompetitorRef(power) {
-  if (power < 300) return 'Twin Disc MG514';
-  if (power < 500) return 'Twin Disc MG527 / ZF 325';
-  if (power < 800) return 'ZF W3300 / Reintjes WAF340';
-  if (power < 1200) return 'ZF W5000 / Reintjes WAF540';
+// 国际竞品齿轮箱参考 (基于功率段+转速)
+function getCompetitorRef(power, speed) {
+  const isHighSpeed = speed > 1800;
+  if (power < 150) return isHighSpeed ? 'Twin Disc MG5061 / ZF 45' : 'Twin Disc MG502 / ZF 25A';
+  if (power < 300) return isHighSpeed ? 'Twin Disc MG514 / ZF 280' : 'Twin Disc MG5091 / ZF 220';
+  if (power < 500) return isHighSpeed ? 'Twin Disc MG527 / ZF 325' : 'ZF W320 / Reintjes WAF240';
+  if (power < 800) return 'ZF W3300 / Reintjes WAF340 / Renk ASL4';
+  if (power < 1200) return 'ZF W5000 / Reintjes WAF540 / Renk RSL6';
   if (power < 2000) return 'ZF W7000 / Reintjes WAF740';
-  return 'ZF W9500+ / Reintjes WAF873';
+  if (power < 4000) return 'ZF W9500 / Reintjes WAF873 / Renk RSL10';
+  return 'Reintjes WAF1175+ / Renk RSL14';
 }
 
 const ENGINE_BRANDS = [
@@ -447,6 +458,8 @@ export default function EngineMatchingExpanded({ colors, theme }) {
   const [showTable, setShowTable] = useState(false);
   const [tierFilter, setTierFilter] = useState(0); // 0=全部, 1/2/3
   const [typeFilter, setTypeFilter] = useState('全部'); // '全部'/'国际'/'国产'
+  const [sortField, setSortField] = useState(''); // 表格排序
+  const [sortDir, setSortDir] = useState('asc');
 
   useEffect(() => {
     Promise.all([
@@ -482,7 +495,7 @@ export default function EngineMatchingExpanded({ colors, theme }) {
     const vt = VESSEL_TYPES.find(v => v.label === vesselType);
     const propRpm = vt ? vt.propRpm : 400;
     const targetRatio = parseFloat((speed / propRpm).toFixed(2));
-    const competitor = getCompetitorRef(power);
+    const competitor = getCompetitorRef(power, speed);
     try {
       const result = autoSelectGearbox(
         { motorPower: power, motorSpeed: speed, targetRatio, thrust: 0 },
@@ -537,12 +550,51 @@ export default function EngineMatchingExpanded({ colors, theme }) {
             appData
           );
           const top = (result.recommendations || [])[0];
-          return { ...m, targetRatio, gearbox: top?.model || '-', ratio: top?.selectedRatio || '-', margin: top?.capacityMargin != null ? Math.round(top.capacityMargin) : null };
+          return { ...m, targetRatio, gearbox: top?.model || '-', ratio: top?.selectedRatio || '-', margin: top?.capacityMargin != null ? Math.round(top.capacityMargin) : null, price: top?.packagePrice || top?.factoryPrice || top?.basePrice || null, thrust: top?.thrust || null };
         } catch {
-          return { ...m, targetRatio, gearbox: '-', ratio: '-', margin: null };
+          return { ...m, targetRatio, gearbox: '-', ratio: '-', margin: null, price: null, thrust: null };
         }
       });
   }, [appData, showTable, brandFilter]);
+
+  // 表格排序
+  const sortedTableData = useMemo(() => {
+    if (!sortField || !tableData.length) return tableData;
+    return [...tableData].sort((a, b) => {
+      let va = a[sortField], vb = b[sortField];
+      if (va == null) return 1;
+      if (vb == null) return -1;
+      if (typeof va === 'string') return sortDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+      return sortDir === 'asc' ? va - vb : vb - va;
+    });
+  }, [tableData, sortField, sortDir]);
+
+  const toggleSort = (field) => {
+    if (sortField === field) {
+      setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDir('asc');
+    }
+  };
+  const sortIcon = (field) => sortField === field ? (sortDir === 'asc' ? '↑' : '↓') : '';
+
+  // 导出CSV
+  const exportCSV = () => {
+    const data = sortedTableData.length ? sortedTableData : tableData;
+    if (!data.length) return;
+    const header = '序号,主机型号,功率(kW),转速(rpm),目标减速比,推荐齿轮箱,实际比,富裕量(%),价格(元),船型';
+    const rows = data.map((m, i) => [
+      i + 1, m.engine, m.power, m.speed, m.targetRatio, m.gearbox, m.ratio,
+      m.margin != null ? `+${m.margin}` : '', m.price || '', m.application
+    ].join(','));
+    const csv = '\uFEFF' + header + '\n' + rows.join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `主机匹配_${brandFilter === '全部' ? '全品牌' : brandFilter}_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click(); URL.revokeObjectURL(url);
+  };
 
   // 品牌统计数据 (功率/转速范围, 转速分类)
   const brandStats = useMemo(() => {
@@ -744,24 +796,41 @@ export default function EngineMatchingExpanded({ colors, theme }) {
 
           {/* 可折叠全量表格 */}
           <Card>
-            <Card.Header className="d-flex justify-content-between align-items-center" style={{cursor: 'pointer'}} onClick={() => setShowTable(!showTable)}>
-              <span><i className={`bi bi-chevron-${showTable ? 'down' : 'right'} me-1`}></i>全部匹配记录 ({brandFilter === '全部' ? ENGINE_DATA.length : getBrandRecords(brandFilter).length}条)</span>
-              <small className="text-muted">
+            <Card.Header className="d-flex justify-content-between align-items-center">
+              <span style={{cursor: 'pointer'}} onClick={() => setShowTable(!showTable)}>
+                <i className={`bi bi-chevron-${showTable ? 'down' : 'right'} me-1`}></i>全部匹配记录 ({brandFilter === '全部' ? ENGINE_DATA.length : getBrandRecords(brandFilter).length}条)
+              </span>
+              <div>
+                {showTable && tableData.length > 0 && (
+                  <Button variant="outline-secondary" size="sm" className="me-2 py-0" onClick={exportCSV}>
+                    <i className="bi bi-download me-1"></i>导出CSV
+                  </Button>
+                )}
                 <Badge bg="primary" className="me-1">HC</Badge>
                 <Badge bg="success" className="me-1">HCM</Badge>
                 <Badge bg="danger" className="me-1">GW</Badge>
                 <Badge bg="secondary">其他</Badge>
-              </small>
+              </div>
             </Card.Header>
             {showTable && (
               <Card.Body className="p-0">
                 <div style={{ maxHeight: '50vh', overflowY: 'auto' }}>
                   <Table hover size="sm" className="mb-0">
                     <thead className="sticky-top bg-light">
-                      <tr><th style={{width: 36}}>#</th><th>主机型号</th><th>功率</th><th>转速</th><th>目标比</th><th>推荐齿轮箱</th><th>富裕量</th><th>船型</th></tr>
+                      <tr>
+                        <th style={{width: 36}}>#</th>
+                        <th style={{cursor:'pointer'}} onClick={() => toggleSort('engine')}>主机型号 {sortIcon('engine')}</th>
+                        <th style={{cursor:'pointer'}} onClick={() => toggleSort('power')}>功率 {sortIcon('power')}</th>
+                        <th style={{cursor:'pointer'}} onClick={() => toggleSort('speed')}>转速 {sortIcon('speed')}</th>
+                        <th>目标比</th>
+                        <th>推荐齿轮箱</th>
+                        <th style={{cursor:'pointer'}} onClick={() => toggleSort('margin')}>富裕量 {sortIcon('margin')}</th>
+                        <th style={{cursor:'pointer'}} onClick={() => toggleSort('price')}>价格 {sortIcon('price')}</th>
+                        <th>船型</th>
+                      </tr>
                     </thead>
                     <tbody>
-                      {tableData.map((m, i) => (
+                      {sortedTableData.map((m, i) => (
                         <tr key={i} style={{cursor: 'pointer'}} onClick={() => selectEngine(m)}>
                           <td><small className="text-muted">{i + 1}</small></td>
                           <td><strong>{m.engine}</strong></td>
@@ -769,7 +838,8 @@ export default function EngineMatchingExpanded({ colors, theme }) {
                           <td>{m.speed}</td>
                           <td>{m.targetRatio}</td>
                           <td><Badge bg={seriesBg(m.gearbox)}>{m.gearbox}</Badge> <small className="text-muted">i={m.ratio}</small></td>
-                          <td>{m.margin != null ? `+${m.margin}%` : '-'}</td>
+                          <td>{m.margin != null ? <span className={m.margin < 10 ? 'text-danger fw-bold' : m.margin > 30 ? 'text-warning' : 'text-success'}>+{m.margin}%</span> : '-'}</td>
+                          <td>{m.price ? <small>{(m.price / 10000).toFixed(1)}万</small> : <small className="text-muted">询价</small>}</td>
                           <td><small>{m.application}</small></td>
                         </tr>
                       ))}
