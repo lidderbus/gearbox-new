@@ -67,6 +67,9 @@ const ENGINE_BRANDS = [
   { name: '道依茨 Deutz', country: '德国', models: ['BF4M', 'BF6M', 'TCD'], founded: 1864, type: '国际', specialty: '小功率高速', tier: 2 },
   { name: '菲亚特 FPT', country: '意大利', models: ['N40', 'N60', 'N67', 'C9', 'C13', 'C16'], founded: 1975, type: '国际', specialty: 'NEF+Cursor高速系列', tier: 2 },
   { name: '珀金斯 Perkins', country: '英国', models: ['M92B', 'M185C', 'M250C', '2500'], founded: 1932, type: '国际', specialty: '小中功率船用', tier: 3 },
+  { name: '劳斯莱斯 Rolls-Royce', country: '英国', models: ['C25:33', 'B32:40', 'B33:45'], founded: 1884, type: '国际', specialty: '中速大功率/卑尔根系列', tier: 3 },
+  { name: '镇江中船 CSSC-MES', country: '中国', models: ['MAN6L21/31', 'MAN8L21/31'], founded: 1965, type: '国产', specialty: 'MAN许可证中速机', tier: 3 },
+  { name: '安庆帝伯格茨 ACD', country: '中国', models: ['6AMZD', '8AMZD'], founded: 1986, type: '国产', specialty: 'MAN许可证中速', tier: 3 },
 ];
 
 // 纯主机参数数据 - 齿轮箱推荐由 autoSelectGearbox 算法实时生成
@@ -365,6 +368,19 @@ const ENGINE_DATA = [
   { engine: '珀金斯 M300C', power: 224, speed: 2200, application: '工作船' },
   { engine: '珀金斯 2500', power: 373, speed: 2100, application: '拖轮/工程船' },
   { engine: '珀金斯 2500', power: 560, speed: 1800, application: '散货船/拖轮' },
+  // 劳斯莱斯 Rolls-Royce Bergen (挪威/英国，卑尔根系列中速大功率)
+  { engine: '劳斯莱斯 C25:33L6', power: 1665, speed: 1000, application: '散货船/油轮' },
+  { engine: '劳斯莱斯 C25:33L9', power: 2500, speed: 1000, application: '大型散货船' },
+  { engine: '劳斯莱斯 B32:40L6', power: 3000, speed: 750, application: '大型散货船' },
+  { engine: '劳斯莱斯 B32:40L8', power: 4000, speed: 750, application: '集装箱船/油轮' },
+  { engine: '劳斯莱斯 B33:45L6', power: 4200, speed: 750, application: '大型散货船/LNG' },
+  { engine: '劳斯莱斯 B33:45L9', power: 6300, speed: 750, application: '大型集装箱/邮轮' },
+  // 镇江中船 CSSC-MES (中国·镇江，MAN许可证中速柴油机)
+  { engine: '镇江中船 MAN6L21/31', power: 1980, speed: 1000, application: '散货船/集装箱' },
+  { engine: '镇江中船 MAN8L21/31', power: 2640, speed: 1000, application: '大型散货船' },
+  // 安庆帝伯格茨 ACD (中国·安庆，MAN许可证中速柴油机)
+  { engine: 'ACD 6AMZD', power: 735, speed: 750, application: '散货船' },
+  { engine: 'ACD 8AMZD', power: 980, speed: 750, application: '散货船/油轮' },
 ];
 
 // 系列颜色映射
@@ -375,6 +391,16 @@ function seriesBg(model) {
     if (model.startsWith(prefix)) return color;
   }
   return 'secondary';
+}
+// 品牌匹配：提取引擎名品牌前缀，与品牌名各部分精确匹配
+// 修复: CAT/MAN/FPT/HiMSEN英文前缀 + 陕柴重工/中船动力简称 + MAN跨品牌污染
+function matchBrand(engineName, brandName) {
+  const engineBrand = engineName.split(' ')[0]; // '陕柴', 'CAT', 'MAN', '中船' 等
+  const brandParts = brandName.split(' ');       // ['陕柴重工', 'SDHI'] 或 ['CAT'] 等
+  return brandParts.some(p => p === engineBrand || p.startsWith(engineBrand));
+}
+function getBrandRecords(brandName) {
+  return ENGINE_DATA.filter(m => matchBrand(m.engine, brandName));
 }
 
 // 标准船型 (简化为12种)
@@ -501,7 +527,7 @@ export default function EngineMatchingExpanded({ colors, theme }) {
   const tableData = useMemo(() => {
     if (!appData || !showTable) return [];
     return ENGINE_DATA
-      .filter(m => brandFilter === '全部' || m.engine.includes(brandFilter.split(' ')[0]))
+      .filter(m => brandFilter === '全部' || matchBrand(m.engine, brandFilter))
       .map(m => {
         const propRpm = getPropRpm(m.application);
         const targetRatio = parseFloat((m.speed / propRpm).toFixed(2));
@@ -522,8 +548,7 @@ export default function EngineMatchingExpanded({ colors, theme }) {
   const brandStats = useMemo(() => {
     const stats = {};
     ENGINE_BRANDS.forEach(b => {
-      const prefix = b.name.split(' ')[0];
-      const records = ENGINE_DATA.filter(m => m.engine.includes(prefix));
+      const records = getBrandRecords(b.name);
       const powers = records.map(r => r.power);
       const speeds = records.map(r => r.speed);
       const apps = [...new Set(records.flatMap(r => r.application.split('/')))];
@@ -545,8 +570,7 @@ export default function EngineMatchingExpanded({ colors, theme }) {
     if (!appData) return {};
     const map = {};
     ENGINE_BRANDS.forEach(b => {
-      const prefix = b.name.split(' ')[0];
-      const records = ENGINE_DATA.filter(m => m.engine.includes(prefix));
+      const records = getBrandRecords(b.name);
       const seriesCounts = {};
       records.forEach(m => {
         const propRpm = getPropRpm(m.application);
@@ -721,7 +745,7 @@ export default function EngineMatchingExpanded({ colors, theme }) {
           {/* 可折叠全量表格 */}
           <Card>
             <Card.Header className="d-flex justify-content-between align-items-center" style={{cursor: 'pointer'}} onClick={() => setShowTable(!showTable)}>
-              <span><i className={`bi bi-chevron-${showTable ? 'down' : 'right'} me-1`}></i>全部匹配记录 ({brandFilter === '全部' ? ENGINE_DATA.length : ENGINE_DATA.filter(m => m.engine.includes(brandFilter.split(' ')[0])).length}条)</span>
+              <span><i className={`bi bi-chevron-${showTable ? 'down' : 'right'} me-1`}></i>全部匹配记录 ({brandFilter === '全部' ? ENGINE_DATA.length : getBrandRecords(brandFilter).length}条)</span>
               <small className="text-muted">
                 <Badge bg="primary" className="me-1">HC</Badge>
                 <Badge bg="success" className="me-1">HCM</Badge>
