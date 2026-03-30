@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 21; // v21: CPP型号映射表+TF090侧推数据+实际项目参考 (2026-03-19)
+export const APP_DATA_VERSION = 33; // v33: 全量字段补全 — controlType 528个型号(432→0缺失), rotationDirection 582个型号(487→0缺失), dimensions补5个, weight补1个, 数据源:杭齿厂选型手册2025版5月版PDF全58页 (2026-03-30)
 
 export const DEFAULTS = {
     gearbox: {

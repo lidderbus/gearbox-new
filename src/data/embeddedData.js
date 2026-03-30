@@ -1,8 +1,8 @@
 
 // src/data/embeddedData.js
 // 自动生成 by scripts/generate-embedded-data.js
-// 生成时间: 2026-03-18T01:51:42.341Z
-// 总型号数: 664 (原215 + 新增0)
+// 生成时间: 2026-03-30T07:12:08.823Z
+// 总型号数: 669 (原215 + 新增0)
 // 数据来源: completeGearboxData.js (700型号) + 原 embeddedData.js 手工数据
 
 // 在文件开头添加 safeParseFloat 函数定义
@@ -30,7 +30,7 @@ export { safeParseFloat };
 
 export const embeddedGearboxData = {
     "_version": 3,
-    "_lastFixed": "2026-03-18T01:51:42.340Z",
+    "_lastFixed": "2026-03-30T07:12:08.822Z",
     "hcGearboxes": [
         {
             "model": "40A",
@@ -134,7 +134,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 11809.6,
             "packagePrice": 11809.6,
             "marketPrice": 13420,
-            "notes": "未在2022价格表中直接列出 (价格同120C)"
+            "notes": "未在2022价格表中直接列出 (价格同120C)",
+            "outputInterfaces": "6135Ca/SAE1 2 3",
+            "rotationDirection": "相反"
         },
         {
             "model": "120B",
@@ -206,7 +208,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 9636,
             "packagePrice": 9636,
             "marketPrice": 10950,
-            "notes": "手控、带罩、齿形块、A1型监控"
+            "notes": "手控、带罩、齿形块、A1型监控",
+            "outputInterfaces": "4135Ca/X6110C/SAE1 2 3",
+            "rotationDirection": "相反"
         },
         {
             "model": "MB242",
@@ -248,7 +252,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 18744,
             "packagePrice": 18744,
             "marketPrice": 21300,
-            "notes": "手控、带罩、齿形块、A1型监控"
+            "notes": "手控、带罩、齿形块、A1型监控",
+            "outputInterfaces": "SAE1 2 3/6135",
+            "rotationDirection": "相反"
         },
         {
             "model": "MB270A",
@@ -288,7 +294,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 25168,
             "packagePrice": 25168,
             "marketPrice": 28600,
-            "notes": "手控、带罩、齿形块、A1型监控 (价格按速比范围区分，此为3-5.5:1价格)"
+            "notes": "手控、带罩、齿形块、A1型监控 (价格按速比范围区分，此为3-5.5:1价格)",
+            "outputInterfaces": "SAE0 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "135",
@@ -416,7 +424,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 15288,
             "packagePrice": 15288,
             "marketPrice": 17372.73,
-            "notes": "手控、带罩、齿形块、A1型监控 (或手控、无罩、高弹、A1型监控)"
+            "notes": "手控、带罩、齿形块、A1型监控 (或手控、无罩、高弹、A1型监控)",
+            "outputInterfaces": "6135Ca/SAE1 2 3",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCD138",
@@ -458,7 +468,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 16296,
             "packagePrice": 16296,
             "marketPrice": 18518.18,
-            "notes": "手控、带罩、齿形块、A1型监控 (或手控、无罩、高弹、A1型监控)"
+            "notes": "手控、带罩、齿形块、A1型监控 (或手控、无罩、高弹、A1型监控)",
+            "outputInterfaces": "6135Ca/SAE1 2",
+            "rotationDirection": "相反"
         },
         {
             "model": "300",
@@ -536,7 +548,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 20810,
             "packagePrice": 20810,
             "marketPrice": 23647.73,
-            "notes": "手控、带罩、齿形块、A1型监控 (报告特批)"
+            "notes": "手控、带罩、齿形块、A1型监控 (报告特批)",
+            "outputInterfaces": "SAE0 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "HC300",
@@ -580,7 +594,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 19320,
             "packagePrice": 19320,
             "marketPrice": 21954.55,
-            "notes": "手控、带罩、齿形块、A1型监控 (价格按速比范围区分，此为1.5-4.61价格)"
+            "notes": "手控、带罩、齿形块、A1型监控 (价格按速比范围区分，此为1.5-4.61价格)",
+            "outputInterfaces": "SAE0 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "D300A",
@@ -620,7 +636,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 25287,
             "packagePrice": 25287,
             "marketPrice": 28735.23,
-            "notes": "手控、带罩、齿形块、A1型监控 (价格按速比范围区分，此为4-5.5:1报告特批价格)"
+            "notes": "手控、带罩、齿形块、A1型监控 (价格按速比范围区分，此为4-5.5:1报告特批价格)",
+            "outputInterfaces": "SAE0 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "T300",
@@ -662,7 +680,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 36876,
             "packagePrice": 36876,
             "marketPrice": 41904.55,
-            "notes": "手控、带罩、齿形块、A1型监控"
+            "notes": "手控、带罩、齿形块、A1型监控",
+            "outputInterfaces": "SAE0 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "T300/1",
@@ -690,7 +710,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 39396,
             "packagePrice": 39396,
             "marketPrice": 44768.18,
-            "notes": "手控、带罩、齿形块、A1型监控"
+            "notes": "手控、带罩、齿形块、A1型监控",
+            "outputInterfaces": "SAE0 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "HC400",
@@ -744,7 +766,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 25077,
             "packagePrice": 25077,
             "marketPrice": 28496.59,
-            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控) (报告特批)"
+            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控) (报告特批)",
+            "outputInterfaces": "SAE0 1/无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCD400A",
@@ -786,7 +810,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 29757,
             "packagePrice": 29757,
             "marketPrice": 33814.77,
-            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控) (报告特批)"
+            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控) (报告特批)",
+            "outputInterfaces": "SAE00 0/1/无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCT400A",
@@ -826,7 +852,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 42840,
             "packagePrice": 42840,
             "marketPrice": 48681.82,
-            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控)"
+            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控)",
+            "outputInterfaces": "SAE00 0/1/无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCT400A/1",
@@ -868,7 +896,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 50400,
             "packagePrice": 50400,
             "marketPrice": 57272.73,
-            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控)"
+            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控)",
+            "outputInterfaces": "SAE00 0/1/无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HC600A",
@@ -904,7 +934,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 50336,
             "packagePrice": 50336,
             "marketPrice": 57200,
-            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控)"
+            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控)",
+            "outputInterfaces": "SAE00 0/1/无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HC400P",
@@ -1214,6 +1246,8 @@ export const embeddedGearboxData = {
                 1.718,
                 1.8514,
                 2.222,
+                2.48,
+                2.48,
                 2.48
             ],
             "thrust": 225,
@@ -1252,6 +1286,8 @@ export const embeddedGearboxData = {
                 1.786,
                 1.8832,
                 2.25,
+                2.5,
+                2.5,
                 2.5
             ],
             "thrust": 410,
@@ -1351,6 +1387,8 @@ export const embeddedGearboxData = {
                 6.11
             ],
             "transferCapacity": [
+                2.1,
+                2.1,
                 2.1,
                 2.1,
                 2.1,
@@ -1479,6 +1517,11 @@ export const embeddedGearboxData = {
                 0.93,
                 0.93,
                 0.93,
+                0.93,
+                0.93,
+                0.93,
+                0.93,
+                0.93,
                 0.93
             ],
             "thrust": 1000,
@@ -1599,6 +1642,8 @@ export const embeddedGearboxData = {
                 1.58,
                 1.58,
                 1.58,
+                1.58,
+                1.58,
                 1.58
             ],
             "thrust": 1000,
@@ -1704,12 +1749,9 @@ export const embeddedGearboxData = {
                 1200
             ],
             "ratios": [
-                2.58,
-                2.87,
-                3.17,
-                3.53,
-                3.91,
-                4.35
+                2.04,
+                2.52,
+                3
             ],
             "transferCapacity": [
                 2.8,
@@ -1737,12 +1779,9 @@ export const embeddedGearboxData = {
                 1100
             ],
             "ratios": [
-                2.58,
-                2.87,
-                3.17,
-                3.53,
-                3.91,
-                4.35
+                2.04,
+                2.52,
+                3
             ],
             "transferCapacity": [
                 3.2,
@@ -1770,11 +1809,8 @@ export const embeddedGearboxData = {
                 1000
             ],
             "ratios": [
-                3,
-                3.5,
-                4,
-                4.5,
-                5
+                2.04,
+                2.52
             ],
             "transferCapacity": [
                 3.8,
@@ -1828,7 +1864,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 53328,
             "packagePrice": 53328,
             "marketPrice": 60600,
-            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控)"
+            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控)",
+            "outputInterfaces": "SAE00 0 1/无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCT600A",
@@ -1866,7 +1904,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 62392,
             "packagePrice": 62392,
             "marketPrice": 70900,
-            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控)"
+            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控)",
+            "outputInterfaces": "SAE00 0 1/无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCT600A/1",
@@ -1918,7 +1958,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 66000,
             "packagePrice": 66000,
             "marketPrice": 75000,
-            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控)"
+            "notes": "手控、无罩、高弹、A1型监控 (或手控、带罩、齿形块、A1型监控)",
+            "outputInterfaces": "SAE00 0 1/无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCD800",
@@ -1937,14 +1979,14 @@ export const embeddedGearboxData = {
                 5.89
             ],
             "transferCapacity": [
-                0.52,
-                0.52,
-                0.468,
-                0.468,
-                0.414,
-                0.38,
-                0.35,
-                0.32
+                0.72,
+                0.72,
+                0.72,
+                0.72,
+                0.72,
+                0.72,
+                0.63,
+                0.6
             ],
             "thrust": 110,
             "centerDistance": 450,
@@ -1958,7 +2000,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 79212,
             "packagePrice": 79212,
             "marketPrice": 90013.64,
-            "notes": "手控、无罩、高弹、A2型监控 (或手控、带罩、齿形块、A2型监控)"
+            "notes": "手控、无罩、高弹、A2型监控 (或手控、带罩、齿形块、A2型监控)",
+            "outputInterfaces": "SAE00 0",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCT800",
@@ -2002,7 +2046,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 90160,
             "packagePrice": 90160,
             "marketPrice": 102454.55,
-            "notes": "手控、无罩、高弹、A2型监控 (或手控、带罩、齿形块、A2型监控)"
+            "notes": "手控、无罩、高弹、A2型监控 (或手控、带罩、齿形块、A2型监控)",
+            "outputInterfaces": "SAE00 0",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCT800/1",
@@ -2064,7 +2110,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 126224,
             "packagePrice": 126224,
             "marketPrice": 143436.36,
-            "notes": "手控、无罩、高弹、A2型监控 (或手控、带罩、齿形块、A2型监控) (价格按速比范围区分，此价格对应高速比范围)"
+            "notes": "手控、无罩、高弹、A2型监控 (或手控、带罩、齿形块、A2型监控) (价格按速比范围区分，此价格对应高速比范围)",
+            "outputInterfaces": "SAE00 0",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCT800/2",
@@ -2075,7 +2123,7 @@ export const embeddedGearboxData = {
             "ratios": [
                 11.52,
                 12.21,
-                11.97,
+                12.97,
                 14.08,
                 14.48,
                 14.88,
@@ -2086,9 +2134,9 @@ export const embeddedGearboxData = {
                 18.94
             ],
             "transferCapacity": [
-                0.6,
-                0.6,
-                0.6,
+                0.72,
+                0.65,
+                0.58,
                 0.553,
                 0.549,
                 0.52,
@@ -2110,7 +2158,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 138184,
             "packagePrice": 138184,
             "marketPrice": 157027.27,
-            "notes": "手控、无罩、高弹、A2型监控 (或手控、带罩、齿形块、A2型监控)"
+            "notes": "手控、无罩、高弹、A2型监控 (或手控、带罩、齿形块、A2型监控)",
+            "outputInterfaces": "SAE00 0/无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCT800/2A",
@@ -2152,7 +2202,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 0,
             "packagePrice": 0,
             "marketPrice": 0,
-            "notes": "未在2022价格表中找到"
+            "notes": "未在2022价格表中找到",
+            "outputInterfaces": "SAE00 0",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCT800/3",
@@ -2184,7 +2236,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 157136,
             "packagePrice": 157136,
             "marketPrice": 178563.64,
-            "notes": "手控、无罩、高弹、A2型监控 (或手控、带罩、齿形块、A2型监控)"
+            "notes": "手控、无罩、高弹、A2型监控 (或手控、带罩、齿形块、A2型监控)",
+            "outputInterfaces": "SAE00 0",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCW800",
@@ -2203,6 +2257,13 @@ export const embeddedGearboxData = {
                 21.99
             ],
             "transferCapacity": [
+                0.931,
+                0.931,
+                0.931,
+                0.931,
+                0.931,
+                0.931,
+                0.931,
                 0.931
             ],
             "thrust": 300,
@@ -2263,7 +2324,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 76328,
             "packagePrice": 76328,
             "marketPrice": 86736.36,
-            "notes": "手控、无罩、高弹、A2型监控 (或手控、带罩、齿形块、A2型监控)"
+            "notes": "手控、无罩、高弹、A2型监控 (或手控、带罩、齿形块、A2型监控)",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCD1000",
@@ -2303,7 +2366,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 84412,
             "packagePrice": 84412,
             "marketPrice": 95922.73,
-            "notes": "手控、无罩、高弹、A2型监控 (或手控、带罩、齿形块、A2型监控)"
+            "notes": "手控、无罩、高弹、A2型监控 (或手控、带罩、齿形块、A2型监控)",
+            "outputInterfaces": "SAE0 00",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCT1100",
@@ -2345,7 +2410,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 121222.4,
             "packagePrice": 121222.4,
             "marketPrice": 137752.73,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCW1100",
@@ -2385,7 +2452,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 242050,
             "packagePrice": 242050,
             "marketPrice": 275056.82,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HC1200",
@@ -2433,7 +2502,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 79380,
             "packagePrice": 79380,
             "marketPrice": 90204.55,
-            "notes": "手控、无罩、高弹、A1型监控 (报告特批)"
+            "notes": "手控、无罩、高弹、A1型监控 (报告特批)",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HC1200/1",
@@ -2473,7 +2544,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 97000,
             "packagePrice": 97000,
             "marketPrice": 110227.27,
-            "notes": "手控、无罩、高弹、A1型监控 (报告特批)"
+            "notes": "手控、无罩、高弹、A1型监控 (报告特批)",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCT1200",
@@ -2513,7 +2586,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 134420,
             "packagePrice": 134420,
             "marketPrice": 152750,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCT1200/1",
@@ -2563,7 +2638,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 147580,
             "packagePrice": 147580,
             "marketPrice": 167690.91,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCT1280/2",
@@ -2621,7 +2698,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 155100,
             "packagePrice": 155100,
             "marketPrice": 176250,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCD1400",
@@ -2665,7 +2744,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 130660,
             "packagePrice": 130660,
             "marketPrice": 148477.27,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCT1400",
@@ -2719,7 +2800,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 152750,
             "packagePrice": 152750,
             "marketPrice": 173579.55,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCT1400/2",
@@ -2779,7 +2862,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 192700,
             "packagePrice": 192700,
             "marketPrice": 218977.27,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCW1400",
@@ -2808,6 +2893,23 @@ export const embeddedGearboxData = {
                 19.07
             ],
             "transferCapacity": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
                 1
             ],
             "thrust": 250,
@@ -2856,7 +2958,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 141000,
             "packagePrice": 141000,
             "marketPrice": 160227.27,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCD1600",
@@ -2896,7 +3000,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 155476,
             "packagePrice": 155476,
             "marketPrice": 176677.27,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCT1600",
@@ -2948,7 +3054,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 183112,
             "packagePrice": 183112,
             "marketPrice": 208081.82,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCT1600/1",
@@ -3000,7 +3108,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 209620,
             "packagePrice": 209620,
             "marketPrice": 238204.55,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HC2000",
@@ -3036,7 +3146,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 169200,
             "packagePrice": 169200,
             "marketPrice": 192272.73,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCD2000",
@@ -3078,7 +3190,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 193640,
             "packagePrice": 193640,
             "marketPrice": 220045.45,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCT2000",
@@ -3136,7 +3250,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 223720,
             "packagePrice": 223720,
             "marketPrice": 254227.27,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCT2000/1",
@@ -3190,7 +3306,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 263200,
             "packagePrice": 263200,
             "marketPrice": 299090.91,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HC2700",
@@ -3228,7 +3346,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 216200,
             "packagePrice": 216200,
             "marketPrice": 245681.82,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCD2700",
@@ -3264,7 +3384,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 264052.8,
             "packagePrice": 264052.8,
             "marketPrice": 300060,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCT2700",
@@ -3314,7 +3436,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 319600,
             "packagePrice": 319600,
             "marketPrice": 363181.82,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCT2700/1",
@@ -3356,7 +3480,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 366600,
             "packagePrice": 366600,
             "marketPrice": 416590.91,
-            "notes": "手控、无罩、高弹、A2型监控"
+            "notes": "手控、无罩、高弹、A2型监控",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCL30",
@@ -3644,7 +3770,9 @@ export const embeddedGearboxData = {
             "discountRate": 0.12,
             "packagePrice": 0,
             "marketPrice": 0,
-            "notes": "未在2022价格表中找到 (旧价格，折扣率参照MB系列)"
+            "notes": "未在2022价格表中找到 (旧价格，折扣率参照MB系列)",
+            "outputInterfaces": "SAE3 4 5",
+            "rotationDirection": "相反"
         },
         {
             "model": "MA125",
@@ -3686,7 +3814,9 @@ export const embeddedGearboxData = {
             "discountRate": 0.12,
             "packagePrice": 0,
             "marketPrice": 0,
-            "notes": "未在2022价格表中找到 (旧价格，折扣率参照MB系列)"
+            "notes": "未在2022价格表中找到 (旧价格，折扣率参照MB系列)",
+            "outputInterfaces": "SAE2 3 4",
+            "rotationDirection": "相反"
         },
         {
             "model": "MA142",
@@ -3726,7 +3856,9 @@ export const embeddedGearboxData = {
             "discountRate": 0.12,
             "packagePrice": 0,
             "marketPrice": 0,
-            "notes": "未在2022价格表中找到 (旧价格，折扣率参照MB系列)"
+            "notes": "未在2022价格表中找到 (旧价格，折扣率参照MB系列)",
+            "outputInterfaces": "SAE2 3",
+            "rotationDirection": "相反"
         },
         {
             "model": "HC350-1",
@@ -3762,7 +3894,9 @@ export const embeddedGearboxData = {
             "discountRate": 0.16,
             "packagePrice": 0,
             "marketPrice": 0,
-            "notes": "未在2022价格表中找到 (旧价格，折扣率参照HC系列)"
+            "notes": "未在2022价格表中找到 (旧价格，折扣率参照HC系列)",
+            "outputInterfaces": "SAE0 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCD350",
@@ -3798,7 +3932,9 @@ export const embeddedGearboxData = {
             "discountRate": 0.16,
             "packagePrice": 0,
             "marketPrice": 0,
-            "notes": "未在2022价格表中找到 (旧价格，折扣率参照HC系列)"
+            "notes": "未在2022价格表中找到 (旧价格，折扣率参照HC系列)",
+            "outputInterfaces": "SAE0 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCT650/2",
@@ -3858,7 +3994,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 0,
             "packagePrice": 0,
             "marketPrice": 0,
-            "notes": "未在2022价格表中找到 (折扣率参照同系列型号)"
+            "notes": "未在2022价格表中找到 (折扣率参照同系列型号)",
+            "outputInterfaces": "SAE00 0/无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HC1201",
@@ -3946,7 +4084,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 0,
             "packagePrice": 0,
             "marketPrice": 0,
-            "notes": "未在2022价格表中找到 (折扣率参照同系列型号)"
+            "notes": "未在2022价格表中找到 (折扣率参照同系列型号)",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCD1500",
@@ -3982,7 +4122,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 0,
             "packagePrice": 0,
             "marketPrice": 0,
-            "notes": "未在2022价格表中找到 (折扣率参照同系列型号)"
+            "notes": "未在2022价格表中找到 (折扣率参照同系列型号)",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "26",
@@ -4100,7 +4242,9 @@ export const embeddedGearboxData = {
                 "max": 288
             },
             "image": "/images/gearbox/Advance-200-201-230.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "6135Ca/SAE1/2 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "HC201",
@@ -4131,7 +4275,9 @@ export const embeddedGearboxData = {
                 "max": 368
             },
             "image": "/images/gearbox/Advance-200-201-230.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE0 1 2",
+            "rotationDirection": "相反"
         },
         {
             "model": "HC2400",
@@ -4166,7 +4312,9 @@ export const embeddedGearboxData = {
                 "max": 2700
             },
             "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HC500",
@@ -4205,7 +4353,9 @@ export const embeddedGearboxData = {
                 "max": 840
             },
             "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE0 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "HC65",
@@ -4240,7 +4390,9 @@ export const embeddedGearboxData = {
                 "max": 93
             },
             "image": "/images/gearbox/Advance-HC65.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE1 2 3",
+            "rotationDirection": "相反"
         },
         {
             "model": "HC85",
@@ -4347,7 +4499,9 @@ export const embeddedGearboxData = {
                 "max": 1957
             },
             "image": "/images/gearbox/Advance-200-201-230.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCD1580",
@@ -4390,7 +4544,9 @@ export const embeddedGearboxData = {
                 "max": 2030
             },
             "image": "/images/gearbox/Advance-1400.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCD1FM",
@@ -4463,7 +4619,9 @@ export const embeddedGearboxData = {
                 "max": 2880
             },
             "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCD2FM",
@@ -4520,7 +4678,9 @@ export const embeddedGearboxData = {
                 "max": 3390
             },
             "image": "/images/gearbox/Advance-800-1000.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCD400",
@@ -4620,7 +4780,9 @@ export const embeddedGearboxData = {
                 "max": 756
             },
             "image": "/images/gearbox/Advance-HCD400A.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE0 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCD450P",
@@ -4716,9 +4878,9 @@ export const embeddedGearboxData = {
             "transferCapacity": [
                 0.55,
                 0.55,
+                0.55,
+                0.55,
                 0.53,
-                0.53,
-                0.515,
                 0.515,
                 0.5
             ],
@@ -4735,7 +4897,9 @@ export const embeddedGearboxData = {
                 "max": 990
             },
             "image": "/images/gearbox/Advance-800-1000.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE00 0 1/无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCD800/2",
@@ -5535,13 +5699,21 @@ export const embeddedGearboxData = {
                 1.55,
                 1.83,
                 2.04,
-                2.23
+                2.23,
+                2.57,
+                2.77,
+                2.91,
+                3.17
             ],
             "transferCapacity": [
-                2.77,
-                2.77,
-                2.77,
-                2.77
+                1.4031,
+                1.3822,
+                1.3508,
+                1.3351,
+                1.3194,
+                1.2984,
+                1.2984,
+                1.2984
             ],
             "weight": 1230,
             "efficiency": 0.97,
@@ -6099,16 +6271,18 @@ export const embeddedGearboxData = {
                 1900
             ],
             "ratios": [
+                2,
                 2.5,
                 3.04,
                 3.48,
                 4.06
             ],
             "transferCapacity": [
-                1.59,
-                1.68,
-                1.72,
-                1.77
+                0.735,
+                0.735,
+                0.735,
+                0.735,
+                0.65
             ],
             "thrust": 0.735,
             "centerDistance": 110,
@@ -6540,7 +6714,9 @@ export const embeddedGearboxData = {
                 "max": 3390
             },
             "image": "/images/gearbox/Advance-800-1000.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCT400",
@@ -6949,6 +7125,129 @@ export const embeddedGearboxData = {
             "powerRange": {
                 "min": 288,
                 "max": 1125
+            },
+            "image": "/images/gearbox/Advance-800-1000.webp",
+            "source": "杭齿厂选型手册2025版5月版"
+        },
+        {
+            "model": "HCD1200/1",
+            "inputSpeedRange": [
+                700,
+                1900
+            ],
+            "ratios": [
+                3.7,
+                3.74,
+                3.95,
+                4.14,
+                4.45,
+                5,
+                5.25,
+                5.58
+            ],
+            "transferCapacity": [
+                1.03,
+                1.03,
+                1.03,
+                1.03,
+                1.03,
+                0.93,
+                0.809,
+                0.735
+            ],
+            "thrust": 140,
+            "centerDistance": 450,
+            "weight": 2500,
+            "dimensions": "1096×1260×1270",
+            "efficiency": 0.97,
+            "basePrice": 255000,
+            "price": 255000,
+            "discountRate": 0.1,
+            "powerRange": {
+                "min": 515,
+                "max": 1957
+            },
+            "image": "/images/gearbox/Advance-200-201-230.webp",
+            "source": "杭齿厂选型手册2025版5月版"
+        },
+        {
+            "model": "HCDS600/1",
+            "inputSpeedRange": [
+                1000,
+                2100
+            ],
+            "ratios": [
+                3.96,
+                4.26,
+                4.45,
+                4.62,
+                4.85,
+                5.11,
+                5.44,
+                5.71
+            ],
+            "transferCapacity": [
+                0.46,
+                0.46,
+                0.44,
+                0.44,
+                0.4,
+                0.4,
+                0.4,
+                0.4
+            ],
+            "thrust": 90,
+            "centerDistance": 415,
+            "efficiency": 0.97,
+            "basePrice": 98000,
+            "price": 98000,
+            "discountRate": 0.1,
+            "powerRange": {
+                "min": 400,
+                "max": 966
+            },
+            "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+            "source": "杭齿厂选型手册2025版5月版"
+        },
+        {
+            "model": "HCTS2700/1",
+            "inputSpeedRange": [
+                500,
+                1600
+            ],
+            "ratios": [
+                7.91,
+                8.44,
+                8.84,
+                9.47,
+                9.89,
+                10.43,
+                11.03,
+                11.98,
+                12.36
+            ],
+            "transferCapacity": [
+                2.1,
+                2.035,
+                1.906,
+                1.844,
+                1.73,
+                1.627,
+                1.5,
+                1.34,
+                1.22
+            ],
+            "thrust": 450,
+            "centerDistance": 800,
+            "weight": 9000,
+            "dimensions": "1900×2250×1950",
+            "efficiency": 0.97,
+            "basePrice": 280000,
+            "price": 280000,
+            "discountRate": 0.1,
+            "powerRange": {
+                "min": 610,
+                "max": 3360
             },
             "image": "/images/gearbox/Advance-800-1000.webp",
             "source": "杭齿厂选型手册2025版5月版"
@@ -9052,11 +9351,22 @@ export const embeddedGearboxData = {
                 1000
             ],
             "ratios": [
-                2.02,
-                2.5
+                4.97,
+                5.46,
+                6,
+                6.47,
+                6.93,
+                7.5,
+                8
             ],
             "transferCapacity": [
-                24
+                11.78,
+                10.72,
+                9.75,
+                9.04,
+                8.4,
+                7.8,
+                7.31
             ],
             "thrust": 1250,
             "centerDistance": 960,
@@ -15751,13 +16061,28 @@ export const embeddedGearboxData = {
                 1500
             ],
             "ratios": [
-                1.5,
-                2,
-                2.5,
-                3
+                1.54,
+                2.03,
+                2.48,
+                3.04,
+                3.52,
+                3.91,
+                4.42,
+                4.92,
+                5.48,
+                6.02
             ],
             "transferCapacity": [
-                0.12
+                0.1,
+                0.1,
+                0.086,
+                0.073,
+                0.061,
+                0.055,
+                0.041,
+                0.033,
+                0.029,
+                0.026
             ],
             "thrust": 20,
             "centerDistance": 150,
@@ -15820,13 +16145,24 @@ export const embeddedGearboxData = {
                 1500
             ],
             "ratios": [
-                1.5,
-                2,
+                1.53,
+                2.03,
                 2.5,
-                3
+                2.95,
+                3.55,
+                4,
+                4.53,
+                5.05
             ],
             "transferCapacity": [
-                0.18
+                0.204,
+                0.204,
+                0.17,
+                0.15,
+                0.128,
+                0.117,
+                0.087,
+                0.076
             ],
             "thrust": 35,
             "centerDistance": 180,
@@ -15900,9 +16236,7 @@ export const embeddedGearboxData = {
                 3.47,
                 3.95,
                 4.57,
-                5.1,
-                5.62,
-                5.98
+                5.03
             ],
             "transferCapacity": [
                 0.48,
@@ -15912,9 +16246,7 @@ export const embeddedGearboxData = {
                 0.283,
                 0.214,
                 0.186,
-                0.166,
-                0.134,
-                0.106
+                0.158
             ],
             "thrust": 50,
             "centerDistance": 220,
@@ -16116,13 +16448,27 @@ export const embeddedGearboxData = {
             ],
             "ratios": [
                 1.5,
-                2,
-                2.5,
-                3,
-                3.5
+                1.96,
+                2.48,
+                3.05,
+                3.5,
+                4,
+                4.45,
+                4.95,
+                5.55,
+                5.95
             ],
             "transferCapacity": [
-                2
+                1.507,
+                1.507,
+                1.507,
+                1.364,
+                1.243,
+                1.103,
+                0.787,
+                0.66,
+                0.52,
+                0.44
             ],
             "thrust": 150,
             "centerDistance": 400,
@@ -16249,7 +16595,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 16380,
             "packagePrice": 16380,
             "marketPrice": 16380,
-            "notes": "全国统一售价"
+            "notes": "全国统一售价",
+            "outputInterfaces": "特配",
+            "rotationDirection": "相反"
         },
         {
             "model": "HC038",
@@ -16265,6 +16613,10 @@ export const embeddedGearboxData = {
                 3.83
             ],
             "transferCapacity": [
+                0.012,
+                0.012,
+                0.012,
+                0.012,
                 0.012
             ],
             "thrust": 3.5,
@@ -16319,7 +16671,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 85000,
             "packagePrice": 85000,
             "marketPrice": 85000,
-            "notes": "全国统一售价"
+            "notes": "全国统一售价",
+            "outputInterfaces": "特配",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQ1001",
@@ -16359,7 +16713,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 0,
             "packagePrice": 0,
             "marketPrice": 0,
-            "notes": "未在2022价格表中找到 (旧价格)"
+            "notes": "未在2022价格表中找到 (旧价格)",
+            "outputInterfaces": "特配",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQ400",
@@ -16407,6 +16763,10 @@ export const embeddedGearboxData = {
                 4
             ],
             "transferCapacity": [
+                0.065,
+                0.065,
+                0.065,
+                0.065,
                 0.065
             ],
             "thrust": 20,
@@ -16461,29 +16821,39 @@ export const embeddedGearboxData = {
             "factoryPrice": 0,
             "packagePrice": 0,
             "marketPrice": 0,
-            "notes": "未在2022价格表中找到 (旧价格)"
+            "notes": "未在2022价格表中找到 (旧价格)",
+            "outputInterfaces": "SAE0",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQ1400",
             "inputSpeedRange": [
-                750,
-                1500
+                1000,
+                2100
             ],
             "ratios": [
-                1.5,
+                1.03,
+                1.52,
                 2,
+                2.03,
+                2.48,
                 2.5,
-                3,
-                3.5
+                2.53,
+                2.93,
+                3
             ],
             "transferCapacity": [
-                0.18,
-                0.18,
-                0.18,
-                0.18,
-                0.18
+                1.03,
+                1.03,
+                1.03,
+                1.03,
+                0.9,
+                0.9,
+                0.9,
+                0.9,
+                0.9
             ],
-            "thrust": 35,
+            "thrust": 110,
             "centerDistance": 340,
             "weight": 1450,
             "controlType": "电控",
@@ -16495,7 +16865,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 0,
             "packagePrice": 0,
             "marketPrice": 0,
-            "notes": "未在2022价格表中找到 (旧价格)"
+            "notes": "未在2022价格表中找到 (旧价格)",
+            "outputInterfaces": "特配",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQ1600",
@@ -16527,7 +16899,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 0,
             "packagePrice": 0,
             "marketPrice": 0,
-            "notes": "未在2022价格表中找到 (旧价格)"
+            "notes": "未在2022价格表中找到 (旧价格)",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQ1601",
@@ -16559,7 +16933,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 0,
             "packagePrice": 0,
             "marketPrice": 0,
-            "notes": "未在2022价格表中找到 (旧价格)"
+            "notes": "未在2022价格表中找到 (旧价格)",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCS138",
@@ -16648,26 +17024,16 @@ export const embeddedGearboxData = {
                 3500
             ],
             "ratios": [
-                1.64,
-                2.03,
-                2.52,
-                3,
-                3.53,
-                4,
-                4.48,
-                4.95,
-                5.56
+                1.49,
+                2.07,
+                2.54,
+                3
             ],
             "transferCapacity": [
-                0.064,
-                0.064,
-                0.058,
-                0.051,
-                0.046,
-                0.041,
-                0.037,
-                0.034,
-                0.03
+                0.079,
+                0.077,
+                0.069,
+                0.062
             ],
             "thrust": 16,
             "centerDistance": 146,
@@ -16682,7 +17048,9 @@ export const embeddedGearboxData = {
                 "max": 224
             },
             "image": "/images/gearbox/Advance-HCQ100-MV100A.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE 4",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQ138",
@@ -16691,26 +17059,20 @@ export const embeddedGearboxData = {
                 2600
             ],
             "ratios": [
-                1.64,
+                1.03,
+                1.25,
+                1.5,
                 2.03,
-                2.52,
-                3.04,
-                3.57,
-                4,
-                4.48,
-                5.05,
-                5.56
+                2.48,
+                2.95
             ],
             "transferCapacity": [
-                0.087,
-                0.087,
-                0.087,
-                0.078,
-                0.07,
-                0.063,
-                0.056,
-                0.05,
-                0.045
+                0.11,
+                0.11,
+                0.11,
+                0.098,
+                0.098,
+                0.098
             ],
             "thrust": 25,
             "centerDistance": 165,
@@ -16725,7 +17087,9 @@ export const embeddedGearboxData = {
                 "max": 226
             },
             "image": "/images/gearbox/HCQ138-HCA138-.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE1 2 3",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQ300",
@@ -16750,20 +17114,20 @@ export const embeddedGearboxData = {
                 2.95
             ],
             "transferCapacity": [
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95
+                0.25,
+                0.25,
+                0.25,
+                0.25,
+                0.25,
+                0.25,
+                0.235,
+                0.235,
+                0.235,
+                0.23,
+                0.23,
+                0.23,
+                0.23,
+                0.23
             ],
             "thrust": 40,
             "centerDistance": 203,
@@ -16778,7 +17142,9 @@ export const embeddedGearboxData = {
                 "max": 6785
             },
             "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE0 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQ401",
@@ -16819,7 +17185,9 @@ export const embeddedGearboxData = {
                 "max": 761
             },
             "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE0 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQ402",
@@ -16852,7 +17220,9 @@ export const embeddedGearboxData = {
                 "max": 761
             },
             "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "特配",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQ501",
@@ -16861,28 +17231,20 @@ export const embeddedGearboxData = {
                 2300
             ],
             "ratios": [
-                1.48,
-                2.04,
-                2.52,
-                3.04,
-                3.57,
-                4,
-                4.47,
-                5.05,
-                5.56,
-                5.95
+                1.03,
+                1.46,
+                1.56,
+                1.88,
+                2,
+                2.45
             ],
             "transferCapacity": [
-                0.36,
-                0.36,
-                0.36,
-                0.36,
-                0.36,
-                0.36,
-                0.324,
-                0.288,
-                0.261,
-                0.243
+                0.404,
+                0.404,
+                0.404,
+                0.382,
+                0.382,
+                0.382
             ],
             "thrust": 55,
             "centerDistance": 235,
@@ -16897,7 +17259,9 @@ export const embeddedGearboxData = {
                 "max": 828
             },
             "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE0 1/无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQ502",
@@ -16906,22 +17270,12 @@ export const embeddedGearboxData = {
                 2300
             ],
             "ratios": [
-                1.58,
-                2.03,
-                2.48,
-                2.96,
-                3.46,
-                3.94,
-                4.39
+                2.71,
+                2.95
             ],
             "transferCapacity": [
-                0.377,
-                0.377,
-                0.377,
-                0.377,
-                0.377,
-                0.339,
-                0.305
+                0.404,
+                0.404
             ],
             "thrust": 60,
             "centerDistance": 264,
@@ -16936,7 +17290,9 @@ export const embeddedGearboxData = {
                 "max": 867
             },
             "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE0 1/无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQ700",
@@ -16983,7 +17339,9 @@ export const embeddedGearboxData = {
                 "运输船",
                 "工程船",
                 "大型渔船"
-            ]
+            ],
+            "outputInterfaces": "SAE0",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQ700A",
@@ -17050,7 +17408,9 @@ export const embeddedGearboxData = {
                 "max": 1385
             },
             "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE0",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQ800A",
@@ -17112,7 +17472,9 @@ export const embeddedGearboxData = {
                 "max": 2528
             },
             "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "无罩壳",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCQH700",
@@ -17189,7 +17551,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 27000,
             "packagePrice": 27000,
             "marketPrice": 30681.82,
-            "notes": "电控、无罩、监控仪 (打包价 2.7 万)"
+            "notes": "电控、无罩、监控仪 (打包价 2.7 万)",
+            "outputInterfaces": "SAE0",
+            "rotationDirection": "相反"
         },
         {
             "model": "GCH390",
@@ -17239,6 +17603,10 @@ export const embeddedGearboxData = {
                 4
             ],
             "transferCapacity": [
+                0.18,
+                0.18,
+                0.18,
+                0.18,
                 0.18
             ],
             "thrust": 60,
@@ -18909,12 +19277,12 @@ export const embeddedGearboxData = {
                 4.47
             ],
             "transferCapacity": [
-                5.43,
-                5.43,
-                5.43,
-                5.43,
-                5.43,
-                5.43
+                4.744,
+                4.744,
+                4.744,
+                4.744,
+                4.623,
+                4.183
             ],
             "thrust": 450,
             "centerDistance": 700,
@@ -19818,6 +20186,9 @@ export const embeddedGearboxData = {
                 3
             ],
             "transferCapacity": [
+                0.01,
+                0.01,
+                0.01,
                 0.01
             ],
             "thrust": 5,
@@ -19847,6 +20218,9 @@ export const embeddedGearboxData = {
                 3
             ],
             "transferCapacity": [
+                0.015,
+                0.015,
+                0.015,
                 0.015
             ],
             "thrust": 6,
@@ -19878,6 +20252,9 @@ export const embeddedGearboxData = {
                 3
             ],
             "transferCapacity": [
+                0.018,
+                0.018,
+                0.018,
                 0.018
             ],
             "thrust": 8,
@@ -19907,6 +20284,9 @@ export const embeddedGearboxData = {
                 3
             ],
             "transferCapacity": [
+                0.02,
+                0.02,
+                0.02,
                 0.02
             ],
             "thrust": 10,
@@ -20008,6 +20388,9 @@ export const embeddedGearboxData = {
                 3
             ],
             "transferCapacity": [
+                0.02,
+                0.02,
+                0.02,
                 0.02
             ],
             "thrust": 10,
@@ -20022,7 +20405,9 @@ export const embeddedGearboxData = {
             "factoryPrice": 16500,
             "packagePrice": 16500,
             "marketPrice": 16500,
-            "notes": "铝合金、高速、全国统一售价"
+            "notes": "铝合金、高速、全国统一售价",
+            "outputInterfaces": "6135Ca/SAE1 2 3",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCA1000",
@@ -20074,7 +20459,9 @@ export const embeddedGearboxData = {
                 "max": 1380
             },
             "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "特配",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCA138",
@@ -20134,7 +20521,9 @@ export const embeddedGearboxData = {
                 "max": 221
             },
             "image": "/images/gearbox/HCQ138-HCA138-.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE1 2",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCA138(倾角7°)",
@@ -20171,7 +20560,9 @@ export const embeddedGearboxData = {
                 "max": 286
             },
             "image": "/images/gearbox/HCQ138-HCA138-.webp",
-            "source": "2025选型手册第13页"
+            "source": "2025选型手册第13页",
+            "outputInterfaces": "SAE1 2",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCA1400",
@@ -20238,7 +20629,9 @@ export const embeddedGearboxData = {
                 "max": 2163
             },
             "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "特配",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCA1401",
@@ -20301,7 +20694,9 @@ export const embeddedGearboxData = {
                 "max": 2165
             },
             "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "特配",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCA300",
@@ -20371,7 +20766,9 @@ export const embeddedGearboxData = {
                 "max": 575
             },
             "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
-            "source": "2025选型手册第13页"
+            "source": "2025选型手册第13页",
+            "outputInterfaces": "SAE0 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCA301",
@@ -20437,7 +20834,9 @@ export const embeddedGearboxData = {
                 "max": 575
             },
             "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
-            "source": "2025选型手册第13页"
+            "source": "2025选型手册第13页",
+            "outputInterfaces": "SAE0 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCA302",
@@ -20501,7 +20900,9 @@ export const embeddedGearboxData = {
                 "max": 575
             },
             "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE 1",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCA700",
@@ -20574,7 +20975,9 @@ export const embeddedGearboxData = {
                 "max": 1385
             },
             "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp",
-            "source": "2025选型手册第14页"
+            "source": "2025选型手册第14页",
+            "outputInterfaces": "SAE0",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCA701",
@@ -20624,7 +21027,9 @@ export const embeddedGearboxData = {
                 "max": 1385
             },
             "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE0",
+            "rotationDirection": "相反"
         },
         {
             "model": "HCAG1090",
@@ -20988,6 +21393,39 @@ export const embeddedGearboxData = {
                 "max": 444
             },
             "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        },
+        {
+            "model": "HCA1600",
+            "inputSpeedRange": [
+                1000,
+                2100
+            ],
+            "ratios": [
+                1.51,
+                1.97,
+                2.48,
+                2.76
+            ],
+            "transferCapacity": [
+                1.204,
+                1.204,
+                1.204,
+                1
+            ],
+            "thrust": 120,
+            "centerDistance": 340,
+            "weight": 1500,
+            "dimensions": "1106×1690×1056",
+            "efficiency": 0.97,
+            "basePrice": 380000,
+            "price": 380000,
+            "discountRate": 0,
+            "powerRange": {
+                "min": 1000,
+                "max": 2529
+            },
+            "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
+            "source": "杭齿厂选型手册2025版5月版"
         }
     ],
     "hcvGearboxes": [
@@ -21004,6 +21442,9 @@ export const embeddedGearboxData = {
                 3
             ],
             "transferCapacity": [
+                0.02,
+                0.02,
+                0.02,
                 0.02
             ],
             "thrust": 10,
@@ -21110,7 +21551,9 @@ export const embeddedGearboxData = {
                 "max": 250
             },
             "image": "/images/gearbox/Advance-120C-HCV120.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE1 2",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCV230",
@@ -21171,7 +21614,9 @@ export const embeddedGearboxData = {
                 "max": 405
             },
             "image": "/images/gearbox/Advance-200-201-230.webp",
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "outputInterfaces": "SAE1",
+            "rotationDirection": "相同"
         },
         {
             "model": "HCVG3710",
@@ -21655,6 +22100,39 @@ export const embeddedGearboxData = {
                 "max": 6714
             },
             "image": "/images/gearbox/Advance-GC.webp",
+            "source": "杭齿厂选型手册2025版5月版"
+        },
+        {
+            "model": "04A",
+            "inputSpeedRange": [
+                750,
+                2000
+            ],
+            "ratios": [
+                2.07,
+                2.96,
+                3.44,
+                3.83
+            ],
+            "transferCapacity": [
+                0.0294,
+                0.0235,
+                0.02,
+                0.02
+            ],
+            "thrust": 8.8,
+            "centerDistance": 142,
+            "weight": 225,
+            "dimensions": "490×670×620",
+            "efficiency": 0.97,
+            "basePrice": 26000,
+            "price": 26000,
+            "discountRate": 0.1,
+            "powerRange": {
+                "min": 15,
+                "max": 59
+            },
+            "image": "/images/gearbox/MA.webp",
             "source": "杭齿厂选型手册2025版5月版"
         }
     ]

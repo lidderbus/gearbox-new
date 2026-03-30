@@ -28,7 +28,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/06-16A-26.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/06-16A-26.webp"
+        "image": "/images/gearbox/06-16A-26.webp",
+        "controlType": "手控",
+        "rotationDirection": "相反"
     },
     {
         "model": "120B",
@@ -78,7 +80,9 @@ export const completeGearboxData = [
             0.044
         ],
         "image": "/images/gearbox/Advance-135.webp",
-        "priceSource": "2026官方出厂价"
+        "priceSource": "2026官方出厂价",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "120C",
@@ -134,7 +138,9 @@ export const completeGearboxData = [
             0.08
         ],
         "image": "/images/gearbox/Advance-120C-HCV120.webp",
-        "priceSource": "2026官方出厂价"
+        "priceSource": "2026官方出厂价",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "135",
@@ -193,7 +199,9 @@ export const completeGearboxData = [
             0.07
         ],
         "image": "/images/gearbox/Advance-135.webp",
-        "priceSource": "2026官方出厂价"
+        "priceSource": "2026官方出厂价",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "16A",
@@ -228,7 +236,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/06-16A-26.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/06-16A-26.webp"
+        "image": "/images/gearbox/06-16A-26.webp",
+        "controlType": "手控",
+        "rotationDirection": "相反"
     },
     {
         "model": "26",
@@ -261,7 +271,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/06-16A-26.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/06-16A-26.webp"
+        "image": "/images/gearbox/06-16A-26.webp",
+        "controlType": "手控",
+        "rotationDirection": "相反"
     },
     {
         "model": "2GWH1060",
@@ -282,8 +294,8 @@ export const completeGearboxData = [
         ],
         "thrust": 175,
         "centerDistance": 1460,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "1486×1888×1650",
+        "weight": 3100,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 280000,
         "discountRate": 0.1,
@@ -294,7 +306,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/06-16A-26.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-2GWH.webp"
+        "image": "/images/gearbox/Advance-2GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "2GWH1830",
@@ -315,8 +329,8 @@ export const completeGearboxData = [
         ],
         "thrust": 270,
         "centerDistance": 1760,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "1688×1968×1710",
+        "weight": 5500,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 380000,
         "discountRate": 0.1,
@@ -327,7 +341,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWH.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-2GWH.webp"
+        "image": "/images/gearbox/Advance-2GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "2GWH3140",
@@ -349,7 +365,7 @@ export const completeGearboxData = [
         "thrust": 300,
         "centerDistance": 2080,
         "dimensions": "3285×3000×2840",
-        "weight": null,
+        "weight": 8200,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 520000,
         "discountRate": 0.1,
@@ -360,7 +376,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWH.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-2GWH.webp"
+        "image": "/images/gearbox/Advance-2GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "2GWH400",
@@ -382,7 +400,10 @@ export const completeGearboxData = [
         "thrust": 80,
         "centerDistance": 1200,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 1500
+        "weight": 1500,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1036×1280×950"
     },
     {
         "model": "2GWH4100",
@@ -403,8 +424,8 @@ export const completeGearboxData = [
         ],
         "thrust": 450,
         "centerDistance": 2300,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "2291×2240×1290",
+        "weight": 11500,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 680000,
         "discountRate": 0.1,
@@ -415,7 +436,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWH.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-2GWH.webp"
+        "image": "/images/gearbox/Advance-2GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "2GWH5410",
@@ -436,8 +459,8 @@ export const completeGearboxData = [
         ],
         "thrust": 550,
         "centerDistance": 2560,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "2445×2560×2215",
+        "weight": 16000,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 850000,
         "discountRate": 0.1,
@@ -448,7 +471,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWH.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-2GWH.webp"
+        "image": "/images/gearbox/Advance-2GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "2GWH600",
@@ -470,7 +495,10 @@ export const completeGearboxData = [
         "thrust": 100,
         "centerDistance": 1400,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 2200
+        "weight": 2200,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1198×1376×1298"
     },
     {
         "model": "2GWH7050",
@@ -491,8 +519,8 @@ export const completeGearboxData = [
         ],
         "thrust": 750,
         "centerDistance": 2700,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "2645×3809×1740",
+        "weight": 22000,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 1050000,
         "discountRate": 0.1,
@@ -503,7 +531,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWH.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-2GWH.webp"
+        "image": "/images/gearbox/Advance-2GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "2GWH800",
@@ -525,7 +555,10 @@ export const completeGearboxData = [
         "thrust": 140,
         "centerDistance": 1460,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 2800
+        "weight": 2800,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1238×1472×1315"
     },
     {
         "model": "2GWH9250",
@@ -546,8 +579,8 @@ export const completeGearboxData = [
         ],
         "thrust": 1000,
         "centerDistance": 3080,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "2876×3441×1970",
+        "weight": 34000,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 1350000,
         "discountRate": 0.1,
@@ -558,7 +591,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWH.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-2GWH.webp"
+        "image": "/images/gearbox/Advance-2GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "300",
@@ -619,7 +654,8 @@ export const completeGearboxData = [
                 "8-φ15"
             ]
         },
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "40A",
@@ -662,7 +698,9 @@ export const completeGearboxData = [
                 "8-φ14"
             ]
         },
-        "image": "/images/gearbox/40A.webp"
+        "image": "/images/gearbox/40A.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "D300A",
@@ -719,7 +757,8 @@ export const completeGearboxData = [
                 "8-φ25.8"
             ]
         },
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "DT10000",
@@ -759,7 +798,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-DT.webp",
         "price": 613000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "电控",
+        "rotationDirection": "相反",
+        "dimensions": "1200×1500×1500"
     },
     {
         "model": "DT1400",
@@ -814,7 +856,8 @@ export const completeGearboxData = [
             "type": "电动机推进",
             "note": "大型电推齿轮箱"
         },
-        "image": "/images/gearbox/Advance-DT.webp"
+        "image": "/images/gearbox/Advance-DT.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "DT1500",
@@ -870,7 +913,8 @@ export const completeGearboxData = [
             "type": "电动机推进",
             "note": "大型电推齿轮箱"
         },
-        "image": "/images/gearbox/Advance-DT.webp"
+        "image": "/images/gearbox/Advance-DT.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "DT180",
@@ -925,7 +969,8 @@ export const completeGearboxData = [
             "type": "电动机推进",
             "note": "小型电推齿轮箱"
         },
-        "image": "/images/gearbox/Advance-DT.webp"
+        "image": "/images/gearbox/Advance-DT.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "DT210",
@@ -980,7 +1025,8 @@ export const completeGearboxData = [
             "type": "电动机推进",
             "note": "小型电推齿轮箱"
         },
-        "image": "/images/gearbox/Advance-DT.webp"
+        "image": "/images/gearbox/Advance-DT.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "DT240",
@@ -1039,7 +1085,8 @@ export const completeGearboxData = [
             "type": "电动机推进",
             "note": "小型电推齿轮箱"
         },
-        "image": "/images/gearbox/Advance-DT.webp"
+        "image": "/images/gearbox/Advance-DT.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "DT2400",
@@ -1096,7 +1143,8 @@ export const completeGearboxData = [
             "type": "电动机推进",
             "note": "超大型电推齿轮箱"
         },
-        "image": "/images/gearbox/Advance-DT.webp"
+        "image": "/images/gearbox/Advance-DT.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "DT2500",
@@ -1118,7 +1166,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 3600
+        "weight": 3600,
+        "controlType": "电控",
+        "rotationDirection": "相反",
+        "dimensions": "920×1210×1210"
     },
     {
         "model": "DT280",
@@ -1169,7 +1220,8 @@ export const completeGearboxData = [
             "type": "电动机推进",
             "note": "中小型电推齿轮箱"
         },
-        "image": "/images/gearbox/Advance-DT.webp"
+        "image": "/images/gearbox/Advance-DT.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "DT4000",
@@ -1189,7 +1241,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 5000
+        "weight": 5000,
+        "controlType": "电控",
+        "rotationDirection": "相反",
+        "dimensions": "923×1230×1180"
     },
     {
         "model": "DT4300",
@@ -1244,7 +1299,9 @@ export const completeGearboxData = [
             "type": "电动机推进",
             "note": "超大型电推齿轮箱"
         },
-        "image": "/images/gearbox/Advance-DT.webp"
+        "image": "/images/gearbox/Advance-DT.webp",
+        "controlType": "电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "DT580",
@@ -1299,7 +1356,8 @@ export const completeGearboxData = [
             "type": "电动机推进",
             "note": "中型电推齿轮箱"
         },
-        "image": "/images/gearbox/Advance-DT.webp"
+        "image": "/images/gearbox/Advance-DT.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "DT770",
@@ -1365,7 +1423,8 @@ export const completeGearboxData = [
             "type": "电动机推进",
             "note": "中型电推齿轮箱"
         },
-        "image": "/images/gearbox/Advance-DT.webp"
+        "image": "/images/gearbox/Advance-DT.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "DT900",
@@ -1430,7 +1489,8 @@ export const completeGearboxData = [
             "type": "电动机推进",
             "note": "中大型电推齿轮箱"
         },
-        "image": "/images/gearbox/Advance-DT.webp"
+        "image": "/images/gearbox/Advance-DT.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "GC1000",
@@ -1452,7 +1512,10 @@ export const completeGearboxData = [
         "thrust": 1400,
         "centerDistance": 1018,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 1800
+        "weight": 1800,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2500×2100×2300"
     },
     {
         "model": "GC1400",
@@ -1474,7 +1537,10 @@ export const completeGearboxData = [
         "thrust": 1400,
         "centerDistance": 1350,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 2500
+        "weight": 2500,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "3500×2940×3220"
     },
     {
         "model": "GC600",
@@ -1496,7 +1562,10 @@ export const completeGearboxData = [
         "thrust": 360,
         "centerDistance": 590,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 850
+        "weight": 850,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1500×1260×1380"
     },
     {
         "model": "GC800",
@@ -1518,7 +1587,10 @@ export const completeGearboxData = [
         "thrust": 800,
         "centerDistance": 855,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 1200
+        "weight": 1200,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2000×1680×1840"
     },
     {
         "model": "GCH1000",
@@ -1545,7 +1617,10 @@ export const completeGearboxData = [
         "minPower": 3500,
         "maxPower": 14000,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2545×2138×2341"
     },
     {
         "model": "GCH320",
@@ -1578,7 +1653,10 @@ export const completeGearboxData = [
         "introduction": "GCH系列齿轮箱是GC系列的重型版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 100,
-        "centerDistance": 320
+        "centerDistance": 320,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "800×672×736"
     },
     {
         "model": "GCH1002L",
@@ -1598,7 +1676,10 @@ export const completeGearboxData = [
         "powerSource": "项目跟踪数据",
         "source": "项目跟踪记录-芜湖造船厂试验舰",
         "note": "特殊型号，左型，8800kW/520rpm，减速比3.939:1，水平异心距1000mm，J检",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2545×2138×2341"
     },
     {
         "model": "GCH1002R",
@@ -1618,7 +1699,10 @@ export const completeGearboxData = [
         "powerSource": "项目跟踪数据",
         "source": "项目跟踪记录-芜湖造船厂试验舰",
         "note": "特殊型号，右型，8800kW/520rpm，减速比3.939:1，水平异心距1000mm，J检",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2545×2138×2341"
     },
     {
         "model": "GCH350",
@@ -1649,7 +1733,10 @@ export const completeGearboxData = [
         "introduction": "GCH系列齿轮箱是GC系列的重型版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 113,
-        "centerDistance": 350
+        "centerDistance": 350,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "875×735×805"
     },
     {
         "model": "GCH390",
@@ -1682,7 +1769,10 @@ export const completeGearboxData = [
         "introduction": "GCH系列齿轮箱是GC系列的重型版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 140,
-        "centerDistance": 390
+        "centerDistance": 390,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "975×819×897"
     },
     {
         "model": "GCH410",
@@ -1715,7 +1805,10 @@ export const completeGearboxData = [
         "introduction": "GCH系列齿轮箱是GC系列的重型版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 175,
-        "centerDistance": 410
+        "centerDistance": 410,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1025×861×943"
     },
     {
         "model": "GCH490",
@@ -1742,7 +1835,10 @@ export const completeGearboxData = [
         "minPower": 848,
         "maxPower": 2968,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1225×1029×1127"
     },
     {
         "model": "GCH540",
@@ -1769,7 +1865,10 @@ export const completeGearboxData = [
         "minPower": 1130,
         "maxPower": 3390,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1350×1134×1242"
     },
     {
         "model": "GCH590",
@@ -1796,7 +1895,10 @@ export const completeGearboxData = [
         "minPower": 1456,
         "maxPower": 4368,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1475×1239×1357"
     },
     {
         "model": "GCH660",
@@ -1823,7 +1925,10 @@ export const completeGearboxData = [
         "minPower": 2020,
         "maxPower": 6060,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1650×1386×1518"
     },
     {
         "model": "GCH750",
@@ -1864,7 +1969,10 @@ export const completeGearboxData = [
         "introduction": "GCH系列齿轮箱是GC系列的重型版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 730,
-        "centerDistance": 750
+        "centerDistance": 750,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1875×1575×1725"
     },
     {
         "model": "GCH760",
@@ -1895,7 +2003,10 @@ export const completeGearboxData = [
         "introduction": "GCH系列齿轮箱是GC系列的重型版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 750,
-        "centerDistance": 768
+        "centerDistance": 768,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1920×1613×1766"
     },
     {
         "model": "GCH850",
@@ -1928,7 +2039,10 @@ export const completeGearboxData = [
         "introduction": "GCH系列齿轮箱是GC系列的重型版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 800,
-        "centerDistance": 855
+        "centerDistance": 855,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2138×1796×1966"
     },
     {
         "model": "GCH880",
@@ -1955,7 +2069,10 @@ export const completeGearboxData = [
         "introduction": "GCH系列齿轮箱是GC系列的重型版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 1000,
-        "centerDistance": 880
+        "centerDistance": 880,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2200×1848×2024"
     },
     {
         "model": "GCH900",
@@ -1986,7 +2103,10 @@ export const completeGearboxData = [
         "introduction": "GCH系列齿轮箱是GC系列的重型版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 980,
-        "centerDistance": 900
+        "centerDistance": 900,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2250×1890×2070"
     },
     {
         "model": "GCH950",
@@ -2013,7 +2133,10 @@ export const completeGearboxData = [
         "minPower": 2800,
         "maxPower": 9100,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2413×2027×2220"
     },
     {
         "model": "GCHE11",
@@ -2052,7 +2175,10 @@ export const completeGearboxData = [
         "introduction": "GCHE系列齿轮箱是GC系列的增强版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 270,
-        "centerDistance": 735
+        "centerDistance": 735,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1838×1544×1690"
     },
     {
         "model": "GCHE15",
@@ -2078,7 +2204,10 @@ export const completeGearboxData = [
         "minPower": 656,
         "maxPower": 2624,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2025×1701×1863"
     },
     {
         "model": "GCHE20",
@@ -2104,7 +2233,10 @@ export const completeGearboxData = [
         "minPower": 848,
         "maxPower": 2968,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1700×1428×1564"
     },
     {
         "model": "GCHE26",
@@ -2130,7 +2262,10 @@ export const completeGearboxData = [
         "minPower": 1130,
         "maxPower": 3390,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2400×2016×2208"
     },
     {
         "model": "GCHE33",
@@ -2156,7 +2291,10 @@ export const completeGearboxData = [
         "minPower": 1456,
         "maxPower": 4368,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2638×2216×2427"
     },
     {
         "model": "GCHE44",
@@ -2193,7 +2331,10 @@ export const completeGearboxData = [
         "introduction": "GCHE系列齿轮箱是GC系列的增强版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 700,
-        "centerDistance": 1185
+        "centerDistance": 1185,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2963×2489×2726"
     },
     {
         "model": "GCHE5",
@@ -2210,7 +2351,7 @@ export const completeGearboxData = [
         ],
         "thrust": 170,
         "centerDistance": 570,
-        "dimensions": null,
+        "dimensions": "1425×1197×1311",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 664820,
@@ -2222,7 +2363,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GC.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
         "introduction": "GCS系列齿轮箱是GC系列的标准版本。",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCHE6",
@@ -2239,7 +2382,7 @@ export const completeGearboxData = [
         ],
         "thrust": 200,
         "centerDistance": 615,
-        "dimensions": null,
+        "dimensions": "1538×1292×1415",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 760805,
@@ -2251,7 +2394,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GC.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
         "introduction": "GCS系列齿轮箱是GC系列的标准版本。",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCHE9",
@@ -2268,7 +2413,7 @@ export const completeGearboxData = [
         ],
         "thrust": 270,
         "centerDistance": 700,
-        "dimensions": null,
+        "dimensions": "1750×1470×1610",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 962000,
@@ -2280,7 +2425,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GC.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
         "introduction": "GCS系列齿轮箱是GC系列的标准版本。",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCHT108",
@@ -2307,7 +2454,10 @@ export const completeGearboxData = [
         "introduction": "GCHT系列齿轮箱是GC系列的特殊版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 1400,
-        "centerDistance": 1230
+        "centerDistance": 1230,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "3075×2583×2829"
     },
     {
         "model": "GCHT11",
@@ -2342,7 +2492,10 @@ export const completeGearboxData = [
         "introduction": "GCHT系列齿轮箱是GC系列的特殊版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 220,
-        "centerDistance": 570
+        "centerDistance": 570,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1425×1197×1311"
     },
     {
         "model": "GCHT115",
@@ -2367,7 +2520,10 @@ export const completeGearboxData = [
         "minPower": 2413,
         "maxPower": 7841,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "3150×2646×2898"
     },
     {
         "model": "GCHT135",
@@ -2392,7 +2548,10 @@ export const completeGearboxData = [
         "minPower": 2800,
         "maxPower": 9100,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "3375×2835×3105"
     },
     {
         "model": "GCHT15",
@@ -2417,7 +2576,10 @@ export const completeGearboxData = [
         "minPower": 656,
         "maxPower": 2624,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1575×1323×1449"
     },
     {
         "model": "GCHT170",
@@ -2442,7 +2604,10 @@ export const completeGearboxData = [
         "minPower": 3500,
         "maxPower": 14000,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "3575×3003×3289"
     },
     {
         "model": "GCHT20",
@@ -2467,7 +2632,10 @@ export const completeGearboxData = [
         "minPower": 848,
         "maxPower": 2968,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1700×1428×1564"
     },
     {
         "model": "GCHT26",
@@ -2492,7 +2660,10 @@ export const completeGearboxData = [
         "minPower": 1130,
         "maxPower": 3390,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1875×1575×1725"
     },
     {
         "model": "GCHT33",
@@ -2517,7 +2688,10 @@ export const completeGearboxData = [
         "minPower": 1456,
         "maxPower": 4368,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2050×1722×1886"
     },
     {
         "model": "GCHT44",
@@ -2542,7 +2716,10 @@ export const completeGearboxData = [
         "minPower": 2020,
         "maxPower": 6060,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2310×1940×2125"
     },
     {
         "model": "GCHT5",
@@ -2563,7 +2740,7 @@ export const completeGearboxData = [
         ],
         "thrust": 120,
         "centerDistance": 445,
-        "dimensions": null,
+        "dimensions": "1113×935×1023",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 436445,
@@ -2575,7 +2752,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GC.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
         "introduction": "GCS系列齿轮箱是GC系列的标准版本。",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCHT6",
@@ -2596,7 +2775,7 @@ export const completeGearboxData = [
         ],
         "thrust": 170,
         "centerDistance": 480,
-        "dimensions": null,
+        "dimensions": "1200×1008×1104",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 494720,
@@ -2608,7 +2787,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GC.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
         "introduction": "GCS系列齿轮箱是GC系列的标准版本。",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCHT66",
@@ -2648,7 +2829,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 1000,
         "centerDistance": 1064,
-        "dimensions": "3609×2639×2370"
+        "dimensions": "3609×2639×2370",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCHT77",
@@ -2681,7 +2864,10 @@ export const completeGearboxData = [
         "introduction": "GCHT系列齿轮箱是GC系列的特殊版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 1000,
-        "centerDistance": 1100
+        "centerDistance": 1100,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1920×1613×1766"
     },
     {
         "model": "GCHT9",
@@ -2702,7 +2888,7 @@ export const completeGearboxData = [
         ],
         "thrust": 220,
         "centerDistance": 545,
-        "dimensions": null,
+        "dimensions": "1363×1145×1254",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 614645,
@@ -2714,7 +2900,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GC.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
         "introduction": "GCS系列齿轮箱是GC系列的标准版本。",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCHT91",
@@ -2745,7 +2933,10 @@ export const completeGearboxData = [
         "introduction": "GCHT系列齿轮箱是GC系列的特殊版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 1000,
-        "centerDistance": 1190
+        "centerDistance": 1190,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2975×2499×2737"
     },
     {
         "model": "GCS1000",
@@ -2772,7 +2963,10 @@ export const completeGearboxData = [
         "minPower": 3500,
         "maxPower": 14000,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2545×2138×2341"
     },
     {
         "model": "GCS320",
@@ -2795,7 +2989,7 @@ export const completeGearboxData = [
         ],
         "thrust": 100,
         "centerDistance": 320,
-        "dimensions": null,
+        "dimensions": "800×672×736",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 264320,
@@ -2818,7 +3012,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCS350",
@@ -2841,7 +3037,7 @@ export const completeGearboxData = [
         ],
         "thrust": 113,
         "centerDistance": 350,
-        "dimensions": null,
+        "dimensions": "875×735×805",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 300500,
@@ -2864,7 +3060,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCS390",
@@ -2887,7 +3085,7 @@ export const completeGearboxData = [
         ],
         "thrust": 140,
         "centerDistance": 390,
-        "dimensions": null,
+        "dimensions": "975×819×897",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 353780,
@@ -2910,7 +3108,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCS410",
@@ -2933,7 +3133,7 @@ export const completeGearboxData = [
         ],
         "thrust": 175,
         "centerDistance": 410,
-        "dimensions": null,
+        "dimensions": "1025×861×943",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 382580,
@@ -2956,7 +3156,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCS450",
@@ -2979,7 +3181,7 @@ export const completeGearboxData = [
         ],
         "thrust": 220,
         "centerDistance": 455,
-        "dimensions": null,
+        "dimensions": "1138×956×1047",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 452645,
@@ -3002,7 +3204,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCS490",
@@ -3029,7 +3233,10 @@ export const completeGearboxData = [
         "minPower": 848,
         "maxPower": 2968,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1225×1029×1127"
     },
     {
         "model": "GCS540",
@@ -3056,7 +3263,10 @@ export const completeGearboxData = [
         "minPower": 1130,
         "maxPower": 3390,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1350×1134×1242"
     },
     {
         "model": "GCS590",
@@ -3083,7 +3293,10 @@ export const completeGearboxData = [
         "minPower": 1456,
         "maxPower": 4368,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1475×1239×1357"
     },
     {
         "model": "GCS660",
@@ -3110,7 +3323,10 @@ export const completeGearboxData = [
         "minPower": 2020,
         "maxPower": 6060,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1650×1386×1518"
     },
     {
         "model": "GCS700B",
@@ -3156,7 +3372,10 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 450,
-        "centerDistance": 700
+        "centerDistance": 700,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1750×1470×1610"
     },
     {
         "model": "GCS750",
@@ -3179,7 +3398,7 @@ export const completeGearboxData = [
         ],
         "thrust": 730,
         "centerDistance": 750,
-        "dimensions": null,
+        "dimensions": "1875×1575×1725",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 1092500,
@@ -3202,7 +3421,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCS760",
@@ -3225,7 +3446,7 @@ export const completeGearboxData = [
         ],
         "thrust": 750,
         "centerDistance": 768,
-        "dimensions": null,
+        "dimensions": "1920×1613×1766",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 1141683,
@@ -3248,7 +3469,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCS850",
@@ -3271,7 +3494,7 @@ export const completeGearboxData = [
         ],
         "thrust": 800,
         "centerDistance": 855,
-        "dimensions": null,
+        "dimensions": "2138×1796×1966",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 1395845,
@@ -3294,7 +3517,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCS880",
@@ -3332,7 +3557,10 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 1000,
-        "centerDistance": 880
+        "centerDistance": 880,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2200×1848×2024"
     },
     {
         "model": "GCS900",
@@ -3374,7 +3602,10 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "thrust": 980,
-        "centerDistance": 900
+        "centerDistance": 900,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2250×1890×2070"
     },
     {
         "model": "GCS950",
@@ -3401,7 +3632,10 @@ export const completeGearboxData = [
         "minPower": 2800,
         "maxPower": 9100,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2413×2027×2220"
     },
     {
         "model": "GCSE11",
@@ -3418,7 +3652,7 @@ export const completeGearboxData = [
         ],
         "thrust": 270,
         "centerDistance": 735,
-        "dimensions": null,
+        "dimensions": "1838×1544×1690",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 1052405,
@@ -3441,7 +3675,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCSE15",
@@ -3467,7 +3703,10 @@ export const completeGearboxData = [
         "minPower": 656,
         "maxPower": 2624,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2025×1701×1863"
     },
     {
         "model": "GCSE20",
@@ -3493,7 +3732,10 @@ export const completeGearboxData = [
         "minPower": 848,
         "maxPower": 2968,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1700×1428×1564"
     },
     {
         "model": "GCSE26",
@@ -3519,7 +3761,10 @@ export const completeGearboxData = [
         "minPower": 1130,
         "maxPower": 3390,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2400×2016×2208"
     },
     {
         "model": "GCSE33",
@@ -3545,7 +3790,10 @@ export const completeGearboxData = [
         "minPower": 1456,
         "maxPower": 4368,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2638×2216×2427"
     },
     {
         "model": "GCSE44",
@@ -3562,7 +3810,7 @@ export const completeGearboxData = [
         ],
         "thrust": 700,
         "centerDistance": 1185,
-        "dimensions": null,
+        "dimensions": "2963×2489×2726",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 2500000,
@@ -3585,7 +3833,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCSE5",
@@ -3602,7 +3852,7 @@ export const completeGearboxData = [
         ],
         "thrust": 170,
         "centerDistance": 570,
-        "dimensions": null,
+        "dimensions": "1425×1197×1311",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 664820,
@@ -3625,7 +3875,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCSE6",
@@ -3642,7 +3894,7 @@ export const completeGearboxData = [
         ],
         "thrust": 200,
         "centerDistance": 615,
-        "dimensions": null,
+        "dimensions": "1538×1292×1415",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 760805,
@@ -3665,7 +3917,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCSE9",
@@ -3682,7 +3936,7 @@ export const completeGearboxData = [
         ],
         "thrust": 270,
         "centerDistance": 700,
-        "dimensions": null,
+        "dimensions": "1750×1470×1610",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 962000,
@@ -3705,7 +3959,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCST108",
@@ -3726,7 +3982,7 @@ export const completeGearboxData = [
         ],
         "thrust": 1400,
         "centerDistance": 1230,
-        "dimensions": null,
+        "dimensions": "3075×2583×2829",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 2500000,
@@ -3749,7 +4005,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCST11",
@@ -3770,7 +4028,7 @@ export const completeGearboxData = [
         ],
         "thrust": 220,
         "centerDistance": 570,
-        "dimensions": null,
+        "dimensions": "1425×1197×1311",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 664820,
@@ -3793,7 +4051,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCST115",
@@ -3818,7 +4078,10 @@ export const completeGearboxData = [
         "minPower": 2413,
         "maxPower": 7841,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "3150×2646×2898"
     },
     {
         "model": "GCST135",
@@ -3843,7 +4106,10 @@ export const completeGearboxData = [
         "minPower": 2800,
         "maxPower": 9100,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "3375×2835×3105"
     },
     {
         "model": "GCST15",
@@ -3868,7 +4134,10 @@ export const completeGearboxData = [
         "minPower": 656,
         "maxPower": 2624,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1575×1323×1449"
     },
     {
         "model": "GCST170",
@@ -3893,7 +4162,10 @@ export const completeGearboxData = [
         "minPower": 3500,
         "maxPower": 14000,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "3575×3003×3289"
     },
     {
         "model": "GCST20",
@@ -3918,7 +4190,10 @@ export const completeGearboxData = [
         "minPower": 848,
         "maxPower": 2968,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1700×1428×1564"
     },
     {
         "model": "GCST26",
@@ -3943,7 +4218,10 @@ export const completeGearboxData = [
         "minPower": 1130,
         "maxPower": 3390,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1875×1575×1725"
     },
     {
         "model": "GCST33",
@@ -3968,7 +4246,10 @@ export const completeGearboxData = [
         "minPower": 1456,
         "maxPower": 4368,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2050×1722×1886"
     },
     {
         "model": "GCST44",
@@ -3993,7 +4274,10 @@ export const completeGearboxData = [
         "minPower": 2020,
         "maxPower": 6060,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2310×1940×2125"
     },
     {
         "model": "GCST5",
@@ -4014,7 +4298,7 @@ export const completeGearboxData = [
         ],
         "thrust": 120,
         "centerDistance": 445,
-        "dimensions": null,
+        "dimensions": "1113×935×1023",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 436445,
@@ -4037,7 +4321,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCST6",
@@ -4058,7 +4344,7 @@ export const completeGearboxData = [
         ],
         "thrust": 170,
         "centerDistance": 480,
-        "dimensions": null,
+        "dimensions": "1200×1008×1104",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 494720,
@@ -4081,7 +4367,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCST66",
@@ -4125,7 +4413,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCST77",
@@ -4142,7 +4432,7 @@ export const completeGearboxData = [
         ],
         "thrust": 1000,
         "centerDistance": 1100,
-        "dimensions": null,
+        "dimensions": "1920×1613×1766",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 2258000,
@@ -4165,7 +4455,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCST9",
@@ -4186,7 +4478,7 @@ export const completeGearboxData = [
         ],
         "thrust": 220,
         "centerDistance": 545,
-        "dimensions": null,
+        "dimensions": "1363×1145×1254",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 614645,
@@ -4209,7 +4501,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GCST91",
@@ -4226,7 +4520,7 @@ export const completeGearboxData = [
         ],
         "thrust": 1000,
         "centerDistance": 1190,
-        "dimensions": null,
+        "dimensions": "2975×2499×2737",
         "weight": null,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 2500000,
@@ -4249,7 +4543,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWC20.34",
@@ -4265,7 +4561,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 125
+        "weight": 125,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "400×350×500"
     },
     {
         "model": "GWC20.54",
@@ -4281,7 +4580,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 148
+        "weight": 148,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "420×370×520"
     },
     {
         "model": "GWC26.58",
@@ -4297,7 +4599,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 198
+        "weight": 198,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "450×580×600"
     },
     {
         "model": "GWC28.30",
@@ -4328,7 +4633,7 @@ export const completeGearboxData = [
         ],
         "thrust": 80,
         "centerDistance": null,
-        "dimensions": null,
+        "dimensions": "1036×800×950",
         "weight": 1230,
         "controlType": "推拉软轴/电控/气控",
         "price": 72500,
@@ -4349,7 +4654,8 @@ export const completeGearboxData = [
                 "φ450"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC28.30P",
@@ -4395,7 +4701,10 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWC.webp",
         "thrust": 80,
-        "weight": 1230
+        "weight": 1230,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1036×800×950"
     },
     {
         "model": "GWC30.32",
@@ -4449,7 +4758,8 @@ export const completeGearboxData = [
                 "φ450"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC30.32P",
@@ -4500,7 +4810,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWC.webp",
         "thrust": 100,
         "dimensions": "1433×1200×888",
-        "weight": 1460
+        "weight": 1460,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC32.35",
@@ -4558,7 +4870,8 @@ export const completeGearboxData = [
                 "φ450"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC32.35P",
@@ -4615,7 +4928,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWC.webp",
         "thrust": 120,
         "dimensions": "1405×1240×920",
-        "weight": 2490
+        "weight": 2490,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC36.39",
@@ -4675,7 +4990,8 @@ export const completeGearboxData = [
                 "φ450"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC36.39P",
@@ -4738,7 +5054,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWC.webp",
         "thrust": 140,
         "dimensions": "1645×1331×1060",
-        "weight": 3200
+        "weight": 3200,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC36.58",
@@ -4754,7 +5072,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 205
+        "weight": 205,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1645×1331×1060"
     },
     {
         "model": "GWC36.59",
@@ -4770,7 +5091,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 270
+        "weight": 270,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1645×1331×1060"
     },
     {
         "model": "GWC39.41",
@@ -4801,7 +5125,7 @@ export const completeGearboxData = [
         ],
         "thrust": 175,
         "centerDistance": null,
-        "dimensions": null,
+        "dimensions": "1454×1010×1425",
         "weight": 3980,
         "controlType": "推拉软轴/电控/气控",
         "price": 153800,
@@ -4824,7 +5148,8 @@ export const completeGearboxData = [
                 "φ480"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC39.41P",
@@ -4880,7 +5205,10 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWC.webp",
         "thrust": 175,
-        "weight": 3980
+        "weight": 3980,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1454×1010×1425"
     },
     {
         "model": "GWC42.45",
@@ -4911,7 +5239,7 @@ export const completeGearboxData = [
         ],
         "thrust": 220,
         "centerDistance": null,
-        "dimensions": null,
+        "dimensions": "1486×1180×1650",
         "weight": 4700,
         "controlType": "推拉软轴/电控/气控",
         "price": 185800,
@@ -4939,7 +5267,8 @@ export const completeGearboxData = [
                 "φ608"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC42.45P",
@@ -4998,7 +5327,10 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWC.webp",
         "thrust": 220,
-        "weight": 4700
+        "weight": 4700,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1486×1180×1650"
     },
     {
         "model": "GWC45.49",
@@ -5029,7 +5361,7 @@ export const completeGearboxData = [
         ],
         "thrust": 270,
         "centerDistance": null,
-        "dimensions": null,
+        "dimensions": "1688×1230×1710",
         "weight": 6030,
         "controlType": "推拉软轴/电控/气控",
         "price": 275800,
@@ -5065,7 +5397,8 @@ export const completeGearboxData = [
                 "16-φ31"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC45.49P",
@@ -5134,7 +5467,10 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWC.webp",
         "thrust": 270,
-        "weight": 6030
+        "weight": 6030,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1688×1230×1710"
     },
     {
         "model": "GWC45.52",
@@ -5201,7 +5537,8 @@ export const completeGearboxData = [
                 "16-φ31"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC46.59",
@@ -5217,7 +5554,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 270
+        "weight": 270,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1550×1200×1680"
     },
     {
         "model": "GWC46.60",
@@ -5233,7 +5573,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 355
+        "weight": 355,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1600×1250×1700"
     },
     {
         "model": "GWC49.54",
@@ -5289,7 +5632,8 @@ export const completeGearboxData = [
                 "φ950"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC49.54P",
@@ -5346,7 +5690,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWC.webp",
         "thrust": 290,
         "dimensions": "2126×1989×1340",
-        "weight": 7900
+        "weight": 7900,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC49.59",
@@ -5377,7 +5723,7 @@ export const completeGearboxData = [
         ],
         "thrust": 290,
         "centerDistance": null,
-        "dimensions": null,
+        "dimensions": "2126×1989×1340",
         "weight": 8500,
         "controlType": "推拉软轴/电控/气控",
         "price": 460000,
@@ -5402,7 +5748,8 @@ export const completeGearboxData = [
                 "φ950"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC52.59",
@@ -5460,7 +5807,8 @@ export const completeGearboxData = [
                 "SAE2#11.5寸"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC52.59P",
@@ -5498,7 +5846,9 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-GWC.webp",
         "dimensions": "2291×1400×1290",
-        "weight": 10700
+        "weight": 10700,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC52.62",
@@ -5559,7 +5909,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 11000,
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "2291×1400×1290"
     },
     {
         "model": "GWC56.61",
@@ -5575,7 +5928,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 360
+        "weight": 360,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "2350×1500×2100"
     },
     {
         "model": "GWC60.66",
@@ -5610,7 +5966,7 @@ export const completeGearboxData = [
         ],
         "thrust": 450,
         "centerDistance": null,
-        "dimensions": null,
+        "dimensions": "2445×1600×2215",
         "weight": 14690,
         "controlType": "推拉软轴/电控/气控",
         "price": 800000,
@@ -5632,7 +5988,8 @@ export const completeGearboxData = [
             ],
             "plainFlange": true
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC60.66P",
@@ -5673,7 +6030,10 @@ export const completeGearboxData = [
         "maxPower": 20817,
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-GWC.webp",
-        "weight": 14690
+        "weight": 14690,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "2445×1600×2215"
     },
     {
         "model": "GWC60.74",
@@ -5730,7 +6090,8 @@ export const completeGearboxData = [
             ],
             "plainFlange": true
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC61.65",
@@ -5746,7 +6107,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 560
+        "weight": 560,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "2500×1650×2200"
     },
     {
         "model": "GWC63.71",
@@ -5804,7 +6168,8 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC63.71P",
@@ -5848,7 +6213,9 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-GWC.webp",
         "dimensions": "2645×2381×1740",
-        "weight": 17500
+        "weight": 17500,
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC66.75",
@@ -5883,7 +6250,7 @@ export const completeGearboxData = [
         ],
         "thrust": 730,
         "centerDistance": null,
-        "dimensions": null,
+        "dimensions": "2750×2500×1800",
         "weight": 20500,
         "controlType": "推拉软轴/电控/气控",
         "price": 1050000,
@@ -5904,7 +6271,8 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC70.76",
@@ -5941,7 +6309,7 @@ export const completeGearboxData = [
         ],
         "thrust": 750,
         "centerDistance": null,
-        "dimensions": null,
+        "dimensions": "2876×2151×1970",
         "weight": 22500,
         "controlType": "推拉软轴/电控/气控",
         "price": 1100000,
@@ -5962,7 +6330,8 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC70.82",
@@ -6008,7 +6377,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 23000,
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC70.85",
@@ -6051,7 +6422,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 27000,
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "2876×2151×1970"
     },
     {
         "model": "GWC75.90",
@@ -6095,7 +6469,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 34000,
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC78.88",
@@ -6151,7 +6527,8 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC78.96",
@@ -6178,7 +6555,7 @@ export const completeGearboxData = [
         ],
         "thrust": 1100,
         "centerDistance": 38,
-        "dimensions": null,
+        "dimensions": "3135×2945×2158",
         "weight": 38000,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 1630000,
@@ -6203,7 +6580,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC80.95",
@@ -6234,7 +6613,7 @@ export const completeGearboxData = [
         ],
         "thrust": 1200,
         "centerDistance": null,
-        "dimensions": null,
+        "dimensions": "3300×3100×2300",
         "weight": 40000,
         "controlType": "推拉软轴/电控/气控",
         "price": 2000000,
@@ -6246,7 +6625,8 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWC.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWC85.100",
@@ -6281,7 +6661,7 @@ export const completeGearboxData = [
         ],
         "thrust": 1400,
         "centerDistance": null,
-        "dimensions": null,
+        "dimensions": "3800×3500×2600",
         "weight": 56500,
         "controlType": "推拉软轴/电控/气控",
         "price": 2500000,
@@ -6293,7 +6673,8 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWC.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
-        "image": "/images/gearbox/Advance-GWC.webp"
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "GWCD26.70",
@@ -6309,7 +6690,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 495
+        "weight": 495,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1238×920×1315"
     },
     {
         "model": "GWCD36.70",
@@ -6325,7 +6709,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 550
+        "weight": 550,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1645×1331×1060"
     },
     {
         "model": "GWCD46.71",
@@ -6341,7 +6728,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 600
+        "weight": 600,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1688×1230×1710"
     },
     {
         "model": "GWCD56.72",
@@ -6357,7 +6747,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 700
+        "weight": 700,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2126×1989×1340"
     },
     {
         "model": "GWCD67.80",
@@ -6373,7 +6766,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 850
+        "weight": 850,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2445×1600×2215"
     },
     {
         "model": "GWCD79.85",
@@ -6389,7 +6785,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 970
+        "weight": 970,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2876×2151×1970"
     },
     {
         "model": "GWCD90.100",
@@ -6405,7 +6804,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 1350
+        "weight": 1350,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "3135×2945×2158"
     },
     {
         "model": "GWD28.30",
@@ -6439,7 +6841,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 1230,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "971×800×950"
     },
     {
         "model": "GWD30.32A",
@@ -6474,7 +6879,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 1350,
         "image": "/images/gearbox/Advance-GWD.webp",
-        "dimensions": "1433×1200×888"
+        "dimensions": "1433×1200×888",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWD32.35",
@@ -6509,7 +6916,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 2080,
         "image": "/images/gearbox/Advance-GWD.webp",
-        "dimensions": "1405×1240×920"
+        "dimensions": "1405×1240×920",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWD36.39",
@@ -6544,7 +6953,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 2450,
         "image": "/images/gearbox/Advance-GWD.webp",
-        "dimensions": "1645×1331×1060"
+        "dimensions": "1645×1331×1060",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWD36.54",
@@ -6576,7 +6987,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 2960,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1645×1331×1060"
     },
     {
         "model": "GWD39.41",
@@ -6621,7 +7035,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 2960,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1423×1010×1425"
     },
     {
         "model": "GWD39.57",
@@ -6664,7 +7081,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 3630,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1423×1010×1425"
     },
     {
         "model": "GWD42.45",
@@ -6698,7 +7118,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 3630,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1454×1180×1650"
     },
     {
         "model": "GWD42.63",
@@ -6730,7 +7153,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 5560,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1454×1180×1650"
     },
     {
         "model": "GWD45.49",
@@ -6764,7 +7190,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 5560,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1649×1230×1710"
     },
     {
         "model": "GWD45.68",
@@ -6796,7 +7225,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 7300,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1649×1230×1710"
     },
     {
         "model": "GWD49.54",
@@ -6831,7 +7263,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 7300,
         "image": "/images/gearbox/Advance-GWD.webp",
-        "dimensions": "2126×1989×1340"
+        "dimensions": "2126×1989×1340",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWD49.74",
@@ -6863,7 +7297,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 8900,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2126×1989×1340"
     },
     {
         "model": "GWD52.59",
@@ -6898,7 +7335,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 8900,
         "image": "/images/gearbox/Advance-GWD.webp",
-        "dimensions": "2291×1400×1290"
+        "dimensions": "2291×1400×1290",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWD52.82",
@@ -6930,7 +7369,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 14000,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2291×1400×1290"
     },
     {
         "model": "GWD60.66",
@@ -6964,7 +7406,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 14000,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2410×1600×2215"
     },
     {
         "model": "GWD60.92",
@@ -6996,7 +7441,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2410×1600×2215"
     },
     {
         "model": "GWD63.71",
@@ -7031,7 +7479,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
         "image": "/images/gearbox/Advance-GWD.webp",
-        "dimensions": "2645×2381×1740"
+        "dimensions": "2645×2381×1740",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWD63.95",
@@ -7063,7 +7513,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2645×2381×1740"
     },
     {
         "model": "GWD66.106",
@@ -7094,7 +7547,10 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
         "image": "/images/gearbox/Advance-GWD.webp",
-        "thrust": 980
+        "thrust": 980,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2750×2500×1800"
     },
     {
         "model": "GWD66.75",
@@ -7128,7 +7584,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 19000,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2750×2500×1800"
     },
     {
         "model": "GWD70.111",
@@ -7159,7 +7618,10 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
         "image": "/images/gearbox/Advance-GWD.webp",
-        "thrust": 1200
+        "thrust": 1200,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2876×2151×1970"
     },
     {
         "model": "GWD70.76",
@@ -7193,7 +7655,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 21500,
-        "image": "/images/gearbox/Advance-GWD.webp"
+        "image": "/images/gearbox/Advance-GWD.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2876×2151×1970"
     },
     {
         "model": "GWD70.82",
@@ -7230,7 +7695,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 8400,
         "image": "/images/gearbox/Advance-GWD.webp",
-        "dimensions": "2876×2151×1970"
+        "dimensions": "2876×2151×1970",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWH28.30",
@@ -7264,7 +7731,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 1230,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "971×800×950"
     },
     {
         "model": "GWH30.32A",
@@ -7298,7 +7768,9 @@ export const completeGearboxData = [
         "weight": 1350,
         "image": "/images/gearbox/Advance-GWH.webp",
         "dimensions": "1433×1200×888",
-        "thrust": 100
+        "thrust": 100,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWH32.35",
@@ -7333,7 +7805,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 2080,
         "image": "/images/gearbox/Advance-GWH.webp",
-        "dimensions": "1405×1240×920"
+        "dimensions": "1405×1240×920",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWH36.39",
@@ -7368,7 +7842,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 2450,
         "image": "/images/gearbox/Advance-GWH.webp",
-        "dimensions": "1645×1331×1060"
+        "dimensions": "1645×1331×1060",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWH36.54",
@@ -7400,7 +7876,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 2960,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1645×1331×1060"
     },
     {
         "model": "GWH39.41",
@@ -7445,7 +7924,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 2960,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1423×1010×1425"
     },
     {
         "model": "GWH39.57",
@@ -7488,7 +7970,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 3630,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1423×1010×1425"
     },
     {
         "model": "GWH42.45",
@@ -7535,7 +8020,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 3630,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1454×1180×1650"
     },
     {
         "model": "GWH42.63",
@@ -7580,7 +8068,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 5560,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1454×1180×1650"
     },
     {
         "model": "GWH45.49",
@@ -7627,7 +8118,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 5560,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1649×1230×1710"
     },
     {
         "model": "GWH45.68B",
@@ -7672,7 +8166,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 7300,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1649×1230×1710"
     },
     {
         "model": "GWH49.54",
@@ -7720,7 +8217,9 @@ export const completeGearboxData = [
         },
         "weight": 7300,
         "image": "/images/gearbox/Advance-GWH.webp",
-        "dimensions": "2126×1989×1340"
+        "dimensions": "2126×1989×1340",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWH49.74",
@@ -7765,7 +8264,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 8900,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2126×1989×1340"
     },
     {
         "model": "GWH52.59",
@@ -7813,7 +8315,9 @@ export const completeGearboxData = [
         },
         "weight": 8900,
         "image": "/images/gearbox/Advance-GWH.webp",
-        "dimensions": "2291×1400×1290"
+        "dimensions": "2291×1400×1290",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWH52.82",
@@ -7858,7 +8362,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 14000,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2291×1400×1290"
     },
     {
         "model": "GWH60.66",
@@ -7892,7 +8399,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 14000,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2410×1600×2215"
     },
     {
         "model": "GWH60.92",
@@ -7924,7 +8434,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2410×1600×2215"
     },
     {
         "model": "GWH63.71",
@@ -7959,7 +8472,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
         "image": "/images/gearbox/Advance-GWH.webp",
-        "dimensions": "2645×2381×1740"
+        "dimensions": "2645×2381×1740",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWH63.95",
@@ -7991,7 +8506,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2645×2381×1740"
     },
     {
         "model": "GWH66.106",
@@ -8022,7 +8540,10 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
         "image": "/images/gearbox/Advance-GWH.webp",
-        "thrust": 980
+        "thrust": 980,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2750×2500×1800"
     },
     {
         "model": "GWH66.75",
@@ -8056,7 +8577,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 19000,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2750×2500×1800"
     },
     {
         "model": "GWH70.111",
@@ -8087,7 +8611,10 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
         "image": "/images/gearbox/Advance-GWH.webp",
-        "thrust": 1200
+        "thrust": 1200,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2876×2151×1970"
     },
     {
         "model": "GWH70.76",
@@ -8121,7 +8648,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 21500,
-        "image": "/images/gearbox/Advance-GWH.webp"
+        "image": "/images/gearbox/Advance-GWH.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2876×2151×1970"
     },
     {
         "model": "GWH70.82",
@@ -8158,7 +8688,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 8400,
         "image": "/images/gearbox/Advance-GWH.webp",
-        "dimensions": "2876×2151×1970"
+        "dimensions": "2876×2151×1970",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWK28.30",
@@ -8192,7 +8724,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 1130,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "968×1050×1370"
     },
     {
         "model": "GWK30.32A",
@@ -8225,7 +8760,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 1300,
         "image": "/images/gearbox/Advance-GWK.webp",
-        "dimensions": "1433×1200×888"
+        "dimensions": "1433×1200×888",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWK32.35",
@@ -8260,7 +8797,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 2080,
         "image": "/images/gearbox/Advance-GWK.webp",
-        "dimensions": "1405×1240×920"
+        "dimensions": "1405×1240×920",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWK36.39",
@@ -8295,7 +8834,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 2250,
         "image": "/images/gearbox/Advance-GWK.webp",
-        "dimensions": "1645×1331×1060"
+        "dimensions": "1645×1331×1060",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWK36.54",
@@ -8327,7 +8868,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 2960,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1645×1331×1060"
     },
     {
         "model": "GWK39.41",
@@ -8372,7 +8916,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 2960,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1393×1400×1630"
     },
     {
         "model": "GWK42.45",
@@ -8419,7 +8966,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 3630,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1425×1460×1630"
     },
     {
         "model": "GWK42.63",
@@ -8464,7 +9014,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 5560,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1425×1460×1630"
     },
     {
         "model": "GWK45.49",
@@ -8511,7 +9064,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 5560,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1594×1590×1860"
     },
     {
         "model": "GWK45.68",
@@ -8556,7 +9112,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 7300,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1594×1590×1860"
     },
     {
         "model": "GWK49.54",
@@ -8604,7 +9163,9 @@ export const completeGearboxData = [
         },
         "weight": 7300,
         "image": "/images/gearbox/Advance-GWK.webp",
-        "dimensions": "2126×1989×1340"
+        "dimensions": "2126×1989×1340",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWK49.74",
@@ -8649,7 +9210,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 7220,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2126×1989×1340"
     },
     {
         "model": "GWK52.59",
@@ -8697,7 +9261,9 @@ export const completeGearboxData = [
         },
         "weight": 7220,
         "image": "/images/gearbox/Advance-GWK.webp",
-        "dimensions": "2291×1400×1290"
+        "dimensions": "2291×1400×1290",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWK52.82",
@@ -8742,7 +9308,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 14000,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2291×1400×1290"
     },
     {
         "model": "GWK60.66",
@@ -8776,7 +9345,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 14000,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2340×2080×2520"
     },
     {
         "model": "GWK60.92",
@@ -8808,7 +9380,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2340×2080×2520"
     },
     {
         "model": "GWK63.71",
@@ -8843,7 +9418,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
         "image": "/images/gearbox/Advance-GWK.webp",
-        "dimensions": "2645×2381×1740"
+        "dimensions": "2645×2381×1740",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWK63.95",
@@ -8875,7 +9452,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2645×2381×1740"
     },
     {
         "model": "GWK66.106",
@@ -8905,7 +9485,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2750×2500×1800"
     },
     {
         "model": "GWK66.75",
@@ -8939,7 +9522,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 19000,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2750×2500×1800"
     },
     {
         "model": "GWK70.111",
@@ -8969,7 +9555,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2876×2151×1970"
     },
     {
         "model": "GWK70.76",
@@ -9003,7 +9592,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 21500,
-        "image": "/images/gearbox/Advance-GWK.webp"
+        "image": "/images/gearbox/Advance-GWK.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2876×2151×1970"
     },
     {
         "model": "GWK70.82",
@@ -9040,7 +9632,9 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 8400,
         "image": "/images/gearbox/Advance-GWK.webp",
-        "dimensions": "2876×2151×1970"
+        "dimensions": "2876×2151×1970",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWL28.30",
@@ -9081,7 +9675,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 1070,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1036×800×950"
     },
     {
         "model": "GWL30.32",
@@ -9123,7 +9720,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 1240,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1198×860×1298"
     },
     {
         "model": "GWL32.35",
@@ -9165,7 +9765,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 2240,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1238×920×1315"
     },
     {
         "model": "GWL36.39",
@@ -9207,7 +9810,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 2700,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1326×1060×1500"
     },
     {
         "model": "GWL39.41",
@@ -9249,7 +9855,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 3550,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1454×1010×1425"
     },
     {
         "model": "GWL42.45",
@@ -9291,7 +9900,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 4190,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1486×1180×1650"
     },
     {
         "model": "GWL45.49",
@@ -9333,7 +9945,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 5350,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1688×1230×1710"
     },
     {
         "model": "GWL45.52",
@@ -9374,7 +9989,11 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWL.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "weight": 4600,
+        "dimensions": "1688×1230×1710"
     },
     {
         "model": "GWL49.54",
@@ -9416,7 +10035,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 7000,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "1783×1340×1925"
     },
     {
         "model": "GWL49.59",
@@ -9457,7 +10079,11 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWL.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "weight": 6000,
+        "dimensions": "1783×1340×1925"
     },
     {
         "model": "GWL52.59",
@@ -9499,7 +10125,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 8955,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "2198×1400×2015"
     },
     {
         "model": "GWL52.62",
@@ -9545,7 +10174,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 9300,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "2198×1400×2015"
     },
     {
         "model": "GWL60.66",
@@ -9591,7 +10223,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 13290,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "2445×1600×2215"
     },
     {
         "model": "GWL60.74",
@@ -9637,7 +10272,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 15100,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "2445×1600×2215"
     },
     {
         "model": "GWL66.75",
@@ -9683,7 +10321,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17500,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "2700×2400×1750"
     },
     {
         "model": "GWL70.76",
@@ -9731,7 +10372,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 20000,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "2850×2100×1950"
     },
     {
         "model": "GWL70.82",
@@ -9767,7 +10411,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 20500,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "2850×2100×1950"
     },
     {
         "model": "GWL70.85",
@@ -9801,7 +10448,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 24200,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "2850×2100×1950"
     },
     {
         "model": "GWL75.90",
@@ -9835,7 +10485,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 31500,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "2950×2800×2100"
     },
     {
         "model": "GWL78.88",
@@ -9876,7 +10529,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 32000,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "3100×2900×2150"
     },
     {
         "model": "GWL80.95",
@@ -9917,7 +10573,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 37000,
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "3250×3050×2280"
     },
     {
         "model": "GWL85.100",
@@ -9960,7 +10619,11 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWL.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
-        "image": "/images/gearbox/Advance-GWL.webp"
+        "image": "/images/gearbox/Advance-GWL.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相同",
+        "dimensions": "3750×3450×2580",
+        "weight": 52000
     },
     {
         "model": "GWS28.30",
@@ -10004,7 +10667,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 1230,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS28.30G/GWH28.30G",
@@ -10031,8 +10696,8 @@ export const completeGearboxData = [
         ],
         "thrust": 80,
         "centerDistance": 1,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "968×1050×1370",
+        "weight": 1230,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 68875,
         "discountRate": 0.1,
@@ -10052,7 +10717,9 @@ export const completeGearboxData = [
                 "φ450"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS28.30P",
@@ -10096,7 +10763,9 @@ export const completeGearboxData = [
         "minPower": 544,
         "maxPower": 2446,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS30.32A",
@@ -10139,7 +10808,9 @@ export const completeGearboxData = [
         "weight": 1460,
         "image": "/images/gearbox/Advance-GWS.webp",
         "dimensions": "1433×1200×888",
-        "thrust": 100
+        "thrust": 100,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS30.32P",
@@ -10163,7 +10834,7 @@ export const completeGearboxData = [
         "thrust": 0.225,
         "centerDistance": 1000,
         "dimensions": "相同",
-        "weight": null,
+        "weight": 1465,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 86260,
         "discountRate": 0.1,
@@ -10183,7 +10854,9 @@ export const completeGearboxData = [
         "minPower": 540,
         "maxPower": 2432,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS32.35",
@@ -10227,7 +10900,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 2250,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS32.35G/GWH32.35G",
@@ -10255,7 +10930,7 @@ export const completeGearboxData = [
         "thrust": 120,
         "centerDistance": 2,
         "dimensions": "1405×1240×920",
-        "weight": null,
+        "weight": 2035,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 98610,
         "discountRate": 0.1,
@@ -10275,7 +10950,9 @@ export const completeGearboxData = [
                 "φ450"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS32.35P",
@@ -10319,7 +10996,9 @@ export const completeGearboxData = [
         "minPower": 560,
         "maxPower": 2520,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS36.39",
@@ -10370,7 +11049,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 2450,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS36.39G/GWH36.39G",
@@ -10398,7 +11079,7 @@ export const completeGearboxData = [
         "thrust": 140,
         "centerDistance": 2,
         "dimensions": "1645×1331×1060",
-        "weight": null,
+        "weight": 2245,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 117610,
         "discountRate": 0.1,
@@ -10425,7 +11106,9 @@ export const completeGearboxData = [
                 "φ450"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS36.39P",
@@ -10476,7 +11159,9 @@ export const completeGearboxData = [
         "minPower": 540,
         "maxPower": 2432,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS36.54",
@@ -10524,7 +11209,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 3230,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1563×1330×1230"
     },
     {
         "model": "GWS36.54G/GWH36.54G",
@@ -10549,8 +11237,8 @@ export const completeGearboxData = [
         ],
         "thrust": 220,
         "centerDistance": null,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "1563×1330×1230",
+        "weight": 3230,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 9555,
         "discountRate": 0.1,
@@ -10577,7 +11265,9 @@ export const completeGearboxData = [
                 "φ450"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS39.41",
@@ -10622,7 +11312,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 3230,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1393×1400×1630"
     },
     {
         "model": "GWS39.41G/GWH39.41G",
@@ -10649,8 +11342,8 @@ export const completeGearboxData = [
         ],
         "thrust": 175,
         "centerDistance": 3,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "1393×1400×1630",
+        "weight": 3230,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 146110,
         "discountRate": 0.1,
@@ -10672,7 +11365,9 @@ export const completeGearboxData = [
                 "φ480"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS39.41P",
@@ -10695,7 +11390,7 @@ export const completeGearboxData = [
         ],
         "thrust": 0.44,
         "centerDistance": 1000,
-        "dimensions": null,
+        "dimensions": "1393×1400×1630",
         "weight": 3230,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 146110,
@@ -10718,7 +11413,9 @@ export const completeGearboxData = [
         "minPower": 541,
         "maxPower": 2165,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS39.57",
@@ -10761,7 +11458,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 3960,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1393×1400×1630"
     },
     {
         "model": "GWS39.57G/GWH39.57G",
@@ -10786,8 +11486,8 @@ export const completeGearboxData = [
         ],
         "thrust": 270,
         "centerDistance": null,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "1393×1400×1630",
+        "weight": 3230,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 9825,
         "discountRate": 0.1,
@@ -10809,7 +11509,9 @@ export const completeGearboxData = [
                 "φ480"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS42.45",
@@ -10860,7 +11562,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 3960,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS42.45G/GWH42.45G",
@@ -10887,8 +11591,8 @@ export const completeGearboxData = [
         ],
         "thrust": 220,
         "centerDistance": 3,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "1425×1460×1630",
+        "weight": 3960,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 176510,
         "discountRate": 0.1,
@@ -10915,7 +11619,9 @@ export const completeGearboxData = [
                 "φ608"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS42.45P",
@@ -10966,7 +11672,9 @@ export const completeGearboxData = [
         "minPower": 558,
         "maxPower": 2230,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS42.63",
@@ -11014,7 +11722,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 6030,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1613×1460×1360"
     },
     {
         "model": "GWS42.63G/GWH42.63G",
@@ -11039,8 +11750,8 @@ export const completeGearboxData = [
         ],
         "thrust": 290,
         "centerDistance": null,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "1613×1460×1360",
+        "weight": 3960,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 10117,
         "discountRate": 0.1,
@@ -11067,7 +11778,9 @@ export const completeGearboxData = [
                 "φ608"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS45.49",
@@ -11114,7 +11827,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 6030,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1594×1590×1860"
     },
     {
         "model": "GWS45.49G/GWH45.49G",
@@ -11141,8 +11857,8 @@ export const completeGearboxData = [
         ],
         "thrust": 270,
         "centerDistance": 6,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "1594×1590×1860",
+        "weight": 5275,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 262010,
         "discountRate": 0.1,
@@ -11166,7 +11882,9 @@ export const completeGearboxData = [
                 "φ608"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS45.49P",
@@ -11214,7 +11932,9 @@ export const completeGearboxData = [
         "minPower": 533,
         "maxPower": 1866,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS45.68",
@@ -11259,7 +11979,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 7900,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1594×1590×1860"
     },
     {
         "model": "GWS45.68G/GWH45.68B/GWD45.68",
@@ -11285,8 +12008,8 @@ export const completeGearboxData = [
         ],
         "thrust": 360,
         "centerDistance": null,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "1594×1590×1860",
+        "weight": 6030,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 10430,
         "discountRate": 0.1,
@@ -11310,7 +12033,9 @@ export const completeGearboxData = [
                 "φ608"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS49.54",
@@ -11358,7 +12083,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 7900,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS49.54G/GWH49.54G",
@@ -11386,7 +12113,7 @@ export const completeGearboxData = [
         "thrust": 290,
         "centerDistance": 7,
         "dimensions": "2126×1989×1340",
-        "weight": null,
+        "weight": 6900,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 382470,
         "discountRate": 0.1,
@@ -11410,7 +12137,9 @@ export const completeGearboxData = [
                 "φ950"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS49.54P",
@@ -11458,7 +12187,9 @@ export const completeGearboxData = [
         "minPower": 533,
         "maxPower": 1800,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS49.61",
@@ -11504,7 +12235,9 @@ export const completeGearboxData = [
                 "φ950"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS49.74",
@@ -11549,7 +12282,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 8900,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2189×1892×1750"
     },
     {
         "model": "GWS49.74G/GWH49.74G",
@@ -11574,8 +12310,8 @@ export const completeGearboxData = [
         ],
         "thrust": 540,
         "centerDistance": null,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "2189×1892×1750",
+        "weight": 8500,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 10881,
         "discountRate": 0.1,
@@ -11599,7 +12335,9 @@ export const completeGearboxData = [
                 "φ950"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS52.59",
@@ -11647,7 +12385,9 @@ export const completeGearboxData = [
         },
         "weight": 8900,
         "image": "/images/gearbox/Advance-GWS.webp",
-        "dimensions": "2291×1400×1290"
+        "dimensions": "2291×1400×1290",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS52.59P",
@@ -11679,7 +12419,10 @@ export const completeGearboxData = [
         "weight": 8900,
         "price": 517750,
         "priceSource": "GWC52.59×95%",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2038×1870×2320"
     },
     {
         "model": "GWS52.71",
@@ -11721,7 +12464,9 @@ export const completeGearboxData = [
                 "φ950"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS52.82",
@@ -11766,7 +12511,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 15000,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2291×1400×1290"
     },
     {
         "model": "GWS52.82G/GWH52.82G",
@@ -11791,8 +12539,8 @@ export const completeGearboxData = [
         ],
         "thrust": 710,
         "centerDistance": null,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "2291×1400×1290",
+        "weight": 12300,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 11245,
         "discountRate": 0.1,
@@ -11816,7 +12564,9 @@ export const completeGearboxData = [
                 "φ950"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS60.66",
@@ -11860,7 +12610,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 15000,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS60.66G/GWH60.66G",
@@ -11887,8 +12639,8 @@ export const completeGearboxData = [
         ],
         "thrust": 450,
         "centerDistance": 15141414,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "2340×2080×2520",
+        "weight": 12100,
         "source": "杭齿厂选型手册2025版5月版",
         "maxPower": 6108,
         "minPower": 2036,
@@ -11908,7 +12660,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "price": 760000,
         "priceSource": "GWC60.66×95%",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS60.66P",
@@ -11941,7 +12695,9 @@ export const completeGearboxData = [
         "weight": 15000,
         "price": 760000,
         "priceSource": "GWC60.66×95%",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS60.75",
@@ -11980,7 +12736,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 18300,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2324×2080×1920"
     },
     {
         "model": "GWS60.92",
@@ -12021,7 +12780,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 17000,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2324×2080×1920"
     },
     {
         "model": "GWS60.92G/GWH60.92G",
@@ -12046,8 +12808,8 @@ export const completeGearboxData = [
         ],
         "thrust": 750,
         "centerDistance": null,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "2324×2080×1920",
+        "weight": 18300,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 12320,
         "discountRate": 0.1,
@@ -12067,7 +12829,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS63.71",
@@ -12111,7 +12875,9 @@ export const completeGearboxData = [
         },
         "weight": 17000,
         "image": "/images/gearbox/Advance-GWS.webp",
-        "dimensions": "2645×2381×1740"
+        "dimensions": "2645×2381×1740",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS63.78A",
@@ -12141,7 +12907,11 @@ export const completeGearboxData = [
         "powerSource": "项目跟踪数据",
         "source": "项目跟踪记录-九江1000TEU集装箱船",
         "note": "新型号，数据待完善，3676kW/650rpm",
-        "image": "/images/gearbox/Advance-GW.webp"
+        "image": "/images/gearbox/Advance-GW.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "weight": 17000,
+        "dimensions": "2645×2381×1740"
     },
     {
         "model": "GWS63.71/GWK63.71/GWH63.71/GWD63.71",
@@ -12171,7 +12941,7 @@ export const completeGearboxData = [
         "thrust": 710,
         "centerDistance": 17,
         "dimensions": "2645×2381×1740",
-        "weight": null,
+        "weight": 17000,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 902500,
         "discountRate": 0.1,
@@ -12191,7 +12961,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS63.95",
@@ -12232,7 +13004,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 17000,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2645×2381×1740"
     },
     {
         "model": "GWS63.95/GWK63.95/GWH63.95/GWD63.95",
@@ -12259,8 +13034,8 @@ export const completeGearboxData = [
         ],
         "thrust": 800,
         "centerDistance": null,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "2645×2381×1740",
+        "weight": 19000,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 12763,
         "discountRate": 0.1,
@@ -12280,7 +13055,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS66.106",
@@ -12311,7 +13088,10 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 17000,
         "image": "/images/gearbox/Advance-GWS.webp",
-        "thrust": 980
+        "thrust": 980,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2750×2500×1800"
     },
     {
         "model": "GWS66.106G/GWH66.106G",
@@ -12336,8 +13116,8 @@ export const completeGearboxData = [
         ],
         "thrust": 980,
         "centerDistance": null,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "2750×2500×1800",
+        "weight": 21000,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 13227,
         "discountRate": 0.1,
@@ -12348,7 +13128,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/06-16A-26.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS66.75",
@@ -12382,7 +13164,10 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "weight": 20000,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2750×2500×1800"
     },
     {
         "model": "GWS66.75G/GWH66.75G",
@@ -12409,8 +13194,8 @@ export const completeGearboxData = [
         ],
         "thrust": 730,
         "centerDistance": 20191919,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "2750×2500×1800",
+        "weight": 20000,
         "source": "杭齿厂选型手册2025版5月版",
         "maxPower": 7106,
         "minPower": 2244,
@@ -12421,7 +13206,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "price": 997500,
         "priceSource": "GWC66.75×95%",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS70.111",
@@ -12461,7 +13248,10 @@ export const completeGearboxData = [
         },
         "weight": 17000,
         "image": "/images/gearbox/Advance-GWS.webp",
-        "thrust": 1200
+        "thrust": 1200,
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2876×2151×1970"
     },
     {
         "model": "GWS70.111G/GWH70.111G",
@@ -12486,8 +13276,8 @@ export const completeGearboxData = [
         ],
         "thrust": 1200,
         "centerDistance": null,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "2876×2151×1970",
+        "weight": 25000,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 13880,
         "discountRate": 0.1,
@@ -12507,7 +13297,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS70.76",
@@ -12550,7 +13342,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 22500,
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反",
+        "dimensions": "2876×2151×1970"
     },
     {
         "model": "GWS70.76G/GWH70.76G",
@@ -12577,8 +13372,8 @@ export const completeGearboxData = [
         ],
         "thrust": 750,
         "centerDistance": 22,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "2876×2151×1970",
+        "weight": 22500,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 1045000,
         "discountRate": 0.1,
@@ -12598,7 +13393,9 @@ export const completeGearboxData = [
                 "φ908"
             ]
         },
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "GWS70.82",
@@ -12644,7 +13441,9 @@ export const completeGearboxData = [
         },
         "weight": 23000,
         "image": "/images/gearbox/Advance-GWS.webp",
-        "dimensions": "2876×2151×1970"
+        "dimensions": "2876×2151×1970",
+        "controlType": "气控/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC038A",
@@ -12694,7 +13493,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC1000",
@@ -12829,7 +13630,8 @@ export const completeGearboxData = [
                 "φ640"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC1200",
@@ -13038,7 +13840,8 @@ export const completeGearboxData = [
                 "4-φ15"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC1200/1",
@@ -13108,7 +13911,9 @@ export const completeGearboxData = [
         },
         "weight": 2500,
         "image": "/images/gearbox/Advance-200-201-230.webp",
-        "dimensions": "1096×1260×1270"
+        "dimensions": "1096×1260×1270",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC1200/1P",
@@ -13143,7 +13948,10 @@ export const completeGearboxData = [
         "maxPower": 2325,
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-1100-1200.webp",
-        "weight": 2500
+        "weight": 2500,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "1096×1260×1270"
     },
     {
         "model": "HC1200P",
@@ -13187,7 +13995,9 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-1100-1200.webp",
         "dimensions": "1082×1200×1130",
-        "weight": 1870
+        "weight": 1870,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC1201",
@@ -13221,7 +14031,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "price": 266000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "1082×1200×1130"
     },
     {
         "model": "HC1250",
@@ -13255,7 +14068,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-1100-1200.webp",
         "price": 277000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "1082×1200×1130"
     },
     {
         "model": "HC138",
@@ -13317,7 +14133,8 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HC138-.webp"
+        "image": "/images/gearbox/Advance-HC138-.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC1600",
@@ -13420,7 +14237,8 @@ export const completeGearboxData = [
                 "φ540"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC1600P",
@@ -13492,7 +14310,9 @@ export const completeGearboxData = [
         "minPower": 677,
         "maxPower": 2902,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC200",
@@ -13542,7 +14362,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC2000",
@@ -13654,7 +14476,8 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC2000P",
@@ -13726,7 +14549,9 @@ export const completeGearboxData = [
         "minPower": 825,
         "maxPower": 2571,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC201",
@@ -13766,7 +14591,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC2400",
@@ -13809,7 +14636,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC2700",
@@ -13879,7 +14708,8 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC2700P",
@@ -13927,7 +14757,9 @@ export const completeGearboxData = [
         "minPower": 686,
         "maxPower": 2827,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC300",
@@ -14000,7 +14832,8 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC350-1",
@@ -14045,7 +14878,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC400",
@@ -14111,7 +14946,8 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC400P",
@@ -14165,7 +15001,9 @@ export const completeGearboxData = [
         "minPower": 190,
         "maxPower": 828,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC4500P",
@@ -14185,7 +15023,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 7500
+        "weight": 7500,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "2100×2300×2000"
     },
     {
         "model": "HC500",
@@ -14232,7 +15073,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC5000P",
@@ -14252,7 +15095,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 8500
+        "weight": 8500,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "2300×2500×2200"
     },
     {
         "model": "HC6000P",
@@ -14270,7 +15116,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 10000
+        "weight": 10000,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "2500×2800×2400"
     },
     {
         "model": "HC600A",
@@ -14316,7 +15165,8 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HC600A.webp"
+        "image": "/images/gearbox/Advance-HC600A.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC600P",
@@ -14334,7 +15184,7 @@ export const completeGearboxData = [
         "thrust": 0.155,
         "centerDistance": 1000,
         "dimensions": "相同",
-        "weight": null,
+        "weight": 1300,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 60000,
         "discountRate": 0.1,
@@ -14362,7 +15212,9 @@ export const completeGearboxData = [
         "minPower": 1359,
         "maxPower": 3583,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC65",
@@ -14408,7 +15260,9 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HC65.webp",
         "thrust": 14.7,
-        "centerDistance": 142
+        "centerDistance": 142,
+        "controlType": "推拉软轴",
+        "rotationDirection": "相反"
     },
     {
         "model": "HC85",
@@ -14432,7 +15286,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 52
+        "weight": 52,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "351×380×544"
     },
     {
         "model": "HCA1000",
@@ -14465,7 +15322,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 1100,
-        "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp",
+        "dimensions": "1030×1104×1050",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA1000(倾角10°)",
@@ -14503,7 +15363,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA138",
@@ -14554,7 +15416,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 200,
-        "image": "/images/gearbox/HCQ138-HCA138-.webp"
+        "image": "/images/gearbox/HCQ138-HCA138-.webp",
+        "controlType": "推拉软轴",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA138(倾角5°)",
@@ -14599,7 +15463,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/HCQ138-HCA138-.webp"
+        "image": "/images/gearbox/HCQ138-HCA138-.webp",
+        "controlType": "推拉软轴",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA138(倾角7°)",
@@ -14649,7 +15515,9 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "thrust": 25,
         "centerDistance": 185,
-        "dimensions": "530×660×616"
+        "dimensions": "530×660×616",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA1400",
@@ -14699,7 +15567,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 1600,
-        "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA1400(倾角7°)",
@@ -14743,7 +15613,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA1401",
@@ -14783,7 +15655,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 1600,
-        "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA1401(倾角5°)",
@@ -14825,7 +15699,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA300",
@@ -14871,7 +15747,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA300(倾角10°)",
@@ -14908,7 +15786,9 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "thrust": 40,
         "centerDistance": 278,
-        "dimensions": "620×585×753"
+        "dimensions": "620×585×753",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA301",
@@ -14955,7 +15835,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA301(倾角5°)",
@@ -14997,7 +15879,9 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "thrust": 40,
         "centerDistance": 265,
-        "dimensions": "618×585×824"
+        "dimensions": "618×585×824",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA302",
@@ -15040,7 +15924,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 370,
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA302(倾角7°)",
@@ -15085,7 +15971,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA700",
@@ -15133,7 +16021,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA700(倾角8°)",
@@ -15171,7 +16061,9 @@ export const completeGearboxData = [
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "thrust": 90,
-        "dimensions": "835×1104×1156"
+        "dimensions": "835×1104×1156",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCA701",
@@ -15205,7 +16097,11 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp",
+        "dimensions": "939×1130×1035",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "weight": 1100
     },
     {
         "model": "HCA701(倾角5°)",
@@ -15218,7 +16114,7 @@ export const completeGearboxData = [
         "thrust": 27.5,
         "centerDistance": null,
         "dimensions": "939×1130×1035",
-        "weight": null,
+        "weight": 1100,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 62060,
         "discountRate": 0.1,
@@ -15241,7 +16137,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCAG1090",
@@ -15289,7 +16187,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 106,
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "480×320×400"
     },
     {
         "model": "HCAG3050",
@@ -15337,7 +16238,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 570,
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "765×510×638"
     },
     {
         "model": "HCAG5050",
@@ -15375,7 +16279,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 870,
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1020×680×850"
     },
     {
         "model": "HCAG6400",
@@ -15411,7 +16318,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 1200,
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1020×680×850"
     },
     {
         "model": "HCAG7650",
@@ -15455,7 +16365,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 1300,
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1170×780×975"
     },
     {
         "model": "HCAG7650(倾角8°)",
@@ -15502,7 +16415,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCAG9055",
@@ -15542,7 +16457,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 1570,
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1408×940×1175"
     },
     {
         "model": "HCAG9055(倾角8°)",
@@ -15581,7 +16499,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCAM1250",
@@ -15607,7 +16527,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-1100-1200.webp",
         "price": 142000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "960×640×800"
     },
     {
         "model": "HCAM1400",
@@ -15633,7 +16556,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "price": 360000,
         "priceSource": "2026官方出厂价",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1050×700×875"
     },
     {
         "model": "HCAM302",
@@ -15659,7 +16585,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "price": 34000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "570×380×475"
     },
     {
         "model": "HCAM303",
@@ -15705,7 +16634,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 290,
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "570×380×475"
     },
     {
         "model": "HCAM403",
@@ -15765,7 +16697,8 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCAM500",
@@ -15791,7 +16724,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "price": 57000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "680×453×566"
     },
     {
         "model": "HCD0FM",
@@ -15813,7 +16749,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 28
+        "weight": 28,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "680×930×880"
     },
     {
         "model": "HCD1000",
@@ -15875,7 +16814,9 @@ export const completeGearboxData = [
                 "φ640"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD1000/2",
@@ -15901,7 +16842,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 2000
+        "weight": 2000,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "1082×1280×1345"
     },
     {
         "model": "HCD1200",
@@ -15963,7 +16907,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD138",
@@ -16018,7 +16964,8 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCD400A.webp"
+        "image": "/images/gearbox/Advance-HCD400A.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD1400",
@@ -16086,7 +17033,9 @@ export const completeGearboxData = [
                 "φ640"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD1400P",
@@ -16172,7 +17121,9 @@ export const completeGearboxData = [
         "minPower": 818,
         "maxPower": 4750,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD1500",
@@ -16399,7 +17350,9 @@ export const completeGearboxData = [
         "thrust": 200,
         "centerDistance": 520,
         "dimensions": "1291×1620×1590",
-        "weight": 4000
+        "weight": 4000,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD1FM",
@@ -16421,7 +17374,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 38
+        "weight": 38,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "820×950×890"
     },
     {
         "model": "HCD2000",
@@ -16476,7 +17432,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD2000/2",
@@ -16498,7 +17456,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 4200
+        "weight": 4200,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "1600×1620×1645"
     },
     {
         "model": "HCD2000P",
@@ -16573,7 +17534,9 @@ export const completeGearboxData = [
         "minPower": 948,
         "maxPower": 2370,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD2400",
@@ -16625,7 +17588,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD2700",
@@ -16670,7 +17635,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD2700P",
@@ -16737,7 +17704,9 @@ export const completeGearboxData = [
         "minPower": 1050,
         "maxPower": 3360,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD2FM",
@@ -16759,7 +17728,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 45
+        "weight": 45,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "1082×1120×990"
     },
     {
         "model": "HCD350",
@@ -16811,7 +17783,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD3800",
@@ -16865,7 +17839,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD400",
@@ -16897,7 +17873,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 620
+        "weight": 620,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "820×950×890"
     },
     {
         "model": "HCD400A",
@@ -16960,7 +17939,8 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCD400A.webp"
+        "image": "/images/gearbox/Advance-HCD400A.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD400P",
@@ -17007,7 +17987,10 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-HCD400A.webp",
-        "weight": 620
+        "weight": 620,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "820×950×890"
     },
     {
         "model": "HCD440",
@@ -17039,7 +18022,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-HCD400A.webp",
         "price": 85000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "820×950×890"
     },
     {
         "model": "HCD450",
@@ -17095,7 +18081,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCD400A.webp"
+        "image": "/images/gearbox/Advance-HCD400A.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD450P",
@@ -17128,7 +18116,9 @@ export const completeGearboxData = [
         "price": 87000,
         "priceSource": "系统估算",
         "discountRate": 0.1,
-        "dimensions": "761×984×1040"
+        "dimensions": "761×984×1040",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD600/2",
@@ -17154,7 +18144,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 950
+        "weight": 950,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "745×1214×1271"
     },
     {
         "model": "HCD600A",
@@ -17224,7 +18217,8 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD600P",
@@ -17288,7 +18282,11 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "745×1214×1126",
+        "weight": 1550
     },
     {
         "model": "HCD68",
@@ -17310,7 +18308,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 48
+        "weight": 48,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "351×380×544"
     },
     {
         "model": "HCD700",
@@ -17364,7 +18365,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD800",
@@ -17421,7 +18424,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCD800/2",
@@ -17447,7 +18452,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 1350
+        "weight": 1350,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "1056×1280×1341"
     },
     {
         "model": "HCD800P",
@@ -17529,7 +18537,9 @@ export const completeGearboxData = [
         "minPower": 811,
         "maxPower": 5208,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCDS1200",
@@ -17545,7 +18555,7 @@ export const completeGearboxData = [
         "thrust": 0.93,
         "centerDistance": 140,
         "dimensions": "450",
-        "weight": null,
+        "weight": 2800,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 133000,
         "discountRate": 0.1,
@@ -17577,7 +18587,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCDS1400",
@@ -17594,7 +18606,7 @@ export const completeGearboxData = [
         "thrust": 1.03,
         "centerDistance": 175,
         "dimensions": "485",
-        "weight": null,
+        "weight": 3400,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 146000,
         "discountRate": 0.1,
@@ -17627,7 +18639,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCDS1600",
@@ -17657,7 +18671,11 @@ export const completeGearboxData = [
         "minPower": 582,
         "maxPower": 2001,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-1600.webp"
+        "image": "/images/gearbox/Advance-1600.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同",
+        "dimensions": "1246×1500×1750",
+        "weight": 5800
     },
     {
         "model": "HCDS2000",
@@ -17693,7 +18711,11 @@ export const completeGearboxData = [
         "minPower": 714,
         "maxPower": 2220,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-HCD400A.webp"
+        "image": "/images/gearbox/Advance-HCD400A.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同",
+        "dimensions": "1600×1620×1645",
+        "weight": 6500
     },
     {
         "model": "HCDS2700",
@@ -17711,7 +18733,7 @@ export const completeGearboxData = [
         "thrust": 2.05,
         "centerDistance": 280,
         "dimensions": "630",
-        "weight": null,
+        "weight": 7500,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 230500,
         "discountRate": 0.1,
@@ -17745,7 +18767,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCDS302",
@@ -17765,7 +18789,7 @@ export const completeGearboxData = [
         "thrust": 0.257,
         "centerDistance": 60,
         "dimensions": "355",
-        "weight": null,
+        "weight": 550,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 74630,
         "discountRate": 0.1,
@@ -17801,7 +18825,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCDS400",
@@ -17818,7 +18844,7 @@ export const completeGearboxData = [
         "thrust": 0.331,
         "centerDistance": 82,
         "dimensions": "355",
-        "weight": null,
+        "weight": 750,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 81000,
         "discountRate": 0.1,
@@ -17851,7 +18877,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCDS600",
@@ -17868,7 +18896,7 @@ export const completeGearboxData = [
         "thrust": 0.48,
         "centerDistance": 90,
         "dimensions": "415",
-        "weight": null,
+        "weight": 1200,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 94000,
         "discountRate": 0.1,
@@ -17901,7 +18929,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCDS800",
@@ -17918,7 +18948,7 @@ export const completeGearboxData = [
         "thrust": 0.625,
         "centerDistance": 110,
         "dimensions": "450",
-        "weight": null,
+        "weight": 1600,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 107000,
         "discountRate": 0.1,
@@ -17951,7 +18981,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCDX300",
@@ -17975,7 +19007,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 180
+        "weight": 180,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "680×930×880"
     },
     {
         "model": "HCDX400",
@@ -18001,7 +19036,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 260
+        "weight": 260,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "820×950×890"
     },
     {
         "model": "HCDX600",
@@ -18029,7 +19067,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 400
+        "weight": 400,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "745×1214×1126"
     },
     {
         "model": "HCDX800",
@@ -18057,7 +19098,10 @@ export const completeGearboxData = [
         "thrust": null,
         "centerDistance": null,
         "source": "杭齿厂选型手册2025版5月版",
-        "weight": 550
+        "weight": 550,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反",
+        "dimensions": "1056×1280×1341"
     },
     {
         "model": "HCG1068",
@@ -18098,7 +19142,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 46,
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "380×254×320"
     },
     {
         "model": "HCG1220",
@@ -18113,7 +19160,7 @@ export const completeGearboxData = [
         ],
         "thrust": 16,
         "centerDistance": 135,
-        "dimensions": null,
+        "dimensions": "405×270×340",
         "weight": 63,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 126500,
@@ -18139,7 +19186,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCG1280-1",
@@ -18155,7 +19204,7 @@ export const completeGearboxData = [
         ],
         "thrust": 16,
         "centerDistance": 146,
-        "dimensions": null,
+        "dimensions": "420×292×365",
         "weight": 73,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 131000,
@@ -18182,7 +19231,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-1400.webp"
+        "image": "/images/gearbox/Advance-1400.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCG1305-3",
@@ -18197,7 +19248,7 @@ export const completeGearboxData = [
         ],
         "thrust": 25,
         "centerDistance": 155,
-        "dimensions": null,
+        "dimensions": "465×310×388",
         "weight": 120,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 132875,
@@ -18223,7 +19274,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-1400.webp"
+        "image": "/images/gearbox/Advance-1400.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCG1400",
@@ -18267,7 +19320,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 160,
-        "image": "/images/gearbox/Advance-1400.webp"
+        "image": "/images/gearbox/Advance-1400.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "525×350×438"
     },
     {
         "model": "HCG1500",
@@ -18311,7 +19367,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 185,
-        "image": "/images/gearbox/Advance-1400.webp"
+        "image": "/images/gearbox/Advance-1400.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "540×360×450"
     },
     {
         "model": "HCG1665",
@@ -18351,7 +19410,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 248,
-        "image": "/images/gearbox/Advance-1600.webp"
+        "image": "/images/gearbox/Advance-1600.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "600×400×500"
     },
     {
         "model": "HCG2050",
@@ -18391,7 +19453,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 342,
-        "image": "/images/gearbox/Advance-2000.webp"
+        "image": "/images/gearbox/Advance-2000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "660×440×550"
     },
     {
         "model": "HCG3050",
@@ -18431,7 +19496,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 570,
-        "image": "/images/gearbox/Advance-2700.webp"
+        "image": "/images/gearbox/Advance-2700.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "765×510×638"
     },
     {
         "model": "HCG5050",
@@ -18446,7 +19514,7 @@ export const completeGearboxData = [
         ],
         "thrust": 110,
         "centerDistance": 340,
-        "dimensions": null,
+        "dimensions": "1020×680×850",
         "weight": 950,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 413750,
@@ -18472,7 +19540,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCG6400",
@@ -18510,7 +19580,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 950,
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1020×680×850"
     },
     {
         "model": "HCG7650",
@@ -18548,7 +19621,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 1230,
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1020×680×850"
     },
     {
         "model": "HCG9060",
@@ -18589,7 +19665,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 1575,
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "1170×780×975"
     },
     {
         "model": "HCL100",
@@ -18633,7 +19712,8 @@ export const completeGearboxData = [
         },
         "minPower": 105,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL1000",
@@ -18667,7 +19747,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL1000F",
@@ -18701,7 +19783,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL1000S",
@@ -18735,7 +19819,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL100F",
@@ -18780,7 +19866,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL100S",
@@ -18825,7 +19913,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL250",
@@ -18870,7 +19960,8 @@ export const completeGearboxData = [
         },
         "minPower": 262,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL250A",
@@ -18918,7 +20009,9 @@ export const completeGearboxData = [
         "minPower": 197,
         "maxPower": 655,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL250F",
@@ -18964,7 +20057,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL250S",
@@ -19010,7 +20105,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL30",
@@ -19056,7 +20153,8 @@ export const completeGearboxData = [
         },
         "minPower": 31,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL30F",
@@ -19103,7 +20201,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL30S",
@@ -19150,7 +20250,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL320",
@@ -19194,7 +20296,8 @@ export const completeGearboxData = [
         },
         "minPower": 335,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL320F",
@@ -19239,7 +20342,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL320S",
@@ -19284,7 +20389,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL600",
@@ -19331,7 +20438,8 @@ export const completeGearboxData = [
         },
         "minPower": 628,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL600F",
@@ -19379,7 +20487,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL600S",
@@ -19427,7 +20537,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL7000",
@@ -19449,7 +20561,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "price": 804000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用",
+        "dimensions": "1200×900×1100"
     },
     {
         "model": "HCL800",
@@ -19487,7 +20602,9 @@ export const completeGearboxData = [
         "minPower": 628,
         "maxPower": 1507,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL800F",
@@ -19531,7 +20648,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 450,
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "dimensions": "746×560×688",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCL800S",
@@ -19575,7 +20695,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 450,
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "dimensions": "746×560×688",
+        "controlType": "机械控制/电控",
+        "rotationDirection": "不适用"
     },
     {
         "model": "HCM1400",
@@ -19603,7 +20726,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
         "price": 412000,
         "priceSource": "2026官方统一售价",
-        "discountRate": 0
+        "discountRate": 0,
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "525×350×438"
     },
     {
         "model": "HCM1600",
@@ -19633,7 +20759,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "price": 48000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "600×400×500"
     },
     {
         "model": "HCM165",
@@ -19677,7 +20806,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 130.5,
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "438×292×365"
     },
     {
         "model": "HCM303",
@@ -19721,7 +20853,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 290,
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "570×380×475"
     },
     {
         "model": "HCM403",
@@ -19773,7 +20908,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 390,
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "597×398×498"
     },
     {
         "model": "HCN120",
@@ -19819,7 +20957,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/HCN120.webp"
+        "image": "/images/gearbox/HCN120.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCNM280T",
@@ -19865,7 +21005,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 260,
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "540×360×450"
     },
     {
         "model": "HCQ100",
@@ -19917,7 +21060,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ100-MV100A.webp"
+        "image": "/images/gearbox/Advance-HCQ100-MV100A.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ1000",
@@ -19960,7 +21105,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ1001",
@@ -19975,7 +21122,7 @@ export const completeGearboxData = [
         "thrust": 100,
         "centerDistance": 335,
         "dimensions": "809×1120×1003",
-        "weight": null,
+        "weight": 1100,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 205000,
         "discountRate": 0,
@@ -20000,7 +21147,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ138",
@@ -20059,7 +21208,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/HCQ138-HCA138-.webp"
+        "image": "/images/gearbox/HCQ138-HCA138-.webp",
+        "controlType": "推拉软轴",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCQ1400",
@@ -20119,7 +21270,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ1600",
@@ -20160,7 +21313,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ1601",
@@ -20197,7 +21352,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-1600.webp"
+        "image": "/images/gearbox/Advance-1600.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ300",
@@ -20271,7 +21428,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ400",
@@ -20294,7 +21453,7 @@ export const completeGearboxData = [
         ],
         "weight": 650,
         "thrust": null,
-        "dimensions": null,
+        "dimensions": "640×900×800",
         "transmissionCapacityPerRatio": [
             0.28,
             0.28,
@@ -20320,7 +21479,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "price": 77000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ401",
@@ -20375,7 +21536,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ402",
@@ -20417,7 +21580,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ501",
@@ -20477,7 +21642,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ502",
@@ -20531,7 +21698,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ700",
@@ -20606,7 +21775,8 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ700A",
@@ -20627,7 +21797,7 @@ export const completeGearboxData = [
         ],
         "weight": 980,
         "thrust": null,
-        "dimensions": null,
+        "dimensions": "898×1104×1066",
         "transmissionCapacityPerRatio": [
             0.554,
             0.554,
@@ -20651,7 +21821,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp",
         "price": 181000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ701",
@@ -20666,7 +21838,7 @@ export const completeGearboxData = [
         "thrust": 95,
         "centerDistance": 340,
         "dimensions": "868×1104×1146",
-        "weight": null,
+        "weight": 980,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 163000,
         "discountRate": 0.1,
@@ -20694,7 +21866,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQ800A",
@@ -20714,7 +21888,7 @@ export const completeGearboxData = [
         ],
         "weight": 1400,
         "thrust": null,
-        "dimensions": null,
+        "dimensions": "898×1104×1066",
         "transmissionCapacityPerRatio": [
             0.7,
             0.7,
@@ -20737,7 +21911,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "price": 192000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQH1000",
@@ -20749,8 +21925,8 @@ export const completeGearboxData = [
         ],
         "thrust": null,
         "centerDistance": null,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "1035×1110×1038",
+        "weight": 1500,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 184000,
         "discountRate": 0.1,
@@ -20776,7 +21952,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQH1600",
@@ -20811,7 +21989,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCQH700",
@@ -20861,7 +22041,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCS1000",
@@ -20877,7 +22059,7 @@ export const completeGearboxData = [
         "thrust": 0.735,
         "centerDistance": 110,
         "dimensions": "335",
-        "weight": null,
+        "weight": 1900,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 110000,
         "discountRate": 0.1,
@@ -20902,7 +22084,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCS1200",
@@ -20920,7 +22104,7 @@ export const completeGearboxData = [
         "thrust": 0.93,
         "centerDistance": 120,
         "dimensions": "380",
-        "weight": null,
+        "weight": 2400,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 126000,
         "discountRate": 0.1,
@@ -20947,7 +22131,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCS138",
@@ -20963,7 +22149,7 @@ export const completeGearboxData = [
         "thrust": 0.11,
         "centerDistance": 30,
         "dimensions": "225",
-        "weight": null,
+        "weight": 470,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 41040,
         "discountRate": 0.1,
@@ -20988,7 +22174,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCS1600",
@@ -21005,7 +22193,7 @@ export const completeGearboxData = [
         "thrust": 1.213,
         "centerDistance": 170,
         "dimensions": "415",
-        "weight": null,
+        "weight": 3900,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 158000,
         "discountRate": 0.1,
@@ -21031,7 +22219,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCS200",
@@ -21049,7 +22239,7 @@ export const completeGearboxData = [
             4.4
         ],
         "thrust": 148,
-        "weight": null,
+        "weight": 280,
         "centerDistance": 190,
         "transmissionCapacityPerRatio": [
             2.06,
@@ -21063,7 +22253,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "price": 109000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同",
+        "dimensions": "424×792×754"
     },
     {
         "model": "HCS2000",
@@ -21081,7 +22274,7 @@ export const completeGearboxData = [
         "thrust": 1.48,
         "centerDistance": 190,
         "dimensions": "450",
-        "weight": null,
+        "weight": 4800,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 190000,
         "discountRate": 0.1,
@@ -21108,7 +22301,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCS201",
@@ -21123,7 +22318,7 @@ export const completeGearboxData = [
         "thrust": 0.147,
         "centerDistance": 40,
         "dimensions": "205",
-        "weight": null,
+        "weight": 360,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 46080,
         "discountRate": 0.1,
@@ -21147,7 +22342,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCS2700",
@@ -21166,7 +22363,7 @@ export const completeGearboxData = [
         "thrust": 2.05,
         "centerDistance": 270,
         "dimensions": "490",
-        "weight": null,
+        "weight": 6100,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 246000,
         "discountRate": 0.1,
@@ -21194,7 +22391,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCS302",
@@ -21211,7 +22410,7 @@ export const completeGearboxData = [
         "thrust": 0.257,
         "centerDistance": 50,
         "dimensions": "264",
-        "weight": null,
+        "weight": 480,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 54160,
         "discountRate": 0.1,
@@ -21237,7 +22436,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCS400",
@@ -21255,7 +22456,7 @@ export const completeGearboxData = [
         "thrust": 0.331,
         "centerDistance": 82,
         "dimensions": "264",
-        "weight": null,
+        "weight": 650,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 55000,
         "discountRate": 0.1,
@@ -21287,7 +22488,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCS600",
@@ -21303,7 +22506,7 @@ export const completeGearboxData = [
         "thrust": 0.48,
         "centerDistance": 90,
         "dimensions": "320",
-        "weight": null,
+        "weight": 1000,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 78000,
         "discountRate": 0.1,
@@ -21328,7 +22531,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT1000",
@@ -21351,7 +22556,7 @@ export const completeGearboxData = [
         ],
         "weight": 1600,
         "thrust": null,
-        "dimensions": null,
+        "dimensions": "1150×1350×1547",
         "transmissionCapacityPerRatio": [
             0.857,
             0.857,
@@ -21384,7 +22589,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "price": 225000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT1100",
@@ -21448,7 +22655,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-1100-1200.webp"
+        "image": "/images/gearbox/Advance-1100-1200.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT1200",
@@ -21515,7 +22724,9 @@ export const completeGearboxData = [
                 "24-φ18"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT1200/1",
@@ -21590,7 +22801,9 @@ export const completeGearboxData = [
                 "24-φ18"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT1200P",
@@ -21686,7 +22899,9 @@ export const completeGearboxData = [
         "minPower": 558,
         "maxPower": 1767,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT1280/2",
@@ -21744,7 +22959,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-1400.webp"
+        "image": "/images/gearbox/Advance-1400.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT1400",
@@ -21803,7 +23020,9 @@ export const completeGearboxData = [
                 "φ720"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT1400/2",
@@ -21875,7 +23094,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 5500,
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT1400/5",
@@ -21941,7 +23162,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT1400P",
@@ -21999,7 +23222,9 @@ export const completeGearboxData = [
         "thrust": 220,
         "centerDistance": 550,
         "dimensions": "1306×1380×1750",
-        "weight": 3800
+        "weight": 3800,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT1600",
@@ -22057,7 +23282,9 @@ export const completeGearboxData = [
                 "φ540"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT1600/1",
@@ -22117,7 +23344,9 @@ export const completeGearboxData = [
                 "φ540"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT1600P",
@@ -22181,7 +23410,9 @@ export const completeGearboxData = [
         "thrust": 250,
         "centerDistance": 585,
         "dimensions": "1246×1500×1750",
-        "weight": 5000
+        "weight": 5000,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT2000",
@@ -22258,7 +23489,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT2000/1",
@@ -22315,7 +23548,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT2000P",
@@ -22390,7 +23625,9 @@ export const completeGearboxData = [
         "minPower": 948,
         "maxPower": 2370,
         "powerSource": "传动能力计算",
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT2700",
@@ -22456,7 +23693,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT2700/1",
@@ -22514,7 +23753,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT2700P",
@@ -22580,7 +23821,9 @@ export const completeGearboxData = [
         "thrust": 340,
         "centerDistance": 680,
         "dimensions": "1900×2000×1970",
-        "weight": 7200
+        "weight": 7200,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCTH2650",
@@ -22600,7 +23843,11 @@ export const completeGearboxData = [
         "powerSource": "项目跟踪数据",
         "source": "项目跟踪记录-芜湖造船厂2#3#栈桥作业船固桨",
         "note": "特殊型号，三机三桨，配PTO，2940kW/1500rpm，速比6.2:1",
-        "image": "/images/gearbox/Advance-HCT.webp"
+        "image": "/images/gearbox/Advance-HCT.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同",
+        "dimensions": "1900×2000×1970",
+        "weight": 8000
     },
     {
         "model": "HCTH2650P",
@@ -22620,7 +23867,11 @@ export const completeGearboxData = [
         "powerSource": "项目跟踪数据",
         "source": "项目跟踪记录-芜湖造船厂2#3#栈桥作业船PTO",
         "note": "PTO版本，2600kW/1500rpm，速比1:1",
-        "image": "/images/gearbox/Advance-HCT.webp"
+        "image": "/images/gearbox/Advance-HCT.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同",
+        "dimensions": "1900×2000×1970",
+        "weight": 8000
     },
     {
         "model": "HCT3800",
@@ -22694,7 +23945,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT400",
@@ -22730,7 +23983,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "price": 87000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同",
+        "dimensions": "800×1052×1182"
     },
     {
         "model": "HCT400A",
@@ -22794,7 +24050,8 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT400A/1",
@@ -22860,7 +24117,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT400P",
@@ -22913,7 +24172,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "thrust": 90,
         "centerDistance": 390,
-        "weight": 1450
+        "weight": 1450,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同",
+        "dimensions": "800×1052×1182"
     },
     {
         "model": "HCT600",
@@ -22975,7 +24237,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "price": 121000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT600A",
@@ -23043,7 +24307,8 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT600A/1",
@@ -23125,7 +24390,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT600P",
@@ -23179,7 +24446,9 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "dimensions": "1223×1136×899",
-        "weight": 800
+        "weight": 800,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT601P",
@@ -23213,7 +24482,10 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "price": 129000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同",
+        "dimensions": "821×1214×1271"
     },
     {
         "model": "HCT650/2",
@@ -23289,7 +24561,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT700",
@@ -23310,7 +24584,7 @@ export const completeGearboxData = [
         ],
         "weight": 850,
         "thrust": null,
-        "dimensions": null,
+        "dimensions": "1056×1280×1425",
         "transmissionCapacityPerRatio": [
             0.49,
             0.49,
@@ -23341,7 +24615,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "price": 129000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT800",
@@ -23478,7 +24754,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT800/1",
@@ -23556,7 +24834,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT800/2",
@@ -23695,7 +24975,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT800/2A",
@@ -23778,7 +25060,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCT800/3",
@@ -23903,7 +25187,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCT800P",
@@ -23951,7 +25237,9 @@ export const completeGearboxData = [
         "thrust": 140,
         "centerDistance": 450,
         "dimensions": "1056×1280×1425",
-        "weight": 2500
+        "weight": 2500,
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCTS1200",
@@ -23970,7 +25258,7 @@ export const completeGearboxData = [
         "thrust": 0.93,
         "centerDistance": 150,
         "dimensions": "705",
-        "weight": null,
+        "weight": 3800,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 135000,
         "discountRate": 0.1,
@@ -24005,7 +25293,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCTS1400",
@@ -24029,7 +25319,7 @@ export const completeGearboxData = [
         "thrust": 1.03,
         "centerDistance": 220,
         "dimensions": "775",
-        "weight": null,
+        "weight": 4500,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 150000,
         "discountRate": 0.1,
@@ -24069,7 +25359,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCTS1600",
@@ -24090,7 +25382,7 @@ export const completeGearboxData = [
         "thrust": 1.213,
         "centerDistance": 250,
         "dimensions": "815",
-        "weight": null,
+        "weight": 5800,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 165000,
         "discountRate": 0.1,
@@ -24127,7 +25419,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCTS2000",
@@ -24151,7 +25445,7 @@ export const completeGearboxData = [
         "thrust": 1.48,
         "centerDistance": 270,
         "dimensions": "870",
-        "weight": null,
+        "weight": 6500,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 195000,
         "discountRate": 0.1,
@@ -24191,7 +25485,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCTS2700",
@@ -24214,7 +25510,7 @@ export const completeGearboxData = [
         "thrust": 2.05,
         "centerDistance": 340,
         "dimensions": "945",
-        "weight": null,
+        "weight": 8500,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 247500,
         "discountRate": 0.1,
@@ -24253,7 +25549,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCTS800",
@@ -24274,7 +25572,7 @@ export const completeGearboxData = [
         "thrust": 0.625,
         "centerDistance": 140,
         "dimensions": "645",
-        "weight": null,
+        "weight": 3000,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 105000,
         "discountRate": 0.1,
@@ -24311,7 +25609,9 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-800-1000.webp"
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCV100",
@@ -24329,7 +25629,7 @@ export const completeGearboxData = [
         ],
         "weight": 70,
         "thrust": null,
-        "dimensions": null,
+        "dimensions": "485×508×580",
         "transmissionCapacityPerRatio": [
             0.06,
             0.054,
@@ -24350,7 +25650,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "price": 31000,
         "priceSource": "系统估算",
-        "discountRate": 0.1
+        "discountRate": 0.1,
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCV120",
@@ -24389,7 +25691,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-120C-HCV120.webp"
+        "image": "/images/gearbox/Advance-120C-HCV120.webp",
+        "controlType": "推拉软轴",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCV120(倾角7°)",
@@ -24429,7 +25733,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-120C-HCV120.webp"
+        "image": "/images/gearbox/Advance-120C-HCV120.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCV230",
@@ -24468,7 +25774,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 450,
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相同"
     },
     {
         "model": "HCV230(倾角7°)",
@@ -24508,7 +25816,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反"
     },
     {
         "model": "HCVG3710",
@@ -24558,7 +25868,10 @@ export const completeGearboxData = [
             ]
         },
         "weight": 600,
-        "image": "/images/gearbox/Advance-200-201-230.webp"
+        "image": "/images/gearbox/Advance-200-201-230.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "995×663×829"
     },
     {
         "model": "HCW1100",
@@ -24611,7 +25924,9 @@ export const completeGearboxData = [
                 "φ770"
             ]
         },
-        "image": "/images/gearbox/Advance-1100-1200.webp"
+        "image": "/images/gearbox/Advance-1100-1200.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "J300",
@@ -24645,7 +25960,8 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "MA100",
@@ -24682,7 +25998,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/MA.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "MA系列船用齿轮箱适用于中小型船舶。",
-        "image": "/images/gearbox/MA.webp"
+        "image": "/images/gearbox/MA.webp",
+        "controlType": "推拉软轴",
+        "rotationDirection": "相反"
     },
     {
         "model": "MA125",
@@ -24721,7 +26039,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/MA.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "MA系列船用齿轮箱适用于中小型船舶。",
-        "image": "/images/gearbox/MA.webp"
+        "image": "/images/gearbox/MA.webp",
+        "controlType": "推拉软轴",
+        "rotationDirection": "相反"
     },
     {
         "model": "MA142",
@@ -24762,7 +26082,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/MA.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "MA系列船用齿轮箱适用于中小型船舶。",
-        "image": "/images/gearbox/MA.webp"
+        "image": "/images/gearbox/MA.webp",
+        "controlType": "推拉软轴",
+        "rotationDirection": "相反"
     },
     {
         "model": "MB170",
@@ -24815,7 +26137,9 @@ export const completeGearboxData = [
             ],
             "plainFlange": true
         },
-        "image": "/images/gearbox/Advance-MB.webp"
+        "image": "/images/gearbox/Advance-MB.webp",
+        "controlType": "推拉软轴",
+        "rotationDirection": "相反"
     },
     {
         "model": "MB242",
@@ -24864,7 +26188,9 @@ export const completeGearboxData = [
                 "SAE1#4寸"
             ]
         },
-        "image": "/images/gearbox/Advance-MB.webp"
+        "image": "/images/gearbox/Advance-MB.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "MB270A",
@@ -24916,7 +26242,9 @@ export const completeGearboxData = [
             ],
             "plainFlange": true
         },
-        "image": "/images/gearbox/Advance-MB.webp"
+        "image": "/images/gearbox/Advance-MB.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "MV100A",
@@ -24965,7 +26293,9 @@ export const completeGearboxData = [
             ]
         },
         "weight": 220,
-        "image": "/images/gearbox/Advance-HCQ100-MV100A.webp"
+        "image": "/images/gearbox/Advance-HCQ100-MV100A.webp",
+        "controlType": "推拉软轴",
+        "rotationDirection": "相反"
     },
     {
         "model": "MV100A(倾角7°)",
@@ -25012,7 +26342,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-HCQ100-MV100A.webp",
         "thrust": 20,
         "centerDistance": 0,
-        "dimensions": "485×508×580"
+        "dimensions": "485×508×580",
+        "controlType": "推拉软轴",
+        "rotationDirection": "相反"
     },
     {
         "model": "SGW30.32",
@@ -25029,8 +26361,8 @@ export const completeGearboxData = [
         ],
         "thrust": 1.109,
         "centerDistance": 100,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "1433×1200×888",
+        "weight": 1500,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 45000,
         "discountRate": 0.1,
@@ -25040,7 +26372,9 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "SGW32.35",
@@ -25057,8 +26391,8 @@ export const completeGearboxData = [
         ],
         "thrust": 1.604,
         "centerDistance": 113,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "1405×1240×920",
+        "weight": 1800,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 52000,
         "discountRate": 0.1,
@@ -25068,7 +26402,9 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "SGW39.41",
@@ -25083,8 +26419,8 @@ export const completeGearboxData = [
         ],
         "thrust": 1.427,
         "centerDistance": 175,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "1454×1010×1425",
+        "weight": 3000,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 245000,
         "discountRate": 0.1,
@@ -25094,7 +26430,9 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "SGW42.45",
@@ -25109,8 +26447,8 @@ export const completeGearboxData = [
         ],
         "thrust": 1.243,
         "centerDistance": 220,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "1486×1180×1650",
+        "weight": 3700,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 273000,
         "discountRate": 0.1,
@@ -25120,7 +26458,9 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "SGWL49.54",
@@ -25142,7 +26482,11 @@ export const completeGearboxData = [
         "powerSource": "项目跟踪数据",
         "source": "项目跟踪记录-芜湖造船厂2#3#栈桥作业船",
         "note": "特殊型号，配舵桨，双速比1.88:1/2.05:1，2940kW/1500rpm",
-        "image": "/images/gearbox/Advance-GW.webp"
+        "image": "/images/gearbox/Advance-GW.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同",
+        "weight": 7000,
+        "dimensions": "2126×1989×1340"
     },
     {
         "model": "SGWL52.59",
@@ -25164,7 +26508,11 @@ export const completeGearboxData = [
         "powerSource": "项目跟踪数据",
         "source": "项目跟踪记录-芜湖造船厂4#运输船",
         "note": "特殊型号，配舵桨，双速比1.022:1/1.145:1，3600kW/800rpm",
-        "image": "/images/gearbox/Advance-GW.webp"
+        "image": "/images/gearbox/Advance-GW.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同",
+        "weight": 8900,
+        "dimensions": "2291×1400×1290"
     },
     {
         "model": "SGW49.54",
@@ -25179,8 +26527,8 @@ export const completeGearboxData = [
         ],
         "thrust": 3.588,
         "centerDistance": 284,
-        "dimensions": null,
-        "weight": null,
+        "dimensions": "2126×1989×1340",
+        "weight": 6000,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 520000,
         "discountRate": 0.1,
@@ -25190,7 +26538,9 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "SGWS49.54",
@@ -25214,7 +26564,7 @@ export const completeGearboxData = [
         "thrust": 2.647,
         "centerDistance": 290,
         "dimensions": "540",
-        "weight": null,
+        "weight": 540,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 116000,
         "discountRate": 0.1,
@@ -25225,7 +26575,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWS.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "SGWS52.59",
@@ -25249,7 +26601,7 @@ export const completeGearboxData = [
         "thrust": 3.448,
         "centerDistance": 360,
         "dimensions": "590",
-        "weight": null,
+        "weight": 590,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 155000,
         "discountRate": 0.1,
@@ -25260,7 +26612,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWS.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "SGWS60.66",
@@ -25284,7 +26638,7 @@ export const completeGearboxData = [
         "thrust": 4.625,
         "centerDistance": 540,
         "dimensions": "668",
-        "weight": null,
+        "weight": 668,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 210000,
         "discountRate": 0.1,
@@ -25295,7 +26649,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWS.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "SGWS66.75",
@@ -25319,7 +26675,7 @@ export const completeGearboxData = [
         "thrust": 6.99,
         "centerDistance": 730,
         "dimensions": "750",
-        "weight": null,
+        "weight": 750,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 280000,
         "discountRate": 0.1,
@@ -25330,7 +26686,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWS.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "SGWS70.76",
@@ -25354,7 +26712,7 @@ export const completeGearboxData = [
         "thrust": 8.111,
         "centerDistance": 750,
         "dimensions": "768",
-        "weight": null,
+        "weight": 768,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 350000,
         "discountRate": 0.1,
@@ -25365,7 +26723,9 @@ export const completeGearboxData = [
         "imageUrl": "/images/gearbox/Advance-GWS.webp",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-GWS.webp"
+        "image": "/images/gearbox/Advance-GWS.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相同"
     },
     {
         "model": "T300",
@@ -25415,7 +26775,8 @@ export const completeGearboxData = [
             ],
             "plainFlange": true
         },
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "rotationDirection": "相反"
     },
     {
         "model": "T300/1",
@@ -25451,7 +26812,9 @@ export const completeGearboxData = [
             ],
             "plainFlange": true
         },
-        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "controlType": "推拉软轴/电控/气控",
+        "rotationDirection": "相反"
     },
     {
         "model": "X6110C",
@@ -25477,6 +26840,10 @@ export const completeGearboxData = [
         ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
-        "image": "/images/gearbox/Advance-GC.webp"
+        "image": "/images/gearbox/Advance-GC.webp",
+        "controlType": "推拉软轴/电控",
+        "rotationDirection": "相反",
+        "dimensions": "350×316×482",
+        "weight": 58
     }
 ];
