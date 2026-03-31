@@ -325,6 +325,32 @@
   font-size: .78rem; color: var(--m-text2);
 }
 
+/* ==================== 系列快速过滤条 ==================== */
+.m-series-scroll {
+  display: flex; gap: 6px; overflow-x: auto;
+  padding: 0 0 8px; margin-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.m-series-scroll::-webkit-scrollbar { display: none; }
+.m-series-btn {
+  flex-shrink: 0; padding: 6px 14px;
+  border-radius: 20px; font-size: .8rem; font-weight: 600;
+  border: 1.5px solid var(--m-border);
+  background: var(--m-card); color: var(--m-text2);
+  cursor: pointer; transition: all .15s;
+  white-space: nowrap;
+}
+.m-series-btn.active {
+  background: var(--m-primary); color: #fff;
+  border-color: var(--m-primary);
+}
+.m-series-btn:active { transform: scale(.95); }
+
+/* ==================== 可点击系列标签 ==================== */
+.m-chip.clickable { cursor: pointer; transition: all .15s; }
+.m-chip.clickable:active { transform: scale(.95); background: var(--m-primary); color: #fff; }
+
 /* ==================== 产品搜索 ==================== */
 .m-search-bar {
   display: flex; gap: 8px; margin-bottom: 12px;
