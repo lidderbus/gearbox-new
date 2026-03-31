@@ -5,7 +5,6 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { userRoles } from './auth/roles';
 import App from './App';
 import LoginPage from './components/LoginPage';
-import { createGlobalStyle } from 'styled-components';
 import './AppWrapper.css';
 // import { loadAndRepairData } from './utils/repair'; // Moved loading outside
 import UserManagementView from './components/UserManagementView'; // Import UserManagementView
@@ -16,25 +15,9 @@ import { useIsMobile } from './hooks/useIsMobile';
 
 const MobileApp = React.lazy(() => import('./components/mobile/MobileApp'));
 
-const GlobalStyle = createGlobalStyle`
-  @font-face {
-    font-family: 'Noto Sans SC';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Noto Sans SC Regular'),
-         local('NotoSansSC-Regular'),
-         url('https://cdn.jsdelivr.net/gh/googlefonts/noto-cjk@main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf') format('opentype');
-    font-display: swap;
-  }
-
-  body {
-    margin: 0;
-    font-family: 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  }
-`;
 
 const AppContent = ({ appData, setAppData }) => {
-  const { currentUser, user, isAuthenticated, loading: authLoading } = useAuth();
+  const { currentUser, user, isAuthenticated, loading: authLoading, logout } = useAuth();
   const { isMobile } = useIsMobile();
   const [forceDesktop, setForceDesktop] = React.useState(() => {
     if (typeof localStorage !== 'undefined') {
@@ -46,6 +29,18 @@ const AppContent = ({ appData, setAppData }) => {
   // Check if user is admin
   const isAdmin = user && (user.role === userRoles.ADMIN || user.role === userRoles.SUPER_ADMIN);
 
+  // 切换到桌面版
+  const handleSwitchToDesktop = React.useCallback(() => {
+    localStorage.setItem('forceDesktop', 'true');
+    setForceDesktop(true);
+  }, []);
+
+  // 切换回移动版
+  const handleSwitchToMobile = React.useCallback(() => {
+    localStorage.setItem('forceDesktop', 'false');
+    setForceDesktop(false);
+  }, []);
+
   if (authLoading) {
     return (
       <div className="loading-container">
@@ -56,6 +51,8 @@ const AppContent = ({ appData, setAppData }) => {
   }
 
   const userIsAuthenticated = isAuthenticated && (currentUser || user);
+  // 移动端且未强制桌面模式时显示MobileApp
+  const showMobile = isMobile && !forceDesktop && userIsAuthenticated;
 
   return (
     <Routes>
@@ -72,7 +69,18 @@ const AppContent = ({ appData, setAppData }) => {
         path="/*"
         element={
           userIsAuthenticated ? (
-            <App appData={appData} setAppData={setAppData} />
+            showMobile ? (
+              <React.Suspense fallback={<div className="loading-container"><div className="loading-spinner"></div><p>加载移动端...</p></div>}>
+                <MobileApp
+                  user={currentUser || user}
+                  onLogout={logout}
+                  appData={appData}
+                  onSwitchToDesktop={handleSwitchToDesktop}
+                />
+              </React.Suspense>
+            ) : (
+              <App appData={appData} setAppData={setAppData} onSwitchToMobile={isMobile ? handleSwitchToMobile : undefined} />
+            )
           ) : (
             <Navigate to="/login" replace state={{ from: window.location.pathname }} />
           )
@@ -102,7 +110,6 @@ const AppWrapper = ({ initialData, setAppData }) => {
     <AuthProvider>
       {/* Assuming DarkModeProvider wraps AuthProvider */}
       {/* <DarkModeProvider> */}
-        <GlobalStyle />
         <Router basename="/gearbox-app">
           <AppContent appData={initialData} setAppData={setAppData} />
         </Router>
