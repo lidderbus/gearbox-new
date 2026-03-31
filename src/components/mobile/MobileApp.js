@@ -273,11 +273,22 @@ function HomeTab({ allGearboxes, seriesStats, user, appData, onNavigate, onNavig
 
 // ==================== 选型 Tab ====================
 function SelectionTab({ appData, allGearboxes }) {
+  // 基础参数
   const [power, setPower] = useState('');
   const [speed, setSpeed] = useState('');
   const [ratio, setRatio] = useState('');
   const [thrust, setThrust] = useState('');
   const [gearboxType, setGearboxType] = useState('auto');
+  // 专业参数
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [workCondition, setWorkCondition] = useState('III类:扭矩变化中等');
+  const [application, setApplication] = useState('propulsion');
+  const [primeType, setPrimeType] = useState('none'); // none/diesel/electric
+  const [hasClutch, setHasClutch] = useState(null); // null=不限, true=需要, false=不需要
+  const [engineConfig, setEngineConfig] = useState('single');
+  const [inputRotation, setInputRotation] = useState('clockwise');
+  const [outputRotation, setOutputRotation] = useState('clockwise');
+  // 状态
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
@@ -286,12 +297,26 @@ function SelectionTab({ appData, allGearboxes }) {
 
   const seriesOptions = [
     { value: 'auto', label: '自动匹配 (推荐)' },
-    { value: 'HC', label: 'HC 系列' },
-    { value: 'GW', label: 'GW 系列' },
-    { value: 'HCM', label: 'HCM 高速系列' },
-    { value: 'DT', label: 'DT 系列' },
-    { value: 'HCQ', label: 'HCQ 系列' },
-    { value: 'GC', label: 'GC 系列' },
+    { value: 'HC', label: 'HC 系列' }, { value: 'GW', label: 'GW 系列' },
+    { value: 'HCM', label: 'HCM 高速系列' }, { value: 'DT', label: 'DT 系列' },
+    { value: 'HCQ', label: 'HCQ 系列' }, { value: 'GC', label: 'GC 系列' },
+    { value: 'HCA', label: 'HCA 倾角系列' }, { value: 'HCV', label: 'HCV 系列' },
+    { value: 'MV', label: 'MV 系列' },
+  ];
+
+  const workConditions = [
+    { value: 'I类:扭矩变化很小', label: 'I类 扭矩变化很小' },
+    { value: 'II类:扭矩变化小', label: 'II类 扭矩变化小' },
+    { value: 'III类:扭矩变化中等', label: 'III类 扭矩变化中等' },
+    { value: 'IV类:扭矩变化大', label: 'IV类 扭矩变化大' },
+    { value: 'V类:扭矩变化很大', label: 'V类 扭矩变化很大' },
+  ];
+
+  const appOptions = [
+    { value: 'propulsion', label: '主推进' },
+    { value: 'auxiliary', label: '辅助推进' },
+    { value: 'winch', label: '绞车' },
+    { value: 'other', label: '其他' },
   ];
 
   const handleSelection = useCallback(() => {
@@ -309,13 +334,29 @@ function SelectionTab({ appData, allGearboxes }) {
     setResult(null);
     setExpandedIdx(null);
 
+    // 构造选型选项 — 与桌面版一致
+    const options = {
+      workCondition,
+      application,
+      temperature: 30,
+      hasCover: false,
+      hasClutch,
+      seriesRequirements: {
+        needsClutch: hasClutch === true ? true : undefined,
+        needsReverse: undefined,
+      },
+    };
+
     setTimeout(() => {
       try {
         let res;
         if (gearboxType === 'auto') {
-          res = autoSelectGearbox({ motorPower: p, motorSpeed: s, targetRatio: r, thrust: t }, appData);
+          res = autoSelectGearbox({
+            motorPower: p, motorSpeed: s, targetRatio: r, thrust: t,
+            ...options,
+          }, appData);
         } else {
-          res = selectGearbox(p, s, r, t, gearboxType, appData, {});
+          res = selectGearbox(p, s, r, t, gearboxType, appData, options);
         }
 
         if (res && res.success && res.recommendations?.length > 0) {
@@ -328,10 +369,10 @@ function SelectionTab({ appData, allGearboxes }) {
               model: res.recommendations[0].model,
               enginePower: p, engineSpeed: s, ratio: r, power: p, speed: s,
               timestamp: Date.now(), count: res.recommendations.length,
+              application, workCondition, gearboxType,
             });
             localStorage.setItem('selectionHistory', JSON.stringify(history.slice(0, 50)));
           } catch (e) { /* ignore */ }
-          // 滚动到结果
           setTimeout(() => resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
         } else {
           setError(res?.message || '未找到匹配的齿轮箱型号，请调整参数后重试');
@@ -341,19 +382,22 @@ function SelectionTab({ appData, allGearboxes }) {
       }
       setLoading(false);
     }, 50);
-  }, [power, speed, ratio, thrust, gearboxType, appData]);
+  }, [power, speed, ratio, thrust, gearboxType, appData, workCondition, application, hasClutch]);
 
   const handleClear = () => {
     setPower(''); setSpeed(''); setRatio(''); setThrust('');
     setGearboxType('auto'); setResult(null); setError(''); setExpandedIdx(null);
+    setWorkCondition('III类:扭矩变化中等'); setApplication('propulsion');
+    setHasClutch(null); setEngineConfig('single'); setPrimeType('none');
   };
 
   return (
     <div className="m-page">
       <SectionTitle text="齿轮箱选型" icon={<Crosshair size={18} />} />
 
-      {/* 输入表单 */}
+      {/* 基础参数卡片 */}
       <div className="m-card">
+        <div className="m-card-title">基础参数</div>
         <div className="m-form-grid">
           <FormField label="发动机功率" unit="kW" required
             value={power} onChange={setPower} placeholder="如 300" inputMode="decimal" />
@@ -371,15 +415,117 @@ function SelectionTab({ appData, allGearboxes }) {
             {seriesOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
         </div>
+      </div>
 
-        <div className="m-form-actions">
-          <button className="m-btn m-btn-primary" onClick={handleSelection} disabled={loading}>
-            {loading ? <><span className="m-spinner" /> 计算中...</> : <><Calculator size={18} /> 开始选型</>}
-          </button>
-          <button className="m-btn m-btn-ghost" onClick={handleClear}>
-            <Trash2 size={16} /> 清空
-          </button>
+      {/* 专业参数折叠面板 */}
+      <button className="m-advanced-toggle" onClick={() => setShowAdvanced(!showAdvanced)}>
+        <Settings size={16} />
+        <span>专业参数</span>
+        {showAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        {(workCondition !== 'III类:扭矩变化中等' || application !== 'propulsion' || hasClutch !== null) &&
+          <span className="m-param-badge">已设置</span>}
+      </button>
+
+      {showAdvanced && (
+        <div className="m-card m-advanced-panel">
+          {/* 工况等级 */}
+          <div className="m-form-group full">
+            <label className="m-label">工况等级</label>
+            <div className="m-option-row">
+              {workConditions.map(wc => (
+                <button key={wc.value}
+                  className={`m-option-btn ${workCondition === wc.value ? 'active' : ''}`}
+                  onClick={() => setWorkCondition(wc.value)}>
+                  {wc.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 应用场景 */}
+          <div className="m-form-group full">
+            <label className="m-label">应用场景</label>
+            <div className="m-option-row">
+              {appOptions.map(ao => (
+                <button key={ao.value}
+                  className={`m-option-btn ${application === ao.value ? 'active' : ''}`}
+                  onClick={() => setApplication(ao.value)}>
+                  {ao.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 原动机类型 */}
+          <div className="m-form-group full">
+            <label className="m-label">原动机类型</label>
+            <div className="m-option-row">
+              {[{v:'none',l:'不限'},{v:'diesel',l:'柴油机 ×1.5'},{v:'electric',l:'电机 ×1.8'}].map(pt => (
+                <button key={pt.v}
+                  className={`m-option-btn ${primeType === pt.v ? 'active' : ''}`}
+                  onClick={() => setPrimeType(pt.v)}>
+                  {pt.l}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 离合器需求 */}
+          <div className="m-form-group full">
+            <label className="m-label">离合器需求</label>
+            <div className="m-option-row">
+              {[{v:null,l:'不限'},{v:true,l:'需要离合器'},{v:false,l:'不需要'}].map(cl => (
+                <button key={String(cl.v)}
+                  className={`m-option-btn ${hasClutch === cl.v ? 'active' : ''}`}
+                  onClick={() => setHasClutch(cl.v)}>
+                  {cl.l}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 发动机配置 */}
+          <div className="m-form-group full">
+            <label className="m-label">发动机配置</label>
+            <div className="m-option-row">
+              {[{v:'single',l:'单机'},{v:'dual',l:'双机'}].map(ec => (
+                <button key={ec.v}
+                  className={`m-option-btn ${engineConfig === ec.v ? 'active' : ''}`}
+                  onClick={() => setEngineConfig(ec.v)}>
+                  {ec.l}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 旋转方向 */}
+          <div className="m-form-grid">
+            <div className="m-form-group">
+              <label className="m-label">输入旋转方向</label>
+              <select className="m-select" value={inputRotation} onChange={e => setInputRotation(e.target.value)}>
+                <option value="clockwise">顺时针</option>
+                <option value="counterclockwise">逆时针</option>
+              </select>
+            </div>
+            <div className="m-form-group">
+              <label className="m-label">输出旋转方向</label>
+              <select className="m-select" value={outputRotation} onChange={e => setOutputRotation(e.target.value)}>
+                <option value="clockwise">顺时针</option>
+                <option value="counterclockwise">逆时针</option>
+              </select>
+            </div>
+          </div>
         </div>
+      )}
+
+      {/* 操作按钮 */}
+      <div className="m-form-actions" style={{ marginTop: 12 }}>
+        <button className="m-btn m-btn-primary" onClick={handleSelection} disabled={loading}>
+          {loading ? <><span className="m-spinner" /> 计算中...</> : <><Calculator size={18} /> 开始选型</>}
+        </button>
+        <button className="m-btn m-btn-ghost" onClick={handleClear}>
+          <Trash2 size={16} /> 清空
+        </button>
       </div>
 
       {/* 错误提示 */}
@@ -408,6 +554,30 @@ function ProductsTab({ allGearboxes, initialFilter = 'all', onFilterChange }) {
   const [expandedModel, setExpandedModel] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
   const [visibleCount, setVisibleCount] = useState(30);
+  // 对比选择
+  const [compareMode, setCompareMode] = useState(false);
+  const [compareList, setCompareList] = useState([]);
+  const [showCompare, setShowCompare] = useState(false);
+  // 收藏
+  const [favorites, setFavorites] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('m_favorites') || '[]'); } catch { return []; }
+  });
+
+  const toggleFavorite = useCallback((model) => {
+    setFavorites(prev => {
+      const next = prev.includes(model) ? prev.filter(m => m !== model) : [...prev, model];
+      localStorage.setItem('m_favorites', JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
+  const toggleCompare = useCallback((model) => {
+    setCompareList(prev => {
+      if (prev.includes(model)) return prev.filter(m => m !== model);
+      if (prev.length >= 3) return prev; // 最多3个
+      return [...prev, model];
+    });
+  }, []);
 
   // 响应外部过滤器变化(从首页系列点击)
   useEffect(() => {
@@ -505,11 +675,34 @@ function ProductsTab({ allGearboxes, initialFilter = 'all', onFilterChange }) {
         </div>
       )}
 
-      {/* 结果计数 */}
-      <div className="m-count">
-        共 <strong>{filtered.length}</strong> 个型号
-        {search && <span> · 搜索 "{search}"</span>}
+      {/* 操作工具栏 */}
+      <div className="m-toolbar">
+        <div className="m-count">
+          共 <strong>{filtered.length}</strong> 个型号
+          {search && <span> · "{search}"</span>}
+        </div>
+        <div className="m-toolbar-actions">
+          <button className={`m-toolbar-btn ${compareMode ? 'active' : ''}`}
+            onClick={() => { setCompareMode(!compareMode); if (compareMode) setCompareList([]); }}>
+            <BarChart3 size={14} /> 对比{compareMode && compareList.length > 0 ? `(${compareList.length})` : ''}
+          </button>
+        </div>
       </div>
+
+      {/* 对比浮动条 */}
+      {compareMode && compareList.length > 0 && (
+        <div className="m-compare-bar">
+          <span>已选 {compareList.length}/3: {compareList.join(', ')}</span>
+          <button className="m-btn m-btn-primary" style={{padding:'8px 14px',fontSize:'.82rem'}}
+            onClick={() => setShowCompare(true)} disabled={compareList.length < 2}>
+            开始对比
+          </button>
+        </div>
+      )}
+
+      {/* 对比弹窗 */}
+      {showCompare && <CompareModal models={compareList} allGearboxes={allGearboxes}
+        onClose={() => setShowCompare(false)} />}
 
       {/* 产品列表 */}
       {visibleList.length === 0 ? (
@@ -518,7 +711,12 @@ function ProductsTab({ allGearboxes, initialFilter = 'all', onFilterChange }) {
         visibleList.map(g => (
           <ProductCard key={g.model} gearbox={g}
             expanded={expandedModel === g.model}
-            onToggle={() => setExpandedModel(expandedModel === g.model ? null : g.model)} />
+            onToggle={() => setExpandedModel(expandedModel === g.model ? null : g.model)}
+            compareMode={compareMode}
+            isCompared={compareList.includes(g.model)}
+            onCompare={() => toggleCompare(g.model)}
+            isFavorite={favorites.includes(g.model)}
+            onFavorite={() => toggleFavorite(g.model)} />
         ))
       )}
 
@@ -598,6 +796,27 @@ function DocsTab({ switchToDesktopAt }) {
 // ==================== 个人中心 Tab ====================
 function ProfileTab({ user, onLogout, onSwitchToDesktop, isDark, toggleTheme, totalModels }) {
   const [showAbout, setShowAbout] = useState(false);
+  const [showFavorites, setShowFavorites] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [favorites, setFavorites] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('m_favorites') || '[]'); } catch { return []; }
+  });
+  const [history, setHistory] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('selectionHistory') || '[]'); } catch { return []; }
+  });
+
+  const removeFavorite = useCallback((model) => {
+    setFavorites(prev => {
+      const next = prev.filter(m => m !== model);
+      localStorage.setItem('m_favorites', JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
+  const clearHistory = useCallback(() => {
+    localStorage.removeItem('selectionHistory');
+    setHistory([]);
+  }, []);
 
   const storageSize = useMemo(() => {
     try {
@@ -614,14 +833,87 @@ function ProfileTab({ user, onLogout, onSwitchToDesktop, isDark, toggleTheme, to
     <div className="m-page">
       {/* 用户卡片 */}
       <div className="m-profile-card">
-        <div className="m-avatar">
-          <User size={32} />
-        </div>
+        <div className="m-avatar"><User size={32} /></div>
         <div className="m-profile-info">
           <h3>{user?.displayName || user?.username || '用户'}</h3>
           <span className="m-role">{user?.role || '普通用户'}</span>
         </div>
       </div>
+
+      {/* 功能入口 */}
+      <div className="m-profile-stats">
+        <div className="m-profile-stat" onClick={() => setShowFavorites(!showFavorites)}>
+          <Star size={20} color="#f59e0b" />
+          <span className="m-stat-num">{favorites.length}</span>
+          <span className="m-stat-label">收藏</span>
+        </div>
+        <div className="m-profile-stat" onClick={() => setShowHistory(!showHistory)}>
+          <Clock size={20} color="#1976d2" />
+          <span className="m-stat-num">{history.length}</span>
+          <span className="m-stat-label">选型记录</span>
+        </div>
+        <div className="m-profile-stat">
+          <Database size={20} color="#2e7d32" />
+          <span className="m-stat-num">{totalModels}</span>
+          <span className="m-stat-label">型号库</span>
+        </div>
+      </div>
+
+      {/* 收藏列表 */}
+      {showFavorites && (
+        <div className="m-section-block">
+          <SectionTitle text={`我的收藏 (${favorites.length})`} icon={<Star size={16} />} />
+          {favorites.length === 0 ? (
+            <div className="m-empty-sm">暂无收藏，在产品库中点击星标添加</div>
+          ) : (
+            <div className="m-fav-list">
+              {favorites.map(model => (
+                <div key={model} className="m-fav-item">
+                  <strong>{model}</strong>
+                  <button className="m-fav-remove" onClick={() => removeFavorite(model)}>
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 选型历史 */}
+      {showHistory && (
+        <div className="m-section-block">
+          <div className="m-section-header">
+            <SectionTitle text={`选型历史 (${history.length})`} icon={<Clock size={16} />} />
+            {history.length > 0 && (
+              <button className="m-text-btn" onClick={clearHistory}>清空</button>
+            )}
+          </div>
+          {history.length === 0 ? (
+            <div className="m-empty-sm">暂无选型记录</div>
+          ) : (
+            <div className="m-history-detail-list">
+              {history.slice(0, 20).map((item, idx) => (
+                <div key={idx} className="m-history-detail">
+                  <div className="m-hd-top">
+                    <strong>{item.model || '选型记录'}</strong>
+                    <span className="m-hd-time">
+                      {item.timestamp ? new Date(item.timestamp).toLocaleString('zh-CN', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}) : ''}
+                    </span>
+                  </div>
+                  <div className="m-hd-params">
+                    {item.power || item.enginePower ? <span>{item.power || item.enginePower}kW</span> : null}
+                    {item.speed || item.engineSpeed ? <span>{item.speed || item.engineSpeed}rpm</span> : null}
+                    {item.ratio ? <span>i={item.ratio}</span> : null}
+                    {item.gearboxType && item.gearboxType !== 'auto' ? <span>{item.gearboxType}</span> : null}
+                    {item.count ? <span>{item.count}个匹配</span> : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 设置项 */}
       <SectionTitle text="设置" />
@@ -649,11 +941,11 @@ function ProfileTab({ user, onLogout, onSwitchToDesktop, isDark, toggleTheme, to
           <AboutRow label="数据版本" value="v37" />
           <AboutRow label="型号数量" value={totalModels + ' 个'} />
           <AboutRow label="本地存储" value={storageSize} />
-          <AboutRow label="移动端版本" value="1.0.0" />
+          <AboutRow label="移动端版本" value="2.0.0" />
         </div>
       )}
 
-      <div style={{ marginTop: 32 }}>
+      <div style={{ marginTop: 24 }}>
         <button className="m-btn m-btn-danger full" onClick={onLogout}>
           <LogOut size={18} /> 退出登录
         </button>
@@ -734,19 +1026,30 @@ function ResultCard({ gearbox: g, index, expanded, onToggle }) {
   );
 }
 
-function ProductCard({ gearbox: g, expanded, onToggle }) {
+function ProductCard({ gearbox: g, expanded, onToggle, compareMode, isCompared, onCompare, isFavorite, onFavorite }) {
   const price = getGearboxPrice(g.model) || g.price || g.marketPrice;
   const series = (g.series || g._series || '').toUpperCase();
 
   return (
-    <div className={`m-product-card ${expanded ? 'expanded' : ''}`} onClick={onToggle}>
+    <div className={`m-product-card ${expanded ? 'expanded' : ''} ${isCompared ? 'compared' : ''}`} onClick={onToggle}>
       <div className="m-product-main">
-        <div>
+        <div className="m-product-left">
+          {compareMode && (
+            <button className={`m-check-btn ${isCompared ? 'checked' : ''}`}
+              onClick={e => { e.stopPropagation(); onCompare?.(); }}>
+              {isCompared ? '✓' : ''}
+            </button>
+          )}
           <span className="m-series-badge">{series}</span>
           <strong className="m-product-model">{g.model}</strong>
         </div>
         <div className="m-product-right">
           <span className="m-product-price">{formatPrice(price)}</span>
+          <button className={`m-fav-btn ${isFavorite ? 'active' : ''}`}
+            onClick={e => { e.stopPropagation(); onFavorite?.(); }}
+            aria-label={isFavorite ? '取消收藏' : '收藏'}>
+            <Star size={14} fill={isFavorite ? 'currentColor' : 'none'} />
+          </button>
           {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </div>
       </div>
@@ -771,6 +1074,54 @@ function formatValue(val) {
   if (Array.isArray(val)) return val.join(', ');
   if (typeof val === 'object') return JSON.stringify(val);
   return String(val);
+}
+
+// ==================== 对比弹窗 ====================
+function CompareModal({ models, allGearboxes, onClose }) {
+  const items = models.map(m => allGearboxes.find(g => g.model === m)).filter(Boolean);
+  const fields = [
+    ['型号', g => g.model],
+    ['系列', g => (g.series || g._series || '').toUpperCase()],
+    ['额定功率', g => g.ratedPower || g.power ? (g.ratedPower || g.power) + ' kW' : '-'],
+    ['转速范围', g => Array.isArray(g.inputSpeedRange) ? g.inputSpeedRange[0]+'~'+g.inputSpeedRange[g.inputSpeedRange.length-1]+' rpm' : '-'],
+    ['减速比', g => Array.isArray(g.ratios) && g.ratios.length ? g.ratios[0]+'~'+g.ratios[g.ratios.length-1] : (g.ratioRange || '-')],
+    ['推力', g => g.thrust ? g.thrust + ' kN' : '-'],
+    ['重量', g => g.weight ? g.weight + ' kg' : '-'],
+    ['中心距', g => g.centerDistance ? g.centerDistance + ' mm' : '-'],
+    ['尺寸', g => g.dimensions || '-'],
+    ['离合器', g => g.hasClutch ? '有' : (g.hasClutch === false ? '无' : '-')],
+    ['控制方式', g => g.controlType || '-'],
+    ['价格', g => formatPrice(getGearboxPrice(g.model) || g.price || g.marketPrice)],
+  ];
+
+  return (
+    <div className="m-modal-overlay" onClick={onClose}>
+      <div className="m-modal" onClick={e => e.stopPropagation()}>
+        <div className="m-modal-header">
+          <h3>型号对比</h3>
+          <button className="m-modal-close" onClick={onClose}><X size={20} /></button>
+        </div>
+        <div className="m-compare-table-wrap">
+          <table className="m-compare-table">
+            <thead>
+              <tr>
+                <th>参数</th>
+                {items.map(g => <th key={g.model}>{g.model}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {fields.map(([label, getter]) => (
+                <tr key={label}>
+                  <td className="m-compare-label">{label}</td>
+                  {items.map(g => <td key={g.model}>{getter(g)}</td>)}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function DetailGrid({ gearbox: g, full }) {
