@@ -148,6 +148,36 @@
 }
 .m-alert-error { background: rgba(211,47,47,.1); color: var(--m-danger); }
 
+/* ==================== 首页快速搜索 ==================== */
+.m-quick-search { margin-bottom: 12px; }
+.m-quick-search .m-search-input { position: relative; display: flex; align-items: center; }
+.m-quick-search .m-search-icon { position: absolute; left: 12px; color: var(--m-text2); pointer-events: none; }
+.m-quick-search input {
+  width: 100%; height: 44px; padding: 0 36px 0 40px;
+  background: var(--m-card); border: 1.5px solid var(--m-border);
+  border-radius: 12px; font-size: .9rem; color: var(--m-text);
+}
+.m-quick-search input:focus { outline: none; border-color: var(--m-primary); box-shadow: 0 0 0 3px rgba(25,118,210,.12); }
+.m-quick-search input::placeholder { color: var(--m-text2); }
+.m-quick-search .m-search-clear {
+  position: absolute; right: 8px; background: transparent; border: none;
+  color: var(--m-text2); cursor: pointer; padding: 4px; display: flex;
+}
+.m-quick-results {
+  background: var(--m-card); border: 1px solid var(--m-border);
+  border-radius: 10px; margin-top: 6px; overflow: hidden;
+  box-shadow: var(--m-shadow2);
+}
+.m-quick-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px; border-bottom: 1px solid var(--m-border);
+  cursor: pointer; font-size: .88rem;
+}
+.m-quick-item:last-child { border-bottom: none; }
+.m-quick-item:active { background: var(--m-primary-bg); }
+.m-quick-price { color: var(--m-danger); font-weight: 600; font-size: .85rem; }
+.m-quick-empty { padding: 12px 14px; text-align: center; color: var(--m-text2); font-size: .85rem; }
+
 /* ==================== 按钮 ==================== */
 .m-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;

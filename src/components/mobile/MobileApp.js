@@ -47,23 +47,34 @@ const MobileApp = ({ user, onLogout, appData, onSwitchToDesktop }) => {
   const [activeTab, setActiveTab] = useState(TABS.HOME);
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
 
-  // 全量齿轮箱数据
+  // 全量齿轮箱数据 — 从数组键名提取系列信息
   const allGearboxes = useMemo(() => {
     if (!appData) return [];
-    const raw = Object.keys(appData)
-      .filter(key => key.endsWith('Gearboxes'))
-      .map(key => appData[key])
-      .filter(Array.isArray)
-      .flat()
-      .filter(item => item && item.model);
-    return enhanceGearboxData(raw);
+    const keyToSeries = {
+      hcGearboxes: 'HC', gwGearboxes: 'GW', hcmGearboxes: 'HCM',
+      dtGearboxes: 'DT', hcqGearboxes: 'HCQ', gcGearboxes: 'GC',
+      hcaGearboxes: 'HCA', hcvGearboxes: 'HCV', hcxGearboxes: 'HCX',
+      mvGearboxes: 'MV', otherGearboxes: 'OTHER',
+    };
+    const items = [];
+    Object.keys(appData).filter(k => k.endsWith('Gearboxes')).forEach(key => {
+      const arr = appData[key];
+      if (!Array.isArray(arr)) return;
+      const series = keyToSeries[key] || key.replace('Gearboxes', '').toUpperCase();
+      arr.forEach(item => {
+        if (item && item.model) {
+          items.push({ ...item, _series: series, series: item.series || series });
+        }
+      });
+    });
+    return enhanceGearboxData(items);
   }, [appData]);
 
   // 系列统计
   const seriesStats = useMemo(() => {
     const map = {};
     allGearboxes.forEach(g => {
-      const s = (g.series || g.model?.replace(/[\d\-/].*/,'') || '其他').toUpperCase();
+      const s = (g.series || g._series || '其他').toUpperCase();
       map[s] = (map[s] || 0) + 1;
     });
     return Object.entries(map).sort((a, b) => b[1] - a[1]);
@@ -127,6 +138,8 @@ export default MobileApp;
 function HomeTab({ allGearboxes, seriesStats, user, appData, onNavigate }) {
   const couplings = appData?.flexibleCouplings?.length || 0;
   const pumps = appData?.standbyPumps?.length || 0;
+  const [quickSearch, setQuickSearch] = useState('');
+  const [quickResults, setQuickResults] = useState(null);
 
   const recentHistory = useMemo(() => {
     try {
@@ -139,12 +152,53 @@ function HomeTab({ allGearboxes, seriesStats, user, appData, onNavigate }) {
     return [];
   }, []);
 
+  // 快速搜索
+  const handleQuickSearch = useCallback((val) => {
+    setQuickSearch(val);
+    if (!val.trim()) { setQuickResults(null); return; }
+    const kw = val.trim().toLowerCase();
+    const found = allGearboxes.filter(g =>
+      (g.model || '').toLowerCase().includes(kw)
+    ).slice(0, 5);
+    setQuickResults(found.length > 0 ? found : []);
+  }, [allGearboxes]);
+
   return (
     <div className="m-page">
       {/* 欢迎横幅 */}
       <div className="m-welcome">
         <h2><Settings size={24} /> 船用齿轮箱选型系统</h2>
         <p>{user?.displayName || user?.username || '用户'}，欢迎使用</p>
+      </div>
+
+      {/* 快速型号搜索 */}
+      <div className="m-quick-search">
+        <div className="m-search-input">
+          <Search size={18} className="m-search-icon" />
+          <input type="text" placeholder="快速搜索型号，如 HC600A..."
+            value={quickSearch} onChange={e => handleQuickSearch(e.target.value)} />
+          {quickSearch && <button className="m-search-clear" onClick={() => handleQuickSearch('')}><X size={16} /></button>}
+        </div>
+        {quickResults !== null && (
+          <div className="m-quick-results">
+            {quickResults.length === 0 ? (
+              <div className="m-quick-empty">未找到匹配型号</div>
+            ) : (
+              quickResults.map(g => {
+                const price = getGearboxPrice(g.model) || g.price || g.marketPrice;
+                return (
+                  <div key={g.model} className="m-quick-item" onClick={() => onNavigate(TABS.PRODUCTS)}>
+                    <div>
+                      <span className="m-series-badge">{(g.series || g._series || '').toUpperCase()}</span>
+                      <strong>{g.model}</strong>
+                    </div>
+                    <span className="m-quick-price">{formatPrice(price)}</span>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        )}
       </div>
 
       {/* 数据统计 */}
@@ -178,13 +232,14 @@ function HomeTab({ allGearboxes, seriesStats, user, appData, onNavigate }) {
           <SectionTitle text="最近选型" />
           <div className="m-history-list">
             {recentHistory.map((item, idx) => (
-              <div key={idx} className="m-history-item">
+              <div key={idx} className="m-history-item" onClick={() => onNavigate(TABS.SELECTION)}>
                 <div className="m-history-model">
                   <Award size={14} />
-                  {item.model || item.selectedModel || '未知'}
+                  {item.model || item.selectedModel || (item.count ? item.count + '个匹配' : '选型记录')}
                 </div>
                 <div className="m-history-params">
-                  {item.power || item.enginePower}kW / {item.speed || item.engineSpeed}rpm
+                  {(item.power || item.enginePower) ? (item.power || item.enginePower) + 'kW' : ''}
+                  {(item.speed || item.engineSpeed) ? ' / ' + (item.speed || item.engineSpeed) + 'rpm' : ''}
                 </div>
                 <div className="m-history-time">
                   {item.timestamp ? new Date(item.timestamp).toLocaleDateString('zh-CN') : ''}
@@ -646,7 +701,7 @@ function ResultCard({ gearbox: g, index, expanded, onToggle }) {
 
 function ProductCard({ gearbox: g, expanded, onToggle }) {
   const price = getGearboxPrice(g.model) || g.price || g.marketPrice;
-  const series = (g.series || g.model?.replace(/[\d\-/].*/, '') || '').toUpperCase();
+  const series = (g.series || g._series || '').toUpperCase();
 
   return (
     <div className={`m-product-card ${expanded ? 'expanded' : ''}`} onClick={onToggle}>
@@ -661,10 +716,11 @@ function ProductCard({ gearbox: g, expanded, onToggle }) {
         </div>
       </div>
       <div className="m-product-tags">
-        {(g.ratedPower || g.power) ? <span className="m-tag"><Zap size={11} /> {g.ratedPower || g.power}kW</span> : null}
-        {(g.maxInputSpeed || g.maxSpeed) ? <span className="m-tag"><Gauge size={11} /> {g.maxInputSpeed || g.maxSpeed}rpm</span> : null}
-        {(g.ratioRange || g.ratio) ? <span className="m-tag"><RotateCcw size={11} /> {g.ratioRange || g.ratio}</span> : null}
+        {(g.ratedPower || g.power || g.minPower) ? <span className="m-tag"><Zap size={11} /> {g.ratedPower || g.power || (g.minPower + '~' + g.maxPower)}kW</span> : null}
+        {(g.maxInputSpeed || g.maxSpeed || g.inputSpeedRange) ? <span className="m-tag"><Gauge size={11} /> {g.maxInputSpeed || g.maxSpeed || (Array.isArray(g.inputSpeedRange) ? g.inputSpeedRange[0] + '~' + g.inputSpeedRange[g.inputSpeedRange.length-1] : g.inputSpeedRange)}rpm</span> : null}
+        {(g.ratios || g.ratioRange || g.ratio) ? <span className="m-tag"><RotateCcw size={11} /> {g.ratioRange || (Array.isArray(g.ratios) ? g.ratios[0] + '~' + g.ratios[g.ratios.length-1] : g.ratio) || '-'}</span> : null}
         {g.weight ? <span className="m-tag"><Box size={11} /> {g.weight}kg</span> : null}
+        {g.thrust ? <span className="m-tag"><Anchor size={11} /> {g.thrust}kN</span> : null}
       </div>
       {expanded && (
         <div className="m-product-expanded" onClick={e => e.stopPropagation()}>
@@ -684,13 +740,15 @@ function formatValue(val) {
 
 function DetailGrid({ gearbox: g, full }) {
   const tc = g.transferCapacity || g.transmissionCapacityPerRatio;
+  const speedRange = g.inputSpeedRange ? (Array.isArray(g.inputSpeedRange) ? g.inputSpeedRange[0] + ' ~ ' + g.inputSpeedRange[g.inputSpeedRange.length-1] : g.inputSpeedRange) : null;
+  const ratioStr = g.ratioRange || (Array.isArray(g.ratios) && g.ratios.length > 0 ? g.ratios[0] + ' ~ ' + g.ratios[g.ratios.length-1] : g.ratio);
   const items = [
     ['型号', g.model],
-    ['系列', (g.series || '').toUpperCase() || '-'],
-    ['额定功率', g.ratedPower || g.power ? (g.ratedPower || g.power) + ' kW' : '-'],
-    ['最高转速', g.maxInputSpeed || g.maxSpeed ? (g.maxInputSpeed || g.maxSpeed) + ' rpm' : '-'],
-    ['减速比', formatValue(g.ratioRange || g.ratio)],
-    ['传递能力', formatValue(tc)],
+    ['系列', (g.series || g._series || '').toUpperCase() || '-'],
+    ['额定功率', g.ratedPower || g.power ? (g.ratedPower || g.power) + ' kW' : (g.minPower ? g.minPower + ' ~ ' + g.maxPower + ' kW' : '-')],
+    ['转速范围', speedRange ? speedRange + ' rpm' : (g.maxInputSpeed || g.maxSpeed ? (g.maxInputSpeed || g.maxSpeed) + ' rpm' : '-')],
+    ['减速比', formatValue(ratioStr)],
+    ['传递能力', Array.isArray(tc) ? tc[0] + ' ~ ' + tc[tc.length-1] : formatValue(tc)],
     ['推力', g.thrust ? g.thrust + ' kN' : '-'],
     ['重量', g.weight ? g.weight + ' kg' : '-'],
   ];
