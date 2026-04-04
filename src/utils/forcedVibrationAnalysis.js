@@ -28,6 +28,137 @@ const STEEL_SHEAR_MODULUS = 8.1e10;
 const PI = Math.PI;
 
 // ============================================================
+// 复数算术 (v3.1 复数Holzer直接法)
+// ============================================================
+
+/** 精简复数类 — 支持复数Holzer传递矩阵计算 */
+class Complex {
+  constructor(re, im = 0) { this.re = re; this.im = im; }
+  add(b) { return new Complex(this.re + b.re, this.im + b.im); }
+  sub(b) { return new Complex(this.re - b.re, this.im - b.im); }
+  mul(b) { return new Complex(this.re * b.re - this.im * b.im, this.re * b.im + this.im * b.re); }
+  div(b) { const d = b.re * b.re + b.im * b.im; return new Complex((this.re * b.re + this.im * b.im) / d, (this.im * b.re - this.re * b.im) / d); }
+  abs() { return Math.sqrt(this.re * this.re + this.im * this.im); }
+  neg() { return new Complex(-this.re, -this.im); }
+}
+const C0 = new Complex(0), C1 = new Complex(1);
+
+/** 2×2复数矩阵乘法 */
+function cmul22(A, B) {
+  return [
+    [A[0][0].mul(B[0][0]).add(A[0][1].mul(B[1][0])), A[0][0].mul(B[0][1]).add(A[0][1].mul(B[1][1]))],
+    [A[1][0].mul(B[0][0]).add(A[1][1].mul(B[1][0])), A[1][0].mul(B[0][1]).add(A[1][1].mul(B[1][1]))]
+  ];
+}
+
+/** 2×2复数矩阵×向量 */
+function cmv(M, v) {
+  return [M[0][0].mul(v[0]).add(M[0][1].mul(v[1])), M[1][0].mul(v[0]).add(M[1][1].mul(v[1]))];
+}
+
+// ============================================================
+// 复数Holzer直接法 (v3.1)
+// ============================================================
+
+/**
+ * 复数Holzer直接法 — 精确频域强迫响应
+ *
+ * 替代模态叠加法, 无模态截断, 所有阻尼效应精确包含
+ * - 联轴器: 复数柔度 c* = c_s(1-jη)/(1+η²)
+ * - 螺旋桨: 惯量矩阵附加粘性阻尼 jωdp
+ * - 边界: 自由-自由 (T₁=0, Tₙ=0)
+ *
+ * @param {Object[]} units - 单元数组 (inertia, torsionalFlexibility, type, speedRatio)
+ * @param {number} excFreqHz - 激励频率 (Hz)
+ * @param {number} excUnitIdx - 激励作用位置 (单元索引)
+ * @param {number} excTorque - 激励扭矩幅值 (N·m, 实数)
+ * @param {number} couplingEta - 联轴器损耗因子η
+ * @param {number} propDampingEquiv - 螺旋桨等效阻尼系数 dp_eq (N·m·s/rad, 已折算到等效系统)
+ * @returns {number[]} 各单元角位移振幅的模 (rad)
+ */
+function solveComplexHolzer(units, excFreqHz, excUnitIdx, excTorque, couplingEta, propDampingEquiv) {
+  const n = units.length;
+  const omega = 2 * PI * excFreqHz;
+  if (omega < 0.01) return new Array(n).fill(0);
+  const omega2 = omega * omega;
+
+  // 找螺旋桨单元索引
+  let propIdx = n - 1;
+  for (let i = n - 1; i >= 0; i--) {
+    if (units[i].type === 'propeller') { propIdx = i; break; }
+  }
+
+  // 正向扫描: 累积传递矩阵M和激励向量v
+  let M = [[C1, C0], [C0, C1]];
+  let v = [C0, C0];
+
+  for (let i = 0; i < n; i++) {
+    // 惯量矩阵 P = [[1,0],[ω²J + jωdp, 1]]
+    let w2J;
+    if (i === propIdx && propDampingEquiv > 0) {
+      w2J = new Complex(omega2 * units[i].inertia, omega * propDampingEquiv);
+    } else {
+      w2J = new Complex(omega2 * units[i].inertia);
+    }
+    const P = [[C1, C0], [w2J, C1]];
+    M = cmul22(P, M);
+    v = cmv(P, v);
+
+    // 外部激励
+    if (i === excUnitIdx) {
+      v[1] = v[1].add(new Complex(excTorque));
+    }
+
+    // 柔度矩阵 F = [[1, -c*], [0, 1]]
+    if (i < n - 1 && units[i].torsionalFlexibility > 0) {
+      let cc;
+      if (units[i].type === 'coupling' && couplingEta > 0) {
+        // 复数柔度: c* = c_s(1-jη)/(1+η²)
+        const cs = units[i].torsionalFlexibility * 1e-10;
+        const denom = 1 + couplingEta * couplingEta;
+        cc = new Complex(cs / denom, -cs * couplingEta / denom);
+      } else {
+        cc = new Complex(units[i].torsionalFlexibility * 1e-10);
+      }
+      const F = [[C1, cc.neg()], [C0, C1]];
+      M = cmul22(F, M);
+      v = cmv(F, v);
+    }
+  }
+
+  // 边界条件: T₁=0 → θ₁ = -v[1] / M[1][0]
+  const th1 = v[1].neg().div(M[1][0]);
+
+  // 反向扫描: 恢复各单元振幅
+  const amps = [];
+  let th = th1, T = C0;
+  for (let i = 0; i < n; i++) {
+    amps.push(th.abs());
+    let w2J;
+    if (i === propIdx && propDampingEquiv > 0) {
+      w2J = new Complex(omega2 * units[i].inertia, omega * propDampingEquiv);
+    } else {
+      w2J = new Complex(omega2 * units[i].inertia);
+    }
+    T = T.add(w2J.mul(th));
+    if (i === excUnitIdx) T = T.add(new Complex(excTorque));
+    if (i < n - 1 && units[i].torsionalFlexibility > 0) {
+      let cc;
+      if (units[i].type === 'coupling' && couplingEta > 0) {
+        const cs = units[i].torsionalFlexibility * 1e-10;
+        const denom = 1 + couplingEta * couplingEta;
+        cc = new Complex(cs / denom, -cs * couplingEta / denom);
+      } else {
+        cc = new Complex(units[i].torsionalFlexibility * 1e-10);
+      }
+      th = th.sub(cc.mul(T));
+    }
+  }
+
+  return amps; // 各单元振幅模值 (rad)
+}
+
+// ============================================================
 // 柴油机激励谐波数据
 // ============================================================
 
@@ -310,14 +441,14 @@ export function calculateModalDampingRatios(naturalModes, units, elasticCoupling
   }
 
   // 获取联轴器的滞后损耗因子η
-  // 制造商标称的"相对阻尼"ψ是比阻尼容量(specific damping capacity)
-  // 与模态应变能法使用的损耗因子η的关系: η = ψ / 2
-  // 校准基准: COMPASS SRM09 64TEU电池船, HGTHT4(ψ=1.15→η=0.575), RMSE=0.35 N/mm²
+  // 制造商标称的"相对阻尼"ψ = kd/ks (动态/静态刚度比)
+  // 损耗因子: η = √(ψ² - 1), 当ψ≤1时退化为η=ψ/2
+  // 校准基准: COMPASS SRM09 64TEU, HGTHT4(ψ=1.15→η=0.568)
   const psi = elasticCouplings.reduce((max, c) => {
     const d = c.dampingCoefficient || c.damping || 0;
     return d > max ? d : max;
   }, 0);
-  const eta = psi / 2; // ψ→η换算
+  const eta = psi > 1 ? Math.sqrt(psi * psi - 1) : psi / 2;
 
   // 找螺旋桨单元 (最后一个type=propeller的单元, 或最后一个单元)
   let propellerIdx = n - 1;
@@ -558,7 +689,7 @@ export function runForcedVibrationAnalysis(systemInput, freeVibrationResults) {
   // 各转速点的结果
   const combinedResults = [];
 
-  // v3.0: 预计算额定工况螺旋桨阻尼参数
+  // v3.0/v3.1: 预计算阻尼参数
   const ratedPower = powerSource?.ratedPower || 400;
   const ratedSpeed = powerSource?.ratedSpeed || 1500;
 
@@ -568,6 +699,30 @@ export function runForcedVibrationAnalysis(systemInput, freeVibrationResults) {
 
   // 额定螺旋桨转速和阻尼
   const ratedPropellerSpeed = ratedSpeed / gearRatio;
+
+  // v3.1: 复数Holzer直接法为可选模式
+  // 默认使用模态应变能法 (v3.0, RMSE=0.35, 1500rpm误差-0.3%)
+  // 复数Holzer通过analysisSettings.useComplexHolzer=true启用
+  // (直接法在共振区峰值偏锐, 适合过共振区研究)
+  const hasCouplingDamping = elasticCouplings.some(c =>
+    (c.dampingCoefficient || c.damping || 0) > 0
+  );
+  const useDirectMethod = hasCouplingDamping &&
+    (analysisSettings.useComplexHolzer === true);
+
+  // v3.1: 联轴器损耗因子 η = √(ψ² - 1), ψ = 制造商"相对阻尼"(kd/ks)
+  let couplingEta = 0;
+  if (useDirectMethod) {
+    const psi = elasticCouplings.reduce((max, c) => {
+      const d = c.dampingCoefficient || c.damping || 0;
+      return d > max ? d : max;
+    }, 0);
+    couplingEta = psi > 1 ? Math.sqrt(psi * psi - 1) : psi / 2;
+  }
+
+  // v3.1: 螺旋桨额定阻尼 (Archer法, 折算到等效系统)
+  const dpRated = calculatePropellerDampingArcher(ratedPower, ratedPropellerSpeed);
+  const dpEqRated = dpRated / (gearRatio * gearRatio);
 
   for (let speed = speedRange.min; speed <= speedRange.max; speed += speedStep) {
     const speedResult = {
@@ -580,22 +735,19 @@ export function runForcedVibrationAnalysis(systemInput, freeVibrationResults) {
       massAmplitude: 0
     };
 
-    // v3.0: 计算当前转速的螺旋桨阻尼 (速度相关)
-    // 策略: 有联轴器时, 联轴器η已包含系统主要阻尼(COMPASS Normal模式)
-    //       无联轴器时(刚性法兰), 需要螺旋桨阻尼作为主要阻尼源
-    const hasCouplingDamping = elasticCouplings.some(c =>
-      (c.dampingCoefficient || c.damping || 0) > 0
-    );
-    let dp = 0;
-    if (!hasCouplingDamping) {
+    // v3.1: 当前转速螺旋桨等效阻尼 (线性: dp ∝ n)
+    const dpEquiv = dpEqRated * (speed / ratedSpeed);
+
+    // v3.0 fallback: 模态阻尼比 (用于无联轴器的模态叠加法)
+    let modalDampingRatios = null;
+    if (!useDirectMethod) {
+      let dp = 0;
       const propellerSpeed = speed / gearRatio;
       dp = calculatePropellerDampingAtSpeed(ratedPower, ratedPropellerSpeed, propellerSpeed);
+      modalDampingRatios = calculateModalDampingRatios(
+        naturalFrequencies, units, elasticCouplings, dp
+      );
     }
-
-    // v3.0: 计算每阶模态阻尼比
-    const modalDampingRatios = calculateModalDampingRatios(
-      naturalFrequencies, units, elasticCouplings, dp
-    );
 
     // 各激励阶次的响应
     for (const order of excitationOrders) {
@@ -612,15 +764,37 @@ export function runForcedVibrationAnalysis(systemInput, freeVibrationResults) {
         units, powerSource, propeller, order, speed
       );
 
-      // v3.0: 传入每阶模态阻尼比 (替代全局标量dampingRatio)
-      const response = calculateForcedResponse({
-        naturalModes: naturalFrequencies,
-        excitationTorques,
-        excitationFreq,
-        dampingRatios: modalDampingRatios,
-        dampingRatio,  // 标量兜底
-        units
-      });
+      let response;
+      if (useDirectMethod) {
+        // v3.1: 复数Holzer直接法 — 精确频域响应, 无模态截断
+        // 找激励位置和扭矩幅值
+        let excIdx = 0, excT = 0;
+        for (let i = 0; i < excitationTorques.length; i++) {
+          if (Math.abs(excitationTorques[i]) > Math.abs(excT)) {
+            excIdx = i; excT = excitationTorques[i];
+          }
+        }
+
+        const responseAmplitudes = solveComplexHolzer(
+          units, excitationFreq, excIdx, excT, couplingEta, dpEquiv
+        );
+
+        response = {
+          excitationFreq,
+          responseAmplitudes,
+          maxAmplitude: Math.max(...responseAmplitudes)
+        };
+      } else {
+        // v3.0 fallback: 模态叠加法 (无联轴器系统)
+        response = calculateForcedResponse({
+          naturalModes: naturalFrequencies,
+          excitationTorques,
+          excitationFreq,
+          dampingRatios: modalDampingRatios,
+          dampingRatio,
+          units
+        });
+      }
 
       speedResult.harmonicResults.push({
         order,
