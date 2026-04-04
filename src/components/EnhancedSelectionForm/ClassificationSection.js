@@ -2,8 +2,14 @@
 // 船检要求区块组件
 
 import React from 'react';
-import { Card, Form, Row, Col, Badge } from 'react-bootstrap';
+import { Card, Form, Row, Col, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { FORM_OPTIONS } from './useEnhancedSelectionForm';
+
+const HelpTip = ({ text }) => (
+  <OverlayTrigger placement="top" overlay={<Tooltip>{text}</Tooltip>}>
+    <i className="bi bi-info-circle ms-1" style={{ cursor: 'pointer', color: '#6c757d', fontSize: '0.85em' }}></i>
+  </OverlayTrigger>
+);
 
 /**
  * 船检要求区块
@@ -50,7 +56,7 @@ const ClassificationSection = ({
         <Row>
           <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>船检类型</Form.Label>
+              <Form.Label>船检类型 <HelpTip text="国内船检遵循中国海事法规(CCS/ZY)，国外船检遵循IMO标准或船旗国法规(LR/DNV/BV/ABS等)" /></Form.Label>
               <div>
                 <Form.Check
                   inline
@@ -84,7 +90,7 @@ const ClassificationSection = ({
 
           <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>船检机构</Form.Label>
+              <Form.Label>船检机构 <HelpTip text="选择具有法律资格的船级社。机构的证书等级决定船舶的可保性和市场准入。杭齿主要产品已获CCS/DNV/LR/ABS等多家认证" /></Form.Label>
               <Form.Select
                 value={classification.society || (classificationType === '国内' ? 'CCS' : 'LR')}
                 onChange={(e) => updateClassification('society', e.target.value)}

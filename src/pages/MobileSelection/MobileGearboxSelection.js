@@ -216,6 +216,24 @@ const MobileGearboxSelection = ({
             </Form.Group>
           </div>
 
+          {/* P/N传递能力实时计算 */}
+          {parseFloat(power) > 0 && parseFloat(speed) > 0 && (
+            <div className="pn-display" style={{
+              padding: '8px 12px',
+              margin: '8px 0',
+              borderRadius: '8px',
+              backgroundColor: 'var(--m-bg-tertiary, #f0f4f8)',
+              fontSize: '0.85rem',
+              textAlign: 'center'
+            }}>
+              <span style={{ color: 'var(--m-text-secondary, #666)' }}>传递能力需求 P/N = </span>
+              <strong style={{ color: 'var(--m-primary, #2563eb)', fontSize: '1.1em' }}>
+                {(parseFloat(power) / parseFloat(speed)).toFixed(4)}
+              </strong>
+              <span style={{ color: 'var(--m-text-secondary, #666)' }}> kW/(r/min)</span>
+            </div>
+          )}
+
           {/* 高级选项 */}
           <div className="advanced-toggle">
             <Button

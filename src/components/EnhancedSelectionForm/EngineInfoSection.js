@@ -2,8 +2,14 @@
 // 主机信息区块组件
 
 import React from 'react';
-import { Card, Form, Row, Col } from 'react-bootstrap';
+import { Card, Form, Row, Col, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { FORM_OPTIONS } from './useEnhancedSelectionForm';
+
+const HelpTip = ({ text }) => (
+  <OverlayTrigger placement="top" overlay={<Tooltip>{text}</Tooltip>}>
+    <i className="bi bi-info-circle ms-1" style={{ cursor: 'pointer', color: '#6c757d', fontSize: '0.85em' }}></i>
+  </OverlayTrigger>
+);
 
 /**
  * 主机信息区块
@@ -31,7 +37,7 @@ const EngineInfoSection = ({
         <Row>
           <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>主机品牌</Form.Label>
+              <Form.Label>主机品牌 <HelpTip text="发动机制造商。选择品牌后可自动匹配常用型号和飞轮规格，便于生成技术协议" /></Form.Label>
               <Form.Select
                 value={formData.engineBrand || '潍柴'}
                 onChange={(e) => updateField('engineBrand', e.target.value)}
@@ -64,7 +70,7 @@ const EngineInfoSection = ({
         <Row>
           <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>飞轮型号 (手动输入)</Form.Label>
+              <Form.Label>飞轮型号 (手动输入) <HelpTip text="SAE飞轮壳标准号(如SAE14/SAE11.5)。决定齿轮箱输入接口尺寸，需与发动机飞轮壳匹配" /></Form.Label>
               <Form.Control
                 type="text"
                 value={formData.flywheelSpec || ''}

@@ -631,6 +631,11 @@ const EnhancedGearboxSelectionResult = ({
                       <td>
                         {gearbox.model}
                         {gearbox.isPartialMatch && <Badge bg="warning" className="ms-1">部分</Badge>}
+                        {gearbox.warnings?.length > 0 && (
+                          <Badge bg="danger" className="ms-1" title={gearbox.warnings.join('; ')}>
+                            <i className="bi bi-exclamation-triangle-fill"></i> {gearbox.warnings.length}
+                          </Badge>
+                        )}
                         <DataCompletenessBadge gearbox={gearbox} className="ms-1" size="sm" />
                       </td>
                       <td>{gearbox.series || extractSeriesFromModel(gearbox.model)}</td>
