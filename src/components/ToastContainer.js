@@ -27,7 +27,7 @@ export default function ToastContainer() {
   };
 
   return (
-    <BSToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
+    <BSToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }} aria-live="polite" role="status">
       {toasts.map((t) => (
         <Toast
           key={t.id}

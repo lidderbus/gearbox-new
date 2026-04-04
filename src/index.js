@@ -144,5 +144,15 @@ reportWebVitals((metric) => {
   }
 });
 
-// 注销 Service Worker，清除旧缓存
-serviceWorkerRegistration.unregister();
+// Register Service Worker for PWA offline support
+serviceWorkerRegistration.register({
+  onUpdate: (registration) => {
+    console.log('[PWA] New version available, will activate on next visit');
+  },
+  onSuccess: (registration) => {
+    console.log('[PWA] App cached for offline use');
+  },
+  onError: (error) => {
+    console.warn('[PWA] Service Worker error:', error);
+  }
+});

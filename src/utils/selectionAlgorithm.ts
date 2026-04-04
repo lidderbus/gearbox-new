@@ -167,6 +167,7 @@ interface NearMatch extends Partial<Gearbox> {
   factoryPrice?: number;
   packagePrice?: number;
   marketPrice?: number;
+  _priceDataMissing?: boolean;
 }
 
 /**
@@ -192,6 +193,7 @@ interface MatchingGearbox extends Gearbox {
   score?: number;
   interfaceMatch?: InterfaceMatch;  // 接口匹配结果
   _pricePerCapacity?: number;
+  _priceDataMissing?: boolean;
   _scoringWeights?: ScoringWeights;
   _displayFields?: {
     capacityText: string;
@@ -394,6 +396,70 @@ function checkInterfaceMatch(
   }
 
   return { matched: true };
+}
+
+/**
+ * Fritsch-Carlson monotone cubic interpolation
+ * Preserves monotonicity of the data, avoiding overshoot
+ */
+function monotoneCubicInterpolate(xs: number[], ys: number[], x: number): number | null {
+  const n = xs.length;
+  if (n < 2) return null;
+  if (x <= xs[0]) return ys[0];
+  if (x >= xs[n - 1]) return ys[n - 1];
+
+  // Find interval
+  let i = 0;
+  while (i < n - 1 && xs[i + 1] < x) i++;
+
+  const h = xs[i + 1] - xs[i];
+  if (h === 0) return ys[i];
+
+  // Compute slopes
+  const delta: number[] = [];
+  for (let j = 0; j < n - 1; j++) {
+    delta.push((ys[j + 1] - ys[j]) / (xs[j + 1] - xs[j]));
+  }
+
+  // Fritsch-Carlson tangents
+  const m: number[] = new Array(n);
+  m[0] = delta[0];
+  m[n - 1] = delta[n - 2];
+  for (let j = 1; j < n - 1; j++) {
+    if (delta[j - 1] * delta[j] <= 0) {
+      m[j] = 0;
+    } else {
+      m[j] = (delta[j - 1] + delta[j]) / 2;
+    }
+  }
+
+  // Monotonicity constraints
+  for (let j = 0; j < n - 1; j++) {
+    if (Math.abs(delta[j]) < 1e-12) {
+      m[j] = 0;
+      m[j + 1] = 0;
+    } else {
+      const alpha = m[j] / delta[j];
+      const beta = m[j + 1] / delta[j];
+      const sq = alpha * alpha + beta * beta;
+      if (sq > 9) {
+        const tau = 3 / Math.sqrt(sq);
+        m[j] = tau * alpha * delta[j];
+        m[j + 1] = tau * beta * delta[j];
+      }
+    }
+  }
+
+  // Hermite interpolation
+  const t = (x - xs[i]) / h;
+  const t2 = t * t;
+  const t3 = t2 * t;
+  const h00 = 2 * t3 - 3 * t2 + 1;
+  const h10 = t3 - 2 * t2 + t;
+  const h01 = -2 * t3 + 3 * t2;
+  const h11 = t3 - t2;
+
+  return h00 * ys[i] + h10 * h * m[i] + h01 * ys[i + 1] + h11 * h * m[i + 1];
 }
 
 // ============= 主要函数 =============
@@ -677,27 +743,44 @@ export const selectGearbox = (
       return undefined;
     };
 
-    // Try linear interpolation if target ratio falls between two discrete ratios
+    // Try interpolation if target ratio falls between two discrete ratios
     const bestRatio = gearbox.ratios[bestRatioIndex];
     const ratiosDiff = bestRatio - targetRatio;
     if (gearbox.ratios.length >= 2 && Math.abs(ratiosDiff) > 0.01) {
-      // Find the adjacent ratio on the other side of targetRatio
-      let adjIndex = -1;
-      if (ratiosDiff > 0 && bestRatioIndex > 0) {
-        adjIndex = bestRatioIndex - 1;
-      } else if (ratiosDiff < 0 && bestRatioIndex < gearbox.ratios.length - 1) {
-        adjIndex = bestRatioIndex + 1;
+      // For 4+ ratios, use monotone cubic interpolation for better accuracy
+      if (gearbox.ratios.length >= 4) {
+        const allCaps: number[] = gearbox.ratios.map((_, idx) => getCapacityAtIndex(idx)).filter((c): c is number => c != null && c > 0);
+        if (allCaps.length === gearbox.ratios.length) {
+          const sortedIndices = gearbox.ratios.map((r, i) => i).sort((a, b) => gearbox.ratios[a] - gearbox.ratios[b]);
+          const sortedRatios = sortedIndices.map(i => gearbox.ratios[i]);
+          const sortedCaps = sortedIndices.map(i => allCaps[i]);
+          const interpolated = monotoneCubicInterpolate(sortedRatios, sortedCaps, targetRatio);
+          if (interpolated != null && interpolated > 0) {
+            capacity = interpolated;
+            DEBUG_LOG(`Gearbox ${gearbox.model} monotone cubic interpolated capacity: ${capacity.toFixed(6)} for ratio ${targetRatio} (${gearbox.ratios.length} ratios)`);
+          }
+        }
       }
-      if (adjIndex >= 0) {
-        const adjRatio = gearbox.ratios[adjIndex];
-        // Only interpolate if targetRatio is between the two ratios
-        if ((bestRatio - targetRatio) * (adjRatio - targetRatio) < 0) {
-          const capBest = getCapacityAtIndex(bestRatioIndex);
-          const capAdj = getCapacityAtIndex(adjIndex);
-          if (capBest != null && capAdj != null && capBest > 0 && capAdj > 0) {
-            const t = (targetRatio - bestRatio) / (adjRatio - bestRatio);
-            capacity = capBest + t * (capAdj - capBest);
-            DEBUG_LOG(`Gearbox ${gearbox.model} interpolated capacity: ${capacity?.toFixed(6)} between ratio ${bestRatio}(${capBest}) and ${adjRatio}(${capAdj})`);
+      // Fall through to linear interpolation if cubic didn't produce a result
+      if (capacity == null) {
+        // Find the adjacent ratio on the other side of targetRatio
+        let adjIndex = -1;
+        if (ratiosDiff > 0 && bestRatioIndex > 0) {
+          adjIndex = bestRatioIndex - 1;
+        } else if (ratiosDiff < 0 && bestRatioIndex < gearbox.ratios.length - 1) {
+          adjIndex = bestRatioIndex + 1;
+        }
+        if (adjIndex >= 0) {
+          const adjRatio = gearbox.ratios[adjIndex];
+          // Only interpolate if targetRatio is between the two ratios
+          if ((bestRatio - targetRatio) * (adjRatio - targetRatio) < 0) {
+            const capBest = getCapacityAtIndex(bestRatioIndex);
+            const capAdj = getCapacityAtIndex(adjIndex);
+            if (capBest != null && capAdj != null && capBest > 0 && capAdj > 0) {
+              const t = (targetRatio - bestRatio) / (adjRatio - bestRatio);
+              capacity = capBest + t * (capAdj - capBest);
+              DEBUG_LOG(`Gearbox ${gearbox.model} linear interpolated capacity: ${capacity?.toFixed(6)} between ratio ${bestRatio}(${capBest}) and ${adjRatio}(${capAdj})`);
+            }
           }
         }
       }
@@ -988,7 +1071,12 @@ export const selectGearbox = (
 
         // 7. 性价比基础分 (近似匹配无法跨候选归一化，按价格有无给分)
         const nearBasePrice = match.basePrice || (match as any).price || 0;
-        score += nearBasePrice > 0 ? W_COST * 0.5 : W_COST * 0.1;
+        if (nearBasePrice > 0) {
+          score += W_COST * 0.5;
+        } else {
+          score += W_COST * 0.4;  // 缺价格型号给中性分，不惩罚也不奖励
+          (match as any)._priceDataMissing = true;
+        }
 
         match.score = Math.max(0, Math.min(100, Math.round(score)));
 
@@ -1163,6 +1251,7 @@ export const selectGearbox = (
       gearbox._pricePerCapacity = basePrice / gearbox.selectedCapacity;
     } else {
       gearbox._pricePerCapacity = Infinity;
+      gearbox._priceDataMissing = true;
     }
 
     return gearbox;
@@ -1189,6 +1278,29 @@ export const selectGearbox = (
     const priceRange = maxPPC - minPPC;
     const weightRange = maxWeight - minWeight;
 
+    // 先计算所有有价格型号的priceScore，用于求中位数给缺价格型号
+    const pricedScores: number[] = [];
+    scoredGearboxes.forEach(g => {
+      if (g._pricePerCapacity !== Infinity) {
+        let ps = 0;
+        if (priceRange > 0) {
+          ps = W_COST * (1 - (g._pricePerCapacity! - minPPC) / priceRange);
+        } else {
+          ps = W_COST;
+        }
+        pricedScores.push(ps);
+      }
+    });
+    // 计算有价格型号的中位数分数，作为缺价格型号的中性得分
+    let medianPriceScore = W_COST * 0.5; // 默认中性值
+    if (pricedScores.length > 0) {
+      const sorted = [...pricedScores].sort((a, b) => a - b);
+      const mid = Math.floor(sorted.length / 2);
+      medianPriceScore = sorted.length % 2 !== 0
+        ? sorted[mid]
+        : (sorted[mid - 1] + sorted[mid]) / 2;
+    }
+
     scoredGearboxes.forEach(g => {
       let priceScore = 0;
       if (g._pricePerCapacity !== Infinity) {
@@ -1197,6 +1309,9 @@ export const selectGearbox = (
         } else {
           priceScore = W_COST;
         }
+      } else {
+        // 缺价格型号：使用有价格型号的中位数分数，不惩罚也不奖励
+        priceScore = medianPriceScore;
       }
 
       // TCO调整1: 过大选型增加维护/能耗成本 (余量>30%时渐进惩罚，最多15%)
@@ -1217,7 +1332,8 @@ export const selectGearbox = (
     if ((scoredGearboxes[0].basePrice || scoredGearboxes[0].price) > 0) {
       scoredGearboxes[0].score = Math.max(0, Math.min(100, Math.round((scoredGearboxes[0].score || 0) + W_COST)));
     } else {
-      scoredGearboxes[0].score = Math.max(0, Math.min(100, Math.round((scoredGearboxes[0].score || 0) + W_COST * 0.1)));
+      // 缺价格单型号：给50%中性分
+      scoredGearboxes[0].score = Math.max(0, Math.min(100, Math.round((scoredGearboxes[0].score || 0) + W_COST * 0.5)));
     }
   }
 
@@ -1330,6 +1446,26 @@ export const selectGearbox = (
     }
   };
 
+  // Critical speed pre-check for high-speed applications
+  if (engineSpeed > 3000 || isPTOorPTIEnabled) {
+    recommendations.forEach(rec => {
+      const csCheck = performCriticalSpeedCheck({
+        enginePower,
+        engineSpeed,
+        ratio: rec.selectedRatio,
+        isPTO: !!isPTOorPTIEnabled
+      });
+      if (csCheck) {
+        (rec as any).criticalSpeedCheck = csCheck;
+        if (!csCheck.safe) {
+          const existingWarnings: string[] = (rec as any).warnings || [];
+          existingWarnings.push(`⚠ 临界转速风险: ${csCheck.recommendation}`);
+          (rec as any).warnings = existingWarnings;
+        }
+      }
+    });
+  }
+
   // --- Add consolidated warning ---
   let consolidatedWarning: string | null = null;
   if (result.success && topRecommendation) {
@@ -1348,6 +1484,12 @@ export const selectGearbox = (
     if (couplingWarning) consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${couplingWarning}` : couplingWarning;
     if (pumpWarning) consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${pumpWarning}` : pumpWarning;
     if (hybridWarning) consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${hybridWarning}` : hybridWarning;
+
+    // Critical speed warning for top recommendation
+    if ((topRecommendation as any).criticalSpeedCheck && !(topRecommendation as any).criticalSpeedCheck.safe) {
+      const csWarn = `临界转速预警: ${(topRecommendation as any).criticalSpeedCheck.recommendation}`;
+      consolidatedWarning = consolidatedWarning ? `${consolidatedWarning}; ${csWarn}` : csWarn;
+    }
 
     if (topRecommendation.hasSpecialPackagePrice) {
       result.priceInfo = `该型号采用市场常规打包价${topRecommendation.packagePrice.toLocaleString()}元。`;

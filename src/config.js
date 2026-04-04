@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 40; // v40: 扭振v3.0 — 模态应变能法阻尼(联轴器η+螺旋桨dp/i²+结构), HGTHT4/5/6.3/8系列联轴器库, DT900齿轮箱4质量数据, 联轴器型号下拉+齿轮箱自动填充UI (2026-04-04)
+export const APP_DATA_VERSION = 41; // v41: 评测修复8项 — TCO中位数补偿(缺价格型号)/临界转速前置过滤/Fritsch-Carlson单调三次插值(≥4速比)/DOCX签名表格/ARIA live region/PWA Service Worker/扭振报告进度标注/+45测试(758总) (2026-04-05)
 
 export const DEFAULTS = {
     gearbox: {

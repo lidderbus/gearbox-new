@@ -231,10 +231,10 @@ const ResponsiveSelectionForm = ({
           disabled={!isFormValid() || loading}
         >
           {loading ? (
-            <>
-              <span className="spinner-border spinner-border-sm" />
+            <span role="status" aria-live="polite">
+              <span className="spinner-border spinner-border-sm" aria-hidden="true" />
               选型中...
-            </>
+            </span>
           ) : (
             <>🔍 开始选型</>
           )}

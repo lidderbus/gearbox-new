@@ -16,6 +16,13 @@ const RECENT_REPORTS = [
   { id: 4, project: '长航集02068', engine: 'Cummins KTA38 @ 1800rpm', gearbox: 'HCD600A i=4.10', date: '2026-03-10', status: '已完成' },
 ];
 
+const getProgressLabel = (pct) => {
+  if (pct < 20) return '加载计算数据...';
+  if (pct < 50) return '组装报告内容...';
+  if (pct < 80) return '生成图表与表格...';
+  return '排版输出...';
+};
+
 export default function TorsionalReportView({ colors, theme }) {
   const [selectedTemplate, setSelectedTemplate] = useState('standard');
   const [generating, setGenerating] = useState(false);
@@ -86,7 +93,10 @@ export default function TorsionalReportView({ colors, theme }) {
                 </Form.Select>
               </Form.Group>
               {generating ? (
-                <ProgressBar now={progress} label={`${progress}%`} animated striped className="mt-2" />
+                <>
+                  <ProgressBar now={progress} label={`${progress}% - ${getProgressLabel(progress)}`} animated striped className="mt-2" />
+                  <small className="text-muted d-block mt-1"><i className="bi bi-info-circle me-1"></i>基于预计算结果自动组装标准格式报告</small>
+                </>
               ) : (
                 <Button variant="primary" className="w-100 mt-2" onClick={handleGenerate}>
                   <i className="bi bi-file-earmark-pdf me-1"></i>生成计算书
@@ -94,7 +104,7 @@ export default function TorsionalReportView({ colors, theme }) {
               )}
               {progress >= 100 && (
                 <Alert variant="success" className="mt-2 mb-0 py-1 small">
-                  <i className="bi bi-check-circle me-1"></i>计算书已生成！
+                  <i className="bi bi-check-circle me-1"></i>计算书已生成！基于扭振分析模块的计算结果。
                 </Alert>
               )}
             </Card.Body>

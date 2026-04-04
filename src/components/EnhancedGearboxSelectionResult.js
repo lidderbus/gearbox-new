@@ -157,7 +157,7 @@ const EnhancedGearboxSelectionResult = ({
   // 如果没有结果，提前返回
   if (!result || !result.recommendations || result.recommendations.length === 0) {
     return (
-      <Card className="mb-4 shadow-sm" style={{ backgroundColor: colors?.card || 'white', borderColor: colors?.border || '#ddd' }}>
+      <Card className="mb-4 shadow-sm" style={{ backgroundColor: colors?.card || 'white', borderColor: colors?.border || '#ddd' }} role="region" aria-live="polite" aria-label="选型结果">
         <Card.Header style={{ backgroundColor: colors?.headerBg || '#f5f5f5', color: colors?.headerText || '#333' }}>
           <i className="bi bi-gear-fill me-2"></i>选型结果
         </Card.Header>
@@ -1032,7 +1032,7 @@ const EnhancedGearboxSelectionResult = ({
 
   // 渲染主界面
   return (
-    <Card className="shadow-sm" style={{ backgroundColor: colors?.card || 'white', borderColor: colors?.border || '#ddd' }}>
+    <Card className="shadow-sm" style={{ backgroundColor: colors?.card || 'white', borderColor: colors?.border || '#ddd' }} role="region" aria-live="polite" aria-label="选型结果">
       <Card.Header style={{ backgroundColor: colors?.headerBg || '#f5f5f5', color: colors?.headerText || '#333' }}>
         <div className="d-flex justify-content-between align-items-center">
           <span><i className="bi bi-gear-fill me-2"></i>选型结果 - {selectedGearbox.model}</span>

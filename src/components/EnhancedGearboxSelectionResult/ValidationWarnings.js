@@ -22,7 +22,7 @@ const ValidationWarnings = ({ validation, type = 'gearbox' }) => {
   };
 
   return (
-    <div className="validation-warnings mt-2">
+    <div className="validation-warnings mt-2" aria-live="assertive" role="alert">
       {hasErrors && (
         <Alert variant="danger" className="py-2 mb-2">
           <div className="d-flex align-items-center mb-1">

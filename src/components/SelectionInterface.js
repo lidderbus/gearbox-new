@@ -313,7 +313,7 @@ const SelectionInterface = () => {
         <div className="result-section">
           <h3>选型结果</h3>
           
-          {loading && <div className="loading">正在计算最佳齿轮箱匹配...</div>}
+          {loading && <div className="loading" role="status" aria-live="polite">正在计算最佳齿轮箱匹配...</div>}
           
           {selectionResult && !loading && (
             <div className="selection-result">

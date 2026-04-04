@@ -8,7 +8,7 @@
 // import { jsPDF } from 'jspdf';
 // import 'jspdf-autotable';
 import { saveAs } from 'file-saver';
-// import { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, HeadingLevel, AlignmentType, WidthType, BorderStyle } from 'docx';
+// import { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, HeadingLevel, AlignmentType, WidthType, BorderStyle, ShadingType } from 'docx';
 // import NotoSansSCFont from '../fonts/NotoSansSC-Regular-normal';
 // 移除有问题的导入
 // import { PDFGenerationErrorHandler } from './dataValidator';
@@ -385,7 +385,7 @@ export class WordExporter extends ExportManager {
       }
 
       // 动态加载 docx
-      const { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, HeadingLevel, AlignmentType, WidthType, BorderStyle } = await loadDocx();
+      const { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, HeadingLevel, AlignmentType, WidthType, BorderStyle, ShadingType } = await loadDocx();
 
       this.updateStatus('generating', 30);
 
@@ -554,14 +554,14 @@ export class WordExporter extends ExportManager {
                   // 表头
                   new TableRow({
                     children: [
-                      new TableCell({ children: [new Paragraph({ text: '序号', alignment: AlignmentType.CENTER })], width: { size: 5, type: WidthType.PERCENTAGE } }),
-                      new TableCell({ children: [new Paragraph({ text: '产品名称', alignment: AlignmentType.CENTER })], width: { size: 20, type: WidthType.PERCENTAGE } }),
-                      new TableCell({ children: [new Paragraph({ text: '规格型号', alignment: AlignmentType.CENTER })], width: { size: 20, type: WidthType.PERCENTAGE } }),
-                      new TableCell({ children: [new Paragraph({ text: '单位', alignment: AlignmentType.CENTER })], width: { size: 10, type: WidthType.PERCENTAGE } }),
-                      new TableCell({ children: [new Paragraph({ text: '数量', alignment: AlignmentType.CENTER })], width: { size: 10, type: WidthType.PERCENTAGE } }),
-                      new TableCell({ children: [new Paragraph({ text: '单价(元)', alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE } }),
-                      new TableCell({ children: [new Paragraph({ text: '金额', alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE } }),
-                      new TableCell({ children: [new Paragraph({ text: '交货期', alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE } }),
+                      new TableCell({ children: [new Paragraph({ text: '序号', alignment: AlignmentType.CENTER })], width: { size: 5, type: WidthType.PERCENTAGE }, shading: { fill: "E8E8E8", type: ShadingType.CLEAR, color: "auto" } }),
+                      new TableCell({ children: [new Paragraph({ text: '产品名称', alignment: AlignmentType.CENTER })], width: { size: 20, type: WidthType.PERCENTAGE }, shading: { fill: "E8E8E8", type: ShadingType.CLEAR, color: "auto" } }),
+                      new TableCell({ children: [new Paragraph({ text: '规格型号', alignment: AlignmentType.CENTER })], width: { size: 20, type: WidthType.PERCENTAGE }, shading: { fill: "E8E8E8", type: ShadingType.CLEAR, color: "auto" } }),
+                      new TableCell({ children: [new Paragraph({ text: '单位', alignment: AlignmentType.CENTER })], width: { size: 10, type: WidthType.PERCENTAGE }, shading: { fill: "E8E8E8", type: ShadingType.CLEAR, color: "auto" } }),
+                      new TableCell({ children: [new Paragraph({ text: '数量', alignment: AlignmentType.CENTER })], width: { size: 10, type: WidthType.PERCENTAGE }, shading: { fill: "E8E8E8", type: ShadingType.CLEAR, color: "auto" } }),
+                      new TableCell({ children: [new Paragraph({ text: '单价(元)', alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE }, shading: { fill: "E8E8E8", type: ShadingType.CLEAR, color: "auto" } }),
+                      new TableCell({ children: [new Paragraph({ text: '金额', alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE }, shading: { fill: "E8E8E8", type: ShadingType.CLEAR, color: "auto" } }),
+                      new TableCell({ children: [new Paragraph({ text: '交货期', alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE }, shading: { fill: "E8E8E8", type: ShadingType.CLEAR, color: "auto" } }),
                     ],
                   }),
                   // 产品行 - 创建产品行函数
@@ -622,23 +622,57 @@ export class WordExporter extends ExportManager {
               new Paragraph({ text: `12. 合同有效期限：自签订日起至${contract.expiryDate || ''}止` }),
               new Paragraph({ text: `13. ${contract.contractCopies || '本合同一式两份，双方各持一份。'}` }),
               
-              // 签名区域
-              new Paragraph({
-                spacing: {
-                  before: 800,
+              // 签名区域 - 使用表格实现对齐
+              new Paragraph({ text: '', spacing: { before: 600 } }),
+              new Table({
+                width: { size: 100, type: WidthType.PERCENTAGE },
+                borders: {
+                  top: { style: BorderStyle.NONE },
+                  bottom: { style: BorderStyle.NONE },
+                  left: { style: BorderStyle.NONE },
+                  right: { style: BorderStyle.NONE },
+                  insideHorizontal: { style: BorderStyle.NONE },
+                  insideVertical: { style: BorderStyle.NONE },
                 },
-                children: [
-                  new TextRun({ text: '需方（盖章）：', size: 24 }),
-                  new TextRun({ text: '\t\t\t\t\t', size: 24 }),
-                  new TextRun({ text: '供方（盖章）：', size: 24 }),
-                  new TextRun({ text: '\n\n\n', size: 24 }),
-                  new TextRun({ text: '法定代表人或委托代理人（签字）：', size: 24 }),
-                  new TextRun({ text: '\t\t', size: 24 }),
-                  new TextRun({ text: '法定代表人或委托代理人（签字）：', size: 24 }),
-                  new TextRun({ text: '\n\n', size: 24 }),
-                  new TextRun({ text: '日期：', size: 24 }),
-                  new TextRun({ text: '\t\t\t\t\t\t', size: 24 }),
-                  new TextRun({ text: '日期：', size: 24 }),
+                rows: [
+                  new TableRow({
+                    children: [
+                      new TableCell({
+                        width: { size: 50, type: WidthType.PERCENTAGE },
+                        borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE } },
+                        children: [new Paragraph({ text: '需方（盖章）：', spacing: { after: 600 } })],
+                      }),
+                      new TableCell({
+                        width: { size: 50, type: WidthType.PERCENTAGE },
+                        borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE } },
+                        children: [new Paragraph({ text: '供方（盖章）：', spacing: { after: 600 } })],
+                      }),
+                    ],
+                  }),
+                  new TableRow({
+                    children: [
+                      new TableCell({
+                        borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE } },
+                        children: [new Paragraph({ text: '法定代表人或委托代理人（签字）：', spacing: { after: 600 } })],
+                      }),
+                      new TableCell({
+                        borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE } },
+                        children: [new Paragraph({ text: '法定代表人或委托代理人（签字）：', spacing: { after: 600 } })],
+                      }),
+                    ],
+                  }),
+                  new TableRow({
+                    children: [
+                      new TableCell({
+                        borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE } },
+                        children: [new Paragraph({ text: '日期：    年    月    日' })],
+                      }),
+                      new TableCell({
+                        borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE } },
+                        children: [new Paragraph({ text: '日期：    年    月    日' })],
+                      }),
+                    ],
+                  }),
                 ],
               }),
             ],

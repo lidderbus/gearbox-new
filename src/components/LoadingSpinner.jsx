@@ -8,8 +8,8 @@ const LoadingSpinner = ({ size = 'medium', text = '加载中...' }) => {
   };
 
   return (
-    <div className="loading-container">
-      <div className={`spinner ${sizeClasses[size]}`}></div>
+    <div className="loading-container" role="status" aria-live="polite">
+      <div className={`spinner ${sizeClasses[size]}`} aria-hidden="true"></div>
       {text && <p className="loading-text">{text}</p>}
     </div>
   );
