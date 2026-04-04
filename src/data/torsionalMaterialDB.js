@@ -212,6 +212,18 @@ export const VESSEL_PRESETS = {
     materialId: '45_STEEL', materialStrength: 600,
     couplingModel: 'HGTQ500',
     motorInertia: 1.5, propellerInertia: 2.8, bladeCount: 4, cylinderCount: 8
+  },
+  // --- 电推 (COMPASS校准基准) ---
+  'electric_64teu': {
+    name: '64TEU 电池动力集装箱船 (COMPASS校准)',
+    motorPower: 249, motorSpeed: 1500, gearRatio: 5.048,
+    shaftDiameter: 120, shaftLength: 1955,
+    materialId: '45_STEEL', materialStrength: 520,
+    couplingModel: 'HGTHT4',
+    motorInertia: 1.35, propellerInertia: 24.89, bladeCount: 4, cylinderCount: 0,
+    powerSourceType: 'electric',
+    gearboxModel: 'DT900',
+    note: 'COMPASS SRM09基准: 1500rpm中间轴3.072 N/mm², 无禁速区'
   }
 };
 
