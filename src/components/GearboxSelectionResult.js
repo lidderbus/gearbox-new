@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Card, Row, Col, Table, Badge, Button, Tabs, Tab, Alert } from 'react-bootstrap';
 import GearboxVisualization from './GearboxVisualization'; // 导入可视化组件
+import RelaxationSuggestions from './selection/RelaxationSuggestions';
 
 const GearboxSelectionResult = ({ 
   result, 
@@ -33,6 +34,7 @@ const GearboxSelectionResult = ({
               </Alert>
             )}
           </div>
+          <RelaxationSuggestions suggestions={result?.relaxationSuggestions} />
         </Card.Body>
       </Card>
     );

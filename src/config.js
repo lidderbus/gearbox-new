@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 41; // v41: 评测修复8项 — TCO中位数补偿(缺价格型号)/临界转速前置过滤/Fritsch-Carlson单调三次插值(≥4速比)/DOCX签名表格/ARIA live region/PWA Service Worker/扭振报告进度标注/+45测试(758总) (2026-04-05)
+export const APP_DATA_VERSION = 42; // v42: P2专业化增强 — 自定义选型模板保存/加载(20个), 选型失败约束松弛建议(5维), 模糊搜索(Levenshtein容错), 基于v41评测修复 (2026-04-05)
 
 export const DEFAULTS = {
     gearbox: {

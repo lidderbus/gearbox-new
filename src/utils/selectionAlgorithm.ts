@@ -149,6 +149,17 @@ interface RejectionReasons {
 }
 
 /**
+ * 约束放宽建议
+ */
+export interface RelaxationSuggestion {
+  parameter: string;
+  currentValue: string;
+  suggestedValue: string;
+  additionalMatches: number;
+  models: string[];
+}
+
+/**
  * 近似匹配结果
  */
 interface NearMatch extends Partial<Gearbox> {
@@ -252,6 +263,7 @@ interface InternalSelectionResult extends SelectionResult {
   warning?: string;
   priceInfo?: string;
   rejectionReasons?: RejectionReasons;
+  relaxationSuggestions?: RelaxationSuggestion[];
   _diagnostics?: {
     scoringWeights: ScoringWeights;
     tolerances: {
@@ -460,6 +472,193 @@ function monotoneCubicInterpolate(xs: number[], ys: number[], x: number): number
   const h11 = t3 - t2;
 
   return h00 * ys[i] + h10 * h * m[i] + h01 * ys[i + 1] + h11 * h * m[i + 1];
+}
+
+// ============= 约束放宽建议生成 =============
+
+/**
+ * 测试放宽各项约束后能解锁多少额外匹配型号
+ * 在选型失败时调用，帮助用户了解如何调整参数
+ */
+function generateRelaxationSuggestions(
+  gearboxes: Gearbox[],
+  enginePower: number,
+  engineSpeed: number,
+  targetRatio: number,
+  thrustRequirement: number,
+  rejectionReasons: RejectionReasons,
+  minCapacityMargin: number
+): RelaxationSuggestion[] {
+  const suggestions: RelaxationSuggestion[] = [];
+  const requiredTC = enginePower / engineSpeed;
+
+  // Helper: check if a gearbox passes speed filter
+  const passesSpeed = (g: Gearbox): boolean => {
+    if (!Array.isArray(g.inputSpeedRange) || g.inputSpeedRange.length < 2) return true;
+    let [minSpd, maxSpd] = g.inputSpeedRange;
+    if (minSpd > maxSpd) [minSpd, maxSpd] = [maxSpd, minSpd];
+    return engineSpeed >= minSpd && engineSpeed <= maxSpd;
+  };
+
+  // Helper: check if a gearbox has any ratio within a given tolerance
+  const hasRatioWithin = (g: Gearbox, tolerancePct: number): boolean => {
+    if (!Array.isArray(g.ratios)) return false;
+    return g.ratios.some((r: number) =>
+      typeof r === 'number' && !isNaN(r) && r > 0 &&
+      (Math.abs(r - targetRatio) / targetRatio) * 100 <= tolerancePct
+    );
+  };
+
+  // Helper: check if a gearbox has capacity meeting a given minimum margin
+  const hasCapacityWithMargin = (g: Gearbox, minMarginPct: number): boolean => {
+    const tcpr = (g as any).transmissionCapacityPerRatio as number[] | undefined;
+    const tc = g.transferCapacity;
+    const caps = Array.isArray(tcpr) ? tcpr : (Array.isArray(tc) ? tc : []);
+    return caps.some((c: any) => {
+      if (typeof c !== 'number' || c <= 0) return false;
+      return ((c - requiredTC) / requiredTC) * 100 >= minMarginPct;
+    });
+  };
+
+  // 1. Test: relax ratio tolerance to 30% (from default ~25%)
+  if (rejectionReasons.ratioOutOfRange > 0) {
+    const relaxedModels = gearboxes.filter(g => {
+      if (!g || !g.model) return false;
+      if (!passesSpeed(g)) return false;
+      // Must have ratio within 30% but NOT within 25% (i.e. newly unlocked)
+      return hasRatioWithin(g, 30) && !hasRatioWithin(g, 25);
+    });
+    if (relaxedModels.length > 0) {
+      suggestions.push({
+        parameter: '速比偏差容差',
+        currentValue: '默认(25%)',
+        suggestedValue: '放宽至30%',
+        additionalMatches: relaxedModels.length,
+        models: relaxedModels.slice(0, 3).map(g => g.model || '')
+      });
+    }
+  }
+
+  // 2. Test: relax speed range by +/-10%
+  if (rejectionReasons.speedRange > 0) {
+    const relaxedSpeedLow = engineSpeed * 0.9;
+    const relaxedSpeedHigh = engineSpeed * 1.1;
+    const relaxedModels = gearboxes.filter(g => {
+      if (!g || !g.model) return false;
+      if (!Array.isArray(g.inputSpeedRange) || g.inputSpeedRange.length < 2) return false;
+      let [minSpd, maxSpd] = g.inputSpeedRange;
+      if (minSpd > maxSpd) [minSpd, maxSpd] = [maxSpd, minSpd];
+      // Would fail with exact speed but pass with relaxed range
+      const failsExact = engineSpeed < minSpd || engineSpeed > maxSpd;
+      const passesRelaxed = relaxedSpeedLow <= maxSpd && relaxedSpeedHigh >= minSpd;
+      return failsExact && passesRelaxed;
+    });
+    if (relaxedModels.length > 0) {
+      suggestions.push({
+        parameter: '主机转速',
+        currentValue: `${engineSpeed} rpm`,
+        suggestedValue: `${Math.round(relaxedSpeedLow)}-${Math.round(relaxedSpeedHigh)} rpm (±10%)`,
+        additionalMatches: relaxedModels.length,
+        models: relaxedModels.slice(0, 3).map(g => g.model || '')
+      });
+    }
+  }
+
+  // 3. Test: relax capacity margin to 5% (from default 10%)
+  if (rejectionReasons.capacityTooLow > 0 && minCapacityMargin > 5) {
+    const relaxedModels = gearboxes.filter(g => {
+      if (!g || !g.model) return false;
+      if (!passesSpeed(g)) return false;
+      if (!hasRatioWithin(g, 25)) return false;
+      // Has capacity with 5% margin but not with current min margin
+      return hasCapacityWithMargin(g, 5) && !hasCapacityWithMargin(g, minCapacityMargin);
+    });
+    if (relaxedModels.length > 0) {
+      suggestions.push({
+        parameter: '最小容量余量',
+        currentValue: `${minCapacityMargin}% (JB/CCS标准)`,
+        suggestedValue: '5% (需船级社确认)',
+        additionalMatches: relaxedModels.length,
+        models: relaxedModels.slice(0, 3).map(g => g.model || '')
+      });
+    }
+  }
+
+  // 4. Test: remove thrust requirement
+  if (rejectionReasons.thrustInsufficient > 0 && thrustRequirement > 0) {
+    const relaxedModels = gearboxes.filter(g => {
+      if (!g || !g.model) return false;
+      if (!passesSpeed(g)) return false;
+      if (!hasRatioWithin(g, 25)) return false;
+      if (!hasCapacityWithMargin(g, minCapacityMargin)) return false;
+      // Would pass everything except thrust
+      const thrustFails = typeof g.thrust === 'number' && g.thrust < thrustRequirement;
+      return thrustFails;
+    });
+    if (relaxedModels.length > 0) {
+      suggestions.push({
+        parameter: '推力要求',
+        currentValue: `${thrustRequirement} kN`,
+        suggestedValue: '不限 (另行配置推力轴承)',
+        additionalMatches: relaxedModels.length,
+        models: relaxedModels.slice(0, 3).map(g => g.model || '')
+      });
+    }
+  }
+
+  // 5. Test: reduce power by 10% (suggest engine re-evaluation)
+  if (rejectionReasons.capacityTooLow > 0) {
+    const reducedPower = enginePower * 0.9;
+    const reducedTC = reducedPower / engineSpeed;
+    const relaxedModels = gearboxes.filter(g => {
+      if (!g || !g.model) return false;
+      if (!passesSpeed(g)) return false;
+      if (!hasRatioWithin(g, 25)) return false;
+      const tcpr = (g as any).transmissionCapacityPerRatio as number[] | undefined;
+      const tc = g.transferCapacity;
+      const caps = Array.isArray(tcpr) ? tcpr : (Array.isArray(tc) ? tc : []);
+      const passesReduced = caps.some((c: any) =>
+        typeof c === 'number' && c > 0 && ((c - reducedTC) / reducedTC) * 100 >= minCapacityMargin
+      );
+      const failsOriginal = !hasCapacityWithMargin(g, minCapacityMargin);
+      return passesReduced && failsOriginal;
+    });
+    if (relaxedModels.length > 0) {
+      suggestions.push({
+        parameter: '发动机功率',
+        currentValue: `${enginePower} kW`,
+        suggestedValue: `${Math.round(reducedPower)} kW (-10%, 重新评估主机选型)`,
+        additionalMatches: relaxedModels.length,
+        models: relaxedModels.slice(0, 3).map(g => g.model || '')
+      });
+    }
+  }
+
+  return suggestions.sort((a, b) => b.additionalMatches - a.additionalMatches);
+}
+
+/**
+ * Aggregate relaxation suggestions from multiple sub-results (used by autoSelectGearbox)
+ * Merges suggestions with the same parameter, summing counts and deduplicating models
+ */
+function aggregateRelaxationSuggestions(allResults: InternalSelectionResult[]): RelaxationSuggestion[] {
+  const mergedMap = new Map<string, RelaxationSuggestion>();
+
+  for (const result of allResults) {
+    if (!result.relaxationSuggestions) continue;
+    for (const s of result.relaxationSuggestions) {
+      const existing = mergedMap.get(s.parameter);
+      if (existing) {
+        existing.additionalMatches += s.additionalMatches;
+        const modelSet = new Set([...existing.models, ...s.models]);
+        existing.models = Array.from(modelSet).slice(0, 5);
+      } else {
+        mergedMap.set(s.parameter, { ...s, models: [...s.models] });
+      }
+    }
+  }
+
+  return Array.from(mergedMap.values()).sort((a, b) => b.additionalMatches - a.additionalMatches);
 }
 
 // ============= 主要函数 =============
@@ -1150,24 +1349,38 @@ export const selectGearbox = (
         })
         .join('、');
 
+      // Generate constraint relaxation suggestions
+      const relaxationSuggestions = generateRelaxationSuggestions(
+        gearboxes, enginePower, engineSpeed, targetRatio,
+        thrustRequirement, rejectionReasons, MIN_CAPACITY_MARGIN
+      );
+
       return {
         success: false,
         message: `没有找到符合所有条件的 ${gearboxType} 系列齿轮箱，主要原因: ${mainReason}`,
         recommendations: nearMatches as SelectionRecommendation[],
         gearboxTypeUsed: gearboxType,
         rejectionReasons,
+        relaxationSuggestions,
         engineTorque: engineTorque_Nm,
         requiredTransferCapacity: requiredTransferCapacity,
         warning: "找到一些接近条件的齿轮箱，但它们不满足全部选型要求。请考虑调整输入参数。"
       };
     }
 
+    // Generate constraint relaxation suggestions for empty results too
+    const relaxationSuggestions = generateRelaxationSuggestions(
+      gearboxes, enginePower, engineSpeed, targetRatio,
+      thrustRequirement, rejectionReasons, MIN_CAPACITY_MARGIN
+    );
+
     return {
       success: false,
       message: `没有找到符合条件的 ${gearboxType} 系列齿轮箱`,
       recommendations: [],
       gearboxTypeUsed: gearboxType,
-      rejectionReasons
+      rejectionReasons,
+      relaxationSuggestions
     };
   }
 
@@ -1657,21 +1870,29 @@ export const autoSelectGearbox = (
 
       const bestNearMatches = allNearMatches.slice(0, 5);
 
+      // Aggregate relaxation suggestions from all sub-results
+      const aggregatedSuggestions = aggregateRelaxationSuggestions(allResults);
+
       return {
         success: false,
         message: '在所有相关系列中均未找到完全符合条件的齿轮箱，但有一些近似匹配',
         recommendations: bestNearMatches as SelectionRecommendation[],
         engineTorque: motorPower * 9550 / motorSpeed,
         requiredTransferCapacity: motorPower / motorSpeed,
+        relaxationSuggestions: aggregatedSuggestions,
         warning: "以下是部分符合条件的齿轮箱，请评估是否可以调整需求或选择其他参数。",
         allResults
       };
     }
 
+    // Aggregate relaxation suggestions from all sub-results
+    const aggregatedSuggestions = aggregateRelaxationSuggestions(allResults);
+
     return {
       success: false,
       message: '在所有相关系列中均未找到符合条件的齿轮箱',
       recommendations: [],
+      relaxationSuggestions: aggregatedSuggestions,
       allResults
     };
   }

@@ -2,7 +2,8 @@
 // 输入参数选项卡组件 - 从 App.js 拆分
 
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
-import { Row, Col, Form, Button, Card, Spinner, ButtonGroup, Badge } from 'react-bootstrap';
+import { Row, Col, Form, Button, Card, Spinner, ButtonGroup, Badge, Modal } from 'react-bootstrap';
+import { getTemplates, saveTemplate, deleteTemplate, incrementUsage } from '../utils/selectionTemplates';
 import SelectionGuidelines, { HelpTooltip, HCGWorkloadSelector } from './SelectionGuidelines';
 import { PRIME_MOVER_CAPACITY_FACTOR } from '../utils/selectionAlgorithm';
 import HybridConfigPanel from './HybridConfigPanel';
@@ -59,6 +60,9 @@ const InputParametersTab = ({
   const [hasRotationConflict, setHasRotationConflict] = useState(false);
   const [wizardMode, setWizardMode] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
+  const [userTemplates, setUserTemplates] = useState(() => getTemplates());
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [templateName, setTemplateName] = useState('');
 
   // Persist core params to localStorage for cross-mode data retention
   const WIZARD_STORAGE_KEY = 'selection_wizard_params';
@@ -229,6 +233,47 @@ const InputParametersTab = ({
     handleRequirementDataChange({ targetRatio: String(p.ratio), thrustRequirement: p.thrust ? String(p.thrust) : '' });
   };
 
+  // --- 用户自定义模板 ---
+  const handleSaveTemplate = () => {
+    if (!templateName.trim()) return;
+    const params = {
+      power: engineData.power,
+      speed: engineData.speed,
+      primeType: engineData.primeType,
+      targetRatio: requirementData.targetRatio,
+      thrustRequirement: requirementData.thrustRequirement,
+      workCondition: requirementData.workCondition,
+      hcgWorkload: requirementData.hcgWorkload,
+    };
+    saveTemplate(templateName.trim(), params);
+    setUserTemplates(getTemplates());
+    setShowSaveModal(false);
+    setTemplateName('');
+  };
+
+  const handleLoadTemplate = (template) => {
+    incrementUsage(template.id);
+    const p = template.params;
+    handleEngineDataChange({
+      power: p.power != null ? String(p.power) : '',
+      speed: p.speed != null ? String(p.speed) : '',
+      ...(p.primeType != null ? { primeType: p.primeType } : {}),
+    });
+    handleRequirementDataChange({
+      targetRatio: p.targetRatio != null ? String(p.targetRatio) : '',
+      thrustRequirement: p.thrustRequirement != null ? String(p.thrustRequirement) : '',
+      ...(p.workCondition != null ? { workCondition: p.workCondition } : {}),
+      ...(p.hcgWorkload != null ? { hcgWorkload: p.hcgWorkload } : {}),
+    });
+    setUserTemplates(getTemplates());
+  };
+
+  const handleDeleteTemplate = (e, id) => {
+    e.stopPropagation();
+    deleteTemplate(id);
+    setUserTemplates(getTemplates());
+  };
+
   const renderCoreParams = () => (
     <Form>
       <div className="mb-3 d-flex align-items-center gap-2 flex-wrap">
@@ -237,7 +282,28 @@ const InputParametersTab = ({
         {PRESETS.map(p => (
           <Badge key={p.label} bg="outline-primary" text="primary" className="border" style={{cursor:'pointer', fontSize:'12px'}} onClick={() => applyPreset(p)}>{p.label}</Badge>
         ))}
+        <Button variant="outline-secondary" size="sm" onClick={() => setShowSaveModal(true)} style={{fontSize:'12px', padding:'2px 8px'}}>
+          <i className="bi bi-bookmark-plus me-1"></i>保存当前
+        </Button>
       </div>
+      {userTemplates.length > 0 && (
+        <div className="mb-3 d-flex align-items-center gap-2 flex-wrap">
+          <small className="text-muted">我的模板:</small>
+          {userTemplates.map(t => (
+            <div key={t.id} className="btn-group btn-group-sm">
+              <Button variant="outline-info" size="sm" onClick={() => handleLoadTemplate(t)}
+                title={`${t.params.power || 0}kW / ${t.params.speed || 0}rpm / i=${t.params.targetRatio || '-'}`}
+                style={{fontSize:'12px', padding:'2px 8px'}}>
+                {t.name}
+              </Button>
+              <Button variant="outline-danger" size="sm" onClick={(e) => handleDeleteTemplate(e, t.id)}
+                style={{fontSize:'12px', padding:'2px 4px'}}>
+                <i className="bi bi-x"></i>
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
       <Form.Group className="mb-3" controlId="enginePower">
         <Form.Label style={{ color: colors.text }}>主机功率 (kW) <span className="text-danger">*</span> <HelpTooltip id="power-tip" content="传递能力 = 功率 ÷ 转速 (kW/r·min⁻¹)" /></Form.Label>
         <Form.Control type="number" value={engineData.power} onChange={(e) => handleEngineDataChange({ power: e.target.value })} placeholder="例如: 350" min="1" step="any" required style={{...inputStyles, ...focusStyles}} className={`${getValidationClassName(getFieldValidationState('enginePower', engineData.power))}`} />
@@ -315,6 +381,36 @@ const InputParametersTab = ({
       <div className="mt-4">
         <HCGWorkloadSelector value={requirementData.hcgWorkload} onChange={(workload) => handleRequirementDataChange({ hcgWorkload: workload })} colors={colors} style={{ marginBottom: '0' }} />
       </div>
+
+      {/* 保存模板弹窗 */}
+      <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)} size="sm" centered>
+        <Modal.Header closeButton><Modal.Title className="fs-6">保存选型模板</Modal.Title></Modal.Header>
+        <Modal.Body>
+          <Form.Group>
+            <Form.Label className="small">模板名称</Form.Label>
+            <Form.Control
+              size="sm"
+              value={templateName}
+              onChange={e => setTemplateName(e.target.value)}
+              placeholder="如: 1000吨散货船标准配置"
+              maxLength={30}
+              autoFocus
+              onKeyDown={e => { if (e.key === 'Enter' && templateName.trim()) handleSaveTemplate(); }}
+            />
+          </Form.Group>
+          {engineData.power && engineData.speed && (
+            <div className="mt-2 small text-muted">
+              当前参数: {engineData.power}kW / {engineData.speed}rpm
+              {requirementData.targetRatio ? ` / i=${requirementData.targetRatio}` : ''}
+              {requirementData.thrustRequirement ? ` / ${requirementData.thrustRequirement}kN` : ''}
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button size="sm" variant="secondary" onClick={() => setShowSaveModal(false)}>取消</Button>
+          <Button size="sm" variant="primary" onClick={handleSaveTemplate} disabled={!templateName.trim()}>保存</Button>
+        </Modal.Footer>
+      </Modal>
     </Form>
   );
 

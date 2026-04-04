@@ -16,6 +16,7 @@ import { formatPrice } from '../utils/priceFormatter';
 import MarginIndicator from './selection/MarginIndicator';
 import RecommendationReasonCard from './selection/RecommendationReasonCard';
 import CapacityCalculationCard from './selection/CapacityCalculationCard';
+import RelaxationSuggestions from './selection/RelaxationSuggestions';
 import { exportSelectionSummary } from '../utils/selectionSummaryExport';
 import { calculatePowerRange, extractSeriesFromModel } from '../utils/gearboxDataEnhancer';
 
@@ -172,6 +173,7 @@ const EnhancedGearboxSelectionResult = ({
               </Alert>
             )}
           </div>
+          <RelaxationSuggestions suggestions={result?.relaxationSuggestions} />
         </Card.Body>
       </Card>
     );
@@ -931,6 +933,9 @@ const EnhancedGearboxSelectionResult = ({
             {result.warning}
           </Alert>
         )}
+
+        {/* Constraint relaxation suggestions for failed/partial selections */}
+        <RelaxationSuggestions suggestions={result.relaxationSuggestions} />
 
         {result.priceInfo && (
           <Alert variant="info" className="mt-2">

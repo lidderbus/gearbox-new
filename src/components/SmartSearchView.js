@@ -20,6 +20,39 @@ function getSeries(model) {
   return '';
 }
 
+// Lightweight fuzzy match helper (Levenshtein distance based)
+function fuzzyMatch(query, target, threshold = 0.6) {
+  query = query.toLowerCase();
+  target = target.toLowerCase();
+
+  // Exact or substring match
+  if (target.includes(query) || query.includes(target)) return 1.0;
+
+  // Levenshtein distance
+  const len1 = query.length, len2 = target.length;
+  if (Math.abs(len1 - len2) > Math.max(len1, len2) * 0.4) return 0;
+
+  const matrix = Array.from({length: len1 + 1}, (_, i) =>
+    Array.from({length: len2 + 1}, (_, j) => i === 0 ? j : j === 0 ? i : 0)
+  );
+
+  for (let i = 1; i <= len1; i++) {
+    for (let j = 1; j <= len2; j++) {
+      const cost = query[i-1] === target[j-1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i-1][j] + 1,
+        matrix[i][j-1] + 1,
+        matrix[i-1][j-1] + cost
+      );
+    }
+  }
+
+  const distance = matrix[len1][len2];
+  const maxLen = Math.max(len1, len2);
+  const similarity = 1 - distance / maxLen;
+  return similarity >= threshold ? similarity : 0;
+}
+
 function searchModels(data, query) {
   if (!query || query.length < 1) return [];
   const q = query.trim().toUpperCase();
@@ -59,6 +92,27 @@ function searchModels(data, query) {
 
     // 系列匹配
     if (!score && getSeries(model) === q) { score = 40; matchType = '系列匹配'; }
+
+    // 模糊匹配 - 型号名 (typo tolerance)
+    if (!score && q.length >= 3) {
+      const fuzzyScore = fuzzyMatch(q, model);
+      if (fuzzyScore > 0) {
+        score = Math.round(fuzzyScore * 50); // max 50 for fuzzy
+        matchType = '模糊匹配';
+      }
+    }
+
+    // 模糊匹配 - 系列名
+    if (!score && q.length >= 2) {
+      const series = getSeries(model);
+      if (series) {
+        const fuzzyScore = fuzzyMatch(q, series);
+        if (fuzzyScore > 0) {
+          score = Math.round(fuzzyScore * 30);
+          matchType = '系列模糊';
+        }
+      }
+    }
 
     if (score > 0) {
       results.push({ ...item, model: item.model || item.name, score, matchType });
@@ -152,7 +206,7 @@ export default function SmartSearchView({ colors, theme }) {
     <Container fluid className="py-3">
       <Row className="mb-3">
         <Col><h5><i className="bi bi-search-heart me-2"></i>智能搜索</h5>
-          <small className="text-muted">搜索型号、减速比、传递能力，自动关联推荐相近型号 ({embeddedData.length}型号)</small>
+          <small className="text-muted">搜索型号、减速比、传递能力，支持模糊/容错搜索，自动关联推荐相近型号 ({embeddedData.length}型号)</small>
         </Col>
       </Row>
 
@@ -209,7 +263,7 @@ export default function SmartSearchView({ colors, theme }) {
                         {results.map((r, i) => (
                           <tr key={r.model + i} style={{ cursor: 'pointer' }} className={selectedResult?.model === r.model ? 'table-primary' : ''} onClick={() => setSelectedResult(r)}>
                             <td><strong>{r.model}</strong></td>
-                            <td><Badge bg={r.score >= 80 ? 'success' : r.score >= 60 ? 'info' : 'secondary'}>{r.matchType}</Badge></td>
+                            <td><Badge bg={r.matchType === '模糊匹配' || r.matchType === '系列模糊' ? 'warning' : r.score >= 80 ? 'success' : r.score >= 60 ? 'info' : 'secondary'} text={r.matchType === '模糊匹配' || r.matchType === '系列模糊' ? 'dark' : undefined}>{r.matchType}</Badge>{(r.matchType === '模糊匹配' || r.matchType === '系列模糊') && <Badge bg="warning" text="dark" className="ms-1">近似</Badge>}</td>
                             <td>
                               <div className="d-flex align-items-center gap-1">
                                 <div style={{ width: 60, height: 6, background: '#e9ecef', borderRadius: 3 }}>
