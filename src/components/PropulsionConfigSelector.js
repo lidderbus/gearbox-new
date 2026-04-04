@@ -18,7 +18,7 @@ const PropulsionConfigSelector = ({
   colors = {},
   onRotationConflictChange
 }) => {
-  const [rotationAcknowledged, setRotationAcknowledged] = useState(false);
+  const [rotationAcknowledged, setRotationAcknowledged] = useState(true);
   // 默认配置
   const currentConfig = useMemo(() => ({
     engineConfiguration: config.engineConfiguration || 'single',
@@ -105,10 +105,8 @@ const PropulsionConfigSelector = ({
     return null;
   }, [currentConfig.inputRotation, currentConfig.outputRotation, currentConfig.engineConfiguration, gearboxType, calculateExpectedOutput]);
 
-  // Reset acknowledgement when rotation changes
-  useEffect(() => {
-    setRotationAcknowledged(false);
-  }, [currentConfig.inputRotation, currentConfig.outputRotation]);
+  // 不再自动重置acknowledged —— 只在用户手动点击旋向配置时由onChange处理重置
+  // 避免每次进入Step2都弹窗
 
   // Notify parent of conflict state
   useEffect(() => {

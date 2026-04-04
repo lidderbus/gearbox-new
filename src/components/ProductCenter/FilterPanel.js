@@ -133,7 +133,7 @@ const FilterPanel = ({
               <div className="d-flex gap-2 align-items-center">
                 <Form.Control
                   type="number"
-                  placeholder="最小"
+                  placeholder="最小 (kW)"
                   value={filters.powerRange[0]}
                   onChange={(e) => updateFilter('powerRange', [Number(e.target.value), filters.powerRange[1]])}
                   style={inputStyle}
@@ -142,7 +142,7 @@ const FilterPanel = ({
                 <span>-</span>
                 <Form.Control
                   type="number"
-                  placeholder="最大"
+                  placeholder="最大 (kW)"
                   value={filters.powerRange[1]}
                   onChange={(e) => updateFilter('powerRange', [filters.powerRange[0], Number(e.target.value)])}
                   style={inputStyle}
@@ -169,7 +169,7 @@ const FilterPanel = ({
               <div className="d-flex gap-2 align-items-center">
                 <Form.Control
                   type="number"
-                  placeholder="最小"
+                  placeholder="最小 (rpm)"
                   value={filters.speedRange[0]}
                   onChange={(e) => updateFilter('speedRange', [Number(e.target.value), filters.speedRange[1]])}
                   style={inputStyle}
@@ -178,7 +178,7 @@ const FilterPanel = ({
                 <span>-</span>
                 <Form.Control
                   type="number"
-                  placeholder="最大"
+                  placeholder="最大 (rpm)"
                   value={filters.speedRange[1]}
                   onChange={(e) => updateFilter('speedRange', [filters.speedRange[0], Number(e.target.value)])}
                   style={inputStyle}
@@ -198,7 +198,7 @@ const FilterPanel = ({
                 <Form.Control
                   type="number"
                   step="0.1"
-                  placeholder="最小"
+                  placeholder="最小 (如1.5)"
                   value={filters.ratioRange[0]}
                   onChange={(e) => updateFilter('ratioRange', [Number(e.target.value), filters.ratioRange[1]])}
                   style={inputStyle}
@@ -208,7 +208,7 @@ const FilterPanel = ({
                 <Form.Control
                   type="number"
                   step="0.1"
-                  placeholder="最大"
+                  placeholder="最大 (如6.0)"
                   value={filters.ratioRange[1]}
                   onChange={(e) => updateFilter('ratioRange', [filters.ratioRange[0], Number(e.target.value)])}
                   style={inputStyle}
@@ -277,7 +277,7 @@ const FilterPanel = ({
               <div className="d-flex gap-2 align-items-center mb-2">
                 <Form.Control
                   type="number"
-                  placeholder="最小"
+                  placeholder="最小 (元)"
                   value={filters.priceRange[0]}
                   onChange={(e) => updateFilter('priceRange', [Number(e.target.value), filters.priceRange[1]])}
                   style={inputStyle}
@@ -286,7 +286,7 @@ const FilterPanel = ({
                 <span>-</span>
                 <Form.Control
                   type="number"
-                  placeholder="最大"
+                  placeholder="最大 (元)"
                   value={filters.priceRange[1]}
                   onChange={(e) => updateFilter('priceRange', [filters.priceRange[0], Number(e.target.value)])}
                   style={inputStyle}

@@ -91,6 +91,36 @@ const ReceivablesManagement = lazy(() => import('./components/ReceivablesManagem
 // 增强选型表单 - 完整技术询单 (2026-01-10新增)
 const EnhancedSelectionForm = lazy(() => import('./components/EnhancedSelectionForm'));
 
+// ===== 21项系统优化新增模块 (2026-03-21) =====
+// Phase 1: 选型能力升级
+const ReverseSelectionView = lazy(() => import('./components/ReverseSelectionView'));
+const TechComparisonView = lazy(() => import('./components/TechComparisonView'));
+const ResourceVersionView = lazy(() => import('./components/ResourceVersionView'));
+const SmartSearchView = lazy(() => import('./components/SmartSearchView'));
+const TrendAnalysisView = lazy(() => import('./components/TrendAnalysisView'));
+
+// Phase 2: 高级选型功能
+const MultiConditionSelection = lazy(() => import('./components/MultiConditionSelection'));
+const SystemSolutionView = lazy(() => import('./components/SystemSolutionView'));
+const EnergyOptimizationView = lazy(() => import('./components/EnergyOptimizationView'));
+
+// Phase 3: 数据库扩展
+const CertificationView = lazy(() => import('./components/CertificationView'));
+const StandardsLibrary = lazy(() => import('./components/StandardsLibrary'));
+const EngineMatchingExpanded = lazy(() => import('./components/EngineMatchingExpanded'));
+
+// 其他功能模块
+const OfflinePackageView = lazy(() => import('./components/OfflinePackageView'));
+const TorsionalReportView = lazy(() => import('./components/TorsionalReportView'));
+const ProjectTracker = lazy(() => import('./components/ProjectTracker'));
+const AfterSalesView = lazy(() => import('./components/AfterSalesView'));
+const InstallationGuide = lazy(() => import('./components/InstallationGuide'));
+const RoleManagement = lazy(() => import('./components/RoleManagement'));
+const CustomerPortal = lazy(() => import('./components/CustomerPortal'));
+const DataBackupView = lazy(() => import('./components/DataBackupView'));
+const MobileOptimization = lazy(() => import('./components/MobileOptimization'));
+const ApiDocumentation = lazy(() => import('./components/ApiDocumentation'));
+
 // Modal components (lazy loaded - only loaded when opened)
 const QuotationOptionsModal = lazy(() => import('./components/QuotationOptionsModal'));
 const CustomQuotationItemModal = lazy(() => import('./components/CustomQuotationItemModal'));
@@ -174,7 +204,7 @@ function App({ appData: initialAppData, setAppData }) {
   const [, setSelectionDiagnostics] = useState(null);
 
 
-  const [engineData, setEngineData] = useState({ power: '', speed: '' });
+  const [engineData, setEngineData] = useState({ power: '', speed: '', primeType: 'none' });
   const [hybridConfig, setHybridConfig] = useState({
     enabled: false,
     modes: { pto: false, pti: false, pth: false },
@@ -852,7 +882,21 @@ function App({ appData: initialAppData, setAppData }) {
         </Offcanvas>
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
+      {/* 跳转到主内容 (a11y) */}
+      <a href="#main-content" className="visually-hidden-focusable" style={{ position: 'absolute', top: 0, left: 0, zIndex: 9999, padding: '8px 16px', backgroundColor: '#003366', color: '#fff' }}>跳转到主内容</a>
+      {/* 面包屑导航 */}
+      {activeTab !== 'home' && (
+        <nav aria-label="breadcrumb" className="px-3 pt-2 pb-0">
+          <ol className="breadcrumb mb-1" style={{fontSize: '13px'}}>
+            <li className="breadcrumb-item"><a href="#/" onClick={(e) => {e.preventDefault(); setActiveTab('home');}} style={{color: colors.primary, textDecoration: 'none', cursor: 'pointer'}}>首页</a></li>
+            <li className="breadcrumb-item active" aria-current="page" style={{color: colors.muted}}>{
+              {input:'输入参数',result:'选型结果',batch:'批量选型',reverse:'反向选型','multi-condition':'多工况选型','overall-solution':'整体方案','smart-search':'智能搜索',coupling:'联轴器配套','high-elastic':'高弹选型','pump-selection':'备用泵选型',cummins:'康明斯配套','engine-matching':'多品牌主机',technical:'技术协议',quotation:'报价单','technical-inquiry':'技术询单',contract:'销售合同','doc-pack':'资料打包','torsional-calc':'扭振计算书',cpp:'可调桨','azimuth-thruster':'全回转','bow-thruster':'侧推器','shaft-design':'轴系设计','drawing-library':'外形图库','manual-library':'说明书库','template-library':'协议模板库','matching-cases':'配机案例','installation-guide':'安装指导','standards':'标准法规','data-versions':'资料版本','param-comparison':'参数对照','torsional-analysis':'扭振分析','efficiency-analysis':'能效分析','efficiency-optimization':'能效优化',statistics:'数据统计','usage-analysis':'使用分析','trend-analysis':'趋势分析','competitor-comparison':'竞品对比','project-tracking':'项目追踪','customer-inquiry':'客户询价','after-sales':'售后服务','classification-society':'船级社认证',query:'数据查询','product-center':'产品中心',history:'选型历史','hcm-selection':'HCM高速',roles:'角色权限',backup:'数据备份','api-doc':'API文档',mobile:'移动端',about:'关于','system-solution':'整体方案'}[activeTab] || activeTab
+            }</li>
+          </ol>
+        </nav>
+      )}
       <Tabs
+        id="main-content"
         activeKey={activeTab}
         onSelect={(k) => setActiveTab(k)}
         className="mb-4 d-none"
@@ -1454,6 +1498,156 @@ function App({ appData: initialAppData, setAppData }) {
               </Col>
             </Row>
           </Tab>
+
+          {/* ===== 21项系统优化新增Tab (2026-03-21) ===== */}
+
+          {/* Phase 1: 反向选型 */}
+          <Tab eventKey="reverse-selection" title={<span><i className="bi bi-arrow-return-left me-1"></i>反向选型</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <ReverseSelectionView colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* Phase 1: 技术参数对照表 */}
+          <Tab eventKey="tech-comparison" title={<span><i className="bi bi-table me-1"></i>参数对照</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <TechComparisonView colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* Phase 1: 资料版本管理 */}
+          <Tab eventKey="resource-versions" title={<span><i className="bi bi-clock-history me-1"></i>资料版本</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <ResourceVersionView colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* Phase 1+: 智能搜索 */}
+          <Tab eventKey="smart-search" title={<span><i className="bi bi-search-heart me-1"></i>智能搜索</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <SmartSearchView colors={colors} theme={theme} onNavigate={setActiveTab} />
+            </Suspense>
+          </Tab>
+
+          {/* Phase 1+: 趋势分析 */}
+          <Tab eventKey="trend-analysis" title={<span><i className="bi bi-graph-up me-1"></i>趋势分析</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <TrendAnalysisView colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* Phase 2: 多工况复合选型 */}
+          <Tab eventKey="multi-condition" title={<span><i className="bi bi-layers me-1"></i>多工况选型</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <MultiConditionSelection colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* Phase 2: 系统级整体方案 */}
+          <Tab eventKey="system-solution" title={<span><i className="bi bi-diagram-3 me-1"></i>整体方案</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <SystemSolutionView colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* Phase 2: 能效优化建议 */}
+          <Tab eventKey="energy-optimization" title={<span><i className="bi bi-lightning me-1"></i>能效优化</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <EnergyOptimizationView colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* Phase 3: 船级社认证 */}
+          <Tab eventKey="certification" title={<span><i className="bi bi-patch-check me-1"></i>船级社认证</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <CertificationView colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* Phase 3: 主机匹配扩展 */}
+          <Tab eventKey="engine-matching" title={<span><i className="bi bi-cpu me-1"></i>多品牌主机</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <EngineMatchingExpanded colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* Phase 3: 标准法规知识库 */}
+          <Tab eventKey="standards-library" title={<span><i className="bi bi-bookmark-check me-1"></i>标准法规</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <StandardsLibrary colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* 离线资料包 */}
+          <Tab eventKey="offline-package" title={<span><i className="bi bi-file-zip me-1"></i>资料打包</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <OfflinePackageView colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* 扭振计算书 */}
+          <Tab eventKey="torsional-report" title={<span><i className="bi bi-file-earmark-pdf me-1"></i>扭振计算书</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <TorsionalReportView colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* 项目追踪 */}
+          <Tab eventKey="project-tracker" title={<span><i className="bi bi-kanban me-1"></i>项目追踪</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <ProjectTracker colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* 售后服务 */}
+          <Tab eventKey="after-sales" title={<span><i className="bi bi-wrench-adjustable me-1"></i>售后服务</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <AfterSalesView colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* 安装指导 */}
+          <Tab eventKey="installation-guide" title={<span><i className="bi bi-tools me-1"></i>安装指导</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <InstallationGuide colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* 客户询价门户 */}
+          <Tab eventKey="customer-portal" title={<span><i className="bi bi-person-badge me-1"></i>客户询价</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <CustomerPortal colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* 角色权限管理 */}
+          <Tab eventKey="role-management" title={<span><i className="bi bi-people me-1"></i>角色权限</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <RoleManagement colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* 数据备份 */}
+          <Tab eventKey="data-backup" title={<span><i className="bi bi-cloud-upload me-1"></i>数据备份</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <DataBackupView colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* API文档 */}
+          <Tab eventKey="api-docs" title={<span><i className="bi bi-code-slash me-1"></i>API文档</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <ApiDocumentation colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* 移动端优化 */}
+          <Tab eventKey="mobile-view" title={<span><i className="bi bi-phone me-1"></i>移动端</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <MobileOptimization colors={colors} theme={theme} onNavigate={setActiveTab} />
+            </Suspense>
+          </Tab>
+
         </Tabs>
       </div>
       </div>

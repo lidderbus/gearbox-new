@@ -1,7 +1,7 @@
 // src/contexts/SelectionResultContext.js
 // Global selection result context for cross-module data sharing
 
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useMemo } from 'react';
 
 const SelectionResultContext = createContext({
   selectedGearbox: null,
@@ -19,7 +19,6 @@ const SelectionResultContext = createContext({
 });
 
 export const SelectionResultProvider = ({ children, value }) => {
-  // Allow external state injection (from App.js) or use internal state
   const [internalGearbox, setInternalGearbox] = useState(null);
   const [internalResult, setInternalResult] = useState(null);
   const [internalCoupling, setInternalCoupling] = useState(null);
@@ -27,7 +26,7 @@ export const SelectionResultProvider = ({ children, value }) => {
   const [internalEngine, setInternalEngine] = useState({});
   const [internalReq, setInternalReq] = useState({});
 
-  const contextValue = {
+  const contextValue = useMemo(() => ({
     selectedGearbox: value?.selectedGearbox ?? internalGearbox,
     engineData: value?.engineData ?? internalEngine,
     requirementData: value?.requirementData ?? internalReq,
@@ -40,7 +39,8 @@ export const SelectionResultProvider = ({ children, value }) => {
     setPumpResult: value?.setPumpResult ?? setInternalPump,
     setEngineData: value?.setEngineData ?? setInternalEngine,
     setRequirementData: value?.setRequirementData ?? setInternalReq,
-  };
+  }), [value, internalGearbox, internalEngine, internalReq,
+    internalResult, internalCoupling, internalPump]);
 
   return (
     <SelectionResultContext.Provider value={contextValue}>

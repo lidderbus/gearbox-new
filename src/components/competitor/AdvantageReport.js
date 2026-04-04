@@ -7,7 +7,8 @@
 
 import React, { useRef, useMemo, useState, useCallback } from 'react';
 import { Card, Row, Col, Badge, Button, Alert, ListGroup, Toast, ToastContainer } from 'react-bootstrap';
-import ReactECharts from 'echarts-for-react';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
+import echarts from '../../config/echartsSetup';
 import {
   generateComparisonReport,
   generateSalesPitch,
@@ -392,7 +393,8 @@ const AdvantageReport = ({
   const renderRadarChart = () => {
     return (
       <div className="radar-chart-container">
-        <ReactECharts
+        <ReactEChartsCore
+          echarts={echarts}
           option={radarChartOption}
           style={{ height: '350px', width: '100%' }}
           opts={{ renderer: 'svg' }}
@@ -406,7 +408,8 @@ const AdvantageReport = ({
     if (!barChartOption) return null;
     return (
       <div className="bar-chart-container">
-        <ReactECharts
+        <ReactEChartsCore
+          echarts={echarts}
           option={barChartOption}
           style={{ height: '300px', width: '100%' }}
           opts={{ renderer: 'svg' }}
@@ -420,7 +423,8 @@ const AdvantageReport = ({
     if (!scatterChartOption) return null;
     return (
       <div className="scatter-chart-container">
-        <ReactECharts
+        <ReactEChartsCore
+          echarts={echarts}
           option={scatterChartOption}
           style={{ height: '300px', width: '100%' }}
           opts={{ renderer: 'svg' }}

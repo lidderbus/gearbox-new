@@ -7,7 +7,8 @@
  * 危险区间半透明红色阴影
  */
 import React, { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
+import echarts from '../../config/echartsSetup';
 
 const TorsionalChart = ({
   criticalSpeeds = [],
@@ -184,7 +185,8 @@ const TorsionalChart = ({
 
   return (
     <div className="torsional-campbell-chart">
-      <ReactECharts
+      <ReactEChartsCore
+        echarts={echarts}
         option={option}
         style={{ height: 380, width: '100%' }}
         theme={theme === 'dark' ? 'dark' : undefined}

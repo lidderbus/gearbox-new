@@ -22,7 +22,6 @@ const defaultUsers = [
   {
     id: 1,
     username: 'admin',
-    // 默认密码: admin123
     passwordHash: '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9',
     role: userRoles.ADMIN,
     name: '系统管理员',
@@ -33,7 +32,6 @@ const defaultUsers = [
   {
     id: 2,
     username: 'user',
-    // 默认密码: user123
     passwordHash: 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3',
     role: userRoles.VIEWER,
     name: '普通用户',

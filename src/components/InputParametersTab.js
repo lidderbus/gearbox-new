@@ -2,8 +2,9 @@
 // 输入参数选项卡组件 - 从 App.js 拆分
 
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
-import { Row, Col, Form, Button, Card, Spinner, ButtonGroup } from 'react-bootstrap';
+import { Row, Col, Form, Button, Card, Spinner, ButtonGroup, Badge } from 'react-bootstrap';
 import SelectionGuidelines, { HelpTooltip, HCGWorkloadSelector } from './SelectionGuidelines';
+import { PRIME_MOVER_CAPACITY_FACTOR } from '../utils/selectionAlgorithm';
 import HybridConfigPanel from './HybridConfigPanel';
 import ShaftArrangementSelector from './ShaftArrangementSelector';
 
@@ -215,9 +216,28 @@ const InputParametersTab = ({
   const inputWarnings = getInputWarnings();
   const warningFor = (field) => inputWarnings.filter(w => w.field === field);
 
+  // 快速预设模板
+  const PRESETS = [
+    { label: '内河渔船', power: 150, speed: 1800, ratio: 3.5, thrust: 0 },
+    { label: '近海拖轮', power: 500, speed: 1500, ratio: 5.0, thrust: 100 },
+    { label: '散货船', power: 800, speed: 1000, ratio: 4.0, thrust: 150 },
+    { label: '高速客船', power: 1200, speed: 2100, ratio: 2.0, thrust: 0 },
+    { label: '工程船', power: 350, speed: 1800, ratio: 4.5, thrust: 80 },
+  ];
+  const applyPreset = (p) => {
+    handleEngineDataChange({ power: String(p.power), speed: String(p.speed) });
+    handleRequirementDataChange({ targetRatio: String(p.ratio), thrustRequirement: p.thrust ? String(p.thrust) : '' });
+  };
+
   const renderCoreParams = () => (
     <Form>
-      <h6 style={{ color: colors.headerText }}>发动机参数</h6>
+      <div className="mb-3 d-flex align-items-center gap-2 flex-wrap">
+        <h6 style={{ color: colors.headerText }} className="mb-0">发动机参数</h6>
+        <span className="text-muted small ms-2">快速预设:</span>
+        {PRESETS.map(p => (
+          <Badge key={p.label} bg="outline-primary" text="primary" className="border" style={{cursor:'pointer', fontSize:'12px'}} onClick={() => applyPreset(p)}>{p.label}</Badge>
+        ))}
+      </div>
       <Form.Group className="mb-3" controlId="enginePower">
         <Form.Label style={{ color: colors.text }}>主机功率 (kW) <span className="text-danger">*</span> <HelpTooltip id="power-tip" content="传递能力 = 功率 ÷ 转速 (kW/r·min⁻¹)" /></Form.Label>
         <Form.Control type="number" value={engineData.power} onChange={(e) => handleEngineDataChange({ power: e.target.value })} placeholder="例如: 350" min="1" step="any" required style={{...inputStyles, ...focusStyles}} className={`${getValidationClassName(getFieldValidationState('enginePower', engineData.power))}`} />
@@ -237,6 +257,33 @@ const InputParametersTab = ({
           <Form.Text key={i} className={`text-${w.variant}`}><i className="bi bi-lightbulb me-1"></i>{w.msg}</Form.Text>
         ))}
       </Form.Group>
+      <Form.Group className="mb-3" controlId="primeType">
+        <Form.Label style={{ color: colors.text }}>
+          原动机类型 <HelpTooltip id="prime-tip" content="影响高弹联轴器额定扭矩匹配：柴油机×1.5（扭矩脉动），电动机×1.8（启停冲击）" />
+        </Form.Label>
+        <div className="d-flex gap-2 flex-wrap">
+          {Object.entries(PRIME_MOVER_CAPACITY_FACTOR).map(([key, cfg]) => (
+            <Button
+              key={key}
+              size="sm"
+              variant={(engineData.primeType || 'none') === key ? 'primary' : 'outline-secondary'}
+              onClick={() => handleEngineDataChange({ primeType: key })}
+              style={{ minWidth: '100px' }}
+            >
+              {cfg.label}
+              {key !== 'none' && <Badge bg="light" text="dark" className="ms-1">×{cfg.factor}</Badge>}
+            </Button>
+          ))}
+        </div>
+        <Form.Text className="text-muted">
+          {(() => {
+            const pt = engineData.primeType || 'none';
+            const cfg = PRIME_MOVER_CAPACITY_FACTOR[pt];
+            if (pt === 'none') return '联轴器所需扭矩 = T × K × St';
+            return `联轴器所需扭矩 = T × K × St × ${cfg.factor} (${cfg.description})`;
+          })()}
+        </Form.Text>
+      </Form.Group>
       <h6 style={{ color: colors.headerText }} className="mt-4">选型要求</h6>
       <Form.Group className="mb-3" controlId="targetRatio">
         <Form.Label style={{ color: colors.text }}>目标减速比 <span className="text-danger">*</span> <HelpTooltip id="ratio-tip" content="减速比 = 输入转速 ÷ 输出转速，减速比越大输出扭矩越大" /></Form.Label>
@@ -251,7 +298,7 @@ const InputParametersTab = ({
       <Form.Group className="mb-3" controlId="thrustRequirement">
         <Form.Label style={{ color: colors.text }}>推力要求 (kN, 可选)</Form.Label>
         <Form.Control type="number" value={requirementData.thrustRequirement} onChange={(e) => handleRequirementDataChange({ thrustRequirement: e.target.value })} placeholder="留空则不强制匹配推力" min="0" step="any" style={{...inputStyles, ...focusStyles}} className={`${getValidationClassName(getFieldValidationState('thrustRequirement', requirementData.thrustRequirement))}`} />
-        <div className="form-feedback invalid">推力要求不能为负数</div>
+        <div className="form-feedback invalid">推力必须为0或正数（留空表示不限制）</div>
         <div className="form-feedback warning">推力值较大，请确认是否正确</div>
         <div className="field-info">更高的推力要求会限制可选齿轮箱型号</div>
         {warningFor('thrust').map((w, i) => (
@@ -284,6 +331,11 @@ const InputParametersTab = ({
           {appDataState?.dtGearboxes?.length > 0 && <Button variant={gearboxType === 'DT' ? 'primary' : 'outline-primary'} onClick={() => handleGearboxTypeChange('DT')}>DT系列</Button>}
           {appDataState?.hcqGearboxes?.length > 0 && <Button variant={gearboxType === 'HCQ' ? 'primary' : 'outline-primary'} onClick={() => handleGearboxTypeChange('HCQ')}>HCQ系列</Button>}
           {appDataState?.gcGearboxes?.length > 0 && <Button variant={gearboxType === 'GC' ? 'primary' : 'outline-primary'} onClick={() => handleGearboxTypeChange('GC')}>GC系列</Button>}
+          {appDataState?.hcaGearboxes?.length > 0 && <Button variant={gearboxType === 'HCA' ? 'primary' : 'outline-primary'} onClick={() => handleGearboxTypeChange('HCA')}>HCA系列</Button>}
+          {appDataState?.hcvGearboxes?.length > 0 && <Button variant={gearboxType === 'HCV' ? 'primary' : 'outline-primary'} onClick={() => handleGearboxTypeChange('HCV')}>HCV系列</Button>}
+          {appDataState?.hcxGearboxes?.length > 0 && <Button variant={gearboxType === 'HCX' ? 'primary' : 'outline-primary'} onClick={() => handleGearboxTypeChange('HCX')}>HCX系列</Button>}
+          {appDataState?.mvGearboxes?.length > 0 && <Button variant={gearboxType === 'MV' ? 'primary' : 'outline-primary'} onClick={() => handleGearboxTypeChange('MV')}>MV系列</Button>}
+          {appDataState?.otherGearboxes?.length > 0 && <Button variant={gearboxType === 'OTHER' ? 'primary' : 'outline-primary'} onClick={() => handleGearboxTypeChange('OTHER')}>其他系列</Button>}
         </div>
         <div className="field-info">不同系列齿轮箱适合不同应用场景。自动选择会搜索所有系列找到最佳匹配。</div>
       </Form.Group>
@@ -354,7 +406,8 @@ const InputParametersTab = ({
         <Col sm={6}>
           <Form.Group className="mb-3" controlId="projectName">
             <Form.Label style={{ color: colors.text }}>项目名称</Form.Label>
-            <Form.Control type="text" placeholder="例如: 38m渔船" value={projectInfo.projectName} onChange={(e) => handleProjectInfoChange({ projectName: e.target.value })} style={{...inputStyles, ...focusStyles}} />
+            <Form.Control type="text" placeholder="例如: 38m渔船动力配套" value={projectInfo.projectName} onChange={(e) => handleProjectInfoChange({ projectName: e.target.value })} style={{...inputStyles, ...focusStyles}} />
+            <div className="field-info">用于报价单、技术协议等文档标题</div>
           </Form.Group>
         </Col>
         <Col sm={6}>
@@ -366,19 +419,20 @@ const InputParametersTab = ({
         <Col sm={6}>
           <Form.Group className="mb-3" controlId="engineModel">
             <Form.Label style={{ color: colors.text }}>主机型号 (可选)</Form.Label>
-            <Form.Control type="text" value={projectInfo.engineModel} onChange={(e) => handleProjectInfoChange({ engineModel: e.target.value })} placeholder="例如: Weichai WP6" style={{...inputStyles, ...focusStyles}} />
+            <Form.Control type="text" value={projectInfo.engineModel} onChange={(e) => handleProjectInfoChange({ engineModel: e.target.value })} placeholder="例如: 潍柴WP6C185-21" style={{...inputStyles, ...focusStyles}} />
+            <div className="field-info">填写后可自动匹配飞轮壳接口和联轴器</div>
           </Form.Group>
         </Col>
         <Col sm={6}>
           <Form.Group className="mb-3" controlId="contactPerson">
             <Form.Label style={{ color: colors.text }}>联系人</Form.Label>
-            <Form.Control type="text" value={projectInfo.contactPerson} onChange={(e) => handleProjectInfoChange({ contactPerson: e.target.value })} style={{...inputStyles, ...focusStyles}} />
+            <Form.Control type="text" value={projectInfo.contactPerson} onChange={(e) => handleProjectInfoChange({ contactPerson: e.target.value })} placeholder="报价单/协议联系人" style={{...inputStyles, ...focusStyles}} />
           </Form.Group>
         </Col>
         <Col sm={6}>
           <Form.Group className="mb-3" controlId="contactPhone">
             <Form.Label style={{ color: colors.text }}>联系电话</Form.Label>
-            <Form.Control type="tel" value={projectInfo.contactPhone} onChange={(e) => handleProjectInfoChange({ contactPhone: e.target.value })} style={{...inputStyles, ...focusStyles}} />
+            <Form.Control type="tel" value={projectInfo.contactPhone} onChange={(e) => handleProjectInfoChange({ contactPhone: e.target.value })} placeholder="报价单/协议联系电话" style={{...inputStyles, ...focusStyles}} />
           </Form.Group>
         </Col>
       </Row>
@@ -386,10 +440,10 @@ const InputParametersTab = ({
         <Col sm={6}>
           <Form.Group className="mb-3" controlId="temperature">
             <Form.Label style={{ color: colors.text }}>工作温度 (°C)</Form.Label>
-            <Form.Control type="number" value={requirementData.temperature} onChange={(e) => handleRequirementDataChange({ temperature: e.target.value })} placeholder="默认 30" step="1" style={{...inputStyles, ...focusStyles}} className={`${getValidationClassName(getFieldValidationState('temperature', requirementData.temperature))}`} />
+            <Form.Control type="number" value={requirementData.temperature} onChange={(e) => handleRequirementDataChange({ temperature: e.target.value })} placeholder="留空默认30°C" step="1" style={{...inputStyles, ...focusStyles}} className={`${getValidationClassName(getFieldValidationState('temperature', requirementData.temperature))}`} />
             <div className="form-feedback invalid">请输入有效的工作温度</div>
             <div className="form-feedback warning">温度超出常规范围，请确认是否正确</div>
-            <div className="field-info">常规工作温度范围: -10°C ~ 50°C</div>
+            <div className="field-info">常规工作温度范围: -20°C ~ 60°C</div>
           </Form.Group>
         </Col>
       </Row>
@@ -402,7 +456,7 @@ const InputParametersTab = ({
         <Form.Select value={requirementData.application} onChange={(e) => handleRequirementDataChange({ application: e.target.value })} style={{...inputStyles, ...focusStyles}} aria-label="选择应用场景">
           {applicationOptions.map(option => (<option key={option.value} value={option.value}>{option.label}</option>))}
         </Form.Select>
-        <Form.Text style={{ color: colors.muted }}>影响服务系数和选型策略</Form.Text>
+        <div className="field-info">应用场景影响服务系数和传递能力裕度计算，不同船型对齿轮箱工况要求不同</div>
       </Form.Group>
     </Form>
   );

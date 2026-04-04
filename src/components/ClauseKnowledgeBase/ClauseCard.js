@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { Card, Badge, Form } from 'react-bootstrap';
+import DOMPurify from 'dompurify';
 import { highlightMatches } from '../../utils/clauseSearch';
 
 // 分类图标映射
@@ -154,14 +155,14 @@ const ClauseCard = ({
         <Card.Title
           className="clause-card-title h6 mb-2"
           style={{ color: colors?.headerText }}
-          dangerouslySetInnerHTML={{ __html: getHighlightedTitle() }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getHighlightedTitle()) }}
         />
 
         {/* 内容摘要 */}
         <Card.Text
           className="clause-card-content small mb-2"
           style={{ color: colors?.text }}
-          dangerouslySetInnerHTML={{ __html: getContentSummary() }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getContentSummary()) }}
         />
 
         {/* 关键词标签 */}

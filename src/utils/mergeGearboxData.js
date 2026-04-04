@@ -41,16 +41,16 @@ function extractObjectFromString(content, objectName) {
     // 提取完整的对象定义
     const objectCode = content.substring(startPos, endPos);
     
-    // 准备执行代码 - 将export替换为let，以便在函数中使用
-    const execCode = objectCode.replace(/export\s+const/, 'const');
-    
-    // 使用Function构造器执行代码并返回对象
-    const extractFn = new Function(`
-      ${execCode}
-      return ${objectName};
-    `);
-    
-    return extractFn();
+    // 安全提取：仅取赋值表达式部分
+    const assignMatch = objectCode.match(new RegExp(`(?:export\\s+)?(?:const|let|var)\\s+${objectName}\\s*=\\s*`));
+    if (!assignMatch) return null;
+    const dataExpr = objectCode.substring(assignMatch.index + assignMatch[0].length).replace(/;\s*$/, '').trim();
+    // 校验无危险代码模式
+    const dangerousPattern = /\b(eval|Function|import|require|fetch|XMLHttpRequest|setTimeout|setInterval|document\.|window\.)\s*\(/;
+    if (dangerousPattern.test(dataExpr)) {
+      throw new Error('数据包含不安全的代码模式');
+    }
+    return (new Function('return ' + dataExpr))();
   } catch (error) {
     console.error('从字符串中提取对象时出错:', error);
     return null;

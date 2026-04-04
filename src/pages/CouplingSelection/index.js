@@ -7,6 +7,10 @@ export { default as CouplingRecommendationList } from './CouplingRecommendationL
 export { default as CouplingTechnicalParams } from './CouplingTechnicalParams';
 export { default as CouplingCharts } from './CouplingCharts';
 export { default as Coupling3DPreview } from './Coupling3DPreview';
+export { default as CouplingManualAdjustment } from './CouplingManualAdjustment';
+export { default as CouplingApplicationScenarios } from './CouplingApplicationScenarios';
+export { default as CouplingTorsionalAnalysis } from './CouplingTorsionalAnalysis';
+export { default as CouplingSelectionHistory } from './CouplingSelectionHistory';
 
 // 默认导出主页面
 export { default } from './CouplingSelectionPage';

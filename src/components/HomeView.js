@@ -9,7 +9,7 @@ const HomeView = ({ appData, colors, theme, onNavigate, selectionHistory = [] })
   const stats = useMemo(() => {
     if (!appData) return { totalModels: 0, series: [], couplings: 0, pumps: 0 };
 
-    const seriesKeys = ['hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes', 'hcqGearboxes', 'gcGearboxes'];
+    const seriesKeys = ['hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes', 'hcqGearboxes', 'gcGearboxes', 'hcaGearboxes', 'hcvGearboxes', 'hcxGearboxes', 'mvGearboxes', 'otherGearboxes'];
     const series = seriesKeys
       .filter(key => Array.isArray(appData[key]) && appData[key].length > 0)
       .map(key => ({
@@ -69,7 +69,7 @@ const HomeView = ({ appData, colors, theme, onNavigate, selectionHistory = [] })
             船用齿轮箱选型系统
           </h4>
           <p style={{ color: colors?.muted, marginBottom: 0 }}>
-            覆盖 HC / GW / HCM / DT / HCQ / GC 全系列，支持智能选型、报价、技术协议一站式服务
+            覆盖 HC / GW / HCM / DT / HCQ / GC / HCA / HCV / MV 全系列，支持智能选型、报价、技术协议一站式服务
           </p>
         </Card.Body>
       </Card>

@@ -1,8 +1,8 @@
 // DWG外形图数据索引
-// 自动生成于: 2025-12-15
-// 总计: 192 个文件
-// 齿轮箱型号: 101 个
-// 联轴器型号: 40 个
+// 更新于: 2026-04-02 (补充移动硬盘外形图13型号)
+// 总计: 206 个文件
+// 齿轮箱型号: 114 个 (含SGW/GCS/LZ/HCU新增系列)
+// 联轴器型号: 41 个
 
 export const DWG_BASE_URL = 'https://qj-gearbox.duckdns.org';
 
@@ -1603,6 +1603,149 @@ export const gearboxDwgDrawings = {
       "series": "T",
       "category": "船用齿轮箱"
     }
+  ],
+  "SGW42.45": [
+    {
+      "id": "sgw4245-1",
+      "fileName": "SGW42.45齿轮箱外形图(2016.5.19).dwg",
+      "filePath": "/drawings/补充外形图/SGW42.45齿轮箱外形图(2016.5.19).dwg",
+      "fileSize": "585KB",
+      "updateDate": "2016-05-19",
+      "series": "SGW",
+      "category": "船用齿轮箱"
+    }
+  ],
+  "SGWS49.54": [
+    {
+      "id": "sgws4954-1",
+      "fileName": "SGWS49.54齿轮箱外形图2017.6.15.dwg",
+      "filePath": "/drawings/补充外形图/SGWS49.54齿轮箱外形图2017.6.15.dwg",
+      "fileSize": "1.1MB",
+      "updateDate": "2017-06-15",
+      "series": "SGW",
+      "category": "船用齿轮箱"
+    }
+  ],
+  "GCS450": [
+    {
+      "id": "gcs450-1",
+      "fileName": "GCS450 600 001船用齿轮箱外形图.dwg",
+      "filePath": "/drawings/补充外形图/GCS450 600 001船用齿轮箱外形图.dwg",
+      "fileSize": "280KB",
+      "updateDate": "2018-09-26",
+      "series": "GCS",
+      "category": "工程船用齿轮箱"
+    }
+  ],
+  "GCS320": [
+    {
+      "id": "gcs320-1",
+      "fileName": "GCS320外形确认图（终）.dwg",
+      "filePath": "/drawings/补充外形图/GCS320外形确认图（终）(1).dwg",
+      "fileSize": "2.6MB",
+      "updateDate": "2013-05-13",
+      "series": "GCS",
+      "category": "工程船用齿轮箱"
+    }
+  ],
+  "HC900": [
+    {
+      "id": "hc900-1",
+      "fileName": "HC900船用齿轮箱外形图20130225.dwg",
+      "filePath": "/drawings/补充外形图/HC900船用齿轮箱外形图20130225.dwg",
+      "fileSize": "497KB",
+      "updateDate": "2013-02-25",
+      "series": "HC",
+      "category": "船用齿轮箱"
+    }
+  ],
+  "HC3200P": [
+    {
+      "id": "hc3200p-1",
+      "fileName": "HC3200P外形工作图20130524.dwg",
+      "filePath": "/drawings/补充外形图/HC3200P外形工作图20130524.dwg",
+      "fileSize": "1.7MB",
+      "updateDate": "2013-05-24",
+      "series": "HC",
+      "category": "船用齿轮箱"
+    }
+  ],
+  "2GWH5410E": [
+    {
+      "id": "2gwh5410e-1",
+      "fileName": "2GWH5410E外形图.dwg",
+      "filePath": "/drawings/补充外形图/2GWH5410E外形图.dwg",
+      "fileSize": "1.4MB",
+      "updateDate": "2013-04-12",
+      "series": "GWH",
+      "category": "高弹联轴器"
+    }
+  ],
+  "HCU120": [
+    {
+      "id": "hcu120-1",
+      "fileName": "HCU120外形图.dwg",
+      "filePath": "/drawings/补充外形图/HCU120外形图.dwg",
+      "fileSize": "1.2MB",
+      "updateDate": "2013-05-28",
+      "series": "HCU",
+      "category": "船用齿轮箱"
+    }
+  ],
+  "LZ570": [
+    {
+      "id": "lz570-1",
+      "fileName": "LZ570外形图20130716.dwg",
+      "filePath": "/drawings/补充外形图/LZ570外形图20130716.dwg",
+      "fileSize": "223KB",
+      "updateDate": "2013-07-16",
+      "series": "LZ",
+      "category": "增速齿轮箱"
+    }
+  ],
+  "LZ110": [
+    {
+      "id": "lz110-1",
+      "fileName": "LZ110增速齿轮箱方案图(大连).dwg",
+      "filePath": "/drawings/补充外形图/LZ110增速齿轮箱方案图(大连).dwg",
+      "fileSize": "175KB",
+      "updateDate": "2013-07-29",
+      "series": "LZ",
+      "category": "增速齿轮箱"
+    }
+  ],
+  "LZ100-1": [
+    {
+      "id": "lz100-1-1",
+      "fileName": "LZ100-1增速齿轮箱方案图.dwg",
+      "filePath": "/drawings/补充外形图/LZ100-1增速齿轮箱方案图.dwg",
+      "fileSize": "179KB",
+      "updateDate": "2013-05-17",
+      "series": "LZ",
+      "category": "增速齿轮箱"
+    }
+  ],
+  "4LZF1100": [
+    {
+      "id": "4lzf1100-1",
+      "fileName": "4LZF1100方案图.dwg",
+      "filePath": "/drawings/补充外形图/4LZF1100方案图.dwg",
+      "fileSize": "356KB",
+      "updateDate": "2013-02-22",
+      "series": "LZ",
+      "category": "增速齿轮箱"
+    }
+  ],
+  "12LZF2350": [
+    {
+      "id": "12lzf2350-1",
+      "fileName": "12LZF2350外形图.dwg",
+      "filePath": "/drawings/补充外形图/12LZF2350外形图.dwg",
+      "fileSize": "305KB",
+      "updateDate": "2013-01-25",
+      "series": "LZ",
+      "category": "增速齿轮箱"
+    }
   ]
 };
 
@@ -2068,6 +2211,10 @@ export const dwgSeriesInfo = {
   'T': { name: 'T系列', description: '特种齿轮箱', type: 'gearbox' },
   'J': { name: 'J系列', description: '特种齿轮箱', type: 'gearbox' },
   'MB': { name: 'MB系列', description: '马达驱动齿轮箱', type: 'gearbox' },
+  'SGW': { name: 'SGW系列', description: 'SGW船用齿轮箱', type: 'gearbox' },
+  'GCS': { name: 'GCS系列', description: '工程船用齿轮箱', type: 'gearbox' },
+  'HCU': { name: 'HCU系列', description: '小型船用齿轮箱', type: 'gearbox' },
+  'LZ': { name: 'LZ系列', description: '增速齿轮箱', type: 'gearbox' },
   // 联轴器系列
   'GW': { name: 'GW系列', description: '高弹联轴器组合', type: 'coupling' },
   'GWH': { name: 'GWH系列', description: '高扭矩联轴器组合', type: 'coupling' },

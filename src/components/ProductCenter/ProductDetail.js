@@ -187,6 +187,12 @@ const ProductDetail = ({
                       <td className="table-secondary">外形尺寸</td>
                       <td>{product.dimensions || '-'}</td>
                     </tr>
+                    <tr>
+                      <td className="table-secondary">输出连接</td>
+                      <td>{product.outputInterfaces || '-'}</td>
+                      <td className="table-secondary">旋转方向</td>
+                      <td>{product.rotationDirection || '-'}</td>
+                    </tr>
                   </tbody>
                 </Table>
               </Tab>

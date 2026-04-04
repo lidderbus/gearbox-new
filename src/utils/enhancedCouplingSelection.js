@@ -8,6 +8,7 @@ import {
   ScoringMode,
   getScoringWeights
 } from '../data/gearboxMatchingMaps';
+import { PRIME_MOVER_CAPACITY_FACTOR } from './selectionAlgorithm';
 import { calculateFactoryPrice, calculateMarketPrice, getStandardDiscountRate } from './priceManager';
 import { safeParseFloat } from './dataHelpers';
 
@@ -73,10 +74,14 @@ export const enhancedCouplingSelection = (
   const stFactor = getTemperatureFactor(temperature);
   const isJbCcsMode = workFactorMode === 'JB_CCS';
 
-  // 计算所需联轴器扭矩 (kN·m)
-  const requiredCouplingTorque_kNm = (engineTorque * kFactor * stFactor) / 1000;
+  // 原动机类型系数: 柴油机1.5 / 电动机1.8 / 不考虑1.0
+  const primeConfig = PRIME_MOVER_CAPACITY_FACTOR[options.primeType || 'none'] || PRIME_MOVER_CAPACITY_FACTOR.none;
+  const primeFactor = primeConfig.factor;
 
-  console.log(`Required Coupling Torque (kN·m): ${requiredCouplingTorque_kNm.toFixed(3)} (Mode: ${isJbCcsMode ? 'JB/CCS' : '厂家'}, Engine Torque: ${engineTorque?.toFixed(2) || 'N/A'} N·m, K: ${kFactor.toFixed(2)}, St: ${stFactor.toFixed(2)})`);
+  // 计算所需联轴器扭矩 (kN·m) = 发动机扭矩 × 工况系数K × 温度系数St × 原动机系数 / 1000
+  const requiredCouplingTorque_kNm = (engineTorque * kFactor * stFactor * primeFactor) / 1000;
+
+  console.log(`Required Coupling Torque (kN·m): ${requiredCouplingTorque_kNm.toFixed(3)} (Mode: ${isJbCcsMode ? 'JB/CCS' : '厂家'}, Engine Torque: ${engineTorque?.toFixed(2) || 'N/A'} N·m, K: ${kFactor.toFixed(2)}, St: ${stFactor.toFixed(2)}, 原动机: ${primeConfig.label}×${primeFactor})`);
 
   // 获取齿轮箱推荐的联轴器信息
   const { 

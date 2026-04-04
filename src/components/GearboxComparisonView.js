@@ -336,6 +336,14 @@ const GearboxComparisonView = ({
                               <strong>控制方式:</strong> {gearbox.controlType || '-'}
                             </Col>
                           </Row>
+                          <Row className="mt-1">
+                            <Col md={4}>
+                              <strong>输出连接:</strong> {gearbox.outputInterfaces || '-'}
+                            </Col>
+                            <Col md={4}>
+                              <strong>旋转方向:</strong> {gearbox.rotationDirection || '-'}
+                            </Col>
+                          </Row>
                           <Row className="mt-2">
                             <Col md={8}>
                               <strong>全部减速比:</strong> {gearbox.ratios?.join(', ') || '-'}

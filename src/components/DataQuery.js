@@ -25,6 +25,11 @@ const DataQuery = ({ appData, theme, colors }) => {
     { value: 'dtGearboxes', label: 'DT系列齿轮箱' },
     { value: 'hcqGearboxes', label: 'HCQ系列齿轮箱' },
     { value: 'gcGearboxes', label: 'GC系列齿轮箱' },
+    { value: 'hcaGearboxes', label: 'HCA系列齿轮箱' },
+    { value: 'hcvGearboxes', label: 'HCV系列齿轮箱' },
+    { value: 'hcxGearboxes', label: 'HCX系列齿轮箱' },
+    { value: 'mvGearboxes', label: 'MV系列齿轮箱' },
+    { value: 'otherGearboxes', label: '其他系列齿轮箱' },
     { value: 'flexibleCouplings', label: '高弹性联轴器' },
     { value: 'standbyPumps', label: '备用泵' }
   ];

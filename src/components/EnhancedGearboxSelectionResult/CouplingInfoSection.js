@@ -71,9 +71,9 @@ const CouplingInfoSection = ({
                 <td>
                   {couplingResult.torqueMargin?.toFixed(1)}%
                   {couplingResult.torqueMargin < 5 ? (
-                    <Badge bg="danger" className="ms-2">过低</Badge>
-                  ) : couplingResult.torqueMargin > 50 ? (
-                    <Badge bg="warning" className="ms-2">过高</Badge>
+                    <Badge bg="danger" className="ms-2">不足</Badge>
+                  ) : couplingResult.torqueMargin > 100 ? (
+                    <Badge bg="info" className="ms-2">充裕(可选小型号)</Badge>
                   ) : (
                     <Badge bg="success" className="ms-2">合适</Badge>
                   )}

@@ -167,10 +167,13 @@ const ComparisonResultModal = ({
         </Button>
         <Button
           variant="primary"
-          onClick={() => {
-            // 导出比较结果为Excel
-            exportComparisonToExcel(comparisonResult, `报价单比较-${new Date().toISOString().slice(0, 10)}`);
-            onHide();
+          onClick={async () => {
+            const success = await exportComparisonToExcel(comparisonResult, `报价单比较-${new Date().toISOString().slice(0, 10)}`);
+            if (success) {
+              onHide();
+            } else {
+              alert('导出失败，请稍后重试');
+            }
           }}
         >
           <i className="bi bi-file-earmark-excel me-1"></i> 导出比较结果

@@ -9,6 +9,10 @@ const NAV_GROUPS = [
       { key: 'input', label: '输入参数', icon: 'bi-input-cursor-text' },
       { key: 'result', label: '选型结果', icon: 'bi-graph-up' },
       { key: 'batch', label: '批量选型', icon: 'bi-list-task' },
+      { key: 'reverse-selection', label: '反向选型', icon: 'bi-arrow-return-left' },
+      { key: 'multi-condition', label: '多工况选型', icon: 'bi-layers' },
+      { key: 'system-solution', label: '整体方案', icon: 'bi-diagram-3' },
+      { key: 'smart-search', label: '智能搜索', icon: 'bi-search-heart' },
     ],
   },
   {
@@ -19,6 +23,7 @@ const NAV_GROUPS = [
       { key: 'coupling-selection', label: '高弹选型', icon: 'bi-link-45deg' },
       { key: 'pump-selection', label: '备用泵选型', icon: 'bi-droplet' },
       { key: 'cummins', label: '康明斯配套', icon: 'bi-gear-wide-connected' },
+      { key: 'engine-matching', label: '多品牌主机', icon: 'bi-cpu' },
     ],
   },
   {
@@ -29,6 +34,8 @@ const NAV_GROUPS = [
       { key: 'quotation', label: '报价单', icon: 'bi-currency-yen' },
       { key: 'agreement', label: '技术协议', icon: 'bi-file-earmark-text' },
       { key: 'contract', label: '销售合同', icon: 'bi-file-earmark-ruled' },
+      { key: 'offline-package', label: '资料打包', icon: 'bi-file-zip' },
+      { key: 'torsional-report', label: '扭振计算书', icon: 'bi-file-earmark-pdf' },
     ],
   },
   {
@@ -49,6 +56,10 @@ const NAV_GROUPS = [
       { key: 'manuals', label: '说明书库', icon: 'bi-book' },
       { key: 'templates', label: '协议模板库', icon: 'bi-file-earmark-text' },
       { key: 'engine-cases', label: '配机案例', icon: 'bi-journal-text' },
+      { key: 'installation-guide', label: '安装指导', icon: 'bi-tools' },
+      { key: 'standards-library', label: '标准法规', icon: 'bi-bookmark-check' },
+      { key: 'resource-versions', label: '资料版本', icon: 'bi-clock-history' },
+      { key: 'tech-comparison', label: '参数对照', icon: 'bi-table' },
     ],
   },
   {
@@ -57,9 +68,21 @@ const NAV_GROUPS = [
     items: [
       { key: 'torsional', label: '扭振分析', icon: 'bi-activity' },
       { key: 'energy', label: '能效分析', icon: 'bi-lightning-charge' },
+      { key: 'energy-optimization', label: '能效优化', icon: 'bi-lightning' },
       { key: 'statistics', label: '数据统计', icon: 'bi-bar-chart' },
       { key: 'analytics', label: '使用分析', icon: 'bi-graph-up-arrow' },
+      { key: 'trend-analysis', label: '趋势分析', icon: 'bi-graph-up' },
       { key: 'competitor', label: '竞品对比', icon: 'bi-bar-chart-fill' },
+    ],
+  },
+  {
+    label: '项目管理',
+    icon: 'bi-kanban',
+    items: [
+      { key: 'project-tracker', label: '项目追踪', icon: 'bi-kanban' },
+      { key: 'customer-portal', label: '客户询价', icon: 'bi-person-badge' },
+      { key: 'after-sales', label: '售后服务', icon: 'bi-wrench-adjustable' },
+      { key: 'certification', label: '船级社认证', icon: 'bi-patch-check' },
     ],
   },
   {
@@ -70,8 +93,16 @@ const NAV_GROUPS = [
       { key: 'product-center', label: '产品中心', icon: 'bi-box-seam' },
       { key: 'history', label: '选型历史', icon: 'bi-clock-history' },
       { key: 'hcm-selection', label: 'HCM高速', icon: 'bi-speedometer2' },
-      { key: 'inventory', label: '库存管理', icon: 'bi-box-seam' },
-      { key: 'receivables', label: '应收账款', icon: 'bi-cash-stack' },
+    ],
+  },
+  {
+    label: '系统管理',
+    icon: 'bi-shield-lock',
+    items: [
+      { key: 'role-management', label: '角色权限', icon: 'bi-people' },
+      { key: 'data-backup', label: '数据备份', icon: 'bi-cloud-upload' },
+      { key: 'api-docs', label: 'API文档', icon: 'bi-code-slash' },
+      { key: 'mobile-view', label: '移动端', icon: 'bi-phone' },
     ],
   },
 ];

@@ -4,7 +4,7 @@
  * 提供全局配置状态和localStorage持久化
  */
 
-import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo } from 'react';
 import {
   DEFAULT_SCORING_WEIGHTS,
   DEFAULT_TOLERANCES,
@@ -232,11 +232,8 @@ export function SelectionConfigProvider({ children }) {
     };
   }, [state.weights, state.tolerances, state.activeApplication, state.useAdaptiveTolerances]);
 
-  const value = {
-    // State
+  const value = useMemo(() => ({
     ...state,
-
-    // Actions
     setWeights,
     setPreset,
     setTolerances,
@@ -245,10 +242,10 @@ export function SelectionConfigProvider({ children }) {
     toggleAdvancedWeights,
     toggleAdvancedTolerances,
     resetToDefaults,
-
-    // Helpers
     getEffectiveConfig
-  };
+  }), [state, setWeights, setPreset, setTolerances, setApplication,
+    setAdaptiveMode, toggleAdvancedWeights, toggleAdvancedTolerances,
+    resetToDefaults, getEffectiveConfig]);
 
   return (
     <SelectionConfigContext.Provider value={value}>

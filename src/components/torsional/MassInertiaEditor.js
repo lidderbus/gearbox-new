@@ -4,8 +4,7 @@
  */
 import React, { useCallback } from 'react';
 import { Table, Button, Form, InputGroup } from 'react-bootstrap';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Plus as AddIcon, Trash2 as DeleteIcon } from 'lucide-react';
 
 const MassInertiaEditor = ({ masses = [], onChange, colors = {}, theme = 'light' }) => {
   // 添加新质量

@@ -8,13 +8,17 @@ import { marketSegments, swotBySegment, segmentSalesPitches } from '../data/comp
 const mfgColors = {
   HANGCHI: '#D4AF37', CZCG: '#C41E3A', NGC: '#1E90FF', ZF: '#003366',
   Reintjes: '#4169E1', TwinDisc: '#B22222', DCSG: '#228B22',
-  FADA: '#FF8C00', Fenjin: '#9ACD32', others: '#999'
+  FADA: '#FF8C00', Fenjin: '#9ACD32', MassonMarine: '#4682B4',
+  DongI: '#003478', Kanzaki: '#E60012', PRM: '#00247D',
+  Kumera: '#005EB8', Hundested: '#C60C30', Wartsila: '#FF6900', others: '#999'
 };
 
 const mfgLabels = {
   HANGCHI: '杭齿', CZCG: '重齿', NGC: '南高精', ZF: 'ZF',
   Reintjes: '莱茵齿', TwinDisc: 'Twin Disc', DCSG: '大连船齿',
-  FADA: '发达', Fenjin: '奋进', others: '其他'
+  FADA: '发达', Fenjin: '奋进', MassonMarine: '马森', DongI: 'Dong-I',
+  Kanzaki: 'Kanzaki', PRM: 'PRM', Kumera: 'Kumera', Hundested: 'Hundested',
+  Wartsila: '瓦锡兰', others: '其他'
 };
 
 // shares可能是对象{HANGCHI:45}或数组[{manufacturer,share}]，统一转为数组

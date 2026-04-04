@@ -229,9 +229,40 @@ export const compareQuotations = (quotationA, quotationB) => {
 };
 
 // 导出报价单比较为Excel
-export const exportComparisonToExcel = (comparison, filename = '报价单比较') => {
-  // 此处实现Excel导出功能
-  // 使用XLSX库将比较结果导出为Excel
-  console.log('报价单比较Excel导出功能待实现');
-  return false;
+export const exportComparisonToExcel = async (comparison, filename = '报价单比较') => {
+  if (!comparison) return false;
+  try {
+    const { loadXLSX } = await import('./dynamicImports');
+    const XLSX = await loadXLSX();
+    const wb = XLSX.utils.book_new();
+
+    // 构建对比表格数据
+    const headers = ['对比项', ...(comparison.items || []).map((_, i) => `报价单${i + 1}`)];
+    const rows = [];
+
+    // 基本信息行
+    rows.push(['报价单名称', ...(comparison.items || []).map(q => q.name || '-')]);
+    rows.push(['客户名称', ...(comparison.items || []).map(q => q.customerName || '-')]);
+    rows.push(['齿轮箱型号', ...(comparison.items || []).map(q => q.gearboxModel || '-')]);
+    rows.push(['总价 (元)', ...(comparison.items || []).map(q => q.totalPrice || 0)]);
+    rows.push(['折扣率', ...(comparison.items || []).map(q => q.discountRate ? (q.discountRate * 100 + '%') : '-')]);
+    rows.push(['创建日期', ...(comparison.items || []).map(q => q.date || '-')]);
+
+    // 差异分析
+    if (comparison.summary) {
+      rows.push([]);
+      rows.push(['价格差异', comparison.summary.priceDiff || '-']);
+      rows.push(['推荐方案', comparison.summary.recommendation || '-']);
+    }
+
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    // 设置列宽
+    ws['!cols'] = headers.map((_, i) => ({ wch: i === 0 ? 15 : 20 }));
+    XLSX.utils.book_append_sheet(wb, ws, '报价单对比');
+    XLSX.writeFile(wb, `${filename}.xlsx`);
+    return true;
+  } catch (error) {
+    console.error('导出报价单比较Excel失败:', error);
+    return false;
+  }
 };

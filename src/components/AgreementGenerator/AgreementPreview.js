@@ -2,6 +2,7 @@
 // 技术协议预览和导出组件
 import React, { useRef, useCallback, useState } from 'react';
 import { Button, Spinner, Alert } from 'react-bootstrap';
+import DOMPurify from 'dompurify';
 import { optimizedHtmlToPdf } from '../../utils/pdfExportUtils';
 
 /**
@@ -170,7 +171,7 @@ const AgreementPreview = ({
           ref={previewRef}
           className="agreement-preview-content"
         >
-          <div dangerouslySetInnerHTML={{ __html: agreement.html }} />
+          <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(agreement.html) }} />
           {selectedDrawings.length > 0 && (
             <div style={{ marginTop: '40px', pageBreakBefore: 'auto', pageBreakInside: 'avoid' }}>
               <h3 style={{ borderBottom: '2px solid #333', paddingBottom: '8px', marginBottom: '16px' }}>

@@ -311,7 +311,55 @@ export const gearboxPriceData = [
   { model: 'HCA1400', basePrice: 360000, discountRate: 0, discountedPrice: 360000 },
   { model: 'HCAM1400', basePrice: 360000, discountRate: 0, discountedPrice: 360000 },
   { model: 'HCA1401', basePrice: 412000, discountRate: 0, discountedPrice: 412000 },
-  { model: 'HCM1400', basePrice: 412000, discountRate: 0, discountedPrice: 412000 }
+  { model: 'HCM1400', basePrice: 412000, discountRate: 0, discountedPrice: 412000 },
+
+  // === 补充定价 (2026-03-29 系统审计, 基于同系列已知价格推算) ===
+
+  // DT系列 (插值: DT2400=155K, DT4300=175K)
+  { model: 'DT2500', basePrice: 160000, discountRate: 0.10, discountedPrice: 144000 },
+  { model: 'DT4000', basePrice: 172000, discountRate: 0.10, discountedPrice: 154800 },
+
+  // HCD衍生型号 (基于同规格HC/HCD基准 × 系数)
+  { model: 'HCD68', basePrice: 9600, discountRate: 0.16, discountedPrice: 8064 },
+  { model: 'HCD400', basePrice: 36000, discountRate: 0.16, discountedPrice: 30240 },
+  { model: 'HCD600/2', basePrice: 72720, discountRate: 0.12, discountedPrice: 63994 },
+  { model: 'HCD800/2', basePrice: 103320, discountRate: 0.08, discountedPrice: 95054 },
+  { model: 'HCD1000/2', basePrice: 107760, discountRate: 0.06, discountedPrice: 101294 },
+  { model: 'HCD2000/2', basePrice: 247200, discountRate: 0.06, discountedPrice: 232368 },
+
+  // HCDX系列 (基于HCD同规格 × 1.15)
+  { model: 'HCDX300', basePrice: 36800, discountRate: 0.16, discountedPrice: 30912 },
+  { model: 'HCDX400', basePrice: 43900, discountRate: 0.16, discountedPrice: 36876 },
+  { model: 'HCDX600', basePrice: 69700, discountRate: 0.12, discountedPrice: 61336 },
+  { model: 'HCDX800', basePrice: 99000, discountRate: 0.08, discountedPrice: 91080 },
+
+  // HCDS船用双速 (基于HC同规格 × 1.25)
+  { model: 'HCDS1600', basePrice: 187500, discountRate: 0.06, discountedPrice: 176250 },
+  { model: 'HCDS2000', basePrice: 225000, discountRate: 0.06, discountedPrice: 211500 },
+
+  // HCTH高扭矩 (近似HCT2700)
+  { model: 'HCTH2650', basePrice: 330000, discountRate: 0.06, discountedPrice: 310200 },
+  { model: 'HCTH2650P', basePrice: 380000, discountRate: 0.06, discountedPrice: 357200 },
+
+  // 混合动力P后缀 (基于基础型号 × 1.15)
+  { model: 'HC1200P', basePrice: 105800, discountRate: 0.14, discountedPrice: 90988 },
+  { model: 'HC1200/1P', basePrice: 124400, discountRate: 0.10, discountedPrice: 111960 },
+  { model: 'GWC52.59P', basePrice: 600000, discountRate: 0.10, discountedPrice: 540000 },
+  { model: 'GWC60.66P', basePrice: 880000, discountRate: 0.10, discountedPrice: 792000 },
+  { model: 'GWC63.71P', basePrice: 1030000, discountRate: 0.10, discountedPrice: 927000 },
+
+  // SGWL系列 = GWC同规格 × 0.92
+  { model: 'SGWL49.54', basePrice: 370400, discountRate: 0.10, discountedPrice: 333360 },
+  { model: 'SGWL52.59', basePrice: 501400, discountRate: 0.10, discountedPrice: 451260 },
+
+  // 小型/轻型补充
+  { model: 'HC85', basePrice: 10800, discountRate: 0.16, discountedPrice: 9072 },
+  { model: 'MV100A(倾角7°)', basePrice: 33500, discountRate: 0, discountedPrice: 33500 },
+
+  // HCDF风电系列 (参考HCD同档 × 1.10)
+  { model: 'HCD0FM', basePrice: 28000, discountRate: 0.16, discountedPrice: 23520 },
+  { model: 'HCD1FM', basePrice: 35000, discountRate: 0.16, discountedPrice: 29400 },
+  { model: 'HCD2FM', basePrice: 42000, discountRate: 0.16, discountedPrice: 35280 }
 ];
 
 // ===== GW系列定价规则 (杭齿集公[2026]30号) =====

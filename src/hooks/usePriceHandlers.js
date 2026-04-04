@@ -327,7 +327,7 @@ const usePriceHandlers = ({
         }
       };
 
-      const allCollections = ['hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes', 'hcqGearboxes', 'gcGearboxes', 'flexibleCouplings', 'standbyPumps'];
+      const allCollections = ['hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes', 'hcqGearboxes', 'gcGearboxes', 'hcaGearboxes', 'hcvGearboxes', 'hcxGearboxes', 'mvGearboxes', 'otherGearboxes', 'flexibleCouplings', 'standbyPumps'];
       const gearboxCollections = allCollections.filter(key => key.endsWith('Gearboxes'));
       const accessoryCollections = ['flexibleCouplings', 'standbyPumps'];
 

@@ -7,6 +7,9 @@ import CouplingSelectionForm from './CouplingSelectionForm';
 import CouplingRecommendationList from './CouplingRecommendationList';
 import CouplingTechnicalParams from './CouplingTechnicalParams';
 import ClassificationComparisonPanel from './ClassificationComparisonPanel';
+import CouplingManualAdjustment from './CouplingManualAdjustment';
+import CouplingApplicationScenarios from './CouplingApplicationScenarios';
+import CouplingSelectionHistory, { saveSelectionHistory } from './CouplingSelectionHistory';
 import { selectCouplingStandalone, getAllCouplings } from '../../services/couplingSelectionService';
 import { ClassificationType } from '../../utils/classificationCertificates';
 
@@ -67,6 +70,8 @@ const CouplingSelectionPage = ({
         if (result.recommendations && result.recommendations.length > 0) {
           setSelectedCoupling(result.recommendations[0]);
         }
+        // 保存选型历史
+        saveSelectionHistory(params, result);
       } else {
         setError(result.message || '选型失败，请调整参数重试');
         setSelectionResult(null);
@@ -97,6 +102,16 @@ const CouplingSelectionPage = ({
     setSelectionParams(null);
     setError(null);
   }, []);
+
+  // 从历史记录加载参数并重新选型
+  const handleLoadHistory = useCallback((params) => {
+    handleSelectionSubmit(params);
+  }, [handleSelectionSubmit]);
+
+  // 手动调整后重新计算
+  const handleManualRecalculate = useCallback((adjustedParams) => {
+    handleSelectionSubmit(adjustedParams);
+  }, [handleSelectionSubmit]);
 
   // 如果有初始参数，自动执行选型
   useEffect(() => {
@@ -136,6 +151,7 @@ const CouplingSelectionPage = ({
                 <i className="bi bi-collection me-1"></i>
                 {couplingStats.series} 个系列
               </Badge>
+              <CouplingSelectionHistory onLoadHistory={handleLoadHistory} />
             </div>
           </div>
         )}
@@ -234,6 +250,22 @@ const CouplingSelectionPage = ({
                       onSelectCoupling={handleCouplingSelect}
                       colors={colors}
                     />
+
+                    {/* 手动调整面板 */}
+                    <CouplingManualAdjustment
+                      selectionResult={selectionResult}
+                      currentParams={selectionParams}
+                      onRecalculate={handleManualRecalculate}
+                      colors={colors}
+                    />
+
+                    {/* 适用场景 */}
+                    {selectedCoupling && (
+                      <CouplingApplicationScenarios
+                        selectedCoupling={selectedCoupling}
+                        selectionResult={selectionResult}
+                      />
+                    )}
 
                     {/* 多船级社对比面板（当有船检要求时显示） */}
                     {selectionParams && selectedCoupling && (

@@ -254,6 +254,15 @@ export const saveSelectionToHistory = (selectionResult, projectInfo, selectedCom
     // ✓ 规范化 projectInfo 数据
     const { normalized: normalizedProjectInfo, selectionType } = normalizeProjectInfo(projectInfo);
 
+    // 自动生成项目名称（如果未填写）
+    if (!normalizedProjectInfo.projectName) {
+      const power = engineData?.enginePower || requirementData?.enginePower || '';
+      const speed = engineData?.engineSpeed || requirementData?.engineSpeed || '';
+      const model = selectionResult?.recommendations?.[0]?.model || '';
+      const date = new Date().toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+      normalizedProjectInfo.projectName = [power && `${power}kW`, speed && `${speed}rpm`, model, date].filter(Boolean).join('-');
+    }
+
     const newEntry = {
       id: Date.now(), // 使用时间戳作为唯一 ID
       timestamp: new Date().toISOString(),

@@ -74,10 +74,10 @@ export const SUB_SERIES_MAP = {
     label: 'HCQ 轻量化'
   },
   GC: {
-    transmissionType: '1-stage',
-    rotationRelation: 'reverse',
-    shaftArrangement: 'horizontal-offset',
-    label: 'GC 特种'
+    transmissionType: '2-stage',
+    rotationRelation: 'same',
+    shaftArrangement: 'concentric',
+    label: 'GC 同中心（配变距桨）'
   }
 };
 
@@ -195,13 +195,11 @@ export function matchesShaftArrangement(model, filter) {
     return { matched: true };
   }
 
-  // 非GW系列不按轴布置过滤（固定为水平偏置）
-  if (!info.subSeries.startsWith('GW')) {
-    return { matched: true };
-  }
+  // 所有在 SUB_SERIES_MAP 中有定义的系列都参与轴布置过滤
+  // 注: 倒顺功能(reversingFunction)仅对GW子系列检查，非GW系列的倒顺由seriesCapabilityConfig处理
 
-  // 检查倒顺功能维度
-  if (reversingFunction !== 'any') {
+  // 检查倒顺功能维度（仅GW子系列有此字段）
+  if (reversingFunction !== 'any' && info.reversingFunction) {
     if (info.reversingFunction !== reversingFunction) {
       const funcLabel = reversingFunction === 'with-reverse' ? '倒顺' : '离合';
       return { matched: false, reason: `${info.label} 不匹配${funcLabel}功能要求` };

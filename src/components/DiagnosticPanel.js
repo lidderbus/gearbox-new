@@ -38,6 +38,11 @@ const DiagnosticPanel = ({ appData, onReset, onHide, colors, theme }) => {
       { key: 'dtGearboxes', name: 'DT系列齿轮箱' },
       { key: 'hcqGearboxes', name: 'HCQ系列齿轮箱' },
       { key: 'gcGearboxes', name: 'GC系列齿轮箱' },
+      { key: 'hcaGearboxes', name: 'HCA系列齿轮箱' },
+      { key: 'hcvGearboxes', name: 'HCV系列齿轮箱' },
+      { key: 'hcxGearboxes', name: 'HCX系列齿轮箱' },
+      { key: 'mvGearboxes', name: 'MV系列齿轮箱' },
+      { key: 'otherGearboxes', name: '其他系列齿轮箱' },
       { key: 'flexibleCouplings', name: '高弹性联轴器' },
       { key: 'standbyPumps', name: '备用泵' },
     ];
@@ -110,7 +115,7 @@ const DiagnosticPanel = ({ appData, onReset, onHide, colors, theme }) => {
       
       // 检查传递能力数组与减速比数组长度是否一致
       const arrayLengthIssues = [];
-      ['hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes', 'hcqGearboxes', 'gcGearboxes'].forEach(collection => {
+      ['hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes', 'hcqGearboxes', 'gcGearboxes', 'hcaGearboxes', 'hcvGearboxes', 'hcxGearboxes', 'mvGearboxes', 'otherGearboxes'].forEach(collection => {
         if (Array.isArray(appData[collection])) {
           appData[collection].forEach((item, index) => {
             if (Array.isArray(item.ratios) && Array.isArray(item.transferCapacity) && 

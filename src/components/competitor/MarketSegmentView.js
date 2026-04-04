@@ -5,7 +5,8 @@
 
 import React, { useState, useMemo } from 'react';
 import { Card, Row, Col, Badge, ListGroup, Form } from 'react-bootstrap';
-import ReactECharts from 'echarts-for-react';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
+import echarts from '../../config/echartsSetup';
 import {
   getSegmentList,
   getSegmentAnalysis,
@@ -140,11 +141,11 @@ const MarketSegmentView = ({ hangchiProduct, competitors = [], colors }) => {
         {/* 图表区 */}
         <Row className="mb-4">
           <Col lg={6} className="mb-3">
-            {pieOption && <ReactECharts option={pieOption} style={{ height: '320px', width: '100%' }} opts={{ renderer: 'svg' }} />}
+            {pieOption && <ReactEChartsCore echarts={echarts} option={pieOption} style={{ height: '320px', width: '100%' }} opts={{ renderer: 'svg' }} />}
           </Col>
           <Col lg={6} className="mb-3">
             {positioningOption ? (
-              <ReactECharts option={positioningOption} style={{ height: '320px', width: '100%' }} opts={{ renderer: 'svg' }} />
+              <ReactEChartsCore echarts={echarts} option={positioningOption} style={{ height: '320px', width: '100%' }} opts={{ renderer: 'svg' }} />
             ) : (
               <div className="text-center text-muted py-5 border rounded h-100 d-flex align-items-center justify-content-center">
                 <div>

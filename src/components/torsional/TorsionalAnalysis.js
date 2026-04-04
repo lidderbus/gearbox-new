@@ -8,10 +8,7 @@
  */
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Card, Button, Form, Row, Col, Tabs, Tab, Spinner, Alert, ButtonGroup, Badge } from 'react-bootstrap';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import SettingsIcon from '@mui/icons-material/Settings';
-import DescriptionIcon from '@mui/icons-material/Description';
+import { Play as PlayArrowIcon, RefreshCw as RefreshIcon, Settings as SettingsIcon, FileText as DescriptionIcon } from 'lucide-react';
 import { FiZap, FiCpu, FiFileText } from 'react-icons/fi';
 
 import MassInertiaEditor from './MassInertiaEditor';

@@ -12,10 +12,10 @@ import { competitors, competitorProducts } from './competitorData';
 // 数据版本控制
 // ============================================================
 export const DATA_VERSION = {
-  version: '2.0.0',
-  lastFullUpdate: '2025-06',
+  version: '3.0.0',
+  lastFullUpdate: '2026-03',
   schema: 'enhanced-v2',
-  notes: '增强版：新增技术维度、新鲜度追踪、市场分段、TCO参数'
+  notes: '增强版v3: 修正6处事实错误, 新增Kumera/Hundested品牌, 补充21条产品(ZF/TwinDisc/Reintjes/Kumera/Hundested), 修复关联文件'
 };
 
 // ============================================================
@@ -103,6 +103,41 @@ export const productFreshnessData = {
   'FJ-06': { lastVerified: '2024-12', priceConfidence: 'estimated', source: '区域调研' },
   'FJ-10': { lastVerified: '2024-12', priceConfidence: 'estimated', source: '区域调研' },
   'FJ-16': { lastVerified: '2024-12', priceConfidence: 'estimated', source: '区域调研' },
+
+  // --- 2026-03-28 新增产品新鲜度 ---
+  // ZF补充
+  'ZF301C': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网技术参数/代理商询价' },
+  'ZF_W10000': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网技术参数' },
+  'ZF9050': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网技术参数' },
+  // Twin Disc补充
+  'MG5050': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网/代理商' },
+  'MG5170': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网/代理商' },
+  'MGX5050': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网技术参数' },
+  'MGX5170': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网技术参数' },
+  'MGX6599': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网/行业对比' },
+  // Reintjes补充
+  'WVS430': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '代理商询价(Karl Senner)' },
+  'WVS640': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '代理商询价' },
+  'WVS1000': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '代理商询价' },
+  'WF350': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网产品指南' },
+  'WF480': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网产品指南' },
+  'WLS640': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '代理商询价' },
+  // Kumera
+  'KM-CPP500': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网/行业展会' },
+  'KM-CPP1000': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网/行业展会' },
+  'KM-CPP2000': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '市场调研' },
+  'KM-CPP4000': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '市场调研' },
+  // Hundested
+  'CPGS300': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网/代理商' },
+  'CPGS800': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网/代理商' },
+  'CPGS1500': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '市场调研' },
+  // Wartsila
+  'SCV55': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网技术参数/行业报价' },
+  'SCV75': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网技术参数/行业报价' },
+  'SCV105': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '官网/行业展会' },
+  'SCH150': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '市场调研' },
+  'TCH250': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '市场调研' },
+  'TCH370': { lastVerified: '2026-03', priceConfidence: 'estimated', source: '市场调研' },
 };
 
 // ============================================================
@@ -173,13 +208,13 @@ export const techDimensionsTemplate = {
   TwinDisc: {
     propellerType: 'FPP',
     noiseLevel: 'medium',
-    digitalMonitoring: 'partial',
-    hybridReady: false,
+    digitalMonitoring: true,
+    hybridReady: 'partial',
     efficiencyClass: 'high',
-    environmentalCompliance: ['ABS', 'LR'],
+    environmentalCompliance: ['ABS', 'LR', 'USCG'],
     maxRPM: 2800,
-    transmissionType: ['单速'],
-    clutchType: '液压多片'
+    transmissionType: ['单速', 'QuickShift电控'],
+    clutchType: '液压多片/QuickShift电控'
   },
   DCSG: {
     propellerType: 'both',
@@ -231,9 +266,9 @@ export const techDimensionsTemplate = {
     digitalMonitoring: 'partial',
     hybridReady: false,
     efficiencyClass: 'high',
-    environmentalCompliance: ['KR', 'CCS'],
-    maxRPM: 2300,
-    transmissionType: ['单速', '双速'],
+    environmentalCompliance: ['KR', 'CCS', 'BV', 'NK'],
+    maxRPM: 2600,
+    transmissionType: ['单速', '双速', '带PTO(DMTP系列)'],
     clutchType: '液压多片'
   },
   Kanzaki: {
@@ -256,6 +291,39 @@ export const techDimensionsTemplate = {
     environmentalCompliance: ['LR'],
     maxRPM: 2500,
     transmissionType: ['单速'],
+    clutchType: '液压多片'
+  },
+  Kumera: {
+    propellerType: 'CPP',
+    noiseLevel: 'low',
+    digitalMonitoring: true,
+    hybridReady: 'partial',
+    efficiencyClass: 'premium',
+    environmentalCompliance: ['DNV', 'LR', 'BV', 'IMO Tier II'],
+    maxRPM: 1800,
+    transmissionType: ['单速', '带PTO'],
+    clutchType: '液压多片'
+  },
+  Hundested: {
+    propellerType: 'CPP',
+    noiseLevel: 'low',
+    digitalMonitoring: true,
+    hybridReady: 'partial',
+    efficiencyClass: 'high',
+    environmentalCompliance: ['DNV', 'LR', 'BV'],
+    maxRPM: 1600,
+    transmissionType: ['单速', '双速'],
+    clutchType: '液压多片'
+  },
+  Wartsila: {
+    propellerType: 'both',
+    noiseLevel: 'low',
+    digitalMonitoring: true,
+    hybridReady: true,
+    efficiencyClass: 'premium',
+    environmentalCompliance: ['DNV', 'LR', 'ABS', 'BV', 'CCS', 'RINA', 'IMO Tier II', 'IMO Tier III'],
+    maxRPM: 1200,
+    transmissionType: ['单速', '双速', '带PTO/PTI/PTH', '双机并车(TCH)'],
     clutchType: '液压多片'
   }
 };
@@ -281,7 +349,7 @@ export const marketSegments = {
     },
     totalMarketSize: '约25亿元/年',
     growth: '+3%',
-    notes: '杭齿在渔船市场占据绝对优势，HC系列在沿海渔船中认知度最高'
+    notes: '杭齿在渔船市场占据绝对优势，HC系列在沿海渔船中认知度最高。杭齿国内市占率约65%(2024年报)。'
   },
   inlandCargo: {
     id: 'inlandCargo',
@@ -334,11 +402,12 @@ export const marketSegments = {
       NGC: 20,
       ZF: 8,
       Reintjes: 5,
-      others: 7
+      Kumera: 1,
+      others: 6
     },
     totalMarketSize: '约60亿元/年',
     growth: '+5%',
-    notes: '中型商船是核心战场，杭齿GW/HC大功率系列vs重齿MG系列'
+    notes: '中型商船是核心战场。全球船用齿轮箱市场2025年约USD74亿(CAGR 5.4%)。中国造船完工量占全球55.7%(2024)，新接订单占74.1%。杭齿2024年船用产品收入10.95亿元(+22%)。'
   },
   largeCommercial: {
     id: 'largeCommercial',
@@ -348,16 +417,18 @@ export const marketSegments = {
     description: '大型散货船/集装箱船/VLCC',
     keyFactors: ['可靠性记录', '全球服务网络', '技术先进性', '认证齐全'],
     shares: {
-      CZCG: 30,
-      NGC: 25,
+      CZCG: 28,
+      NGC: 24,
       HANGCHI: 18,
-      ZF: 12,
-      Reintjes: 8,
+      ZF: 10,
+      Reintjes: 7,
+      Wartsila: 5,
+      Kumera: 1,
       others: 7
     },
     totalMarketSize: '约80亿元/年',
     growth: '+6%',
-    notes: '大型船市场重齿/南高齿占优，杭齿正在追赶，GW系列是突破口'
+    notes: '大型船市场重齿/南高齿占优。全球混合动力推进市场2025年USD50.7亿(CAGR 11.9%)，是齿轮箱增长最快细分。IMO净零框架2027年实施将加速设备升级。'
   },
   specialVessel: {
     id: 'specialVessel',
@@ -367,16 +438,19 @@ export const marketSegments = {
     description: '拖轮/挖泥船/工程船/消防船/公务船',
     keyFactors: ['可靠性', '操控性', '抗冲击', '定制能力'],
     shares: {
-      HANGCHI: 30,
-      CZCG: 25,
-      NGC: 15,
-      ZF: 12,
-      Reintjes: 8,
-      others: 10
+      HANGCHI: 28,
+      CZCG: 24,
+      NGC: 14,
+      ZF: 10,
+      Reintjes: 7,
+      Wartsila: 5,
+      Kumera: 2,
+      Hundested: 1,
+      others: 9
     },
     totalMarketSize: '约35亿元/年',
-    growth: '+4%',
-    notes: '特种船利润率高，对产品定制能力要求高'
+    growth: '+5%',
+    notes: '特种船利润率高。海上风电运维船、深远海养殖工程船是新增长点。CPP在特种船占优(全球CPP市场2024年USD38亿，CAGR 5%)。Kumera/Hundested在北欧特种船CPP市场有根基。'
   },
   yacht: {
     id: 'yacht',
@@ -395,7 +469,7 @@ export const marketSegments = {
     },
     totalMarketSize: '约15亿元/年',
     growth: '+8%',
-    notes: '进口品牌在高端游艇市场占优，杭齿HCQ系列正在突破中端市场'
+    notes: 'ZF占游艇市场约35%。TwinDisc QuickShift电控换挡在北美市场渗透率高。ZF轻量化优势明显(ZF25仅24kg)。杭齿HCQ系列在中端突破。'
   },
   military: {
     id: 'military',
@@ -440,22 +514,22 @@ export const swotBySegment = {
     threats: ['重齿/南高齿加大沿海市场投入']
   },
   mediumCommercial: {
-    strengths: ['GW系列技术成熟', '认证齐全', '本土服务优势'],
-    weaknesses: ['品牌认知不如重齿/南高齿', '大型项目经验积累不足'],
-    opportunities: ['中型船市场持续增长', '替代进口需求'],
-    threats: ['ZF等进口品牌降价', '重齿/NGC技术升级']
+    strengths: ['GW系列技术成熟', '认证齐全', '本土服务优势', '国产替代政策支持'],
+    weaknesses: ['品牌认知不如重齿/南高齿', '大型项目经验积累不足', '混合动力齿轮箱产品线待完善'],
+    opportunities: ['中型船市场持续增长', '替代进口需求', 'EEXI/CII合规改造带来换装需求', '新能源船舶(LNG/混动)配套'],
+    threats: ['ZF等进口品牌降价及南京合资本地化', '重齿/NGC技术升级', 'TwinDisc QuickShift电控技术竞争']
   },
   largeCommercial: {
-    strengths: ['GW大功率系列性能优', '价格比进口有优势'],
-    weaknesses: ['大型船业绩不如重齿/NGC', '全球服务网络薄弱'],
-    opportunities: ['超大型船国产替代', '一带一路海外项目'],
-    threats: ['重齿/NGC市场份额固化', '进口品牌渠道下沉']
+    strengths: ['GW大功率系列性能优', '价格比进口有优势', '杭齿上市公司(601177)持续研发投入'],
+    weaknesses: ['大型船业绩不如重齿/NGC', '全球服务网络薄弱', 'CPP大功率系统集成经验不足'],
+    opportunities: ['超大型船国产替代', '一带一路海外项目', '绿色航运走廊(全球84条)带来设备升级需求', 'IMO净零框架2027年实施'],
+    threats: ['重齿/NGC市场份额固化', '进口品牌渠道下沉', 'Kumera等CPP专家切入大型船CPP市场']
   },
   specialVessel: {
-    strengths: ['定制化能力强', '快速响应技术需求', 'HCQ系列操控性好'],
-    weaknesses: ['部分特种需求经验不足'],
-    opportunities: ['海上风电运维船', '深远海养殖工程船'],
-    threats: ['进口品牌在高端特种船市场优势明显']
+    strengths: ['定制化能力强', '快速响应技术需求', 'HCQ系列操控性好', 'CPP系统集成能力持续提升'],
+    weaknesses: ['部分特种需求经验不足', 'CPP系统集成度与Kumera/Hundested有差距'],
+    opportunities: ['海上风电运维船', '深远海养殖工程船', '混合动力特种船', 'IMO EEXI/CII合规改造需求'],
+    threats: ['进口品牌在高端特种船市场优势明显', 'Kumera/Hundested在北欧CPP市场根基深厚', '混合动力齿轮箱技术竞争加剧']
   },
   yacht: {
     strengths: ['HCQ系列噪振控制改善明显', '价格优势'],
@@ -529,6 +603,14 @@ export const segmentSalesPitches = {
     {
       pitch: '特种船对齿轮箱要求高，需要定制化方案。杭齿有专门的特种船技术团队，从选型到调试全程技术支持，HCQ系列操控性特别适合拖轮和工程船。',
       keyPoints: ['专业技术团队', '全程技术支持', 'HCQ操控性']
+    },
+    {
+      pitch: '客户如果对比Kumera/Hundested等北欧CPP品牌，我们的优势是价格低40-60%、交期快2-3倍（6-8周vs18-24周），而且CPP系统售后不需要等北欧原厂工程师过来，国内就能解决。',
+      keyPoints: ['价格优势40-60%', '交期6-8周vs18-24周', '国内售后覆盖']
+    },
+    {
+      pitch: '当前IMO EEXI/CII法规驱动特种船升级，杭齿正在推出新能源混动齿轮箱系列，可以帮助船东在不更换主机的情况下达标。这是进口品牌在中国市场做不到的。',
+      keyPoints: ['IMO合规方案', '混动齿轮箱', '不更换主机达标']
     }
   ],
   yacht: [
@@ -668,6 +750,30 @@ export const tcoParameters = {
       fuelEfficiency: 1.0,
       downtime: 1.4,
       description: '英国品牌，中低功率'
+    },
+    Kumera: {
+      acquisition: 1.60,
+      maintenance: 1.3,
+      spareParts: 2.0,
+      fuelEfficiency: 0.95,
+      downtime: 1.5,
+      description: '芬兰品牌，CPP专家，全面进口'
+    },
+    Hundested: {
+      acquisition: 1.70,
+      maintenance: 1.4,
+      spareParts: 2.2,
+      fuelEfficiency: 0.95,
+      downtime: 1.6,
+      description: '丹麦品牌，CPP系统专家，全定制进口'
+    },
+    Wartsila: {
+      acquisition: 2.20,
+      maintenance: 1.6,
+      spareParts: 3.0,
+      fuelEfficiency: 0.92,
+      downtime: 2.0,
+      description: '芬兰品牌，全球推进系统领导者，全面进口，配件极贵但效率最高'
     }
   }
 };
@@ -763,19 +869,62 @@ export const shipTypeDefaults = {
 // ============================================================
 // x轴: 价格(1-10, 10=最贵), y轴: 技术(1-10, 10=最先进), size: 市场份额估算
 export const positioningMapData = {
-  HANGCHI: { x: 5, y: 7, size: 35, label: '杭齿前进' },
+  HANGCHI: { x: 5, y: 7.5, size: 35, label: '杭齿前进' },
   CZCG: { x: 5.5, y: 7, size: 25, label: '重齿' },
   NGC: { x: 6, y: 7.5, size: 18, label: '南高齿' },
   ZF: { x: 9, y: 9.5, size: 8, label: 'ZF' },
   Reintjes: { x: 8.5, y: 9, size: 5, label: 'Reintjes' },
-  TwinDisc: { x: 7.5, y: 7, size: 3, label: 'TwinDisc' },
+  TwinDisc: { x: 7.5, y: 8, size: 3, label: 'TwinDisc' },
   DCSG: { x: 4, y: 5, size: 5, label: '大齿' },
-  FADA: { x: 3, y: 4, size: 6, label: '法达' },
+  FADA: { x: 3, y: 4, size: 6, label: '发达' },
   Fenjin: { x: 2, y: 3, size: 4, label: '奋进' },
   MassonMarine: { x: 9.5, y: 9.5, size: 2, label: 'Masson' },
   DongI: { x: 6.5, y: 7, size: 2, label: '东一' },
   Kanzaki: { x: 7, y: 6.5, size: 1.5, label: '神崎' },
   PRM: { x: 6, y: 5, size: 1, label: 'PRM' },
+  Kumera: { x: 8, y: 8.5, size: 1, label: 'Kumera' },
+  Hundested: { x: 8.5, y: 8, size: 0.5, label: 'Hundested' },
+  Wartsila: { x: 9.5, y: 10, size: 5, label: '瓦锡兰' },
+};
+
+// ============================================================
+// 行业趋势与法规影响 (2025-2026)
+// ============================================================
+export const industryTrends = {
+  globalMarket: {
+    size2025: 'USD 74亿 (约530亿RMB)',
+    cagr: '5.4%',
+    forecastTarget: 'USD 125亿 (2035年)',
+    sources: 'Fundamental Business Insights, Research Nester, Verified Market Research',
+    dominantRegion: '亚太 (中国造船完工量占全球55.7%，新接订单占74.1%)'
+  },
+  chinaMarket: {
+    hangchiShare: '约65% (国内船用齿轮箱市场)',
+    hangchiRevenue2024: '船用产品收入10.95亿元，同比+22.22%',
+    trend: '国产替代趋势明确，新能源/混动/电驱齿轮箱增长态势',
+    keyPlayers: '杭齿前进(601177) >> 重齿(CSSC) > 南高齿(NGC) > 发达(FADA)'
+  },
+  hybridElectric: {
+    marketSize2025: 'USD 50.7亿',
+    cagr: '11.9%',
+    forecast2030: 'USD 85.3亿',
+    keyPlayers: 'Wartsila(PTO/PTI), ZF(PTI扩展), TwinDisc(Go Electric/MGE/MGH), Reintjes(HS混合系统)',
+    hangchiStatus: '电驱和混动齿轮箱正在推进，长江新能源客船/散货船已取得批量订单'
+  },
+  imoRegulations: {
+    eexi: 'EEXI现有船舶能效指数 - Phase 2审查2026-2028，涉及功率限制和螺旋桨优化',
+    cii: 'CII碳强度指标 - 年度评级A-E，2025年审查可能收紧目标',
+    netZero: 'IMO净零框架 - 2030年≥5%零排放燃料，2040年减排70-80%，2050年净零。实施预计2027年开始',
+    greenCorridors: '全球84条绿色航运走廊(2025)，4条已达实现阶段',
+    impact: '功率限制影响齿轮箱选型，CII驱动混合推进需求，旧船改造市场为齿轮箱带来替换需求'
+  },
+  cppVsFpp: {
+    cppMarket2024: 'USD 38亿',
+    cppGrowth: 'CAGR 5%',
+    cppAdvantage: '变工况（拖轮/OSV/军船）、混合推进协同、EEXI合规灵活性',
+    fppDominance: '远洋散货/油轮固定工况船型',
+    trend: 'CPP在价值维度增长，与混合推进结合趋势明显'
+  }
 };
 
 // ============================================================
@@ -803,5 +952,6 @@ export default {
   tcoParameters,
   shipTypeDefaults,
   positioningMapData,
+  industryTrends,
   getEnhancedProducts
 };

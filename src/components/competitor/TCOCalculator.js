@@ -5,7 +5,8 @@
 
 import React, { useState, useMemo } from 'react';
 import { Card, Row, Col, Form, Badge, Alert } from 'react-bootstrap';
-import ReactECharts from 'echarts-for-react';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
+import echarts from '../../config/echartsSetup';
 import { calculateTCO, compareTCO, getShipTypeOptions, formatTCOForChart, tcoDefaults } from '../../utils/tcoCalculator';
 import { getManufacturerInfo } from '../../utils/competitorAnalysis';
 import { manufacturerColors } from '../../data/competitorData';
@@ -227,12 +228,12 @@ const TCOCalculator = ({ hangchiProduct, competitors = [], colors }) => {
         <Row>
           <Col lg={6} className="mb-3">
             {stackedBarOption && (
-              <ReactECharts option={stackedBarOption} style={{ height: '350px', width: '100%' }} opts={{ renderer: 'svg' }} />
+              <ReactEChartsCore echarts={echarts} option={stackedBarOption} style={{ height: '350px', width: '100%' }} opts={{ renderer: 'svg' }} />
             )}
           </Col>
           <Col lg={6} className="mb-3">
             {cumulativeOption && (
-              <ReactECharts option={cumulativeOption} style={{ height: '350px', width: '100%' }} opts={{ renderer: 'svg' }} />
+              <ReactEChartsCore echarts={echarts} option={cumulativeOption} style={{ height: '350px', width: '100%' }} opts={{ renderer: 'svg' }} />
             )}
           </Col>
         </Row>

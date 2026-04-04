@@ -15,6 +15,7 @@ import {
 } from '../../utils/competitorAnalysis';
 import { hangchiAdvantages, manufacturerColors } from '../../data/competitorData';
 import { techDimensionsTemplate } from '../../data/competitorDataEnhanced';
+import { getCatalogsForManufacturer } from '../../data/competitorDrawings';
 import { FreshnessDot } from './DataFreshnessIndicator';
 import { formatPowerRange } from '../../utils/gearboxDataEnhancer';
 
@@ -144,6 +145,34 @@ const ComparisonTable = ({
                 </OverlayTrigger>
               </td>
             ))}
+          </tr>
+
+          <tr>
+            <td>外形图资料</td>
+            <td>
+              <Badge bg="success" className="cursor-pointer">
+                <i className="bi bi-file-earmark-pdf me-1"></i>外形图库
+              </Badge>
+            </td>
+            {competitors.map(comp => {
+              const drawingData = getCatalogsForManufacturer(comp.manufacturer);
+              const hasDrawings = drawingData.status === 'available' && drawingData.catalogs.length > 0;
+              return (
+                <td key={comp.model}>
+                  {hasDrawings ? (
+                    <Badge bg="primary" className="cursor-pointer" style={{ cursor: 'pointer' }}
+                      title={`${drawingData.catalogs.length}份PDF (点击竞品外形图Tab查看)`}>
+                      <i className="bi bi-file-earmark-pdf me-1"></i>
+                      {drawingData.catalogs.length}份PDF
+                    </Badge>
+                  ) : (
+                    <span className="text-muted" style={{ fontSize: '0.85em' }}>
+                      {drawingData.reason ? '暂无' : '-'}
+                    </span>
+                  )}
+                </td>
+              );
+            })}
           </tr>
 
           {/* 技术参数组 */}
@@ -293,7 +322,7 @@ const ComparisonTable = ({
             </td>
             {competitors.map(comp => {
               const info = getManufacturerInfo(comp.manufacturer);
-              const isImport = ['ZF', 'Reintjes', 'TwinDisc', 'MassonMarine'].includes(comp.manufacturer);
+              const isImport = ['ZF', 'Reintjes', 'TwinDisc', 'MassonMarine', 'DongI', 'Kanzaki', 'PRM', 'Kumera', 'Hundested', 'Wartsila'].includes(comp.manufacturer);
               return (
                 <td key={comp.model} className="text-muted">
                   {isImport ? '48-72小时' : '24-48小时'}
@@ -309,7 +338,7 @@ const ComparisonTable = ({
               </strong>
             </td>
             {competitors.map(comp => {
-              const isImport = ['ZF', 'Reintjes', 'TwinDisc', 'MassonMarine'].includes(comp.manufacturer);
+              const isImport = ['ZF', 'Reintjes', 'TwinDisc', 'MassonMarine', 'DongI', 'Kanzaki', 'PRM', 'Kumera', 'Hundested', 'Wartsila'].includes(comp.manufacturer);
               const isDomesticLarge = ['CZCG', 'NGC'].includes(comp.manufacturer);
               return (
                 <td key={comp.model} className="text-muted">
@@ -324,7 +353,7 @@ const ComparisonTable = ({
               <strong className="text-success">{hangchiAdvantages.serviceAdvantage.spareParts}</strong>
             </td>
             {competitors.map(comp => {
-              const isImport = ['ZF', 'Reintjes', 'TwinDisc', 'MassonMarine'].includes(comp.manufacturer);
+              const isImport = ['ZF', 'Reintjes', 'TwinDisc', 'MassonMarine', 'DongI', 'Kanzaki', 'PRM', 'Kumera', 'Hundested', 'Wartsila'].includes(comp.manufacturer);
               return (
                 <td key={comp.model} className="text-muted">
                   {isImport ? '进口4-8周' : '国产1-2周'}

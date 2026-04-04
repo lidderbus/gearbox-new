@@ -30,7 +30,22 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/06-16A-26.webp",
         "controlType": "手控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "小型渔船",
+            "内河船",
+            "游艇"
+        ],
+        "inputInterfaces": {
+            "plainFlange": true,
+            "boltPatterns": [
+                "8-φ11",
+                "8-φ14"
+            ]
+        }
     },
     {
         "model": "120B",
@@ -82,7 +97,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-135.webp",
         "priceSource": "2026官方出厂价",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "source": "杭齿厂选型手册2025版5月版",
+        "imageUrl": "/images/gearbox/Advance-135.webp"
     },
     {
         "model": "120C",
@@ -140,7 +157,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-120C-HCV120.webp",
         "priceSource": "2026官方出厂价",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "source": "杭齿厂选型手册2025版5月版",
+        "imageUrl": "/images/gearbox/Advance-120C-HCV120.webp"
     },
     {
         "model": "135",
@@ -201,7 +220,9 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-135.webp",
         "priceSource": "2026官方出厂价",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "source": "杭齿厂选型手册2025版5月版",
+        "imageUrl": "/images/gearbox/Advance-135.webp"
     },
     {
         "model": "16A",
@@ -238,7 +259,22 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/06-16A-26.webp",
         "controlType": "手控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "plainFlange": true,
+            "boltPatterns": [
+                "8-φ11",
+                "8-φ14"
+            ]
+        }
     },
     {
         "model": "26",
@@ -273,7 +309,25 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/06-16A-26.webp",
         "controlType": "手控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "8-φ11",
+                "12-φ12.5"
+            ]
+        }
     },
     {
         "model": "2GWH1060",
@@ -308,7 +362,27 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-2GWH.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "2GWH1830",
@@ -343,7 +417,27 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-2GWH.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "2GWH3140",
@@ -378,13 +472,33 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-2GWH.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "2GWH400",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1000,
         "ratios": [
             2.04,
             2.52,
@@ -403,7 +517,35 @@ export const completeGearboxData = [
         "weight": 1500,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1036×1280×950"
+        "dimensions": "1036×1280×950",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ],
+        "maxPower": 280,
+        "minPower": 112,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 85000,
+        "discountRate": 0.1,
+        "introduction": "2GWH400是杭州前进齿轮箱集团生产的中小功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比2.04~3.57，适用输入转速400~1000r/min，额定推力80kN。适用于内河运输船、工作船、拖船等船舶。",
+        "image": "/images/gearbox/Advance-2GWH.webp",
+        "imageUrl": "/images/gearbox/Advance-2GWH.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "2GWH4100",
@@ -438,7 +580,27 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-2GWH.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "2GWH5410",
@@ -473,13 +635,33 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-2GWH.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "2GWH600",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1000,
         "ratios": [
             2.04,
             2.52,
@@ -498,7 +680,35 @@ export const completeGearboxData = [
         "weight": 2200,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1198×1376×1298"
+        "dimensions": "1198×1376×1298",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ],
+        "maxPower": 420,
+        "minPower": 168,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 115000,
+        "discountRate": 0.1,
+        "introduction": "2GWH600是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比2.04~3.57，适用输入转速400~1000r/min，额定推力100kN。适用于内河运输船、工作船、拖船等船舶。",
+        "image": "/images/gearbox/Advance-2GWH.webp",
+        "imageUrl": "/images/gearbox/Advance-2GWH.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "2GWH7050",
@@ -533,13 +743,33 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-2GWH.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "2GWH800",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 900,
         "ratios": [
             2.04,
             2.52,
@@ -558,7 +788,35 @@ export const completeGearboxData = [
         "weight": 2800,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1238×1472×1315"
+        "dimensions": "1238×1472×1315",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ],
+        "maxPower": 468,
+        "minPower": 208,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 135000,
+        "discountRate": 0.1,
+        "introduction": "2GWH800是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比2.04~3.57，适用输入转速400~900r/min，额定推力140kN。适用于内河运输船、工作船、拖船等船舶。",
+        "image": "/images/gearbox/Advance-2GWH.webp",
+        "imageUrl": "/images/gearbox/Advance-2GWH.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "2GWH9250",
@@ -593,7 +851,27 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-2GWH.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "300",
@@ -655,7 +933,17 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
     },
     {
         "model": "40A",
@@ -700,7 +988,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/40A.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ]
     },
     {
         "model": "D300A",
@@ -758,7 +1054,17 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
     },
     {
         "model": "DT10000",
@@ -794,14 +1100,34 @@ export const completeGearboxData = [
             3.505,
             3.505
         ],
-        "dataSource": "dwgTechParams_estimated",
         "image": "/images/gearbox/Advance-DT.webp",
         "price": 613000,
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "电控",
         "rotationDirection": "相反",
-        "dimensions": "1200×1500×1500"
+        "dimensions": "1200×1500×1500",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "DT10000是杭州前进齿轮箱集团生产的大功率电力推进船用齿轮箱，采用电控操纵方式，减速比1.50~5.95，适用输入转速750~1500r/min，额定推力279kN。适用于大型运输船、集装箱船、散货船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-DT.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE24寸",
+                "SAE30寸"
+            ],
+            "plainFlange": true
+        }
     },
     {
         "model": "DT1400",
@@ -831,10 +1157,6 @@ export const completeGearboxData = [
         "maxPower": 1200,
         "minPower": 204,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             0.8,
             0.77,
@@ -857,7 +1179,18 @@ export const completeGearboxData = [
             "note": "大型电推齿轮箱"
         },
         "image": "/images/gearbox/Advance-DT.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "工作船"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-DT.webp"
     },
     {
         "model": "DT1500",
@@ -887,10 +1220,6 @@ export const completeGearboxData = [
         "maxPower": 1688,
         "minPower": 194,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             1.125,
             0.967,
@@ -914,7 +1243,18 @@ export const completeGearboxData = [
             "note": "大型电推齿轮箱"
         },
         "image": "/images/gearbox/Advance-DT.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "工作船"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-DT.webp"
     },
     {
         "model": "DT180",
@@ -944,10 +1284,6 @@ export const completeGearboxData = [
         "maxPower": 125,
         "minPower": 11,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            750,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             0.083,
             0.083,
@@ -970,7 +1306,17 @@ export const completeGearboxData = [
             "note": "小型电推齿轮箱"
         },
         "image": "/images/gearbox/Advance-DT.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河船",
+            "小型运输船",
+            "工作艇"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-DT.webp"
     },
     {
         "model": "DT210",
@@ -1000,10 +1346,6 @@ export const completeGearboxData = [
         "maxPower": 150,
         "minPower": 20,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            750,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             0.1,
             0.1,
@@ -1026,7 +1368,17 @@ export const completeGearboxData = [
             "note": "小型电推齿轮箱"
         },
         "image": "/images/gearbox/Advance-DT.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河船",
+            "小型运输船",
+            "工作艇"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-DT.webp"
     },
     {
         "model": "DT240",
@@ -1056,10 +1408,6 @@ export const completeGearboxData = [
         "maxPower": 240,
         "minPower": 15,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            750,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             0.16,
             0.16,
@@ -1086,7 +1434,17 @@ export const completeGearboxData = [
             "note": "小型电推齿轮箱"
         },
         "image": "/images/gearbox/Advance-DT.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河船",
+            "小型运输船",
+            "工作艇"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-DT.webp"
     },
     {
         "model": "DT2400",
@@ -1117,10 +1475,6 @@ export const completeGearboxData = [
         "maxPower": 2199,
         "minPower": 170,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            750,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             1.466,
             1.466,
@@ -1144,13 +1498,25 @@ export const completeGearboxData = [
             "note": "超大型电推齿轮箱"
         },
         "image": "/images/gearbox/Advance-DT.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-DT.webp"
     },
     {
         "model": "DT2500",
         "series": "DT",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 750,
+        "maxSpeed": 1500,
         "ratios": [
             1.48,
             1.86,
@@ -1163,13 +1529,39 @@ export const completeGearboxData = [
             1.46,
             1.36
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 110,
+        "centerDistance": 350,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 3600,
         "controlType": "电控",
         "rotationDirection": "相反",
-        "dimensions": "920×1210×1210"
+        "dimensions": "920×1210×1210",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船"
+        ],
+        "maxPower": 2505,
+        "minPower": 1020,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 150000,
+        "discountRate": 0.1,
+        "introduction": "DT2500是杭州前进齿轮箱集团生产的中大功率电力推进船用齿轮箱，采用电控操纵方式，减速比1.48~2.14，适用输入转速750~1500r/min，额定推力110kN。适用于大型运输船、集装箱船、散货船等船舶。",
+        "image": "/images/gearbox/Advance-DT.webp",
+        "imageUrl": "/images/gearbox/Advance-DT.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE24寸",
+                "SAE30寸"
+            ],
+            "plainFlange": true
+        }
     },
     {
         "model": "DT280",
@@ -1197,10 +1589,6 @@ export const completeGearboxData = [
         "maxPower": 306,
         "minPower": 57,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            750,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             0.204,
             0.204,
@@ -1221,13 +1609,23 @@ export const completeGearboxData = [
             "note": "中小型电推齿轮箱"
         },
         "image": "/images/gearbox/Advance-DT.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河船",
+            "小型运输船",
+            "工作艇"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-DT.webp"
     },
     {
         "model": "DT4000",
         "series": "DT",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 750,
+        "maxSpeed": 1500,
         "ratios": [
             1.48,
             1.86,
@@ -1238,13 +1636,39 @@ export const completeGearboxData = [
             2.5,
             2.2
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 120,
+        "centerDistance": 365,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 5000,
         "controlType": "电控",
         "rotationDirection": "相反",
-        "dimensions": "923×1230×1180"
+        "dimensions": "923×1230×1180",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船"
+        ],
+        "maxPower": 3750,
+        "minPower": 1650,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 160000,
+        "discountRate": 0.1,
+        "introduction": "DT4000是杭州前进齿轮箱集团生产的大功率电力推进船用齿轮箱，采用电控操纵方式，减速比1.48~2.04，适用输入转速750~1500r/min，额定推力120kN。适用于大型运输船、集装箱船、散货船等船舶。",
+        "image": "/images/gearbox/Advance-DT.webp",
+        "imageUrl": "/images/gearbox/Advance-DT.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE24寸",
+                "SAE30寸"
+            ],
+            "plainFlange": true
+        }
     },
     {
         "model": "DT4300",
@@ -1274,10 +1698,6 @@ export const completeGearboxData = [
         "maxPower": 2261,
         "minPower": 330,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            750,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             1.507,
             1.507,
@@ -1301,7 +1721,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-DT.webp",
         "controlType": "电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-DT.webp"
     },
     {
         "model": "DT580",
@@ -1331,10 +1762,6 @@ export const completeGearboxData = [
         "maxPower": 504,
         "minPower": 65,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            750,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             0.336,
             0.27,
@@ -1357,7 +1784,17 @@ export const completeGearboxData = [
             "note": "中型电推齿轮箱"
         },
         "image": "/images/gearbox/Advance-DT.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河船",
+            "小型运输船",
+            "工作艇"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-DT.webp"
     },
     {
         "model": "DT770",
@@ -1385,10 +1822,6 @@ export const completeGearboxData = [
         "maxPower": 720,
         "minPower": 119,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            750,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             0.48,
             0.443,
@@ -1398,17 +1831,6 @@ export const completeGearboxData = [
             0.214,
             0.186,
             0.158
-        ],
-        "transferCapacity": [
-            0.52,
-            0.48,
-            0.42,
-            0.36,
-            0.32,
-            0.28,
-            0.24,
-            0.21,
-            0.18
         ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-dt.png",
         "introduction": "DT系列工业齿轮箱适用于各类工业机械的减速传动。采用硬齿面齿轮,承载能力强,使用寿命长。",
@@ -1424,7 +1846,17 @@ export const completeGearboxData = [
             "note": "中型电推齿轮箱"
         },
         "image": "/images/gearbox/Advance-DT.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河船",
+            "小型运输船",
+            "工作艇"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-DT.webp"
     },
     {
         "model": "DT900",
@@ -1453,10 +1885,6 @@ export const completeGearboxData = [
         "maxPower": 951,
         "minPower": 100,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            750,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             0.634,
             0.528,
@@ -1468,18 +1896,6 @@ export const completeGearboxData = [
             0.206,
             0.173
         ],
-        "transferCapacity": [
-            0.634,
-            0.528,
-            0.527,
-            0.446,
-            0.408,
-            0.332,
-            0.243,
-            0.206,
-            0.173,
-            0.133
-        ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-dt.png",
         "introduction": "DT系列工业齿轮箱适用于各类工业机械的减速传动。采用硬齿面齿轮,承载能力强,使用寿命长。",
         "inputInterfaces": {
@@ -1490,13 +1906,24 @@ export const completeGearboxData = [
             "note": "中大型电推齿轮箱"
         },
         "image": "/images/gearbox/Advance-DT.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "工作船"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-DT.webp"
     },
     {
         "model": "GC1000",
         "series": "GC配变距桨",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1400,
         "ratios": [
             1.5,
             2,
@@ -1515,13 +1942,40 @@ export const completeGearboxData = [
         "weight": 1800,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2500×2100×2300"
+        "dimensions": "2500×2100×2300",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "渔船",
+            "工作船",
+            "巡逻艇"
+        ],
+        "maxPower": 1162,
+        "minPower": 268,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 1500000,
+        "discountRate": 0.1,
+        "introduction": "GC1000是杭州前进齿轮箱集团生产的中大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比1.50~3.00，适用输入转速400~1400r/min，额定推力1400kN。适用于渔船、工作船、巡逻艇等船舶。",
+        "image": "/images/gearbox/Advance-GC.webp",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640"
+            ]
+        }
     },
     {
         "model": "GC1400",
         "series": "GC配变距桨",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1200,
         "ratios": [
             1.5,
             2,
@@ -1540,13 +1994,40 @@ export const completeGearboxData = [
         "weight": 2500,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "3500×2940×3220"
+        "dimensions": "3500×2940×3220",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "渔船",
+            "工作船",
+            "巡逻艇"
+        ],
+        "maxPower": 1320,
+        "minPower": 352,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 2500000,
+        "discountRate": 0.1,
+        "introduction": "GC1400是杭州前进齿轮箱集团生产的中大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比1.50~3.00，适用输入转速400~1200r/min，额定推力1400kN。适用于渔船、工作船、巡逻艇等船舶。",
+        "image": "/images/gearbox/Advance-GC.webp",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640"
+            ]
+        }
     },
     {
         "model": "GC600",
         "series": "GC配变距桨",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1800,
         "ratios": [
             1.5,
             2,
@@ -1565,13 +2046,40 @@ export const completeGearboxData = [
         "weight": 850,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1500×1260×1380"
+        "dimensions": "1500×1260×1380",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "渔船",
+            "工作船",
+            "巡逻艇"
+        ],
+        "maxPower": 846,
+        "minPower": 152,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 400000,
+        "discountRate": 0.1,
+        "introduction": "GC600是杭州前进齿轮箱集团生产的中功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比1.50~3.00，适用输入转速400~1800r/min，额定推力360kN。适用于渔船、工作船、巡逻艇等船舶。",
+        "image": "/images/gearbox/Advance-GC.webp",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640"
+            ]
+        }
     },
     {
         "model": "GC800",
         "series": "GC配变距桨",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1600,
         "ratios": [
             1.5,
             2,
@@ -1590,7 +2098,34 @@ export const completeGearboxData = [
         "weight": 1200,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2000×1680×1840"
+        "dimensions": "2000×1680×1840",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "渔船",
+            "工作船",
+            "巡逻艇"
+        ],
+        "maxPower": 1008,
+        "minPower": 200,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 850000,
+        "discountRate": 0.1,
+        "introduction": "GC800是杭州前进齿轮箱集团生产的中大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比1.50~3.00，适用输入转速400~1600r/min，额定推力800kN。适用于渔船、工作船、巡逻艇等船舶。",
+        "image": "/images/gearbox/Advance-GC.webp",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640"
+            ]
+        }
     },
     {
         "model": "GCH1000",
@@ -1620,7 +2155,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2545×2138×2341"
+        "dimensions": "2545×2138×2341",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1800,
+        "priceSource": "估算价格",
+        "price": 1500000,
+        "discountRate": 0.1,
+        "introduction": "GCH1000是杭州前进齿轮箱集团生产的超大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比2.00~3.95，适用输入转速200~800r/min，额定推力1400kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCH320",
@@ -1656,7 +2219,26 @@ export const completeGearboxData = [
         "centerDistance": 320,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "800×672×736"
+        "dimensions": "800×672×736",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "weight": 408,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640"
+            ]
+        }
     },
     {
         "model": "GCH1002L",
@@ -1679,7 +2261,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2545×2138×2341"
+        "dimensions": "2545×2138×2341",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1734,
+        "priceSource": "估算价格",
+        "price": 1428221,
+        "discountRate": 0.1,
+        "introduction": "GCH1002L是杭州前进齿轮箱集团生产的超大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比3.94~3.94，适用输入转速400~600r/min，额定推力800kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCH1002R",
@@ -1702,7 +2312,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2545×2138×2341"
+        "dimensions": "2545×2138×2341",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1734,
+        "priceSource": "估算价格",
+        "price": 1428221,
+        "discountRate": 0.1,
+        "introduction": "GCH1002R是杭州前进齿轮箱集团生产的超大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比3.94~3.94，适用输入转速400~600r/min，额定推力800kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCH350",
@@ -1736,7 +2374,26 @@ export const completeGearboxData = [
         "centerDistance": 350,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "875×735×805"
+        "dimensions": "875×735×805",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "weight": 454,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640"
+            ]
+        }
     },
     {
         "model": "GCH390",
@@ -1772,7 +2429,26 @@ export const completeGearboxData = [
         "centerDistance": 390,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "975×819×897"
+        "dimensions": "975×819×897",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "weight": 517,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640"
+            ]
+        }
     },
     {
         "model": "GCH410",
@@ -1808,7 +2484,30 @@ export const completeGearboxData = [
         "centerDistance": 410,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1025×861×943"
+        "dimensions": "1025×861×943",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 549,
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCH490",
@@ -1838,7 +2537,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1225×1029×1127"
+        "dimensions": "1225×1029×1127",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 680,
+        "priceSource": "估算价格",
+        "price": 316667,
+        "discountRate": 0.1,
+        "introduction": "GCH490是杭州前进齿轮箱集团生产的中大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比2.03~3.95，适用输入转速400~1400r/min，额定推力270kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCH540",
@@ -1868,7 +2595,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1350×1134×1242"
+        "dimensions": "1350×1134×1242",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 764,
+        "priceSource": "估算价格",
+        "price": 358333,
+        "discountRate": 0.1,
+        "introduction": "GCH540是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比1.97~3.95，适用输入转速400~1200r/min，额定推力290kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCH590",
@@ -1898,7 +2653,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1475×1239×1357"
+        "dimensions": "1475×1239×1357",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 850,
+        "priceSource": "估算价格",
+        "price": 400000,
+        "discountRate": 0.1,
+        "introduction": "GCH590是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比1.97~3.95，适用输入转速400~1200r/min，额定推力360kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCH660",
@@ -1928,7 +2711,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1650×1386×1518"
+        "dimensions": "1650×1386×1518",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 953,
+        "priceSource": "估算价格",
+        "price": 532453,
+        "discountRate": 0.1,
+        "introduction": "GCH660是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比2.00~3.95，适用输入转速400~1200r/min，额定推力540kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCH750",
@@ -1972,7 +2783,30 @@ export const completeGearboxData = [
         "centerDistance": 750,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1875×1575×1725"
+        "dimensions": "1875×1575×1725",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1061,
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCH760",
@@ -2006,7 +2840,30 @@ export const completeGearboxData = [
         "centerDistance": 768,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1920×1613×1766"
+        "dimensions": "1920×1613×1766",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1085,
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCH850",
@@ -2042,7 +2899,30 @@ export const completeGearboxData = [
         "centerDistance": 855,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2138×1796×1966"
+        "dimensions": "2138×1796×1966",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1200,
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCH880",
@@ -2072,7 +2952,30 @@ export const completeGearboxData = [
         "centerDistance": 880,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2200×1848×2024"
+        "dimensions": "2200×1848×2024",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1292,
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCH900",
@@ -2106,7 +3009,30 @@ export const completeGearboxData = [
         "centerDistance": 900,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2250×1890×2070"
+        "dimensions": "2250×1890×2070",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1366,
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCH950",
@@ -2136,7 +3062,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2413×2027×2220"
+        "dimensions": "2413×2027×2220",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1605,
+        "priceSource": "估算价格",
+        "price": 1288650,
+        "discountRate": 0.1,
+        "introduction": "GCH950是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比2.00~3.95，适用输入转速200~650r/min，额定推力1000kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHE11",
@@ -2178,7 +3132,30 @@ export const completeGearboxData = [
         "centerDistance": 735,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1838×1544×1690"
+        "dimensions": "1838×1544×1690",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1042,
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHE15",
@@ -2207,7 +3184,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2025×1701×1863"
+        "dimensions": "2025×1701×1863",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1141,
+        "priceSource": "估算价格",
+        "price": 773585,
+        "discountRate": 0.1,
+        "introduction": "GCHE15是杭州前进齿轮箱集团生产的中大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比6.50~8.00，适用输入转速400~1600r/min，额定推力300kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHE20",
@@ -2236,7 +3241,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1700×1428×1564"
+        "dimensions": "1700×1428×1564",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1274,
+        "priceSource": "估算价格",
+        "price": 929755,
+        "discountRate": 0.1,
+        "introduction": "GCHE20是杭州前进齿轮箱集团生产的中大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比6.50~8.00，适用输入转速400~1400r/min，额定推力350kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHE26",
@@ -2265,7 +3298,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2400×2016×2208"
+        "dimensions": "2400×2016×2208",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1587,
+        "priceSource": "估算价格",
+        "price": 1268712,
+        "discountRate": 0.1,
+        "introduction": "GCHE26是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比6.50~8.00，适用输入转速400~1200r/min，额定推力450kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHE33",
@@ -2294,7 +3355,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2638×2216×2427"
+        "dimensions": "2638×2216×2427",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1878,
+        "priceSource": "估算价格",
+        "price": 1611446,
+        "discountRate": 0.1,
+        "introduction": "GCHE33是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比6.50~8.00，适用输入转速400~1200r/min，额定推力550kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHE44",
@@ -2334,7 +3423,30 @@ export const completeGearboxData = [
         "centerDistance": 1185,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2963×2489×2726"
+        "dimensions": "2963×2489×2726",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 2152,
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHE5",
@@ -2352,7 +3464,7 @@ export const completeGearboxData = [
         "thrust": 170,
         "centerDistance": 570,
         "dimensions": "1425×1197×1311",
-        "weight": null,
+        "weight": 816,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 664820,
         "discountRate": 0.1,
@@ -2365,7 +3477,25 @@ export const completeGearboxData = [
         "introduction": "GCS系列齿轮箱是GC系列的标准版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640"
+            ]
+        }
     },
     {
         "model": "GCHE6",
@@ -2383,7 +3513,7 @@ export const completeGearboxData = [
         "thrust": 200,
         "centerDistance": 615,
         "dimensions": "1538×1292×1415",
-        "weight": null,
+        "weight": 883,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 760805,
         "discountRate": 0.1,
@@ -2396,7 +3526,25 @@ export const completeGearboxData = [
         "introduction": "GCS系列齿轮箱是GC系列的标准版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640"
+            ]
+        }
     },
     {
         "model": "GCHE9",
@@ -2414,7 +3562,7 @@ export const completeGearboxData = [
         "thrust": 270,
         "centerDistance": 700,
         "dimensions": "1750×1470×1610",
-        "weight": null,
+        "weight": 995,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 962000,
         "discountRate": 0.1,
@@ -2427,7 +3575,25 @@ export const completeGearboxData = [
         "introduction": "GCS系列齿轮箱是GC系列的标准版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640"
+            ]
+        }
     },
     {
         "model": "GCHT108",
@@ -2457,7 +3623,30 @@ export const completeGearboxData = [
         "centerDistance": 1230,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "3075×2583×2829"
+        "dimensions": "3075×2583×2829",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 2247,
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHT11",
@@ -2495,7 +3684,30 @@ export const completeGearboxData = [
         "centerDistance": 570,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1425×1197×1311"
+        "dimensions": "1425×1197×1311",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 816,
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHT115",
@@ -2523,7 +3735,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "3150×2646×2898"
+        "dimensions": "3150×2646×2898",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 2310,
+        "priceSource": "估算价格",
+        "price": 2228916,
+        "discountRate": 0.1,
+        "introduction": "GCHT115是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.50~6.00，适用输入转速200~650r/min，额定推力1400kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHT135",
@@ -2551,7 +3791,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "3375×2835×3105"
+        "dimensions": "3375×2835×3105",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 2500,
+        "priceSource": "估算价格",
+        "price": 2500000,
+        "discountRate": 0.1,
+        "introduction": "GCHT135是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.50~6.00，适用输入转速200~650r/min，额定推力1400kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHT15",
@@ -2579,7 +3847,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1575×1323×1449"
+        "dimensions": "1575×1323×1449",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 903,
+        "priceSource": "估算价格",
+        "price": 467925,
+        "discountRate": 0.1,
+        "introduction": "GCHT15是杭州前进齿轮箱集团生产的中大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.46~5.96，适用输入转速400~1600r/min，额定推力270kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHT170",
@@ -2607,7 +3903,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "3575×3003×3289"
+        "dimensions": "3575×3003×3289",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 2679,
+        "priceSource": "估算价格",
+        "price": 2648148,
+        "discountRate": 0.1,
+        "introduction": "GCHT170是杭州前进齿轮箱集团生产的超大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.50~6.00，适用输入转速200~800r/min，额定推力1400kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHT20",
@@ -2635,7 +3959,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1700×1428×1564"
+        "dimensions": "1700×1428×1564",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 969,
+        "priceSource": "估算价格",
+        "price": 552830,
+        "discountRate": 0.1,
+        "introduction": "GCHT20是杭州前进齿轮箱集团生产的中大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.50~5.95，适用输入转速400~1400r/min，额定推力300kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHT26",
@@ -2663,7 +4015,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1875×1575×1725"
+        "dimensions": "1875×1575×1725",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1061,
+        "priceSource": "估算价格",
+        "price": 671698,
+        "discountRate": 0.1,
+        "introduction": "GCHT26是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.58~5.95，适用输入转速400~1200r/min，额定推力360kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHT33",
@@ -2691,7 +4071,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2050×1722×1886"
+        "dimensions": "2050×1722×1886",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1154,
+        "priceSource": "估算价格",
+        "price": 790566,
+        "discountRate": 0.1,
+        "introduction": "GCHT33是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.54~5.95，适用输入转速400~1200r/min，额定推力540kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHT44",
@@ -2719,7 +4127,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2310×1940×2125"
+        "dimensions": "2310×1940×2125",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1454,
+        "priceSource": "估算价格",
+        "price": 1125153,
+        "discountRate": 0.1,
+        "introduction": "GCHT44是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.52~5.96，适用输入转速400~1200r/min，额定推力600kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHT5",
@@ -2741,7 +4177,7 @@ export const completeGearboxData = [
         "thrust": 120,
         "centerDistance": 445,
         "dimensions": "1113×935×1023",
-        "weight": null,
+        "weight": 606,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 436445,
         "discountRate": 0.1,
@@ -2754,7 +4190,25 @@ export const completeGearboxData = [
         "introduction": "GCS系列齿轮箱是GC系列的标准版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640"
+            ]
+        }
     },
     {
         "model": "GCHT6",
@@ -2776,7 +4230,7 @@ export const completeGearboxData = [
         "thrust": 170,
         "centerDistance": 480,
         "dimensions": "1200×1008×1104",
-        "weight": null,
+        "weight": 664,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 494720,
         "discountRate": 0.1,
@@ -2789,7 +4243,25 @@ export const completeGearboxData = [
         "introduction": "GCS系列齿轮箱是GC系列的标准版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640"
+            ]
+        }
     },
     {
         "model": "GCHT66",
@@ -2831,7 +4303,30 @@ export const completeGearboxData = [
         "centerDistance": 1064,
         "dimensions": "3609×2639×2370",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1897,
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHT77",
@@ -2867,7 +4362,30 @@ export const completeGearboxData = [
         "centerDistance": 1100,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1920×1613×1766"
+        "dimensions": "1920×1613×1766",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1973,
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCHT9",
@@ -2889,7 +4407,7 @@ export const completeGearboxData = [
         "thrust": 220,
         "centerDistance": 545,
         "dimensions": "1363×1145×1254",
-        "weight": null,
+        "weight": 773,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 614645,
         "discountRate": 0.1,
@@ -2902,7 +4420,25 @@ export const completeGearboxData = [
         "introduction": "GCS系列齿轮箱是GC系列的标准版本。",
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640"
+            ]
+        }
     },
     {
         "model": "GCHT91",
@@ -2936,7 +4472,30 @@ export const completeGearboxData = [
         "centerDistance": 1190,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2975×2499×2737"
+        "dimensions": "2975×2499×2737",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 2163,
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCS1000",
@@ -2966,7 +4525,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2545×2138×2341"
+        "dimensions": "2545×2138×2341",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1800,
+        "priceSource": "估算价格",
+        "price": 1500000,
+        "discountRate": 0.1,
+        "introduction": "GCS1000是杭州前进齿轮箱集团生产的超大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比2.00~3.95，适用输入转速200~800r/min，额定推力1400kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCS320",
@@ -2990,7 +4577,7 @@ export const completeGearboxData = [
         "thrust": 100,
         "centerDistance": 320,
         "dimensions": "800×672×736",
-        "weight": null,
+        "weight": 408,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 264320,
         "discountRate": 0.1,
@@ -3014,7 +4601,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ]
     },
     {
         "model": "GCS350",
@@ -3038,7 +4634,7 @@ export const completeGearboxData = [
         "thrust": 113,
         "centerDistance": 350,
         "dimensions": "875×735×805",
-        "weight": null,
+        "weight": 454,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 300500,
         "discountRate": 0.1,
@@ -3062,7 +4658,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ]
     },
     {
         "model": "GCS390",
@@ -3086,7 +4691,7 @@ export const completeGearboxData = [
         "thrust": 140,
         "centerDistance": 390,
         "dimensions": "975×819×897",
-        "weight": null,
+        "weight": 517,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 353780,
         "discountRate": 0.1,
@@ -3110,7 +4715,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ]
     },
     {
         "model": "GCS410",
@@ -3134,7 +4748,7 @@ export const completeGearboxData = [
         "thrust": 175,
         "centerDistance": 410,
         "dimensions": "1025×861×943",
-        "weight": null,
+        "weight": 549,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 382580,
         "discountRate": 0.1,
@@ -3158,7 +4772,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ]
     },
     {
         "model": "GCS450",
@@ -3182,7 +4806,7 @@ export const completeGearboxData = [
         "thrust": 220,
         "centerDistance": 455,
         "dimensions": "1138×956×1047",
-        "weight": null,
+        "weight": 622,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 452645,
         "discountRate": 0.1,
@@ -3206,7 +4830,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ]
     },
     {
         "model": "GCS490",
@@ -3236,7 +4870,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1225×1029×1127"
+        "dimensions": "1225×1029×1127",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 680,
+        "priceSource": "估算价格",
+        "price": 316667,
+        "discountRate": 0.1,
+        "introduction": "GCS490是杭州前进齿轮箱集团生产的中大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比2.03~3.95，适用输入转速400~1400r/min，额定推力270kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCS540",
@@ -3266,7 +4928,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1350×1134×1242"
+        "dimensions": "1350×1134×1242",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 764,
+        "priceSource": "估算价格",
+        "price": 358333,
+        "discountRate": 0.1,
+        "introduction": "GCS540是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比1.97~3.95，适用输入转速400~1200r/min，额定推力290kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCS590",
@@ -3296,7 +4986,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1475×1239×1357"
+        "dimensions": "1475×1239×1357",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 850,
+        "priceSource": "估算价格",
+        "price": 400000,
+        "discountRate": 0.1,
+        "introduction": "GCS590是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比1.97~3.95，适用输入转速400~1200r/min，额定推力360kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCS660",
@@ -3326,7 +5044,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1650×1386×1518"
+        "dimensions": "1650×1386×1518",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 953,
+        "priceSource": "估算价格",
+        "price": 532453,
+        "discountRate": 0.1,
+        "introduction": "GCS660是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比2.00~3.95，适用输入转速400~1200r/min，额定推力540kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCS700B",
@@ -3375,7 +5121,18 @@ export const completeGearboxData = [
         "centerDistance": 700,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1750×1470×1610"
+        "dimensions": "1750×1470×1610",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 995
     },
     {
         "model": "GCS750",
@@ -3399,7 +5156,7 @@ export const completeGearboxData = [
         "thrust": 730,
         "centerDistance": 750,
         "dimensions": "1875×1575×1725",
-        "weight": null,
+        "weight": 1061,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 1092500,
         "discountRate": 0.1,
@@ -3423,7 +5180,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ]
     },
     {
         "model": "GCS760",
@@ -3447,7 +5214,7 @@ export const completeGearboxData = [
         "thrust": 750,
         "centerDistance": 768,
         "dimensions": "1920×1613×1766",
-        "weight": null,
+        "weight": 1085,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 1141683,
         "discountRate": 0.1,
@@ -3471,7 +5238,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ]
     },
     {
         "model": "GCS850",
@@ -3495,7 +5272,7 @@ export const completeGearboxData = [
         "thrust": 800,
         "centerDistance": 855,
         "dimensions": "2138×1796×1966",
-        "weight": null,
+        "weight": 1200,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 1395845,
         "discountRate": 0.1,
@@ -3519,7 +5296,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ]
     },
     {
         "model": "GCS880",
@@ -3560,7 +5347,18 @@ export const completeGearboxData = [
         "centerDistance": 880,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2200×1848×2024"
+        "dimensions": "2200×1848×2024",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1292
     },
     {
         "model": "GCS900",
@@ -3605,7 +5403,18 @@ export const completeGearboxData = [
         "centerDistance": 900,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2250×1890×2070"
+        "dimensions": "2250×1890×2070",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1366
     },
     {
         "model": "GCS950",
@@ -3635,7 +5444,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2413×2027×2220"
+        "dimensions": "2413×2027×2220",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1605,
+        "priceSource": "估算价格",
+        "price": 1288650,
+        "discountRate": 0.1,
+        "introduction": "GCS950是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比2.00~3.95，适用输入转速200~650r/min，额定推力1000kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCSE11",
@@ -3653,7 +5490,7 @@ export const completeGearboxData = [
         "thrust": 270,
         "centerDistance": 735,
         "dimensions": "1838×1544×1690",
-        "weight": null,
+        "weight": 1042,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 1052405,
         "discountRate": 0.1,
@@ -3677,7 +5514,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ]
     },
     {
         "model": "GCSE15",
@@ -3706,7 +5553,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2025×1701×1863"
+        "dimensions": "2025×1701×1863",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1141,
+        "priceSource": "估算价格",
+        "price": 773585,
+        "discountRate": 0.1,
+        "introduction": "GCSE15是杭州前进齿轮箱集团生产的中大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比6.50~8.00，适用输入转速400~1600r/min，额定推力300kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCSE20",
@@ -3735,7 +5610,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1700×1428×1564"
+        "dimensions": "1700×1428×1564",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1274,
+        "priceSource": "估算价格",
+        "price": 929755,
+        "discountRate": 0.1,
+        "introduction": "GCSE20是杭州前进齿轮箱集团生产的中大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比6.50~8.00，适用输入转速400~1400r/min，额定推力350kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCSE26",
@@ -3764,7 +5667,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2400×2016×2208"
+        "dimensions": "2400×2016×2208",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1587,
+        "priceSource": "估算价格",
+        "price": 1268712,
+        "discountRate": 0.1,
+        "introduction": "GCSE26是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比6.50~8.00，适用输入转速400~1200r/min，额定推力450kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCSE33",
@@ -3793,7 +5724,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2638×2216×2427"
+        "dimensions": "2638×2216×2427",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1878,
+        "priceSource": "估算价格",
+        "price": 1611446,
+        "discountRate": 0.1,
+        "introduction": "GCSE33是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比6.50~8.00，适用输入转速400~1200r/min，额定推力550kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCSE44",
@@ -3811,7 +5770,7 @@ export const completeGearboxData = [
         "thrust": 700,
         "centerDistance": 1185,
         "dimensions": "2963×2489×2726",
-        "weight": null,
+        "weight": 2152,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 2500000,
         "discountRate": 0.1,
@@ -3835,7 +5794,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ]
     },
     {
         "model": "GCSE5",
@@ -3853,7 +5822,7 @@ export const completeGearboxData = [
         "thrust": 170,
         "centerDistance": 570,
         "dimensions": "1425×1197×1311",
-        "weight": null,
+        "weight": 816,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 664820,
         "discountRate": 0.1,
@@ -3877,7 +5846,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ]
     },
     {
         "model": "GCSE6",
@@ -3895,7 +5873,7 @@ export const completeGearboxData = [
         "thrust": 200,
         "centerDistance": 615,
         "dimensions": "1538×1292×1415",
-        "weight": null,
+        "weight": 883,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 760805,
         "discountRate": 0.1,
@@ -3919,7 +5897,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ]
     },
     {
         "model": "GCSE9",
@@ -3937,7 +5924,7 @@ export const completeGearboxData = [
         "thrust": 270,
         "centerDistance": 700,
         "dimensions": "1750×1470×1610",
-        "weight": null,
+        "weight": 995,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 962000,
         "discountRate": 0.1,
@@ -3961,7 +5948,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ]
     },
     {
         "model": "GCST108",
@@ -3983,7 +5979,7 @@ export const completeGearboxData = [
         "thrust": 1400,
         "centerDistance": 1230,
         "dimensions": "3075×2583×2829",
-        "weight": null,
+        "weight": 2247,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 2500000,
         "discountRate": 0.1,
@@ -4007,7 +6003,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ]
     },
     {
         "model": "GCST11",
@@ -4029,7 +6035,7 @@ export const completeGearboxData = [
         "thrust": 220,
         "centerDistance": 570,
         "dimensions": "1425×1197×1311",
-        "weight": null,
+        "weight": 816,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 664820,
         "discountRate": 0.1,
@@ -4053,7 +6059,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ]
     },
     {
         "model": "GCST115",
@@ -4081,7 +6097,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "3150×2646×2898"
+        "dimensions": "3150×2646×2898",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 2310,
+        "priceSource": "估算价格",
+        "price": 2228916,
+        "discountRate": 0.1,
+        "introduction": "GCST115是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.50~6.00，适用输入转速200~650r/min，额定推力1400kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCST135",
@@ -4109,7 +6153,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "3375×2835×3105"
+        "dimensions": "3375×2835×3105",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 2500,
+        "priceSource": "估算价格",
+        "price": 2500000,
+        "discountRate": 0.1,
+        "introduction": "GCST135是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.50~6.00，适用输入转速200~650r/min，额定推力1400kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCST15",
@@ -4137,7 +6209,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1575×1323×1449"
+        "dimensions": "1575×1323×1449",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 903,
+        "priceSource": "估算价格",
+        "price": 467925,
+        "discountRate": 0.1,
+        "introduction": "GCST15是杭州前进齿轮箱集团生产的中大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.46~5.96，适用输入转速400~1600r/min，额定推力270kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCST170",
@@ -4165,7 +6265,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "3575×3003×3289"
+        "dimensions": "3575×3003×3289",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 2679,
+        "priceSource": "估算价格",
+        "price": 2648148,
+        "discountRate": 0.1,
+        "introduction": "GCST170是杭州前进齿轮箱集团生产的超大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.50~6.00，适用输入转速200~800r/min，额定推力1400kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCST20",
@@ -4193,7 +6321,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1700×1428×1564"
+        "dimensions": "1700×1428×1564",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 969,
+        "priceSource": "估算价格",
+        "price": 552830,
+        "discountRate": 0.1,
+        "introduction": "GCST20是杭州前进齿轮箱集团生产的中大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.50~5.95，适用输入转速400~1400r/min，额定推力300kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCST26",
@@ -4221,7 +6377,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1875×1575×1725"
+        "dimensions": "1875×1575×1725",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1061,
+        "priceSource": "估算价格",
+        "price": 671698,
+        "discountRate": 0.1,
+        "introduction": "GCST26是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.58~5.95，适用输入转速400~1200r/min，额定推力360kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCST33",
@@ -4249,7 +6433,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2050×1722×1886"
+        "dimensions": "2050×1722×1886",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1154,
+        "priceSource": "估算价格",
+        "price": 790566,
+        "discountRate": 0.1,
+        "introduction": "GCST33是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.54~5.95，适用输入转速400~1200r/min，额定推力540kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCST44",
@@ -4277,7 +6489,35 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2310×1940×2125"
+        "dimensions": "2310×1940×2125",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ],
+        "weight": 1454,
+        "priceSource": "估算价格",
+        "price": 1125153,
+        "discountRate": 0.1,
+        "introduction": "GCST44是杭州前进齿轮箱集团生产的大功率配变距桨船用齿轮箱，采用气控/电控操纵方式，减速比4.52~5.96，适用输入转速400~1200r/min，额定推力600kN。适用于大型运输船、海工船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE0#18寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ770",
+                "φ908"
+            ]
+        }
     },
     {
         "model": "GCST5",
@@ -4299,7 +6539,7 @@ export const completeGearboxData = [
         "thrust": 120,
         "centerDistance": 445,
         "dimensions": "1113×935×1023",
-        "weight": null,
+        "weight": 606,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 436445,
         "discountRate": 0.1,
@@ -4323,7 +6563,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ]
     },
     {
         "model": "GCST6",
@@ -4345,7 +6594,7 @@ export const completeGearboxData = [
         "thrust": 170,
         "centerDistance": 480,
         "dimensions": "1200×1008×1104",
-        "weight": null,
+        "weight": 664,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 494720,
         "discountRate": 0.1,
@@ -4369,7 +6618,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ]
     },
     {
         "model": "GCST66",
@@ -4391,7 +6649,7 @@ export const completeGearboxData = [
         "thrust": 1000,
         "centerDistance": 1064,
         "dimensions": "3609×2639×2370",
-        "weight": null,
+        "weight": 1897,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 2117773,
         "discountRate": 0.1,
@@ -4415,7 +6673,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ]
     },
     {
         "model": "GCST77",
@@ -4433,7 +6701,7 @@ export const completeGearboxData = [
         "thrust": 1000,
         "centerDistance": 1100,
         "dimensions": "1920×1613×1766",
-        "weight": null,
+        "weight": 1973,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 2258000,
         "discountRate": 0.1,
@@ -4457,7 +6725,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ]
     },
     {
         "model": "GCST9",
@@ -4479,7 +6757,7 @@ export const completeGearboxData = [
         "thrust": 220,
         "centerDistance": 545,
         "dimensions": "1363×1145×1254",
-        "weight": null,
+        "weight": 773,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 614645,
         "discountRate": 0.1,
@@ -4503,7 +6781,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ]
     },
     {
         "model": "GCST91",
@@ -4521,7 +6808,7 @@ export const completeGearboxData = [
         "thrust": 1000,
         "centerDistance": 1190,
         "dimensions": "2975×2499×2737",
-        "weight": null,
+        "weight": 2163,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 2500000,
         "discountRate": 0.1,
@@ -4545,64 +6832,158 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "海工船",
+            "工程船",
+            "军辅船"
+        ]
     },
     {
         "model": "GWC20.34",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1400,
         "ratios": [
             2.04
         ],
         "transmissionCapacityPerRatio": [
             0.18
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 50,
+        "centerDistance": 70,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 125,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "400×350×500"
+        "dimensions": "400×350×500",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ],
+        "maxPower": 252,
+        "minPower": 72,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 25000,
+        "discountRate": 0.1,
+        "introduction": "GWC20.34是杭州前进齿轮箱集团生产的中小功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比2.04~2.04，适用输入转速400~1400r/min，额定推力50kN。适用于内河运输船、工作船、拖船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWC20.54",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1400,
         "ratios": [
             2.04
         ],
         "transmissionCapacityPerRatio": [
             0.22
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 50,
+        "centerDistance": 70,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 148,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "420×370×520"
+        "dimensions": "420×370×520",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ],
+        "maxPower": 308,
+        "minPower": 88,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 28000,
+        "discountRate": 0.1,
+        "introduction": "GWC20.54是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比2.04~2.04，适用输入转速400~1400r/min，额定推力50kN。适用于内河运输船、工作船、拖船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWC26.58",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1400,
         "ratios": [
             2.6
         ],
         "transmissionCapacityPerRatio": [
             0.22
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 60,
+        "centerDistance": 80,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 198,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "450×580×600"
+        "dimensions": "450×580×600",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ],
+        "maxPower": 308,
+        "minPower": 88,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 35000,
+        "discountRate": 0.1,
+        "introduction": "GWC26.58是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比2.60~2.60，适用输入转速400~1400r/min，额定推力60kN。适用于内河运输船、工作船、拖船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWC28.30",
@@ -4632,7 +7013,7 @@ export const completeGearboxData = [
             0.29
         ],
         "thrust": 80,
-        "centerDistance": null,
+        "centerDistance": 100,
         "dimensions": "1036×800×950",
         "weight": 1230,
         "controlType": "推拉软轴/电控/气控",
@@ -4655,7 +7036,16 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC28.30P",
@@ -4704,7 +7094,16 @@ export const completeGearboxData = [
         "weight": 1230,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1036×800×950"
+        "dimensions": "1036×800×950",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ],
+        "centerDistance": 100
     },
     {
         "model": "GWC30.32",
@@ -4734,7 +7133,7 @@ export const completeGearboxData = [
             0.376
         ],
         "thrust": 100,
-        "centerDistance": null,
+        "centerDistance": 100,
         "dimensions": "1433×1200×888",
         "weight": 1460,
         "controlType": "推拉软轴/电控/气控",
@@ -4759,7 +7158,16 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC30.32P",
@@ -4812,7 +7220,16 @@ export const completeGearboxData = [
         "dimensions": "1433×1200×888",
         "weight": 1460,
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "centerDistance": 100
     },
     {
         "model": "GWC32.35",
@@ -4842,7 +7259,7 @@ export const completeGearboxData = [
             0.48
         ],
         "thrust": 120,
-        "centerDistance": null,
+        "centerDistance": 120,
         "dimensions": "1405×1240×920",
         "weight": 2490,
         "controlType": "推拉软轴/电控/气控",
@@ -4871,7 +7288,16 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC32.35P",
@@ -4930,7 +7356,16 @@ export const completeGearboxData = [
         "dimensions": "1405×1240×920",
         "weight": 2490,
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "centerDistance": 120
     },
     {
         "model": "GWC36.39",
@@ -4960,7 +7395,7 @@ export const completeGearboxData = [
             0.675
         ],
         "thrust": 140,
-        "centerDistance": null,
+        "centerDistance": 140,
         "dimensions": "1645×1331×1060",
         "weight": 3200,
         "controlType": "推拉软轴/电控/气控",
@@ -4991,7 +7426,16 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC36.39P",
@@ -5056,45 +7500,110 @@ export const completeGearboxData = [
         "dimensions": "1645×1331×1060",
         "weight": 3200,
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "centerDistance": 140
     },
     {
         "model": "GWC36.58",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1200,
         "ratios": [
             3.42
         ],
         "transmissionCapacityPerRatio": [
             0.3
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 140,
+        "centerDistance": 220,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 205,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1645×1331×1060"
+        "dimensions": "1645×1331×1060",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "maxPower": 360,
+        "minPower": 120,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 45000,
+        "discountRate": 0.1,
+        "introduction": "GWC36.58是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比3.42~3.42，适用输入转速400~1200r/min，额定推力140kN。适用于运输船、拖船、工程船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWC36.59",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1200,
         "ratios": [
             3.47
         ],
         "transmissionCapacityPerRatio": [
             0.38
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 140,
+        "centerDistance": 220,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 270,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1645×1331×1060"
+        "dimensions": "1645×1331×1060",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "maxPower": 456,
+        "minPower": 152,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 50000,
+        "discountRate": 0.1,
+        "introduction": "GWC36.59是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比3.47~3.47，适用输入转速400~1200r/min，额定推力140kN。适用于运输船、拖船、工程船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWC39.41",
@@ -5124,7 +7633,7 @@ export const completeGearboxData = [
             0.947
         ],
         "thrust": 175,
-        "centerDistance": null,
+        "centerDistance": 175,
         "dimensions": "1454×1010×1425",
         "weight": 3980,
         "controlType": "推拉软轴/电控/气控",
@@ -5149,7 +7658,16 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC39.41P",
@@ -5208,7 +7726,16 @@ export const completeGearboxData = [
         "weight": 3980,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1454×1010×1425"
+        "dimensions": "1454×1010×1425",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "centerDistance": 175
     },
     {
         "model": "GWC42.45",
@@ -5238,7 +7765,7 @@ export const completeGearboxData = [
             1.221
         ],
         "thrust": 220,
-        "centerDistance": null,
+        "centerDistance": 220,
         "dimensions": "1486×1180×1650",
         "weight": 4700,
         "controlType": "推拉软轴/电控/气控",
@@ -5268,7 +7795,16 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC42.45P",
@@ -5330,7 +7866,16 @@ export const completeGearboxData = [
         "weight": 4700,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1486×1180×1650"
+        "dimensions": "1486×1180×1650",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "centerDistance": 220
     },
     {
         "model": "GWC45.49",
@@ -5360,7 +7905,7 @@ export const completeGearboxData = [
             1.471
         ],
         "thrust": 270,
-        "centerDistance": null,
+        "centerDistance": 270,
         "dimensions": "1688×1230×1710",
         "weight": 6030,
         "controlType": "推拉软轴/电控/气控",
@@ -5398,7 +7943,17 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC45.49P",
@@ -5470,7 +8025,17 @@ export const completeGearboxData = [
         "weight": 6030,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1688×1230×1710"
+        "dimensions": "1688×1230×1710",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "centerDistance": 270
     },
     {
         "model": "GWC45.52",
@@ -5500,7 +8065,7 @@ export const completeGearboxData = [
             1.609
         ],
         "thrust": 270,
-        "centerDistance": null,
+        "centerDistance": 270,
         "dimensions": "2056×1705×1300",
         "weight": 6500,
         "controlType": "推拉软轴/电控/气控",
@@ -5538,45 +8103,113 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC46.59",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1200,
         "ratios": [
             4.47
         ],
         "transmissionCapacityPerRatio": [
             0.3
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 270,
+        "centerDistance": 290,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 270,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1550×1200×1680"
+        "dimensions": "1550×1200×1680",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "maxPower": 360,
+        "minPower": 120,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 55000,
+        "discountRate": 0.1,
+        "introduction": "GWC46.59是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比4.47~4.47，适用输入转速400~1200r/min，额定推力270kN。适用于运输船、散货船、工程船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWC46.60",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1200,
         "ratios": [
             4.47
         ],
         "transmissionCapacityPerRatio": [
             0.42
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 270,
+        "centerDistance": 290,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 355,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1600×1250×1700"
+        "dimensions": "1600×1250×1700",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "maxPower": 504,
+        "minPower": 168,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 60000,
+        "discountRate": 0.1,
+        "introduction": "GWC46.60是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比4.47~4.47，适用输入转速400~1200r/min，额定推力270kN。适用于运输船、散货船、工程船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWC49.54",
@@ -5606,7 +8239,7 @@ export const completeGearboxData = [
             1.898
         ],
         "thrust": 290,
-        "centerDistance": null,
+        "centerDistance": 290,
         "dimensions": "2126×1989×1340",
         "weight": 7900,
         "controlType": "推拉软轴/电控/气控",
@@ -5633,7 +8266,17 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC49.54P",
@@ -5692,7 +8335,17 @@ export const completeGearboxData = [
         "dimensions": "2126×1989×1340",
         "weight": 7900,
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "centerDistance": 290
     },
     {
         "model": "GWC49.59",
@@ -5722,7 +8375,7 @@ export const completeGearboxData = [
             2.171
         ],
         "thrust": 290,
-        "centerDistance": null,
+        "centerDistance": 290,
         "dimensions": "2126×1989×1340",
         "weight": 8500,
         "controlType": "推拉软轴/电控/气控",
@@ -5749,7 +8402,17 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC52.59",
@@ -5779,7 +8442,7 @@ export const completeGearboxData = [
             2.538
         ],
         "thrust": 300,
-        "centerDistance": null,
+        "centerDistance": 300,
         "dimensions": "2291×1400×1290",
         "weight": 10700,
         "controlType": "推拉软轴/电控/气控",
@@ -5808,7 +8471,17 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC52.59P",
@@ -5848,7 +8521,34 @@ export const completeGearboxData = [
         "dimensions": "2291×1400×1290",
         "weight": 10700,
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "海工船",
+            "环保船"
+        ],
+        "priceSource": "估算价格",
+        "price": 550000,
+        "discountRate": 0.1,
+        "introduction": "GWC52.59P是杭州前进齿轮箱集团生产的超大功率混合动力船用齿轮箱，采用气控/电控操纵方式，减速比1.93~5.93，适用输入转速1000~2100r/min，额定推力300kN。适用于运输船、工程船、海工船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ820"
+            ]
+        }
     },
     {
         "model": "GWC52.62",
@@ -5912,26 +8612,64 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "2291×1400×1290"
+        "dimensions": "2291×1400×1290",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWC56.61",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1000,
         "ratios": [
             5.63
         ],
         "transmissionCapacityPerRatio": [
             0.42
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 300,
+        "centerDistance": 300,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 360,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "2350×1500×2100"
+        "dimensions": "2350×1500×2100",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "maxPower": 420,
+        "minPower": 168,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 65000,
+        "discountRate": 0.1,
+        "introduction": "GWC56.61是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比5.63~5.63，适用输入转速400~1000r/min，额定推力300kN。适用于运输船、散货船、工程船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWC60.66",
@@ -5965,7 +8703,7 @@ export const completeGearboxData = [
             3
         ],
         "thrust": 450,
-        "centerDistance": null,
+        "centerDistance": 450,
         "dimensions": "2445×1600×2215",
         "weight": 14690,
         "controlType": "推拉软轴/电控/气控",
@@ -5989,7 +8727,17 @@ export const completeGearboxData = [
             "plainFlange": true
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC60.66P",
@@ -6033,7 +8781,34 @@ export const completeGearboxData = [
         "weight": 14690,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "2445×1600×2215"
+        "dimensions": "2445×1600×2215",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "海工船",
+            "环保船"
+        ],
+        "priceSource": "估算价格",
+        "price": 780000,
+        "discountRate": 0.1,
+        "introduction": "GWC60.66P是杭州前进齿轮箱集团生产的超大功率混合动力船用齿轮箱，采用气控/电控操纵方式，减速比2.01~6.97，适用输入转速1000~2100r/min，额定推力450kN。适用于运输船、工程船、海工船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ820"
+            ]
+        }
     },
     {
         "model": "GWC60.74",
@@ -6067,7 +8842,7 @@ export const completeGearboxData = [
             3.4
         ],
         "thrust": 550,
-        "centerDistance": null,
+        "centerDistance": 550,
         "dimensions": "2540×1855×1736",
         "weight": 16600,
         "controlType": "推拉软轴/电控/气控",
@@ -6091,26 +8866,65 @@ export const completeGearboxData = [
             "plainFlange": true
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC61.65",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1000,
         "ratios": [
             6.13
         ],
         "transmissionCapacityPerRatio": [
             0.55
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 450,
+        "centerDistance": 450,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 560,
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "2500×1650×2200"
+        "dimensions": "2500×1650×2200",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "maxPower": 550,
+        "minPower": 220,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 80000,
+        "discountRate": 0.1,
+        "introduction": "GWC61.65是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比6.13~6.13，适用输入转速400~1000r/min，额定推力450kN。适用于运输船、散货船、工程船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWC63.71",
@@ -6146,7 +8960,7 @@ export const completeGearboxData = [
             3.678
         ],
         "thrust": 710,
-        "centerDistance": null,
+        "centerDistance": 710,
         "dimensions": "2645×2381×1740",
         "weight": 17500,
         "controlType": "推拉软轴/电控/气控",
@@ -6169,7 +8983,17 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC63.71P",
@@ -6205,7 +9029,7 @@ export const completeGearboxData = [
             3.294
         ],
         "thrust": 710,
-        "centerDistance": null,
+        "centerDistance": 710,
         "source": "杭齿厂选型手册2025版5月版",
         "note": "混合动力齿轮箱，支持柴电双动力输入",
         "minPower": 3294,
@@ -6215,7 +9039,34 @@ export const completeGearboxData = [
         "dimensions": "2645×2381×1740",
         "weight": 17500,
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "海工船",
+            "环保船"
+        ],
+        "priceSource": "估算价格",
+        "price": 950000,
+        "discountRate": 0.1,
+        "introduction": "GWC63.71P是杭州前进齿轮箱集团生产的超大功率混合动力船用齿轮箱，采用气控/电控操纵方式，减速比2.01~7.48，适用输入转速1000~2100r/min，额定推力710kN。适用于运输船、工程船、海工船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ820"
+            ]
+        }
     },
     {
         "model": "GWC66.75",
@@ -6249,7 +9100,7 @@ export const completeGearboxData = [
             4.253
         ],
         "thrust": 730,
-        "centerDistance": null,
+        "centerDistance": 730,
         "dimensions": "2750×2500×1800",
         "weight": 20500,
         "controlType": "推拉软轴/电控/气控",
@@ -6272,7 +9123,17 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC70.76",
@@ -6308,7 +9169,7 @@ export const completeGearboxData = [
             4.5
         ],
         "thrust": 750,
-        "centerDistance": null,
+        "centerDistance": 750,
         "dimensions": "2876×2151×1970",
         "weight": 22500,
         "controlType": "推拉软轴/电控/气控",
@@ -6331,7 +9192,19 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC70.82",
@@ -6379,7 +9252,18 @@ export const completeGearboxData = [
         "weight": 23000,
         "image": "/images/gearbox/Advance-GWC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ]
     },
     {
         "model": "GWC70.85",
@@ -6425,7 +9309,18 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWC.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "2876×2151×1970"
+        "dimensions": "2876×2151×1970",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ]
     },
     {
         "model": "GWC75.90",
@@ -6440,7 +9335,7 @@ export const completeGearboxData = [
             4
         ],
         "thrust": 980,
-        "centerDistance": null,
+        "centerDistance": 980,
         "maxPower": 10427,
         "minPower": 2256,
         "powerSource": "传动能力计算",
@@ -6471,7 +9366,18 @@ export const completeGearboxData = [
         "weight": 34000,
         "image": "/images/gearbox/Advance-GWC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ]
     },
     {
         "model": "GWC78.88",
@@ -6501,7 +9407,7 @@ export const completeGearboxData = [
             7.83
         ],
         "thrust": 1000,
-        "centerDistance": null,
+        "centerDistance": 1000,
         "dimensions": "3135×2945×2158",
         "weight": 35000,
         "controlType": "推拉软轴/电控/气控",
@@ -6528,7 +9434,19 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "GWC78.96",
@@ -6554,7 +9472,7 @@ export const completeGearboxData = [
             7.31
         ],
         "thrust": 1100,
-        "centerDistance": 38,
+        "centerDistance": 960,
         "dimensions": "3135×2945×2158",
         "weight": 38000,
         "source": "杭齿厂选型手册2025版5月版",
@@ -6582,7 +9500,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWC.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ]
     },
     {
         "model": "GWC80.95",
@@ -6612,7 +9541,7 @@ export const completeGearboxData = [
             9.33
         ],
         "thrust": 1200,
-        "centerDistance": null,
+        "centerDistance": 950,
         "dimensions": "3300×3100×2300",
         "weight": 40000,
         "controlType": "推拉软轴/电控/气控",
@@ -6626,7 +9555,30 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "priceSource": "估算价格",
+        "inputInterfaces": {
+            "sae": [
+                "SAE2#1寸",
+                "SAE2#11.5寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ530",
+                "φ570"
+            ]
+        }
     },
     {
         "model": "GWC85.100",
@@ -6660,7 +9612,7 @@ export const completeGearboxData = [
             9.92
         ],
         "thrust": 1400,
-        "centerDistance": null,
+        "centerDistance": 1000,
         "dimensions": "3800×3500×2600",
         "weight": 56500,
         "controlType": "推拉软轴/电控/气控",
@@ -6674,140 +9626,368 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "image": "/images/gearbox/Advance-GWC.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "priceSource": "估算价格",
+        "inputInterfaces": {
+            "sae": [
+                "SAE2#1寸",
+                "SAE2#11.5寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ530",
+                "φ570"
+            ]
+        }
     },
     {
         "model": "GWCD26.70",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1400,
         "ratios": [
             2.7
         ],
         "transmissionCapacityPerRatio": [
             0.6
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 60,
+        "centerDistance": 400,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 495,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1238×920×1315"
+        "dimensions": "1238×920×1315",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ],
+        "maxPower": 840,
+        "minPower": 240,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 50000,
+        "discountRate": 0.1,
+        "introduction": "GWCD26.70是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比2.70~2.70，适用输入转速400~1400r/min，额定推力60kN。适用于内河运输船、工作船、拖船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWCD36.70",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1200,
         "ratios": [
             3.75
         ],
         "transmissionCapacityPerRatio": [
             0.7
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 140,
+        "centerDistance": 500,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 550,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1645×1331×1060"
+        "dimensions": "1645×1331×1060",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "maxPower": 840,
+        "minPower": 280,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 65000,
+        "discountRate": 0.1,
+        "introduction": "GWCD36.70是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比3.75~3.75，适用输入转速400~1200r/min，额定推力140kN。适用于运输船、拖船、工程船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWCD46.71",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1200,
         "ratios": [
             4.92
         ],
         "transmissionCapacityPerRatio": [
             0.8
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 270,
+        "centerDistance": 600,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 600,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1688×1230×1710"
+        "dimensions": "1688×1230×1710",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "maxPower": 960,
+        "minPower": 320,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 85000,
+        "discountRate": 0.1,
+        "introduction": "GWCD46.71是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比4.92~4.92，适用输入转速400~1200r/min，额定推力270kN。适用于运输船、散货船、工程船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWCD56.72",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 400,
+        "maxSpeed": 1000,
         "ratios": [
             5.71
         ],
         "transmissionCapacityPerRatio": [
             0.85
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 300,
+        "centerDistance": 700,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 700,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2126×1989×1340"
+        "dimensions": "2126×1989×1340",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "maxPower": 850,
+        "minPower": 340,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 100000,
+        "discountRate": 0.1,
+        "introduction": "GWCD56.72是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比5.71~5.71，适用输入转速400~1000r/min，额定推力300kN。适用于运输船、散货船、工程船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWCD67.80",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 300,
+        "maxSpeed": 900,
         "ratios": [
             6.54
         ],
         "transmissionCapacityPerRatio": [
             0.9
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 710,
+        "centerDistance": 850,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 850,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2445×1600×2215"
+        "dimensions": "2445×1600×2215",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "maxPower": 810,
+        "minPower": 270,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 350000,
+        "discountRate": 0.1,
+        "introduction": "GWCD67.80是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比6.54~6.54，适用输入转速300~900r/min，额定推力710kN。适用于运输船、散货船、工程船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWCD79.85",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 200,
+        "maxSpeed": 800,
         "ratios": [
             7.92
         ],
         "transmissionCapacityPerRatio": [
             0.95
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 1000,
+        "centerDistance": 1000,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 970,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2876×2151×1970"
+        "dimensions": "2876×2151×1970",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "maxPower": 760,
+        "minPower": 190,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 500000,
+        "discountRate": 0.1,
+        "introduction": "GWCD79.85是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比7.92~7.92，适用输入转速200~800r/min，额定推力1000kN。适用于大型运输船、集装箱船、散货船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWCD90.100",
         "series": "GW",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 200,
+        "maxSpeed": 600,
         "ratios": [
             9.4
         ],
         "transmissionCapacityPerRatio": [
             1.1
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 1400,
+        "centerDistance": 1200,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 1350,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "3135×2945×2158"
+        "dimensions": "3135×2945×2158",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "maxPower": 660,
+        "minPower": 220,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 800000,
+        "discountRate": 0.1,
+        "introduction": "GWCD90.100是杭州前进齿轮箱集团生产的中功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比9.40~9.40，适用输入转速200~600r/min，额定推力1400kN。适用于大型运输船、集装箱船、散货船等船舶。",
+        "image": "/images/gearbox/Advance-GWC.webp",
+        "imageUrl": "/images/gearbox/Advance-GWC.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWD28.30",
@@ -6844,7 +10024,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "971×800×950"
+        "dimensions": "971×800×950",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWD30.32A",
@@ -6881,7 +10080,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "dimensions": "1433×1200×888",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWD32.35",
@@ -6918,7 +10136,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "dimensions": "1405×1240×920",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWD36.39",
@@ -6955,7 +10192,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "dimensions": "1645×1331×1060",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWD36.54",
@@ -6990,7 +10246,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1645×1331×1060"
+        "dimensions": "1645×1331×1060",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWD39.41",
@@ -7038,7 +10313,15 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1423×1010×1425"
+        "dimensions": "1423×1010×1425",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWD39.57",
@@ -7084,7 +10367,15 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1423×1010×1425"
+        "dimensions": "1423×1010×1425",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWD42.45",
@@ -7121,7 +10412,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1454×1180×1650"
+        "dimensions": "1454×1180×1650",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWD42.63",
@@ -7156,7 +10466,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1454×1180×1650"
+        "dimensions": "1454×1180×1650",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWD45.49",
@@ -7193,7 +10522,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1649×1230×1710"
+        "dimensions": "1649×1230×1710",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWD45.68",
@@ -7228,7 +10577,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1649×1230×1710"
+        "dimensions": "1649×1230×1710",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWD49.54",
@@ -7265,7 +10634,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "dimensions": "2126×1989×1340",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWD49.74",
@@ -7300,7 +10689,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2126×1989×1340"
+        "dimensions": "2126×1989×1340",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWD52.59",
@@ -7337,7 +10746,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "dimensions": "2291×1400×1290",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWD52.82",
@@ -7372,7 +10801,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2291×1400×1290"
+        "dimensions": "2291×1400×1290",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWD60.66",
@@ -7409,7 +10858,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2410×1600×2215"
+        "dimensions": "2410×1600×2215",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWD60.92",
@@ -7444,7 +10913,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2410×1600×2215"
+        "dimensions": "2410×1600×2215",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWD63.71",
@@ -7481,7 +10970,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "dimensions": "2645×2381×1740",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWD63.95",
@@ -7516,7 +11025,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2645×2381×1740"
+        "dimensions": "2645×2381×1740",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWD66.106",
@@ -7550,7 +11079,28 @@ export const completeGearboxData = [
         "thrust": 980,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2750×2500×1800"
+        "dimensions": "2750×2500×1800",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "centerDistance": 1060,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWD66.75",
@@ -7587,7 +11137,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2750×2500×1800"
+        "dimensions": "2750×2500×1800",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWD70.111",
@@ -7621,7 +11191,30 @@ export const completeGearboxData = [
         "thrust": 1200,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2876×2151×1970"
+        "dimensions": "2876×2151×1970",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "centerDistance": 1110,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWD70.76",
@@ -7658,7 +11251,29 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2876×2151×1970"
+        "dimensions": "2876×2151×1970",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWD70.82",
@@ -7697,7 +11312,29 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWD.webp",
         "dimensions": "2876×2151×1970",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWH28.30",
@@ -7734,7 +11371,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "971×800×950"
+        "dimensions": "971×800×950",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWH30.32A",
@@ -7770,7 +11426,27 @@ export const completeGearboxData = [
         "dimensions": "1433×1200×888",
         "thrust": 100,
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "centerDistance": 100,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWH32.35",
@@ -7807,7 +11483,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "dimensions": "1405×1240×920",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWH36.39",
@@ -7844,7 +11539,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "dimensions": "1645×1331×1060",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWH36.54",
@@ -7879,7 +11593,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1645×1331×1060"
+        "dimensions": "1645×1331×1060",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWH39.41",
@@ -7927,7 +11660,15 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1423×1010×1425"
+        "dimensions": "1423×1010×1425",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWH39.57",
@@ -7973,7 +11714,15 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1423×1010×1425"
+        "dimensions": "1423×1010×1425",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWH42.45",
@@ -8023,7 +11772,15 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1454×1180×1650"
+        "dimensions": "1454×1180×1650",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWH42.63",
@@ -8071,7 +11828,15 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1454×1180×1650"
+        "dimensions": "1454×1180×1650",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWH45.49",
@@ -8121,7 +11886,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1649×1230×1710"
+        "dimensions": "1649×1230×1710",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWH45.68B",
@@ -8169,7 +11943,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1649×1230×1710"
+        "dimensions": "1649×1230×1710",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWH49.54",
@@ -8219,7 +12002,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "dimensions": "2126×1989×1340",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWH49.74",
@@ -8267,7 +12059,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2126×1989×1340"
+        "dimensions": "2126×1989×1340",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWH52.59",
@@ -8317,7 +12118,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "dimensions": "2291×1400×1290",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWH52.82",
@@ -8365,7 +12175,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2291×1400×1290"
+        "dimensions": "2291×1400×1290",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWH60.66",
@@ -8402,7 +12221,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2410×1600×2215"
+        "dimensions": "2410×1600×2215",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWH60.92",
@@ -8437,7 +12276,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2410×1600×2215"
+        "dimensions": "2410×1600×2215",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWH63.71",
@@ -8474,7 +12333,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "dimensions": "2645×2381×1740",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWH63.95",
@@ -8509,7 +12388,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2645×2381×1740"
+        "dimensions": "2645×2381×1740",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWH66.106",
@@ -8543,7 +12442,28 @@ export const completeGearboxData = [
         "thrust": 980,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2750×2500×1800"
+        "dimensions": "2750×2500×1800",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "centerDistance": 1060,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWH66.75",
@@ -8580,7 +12500,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2750×2500×1800"
+        "dimensions": "2750×2500×1800",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWH70.111",
@@ -8614,7 +12554,30 @@ export const completeGearboxData = [
         "thrust": 1200,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2876×2151×1970"
+        "dimensions": "2876×2151×1970",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "centerDistance": 1110,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWH70.76",
@@ -8651,7 +12614,29 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2876×2151×1970"
+        "dimensions": "2876×2151×1970",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWH70.82",
@@ -8690,7 +12675,29 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWH.webp",
         "dimensions": "2876×2151×1970",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWK28.30",
@@ -8727,7 +12734,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "968×1050×1370"
+        "dimensions": "968×1050×1370",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWK30.32A",
@@ -8762,7 +12788,28 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "dimensions": "1433×1200×888",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "thrust": 100,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "centerDistance": 100,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWK32.35",
@@ -8799,7 +12846,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "dimensions": "1405×1240×920",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWK36.39",
@@ -8836,7 +12902,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "dimensions": "1645×1331×1060",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWK36.54",
@@ -8871,7 +12956,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1645×1331×1060"
+        "dimensions": "1645×1331×1060",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWK39.41",
@@ -8919,7 +13023,15 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1393×1400×1630"
+        "dimensions": "1393×1400×1630",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWK42.45",
@@ -8969,7 +13081,15 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1425×1460×1630"
+        "dimensions": "1425×1460×1630",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWK42.63",
@@ -9017,7 +13137,15 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1425×1460×1630"
+        "dimensions": "1425×1460×1630",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWK45.49",
@@ -9067,7 +13195,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1594×1590×1860"
+        "dimensions": "1594×1590×1860",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWK45.68",
@@ -9115,7 +13252,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1594×1590×1860"
+        "dimensions": "1594×1590×1860",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWK49.54",
@@ -9165,7 +13311,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "dimensions": "2126×1989×1340",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWK49.74",
@@ -9213,7 +13368,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2126×1989×1340"
+        "dimensions": "2126×1989×1340",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWK52.59",
@@ -9263,7 +13427,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "dimensions": "2291×1400×1290",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWK52.82",
@@ -9311,7 +13484,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2291×1400×1290"
+        "dimensions": "2291×1400×1290",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWK60.66",
@@ -9348,7 +13530,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2340×2080×2520"
+        "dimensions": "2340×2080×2520",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWK60.92",
@@ -9383,7 +13585,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2340×2080×2520"
+        "dimensions": "2340×2080×2520",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWK63.71",
@@ -9420,7 +13642,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "dimensions": "2645×2381×1740",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWK63.95",
@@ -9455,7 +13697,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2645×2381×1740"
+        "dimensions": "2645×2381×1740",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWK66.106",
@@ -9488,7 +13750,29 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2750×2500×1800"
+        "dimensions": "2750×2500×1800",
+        "thrust": 980,
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "centerDistance": 1060,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWK66.75",
@@ -9525,7 +13809,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2750×2500×1800"
+        "dimensions": "2750×2500×1800",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWK70.111",
@@ -9558,7 +13862,31 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2876×2151×1970"
+        "dimensions": "2876×2151×1970",
+        "thrust": 1200,
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "centerDistance": 1110,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWK70.76",
@@ -9595,7 +13923,29 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2876×2151×1970"
+        "dimensions": "2876×2151×1970",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWK70.82",
@@ -9634,7 +13984,29 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWK.webp",
         "dimensions": "2876×2151×1970",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL28.30",
@@ -9678,7 +14050,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1036×800×950"
+        "dimensions": "1036×800×950",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ],
+        "centerDistance": 100,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWL30.32",
@@ -9723,7 +14115,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1198×860×1298"
+        "dimensions": "1198×860×1298",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWL32.35",
@@ -9768,7 +14179,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1238×920×1315"
+        "dimensions": "1238×920×1315",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWL36.39",
@@ -9813,7 +14243,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1326×1060×1500"
+        "dimensions": "1326×1060×1500",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWL39.41",
@@ -9858,7 +14307,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1454×1010×1425"
+        "dimensions": "1454×1010×1425",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWL42.45",
@@ -9903,7 +14371,26 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1486×1180×1650"
+        "dimensions": "1486×1180×1650",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE1#14寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ405",
+                "φ450"
+            ]
+        }
     },
     {
         "model": "GWL45.49",
@@ -9948,7 +14435,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1688×1230×1710"
+        "dimensions": "1688×1230×1710",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL45.52",
@@ -9993,7 +14500,27 @@ export const completeGearboxData = [
         "controlType": "气控/电控",
         "rotationDirection": "相同",
         "weight": 4600,
-        "dimensions": "1688×1230×1710"
+        "dimensions": "1688×1230×1710",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL49.54",
@@ -10038,7 +14565,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "1783×1340×1925"
+        "dimensions": "1783×1340×1925",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL49.59",
@@ -10083,7 +14630,27 @@ export const completeGearboxData = [
         "controlType": "气控/电控",
         "rotationDirection": "相同",
         "weight": 6000,
-        "dimensions": "1783×1340×1925"
+        "dimensions": "1783×1340×1925",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL52.59",
@@ -10128,7 +14695,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "2198×1400×2015"
+        "dimensions": "2198×1400×2015",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL52.62",
@@ -10177,7 +14764,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "2198×1400×2015"
+        "dimensions": "2198×1400×2015",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL60.66",
@@ -10226,7 +14833,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "2445×1600×2215"
+        "dimensions": "2445×1600×2215",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL60.74",
@@ -10275,7 +14902,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "2445×1600×2215"
+        "dimensions": "2445×1600×2215",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL66.75",
@@ -10324,7 +14971,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "2700×2400×1750"
+        "dimensions": "2700×2400×1750",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL70.76",
@@ -10375,7 +15042,29 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "2850×2100×1950"
+        "dimensions": "2850×2100×1950",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL70.82",
@@ -10414,7 +15103,29 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "2850×2100×1950"
+        "dimensions": "2850×2100×1950",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL70.85",
@@ -10451,7 +15162,29 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "2850×2100×1950"
+        "dimensions": "2850×2100×1950",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL75.90",
@@ -10488,7 +15221,29 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "2950×2800×2100"
+        "dimensions": "2950×2800×2100",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE2#1寸",
+                "SAE2#11.5寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ530",
+                "φ570"
+            ]
+        }
     },
     {
         "model": "GWL78.88",
@@ -10532,7 +15287,30 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "3100×2900×2150"
+        "dimensions": "3100×2900×2150",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "centerDistance": 1000,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL80.95",
@@ -10576,7 +15354,30 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWL.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相同",
-        "dimensions": "3250×3050×2280"
+        "dimensions": "3250×3050×2280",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "centerDistance": 950,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWL85.100",
@@ -10623,7 +15424,31 @@ export const completeGearboxData = [
         "controlType": "气控/电控",
         "rotationDirection": "相同",
         "dimensions": "3750×3450×2580",
-        "weight": 52000
+        "weight": 52000,
+        "thrust": 1400,
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "centerDistance": 1000,
+        "inputInterfaces": {
+            "sae": [
+                "SAE2#1寸",
+                "SAE2#11.5寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ530",
+                "φ570"
+            ]
+        }
     },
     {
         "model": "GWS28.30",
@@ -10669,7 +15494,15 @@ export const completeGearboxData = [
         "weight": 1230,
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ]
     },
     {
         "model": "GWS28.30G/GWH28.30G",
@@ -10695,7 +15528,7 @@ export const completeGearboxData = [
             0.44
         ],
         "thrust": 80,
-        "centerDistance": 1,
+        "centerDistance": 100,
         "dimensions": "968×1050×1370",
         "weight": 1230,
         "source": "杭齿厂选型手册2025版5月版",
@@ -10719,7 +15552,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ]
     },
     {
         "model": "GWS28.30P",
@@ -10741,7 +15582,7 @@ export const completeGearboxData = [
             1.359
         ],
         "thrust": 0.155,
-        "centerDistance": 1000,
+        "centerDistance": 100,
         "dimensions": "相同",
         "weight": 1230,
         "source": "杭齿厂选型手册2025版5月版",
@@ -10765,7 +15606,15 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "内河运输船",
+            "工作船",
+            "拖船"
+        ]
     },
     {
         "model": "GWS30.32A",
@@ -10810,7 +15659,16 @@ export const completeGearboxData = [
         "dimensions": "1433×1200×888",
         "thrust": 100,
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ],
+        "centerDistance": 100
     },
     {
         "model": "GWS30.32P",
@@ -10832,7 +15690,7 @@ export const completeGearboxData = [
             1.351
         ],
         "thrust": 0.225,
-        "centerDistance": 1000,
+        "centerDistance": 100,
         "dimensions": "相同",
         "weight": 1465,
         "source": "杭齿厂选型手册2025版5月版",
@@ -10856,7 +15714,15 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS32.35",
@@ -10902,7 +15768,15 @@ export const completeGearboxData = [
         "weight": 2250,
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS32.35G/GWH32.35G",
@@ -10928,7 +15802,7 @@ export const completeGearboxData = [
             0.72
         ],
         "thrust": 120,
-        "centerDistance": 2,
+        "centerDistance": 120,
         "dimensions": "1405×1240×920",
         "weight": 2035,
         "source": "杭齿厂选型手册2025版5月版",
@@ -10952,7 +15826,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS32.35P",
@@ -10974,7 +15856,7 @@ export const completeGearboxData = [
             1.4
         ],
         "thrust": 0.27,
-        "centerDistance": 1000,
+        "centerDistance": 120,
         "dimensions": "1437×1210×1110",
         "weight": 2250,
         "source": "杭齿厂选型手册2025版5月版",
@@ -10998,7 +15880,15 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS36.39",
@@ -11051,7 +15941,15 @@ export const completeGearboxData = [
         "weight": 2450,
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS36.39G/GWH36.39G",
@@ -11077,7 +15975,7 @@ export const completeGearboxData = [
             1.02
         ],
         "thrust": 140,
-        "centerDistance": 2,
+        "centerDistance": 140,
         "dimensions": "1645×1331×1060",
         "weight": 2245,
         "source": "杭齿厂选型手册2025版5月版",
@@ -11108,7 +16006,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS36.39P",
@@ -11130,7 +16036,7 @@ export const completeGearboxData = [
             1.351
         ],
         "thrust": 0.28,
-        "centerDistance": 1000,
+        "centerDistance": 140,
         "dimensions": "1563×1330×1230",
         "weight": 2450,
         "source": "杭齿厂选型手册2025版5月版",
@@ -11161,7 +16067,15 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS36.54",
@@ -11212,7 +16126,15 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1563×1330×1230"
+        "dimensions": "1563×1330×1230",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS36.54G/GWH36.54G",
@@ -11236,7 +16158,7 @@ export const completeGearboxData = [
             0.96
         ],
         "thrust": 220,
-        "centerDistance": null,
+        "centerDistance": 220,
         "dimensions": "1563×1330×1230",
         "weight": 3230,
         "source": "杭齿厂选型手册2025版5月版",
@@ -11267,7 +16189,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS39.41",
@@ -11315,7 +16245,15 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1393×1400×1630"
+        "dimensions": "1393×1400×1630",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS39.41G/GWH39.41G",
@@ -11341,7 +16279,7 @@ export const completeGearboxData = [
             1.4
         ],
         "thrust": 175,
-        "centerDistance": 3,
+        "centerDistance": 175,
         "dimensions": "1393×1400×1630",
         "weight": 3230,
         "source": "杭齿厂选型手册2025版5月版",
@@ -11367,7 +16305,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS39.41P",
@@ -11389,7 +16335,7 @@ export const completeGearboxData = [
             1.353
         ],
         "thrust": 0.44,
-        "centerDistance": 1000,
+        "centerDistance": 175,
         "dimensions": "1393×1400×1630",
         "weight": 3230,
         "source": "杭齿厂选型手册2025版5月版",
@@ -11415,7 +16361,15 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS39.57",
@@ -11461,7 +16415,15 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1393×1400×1630"
+        "dimensions": "1393×1400×1630",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS39.57G/GWH39.57G",
@@ -11485,7 +16447,7 @@ export const completeGearboxData = [
             1.29
         ],
         "thrust": 270,
-        "centerDistance": null,
+        "centerDistance": 270,
         "dimensions": "1393×1400×1630",
         "weight": 3230,
         "source": "杭齿厂选型手册2025版5月版",
@@ -11511,7 +16473,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS42.45",
@@ -11564,7 +16534,15 @@ export const completeGearboxData = [
         "weight": 3960,
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS42.45G/GWH42.45G",
@@ -11590,7 +16568,7 @@ export const completeGearboxData = [
             1.81
         ],
         "thrust": 220,
-        "centerDistance": 3,
+        "centerDistance": 220,
         "dimensions": "1425×1460×1630",
         "weight": 3960,
         "source": "杭齿厂选型手册2025版5月版",
@@ -11621,7 +16599,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS42.45P",
@@ -11643,7 +16629,7 @@ export const completeGearboxData = [
             1.394
         ],
         "thrust": 0.6,
-        "centerDistance": 1000,
+        "centerDistance": 220,
         "dimensions": "相同",
         "weight": 3960,
         "source": "杭齿厂选型手册2025版5月版",
@@ -11674,7 +16660,15 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS42.63",
@@ -11725,7 +16719,15 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1613×1460×1360"
+        "dimensions": "1613×1460×1360",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS42.63G/GWH42.63G",
@@ -11749,7 +16751,7 @@ export const completeGearboxData = [
             1.64
         ],
         "thrust": 290,
-        "centerDistance": null,
+        "centerDistance": 290,
         "dimensions": "1613×1460×1360",
         "weight": 3960,
         "source": "杭齿厂选型手册2025版5月版",
@@ -11780,7 +16782,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS45.49",
@@ -11830,7 +16840,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1594×1590×1860"
+        "dimensions": "1594×1590×1860",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS45.49G/GWH45.49G",
@@ -11856,7 +16875,7 @@ export const completeGearboxData = [
             2.23
         ],
         "thrust": 270,
-        "centerDistance": 6,
+        "centerDistance": 270,
         "dimensions": "1594×1590×1860",
         "weight": 5275,
         "source": "杭齿厂选型手册2025版5月版",
@@ -11884,7 +16903,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS45.49P",
@@ -11906,7 +16934,7 @@ export const completeGearboxData = [
             1.333
         ],
         "thrust": 0.67,
-        "centerDistance": 1000,
+        "centerDistance": 270,
         "dimensions": "相同",
         "weight": 6030,
         "source": "杭齿厂选型手册2025版5月版",
@@ -11934,7 +16962,16 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS45.68",
@@ -11982,7 +17019,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "1594×1590×1860"
+        "dimensions": "1594×1590×1860",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS45.68G/GWH45.68B/GWD45.68",
@@ -12007,7 +17053,7 @@ export const completeGearboxData = [
             2.12
         ],
         "thrust": 360,
-        "centerDistance": null,
+        "centerDistance": 360,
         "dimensions": "1594×1590×1860",
         "weight": 6030,
         "source": "杭齿厂选型手册2025版5月版",
@@ -12035,7 +17081,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS49.54",
@@ -12085,7 +17140,16 @@ export const completeGearboxData = [
         "weight": 7900,
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS49.54G/GWH49.54G",
@@ -12111,7 +17175,7 @@ export const completeGearboxData = [
             3.26
         ],
         "thrust": 290,
-        "centerDistance": 7,
+        "centerDistance": 290,
         "dimensions": "2126×1989×1340",
         "weight": 6900,
         "source": "杭齿厂选型手册2025版5月版",
@@ -12139,7 +17203,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS49.54P",
@@ -12161,7 +17234,7 @@ export const completeGearboxData = [
             1.5
         ],
         "thrust": 0.85,
-        "centerDistance": 1000,
+        "centerDistance": 290,
         "dimensions": "相同",
         "weight": 7900,
         "source": "杭齿厂选型手册2025版5月版",
@@ -12189,7 +17262,16 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS49.61",
@@ -12237,7 +17319,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS49.74",
@@ -12285,7 +17376,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2189×1892×1750"
+        "dimensions": "2189×1892×1750",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS49.74G/GWH49.74G",
@@ -12309,7 +17409,7 @@ export const completeGearboxData = [
             2.83
         ],
         "thrust": 540,
-        "centerDistance": null,
+        "centerDistance": 540,
         "dimensions": "2189×1892×1750",
         "weight": 8500,
         "source": "杭齿厂选型手册2025版5月版",
@@ -12337,7 +17437,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS52.59",
@@ -12387,7 +17496,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "dimensions": "2291×1400×1290",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS52.59P",
@@ -12422,7 +17540,31 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2038×1870×2320"
+        "dimensions": "2038×1870×2320",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "海工船",
+            "环保船"
+        ],
+        "introduction": "GWS52.59P是杭州前进齿轮箱集团生产的大功率混合动力船用齿轮箱，采用气控/电控操纵方式，减速比1.97~3.95，适用输入转速1000~2100r/min，额定推力300kN。适用于运输船、工程船、海工船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GWS.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ820"
+            ]
+        }
     },
     {
         "model": "GWS52.71",
@@ -12466,7 +17608,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS52.82",
@@ -12514,7 +17665,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2291×1400×1290"
+        "dimensions": "2291×1400×1290",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS52.82G/GWH52.82G",
@@ -12538,7 +17698,7 @@ export const completeGearboxData = [
             3.64
         ],
         "thrust": 710,
-        "centerDistance": null,
+        "centerDistance": 710,
         "dimensions": "2291×1400×1290",
         "weight": 12300,
         "source": "杭齿厂选型手册2025版5月版",
@@ -12566,7 +17726,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS60.66",
@@ -12612,7 +17781,16 @@ export const completeGearboxData = [
         "weight": 15000,
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS60.66G/GWH60.66G",
@@ -12662,7 +17840,16 @@ export const completeGearboxData = [
         "priceSource": "GWC60.66×95%",
         "discountRate": 0.1,
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS60.66P",
@@ -12697,7 +17884,31 @@ export const completeGearboxData = [
         "priceSource": "GWC60.66×95%",
         "discountRate": 0.1,
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "海工船",
+            "环保船"
+        ],
+        "introduction": "GWS60.66P是杭州前进齿轮箱集团生产的超大功率混合动力船用齿轮箱，采用气控/电控操纵方式，减速比2.00~3.95，适用输入转速1000~2100r/min，额定推力450kN。适用于运输船、工程船、海工船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GWS.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ820"
+            ]
+        }
     },
     {
         "model": "GWS60.75",
@@ -12739,7 +17950,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2324×2080×1920"
+        "dimensions": "2324×2080×1920",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS60.92",
@@ -12783,7 +18003,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2324×2080×1920"
+        "dimensions": "2324×2080×1920",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS60.92G/GWH60.92G",
@@ -12807,7 +18036,7 @@ export const completeGearboxData = [
             5.05
         ],
         "thrust": 750,
-        "centerDistance": null,
+        "centerDistance": 750,
         "dimensions": "2324×2080×1920",
         "weight": 18300,
         "source": "杭齿厂选型手册2025版5月版",
@@ -12831,7 +18060,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS63.71",
@@ -12877,7 +18115,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "dimensions": "2645×2381×1740",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS63.78A",
@@ -12911,7 +18158,32 @@ export const completeGearboxData = [
         "controlType": "气控/电控",
         "rotationDirection": "相反",
         "weight": 17000,
-        "dimensions": "2645×2381×1740"
+        "dimensions": "2645×2381×1740",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "priceSource": "估算价格",
+        "price": 900000,
+        "discountRate": 0.1,
+        "introduction": "GWS63.78A是杭州前进齿轮箱集团生产的大功率大功率低速船用齿轮箱，采用气控/电控操纵方式，减速比3.50~6.00，适用输入转速400~800r/min，额定推力500kN。适用于运输船、散货船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GW.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWS63.71/GWK63.71/GWH63.71/GWD63.71",
@@ -12939,7 +18211,7 @@ export const completeGearboxData = [
             6.45
         ],
         "thrust": 710,
-        "centerDistance": 17,
+        "centerDistance": 710,
         "dimensions": "2645×2381×1740",
         "weight": 17000,
         "source": "杭齿厂选型手册2025版5月版",
@@ -12963,7 +18235,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS63.95",
@@ -13007,7 +18288,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2645×2381×1740"
+        "dimensions": "2645×2381×1740",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS63.95/GWK63.95/GWH63.95/GWD63.95",
@@ -13033,7 +18323,7 @@ export const completeGearboxData = [
             6
         ],
         "thrust": 800,
-        "centerDistance": null,
+        "centerDistance": 800,
         "dimensions": "2645×2381×1740",
         "weight": 19000,
         "source": "杭齿厂选型手册2025版5月版",
@@ -13057,7 +18347,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ]
     },
     {
         "model": "GWS66.106",
@@ -13091,7 +18390,28 @@ export const completeGearboxData = [
         "thrust": 980,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2750×2500×1800"
+        "dimensions": "2750×2500×1800",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "centerDistance": 1060,
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWS66.106G/GWH66.106G",
@@ -13115,7 +18435,7 @@ export const completeGearboxData = [
             7.2
         ],
         "thrust": 980,
-        "centerDistance": null,
+        "centerDistance": 1060,
         "dimensions": "2750×2500×1800",
         "weight": 21000,
         "source": "杭齿厂选型手册2025版5月版",
@@ -13130,7 +18450,27 @@ export const completeGearboxData = [
         "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWS66.75",
@@ -13167,7 +18507,27 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2750×2500×1800"
+        "dimensions": "2750×2500×1800",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWS66.75G/GWH66.75G",
@@ -13208,7 +18568,27 @@ export const completeGearboxData = [
         "priceSource": "GWC66.75×95%",
         "discountRate": 0.1,
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "GWS70.111",
@@ -13251,7 +18631,19 @@ export const completeGearboxData = [
         "thrust": 1200,
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2876×2151×1970"
+        "dimensions": "2876×2151×1970",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ],
+        "centerDistance": 1110
     },
     {
         "model": "GWS70.111G/GWH70.111G",
@@ -13275,7 +18667,7 @@ export const completeGearboxData = [
             8.11
         ],
         "thrust": 1200,
-        "centerDistance": null,
+        "centerDistance": 1110,
         "dimensions": "2876×2151×1970",
         "weight": 25000,
         "source": "杭齿厂选型手册2025版5月版",
@@ -13299,7 +18691,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ]
     },
     {
         "model": "GWS70.76",
@@ -13345,7 +18748,18 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
         "rotationDirection": "相反",
-        "dimensions": "2876×2151×1970"
+        "dimensions": "2876×2151×1970",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ]
     },
     {
         "model": "GWS70.76G/GWH70.76G",
@@ -13371,7 +18785,7 @@ export const completeGearboxData = [
             8.15
         ],
         "thrust": 750,
-        "centerDistance": 22,
+        "centerDistance": 750,
         "dimensions": "2876×2151×1970",
         "weight": 22500,
         "source": "杭齿厂选型手册2025版5月版",
@@ -13395,7 +18809,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ]
     },
     {
         "model": "GWS70.82",
@@ -13443,7 +18868,18 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-GWS.webp",
         "dimensions": "2876×2151×1970",
         "controlType": "气控/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "散货船",
+            "油轮"
+        ]
     },
     {
         "model": "HC038A",
@@ -13468,10 +18904,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1500,
-            3200
-        ],
         "transmissionCapacityPerRatio": [
             0.028,
             0.028,
@@ -13495,7 +18927,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "小型渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HC1000",
@@ -13590,10 +19031,6 @@ export const completeGearboxData = [
                 "gearTooth": []
             }
         },
-        "inputSpeedRange": [
-            600,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.735,
             0.735,
@@ -13631,7 +19068,18 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船",
+            "大型渔船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "HC1200",
@@ -13794,10 +19242,6 @@ export const completeGearboxData = [
                 "gearTooth": []
             }
         },
-        "inputSpeedRange": [
-            600,
-            1900
-        ],
         "transmissionCapacityPerRatio": [
             1.03,
             1.03,
@@ -13841,7 +19285,18 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船",
+            "大型渔船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "HC1200/1",
@@ -13867,10 +19322,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            600,
-            1900
-        ],
         "transmissionCapacityPerRatio": [
             1.03,
             1.03,
@@ -13913,7 +19364,17 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "dimensions": "1096×1260×1270",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船",
+            "大型渔船"
+        ]
     },
     {
         "model": "HC1200/1P",
@@ -13951,7 +19412,34 @@ export const completeGearboxData = [
         "weight": 2500,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "1096×1260×1270"
+        "dimensions": "1096×1260×1270",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "海工船",
+            "环保船"
+        ],
+        "priceSource": "估算价格",
+        "price": 210000,
+        "discountRate": 0.1,
+        "introduction": "HC1200/1P是杭州前进齿轮箱集团生产的中大功率混合动力船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比3.70~5.58，适用输入转速1000~2500r/min，额定推力140kN。适用于运输船、工程船、海工船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-1100-1200.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ820"
+            ]
+        }
     },
     {
         "model": "HC1200P",
@@ -13997,7 +19485,34 @@ export const completeGearboxData = [
         "dimensions": "1082×1200×1130",
         "weight": 1870,
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "海工船",
+            "环保船"
+        ],
+        "priceSource": "估算价格",
+        "price": 200000,
+        "discountRate": 0.1,
+        "introduction": "HC1200P是杭州前进齿轮箱集团生产的中大功率混合动力船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比1.60~4.47，适用输入转速1000~2500r/min，额定推力120kN。适用于运输船、工程船、海工船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-1100-1200.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ820"
+            ]
+        }
     },
     {
         "model": "HC1201",
@@ -14027,14 +19542,39 @@ export const completeGearboxData = [
             0.93,
             0.93
         ],
-        "dataSource": "dwgTechParams_estimated",
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "price": 266000,
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "1082×1200×1130"
+        "dimensions": "1082×1200×1130",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船",
+            "大型渔船"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "HC1201是杭州前进齿轮箱集团生产的中大功率船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比1.60~4.47，适用输入转速600~1900r/min，额定推力120kN。适用于运输船、工程船、拖船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ505",
+                "φ518",
+                "φ640"
+            ]
+        }
     },
     {
         "model": "HC1250",
@@ -14064,14 +19604,39 @@ export const completeGearboxData = [
             0.969,
             0.969
         ],
-        "dataSource": "dwgTechParams_estimated",
         "image": "/images/gearbox/Advance-1100-1200.webp",
         "price": 277000,
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "1082×1200×1130"
+        "dimensions": "1082×1200×1130",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船",
+            "大型渔船"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "HC1250是杭州前进齿轮箱集团生产的中大功率船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比1.60~4.47，适用输入转速600~1900r/min，额定推力125kN。适用于运输船、工程船、拖船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-1100-1200.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ505",
+                "φ518",
+                "φ640"
+            ]
+        }
     },
     {
         "model": "HC138",
@@ -14101,10 +19666,6 @@ export const completeGearboxData = [
         "maxPower": 275,
         "minPower": 110,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.11,
             0.11,
@@ -14134,7 +19695,16 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-HC138-.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "HC1600",
@@ -14211,10 +19781,6 @@ export const completeGearboxData = [
                 "gearTooth": []
             }
         },
-        "inputSpeedRange": [
-            500,
-            1650
-        ],
         "transmissionCapacityPerRatio": [
             1.26,
             1.2,
@@ -14238,7 +19804,18 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船",
+            "大型渔船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "HC1600P",
@@ -14284,10 +19861,6 @@ export const completeGearboxData = [
                 ]
             }
         },
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             1.353,
             1.5,
@@ -14312,7 +19885,17 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船",
+            "大型渔船"
+        ]
     },
     {
         "model": "HC200",
@@ -14330,15 +19913,11 @@ export const completeGearboxData = [
         "weight": 280,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 27200,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "maxPower": 288,
         "minPower": 87,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            750,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.147,
             0.147,
@@ -14364,7 +19943,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ]
     },
     {
         "model": "HC2000",
@@ -14447,10 +20034,6 @@ export const completeGearboxData = [
                 "gearTooth": []
             }
         },
-        "inputSpeedRange": [
-            600,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             1.62,
             1.58,
@@ -14477,7 +20060,18 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船",
+            "大型渔船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "HC2000P",
@@ -14522,10 +20116,6 @@ export const completeGearboxData = [
                 ]
             }
         },
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             1.375,
             1.533,
@@ -14551,7 +20141,17 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船",
+            "大型渔船"
+        ]
     },
     {
         "model": "HC201",
@@ -14571,13 +20171,9 @@ export const completeGearboxData = [
         "minPower": 132,
         "powerSource": "传动能力计算",
         "price": 30600,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.147,
             0.147,
@@ -14593,7 +20189,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ]
     },
     {
         "model": "HC2400",
@@ -14618,10 +20222,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            600,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             1.8,
             1.8,
@@ -14638,7 +20238,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船",
+            "大型渔船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HC2700",
@@ -14687,10 +20298,6 @@ export const completeGearboxData = [
                 "gearTooth": []
             }
         },
-        "inputSpeedRange": [
-            500,
-            1600
-        ],
         "transmissionCapacityPerRatio": [
             2.05,
             2,
@@ -14709,7 +20316,18 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船",
+            "大型渔船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "HC2700P",
@@ -14733,10 +20351,6 @@ export const completeGearboxData = [
         "price": 207000,
         "discountRate": 0.1,
         "priceSource": "系统估算",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             1.371,
             1.515,
@@ -14759,7 +20373,17 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船",
+            "大型渔船"
+        ]
     },
     {
         "model": "HC300",
@@ -14791,10 +20415,6 @@ export const completeGearboxData = [
         "maxPower": 643,
         "minPower": 91,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.257,
             0.257,
@@ -14833,7 +20453,16 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "HC350-1",
@@ -14859,10 +20488,6 @@ export const completeGearboxData = [
         "maxPower": 650,
         "minPower": 118,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            750,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.26,
             0.257,
@@ -14880,7 +20505,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
     },
     {
         "model": "HC400",
@@ -14913,10 +20547,6 @@ export const completeGearboxData = [
         "maxPower": 596,
         "minPower": 190,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             0.331,
             0.331,
@@ -14947,7 +20577,16 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "HC400P",
@@ -14971,10 +20610,6 @@ export const completeGearboxData = [
         "price": 46000,
         "discountRate": 0.1,
         "priceSource": "系统估算",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.331,
             0.331,
@@ -15003,13 +20638,21 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ]
     },
     {
         "model": "HC4500P",
         "series": "HCP",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 500,
+        "maxSpeed": 1200,
         "ratios": [
             2.04,
             2.52,
@@ -15020,13 +20663,44 @@ export const completeGearboxData = [
             2.8,
             2.5
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 340,
+        "centerDistance": 720,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 7500,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "2100×2300×2000"
+        "dimensions": "2100×2300×2000",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "海工船",
+            "环保船"
+        ],
+        "maxPower": 3360,
+        "minPower": 1250,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 450000,
+        "discountRate": 0.1,
+        "introduction": "HC4500P是杭州前进齿轮箱集团生产的大功率混合动力船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比2.04~3.00，适用输入转速500~1200r/min，额定推力340kN。适用于运输船、工程船、海工船等船舶。",
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ820"
+            ]
+        }
     },
     {
         "model": "HC500",
@@ -15053,10 +20727,6 @@ export const completeGearboxData = [
         "maxPower": 840,
         "minPower": 320,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            800,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.4,
             0.4,
@@ -15075,13 +20745,22 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HC5000P",
         "series": "HCP",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 500,
+        "maxSpeed": 1200,
         "ratios": [
             2.04,
             2.52,
@@ -15092,19 +20771,50 @@ export const completeGearboxData = [
             3.2,
             2.8
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 400,
+        "centerDistance": 750,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 8500,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "2300×2500×2200"
+        "dimensions": "2300×2500×2200",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "海工船",
+            "环保船"
+        ],
+        "maxPower": 3840,
+        "minPower": 1400,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 520000,
+        "discountRate": 0.1,
+        "introduction": "HC5000P是杭州前进齿轮箱集团生产的大功率混合动力船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比2.04~3.00，适用输入转速500~1200r/min，额定推力400kN。适用于运输船、工程船、海工船等船舶。",
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ820"
+            ]
+        }
     },
     {
         "model": "HC6000P",
         "series": "HCP",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 500,
+        "maxSpeed": 1000,
         "ratios": [
             2.04,
             2.52
@@ -15113,13 +20823,44 @@ export const completeGearboxData = [
             3.8,
             3.8
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 450,
+        "centerDistance": 800,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 10000,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "2500×2800×2400"
+        "dimensions": "2500×2800×2400",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "海工船",
+            "环保船"
+        ],
+        "maxPower": 3800,
+        "minPower": 1900,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 650000,
+        "discountRate": 0.1,
+        "introduction": "HC6000P是杭州前进齿轮箱集团生产的大功率混合动力船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比2.04~2.52，适用输入转速500~1000r/min，额定推力450kN。适用于运输船、工程船、海工船等船舶。",
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ640",
+                "φ820"
+            ]
+        }
     },
     {
         "model": "HC600A",
@@ -15145,10 +20886,6 @@ export const completeGearboxData = [
         "maxPower": 1029,
         "minPower": 490,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.49,
             0.49,
@@ -15166,7 +20903,16 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-HC600A.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "HC600P",
@@ -15189,10 +20935,6 @@ export const completeGearboxData = [
         "price": 60000,
         "discountRate": 0.1,
         "priceSource": "系统估算",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             1.359,
             1.486,
@@ -15214,7 +20956,16 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船",
+            "大型渔船"
+        ]
     },
     {
         "model": "HC65",
@@ -15231,13 +20982,9 @@ export const completeGearboxData = [
         "minPower": 24,
         "powerSource": "传动能力计算",
         "price": 12000,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2800
-        ],
         "weight": 130,
         "transmissionCapacityPerRatio": [
             0.048,
@@ -15262,13 +21009,21 @@ export const completeGearboxData = [
         "thrust": 14.7,
         "centerDistance": 142,
         "controlType": "推拉软轴",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "小型渔船",
+            "内河船",
+            "工作艇"
+        ]
     },
     {
         "model": "HC85",
         "series": "HC",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 1000,
+        "maxSpeed": 2500,
         "ratios": [
             2.04,
             2.59,
@@ -15283,13 +21038,41 @@ export const completeGearboxData = [
             0.039,
             0.035
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 1.8,
+        "centerDistance": 130,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 52,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "351×380×544"
+        "dimensions": "351×380×544",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "小型渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "maxPower": 130,
+        "minPower": 35,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 10000,
+        "discountRate": 0.1,
+        "introduction": "HC85是杭州前进齿轮箱集团生产的中小功率船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比2.04~4.12，适用输入转速1000~2500r/min，额定推力1.8kN。适用于小型渔船、内河船、工作艇等船舶。",
+        "image": "/images/gearbox/06-16A-26.webp",
+        "imageUrl": "/images/gearbox/06-16A-26.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "HCA1000",
@@ -15306,10 +21089,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             0.6
         ],
@@ -15325,7 +21104,18 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp",
         "dimensions": "1030×1104×1050",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "thrust": 100,
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "centerDistance": 310
     },
     {
         "model": "HCA1000(倾角10°)",
@@ -15337,7 +21127,7 @@ export const completeGearboxData = [
             2.96
         ],
         "thrust": 100,
-        "centerDistance": null,
+        "centerDistance": 310,
         "dimensions": "1030×1104×1050",
         "weight": 1100,
         "source": "杭齿厂选型手册2025版5月版",
@@ -15347,10 +21137,6 @@ export const completeGearboxData = [
         "maxPower": 1380,
         "minPower": 600,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             0.6,
             0.6
@@ -15365,7 +21151,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ]
     },
     {
         "model": "HCA138",
@@ -15383,13 +21178,9 @@ export const completeGearboxData = [
         "minPower": 2960,
         "powerSource": "传动能力计算",
         "price": 34000,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2600
-        ],
         "transmissionCapacityPerRatio": [
             2.96,
             2.96,
@@ -15418,7 +21209,18 @@ export const completeGearboxData = [
         "weight": 200,
         "image": "/images/gearbox/HCQ138-HCA138-.webp",
         "controlType": "推拉软轴",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "thrust": 25,
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "centerDistance": 296
     },
     {
         "model": "HCA138(倾角5°)",
@@ -15439,10 +21241,6 @@ export const completeGearboxData = [
         "maxPower": 221,
         "minPower": 85,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2600
-        ],
         "transmissionCapacityPerRatio": [
             0.085
         ],
@@ -15465,7 +21263,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/HCQ138-HCA138-.webp",
         "controlType": "推拉软轴",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "运输船",
+            "工作船"
+        ]
     },
     {
         "model": "HCA138(倾角7°)",
@@ -15517,7 +21324,17 @@ export const completeGearboxData = [
         "centerDistance": 185,
         "dimensions": "530×660×616",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "运输船",
+            "工作船"
+        ],
+        "imageUrl": "/images/gearbox/HCQ138-HCA138-.webp"
     },
     {
         "model": "HCA1400",
@@ -15537,13 +21354,9 @@ export const completeGearboxData = [
         "minPower": 4800,
         "powerSource": "传动能力计算",
         "price": 360000,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1600,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             3,
             3,
@@ -15569,7 +21382,18 @@ export const completeGearboxData = [
         "weight": 1600,
         "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "thrust": 110,
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "centerDistance": 370
     },
     {
         "model": "HCA1400(倾角7°)",
@@ -15582,7 +21406,7 @@ export const completeGearboxData = [
             3
         ],
         "thrust": 110,
-        "centerDistance": null,
+        "centerDistance": 370,
         "dimensions": "826×1300×1250",
         "weight": 1600,
         "source": "杭齿厂选型手册2025版5月版",
@@ -15592,10 +21416,6 @@ export const completeGearboxData = [
         "maxPower": 2163,
         "minPower": 1648,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1600,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             1.03,
             1.03,
@@ -15615,7 +21435,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ]
     },
     {
         "model": "HCA1401",
@@ -15635,10 +21464,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             2.93,
             2.93,
@@ -15657,7 +21482,18 @@ export const completeGearboxData = [
         "weight": 1600,
         "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "thrust": 110,
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "centerDistance": 370
     },
     {
         "model": "HCA1401(倾角5°)",
@@ -15671,7 +21507,7 @@ export const completeGearboxData = [
             2.93
         ],
         "thrust": 110,
-        "centerDistance": null,
+        "centerDistance": 370,
         "dimensions": "756×1300×1285",
         "weight": 1600,
         "source": "杭齿厂选型手册2025版5月版",
@@ -15681,10 +21517,6 @@ export const completeGearboxData = [
         "maxPower": 2165,
         "minPower": 880,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             1.031,
             1.031,
@@ -15701,7 +21533,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ]
     },
     {
         "model": "HCA300",
@@ -15724,13 +21565,9 @@ export const completeGearboxData = [
         "minPower": 2950,
         "powerSource": "传动能力计算",
         "price": 66900,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             2.95,
             2.95,
@@ -15749,7 +21586,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ]
     },
     {
         "model": "HCA300(倾角10°)",
@@ -15788,7 +21634,17 @@ export const completeGearboxData = [
         "centerDistance": 278,
         "dimensions": "620×585×753",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
     },
     {
         "model": "HCA301",
@@ -15812,10 +21668,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             0.25,
             0.235,
@@ -15837,7 +21689,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ]
     },
     {
         "model": "HCA301(倾角5°)",
@@ -15881,7 +21742,17 @@ export const completeGearboxData = [
         "centerDistance": 265,
         "dimensions": "618×585×824",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
     },
     {
         "model": "HCA302",
@@ -15901,10 +21772,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             0.25,
             0.25,
@@ -15926,7 +21793,18 @@ export const completeGearboxData = [
         "weight": 370,
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "thrust": 40,
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "centerDistance": 300
     },
     {
         "model": "HCA302(倾角7°)",
@@ -15950,10 +21828,6 @@ export const completeGearboxData = [
         "maxPower": 575,
         "minPower": 235,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             0.25,
             0.25,
@@ -15973,7 +21847,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ]
     },
     {
         "model": "HCA700",
@@ -15997,13 +21880,9 @@ export const completeGearboxData = [
         "minPower": 2920,
         "powerSource": "传动能力计算",
         "price": 163000,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             2.92,
             2.92,
@@ -16023,7 +21902,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ]
     },
     {
         "model": "HCA700(倾角8°)",
@@ -16063,7 +21951,18 @@ export const completeGearboxData = [
         "thrust": 90,
         "dimensions": "835×1104×1156",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "centerDistance": 340,
+        "imageUrl": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp"
     },
     {
         "model": "HCA701",
@@ -16081,10 +21980,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             2.96,
             2.96
@@ -16101,7 +21996,18 @@ export const completeGearboxData = [
         "dimensions": "939×1130×1035",
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "weight": 1100
+        "weight": 1100,
+        "thrust": 27.5,
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "centerDistance": 340
     },
     {
         "model": "HCA701(倾角5°)",
@@ -16112,7 +22018,7 @@ export const completeGearboxData = [
             0.77
         ],
         "thrust": 27.5,
-        "centerDistance": null,
+        "centerDistance": 340,
         "dimensions": "939×1130×1035",
         "weight": 1100,
         "source": "杭齿厂选型手册2025版5月版",
@@ -16122,10 +22028,6 @@ export const completeGearboxData = [
         "maxPower": 1385,
         "minPower": 554,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.554
         ],
@@ -16139,7 +22041,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ]
     },
     {
         "model": "HCAG1090",
@@ -16165,10 +22076,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1500,
-            4500
-        ],
         "transmissionCapacityPerRatio": [
             3,
             3,
@@ -16190,7 +22097,17 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "480×320×400"
+        "dimensions": "480×320×400",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCAG3050",
@@ -16216,10 +22133,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2600
-        ],
         "transmissionCapacityPerRatio": [
             3,
             3,
@@ -16241,7 +22154,17 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "765×510×638"
+        "dimensions": "765×510×638",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCAG5050",
@@ -16262,10 +22185,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1500,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.9435,
             0.9157,
@@ -16282,7 +22201,17 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "1020×680×850"
+        "dimensions": "1020×680×850",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCAG6400",
@@ -16302,10 +22231,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1600,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             1.03,
             1.03
@@ -16321,7 +22246,17 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "1020×680×850"
+        "dimensions": "1020×680×850",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCAG7650",
@@ -16345,10 +22280,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             2.75,
             2.75,
@@ -16368,7 +22299,17 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "1170×780×975"
+        "dimensions": "1170×780×975",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCAG7650(倾角8°)",
@@ -16395,10 +22336,6 @@ export const completeGearboxData = [
         "maxPower": 2946,
         "minPower": 1403,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             1.403,
             1.403,
@@ -16417,7 +22354,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCAG9055",
@@ -16439,10 +22386,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             2.95,
             2.95,
@@ -16460,7 +22403,17 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "1408×940×1175"
+        "dimensions": "1408×940×1175",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCAG9055(倾角8°)",
@@ -16483,10 +22436,6 @@ export const completeGearboxData = [
         "maxPower": 3694,
         "minPower": 1660,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             1.759,
             1.7095,
@@ -16501,7 +22450,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "拖网渔船",
+            "大型渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCAM1250",
@@ -16523,14 +22482,32 @@ export const completeGearboxData = [
             0.8,
             0.8
         ],
-        "dataSource": "dwgTechParams_estimated",
         "image": "/images/gearbox/Advance-1100-1200.webp",
         "price": 142000,
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "960×640×800"
+        "dimensions": "960×640×800",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "高速渔船",
+            "快艇",
+            "巡逻艇"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "HCAM1250是杭州前进齿轮箱集团生产的中大功率铝合金倾角船用齿轮箱，采用推拉软轴/电控操纵方式，减速比1.10~1.51，适用输入转速1000~2300r/min，额定推力155kN。适用于高速渔船、快艇、巡逻艇等船舶。",
+        "imageUrl": "/images/gearbox/Advance-1100-1200.webp",
+        "inputInterfaces": {
+            "plainFlange": true,
+            "domestic": [
+                "φ770"
+            ]
+        }
     },
     {
         "model": "HCAM1400",
@@ -16552,14 +22529,32 @@ export const completeGearboxData = [
             0.896,
             0.896
         ],
-        "dataSource": "dwgTechParams_estimated",
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "price": 360000,
         "priceSource": "2026官方出厂价",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "1050×700×875"
+        "dimensions": "1050×700×875",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "高速渔船",
+            "快艇",
+            "巡逻艇"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "HCAM1400是杭州前进齿轮箱集团生产的中大功率铝合金倾角船用齿轮箱，采用推拉软轴/电控操纵方式，减速比1.10~1.51，适用输入转速1000~2300r/min，额定推力174kN。适用于高速渔船、快艇、巡逻艇等船舶。",
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "inputInterfaces": {
+            "plainFlange": true,
+            "domestic": [
+                "φ770"
+            ]
+        }
     },
     {
         "model": "HCAM302",
@@ -16581,14 +22576,32 @@ export const completeGearboxData = [
             0.193,
             0.193
         ],
-        "dataSource": "dwgTechParams_estimated",
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "price": 34000,
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "570×380×475"
+        "dimensions": "570×380×475",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "高速渔船",
+            "快艇",
+            "巡逻艇"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "HCAM302是杭州前进齿轮箱集团生产的中功率铝合金倾角船用齿轮箱，采用推拉软轴/电控操纵方式，减速比1.10~1.51，适用输入转速1000~2300r/min，额定推力37kN。适用于高速渔船、快艇、巡逻艇等船舶。",
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "inputInterfaces": {
+            "plainFlange": true,
+            "domestic": [
+                "φ770"
+            ]
+        }
     },
     {
         "model": "HCAM303",
@@ -16613,10 +22626,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             1.49,
             1.49,
@@ -16637,7 +22646,17 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "570×380×475"
+        "dimensions": "570×380×475",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "高速渔船",
+            "快艇",
+            "巡逻艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
     },
     {
         "model": "HCAM403",
@@ -16653,18 +22672,7 @@ export const completeGearboxData = [
         "centerDistance": 224,
         "dimensions": "712×586×619",
         "weight": 390,
-        "oilCapacity": 18,
-        "clutchType": "液压湿式多片摩擦离合器",
-        "gearType": "圆柱斜齿轮",
-        "transmissionType": "三轴五齿轮传动",
-        "workingPressure": "1.8-2.0",
-        "maxOilTemp": 85,
-        "coolingWaterFlow": 2.5,
-        "overhaulPeriod": 10000,
-        "efficiency": 0.97,
         "controlType": "推拉软轴/电控",
-        "inputShaftType": "SAE1#14/SAE2#11.5",
-        "outputShaftDia": 100,
         "applications": [
             "拖网渔船",
             "运输船",
@@ -16681,10 +22689,6 @@ export const completeGearboxData = [
         "maxPower": 593,
         "minPower": 181,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             0.258,
             0.232,
@@ -16698,7 +22702,8 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCAM500",
@@ -16720,20 +22725,38 @@ export const completeGearboxData = [
             0.32,
             0.32
         ],
-        "dataSource": "dwgTechParams_estimated",
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "price": 57000,
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "680×453×566"
+        "dimensions": "680×453×566",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "高速渔船",
+            "快艇",
+            "巡逻艇"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "HCAM500是杭州前进齿轮箱集团生产的中功率铝合金倾角船用齿轮箱，采用推拉软轴/电控操纵方式，减速比1.10~1.51，适用输入转速1000~2300r/min，额定推力62kN。适用于高速渔船、快艇、巡逻艇等船舶。",
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "inputInterfaces": {
+            "plainFlange": true,
+            "domestic": [
+                "φ770"
+            ]
+        }
     },
     {
         "model": "HCD0FM",
         "series": "HCDF",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 1000,
+        "maxSpeed": 2100,
         "ratios": [
             1.09,
             1.52,
@@ -16746,13 +22769,37 @@ export const completeGearboxData = [
             0.03,
             0.025
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 3,
+        "centerDistance": 80,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 28,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "680×930×880"
+        "dimensions": "680×930×880",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "小型渔船",
+            "内河船",
+            "游艇"
+        ],
+        "maxPower": 76,
+        "minPower": 25,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 5000,
+        "discountRate": 0.1,
+        "introduction": "HCD0FM是杭州前进齿轮箱集团生产的中小功率法兰输出小型船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比1.09~2.48，适用输入转速1000~2100r/min，额定推力3kN。适用于小型渔船、内河船、游艇等船舶。",
+        "image": "/images/gearbox/06-16A-26.webp",
+        "imageUrl": "/images/gearbox/06-16A-26.webp",
+        "inputInterfaces": {
+            "plainFlange": true,
+            "boltPatterns": [
+                "6-φ11",
+                "8-φ11"
+            ]
+        }
     },
     {
         "model": "HCD1000",
@@ -16780,10 +22827,6 @@ export const completeGearboxData = [
         "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            600,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.735,
             0.735,
@@ -16816,13 +22859,23 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCD1000/2",
         "series": "HCD",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 600,
+        "maxSpeed": 2100,
         "ratios": [
             2.04,
             2.52,
@@ -16839,13 +22892,42 @@ export const completeGearboxData = [
             0.74,
             0.66
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 140,
+        "centerDistance": 450,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 2000,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "1082×1280×1345"
+        "dimensions": "1082×1280×1345",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ],
+        "maxPower": 1554,
+        "minPower": 396,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 90000,
+        "discountRate": 0.1,
+        "introduction": "HCD1000/2是杭州前进齿轮箱集团生产的中大功率船用齿轮箱（带离合器），采用推拉软轴/电控/气控操纵方式，减速比2.04~4.47，适用输入转速600~2100r/min，额定推力140kN。适用于渔船、运输船、工作船等船舶。",
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ518",
+                "φ640"
+            ]
+        }
     },
     {
         "model": "HCD1200",
@@ -16876,10 +22958,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            700,
-            1900
-        ],
         "transmissionCapacityPerRatio": [
             1.03,
             1.03,
@@ -16909,7 +22987,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCD138",
@@ -16933,10 +23021,6 @@ export const completeGearboxData = [
         "maxPower": 275,
         "minPower": 93,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.11,
             0.11,
@@ -16965,7 +23049,16 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-HCD400A.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "HCD1400",
@@ -16995,10 +23088,6 @@ export const completeGearboxData = [
         "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            600,
-            1900
-        ],
         "transmissionCapacityPerRatio": [
             1.081,
             1.081,
@@ -17035,7 +23124,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCD1400P",
@@ -17080,10 +23179,6 @@ export const completeGearboxData = [
                 ]
             }
         },
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             1.364,
             1.516,
@@ -17123,7 +23218,17 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCD1500",
@@ -17144,7 +23249,6 @@ export const completeGearboxData = [
         "dimensions": "1260×1380×1360",
         "weight": 2800,
         "controlType": "推拉软轴/电控/气控",
-        "inputShaftType": "按主机飞轮配",
         "rotationDirection": "相反",
         "source": "杭齿厂选型手册2025版5月版",
         "price": 155000,
@@ -17153,10 +23257,6 @@ export const completeGearboxData = [
         "maxPower": 2280,
         "minPower": 720,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1900
-        ],
         "transmissionCapacityPerRatio": [
             1.2,
             1.2,
@@ -17180,7 +23280,17 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCD1580",
@@ -17203,7 +23313,6 @@ export const completeGearboxData = [
         "dimensions": "1260×1380×1360",
         "weight": 2800,
         "controlType": "推拉软轴/电控/气控",
-        "inputShaftType": "按主机飞轮配",
         "rotationDirection": "相反",
         "source": "杭齿厂选型手册2025版5月版",
         "price": 168000,
@@ -17212,10 +23321,6 @@ export const completeGearboxData = [
         "maxPower": 2030,
         "minPower": 627,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1650
-        ],
         "transmissionCapacityPerRatio": [
             1.23,
             1.23,
@@ -17241,7 +23346,17 @@ export const completeGearboxData = [
                 "φ518"
             ]
         },
-        "image": "/images/gearbox/Advance-1400.webp"
+        "image": "/images/gearbox/Advance-1400.webp",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-1400.webp"
     },
     {
         "model": "HCD1600",
@@ -17263,7 +23378,6 @@ export const completeGearboxData = [
         "dimensions": "1291×1620×1590",
         "weight": 4000,
         "controlType": "推拉软轴/电控/气控",
-        "inputShaftType": "按主机飞轮配",
         "rotationDirection": "相反",
         "source": "杭齿厂选型手册2025版5月版",
         "price": 165400,
@@ -17272,10 +23386,6 @@ export const completeGearboxData = [
         "maxPower": 2129,
         "minPower": 525,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             1.29,
             1.29,
@@ -17300,7 +23410,17 @@ export const completeGearboxData = [
                 "φ540"
             ]
         },
-        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
+        "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCD1600P",
@@ -17320,10 +23440,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             1.26,
             1.2,
@@ -17352,13 +23468,23 @@ export const completeGearboxData = [
         "dimensions": "1291×1620×1590",
         "weight": 4000,
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCD1FM",
         "series": "HCDF",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 1000,
+        "maxSpeed": 2000,
         "ratios": [
             1.09,
             1.52,
@@ -17371,13 +23497,37 @@ export const completeGearboxData = [
             0.042,
             0.035
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 5,
+        "centerDistance": 100,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 38,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "820×950×890"
+        "dimensions": "820×950×890",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "小型渔船",
+            "内河船",
+            "游艇"
+        ],
+        "maxPower": 100,
+        "minPower": 35,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 6500,
+        "discountRate": 0.1,
+        "introduction": "HCD1FM是杭州前进齿轮箱集团生产的中小功率法兰输出小型船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比1.09~2.48，适用输入转速1000~2000r/min，额定推力5kN。适用于小型渔船、内河船、游艇等船舶。",
+        "image": "/images/gearbox/06-16A-26.webp",
+        "imageUrl": "/images/gearbox/06-16A-26.webp",
+        "inputInterfaces": {
+            "plainFlange": true,
+            "boltPatterns": [
+                "6-φ11",
+                "8-φ11"
+            ]
+        }
     },
     {
         "model": "HCD2000",
@@ -17403,10 +23553,6 @@ export const completeGearboxData = [
         "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            600,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             1.62,
             1.62,
@@ -17434,13 +23580,23 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCD2000/2",
         "series": "HCD",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 600,
+        "maxSpeed": 1500,
         "ratios": [
             2.04,
             2.52,
@@ -17453,13 +23609,43 @@ export const completeGearboxData = [
             1.5,
             1.5
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 220,
+        "centerDistance": 560,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 4200,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "1600×1620×1645"
+        "dimensions": "1600×1620×1645",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ],
+        "maxPower": 2250,
+        "minPower": 900,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 206000,
+        "discountRate": 0.1,
+        "introduction": "HCD2000/2是杭州前进齿轮箱集团生产的中大功率船用齿轮箱（带离合器），采用推拉软轴/电控/气控操纵方式，减速比2.04~3.50，适用输入转速600~1500r/min，额定推力220kN。适用于渔船、运输船、工作船等船舶。",
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ518",
+                "φ640",
+                "φ700"
+            ]
+        }
     },
     {
         "model": "HCD2000P",
@@ -17502,10 +23688,6 @@ export const completeGearboxData = [
                 ]
             }
         },
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             1.58,
             1.58,
@@ -17536,7 +23718,17 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCD2400",
@@ -17562,10 +23754,6 @@ export const completeGearboxData = [
         "maxPower": 2880,
         "minPower": 1080,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1600
-        ],
         "transmissionCapacityPerRatio": [
             1.8,
             1.8,
@@ -17590,7 +23778,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCD2700",
@@ -17616,10 +23814,6 @@ export const completeGearboxData = [
         "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            500,
-            1600
-        ],
         "transmissionCapacityPerRatio": [
             2.1,
             2.1,
@@ -17637,7 +23831,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCD2700P",
@@ -17675,10 +23879,6 @@ export const completeGearboxData = [
                 ]
             }
         },
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             2.1,
             2.1,
@@ -17706,13 +23906,23 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCD2FM",
         "series": "HCDF",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 1000,
+        "maxSpeed": 2500,
         "ratios": [
             1.55,
             2,
@@ -17725,13 +23935,37 @@ export const completeGearboxData = [
             0.048,
             0.04
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 8.5,
+        "centerDistance": 120,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 45,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "1082×1120×990"
+        "dimensions": "1082×1120×990",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "小型渔船",
+            "内河船",
+            "游艇"
+        ],
+        "maxPower": 145,
+        "minPower": 40,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 8000,
+        "discountRate": 0.1,
+        "introduction": "HCD2FM是杭州前进齿轮箱集团生产的中小功率法兰输出小型船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比1.55~3.00，适用输入转速1000~2500r/min，额定推力8.5kN。适用于小型渔船、内河船、游艇等船舶。",
+        "image": "/images/gearbox/06-16A-26.webp",
+        "imageUrl": "/images/gearbox/06-16A-26.webp",
+        "inputInterfaces": {
+            "plainFlange": true,
+            "boltPatterns": [
+                "6-φ11",
+                "8-φ11"
+            ]
+        }
     },
     {
         "model": "HCD350",
@@ -17757,10 +23991,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            750,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.26,
             0.245,
@@ -17785,7 +24015,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
     },
     {
         "model": "HCD3800",
@@ -17812,10 +24051,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            500,
-            1200
-        ],
         "transmissionCapacityPerRatio": [
             2.825,
             2.825,
@@ -17841,13 +24076,23 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCD400",
         "series": "HCD",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 1000,
+        "maxSpeed": 1800,
         "ratios": [
             1.48,
             1.94,
@@ -17870,13 +24115,41 @@ export const completeGearboxData = [
             0.222,
             0.201
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 82,
+        "centerDistance": 355,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 620,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "820×950×890"
+        "dimensions": "820×950×890",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ],
+        "maxPower": 504,
+        "minPower": 201,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 38000,
+        "discountRate": 0.1,
+        "introduction": "HCD400是杭州前进齿轮箱集团生产的中功率船用齿轮箱（带离合器），采用推拉软轴/电控/气控操纵方式，减速比1.48~5.54，适用输入转速1000~1800r/min，额定推力82kN。适用于渔船、运输船、工作船等船舶。",
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ505",
+                "φ518"
+            ]
+        }
     },
     {
         "model": "HCD400A",
@@ -17905,10 +24178,6 @@ export const completeGearboxData = [
         "maxPower": 490,
         "minPower": 196,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.331,
             0.293,
@@ -17940,7 +24209,16 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-HCD400A.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "HCD400P",
@@ -17959,10 +24237,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            3000
-        ],
         "transmissionCapacityPerRatio": [
             0.331,
             0.331,
@@ -17990,7 +24264,18 @@ export const completeGearboxData = [
         "weight": 620,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "820×950×890"
+        "dimensions": "820×950×890",
+        "thrust": 82,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "centerDistance": 355,
+        "imageUrl": "/images/gearbox/Advance-HCD400A.webp"
     },
     {
         "model": "HCD440",
@@ -18018,14 +24303,36 @@ export const completeGearboxData = [
             0.352,
             0.352
         ],
-        "dataSource": "dwgTechParams_estimated",
         "image": "/images/gearbox/Advance-HCD400A.webp",
         "price": 85000,
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "820×950×890"
+        "dimensions": "820×950×890",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "HCD440是杭州前进齿轮箱集团生产的中功率船用齿轮箱（带离合器），采用推拉软轴/电控/气控操纵方式，减速比4.00~6.00，适用输入转速1000~2100r/min，额定推力80kN。适用于运输船、拖网渔船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-HCD400A.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ505",
+                "φ518"
+            ]
+        }
     },
     {
         "model": "HCD450",
@@ -18051,10 +24358,6 @@ export const completeGearboxData = [
         "maxPower": 756,
         "minPower": 279,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.36,
             0.331,
@@ -18083,7 +24386,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCD400A.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCD400A.webp"
     },
     {
         "model": "HCD450P",
@@ -18111,20 +24423,42 @@ export const completeGearboxData = [
             0.36,
             0.36
         ],
-        "dataSource": "dwgTechParams",
         "image": "/images/gearbox/Advance-HCD400A.webp",
         "price": 87000,
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "dimensions": "761×984×1040",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "HCD450P是杭州前进齿轮箱集团生产的中功率船用齿轮箱（带离合器），采用推拉软轴/电控/气控操纵方式，减速比4.00~6.00，适用输入转速1000~2100r/min，额定推力82kN。适用于运输船、拖网渔船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-HCD400A.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ505",
+                "φ518"
+            ]
+        }
     },
     {
         "model": "HCD600/2",
         "series": "HCD",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 1000,
+        "maxSpeed": 2100,
         "ratios": [
             2.04,
             2.96,
@@ -18141,13 +24475,41 @@ export const completeGearboxData = [
             0.34,
             0.31
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 90,
+        "centerDistance": 415,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 950,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "745×1214×1271"
+        "dimensions": "745×1214×1271",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ],
+        "maxPower": 882,
+        "minPower": 310,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 72000,
+        "discountRate": 0.1,
+        "introduction": "HCD600/2是杭州前进齿轮箱集团生产的中功率船用齿轮箱（带离合器），采用推拉软轴/电控/气控操纵方式，减速比2.04~4.89，适用输入转速1000~2100r/min，额定推力90kN。适用于渔船、运输船、工作船等船舶。",
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ518",
+                "φ640"
+            ]
+        }
     },
     {
         "model": "HCD600A",
@@ -18173,10 +24535,6 @@ export const completeGearboxData = [
         "maxPower": 1029,
         "minPower": 430,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.49,
             0.49,
@@ -18218,7 +24576,16 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "priceSource": "估算价格"
     },
     {
         "model": "HCD600P",
@@ -18239,10 +24606,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            3000
-        ],
         "transmissionCapacityPerRatio": [
             0.45,
             0.41,
@@ -18286,13 +24649,23 @@ export const completeGearboxData = [
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
         "dimensions": "745×1214×1126",
-        "weight": 1550
+        "weight": 1550,
+        "thrust": 90,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "centerDistance": 415
     },
     {
         "model": "HCD68",
         "series": "HCD",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 1000,
+        "maxSpeed": 2500,
         "ratios": [
             2.05,
             2.45,
@@ -18305,13 +24678,40 @@ export const completeGearboxData = [
             0.031,
             0.027
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 14.7,
+        "centerDistance": 142,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 48,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "351×380×544"
+        "dimensions": "351×380×544",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ],
+        "maxPower": 95,
+        "minPower": 27,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 15000,
+        "discountRate": 0.1,
+        "introduction": "HCD68是杭州前进齿轮箱集团生产的中小功率船用齿轮箱（带离合器），采用推拉软轴/电控/气控操纵方式，减速比2.05~3.55，适用输入转速1000~2500r/min，额定推力14.7kN。适用于渔船、运输船、工作船等船舶。",
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ505"
+            ]
+        }
     },
     {
         "model": "HCD700",
@@ -18338,10 +24738,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            600,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             0.55,
             0.55,
@@ -18367,7 +24763,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCD800",
@@ -18395,10 +24800,6 @@ export const completeGearboxData = [
         "discountRate": 0.08,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            900,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.52,
             0.52,
@@ -18426,13 +24827,21 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ]
     },
     {
         "model": "HCD800/2",
         "series": "HCD",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 600,
+        "maxSpeed": 2100,
         "ratios": [
             2.04,
             2.52,
@@ -18449,13 +24858,41 @@ export const completeGearboxData = [
             0.52,
             0.47
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 110,
+        "centerDistance": 450,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 1350,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "1056×1280×1341"
+        "dimensions": "1056×1280×1341",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ],
+        "maxPower": 1092,
+        "minPower": 282,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 89000,
+        "discountRate": 0.1,
+        "introduction": "HCD800/2是杭州前进齿轮箱集团生产的中大功率船用齿轮箱（带离合器），采用推拉软轴/电控/气控操纵方式，减速比2.04~4.47，适用输入转速600~2100r/min，额定推力110kN。适用于渔船、运输船、工作船等船舶。",
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ518",
+                "φ640"
+            ]
+        }
     },
     {
         "model": "HCD800P",
@@ -18505,10 +24942,6 @@ export const completeGearboxData = [
                 ]
             }
         },
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             1.351,
             1.486,
@@ -18539,7 +24972,15 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ]
     },
     {
         "model": "HCDS1200",
@@ -18563,10 +25004,6 @@ export const completeGearboxData = [
         "maxPower": 1767,
         "minPower": 390,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1900
-        ],
         "transmissionCapacityPerRatio": [
             0.93,
             0.93,
@@ -18589,7 +25026,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCDS1400",
@@ -18614,10 +25060,6 @@ export const completeGearboxData = [
         "maxPower": 1854,
         "minPower": 570,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             1.03,
             1.03,
@@ -18641,7 +25083,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCDS1600",
@@ -18675,7 +25126,30 @@ export const completeGearboxData = [
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相同",
         "dimensions": "1246×1500×1750",
-        "weight": 5800
+        "weight": 5800,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "拖网渔船",
+            "拖船",
+            "工程船"
+        ],
+        "priceSource": "估算价格",
+        "price": 200000,
+        "discountRate": 0.1,
+        "introduction": "HCDS1600是杭州前进齿轮箱集团生产的中大功率双速船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比2.97~5.25，适用输入转速500~1650r/min，额定推力200kN。适用于拖网渔船、拖船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-1600.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ518"
+            ]
+        }
     },
     {
         "model": "HCDS2000",
@@ -18715,7 +25189,30 @@ export const completeGearboxData = [
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相同",
         "dimensions": "1600×1620×1645",
-        "weight": 6500
+        "weight": 6500,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "拖网渔船",
+            "拖船",
+            "工程船"
+        ],
+        "priceSource": "估算价格",
+        "price": 250000,
+        "discountRate": 0.1,
+        "introduction": "HCDS2000是杭州前进齿轮箱集团生产的中大功率双速船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比3.00~6.05，适用输入转速600~1500r/min，额定推力220kN。适用于拖网渔船、拖船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-HCD400A.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ518"
+            ]
+        }
     },
     {
         "model": "HCDS2700",
@@ -18741,10 +25238,6 @@ export const completeGearboxData = [
         "maxPower": 2870,
         "minPower": 850,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            500,
-            1400
-        ],
         "transmissionCapacityPerRatio": [
             2.05,
             2.05,
@@ -18769,7 +25262,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCDS302",
@@ -18797,10 +25299,6 @@ export const completeGearboxData = [
         "maxPower": 643,
         "minPower": 130,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.257,
             0.257,
@@ -18827,7 +25325,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
     },
     {
         "model": "HCDS400",
@@ -18852,10 +25359,6 @@ export const completeGearboxData = [
         "maxPower": 596,
         "minPower": 280,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             0.331,
             0.331,
@@ -18879,7 +25382,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCDS600",
@@ -18904,10 +25416,6 @@ export const completeGearboxData = [
         "maxPower": 1008,
         "minPower": 380,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.48,
             0.48,
@@ -18931,7 +25439,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCDS800",
@@ -18956,10 +25473,6 @@ export const completeGearboxData = [
         "maxPower": 1125,
         "minPower": 300,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             0.625,
             0.625,
@@ -18983,13 +25496,22 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCDX300",
         "series": "HCDX",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 1000,
+        "maxSpeed": 2500,
         "ratios": [
             2.04,
             2.48,
@@ -19004,19 +25526,47 @@ export const completeGearboxData = [
             0.189,
             0.165
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 60,
+        "centerDistance": 300,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 180,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "680×930×880"
+        "dimensions": "680×930×880",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ],
+        "maxPower": 525,
+        "minPower": 165,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 25000,
+        "discountRate": 0.1,
+        "introduction": "HCDX300是杭州前进齿轮箱集团生产的中功率多档位船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比2.04~3.96，适用输入转速1000~2500r/min，额定推力60kN。适用于渔船、运输船、工作船等船舶。",
+        "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ505",
+                "φ518"
+            ]
+        }
     },
     {
         "model": "HCDX400",
         "series": "HCDX",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 1000,
+        "maxSpeed": 1800,
         "ratios": [
             2.04,
             2.48,
@@ -19033,19 +25583,47 @@ export const completeGearboxData = [
             0.252,
             0.222
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 82,
+        "centerDistance": 355,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 260,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "820×950×890"
+        "dimensions": "820×950×890",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ],
+        "maxPower": 504,
+        "minPower": 222,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 50000,
+        "discountRate": 0.1,
+        "introduction": "HCDX400是杭州前进齿轮箱集团生产的中功率多档位船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比2.04~4.48，适用输入转速1000~1800r/min，额定推力82kN。适用于渔船、运输船、工作船等船舶。",
+        "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ505",
+                "φ518"
+            ]
+        }
     },
     {
         "model": "HCDX600",
         "series": "HCDX",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 1000,
+        "maxSpeed": 2100,
         "ratios": [
             2.04,
             2.52,
@@ -19064,19 +25642,47 @@ export const completeGearboxData = [
             0.407,
             0.36
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 90,
+        "centerDistance": 415,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 400,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "745×1214×1126"
+        "dimensions": "745×1214×1126",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ],
+        "maxPower": 949,
+        "minPower": 360,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 95000,
+        "discountRate": 0.1,
+        "introduction": "HCDX600是杭州前进齿轮箱集团生产的中功率多档位船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比2.04~5.05，适用输入转速1000~2100r/min，额定推力90kN。适用于渔船、运输船、工作船等船舶。",
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ518",
+                "φ640"
+            ]
+        }
     },
     {
         "model": "HCDX800",
         "series": "HCDX",
-        "minSpeed": null,
-        "maxSpeed": null,
+        "minSpeed": 600,
+        "maxSpeed": 2100,
         "ratios": [
             2.04,
             2.48,
@@ -19095,13 +25701,41 @@ export const completeGearboxData = [
             0.468,
             0.414
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 110,
+        "centerDistance": 450,
         "source": "杭齿厂选型手册2025版5月版",
         "weight": 550,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相反",
-        "dimensions": "1056×1280×1341"
+        "dimensions": "1056×1280×1341",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ],
+        "maxPower": 1092,
+        "minPower": 248,
+        "powerSource": "传动能力计算",
+        "priceSource": "估算价格",
+        "price": 116000,
+        "discountRate": 0.1,
+        "introduction": "HCDX800是杭州前进齿轮箱集团生产的中大功率多档位船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比2.04~5.05，适用输入转速600~2100r/min，额定推力110kN。适用于渔船、运输船、工作船等船舶。",
+        "image": "/images/gearbox/Advance-800-1000.webp",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ518",
+                "φ640"
+            ]
+        }
     },
     {
         "model": "HCG1068",
@@ -19122,10 +25756,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1500,
-            4000
-        ],
         "transmissionCapacityPerRatio": [
             2.9,
             2.9,
@@ -19145,7 +25775,17 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "380×254×320"
+        "dimensions": "380×254×320",
+        "thrust": 14,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "快艇",
+            "游艇",
+            "巡逻艇"
+        ],
+        "centerDistance": 75
     },
     {
         "model": "HCG1220",
@@ -19169,10 +25809,6 @@ export const completeGearboxData = [
         "maxPower": 441,
         "minPower": 128,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1500,
-            4500
-        ],
         "transmissionCapacityPerRatio": [
             0.098,
             0.0915,
@@ -19188,7 +25824,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "快艇",
+            "游艇",
+            "巡逻艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCG1280-1",
@@ -19213,10 +25858,6 @@ export const completeGearboxData = [
         "maxPower": 500,
         "minPower": 171,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1500,
-            3600
-        ],
         "transmissionCapacityPerRatio": [
             0.139,
             0.1243,
@@ -19233,7 +25874,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-1400.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "快艇",
+            "游艇",
+            "巡逻艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-1400.webp"
     },
     {
         "model": "HCG1305-3",
@@ -19257,10 +25907,6 @@ export const completeGearboxData = [
         "maxPower": 657,
         "minPower": 267,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1500,
-            3000
-        ],
         "transmissionCapacityPerRatio": [
             0.219,
             0.1985,
@@ -19276,7 +25922,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-1400.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "快艇",
+            "游艇",
+            "巡逻艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-1400.webp"
     },
     {
         "model": "HCG1400",
@@ -19299,10 +25954,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1500,
-            3000
-        ],
         "transmissionCapacityPerRatio": [
             2.96,
             2.96,
@@ -19323,7 +25974,18 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-1400.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "525×350×438"
+        "dimensions": "525×350×438",
+        "thrust": 27.5,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "快艇",
+            "游艇",
+            "巡逻艇"
+        ],
+        "centerDistance": 140,
+        "imageUrl": "/images/gearbox/Advance-1400.webp"
     },
     {
         "model": "HCG1500",
@@ -19346,10 +26008,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1500,
-            3000
-        ],
         "transmissionCapacityPerRatio": [
             2.59,
             2.59,
@@ -19370,7 +26028,18 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-1400.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "540×360×450"
+        "dimensions": "540×360×450",
+        "thrust": 40,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "快艇",
+            "游艇",
+            "巡逻艇"
+        ],
+        "centerDistance": 170,
+        "imageUrl": "/images/gearbox/Advance-1400.webp"
     },
     {
         "model": "HCG1665",
@@ -19391,10 +26060,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1500,
-            3000
-        ],
         "transmissionCapacityPerRatio": [
             2.59,
             2.59,
@@ -19413,7 +26078,18 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-1600.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "600×400×500"
+        "dimensions": "600×400×500",
+        "thrust": 40,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "快艇",
+            "游艇",
+            "巡逻艇"
+        ],
+        "centerDistance": 185,
+        "imageUrl": "/images/gearbox/Advance-1600.webp"
     },
     {
         "model": "HCG2050",
@@ -19434,10 +26110,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1500,
-            2600
-        ],
         "transmissionCapacityPerRatio": [
             3,
             3,
@@ -19456,7 +26128,18 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-2000.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "660×440×550"
+        "dimensions": "660×440×550",
+        "thrust": 40,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "高速客船",
+            "巡逻艇",
+            "快艇"
+        ],
+        "centerDistance": 220,
+        "imageUrl": "/images/gearbox/Advance-2000.webp"
     },
     {
         "model": "HCG3050",
@@ -19477,10 +26160,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2600
-        ],
         "transmissionCapacityPerRatio": [
             3,
             3,
@@ -19499,7 +26178,18 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-2700.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "765×510×638"
+        "dimensions": "765×510×638",
+        "thrust": 50,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "高速客船",
+            "巡逻艇",
+            "快艇"
+        ],
+        "centerDistance": 250,
+        "imageUrl": "/images/gearbox/Advance-2700.webp"
     },
     {
         "model": "HCG5050",
@@ -19523,10 +26213,6 @@ export const completeGearboxData = [
         "maxPower": 2500,
         "minPower": 1355,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1500,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.943,
             0.9487,
@@ -19542,7 +26228,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "高速客船",
+            "巡逻艇",
+            "快艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCG6400",
@@ -19562,10 +26257,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1600,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             1.031,
             1.031,
@@ -19583,7 +26274,20 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "1020×680×850"
+        "dimensions": "1020×680×850",
+        "thrust": 110,
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "高速客船",
+            "军用舰艇",
+            "巡逻艇",
+            "大型快艇"
+        ],
+        "centerDistance": 340,
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCG7650",
@@ -19603,10 +26307,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             2.77,
             2.77,
@@ -19624,7 +26324,20 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "1020×680×850"
+        "dimensions": "1020×680×850",
+        "thrust": 135,
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "高速客船",
+            "军用舰艇",
+            "巡逻艇",
+            "大型快艇"
+        ],
+        "centerDistance": 370,
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCG9060",
@@ -19645,10 +26358,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             2.96,
             2.96,
@@ -19668,7 +26377,19 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "1170×780×975"
+        "dimensions": "1170×780×975",
+        "thrust": 225,
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "高速客船",
+            "军用舰艇",
+            "巡逻艇",
+            "大型快艇"
+        ],
+        "centerDistance": 420
     },
     {
         "model": "HCL100",
@@ -19680,17 +26401,13 @@ export const completeGearboxData = [
         ],
         "maxPower": 210,
         "thrust": 20,
-        "centerDistance": null,
+        "centerDistance": 130,
         "dimensions": "570×420×535",
         "weight": 156,
         "controlType": "推拉软轴/电控",
         "price": 6760,
         "discountRate": 0.12,
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            750,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.105
         ],
@@ -19713,14 +26430,23 @@ export const completeGearboxData = [
         "minPower": 105,
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-800-1000.webp",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL1000",
         "series": "HCL",
         "minSpeed": 750,
         "maxSpeed": 1000,
-        "transmissionCapacity": 3,
         "maxPower": 1047,
         "minPower": 785,
         "powerSource": "传动能力计算",
@@ -19728,10 +26454,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            750,
-            1800
-        ],
         "ratios": [
             1
         ],
@@ -19749,14 +26471,24 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "thrust": 0,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "centerDistance": 300,
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL1000F",
         "series": "HCL",
         "minSpeed": 1000,
         "maxSpeed": 1800,
-        "transmissionCapacity": 3,
         "maxPower": 1885,
         "minPower": 1047,
         "powerSource": "传动能力计算",
@@ -19764,10 +26496,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            1800
-        ],
         "ratios": [
             1
         ],
@@ -19785,14 +26513,24 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "thrust": 0,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "centerDistance": 300,
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL1000S",
         "series": "HCL",
         "minSpeed": 750,
         "maxSpeed": 1000,
-        "transmissionCapacity": 3,
         "maxPower": 1047,
         "minPower": 785,
         "powerSource": "传动能力计算",
@@ -19800,10 +26538,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            750,
-            1000
-        ],
         "ratios": [
             1
         ],
@@ -19821,14 +26555,24 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "thrust": 0,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "centerDistance": 300,
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL100F",
         "series": "HCL",
         "minSpeed": 1500,
         "maxSpeed": 2500,
-        "transmissionCapacity": 0.628,
         "thrust": 210,
         "centerDistance": 210,
         "maxPower": 263,
@@ -19838,10 +26582,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1500,
-            2500
-        ],
         "ratios": [
             1
         ],
@@ -19868,14 +26608,22 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL100S",
         "series": "HCL",
         "minSpeed": 750,
         "maxSpeed": 1500,
-        "transmissionCapacity": 0.335,
         "thrust": 156,
         "centerDistance": 156,
         "maxPower": 158,
@@ -19885,10 +26633,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            750,
-            1500
-        ],
         "ratios": [
             1
         ],
@@ -19915,7 +26659,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL250",
@@ -19927,17 +26680,13 @@ export const completeGearboxData = [
         ],
         "maxPower": 524,
         "thrust": 35,
-        "centerDistance": null,
+        "centerDistance": 160,
         "dimensions": "554×425×635",
         "weight": 210,
         "controlType": "推拉软轴/电控",
         "price": 8800,
         "discountRate": 0.12,
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            750,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.262
         ],
@@ -19961,7 +26710,17 @@ export const completeGearboxData = [
         "minPower": 262,
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-800-1000.webp",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL250A",
@@ -19971,22 +26730,15 @@ export const completeGearboxData = [
         "ratios": [
             1
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 0,
+        "centerDistance": 160,
         "dimensions": "554×425×635",
         "weight": 210,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 28000,
         "discountRate": 0.1,
         "priceSource": "系统估算",
-        "inputSpeedRange": [
-            750,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
-            0.262
-        ],
-        "transferCapacity": [
             0.262
         ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
@@ -20011,14 +26763,22 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL250F",
         "series": "HCL",
         "minSpeed": 1000,
         "maxSpeed": 2500,
-        "transmissionCapacity": 0.837,
         "thrust": 210,
         "centerDistance": 210,
         "maxPower": 655,
@@ -20028,10 +26788,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "ratios": [
             1
         ],
@@ -20059,14 +26815,22 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL250S",
         "series": "HCL",
         "minSpeed": 750,
         "maxSpeed": 1000,
-        "transmissionCapacity": 0.628,
         "thrust": 210,
         "centerDistance": 210,
         "maxPower": 262,
@@ -20076,10 +26840,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            750,
-            1000
-        ],
         "ratios": [
             1
         ],
@@ -20107,7 +26867,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL30",
@@ -20119,17 +26888,13 @@ export const completeGearboxData = [
         ],
         "maxPower": 62,
         "thrust": 10,
-        "centerDistance": null,
+        "centerDistance": 100,
         "dimensions": "345×310×455",
         "weight": 100,
         "controlType": "推拉软轴/电控",
         "price": 5320,
         "discountRate": 0.12,
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            750,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.031
         ],
@@ -20154,14 +26919,23 @@ export const completeGearboxData = [
         "minPower": 31,
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-800-1000.webp",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL30F",
         "series": "HCL",
         "minSpeed": 1500,
         "maxSpeed": 2500,
-        "transmissionCapacity": 0.335,
         "thrust": 156,
         "centerDistance": 156,
         "maxPower": 78,
@@ -20171,10 +26945,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1500,
-            2500
-        ],
         "ratios": [
             1
         ],
@@ -20203,14 +26973,22 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL30S",
         "series": "HCL",
         "minSpeed": 750,
         "maxSpeed": 1500,
-        "transmissionCapacity": 0.262,
         "thrust": 100,
         "centerDistance": 100,
         "maxPower": 47,
@@ -20220,10 +26998,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            750,
-            1500
-        ],
         "ratios": [
             1
         ],
@@ -20252,7 +27026,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL320",
@@ -20264,17 +27047,13 @@ export const completeGearboxData = [
         ],
         "maxPower": 670,
         "thrust": 45,
-        "centerDistance": null,
+        "centerDistance": 160,
         "dimensions": "554×425×635",
         "weight": 210,
         "controlType": "推拉软轴/电控",
         "price": 9100,
         "discountRate": 0.12,
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            500,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.335
         ],
@@ -20297,14 +27076,23 @@ export const completeGearboxData = [
         "minPower": 335,
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-800-1000.webp",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL320F",
         "series": "HCL",
         "minSpeed": 1000,
         "maxSpeed": 2500,
-        "transmissionCapacity": 1.047,
         "thrust": 450,
         "centerDistance": 450,
         "maxPower": 838,
@@ -20314,10 +27102,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "ratios": [
             1
         ],
@@ -20344,14 +27128,22 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL320S",
         "series": "HCL",
         "minSpeed": 500,
         "maxSpeed": 1000,
-        "transmissionCapacity": 0.837,
         "thrust": 210,
         "centerDistance": 210,
         "maxPower": 335,
@@ -20361,10 +27153,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            500,
-            1000
-        ],
         "ratios": [
             1
         ],
@@ -20391,7 +27179,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL600",
@@ -20403,17 +27200,13 @@ export const completeGearboxData = [
         ],
         "maxPower": 1256,
         "thrust": 70,
-        "centerDistance": null,
+        "centerDistance": 220,
         "dimensions": "746×560×688",
         "weight": 450,
         "controlType": "推拉软轴/电控",
         "price": 21600,
         "discountRate": 0.12,
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            750,
-            1600
-        ],
         "transmissionCapacityPerRatio": [
             0.628
         ],
@@ -20439,14 +27232,23 @@ export const completeGearboxData = [
         "minPower": 628,
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-800-1000.webp",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL600F",
         "series": "HCL",
         "minSpeed": 1000,
         "maxSpeed": 1600,
-        "transmissionCapacity": 1.047,
         "thrust": 450,
         "centerDistance": 450,
         "maxPower": 1005,
@@ -20456,10 +27258,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            1600
-        ],
         "ratios": [
             1
         ],
@@ -20489,14 +27287,22 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL600S",
         "series": "HCL",
         "minSpeed": 750,
         "maxSpeed": 1000,
-        "transmissionCapacity": 1.047,
         "thrust": 450,
         "centerDistance": 450,
         "maxPower": 628,
@@ -20506,10 +27312,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            750,
-            1000
-        ],
         "ratios": [
             1
         ],
@@ -20539,7 +27341,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL7000",
@@ -20557,14 +27368,32 @@ export const completeGearboxData = [
         "transmissionCapacityPerRatio": [
             5.83
         ],
-        "dataSource": "dwgTechParams_estimated",
         "image": "/images/gearbox/Advance-800-1000.webp",
         "price": 804000,
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "机械控制/电控",
         "rotationDirection": "不适用",
-        "dimensions": "1200×900×1100"
+        "dimensions": "1200×900×1100",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "HCL7000是杭州前进齿轮箱集团生产的大功率液压离合器，采用机械控制/电控操纵方式，减速比1.00~1.00，适用输入转速500~1200r/min，额定推力700kN。适用于辅机驱动、发电机组、泵组驱动等船舶。",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE2#1寸",
+                "SAE3#11.5寸"
+            ],
+            "plainFlange": true
+        }
     },
     {
         "model": "HCL800",
@@ -20574,22 +27403,15 @@ export const completeGearboxData = [
         "ratios": [
             1
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 0,
+        "centerDistance": 250,
         "dimensions": "746×560×688",
         "weight": 450,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 83000,
         "discountRate": 0.1,
         "priceSource": "系统估算",
-        "inputSpeedRange": [
-            750,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
-            0.837
-        ],
-        "transferCapacity": [
             0.837
         ],
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
@@ -20604,7 +27426,16 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL800F",
@@ -20628,10 +27459,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             3,
             3,
@@ -20651,7 +27478,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "dimensions": "746×560×688",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCL800S",
@@ -20675,10 +27511,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            750,
-            1000
-        ],
         "transmissionCapacityPerRatio": [
             3,
             3,
@@ -20698,7 +27530,16 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "dimensions": "746×560×688",
         "controlType": "机械控制/电控",
-        "rotationDirection": "不适用"
+        "rotationDirection": "不适用",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "辅机驱动",
+            "发电机组",
+            "泵组驱动"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCM1400",
@@ -20722,14 +27563,32 @@ export const completeGearboxData = [
             0.952,
             0.952
         ],
-        "dataSource": "dwgTechParams_estimated",
         "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
         "price": 412000,
         "priceSource": "2026官方统一售价",
-        "discountRate": 0,
+        "discountRate": 0.1,
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "525×350×438"
+        "dimensions": "525×350×438",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "高速渔船",
+            "快艇",
+            "巡逻艇"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "HCM1400是杭州前进齿轮箱集团生产的中大功率铝合金船用齿轮箱，采用推拉软轴/电控操纵方式，减速比1.50~3.00，适用输入转速1000~2100r/min，额定推力150kN。适用于高速渔船、快艇、巡逻艇等船舶。",
+        "imageUrl": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
+        "inputInterfaces": {
+            "plainFlange": true,
+            "domestic": [
+                "φ770"
+            ]
+        }
     },
     {
         "model": "HCM1600",
@@ -20755,14 +27614,32 @@ export const completeGearboxData = [
             1.19,
             1.19
         ],
-        "dataSource": "dwgTechParams_estimated",
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "price": 48000,
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "600×400×500"
+        "dimensions": "600×400×500",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "高速渔船",
+            "快艇",
+            "巡逻艇"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "HCM1600是杭州前进齿轮箱集团生产的中大功率铝合金船用齿轮箱，采用推拉软轴/电控操纵方式，减速比1.50~3.00，适用输入转速1000~2100r/min，额定推力180kN。适用于高速渔船、快艇、巡逻艇等船舶。",
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
+        "inputInterfaces": {
+            "plainFlange": true,
+            "domestic": [
+                "φ770"
+            ]
+        }
     },
     {
         "model": "HCM165",
@@ -20786,10 +27663,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1500,
-            3600
-        ],
         "transmissionCapacityPerRatio": [
             2.92,
             2.92,
@@ -20809,7 +27682,17 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "438×292×365"
+        "dimensions": "438×292×365",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "高速渔船",
+            "快艇",
+            "巡逻艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCM303",
@@ -20833,10 +27716,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             1.49,
             1.49,
@@ -20856,7 +27735,17 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "570×380×475"
+        "dimensions": "570×380×475",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "高速渔船",
+            "快艇",
+            "巡逻艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
     },
     {
         "model": "HCM403",
@@ -20884,10 +27773,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             2.6,
             2.6,
@@ -20911,7 +27796,17 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "597×398×498"
+        "dimensions": "597×398×498",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "高速渔船",
+            "快艇",
+            "巡逻艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCN120",
@@ -20937,10 +27832,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.1,
             0.1,
@@ -20959,7 +27850,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/HCN120.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ]
     },
     {
         "model": "HCNM280T",
@@ -20984,10 +27883,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             2.48,
             2.48,
@@ -21008,7 +27903,17 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "540×360×450"
+        "dimensions": "540×360×450",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "高速渔船",
+            "快艇",
+            "巡逻艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCQ100",
@@ -21034,13 +27939,9 @@ export const completeGearboxData = [
         "minPower": 30,
         "powerSource": "传动能力计算",
         "price": 28000,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2600
-        ],
         "transmissionCapacityPerRatio": [
             0.064,
             0.064,
@@ -21062,7 +27963,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ100-MV100A.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ]
     },
     {
         "model": "HCQ1000",
@@ -21079,15 +27989,11 @@ export const completeGearboxData = [
         "weight": 1100,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 184000,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "maxPower": 1691,
         "minPower": 650,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             0.735,
             0.65
@@ -21107,7 +28013,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC",
+            "BV"
+        ],
+        "applications": [
+            "拖网渔船",
+            "运输船",
+            "工程船",
+            "大型渔船"
+        ]
     },
     {
         "model": "HCQ1001",
@@ -21125,15 +28042,11 @@ export const completeGearboxData = [
         "weight": 1100,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 205000,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "maxPower": 1691,
         "minPower": 735,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             0.735,
             0.735,
@@ -21149,7 +28062,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC",
+            "BV"
+        ],
+        "applications": [
+            "拖网渔船",
+            "运输船",
+            "工程船",
+            "大型渔船"
+        ]
     },
     {
         "model": "HCQ138",
@@ -21175,13 +28099,9 @@ export const completeGearboxData = [
         "minPower": 45,
         "powerSource": "传动能力计算",
         "price": 27600,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.087,
             0.087,
@@ -21210,7 +28130,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/HCQ138-HCA138-.webp",
         "controlType": "推拉软轴",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ]
     },
     {
         "model": "HCQ1400",
@@ -21236,13 +28165,9 @@ export const completeGearboxData = [
         "minPower": 3000,
         "powerSource": "传动能力计算",
         "price": 210000,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             3,
             3,
@@ -21272,7 +28197,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ1400-HCM1400-HCA1400-HCA1401_3_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC",
+            "BV"
+        ],
+        "applications": [
+            "拖网渔船",
+            "运输船",
+            "工程船",
+            "大型渔船"
+        ]
     },
     {
         "model": "HCQ1600",
@@ -21296,10 +28232,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             1.204,
             1.204,
@@ -21315,7 +28247,19 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC",
+            "BV"
+        ],
+        "applications": [
+            "拖网渔船",
+            "运输船",
+            "工程船",
+            "大型渔船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCQ1601",
@@ -21337,10 +28281,6 @@ export const completeGearboxData = [
         "maxPower": 2528,
         "minPower": 1000,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             1.204,
             1
@@ -21354,7 +28294,19 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-1600.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC",
+            "BV"
+        ],
+        "applications": [
+            "拖网渔船",
+            "运输船",
+            "工程船",
+            "大型渔船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-1600.webp"
     },
     {
         "model": "HCQ300",
@@ -21385,13 +28337,9 @@ export const completeGearboxData = [
         "minPower": 2950,
         "powerSource": "传动能力计算",
         "price": 42000,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             2.95,
             2.95,
@@ -21430,15 +28378,20 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ]
     },
     {
         "model": "HCQ400",
         "series": "HCQ",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "ratios": [
             1.53,
             2.03,
@@ -21452,7 +28405,7 @@ export const completeGearboxData = [
             5.98
         ],
         "weight": 650,
-        "thrust": null,
+        "thrust": 50,
         "dimensions": "640×900×800",
         "transmissionCapacityPerRatio": [
             0.28,
@@ -21481,7 +28434,21 @@ export const completeGearboxData = [
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ],
+        "centerDistance": 220,
+        "minSpeed": 1000,
+        "maxSpeed": 2500,
+        "source": "杭齿厂选型手册2025版5月版",
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCQ401",
@@ -21506,13 +28473,9 @@ export const completeGearboxData = [
         "minPower": 294,
         "powerSource": "传动能力计算",
         "price": 63500,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             0.331,
             0.331,
@@ -21538,7 +28501,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ]
     },
     {
         "model": "HCQ402",
@@ -21557,15 +28529,11 @@ export const completeGearboxData = [
         "weight": 650,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 75300,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "maxPower": 761,
         "minPower": 331,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             0.331,
             0.331,
@@ -21582,7 +28550,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ]
     },
     {
         "model": "HCQ501",
@@ -21609,13 +28586,9 @@ export const completeGearboxData = [
         "minPower": 243,
         "powerSource": "传动能力计算",
         "price": 76000,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.36,
             0.36,
@@ -21644,7 +28617,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ]
     },
     {
         "model": "HCQ502",
@@ -21666,15 +28648,11 @@ export const completeGearboxData = [
         "weight": 700,
         "source": "杭齿厂选型手册2025版5月版",
         "price": 78800,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "maxPower": 867,
         "minPower": 305,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            900,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.377,
             0.377,
@@ -21700,7 +28678,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "渔船",
+            "运输船",
+            "工作船"
+        ]
     },
     {
         "model": "HCQ700",
@@ -21721,20 +28708,7 @@ export const completeGearboxData = [
         "centerDistance": 290,
         "dimensions": "898×1104×1066",
         "weight": 980,
-        "oilCapacity": 30,
-        "clutchType": "液压湿式多片摩擦离合器",
-        "gearType": "圆柱斜齿轮",
-        "transmissionType": "三轴五齿轮传动",
-        "workingPressure": "1.4-1.6",
-        "lubricationPressure": "0.2-0.45",
-        "maxOilTemp": 80,
-        "coolingWaterFlow": 4,
-        "directionChangeTime": 10,
-        "overhaulPeriod": 10000,
-        "efficiency": 0.97,
         "controlType": "推拉软轴/电控",
-        "inputShaftType": "SAE0#18/SAE1#14",
-        "outputShaftDia": 130,
         "applications": [
             "拖网渔船",
             "运输船",
@@ -21748,15 +28722,11 @@ export const completeGearboxData = [
         ],
         "source": "HCQ700型船用齿轮箱使用说明书发407",
         "price": 118000,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方统一售价",
         "maxPower": 1450,
         "minPower": 490,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.58,
             0.58,
@@ -21781,10 +28751,6 @@ export const completeGearboxData = [
     {
         "model": "HCQ700A",
         "series": "HCQ",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "ratios": [
             1.24,
             1.46,
@@ -21796,7 +28762,7 @@ export const completeGearboxData = [
             2.96
         ],
         "weight": 980,
-        "thrust": null,
+        "thrust": 90,
         "dimensions": "898×1104×1066",
         "transmissionCapacityPerRatio": [
             0.554,
@@ -21823,7 +28789,23 @@ export const completeGearboxData = [
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC",
+            "BV"
+        ],
+        "applications": [
+            "拖网渔船",
+            "运输船",
+            "工程船",
+            "大型渔船"
+        ],
+        "centerDistance": 290,
+        "minSpeed": 1000,
+        "maxSpeed": 2500,
+        "source": "杭齿厂选型手册2025版5月版",
+        "imageUrl": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp"
     },
     {
         "model": "HCQ701",
@@ -21846,10 +28828,6 @@ export const completeGearboxData = [
         "maxPower": 1385,
         "minPower": 490,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.554,
             0.514,
@@ -21868,15 +28846,22 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC",
+            "BV"
+        ],
+        "applications": [
+            "拖网渔船",
+            "运输船",
+            "工程船",
+            "大型渔船"
+        ]
     },
     {
         "model": "HCQ800A",
         "series": "HCQ",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "ratios": [
             1.28,
             1.46,
@@ -21887,7 +28872,7 @@ export const completeGearboxData = [
             2.75
         ],
         "weight": 1400,
-        "thrust": null,
+        "thrust": 95,
         "dimensions": "898×1104×1066",
         "transmissionCapacityPerRatio": [
             0.7,
@@ -21913,7 +28898,23 @@ export const completeGearboxData = [
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC",
+            "BV"
+        ],
+        "applications": [
+            "拖网渔船",
+            "运输船",
+            "工程船",
+            "大型渔船"
+        ],
+        "centerDistance": 340,
+        "minSpeed": 1000,
+        "maxSpeed": 2500,
+        "source": "杭齿厂选型手册2025版5月版",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCQH1000",
@@ -21923,8 +28924,8 @@ export const completeGearboxData = [
         "ratios": [
             2.26
         ],
-        "thrust": null,
-        "centerDistance": null,
+        "thrust": 100,
+        "centerDistance": 310,
         "dimensions": "1035×1110×1038",
         "weight": 1500,
         "source": "杭齿厂选型手册2025版5月版",
@@ -21934,10 +28935,6 @@ export const completeGearboxData = [
         "maxPower": 1691,
         "minPower": 735,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2300
-        ],
         "transmissionCapacityPerRatio": [
             0.735
         ],
@@ -21954,7 +28951,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC",
+            "BV"
+        ],
+        "applications": [
+            "拖网渔船",
+            "运输船",
+            "工程船",
+            "大型渔船"
+        ]
     },
     {
         "model": "HCQH1600",
@@ -21975,10 +28983,6 @@ export const completeGearboxData = [
         "maxPower": 2528,
         "minPower": 1204,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             1.204
         ],
@@ -21991,7 +28995,19 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC",
+            "BV"
+        ],
+        "applications": [
+            "拖网渔船",
+            "运输船",
+            "工程船",
+            "大型渔船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCQH700",
@@ -22019,10 +29035,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.58,
             0.58,
@@ -22043,7 +29055,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ700-HCQ701-HCQH700-HCA700-HCA701-_1_11zon.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC",
+            "BV"
+        ],
+        "applications": [
+            "拖网渔船",
+            "运输船",
+            "工程船",
+            "大型渔船"
+        ]
     },
     {
         "model": "HCS1000",
@@ -22067,10 +29090,6 @@ export const completeGearboxData = [
         "maxPower": 3363,
         "minPower": 954,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1900
-        ],
         "transmissionCapacityPerRatio": [
             1.59,
             1.68,
@@ -22086,7 +29105,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "拖网渔船",
+            "拖船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCS1200",
@@ -22112,10 +29140,6 @@ export const completeGearboxData = [
         "maxPower": 3857,
         "minPower": 966,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1900
-        ],
         "transmissionCapacityPerRatio": [
             1.61,
             1.69,
@@ -22133,7 +29157,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "拖网渔船",
+            "拖船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCS138",
@@ -22157,10 +29190,6 @@ export const completeGearboxData = [
         "maxPower": 4450,
         "minPower": 1600,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             1.6,
             1.64,
@@ -22176,7 +29205,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "拖网渔船",
+            "拖船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
     },
     {
         "model": "HCS1600",
@@ -22201,10 +29239,6 @@ export const completeGearboxData = [
         "maxPower": 3069,
         "minPower": 815,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            500,
-            1650
-        ],
         "transmissionCapacityPerRatio": [
             1.63,
             1.68,
@@ -22221,7 +29255,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "拖网渔船",
+            "拖船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCS200",
@@ -22249,14 +29292,35 @@ export const completeGearboxData = [
             2.06,
             2.06
         ],
-        "dataSource": "dwgTechParams",
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "price": 109000,
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相同",
-        "dimensions": "424×792×754"
+        "dimensions": "424×792×754",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "拖网渔船",
+            "拖船",
+            "工程船"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "HCS200是杭州前进齿轮箱集团生产的大功率双速船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比2.28~4.40，适用输入转速600~1500r/min，额定推力148kN。适用于拖网渔船、拖船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ518"
+            ]
+        }
     },
     {
         "model": "HCS2000",
@@ -22282,10 +29346,6 @@ export const completeGearboxData = [
         "maxPower": 3090,
         "minPower": 1098,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             1.83,
             1.89,
@@ -22303,7 +29363,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "拖网渔船",
+            "拖船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCS201",
@@ -22326,10 +29395,6 @@ export const completeGearboxData = [
         "maxPower": 5350,
         "minPower": 2070,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             2.105,
             2.07,
@@ -22344,7 +29409,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "拖网渔船",
+            "拖船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCS2700",
@@ -22371,10 +29445,6 @@ export const completeGearboxData = [
         "maxPower": 2380,
         "minPower": 620,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            500,
-            1400
-        ],
         "transmissionCapacityPerRatio": [
             1.24,
             1.27,
@@ -22393,7 +29463,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "拖网渔船",
+            "拖船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCS302",
@@ -22418,10 +29497,6 @@ export const completeGearboxData = [
         "maxPower": 4600,
         "minPower": 1215,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            750,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             1.62,
             1.66,
@@ -22438,7 +29513,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "拖网渔船",
+            "拖船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
     },
     {
         "model": "HCS400",
@@ -22464,10 +29548,6 @@ export const completeGearboxData = [
         "maxPower": 2934,
         "minPower": 1210,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             1.21,
             1.24,
@@ -22490,7 +29570,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "拖网渔船",
+            "拖船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCS600",
@@ -22514,10 +29603,6 @@ export const completeGearboxData = [
         "maxPower": 3696,
         "minPower": 1610,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             1.61,
             1.66,
@@ -22533,15 +29618,20 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "拖网渔船",
+            "拖船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCT1000",
         "series": "HCT",
-        "inputSpeedRange": [
-            600,
-            2100
-        ],
         "ratios": [
             1.59,
             2.03,
@@ -22555,7 +29645,7 @@ export const completeGearboxData = [
             5.94
         ],
         "weight": 1600,
-        "thrust": null,
+        "thrust": 110,
         "dimensions": "1150×1350×1547",
         "transmissionCapacityPerRatio": [
             0.857,
@@ -22591,7 +29681,22 @@ export const completeGearboxData = [
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "centerDistance": 500,
+        "minSpeed": 600,
+        "maxSpeed": 1900,
+        "source": "杭齿厂选型手册2025版5月版",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCT1100",
@@ -22620,10 +29725,6 @@ export const completeGearboxData = [
         "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            600,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.846,
             0.846,
@@ -22657,7 +29758,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-1100-1200.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-1100-1200.webp"
     },
     {
         "model": "HCT1200",
@@ -22686,10 +29798,6 @@ export const completeGearboxData = [
         "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            600,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             1.014,
             1.014,
@@ -22726,7 +29834,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCT1200/1",
@@ -22759,10 +29878,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            600,
-            1900
-        ],
         "transmissionCapacityPerRatio": [
             1.014,
             1.014,
@@ -22803,7 +29918,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCT1200P",
@@ -22855,10 +29981,6 @@ export const completeGearboxData = [
                 ]
             }
         },
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.93,
             0.93,
@@ -22901,7 +30023,18 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCT1280/2",
@@ -22930,10 +30063,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            700,
-            1900
-        ],
         "transmissionCapacityPerRatio": [
             0.93,
             0.93,
@@ -22961,7 +30090,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-1400.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-1400.webp"
     },
     {
         "model": "HCT1400",
@@ -22990,10 +30130,6 @@ export const completeGearboxData = [
         "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            600,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             1.081,
             1.081,
@@ -23022,14 +30158,25 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCT1400/2",
         "series": "HCT",
         "minSpeed": 600,
         "maxSpeed": 1900,
-        "transmissionCapacity": 19.07,
         "thrust": 220,
         "centerDistance": 722,
         "dimensions": "1279×1600×2100",
@@ -23040,10 +30187,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            750,
-            2100
-        ],
         "ratios": [
             10.47,
             11.15,
@@ -23096,7 +30239,19 @@ export const completeGearboxData = [
         "weight": 5500,
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCT1400/5",
@@ -23128,10 +30283,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            700,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             1.035,
             1.035,
@@ -23164,7 +30315,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCT1400P",
@@ -23188,10 +30350,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             1.081,
             1.081,
@@ -23224,7 +30382,19 @@ export const completeGearboxData = [
         "dimensions": "1306×1380×1750",
         "weight": 3800,
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCT1600",
@@ -23251,10 +30421,6 @@ export const completeGearboxData = [
         "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            600,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             1.29,
             1.29,
@@ -23284,7 +30450,19 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCT1600/1",
@@ -23312,10 +30490,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            500,
-            1650
-        ],
         "transmissionCapacityPerRatio": [
             1.29,
             1.29,
@@ -23346,7 +30520,19 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCT1600P",
@@ -23371,10 +30557,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             1.26,
             1.213,
@@ -23412,7 +30594,19 @@ export const completeGearboxData = [
         "dimensions": "1246×1500×1750",
         "weight": 5000,
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCT2000",
@@ -23449,10 +30643,6 @@ export const completeGearboxData = [
         "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            500,
-            1600
-        ],
         "transmissionCapacityPerRatio": [
             1.62,
             1.62,
@@ -23491,7 +30681,19 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCT2000/1",
@@ -23519,10 +30721,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            600,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             1.62,
             1.62,
@@ -23550,7 +30748,19 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCT2000P",
@@ -23591,10 +30801,6 @@ export const completeGearboxData = [
                 ]
             }
         },
-        "inputSpeedRange": [
-            500,
-            1400
-        ],
         "transmissionCapacityPerRatio": [
             1.58,
             1.58,
@@ -23627,7 +30833,19 @@ export const completeGearboxData = [
         "powerSource": "传动能力计算",
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCT2700",
@@ -23660,10 +30878,6 @@ export const completeGearboxData = [
         "discountRate": 0.06,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            500,
-            1600
-        ],
         "transmissionCapacityPerRatio": [
             2.1,
             2.1,
@@ -23695,7 +30909,19 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCT2700/1",
@@ -23724,10 +30950,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            500,
-            1600
-        ],
         "transmissionCapacityPerRatio": [
             2.1,
             2.1,
@@ -23755,7 +30977,19 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCT2700P",
@@ -23784,10 +31018,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             2.1,
             2.1,
@@ -23823,7 +31053,19 @@ export const completeGearboxData = [
         "dimensions": "1900×2000×1970",
         "weight": 7200,
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCTH2650",
@@ -23847,7 +31089,35 @@ export const completeGearboxData = [
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相同",
         "dimensions": "1900×2000×1970",
-        "weight": 8000
+        "weight": 8000,
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "priceSource": "估算价格",
+        "price": 310000,
+        "discountRate": 0.1,
+        "introduction": "HCTH2650是杭州前进齿轮箱集团生产的大功率大功率船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比6.20~6.20，适用输入转速600~1500r/min，额定推力400kN。适用于大型运输船、工程船、拖船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-HCT.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ518",
+                "φ640",
+                "φ820"
+            ]
+        }
     },
     {
         "model": "HCTH2650P",
@@ -23871,7 +31141,35 @@ export const completeGearboxData = [
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相同",
         "dimensions": "1900×2000×1970",
-        "weight": 8000
+        "weight": 8000,
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "priceSource": "估算价格",
+        "price": 310000,
+        "discountRate": 0.1,
+        "introduction": "HCTH2650P是杭州前进齿轮箱集团生产的大功率大功率船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比1.00~1.00，适用输入转速600~1500r/min。适用于大型运输船、工程船、拖船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-HCT.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ518",
+                "φ640",
+                "φ820"
+            ]
+        }
     },
     {
         "model": "HCT3800",
@@ -23906,10 +31204,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            500,
-            1200
-        ],
         "transmissionCapacityPerRatio": [
             2.825,
             2.825,
@@ -23947,7 +31241,19 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCT400",
@@ -23979,14 +31285,37 @@ export const completeGearboxData = [
             0.054,
             0.054
         ],
-        "dataSource": "dwgTechParams",
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "price": 87000,
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相同",
-        "dimensions": "800×1052×1182"
+        "dimensions": "800×1052×1182",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "HCT400是杭州前进齿轮箱集团生产的中小功率大功率船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比6.09~9.47，适用输入转速1000~2100r/min，额定推力90kN。适用于运输船、拖网渔船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#8寸",
+                "SAE18寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ505",
+                "φ518"
+            ]
+        }
     },
     {
         "model": "HCT400A",
@@ -24014,10 +31343,6 @@ export const completeGearboxData = [
         "maxPower": 695,
         "minPower": 279,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.331,
             0.331,
@@ -24051,7 +31376,18 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCT400A/1",
@@ -24080,10 +31416,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.331,
             0.331,
@@ -24119,7 +31451,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCT400P",
@@ -24138,10 +31480,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            3000
-        ],
         "transmissionCapacityPerRatio": [
             0.331,
             0.331,
@@ -24175,15 +31513,21 @@ export const completeGearboxData = [
         "weight": 1450,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相同",
-        "dimensions": "800×1052×1182"
+        "dimensions": "800×1052×1182",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCT600",
         "series": "HCT",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "ratios": [
             1.59,
             2.03,
@@ -24193,7 +31537,7 @@ export const completeGearboxData = [
             3.94
         ],
         "weight": 800,
-        "thrust": null,
+        "thrust": 90,
         "dimensions": "1223×1136×899",
         "transmissionCapacityPerRatio": [
             0.46,
@@ -24239,7 +31583,21 @@ export const completeGearboxData = [
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "centerDistance": 415,
+        "minSpeed": 1000,
+        "maxSpeed": 2100,
+        "source": "杭齿厂选型手册2025版5月版",
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCT600A",
@@ -24266,10 +31624,6 @@ export const completeGearboxData = [
         "maxPower": 1029,
         "minPower": 310,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.45,
             0.419,
@@ -24308,7 +31662,18 @@ export const completeGearboxData = [
             ]
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCT600A/1",
@@ -24342,10 +31707,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.49,
             0.485,
@@ -24392,7 +31753,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCT600P",
@@ -24409,10 +31780,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            3000
-        ],
         "transmissionCapacityPerRatio": [
             0.45
         ],
@@ -24448,7 +31815,19 @@ export const completeGearboxData = [
         "dimensions": "1223×1136×899",
         "weight": 800,
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "thrust": 90,
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "centerDistance": 415,
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCT601P",
@@ -24478,14 +31857,37 @@ export const completeGearboxData = [
             0.491,
             0.491
         ],
-        "dataSource": "dwgTechParams_estimated",
         "image": "/images/gearbox/Advance-800-1000.webp",
         "price": 129000,
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相同",
-        "dimensions": "821×1214×1271"
+        "dimensions": "821×1214×1271",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "powerSource": "传动能力计算",
+        "source": "杭齿厂选型手册2025版5月版",
+        "introduction": "HCT601P是杭州前进齿轮箱集团生产的中大功率大功率船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比6.06~9.35，适用输入转速1000~2100r/min，额定推力110kN。适用于运输船、工程船、拖船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE18寸",
+                "SAE21寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ518",
+                "φ640"
+            ]
+        }
     },
     {
         "model": "HCT650/2",
@@ -24523,10 +31925,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.49,
             0.49,
@@ -24563,15 +31961,21 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCT700",
         "series": "HCT",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "ratios": [
             1.59,
             2.05,
@@ -24583,7 +31987,7 @@ export const completeGearboxData = [
             4.89
         ],
         "weight": 850,
-        "thrust": null,
+        "thrust": 90,
         "dimensions": "1056×1280×1425",
         "transmissionCapacityPerRatio": [
             0.49,
@@ -24617,7 +32021,21 @@ export const completeGearboxData = [
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "拖网渔船",
+            "工程船"
+        ],
+        "centerDistance": 430,
+        "minSpeed": 600,
+        "maxSpeed": 2100,
+        "source": "杭齿厂选型手册2025版5月版",
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCT800",
@@ -24724,10 +32142,6 @@ export const completeGearboxData = [
                 "gearTooth": []
             }
         },
-        "inputSpeedRange": [
-            600,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.72,
             0.72,
@@ -24756,7 +32170,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCT800/1",
@@ -24795,10 +32219,6 @@ export const completeGearboxData = [
         "discountRate": 0.08,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            600,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.72,
             0.72,
@@ -24836,7 +32256,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCT800/2",
@@ -24944,10 +32374,6 @@ export const completeGearboxData = [
                 "gearTooth": []
             }
         },
-        "inputSpeedRange": [
-            600,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.72,
             0.72,
@@ -24977,7 +32403,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCT800/2A",
@@ -25031,10 +32467,6 @@ export const completeGearboxData = [
                 ]
             }
         },
-        "inputSpeedRange": [
-            600,
-            1900
-        ],
         "transmissionCapacityPerRatio": [
             0.6816,
             0.6474,
@@ -25062,7 +32494,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCT800/3",
@@ -25163,10 +32605,6 @@ export const completeGearboxData = [
                 "gearTooth": []
             }
         },
-        "inputSpeedRange": [
-            600,
-            2100
-        ],
         "transmissionCapacityPerRatio": [
             0.642,
             0.592,
@@ -25189,7 +32627,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCT800P",
@@ -25209,10 +32657,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.625,
             0.625,
@@ -25239,7 +32683,17 @@ export const completeGearboxData = [
         "dimensions": "1056×1280×1425",
         "weight": 2500,
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCTS1200",
@@ -25266,10 +32720,6 @@ export const completeGearboxData = [
         "maxPower": 1674,
         "minPower": 651,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            700,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             0.93,
             0.93,
@@ -25295,7 +32745,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCTS1400",
@@ -25327,10 +32787,6 @@ export const completeGearboxData = [
         "maxPower": 1854,
         "minPower": 618,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             1.03,
             1.03,
@@ -25361,7 +32817,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ401-HCQ402_5_11zon.webp"
     },
     {
         "model": "HCTS1600",
@@ -25390,10 +32856,6 @@ export const completeGearboxData = [
         "maxPower": 2001,
         "minPower": 465,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            500,
-            1650
-        ],
         "transmissionCapacityPerRatio": [
             1.213,
             1.213,
@@ -25421,7 +32883,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-HCQ501-HCQ502-HCAM500_6_11zon.webp"
     },
     {
         "model": "HCTS2000",
@@ -25453,10 +32926,6 @@ export const completeGearboxData = [
         "maxPower": 2220,
         "minPower": 660,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1500
-        ],
         "transmissionCapacityPerRatio": [
             1.48,
             1.48,
@@ -25487,7 +32956,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCTS2700",
@@ -25518,10 +32998,6 @@ export const completeGearboxData = [
         "maxPower": 2870,
         "minPower": 770,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            500,
-            1400
-        ],
         "transmissionCapacityPerRatio": [
             2.05,
             2.05,
@@ -25551,7 +33027,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "大型运输船",
+            "工程船",
+            "拖船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCTS800",
@@ -25580,10 +33067,6 @@ export const completeGearboxData = [
         "maxPower": 1125,
         "minPower": 288,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            600,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             0.625,
             0.625,
@@ -25611,15 +33094,21 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-800-1000.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "工程船",
+            "拖船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-800-1000.webp"
     },
     {
         "model": "HCV100",
         "series": "HCV",
-        "inputSpeedRange": [
-            1200,
-            2600
-        ],
         "ratios": [
             2.02,
             2.48,
@@ -25628,7 +33117,7 @@ export const completeGearboxData = [
             4
         ],
         "weight": 70,
-        "thrust": null,
+        "thrust": 16,
         "dimensions": "485×508×580",
         "transmissionCapacityPerRatio": [
             0.06,
@@ -25652,7 +33141,21 @@ export const completeGearboxData = [
         "priceSource": "系统估算",
         "discountRate": 0.1,
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "游艇",
+            "快艇",
+            "巡逻艇"
+        ],
+        "centerDistance": 146,
+        "minSpeed": 1000,
+        "maxSpeed": 3500,
+        "source": "杭齿厂选型手册2025版5月版",
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCV120",
@@ -25668,13 +33171,9 @@ export const completeGearboxData = [
         "minPower": 50,
         "powerSource": "传动能力计算",
         "price": 33500,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2100
-        ],
         "weight": 300,
         "transmissionCapacityPerRatio": [
             0.077,
@@ -25693,7 +33192,17 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-120C-HCV120.webp",
         "controlType": "推拉软轴",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "thrust": 25,
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "游艇",
+            "快艇",
+            "巡逻艇"
+        ]
     },
     {
         "model": "HCV120(倾角7°)",
@@ -25716,10 +33225,6 @@ export const completeGearboxData = [
         "maxPower": 250,
         "minPower": 76,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             0.1,
             0.1,
@@ -25735,7 +33240,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-120C-HCV120.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "游艇",
+            "快艇",
+            "巡逻艇"
+        ]
     },
     {
         "model": "HCV230",
@@ -25751,13 +33265,9 @@ export const completeGearboxData = [
         "minPower": 2950,
         "powerSource": "传动能力计算",
         "price": 51000,
-        "discountRate": 0,
+        "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2200
-        ],
         "transmissionCapacityPerRatio": [
             2.95,
             2.95,
@@ -25776,7 +33286,17 @@ export const completeGearboxData = [
         "weight": 450,
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "thrust": 27.5,
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "游艇",
+            "快艇",
+            "巡逻艇"
+        ]
     },
     {
         "model": "HCV230(倾角7°)",
@@ -25799,10 +33319,6 @@ export const completeGearboxData = [
         "maxPower": 405,
         "minPower": 146,
         "powerSource": "传动能力计算",
-        "inputSpeedRange": [
-            1000,
-            2200
-        ],
         "transmissionCapacityPerRatio": [
             0.184,
             0.17,
@@ -25818,7 +33334,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "游艇",
+            "快艇",
+            "巡逻艇"
+        ]
     },
     {
         "model": "HCVG3710",
@@ -25845,10 +33370,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "系统估算",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1000,
-            2500
-        ],
         "transmissionCapacityPerRatio": [
             2.96,
             2.96,
@@ -25871,7 +33392,17 @@ export const completeGearboxData = [
         "image": "/images/gearbox/Advance-200-201-230.webp",
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
-        "dimensions": "995×663×829"
+        "dimensions": "995×663×829",
+        "certifications": [
+            "CCS",
+            "ZC"
+        ],
+        "applications": [
+            "游艇",
+            "快艇",
+            "巡逻艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-200-201-230.webp"
     },
     {
         "model": "HCW1100",
@@ -25899,10 +33430,6 @@ export const completeGearboxData = [
         "discountRate": 0.1,
         "priceSource": "2026官方出厂价",
         "source": "杭齿厂选型手册2025版5月版",
-        "inputSpeedRange": [
-            1500,
-            1800
-        ],
         "transmissionCapacityPerRatio": [
             0.931,
             0.931,
@@ -25926,7 +33453,18 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-1100-1200.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS",
+            "BV",
+            "DNV"
+        ],
+        "applications": [
+            "大型运输船",
+            "集装箱船",
+            "海工船"
+        ],
+        "imageUrl": "/images/gearbox/Advance-1100-1200.webp"
     },
     {
         "model": "J300",
@@ -25961,7 +33499,29 @@ export const completeGearboxData = [
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "MA100",
@@ -26000,7 +33560,22 @@ export const completeGearboxData = [
         "introduction": "MA系列船用齿轮箱适用于中小型船舶。",
         "image": "/images/gearbox/MA.webp",
         "controlType": "推拉软轴",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "小型渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "plainFlange": true,
+            "boltPatterns": [
+                "8-φ11",
+                "8-φ14"
+            ]
+        }
     },
     {
         "model": "MA125",
@@ -26041,7 +33616,26 @@ export const completeGearboxData = [
         "introduction": "MA系列船用齿轮箱适用于中小型船舶。",
         "image": "/images/gearbox/MA.webp",
         "controlType": "推拉软轴",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "小型渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#1.5寸",
+                "SAE1#4寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "8-φ11",
+                "12-φ12.5"
+            ]
+        }
     },
     {
         "model": "MA142",
@@ -26084,7 +33678,26 @@ export const completeGearboxData = [
         "introduction": "MA系列船用齿轮箱适用于中小型船舶。",
         "image": "/images/gearbox/MA.webp",
         "controlType": "推拉软轴",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "小型渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#1.5寸",
+                "SAE1#4寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "8-φ11",
+                "12-φ12.5"
+            ]
+        }
     },
     {
         "model": "MB170",
@@ -26139,7 +33752,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-MB.webp",
         "controlType": "推拉软轴",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "小型渔船",
+            "内河船",
+            "工作艇"
+        ]
     },
     {
         "model": "MB242",
@@ -26190,7 +33811,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-MB.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "小型渔船",
+            "内河船",
+            "工作艇"
+        ]
     },
     {
         "model": "MB270A",
@@ -26244,7 +33873,15 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-MB.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "小型渔船",
+            "内河船",
+            "工作艇"
+        ]
     },
     {
         "model": "MV100A",
@@ -26295,7 +33932,16 @@ export const completeGearboxData = [
         "weight": 220,
         "image": "/images/gearbox/Advance-HCQ100-MV100A.webp",
         "controlType": "推拉软轴",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "thrust": 20,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "游艇",
+            "小型渔船",
+            "快艇"
+        ]
     },
     {
         "model": "MV100A(倾角7°)",
@@ -26318,7 +33964,7 @@ export const completeGearboxData = [
         ],
         "minSpeed": 1000,
         "maxSpeed": 3000,
-        "price": null,
+        "price": 100000,
         "source": "2025选型手册第13页",
         "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/4bc80648-8b88-4adf-a3f9-8f4d3fc920e4.png",
         "introduction": "MV系列船用齿轮箱是V型布置版本。",
@@ -26344,7 +33990,18 @@ export const completeGearboxData = [
         "centerDistance": 0,
         "dimensions": "485×508×580",
         "controlType": "推拉软轴",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "游艇",
+            "小型渔船",
+            "快艇"
+        ],
+        "priceSource": "估算价格",
+        "discountRate": 0.1,
+        "imageUrl": "/images/gearbox/Advance-HCQ100-MV100A.webp"
     },
     {
         "model": "SGW30.32",
@@ -26374,7 +34031,28 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-GWS.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "SGW32.35",
@@ -26404,7 +34082,28 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-GWS.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "SGW39.41",
@@ -26432,7 +34131,28 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-GWS.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "SGW42.45",
@@ -26460,7 +34180,28 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-GWS.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "SGWL49.54",
@@ -26476,7 +34217,7 @@ export const completeGearboxData = [
             5
         ],
         "thrust": 300,
-        "centerDistance": 0,
+        "centerDistance": 290,
         "minPower": 1500,
         "maxPower": 3500,
         "powerSource": "项目跟踪数据",
@@ -26486,7 +34227,32 @@ export const completeGearboxData = [
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相同",
         "weight": 7000,
-        "dimensions": "2126×1989×1340"
+        "dimensions": "2126×1989×1340",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "priceSource": "估算价格",
+        "price": 370000,
+        "discountRate": 0.1,
+        "introduction": "SGWL49.54是杭州前进齿轮箱集团生产的大功率大功率低速船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比1.88~2.05，适用输入转速600~1500r/min，额定推力300kN。适用于运输船、散货船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GW.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "SGWL52.59",
@@ -26502,7 +34268,7 @@ export const completeGearboxData = [
             6
         ],
         "thrust": 350,
-        "centerDistance": 0,
+        "centerDistance": 300,
         "minPower": 2000,
         "maxPower": 4500,
         "powerSource": "项目跟踪数据",
@@ -26512,7 +34278,32 @@ export const completeGearboxData = [
         "controlType": "推拉软轴/电控/气控",
         "rotationDirection": "相同",
         "weight": 8900,
-        "dimensions": "2291×1400×1290"
+        "dimensions": "2291×1400×1290",
+        "certifications": [
+            "CCS",
+            "BV"
+        ],
+        "applications": [
+            "运输船",
+            "散货船",
+            "工程船"
+        ],
+        "priceSource": "估算价格",
+        "price": 430000,
+        "discountRate": 0.1,
+        "introduction": "SGWL52.59是杭州前进齿轮箱集团生产的大功率大功率低速船用齿轮箱，采用推拉软轴/电控/气控操纵方式，减速比1.02~1.15，适用输入转速600~1000r/min，额定推力350kN。适用于运输船、散货船、工程船等船舶。",
+        "imageUrl": "/images/gearbox/Advance-GW.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#14寸",
+                "SAE2#1寸"
+            ],
+            "plainFlange": true,
+            "domestic": [
+                "φ480",
+                "φ530"
+            ]
+        }
     },
     {
         "model": "SGW49.54",
@@ -26540,7 +34331,28 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-GWS.webp",
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "SGWS49.54",
@@ -26577,7 +34389,27 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "SGWS52.59",
@@ -26614,7 +34446,27 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "SGWS60.66",
@@ -26651,7 +34503,27 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "SGWS66.75",
@@ -26688,7 +34560,27 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "SGWS70.76",
@@ -26725,7 +34617,27 @@ export const completeGearboxData = [
         "introduction": "杭州前进齿轮箱集团船用齿轮箱产品。",
         "image": "/images/gearbox/Advance-GWS.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相同"
+        "rotationDirection": "相同",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "inputInterfaces": {
+            "sae": [
+                "SAE1#4寸",
+                "SAE1#6寸",
+                "SAE1#8寸"
+            ],
+            "plainFlange": true,
+            "boltPatterns": [
+                "12-φ12.5",
+                "12-φ13"
+            ]
+        }
     },
     {
         "model": "T300",
@@ -26776,7 +34688,17 @@ export const completeGearboxData = [
             "plainFlange": true
         },
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "priceSource": "估算价格",
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
     },
     {
         "model": "T300/1",
@@ -26814,7 +34736,16 @@ export const completeGearboxData = [
         },
         "image": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
         "controlType": "推拉软轴/电控/气控",
-        "rotationDirection": "相反"
+        "rotationDirection": "相反",
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "渔船",
+            "内河船",
+            "工作艇"
+        ],
+        "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp"
     },
     {
         "model": "X6110C",
@@ -26844,6 +34775,22 @@ export const completeGearboxData = [
         "controlType": "推拉软轴/电控",
         "rotationDirection": "相反",
         "dimensions": "350×316×482",
-        "weight": 58
+        "weight": 58,
+        "thrust": 3,
+        "certifications": [
+            "CCS"
+        ],
+        "applications": [
+            "小型渔船",
+            "内河船"
+        ],
+        "centerDistance": 124,
+        "imageUrl": "/images/gearbox/Advance-GC.webp",
+        "inputInterfaces": {
+            "plainFlange": true,
+            "boltPatterns": [
+                "8-φ11"
+            ]
+        }
     }
 ];

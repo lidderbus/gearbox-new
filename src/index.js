@@ -5,7 +5,6 @@ import './index.css';
 import AppWrapper from './AppWrapper';
 // 导入并使用来自 repair.js 的更完整的数据加载和修复函数
 import { loadAndRepairData } from './utils/repair'; // <--- CHANGED IMPORT
-import DarkModeProvider from './contexts/DarkModeContext';
 import { SelectionConfigProvider } from './contexts/SelectionConfigContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import reportWebVitals from './reportWebVitals';
@@ -16,6 +15,13 @@ import { initSentry } from './config/sentry';
 
 // 初始化 Sentry (应在渲染前调用)
 initSentry();
+
+// 生产环境抑制非关键日志 (保留 warn/error 用于监控)
+if (process.env.NODE_ENV === 'production') {
+  console.log = () => {};
+  console.debug = () => {};
+  console.info = () => {};
+}
 
 const Root = () => {
   const [appData, setAppData] = useState(null);
@@ -101,11 +107,9 @@ const Root = () => {
   return (
     <React.StrictMode>
       <ErrorBoundary>
-        <DarkModeProvider>
-          <SelectionConfigProvider>
-            <AppWrapper initialData={appData} setAppData={setAppData} />
-          </SelectionConfigProvider>
-        </DarkModeProvider>
+        <SelectionConfigProvider>
+          <AppWrapper initialData={appData} setAppData={setAppData} />
+        </SelectionConfigProvider>
       </ErrorBoundary>
     </React.StrictMode>
   );

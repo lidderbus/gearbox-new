@@ -194,7 +194,7 @@ function ProductImageModal({
   };
 
   return (
-    <div style={overlayStyle} onClick={onClose}>
+    <div style={overlayStyle} onClick={onClose} role="dialog" aria-modal="true" aria-label={`${model} 产品图片`}>
       <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
         {/* 头部 */}
         <div style={headerStyle}>
@@ -204,6 +204,7 @@ function ProductImageModal({
           <button
             style={closeButtonStyle}
             onClick={onClose}
+            aria-label="关闭"
             onMouseEnter={(e) => (e.target.style.backgroundColor = '#f0f0f0')}
             onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}
           >

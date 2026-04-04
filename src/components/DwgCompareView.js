@@ -102,6 +102,8 @@ const DwgCompareView = () => {
       { key: 'weight', label: '重量' },
       { key: 'dimensions', label: '尺寸' },
       { key: 'controlType', label: '操纵方式' },
+      { key: 'outputInterfaces', label: '输出连接' },
+      { key: 'rotationDirection', label: '旋转方向' },
     ];
 
     return paramRows.map(row => {
@@ -260,6 +262,8 @@ const DwgCompareView = () => {
       { key: 'weight', label: '重量', unit: '' },
       { key: 'dimensions', label: '尺寸', unit: '' },
       { key: 'controlType', label: '操纵方式', unit: '' },
+      { key: 'outputInterfaces', label: '输出连接', unit: '' },
+      { key: 'rotationDirection', label: '旋转方向', unit: '' },
     ];
 
     // 检查是否有任何参数数据

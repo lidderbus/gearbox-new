@@ -361,7 +361,7 @@ const EngineMatchingCases = () => {
           <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
             <div style={styles.modalHeader}>
               <h3>案例详情</h3>
-              <button onClick={() => setSelectedCase(null)} style={styles.closeButton}>×</button>
+              <button onClick={() => setSelectedCase(null)} style={styles.closeButton} aria-label="关闭">×</button>
             </div>
             <div style={styles.modalBody}>
               <table style={styles.detailTable}>

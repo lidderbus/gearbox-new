@@ -224,11 +224,11 @@ function ensureMatchingCapacityArray(capacity, ratios) {
     return capacity.map(c => safeParseFloat(c) || DEFAULTS.gearbox.transferCapacity);
   }
   
-  // 处理长度不匹配的情况
+  // 处理长度不匹配的情况：clamp到最后一个有效值
   const result = [];
   for (let i = 0; i < ratios.length; i++) {
-    // 使用循环取模保证索引有效
-    const capacityValue = safeParseFloat(capacity[i % capacity.length]);
+    const clampedIndex = Math.min(i, capacity.length - 1);
+    const capacityValue = safeParseFloat(capacity[clampedIndex]);
     result.push(capacityValue || DEFAULTS.gearbox.transferCapacity);
   }
   

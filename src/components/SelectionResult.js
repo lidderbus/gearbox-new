@@ -50,8 +50,20 @@ const SelectionResult = ({ result, onGenerateQuotation }) => {
               </tr>
               <tr>
                 <td>控制方式</td>
-                <td>{gearbox.controlType}</td>
+                <td>{gearbox.controlType || '-'}</td>
               </tr>
+              {gearbox.outputInterfaces && (
+              <tr>
+                <td>输出连接</td>
+                <td>{gearbox.outputInterfaces}</td>
+              </tr>
+              )}
+              {gearbox.rotationDirection && (
+              <tr>
+                <td>输出轴旋转方向</td>
+                <td>{gearbox.rotationDirection}</td>
+              </tr>
+              )}
             </tbody>
           </Table>
         </Card.Body>

@@ -15,6 +15,8 @@ const COMPARE_FIELDS = [
   { key: 'weight', label: '重量 (kg)', type: 'number', compare: 'lower' },
   { key: 'efficiency', label: '传动效率', type: 'percent' },
   { key: 'controlType', label: '控制方式', type: 'text' },
+  { key: 'outputInterfaces', label: '输出连接', type: 'text' },
+  { key: 'rotationDirection', label: '旋转方向', type: 'text' },
   { key: 'centerDistance', label: '中心距 (mm)', type: 'number' },
   { key: 'dimensions', label: '外形尺寸', type: 'text' },
   { key: 'displayPrice', label: '市场价 (元)', type: 'price', compare: 'lower' }

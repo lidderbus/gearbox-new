@@ -152,7 +152,8 @@ const useSelectionHandlers = ({
           {
             workCondition: requirementData.workCondition,
             temperature: parseFloat(requirementData.temperature) || 30,
-            hasCover: requirementData.hasCover
+            hasCover: requirementData.hasCover,
+            primeType: engineData.primeType || 'none'
           }
         );
       } else {
@@ -353,6 +354,16 @@ const useSelectionHandlers = ({
         return arr;
       })();
 
+      // 构建系列特性需求（从用户输入推导）
+      const seriesRequirements = (() => {
+        const req = {};
+        if (requirementData.hasClutch != null) req.needsClutch = requirementData.hasClutch;
+        if (shaftFilter?.reversingFunction === 'with-reverse') req.needsReverse = true;
+        else if (shaftFilter?.reversingFunction === 'no-reverse') req.needsReverse = false;
+        if (shaftFilter?.axisAlignment === 'concentric') req.preferConcentric = true;
+        return Object.keys(req).length > 0 ? req : undefined;
+      })();
+
       if (gearboxType === 'auto') {
         // 自动选型模式，传递完整选项
         result = autoSelectGearbox(
@@ -374,7 +385,10 @@ const useSelectionHandlers = ({
             interfaceSpec: requirementData.interfaceSpec || '',
             interfaceFilterMode: requirementData.interfaceFilterMode || 'prefer',
             // 轴布置筛选选项
-            shaftArrangement: shaftFilter
+            shaftArrangement: shaftFilter,
+            // 系列特性需求（替代旧的 hasClutch）
+            seriesRequirements,
+            hasClutch: requirementData.hasClutch
           },
           appDataState
         );
@@ -406,7 +420,10 @@ const useSelectionHandlers = ({
             interfaceSpec: requirementData.interfaceSpec || '',
             interfaceFilterMode: requirementData.interfaceFilterMode || 'prefer',
             // 轴布置筛选选项
-            shaftArrangement: shaftFilter
+            shaftArrangement: shaftFilter,
+            // 系列特性需求（替代旧的 hasClutch）
+            seriesRequirements,
+            hasClutch: requirementData.hasClutch
           }
         );
 
@@ -438,7 +455,8 @@ const useSelectionHandlers = ({
             {
               workCondition: requirementData.workCondition,
               temperature: parseFloat(requirementData.temperature) || 30,
-              hasCover: requirementData.hasCover
+              hasCover: requirementData.hasCover,
+              primeType: engineData.primeType || 'none'
             }
           );
 

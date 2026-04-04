@@ -1,0 +1,162 @@
+[
+  {
+    "model": "HC138", "section": "中小功率",
+    "minSpeed": 1000, "maxSpeed": 2500,
+    "ratios": [2.00, 2.52, 3.00, 3.57, 4.05, 4.45],
+    "capacities": [0.110, 0.110, 0.110, 0.110, 0.110, 0.110],
+    "thrust": 30, "centerDistance": 225,
+    "dimensions": "520×792×760", "weight": 360
+  },
+  {
+    "model": "HCD138", "section": "中小功率",
+    "minSpeed": 1000, "maxSpeed": 2500,
+    "ratios": [5.05, 5.63, 6.06, 6.47],
+    "capacities": [0.110, 0.099, 0.099, 0.093],
+    "thrust": 40, "centerDistance": 296,
+    "dimensions": "494×800×870", "weight": 415
+  },
+  {
+    "model": "MB242", "section": "中小功率",
+    "minSpeed": 1000, "maxSpeed": 2500,
+    "ratios": [2.00, 2.54, 3.04, 3.52, 3.95, 4.53, 5.12, 5.56, 5.88],
+    "capacities": [0.103, 0.100, 0.094, 0.094, 0.094, 0.074, 0.074, 0.074, 0.074],
+    "thrust": 30, "centerDistance": 242,
+    "dimensions": "442×774×763", "weight": 385
+  },
+  {
+    "model": "MB270A", "section": "中小功率",
+    "minSpeed": 1000, "maxSpeed": 2500,
+    "ratios": [3.00, 4.05, 4.53, 5.12, 5.50, 5.95, 6.39, 6.82],
+    "capacities": [0.147, 0.134, 0.110, 0.110, 0.110, 0.088, 0.088, 0.088],
+    "thrust": 39.2, "centerDistance": 270,
+    "dimensions": "594×810×868", "weight": 675
+  },
+  {
+    "model": "300", "section": "中小功率",
+    "minSpeed": 750, "maxSpeed": 2500,
+    "ratios": [1.87, 2.04, 2.54, 3.00, 3.53, 4.10, 4.47, 4.61, 4.94, 5.44],
+    "capacities": [0.257, 0.243, 0.221, 0.221, 0.184, 0.184, 0.147, 0.147, 0.125, 0.125],
+    "thrust": 50, "centerDistance": 264,
+    "dimensions": "786×930×864", "weight": 740
+  },
+  {
+    "model": "HC300", "section": "中小功率",
+    "minSpeed": 700, "maxSpeed": 2500,
+    "ratios": [1.50, 1.87, 2.04, 2.23, 2.54, 3.00, 3.53, 4.10, 4.47, 4.61, 4.94, 5.44],
+    "capacities": [0.257, 0.257, 0.2, 0.2, 0.184, 0.184, 0.184, 0.147, 0.147, 0.13, 0.13, 0.13],
+    "thrust": 50, "centerDistance": 264,
+    "dimensions": "680×930×880", "weight": 680
+  },
+  {
+    "model": "J300", "section": "中小功率",
+    "minSpeed": 750, "maxSpeed": 2500,
+    "ratios": [2.04, 2.54, 3.0, 3.47, 3.95],
+    "capacities": [0.280, 0.280, 0.257, 0.257, 0.257],
+    "thrust": 60, "centerDistance": 264,
+    "dimensions": "786×930×864", "weight": 740
+  },
+  {
+    "model": "D300A", "section": "中小功率",
+    "minSpeed": 1000, "maxSpeed": 2500,
+    "ratios": [4.00, 4.48, 5.05, 5.52, 5.90, 6.56, 7.06, 7.63],
+    "capacities": [0.257, 0.243, 0.221, 0.221, 0.184, 0.184, 0.147, 0.125],
+    "thrust": 60, "centerDistance": 355,
+    "dimensions": "786×1010×1041", "weight": 940
+  },
+  {
+    "model": "T300", "section": "中小功率",
+    "minSpeed": 1000, "maxSpeed": 2300,
+    "ratios": [4.73, 4.95, 5.51, 6.03, 6.65, 7.04, 7.54, 8.02, 8.47],
+    "capacities": [0.243, 0.221, 0.221, 0.200, 0.200, 0.200, 0.200, 0.200, 0.200],
+    "thrust": 70, "centerDistance": 355,
+    "dimensions": "772×980×1106", "weight": 1120
+  },
+  {
+    "model": "T300/1", "section": "中小功率",
+    "minSpeed": 1000, "maxSpeed": 2300,
+    "ratios": [8.94, 9.45],
+    "capacities": [0.196, 0.196],
+    "thrust": 70, "centerDistance": 355,
+    "dimensions": "772×980×1106", "weight": 1120
+  },
+  {
+    "model": "HC350-1", "section": "中小功率",
+    "minSpeed": 750, "maxSpeed": 2500,
+    "ratios": [2.96, 3.48, 3.68, 4.10, 4.42, 5.00],
+    "capacities": [0.26, 0.257, 0.223, 0.223, 0.186, 0.157],
+    "thrust": 50, "centerDistance": 264,
+    "dimensions": "604×886×880", "weight": 520
+  },
+  {
+    "model": "HCD350", "section": "中小功率",
+    "minSpeed": 750, "maxSpeed": 2500,
+    "ratios": [4.08, 4.55, 4.81, 5.1, 5.47, 6.20],
+    "capacities": [0.260, 0.245, 0.223, 0.223, 0.186, 0.157],
+    "thrust": 50, "centerDistance": 315,
+    "dimensions": "610×915×987", "weight": 590
+  },
+  {
+    "model": "HC400", "section": "中小功率",
+    "minSpeed": 1000, "maxSpeed": 1800,
+    "ratios": [1.50, 1.77, 2.04, 2.50, 2.86, 3.00, 3.25, 3.33, 3.42, 3.60, 4.06, 4.61, 4.94],
+    "capacities": [0.331, 0.331, 0.331, 0.331, 0.331, 0.331, 0.331, 0.331, 0.331, 0.331, 0.279, 0.279, 0.190],
+    "thrust": 82, "centerDistance": 264,
+    "dimensions": "820×950×890", "weight": 820
+  },
+  {
+    "model": "HCD400A", "section": "中小功率",
+    "minSpeed": 1000, "maxSpeed": 1800,
+    "ratios": [3.96, 4.33, 4.43, 4.70, 5.00, 5.53, 5.71, 5.89, 6.00],
+    "capacities": [0.331, 0.293, 0.293, 0.272, 0.272, 0.267, 0.267, 0.267, 0.267],
+    "thrust": 82, "centerDistance": 355,
+    "dimensions": "820×1010×1070", "weight": 1100
+  },
+  {
+    "model": "HCT400A", "section": "中小功率",
+    "minSpeed": 1000, "maxSpeed": 2100,
+    "ratios": [6.09, 6.49, 6.93, 7.42, 7.96, 8.40, 9.00, 9.47],
+    "capacities": [0.331, 0.309, 0.294, 0.294, 0.279, 0.279, 0.279, 0.279],
+    "thrust": 82, "centerDistance": 375,
+    "dimensions": "800×1052×1182", "weight": 1450
+  },
+  {
+    "model": "HCT400A/1", "section": "中小功率",
+    "minSpeed": 1000, "maxSpeed": 2100,
+    "ratios": [8.15, 8.69, 9.27, 9.94, 10.60, 11.37, 12.00, 12.50, 13.96],
+    "capacities": [0.331, 0.316, 0.297, 0.274, 0.274, 0.262, 0.262, 0.204, 0.204],
+    "thrust": 120, "centerDistance": 465,
+    "dimensions": "832×1100×1328", "weight": 1500
+  },
+  {
+    "model": "HCD450", "section": "中小功率",
+    "minSpeed": 1000, "maxSpeed": 2100,
+    "ratios": [4.00, 4.48, 4.75, 5.05, 5.52, 6.00],
+    "capacities": [0.36, 0.331, 0.331, 0.294, 0.294, 0.279],
+    "thrust": 82, "centerDistance": 355,
+    "dimensions": "761×984×1040", "weight": 800
+  },
+  {
+    "model": "HC500", "section": "中小功率",
+    "minSpeed": 800, "maxSpeed": 2100,
+    "ratios": [1.50, 1.77, 2.04, 2.50, 2.86, 3.00, 3.48],
+    "capacities": [0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4],
+    "thrust": 82, "centerDistance": 264,
+    "dimensions": "900×897×680", "weight": 800
+  },
+  {
+    "model": "HC600A", "section": "中小功率",
+    "minSpeed": 1000, "maxSpeed": 2100,
+    "ratios": [2.00, 2.48, 2.63, 3.00, 3.58, 3.89],
+    "capacities": [0.490, 0.490, 0.490, 0.490, 0.490, 0.490],
+    "thrust": 90, "centerDistance": 320,
+    "dimensions": "745×1214×1126", "weight": 1300
+  },
+  {
+    "model": "HCD600A", "section": "中小功率",
+    "minSpeed": 1000, "maxSpeed": 2100,
+    "ratios": [4.18, 4.43, 4.70, 5.00, 5.44, 5.71],
+    "capacities": [0.490, 0.450, 0.450, 0.430, 0.430, 0.430],
+    "thrust": 90, "centerDistance": 415,
+    "dimensions": "745×1214×1271", "weight": 1550
+  }
+]

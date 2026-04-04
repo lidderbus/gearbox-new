@@ -9,13 +9,7 @@
  */
 import React, { useState, useCallback, useMemo } from 'react';
 import { Card, Form, Button, Badge, Alert, Spinner, Collapse } from 'react-bootstrap';
-import SearchIcon from '@mui/icons-material/Search';
-import TuneIcon from '@mui/icons-material/Tune';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import SpeedIcon from '@mui/icons-material/Speed';
-import SettingsIcon from '@mui/icons-material/Settings';
+import { Search as SearchIcon, SlidersHorizontal as TuneIcon, ChevronDown as ExpandMoreIcon, ChevronUp as ExpandLessIcon, CheckCircle as CheckCircleIcon, Gauge as SpeedIcon, Settings as SettingsIcon } from 'lucide-react';
 import './MobileGearboxSelection.css';
 
 // 快速选型预设

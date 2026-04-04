@@ -86,13 +86,15 @@ const GearboxSelectionResult = ({
                     <tr>
                       <td>能力余量</td>
                       <td>
-                        {selectedGearbox.capacityMargin !== undefined 
-                          ? `${selectedGearbox.capacityMargin.toFixed(1)}%` 
+                        {selectedGearbox.capacityMargin !== undefined
+                          ? `${selectedGearbox.capacityMargin.toFixed(1)}%`
                           : '-'}
-                        {selectedGearbox.capacityMargin < 5 ? (
-                          <Badge bg="danger" className="ms-2">过低</Badge>
-                        ) : selectedGearbox.capacityMargin > 40 ? (
-                          <Badge bg="warning" className="ms-2">过高</Badge>
+                        {selectedGearbox.capacityMargin <= 0 ? (
+                          <><Badge bg="danger" className="ms-2">危险</Badge><small className="text-danger ms-1">无安全余量，强烈建议选择更大型号</small></>
+                        ) : selectedGearbox.capacityMargin < 5 ? (
+                          <><Badge bg="danger" className="ms-2">过低</Badge><small className="text-warning ms-1">建议选择更大型号</small></>
+                        ) : selectedGearbox.capacityMargin > 50 ? (
+                          <Badge bg="info" className="ms-2">充裕</Badge>
                         ) : (
                           <Badge bg="success" className="ms-2">合适</Badge>
                         )}

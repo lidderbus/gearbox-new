@@ -27,11 +27,8 @@ module.exports = defineConfig({
   // 并发工作进程数
   workers: process.env.CI ? 1 : undefined,
 
-  // 报告器配置
-  reporter: [
-    ['html', { outputFolder: 'playwright-report' }],
-    ['list']
-  ],
+  // 报告器配置 (CLI只用list，避免HTML报告卡住进程)
+  reporter: 'list',
 
   // 全局超时设置
   timeout: 30000,
@@ -64,20 +61,22 @@ module.exports = defineConfig({
 
   // 浏览器配置
   projects: [
-    // 桌面 Chrome
+    // 桌面 Chrome (使用本机已安装的Chrome，无需额外下载)
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        channel: 'chrome',
         viewport: { width: 1280, height: 720 },
       },
     },
 
-    // 移动端 Safari (iPhone 13)
+    // 移动端模拟 (使用本机Chrome)
     {
       name: 'mobile',
       use: {
         ...devices['iPhone 13'],
+        channel: 'chrome',
       },
     },
 

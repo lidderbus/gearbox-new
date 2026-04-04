@@ -8,16 +8,7 @@
  */
 import React, { useState, useCallback } from 'react';
 import { Offcanvas, Nav, Button, Badge } from 'react-bootstrap';
-import MenuIcon from '@mui/icons-material/Menu';
-import HomeIcon from '@mui/icons-material/Home';
-import SettingsIcon from '@mui/icons-material/Settings';
-import CompareIcon from '@mui/icons-material/Compare';
-import DescriptionIcon from '@mui/icons-material/Description';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import CloseIcon from '@mui/icons-material/Close';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import LogoutIcon from '@mui/icons-material/Logout';
+import { Menu as MenuIcon, Home as HomeIcon, Settings as SettingsIcon, GitCompare as CompareIcon, FileText as DescriptionIcon, Receipt as ReceiptIcon, X as CloseIcon, Moon as DarkModeIcon, Sun as LightModeIcon, LogOut as LogoutIcon } from 'lucide-react';
 import './MobileNav.css';
 
 const MobileNav = ({

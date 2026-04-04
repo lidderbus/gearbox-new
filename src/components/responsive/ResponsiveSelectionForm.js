@@ -12,6 +12,11 @@ const GEARBOX_TYPES = [
   { value: 'DT', label: 'DT系列' },
   { value: 'HCQ', label: 'HCQ系列' },
   { value: 'GC', label: 'GC系列' },
+  { value: 'HCA', label: 'HCA系列' },
+  { value: 'HCV', label: 'HCV系列' },
+  { value: 'HCX', label: 'HCX系列' },
+  { value: 'MV', label: 'MV系列' },
+  { value: 'OTHER', label: '其他系列' },
 ];
 
 /**

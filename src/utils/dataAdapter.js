@@ -149,10 +149,11 @@ function ensureMatchingCapacityArray(capacity, ratios) {
     return capacity.map(c => safeParseFloat(c) || 0.1);
   }
   
-  // 调整长度
+  // 调整长度：clamp到最后一个有效值（而非modulo循环）
   const result = [];
   for (let i = 0; i < ratios.length; i++) {
-    result.push(safeParseFloat(capacity[i % capacity.length]) || 0.1);
+    const clampedIndex = Math.min(i, capacity.length - 1);
+    result.push(safeParseFloat(capacity[clampedIndex]) || 0.1);
   }
   return result;
 }

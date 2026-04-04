@@ -1,6 +1,7 @@
 // components/AgreementView.js
 import React from 'react';
 import { Card, Button, Table, Row, Col } from 'react-bootstrap';
+import DOMPurify from 'dompurify';
 
 /**
  * Component for displaying the technical agreement
@@ -231,7 +232,7 @@ const AgreementView = ({
               fontWeight: 'bold',
               color: '#003366'
             }}>船用齿轮箱技术协议</h2>
-            <div dangerouslySetInnerHTML={{ __html: formatContent() }} />
+            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(formatContent()) }} />
           </div>
         </Card.Body>
         <Card.Footer style={{ 

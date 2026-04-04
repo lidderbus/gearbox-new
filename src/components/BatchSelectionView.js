@@ -502,6 +502,14 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
             <br />
             每行一个需求，使用逗号或制表符分隔
           </p>
+          <Button size="sm" variant="outline-info" className="mb-2" onClick={() => {
+            const tpl = '名称,功率(kW),转速(rpm),目标速比,推力(kN),备注\n主推进1,350,1800,4.5,,散货船\n主推进2,250,1500,3.5,,渔船\n辅机,100,1200,2.5,,\n';
+            const blob = new Blob(['\uFEFF' + tpl], {type: 'text/csv;charset=utf-8'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = '批量选型导入模板.csv'; a.click();
+            URL.revokeObjectURL(url);
+          }}><i className="bi bi-download me-1"></i>下载导入模板 (CSV)</Button>
           <Form.Control
             as="textarea"
             rows={10}

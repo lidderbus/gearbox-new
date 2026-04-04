@@ -8,7 +8,8 @@
 
 import React, { useState, useMemo } from 'react';
 import { Card, Row, Col, Form, Badge, ProgressBar, Table, Tabs, Tab, Alert } from 'react-bootstrap';
-import ReactECharts from 'echarts-for-react';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
+import echarts from '../config/echartsSetup';
 
 import {
   CARBON_FACTORS,
@@ -155,7 +156,7 @@ const CIIGaugeMeter = ({ rating, value }) => {
     }]
   };
 
-  return <ReactECharts option={option} style={{ height: '220px' }} />;
+  return <ReactEChartsCore echarts={echarts} option={option} style={{ height: '220px' }} />;
 };
 
 /**
@@ -218,7 +219,7 @@ const CarbonCostTrendChart = ({ annualCO2 }) => {
     ]
   };
 
-  return <ReactECharts option={option} style={{ height: '300px' }} />;
+  return <ReactEChartsCore echarts={echarts} option={option} style={{ height: '300px' }} />;
 };
 
 /**
@@ -271,7 +272,7 @@ const EmissionPieChart = ({ emissions, title = '排放组成' }) => {
     }]
   };
 
-  return <ReactECharts option={option} style={{ height: '250px' }} />;
+  return <ReactEChartsCore echarts={echarts} option={option} style={{ height: '250px' }} />;
 };
 
 /**
@@ -340,7 +341,7 @@ const FuelComparisonChart = ({ comparisonData }) => {
     ]
   };
 
-  return <ReactECharts option={option} style={{ height: '300px' }} />;
+  return <ReactEChartsCore echarts={echarts} option={option} style={{ height: '300px' }} />;
 };
 
 /**
@@ -391,7 +392,7 @@ const HybridBenefitChart = ({ baseline, hybrid }) => {
     }]
   };
 
-  return <ReactECharts option={option} style={{ height: '300px' }} />;
+  return <ReactEChartsCore echarts={echarts} option={option} style={{ height: '300px' }} />;
 };
 
 /**

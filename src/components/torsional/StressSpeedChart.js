@@ -9,7 +9,8 @@
 
 import React, { useMemo, useRef, useEffect } from 'react';
 import { Card, Row, Col, Badge } from 'react-bootstrap';
-import ReactECharts from 'echarts-for-react';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
+import echarts from '../../config/echartsSetup';
 import { FiActivity, FiAlertTriangle } from 'react-icons/fi';
 
 /**
@@ -431,7 +432,8 @@ const StressSpeedChart = ({
         <Col lg={6}>
           <Card style={cardStyle} className="mb-3">
             <Card.Body>
-              <ReactECharts
+              <ReactEChartsCore
+                echarts={echarts}
                 ref={chartRef}
                 option={intermediateShaftOptions}
                 style={{ height: '350px' }}
@@ -444,7 +446,8 @@ const StressSpeedChart = ({
         <Col lg={6}>
           <Card style={cardStyle} className="mb-3">
             <Card.Body>
-              <ReactECharts
+              <ReactEChartsCore
+                echarts={echarts}
                 ref={propellerChartRef}
                 option={propellerShaftOptions}
                 style={{ height: '350px' }}

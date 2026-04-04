@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useCallback, useMemo } from 'react';
 
 const DataContext = createContext();
 
@@ -7,8 +7,7 @@ export const DataProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // 加载持久化数据
-  const loadPersistedData = () => {
+  const loadPersistedData = useCallback(() => {
     try {
       const savedData = localStorage.getItem('appData');
       if (savedData) {
@@ -17,96 +16,89 @@ export const DataProvider = ({ children }) => {
     } catch (err) {
       setError('加载持久化数据失败');
     }
-  };
+  }, []);
 
-  // 保存数据到本地存储
-  const savePersistedData = (newData) => {
+  const savePersistedData = useCallback((newData) => {
     try {
       localStorage.setItem('appData', JSON.stringify(newData));
     } catch (err) {
       setError('保存数据失败');
     }
-  };
+  }, []);
 
-  // 确保数据集合存在
-  const ensureDataCollections = (data) => {
-    if (!data) return {};
+  const ensureDataCollections = useCallback((d) => {
+    if (!d) return {};
     const collections = ['gearboxes', 'couplings', 'prices'];
     collections.forEach(collection => {
-      if (!data[collection]) {
-        data[collection] = [];
+      if (!d[collection]) {
+        d[collection] = [];
       }
     });
-    return data;
-  };
+    return d;
+  }, []);
 
-  // 验证数据完整性
-  const validateDataCompleteness = (data) => {
-    if (!data) return false;
+  const validateDataCompleteness = useCallback((d) => {
+    if (!d) return false;
     return true;
-  };
+  }, []);
 
-  // 更新应用数据
-  const updateAppData = (newData) => {
+  const updateAppData = useCallback((newData) => {
     setData(newData);
-    savePersistedData(newData);
-  };
+    try {
+      localStorage.setItem('appData', JSON.stringify(newData));
+    } catch (err) {
+      setError('保存数据失败');
+    }
+  }, []);
 
-  // 重置为默认数据
-  const resetToDefaultData = () => {
+  const resetToDefaultData = useCallback(() => {
     setData(null);
     localStorage.removeItem('appData');
-  };
+  }, []);
 
-  // 检查数据完整性
-  const checkDataIntegrity = async () => {
+  const checkDataIntegrity = useCallback(async () => {
     setLoading(true);
     try {
-      if (!data) {
-        loadPersistedData();
-      }
-      if (!validateDataCompleteness(data)) {
-        setError('数据不完整');
+      const savedData = localStorage.getItem('appData');
+      if (savedData) {
+        setData(JSON.parse(savedData));
       }
     } catch (err) {
       setError('检查数据完整性失败');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  // 更新项目价格
-  const updateItemPrice = (item) => {
-    if (!data || !data.prices) return;
-    const updatedPrices = data.prices.map(price => 
-      price.id === item.id ? { ...price, ...item } : price
-    );
-    updateAppData({ ...data, prices: updatedPrices });
-  };
+  const updateItemPrice = useCallback((item) => {
+    setData(prev => {
+      if (!prev || !prev.prices) return prev;
+      const updatedPrices = prev.prices.map(price =>
+        price.id === item.id ? { ...price, ...item } : price
+      );
+      const newData = { ...prev, prices: updatedPrices };
+      try { localStorage.setItem('appData', JSON.stringify(newData)); } catch {}
+      return newData;
+    });
+  }, []);
 
-  // 更新类别
-  const updateCategory = (catKey) => {
-    if (!data || !data[catKey]) return;
-    updateAppData({ ...data, [catKey]: [...data[catKey]] });
-  };
+  const updateCategory = useCallback((catKey) => {
+    setData(prev => {
+      if (!prev || !prev[catKey]) return prev;
+      const newData = { ...prev, [catKey]: [...prev[catKey]] };
+      try { localStorage.setItem('appData', JSON.stringify(newData)); } catch {}
+      return newData;
+    });
+  }, []);
 
-  const value = {
-    data,
-    setData,
-    loading,
-    setLoading,
-    error,
-    setError,
-    loadPersistedData,
-    savePersistedData,
-    ensureDataCollections,
-    validateDataCompleteness,
-    updateAppData,
-    resetToDefaultData,
-    checkDataIntegrity,
-    updateItemPrice,
-    updateCategory
-  };
+  const value = useMemo(() => ({
+    data, setData, loading, setLoading, error, setError,
+    loadPersistedData, savePersistedData, ensureDataCollections,
+    validateDataCompleteness, updateAppData, resetToDefaultData,
+    checkDataIntegrity, updateItemPrice, updateCategory
+  }), [data, loading, error, loadPersistedData, savePersistedData,
+    ensureDataCollections, validateDataCompleteness, updateAppData,
+    resetToDefaultData, checkDataIntegrity, updateItemPrice, updateCategory]);
 
   return (
     <DataContext.Provider value={value}>
@@ -123,4 +115,4 @@ export const useAppData = () => {
   return context;
 };
 
-export default DataContext; 
+export default DataContext;

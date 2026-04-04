@@ -464,7 +464,7 @@ const HCMSelectionModule = () => {
           <div style={styles.modalContent}>
             <div style={styles.modalHeader}>
               <h3>{selectedGearbox.model} 详情</h3>
-              <button onClick={() => setShowCases(false)} style={styles.closeButton}>×</button>
+              <button onClick={() => setShowCases(false)} style={styles.closeButton} aria-label="关闭">×</button>
             </div>
 
             <div style={styles.modalBody}>

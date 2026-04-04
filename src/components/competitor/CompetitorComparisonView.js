@@ -17,6 +17,7 @@ import TechnologyMatrix from './TechnologyMatrix';
 import TCOCalculator from './TCOCalculator';
 import MarketSegmentView from './MarketSegmentView';
 import DataFreshnessIndicator from './DataFreshnessIndicator';
+import CompetitorDrawingCatalog from './CompetitorDrawingCatalog';
 import {
   selectCompetitorProducts,
   findEquivalentCompetitors,
@@ -562,6 +563,14 @@ const CompetitorComparisonView = ({
             colors={colors}
             onExportPDF={handleExportPDF}
           />
+        </Tab>
+
+        {/* Tab 7: 竞品外形图 */}
+        <Tab
+          eventKey="drawings"
+          title={<span><i className="bi bi-file-earmark-pdf me-2"></i>竞品外形图</span>}
+        >
+          <CompetitorDrawingCatalog colors={colors} />
         </Tab>
       </Tabs>
     </Container>

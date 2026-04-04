@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import { Card, Table, Badge, Tabs, Tab, Row, Col, Button, ListGroup } from 'react-bootstrap';
 import { getCouplingSeriesInfo } from '../../services/couplingSelectionService';
+import CouplingTorsionalAnalysis from './CouplingTorsionalAnalysis';
 
 /**
  * 联轴器技术参数详情组件
@@ -100,49 +101,100 @@ const CouplingTechnicalParams = ({
     </Table>
   );
 
-  // 渲染计算过程
-  const renderCalculationProcess = () => (
-    <div>
-      <h6>扭矩计算过程</h6>
-      <ListGroup variant="flush" className="mb-3">
-        <ListGroup.Item className="d-flex justify-content-between">
-          <span>1. 发动机扭矩</span>
-          <span>
-            T = P × 9550 / n = {calculationDetails?.power} × 9550 / {calculationDetails?.speed} = <strong>{calculationDetails?.engineTorque?.toFixed(2)} N·m</strong>
-          </span>
-        </ListGroup.Item>
-        <ListGroup.Item className="d-flex justify-content-between">
-          <span>2. 工况系数 K</span>
-          <span><strong>{calculationDetails?.kFactor?.toFixed(2)}</strong></span>
-        </ListGroup.Item>
-        <ListGroup.Item className="d-flex justify-content-between">
-          <span>3. 温度系数 St</span>
-          <span><strong>{calculationDetails?.stFactor?.toFixed(2)}</strong></span>
-        </ListGroup.Item>
-        <ListGroup.Item className="d-flex justify-content-between bg-light">
-          <span>4. 所需联轴器扭矩</span>
-          <span>
-            Tc = T × K × St / 1000 = <strong>{calculationDetails?.requiredTorque_kNm?.toFixed(3)} kN·m</strong>
-          </span>
-        </ListGroup.Item>
-      </ListGroup>
+  // 渲染计算过程（增强版5步详解）
+  const renderCalculationProcess = () => {
+    const power = calculationDetails?.power;
+    const speed = calculationDetails?.speed;
+    const engineTorque = calculationDetails?.engineTorque;
+    const kFactor = calculationDetails?.kFactor;
+    const stFactor = calculationDetails?.stFactor;
+    const reqTorque = calculationDetails?.requiredTorque_kNm;
+    const isJbCcs = calculationDetails?.workFactorMode === 'JB_CCS';
 
-      <h6>选型匹配结果</h6>
-      <ListGroup variant="flush">
-        <ListGroup.Item className="d-flex justify-content-between">
-          <span>联轴器额定扭矩</span>
-          <span><strong>{coupling.torque?.toFixed(2)} kN·m</strong></span>
-        </ListGroup.Item>
-        <ListGroup.Item className="d-flex justify-content-between">
-          <span>扭矩余量</span>
-          <span>
-            ({coupling.torque?.toFixed(3)} - {calculationDetails?.requiredTorque_kNm?.toFixed(3)}) / {calculationDetails?.requiredTorque_kNm?.toFixed(3)} × 100% =
-            <strong className={coupling.torqueMargin >= 10 ? 'text-success' : 'text-warning'}> {coupling.torqueMargin?.toFixed(1)}%</strong>
-          </span>
-        </ListGroup.Item>
-      </ListGroup>
-    </div>
-  );
+    return (
+      <div>
+        <h6 className="mb-3">
+          <i className="bi bi-calculator me-1"></i>
+          选型计算过程详解
+        </h6>
+
+        {/* 步骤1 */}
+        <Card className="mb-2 border-start border-primary border-3">
+          <Card.Body className="py-2">
+            <div className="small fw-bold text-primary">步骤1：计算发动机扭矩 T<sub>AN</sub></div>
+            <div className="text-muted small">T<sub>AN</sub> = 9.55 × P<sub>w</sub> / n</div>
+            <div className="small">= 9.55 × {power} kW / {speed} rpm</div>
+            <div className="fw-bold">= {engineTorque?.toFixed(2)} N·m = {(engineTorque / 1000)?.toFixed(4)} kN·m</div>
+          </Card.Body>
+        </Card>
+
+        {/* 步骤2 */}
+        <Card className="mb-2 border-start border-success border-3">
+          <Card.Body className="py-2">
+            <div className="small fw-bold text-success">步骤2：确定工况系数 K</div>
+            <div className="text-muted small">
+              工况类型: {calculationDetails?.workCondition || 'III类'}
+              {isJbCcs ? ' (CCS船级社标准)' : ' (厂家标准)'}
+            </div>
+            <div className="fw-bold">K = {kFactor?.toFixed(2)}</div>
+          </Card.Body>
+        </Card>
+
+        {/* 步骤3 */}
+        <Card className="mb-2 border-start border-info border-3">
+          <Card.Body className="py-2">
+            <div className="small fw-bold text-info">步骤3：确定温度系数 S<sub>t</sub></div>
+            <div className="text-muted small">环境温度: {calculationDetails?.temperature || 30}°C</div>
+            <div className="fw-bold">S<sub>t</sub> = {stFactor?.toFixed(2)}</div>
+          </Card.Body>
+        </Card>
+
+        {/* 步骤4 */}
+        <Card className="mb-2 border-start border-warning border-3">
+          <Card.Body className="py-2">
+            <div className="small fw-bold text-warning">步骤4：计算所需联轴器扭矩 T<sub>KN</sub></div>
+            <div className="text-muted small">T<sub>KN</sub> = T<sub>AN</sub> × K × S<sub>t</sub></div>
+            <div className="small">= {(engineTorque / 1000)?.toFixed(4)} × {kFactor?.toFixed(2)} × {stFactor?.toFixed(2)}</div>
+            <div className="fw-bold text-danger" style={{ fontSize: '1.05em' }}>= {reqTorque?.toFixed(3)} kN·m</div>
+          </Card.Body>
+        </Card>
+
+        {/* 步骤5 */}
+        <Card className="mb-3 border-start border-danger border-3">
+          <Card.Body className="py-2">
+            <div className="small fw-bold" style={{ color: '#9c27b0' }}>步骤5：选型判定</div>
+            <div className="text-muted small">选型依据: T<sub>KN30</sub> ≥ T<sub>KN</sub>，推荐余量 10%-30%</div>
+            <div className="small">选择扭矩范围: ≥ {reqTorque?.toFixed(3)} kN·m</div>
+            <div className="fw-bold">
+              <span className="text-success">✅ 推荐型号 </span>
+              <Badge bg="primary">{coupling.model}</Badge>
+              <span className="ms-2">额定扭矩 {coupling.torque?.toFixed(2)} kN·m，余量 {coupling.torqueMargin?.toFixed(1)}%</span>
+            </div>
+          </Card.Body>
+        </Card>
+
+        {/* PDF参考公式 */}
+        <Card className="bg-light">
+          <Card.Body className="py-2">
+            <h6 className="small fw-bold">
+              <i className="bi bi-file-earmark-text me-1"></i>
+              选型参考公式（来自PDF目录）
+            </h6>
+            <ul className="mb-0 small ps-3" style={{ fontSize: '0.8rem' }}>
+              <li><strong>扭矩计算:</strong> T<sub>KN</sub> = K × 9.55 × P<sub>w</sub> / n</li>
+              <li><strong>工况系数K范围{isJbCcs ? '（CCS船级社标准）' : '（厂家标准）'}:</strong>{' '}
+                {isJbCcs
+                  ? 'I类(1.3) → II类(1.75) → III类(2.5) → IV类(2.75) → V类(3.0)'
+                  : 'I类(1.0) → II类(1.2) → III类(1.4) → IV类(1.6) → V类(1.8)'}
+              </li>
+              <li><strong>温度系数St:</strong> ≤20°C(1.0) → 40°C(1.1) → 60°C(1.2) → 80°C(1.3)</li>
+              <li><strong>双缸柴油机:</strong> K值需增加0.2</li>
+            </ul>
+          </Card.Body>
+        </Card>
+      </div>
+    );
+  };
 
   // 渲染系列信息
   const renderSeriesInfo = () => (
@@ -232,6 +284,12 @@ const CouplingTechnicalParams = ({
           </Tab>
           <Tab eventKey="series" title="系列信息">
             {renderSeriesInfo()}
+          </Tab>
+          <Tab eventKey="vibration" title="扭振分析">
+            <CouplingTorsionalAnalysis
+              selectedCoupling={coupling}
+              engineData={{ speed: calculationDetails?.speed, power: calculationDetails?.power }}
+            />
           </Tab>
         </Tabs>
 

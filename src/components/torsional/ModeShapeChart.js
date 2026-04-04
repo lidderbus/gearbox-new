@@ -4,7 +4,8 @@
  * 多阶振型叠加显示，节点位置标注
  */
 import React, { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
+import echarts from '../../config/echartsSetup';
 
 const ModeShapeChart = ({
   naturalFrequencies = [],
@@ -147,7 +148,8 @@ const ModeShapeChart = ({
   }
 
   return (
-    <ReactECharts
+    <ReactEChartsCore
+      echarts={echarts}
       option={option}
       style={{ height: 350, width: '100%' }}
       theme={theme === 'dark' ? 'dark' : undefined}

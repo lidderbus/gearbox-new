@@ -66,15 +66,16 @@ function GearboxDataImporter({ onDataUpdate }) {
           // 处理Python或JavaScript格式文件
           const exportMatch = fileContent.match(/export\s+const\s+(\w+)\s*=\s*/);
           if (exportMatch) {
-            const varName = exportMatch[1]; // 例如 advanceGearboxData
             try {
-              // 安全地执行代码提取数据
-              const funcBody = `
-                ${fileContent}
-                return typeof ${varName} !== 'undefined' ? ${varName} : null;
-              `;
-              const dataFunc = new Function(funcBody);
-              const result = dataFunc();
+              // 安全提取数据：仅取赋值表达式，不执行整个文件
+              const dataStartIdx = exportMatch.index + exportMatch[0].length;
+              const dataExpr = fileContent.substring(dataStartIdx).replace(/;\s*(export\b[\s\S]*)?$/, '').trim();
+              // 校验无危险代码模式
+              const dangerousPattern = /\b(eval|Function|import|require|fetch|XMLHttpRequest|setTimeout|setInterval|document\.|window\.)\s*\(/;
+              if (dangerousPattern.test(dataExpr)) {
+                throw new Error('文件包含不安全的代码模式，已拒绝执行');
+              }
+              const result = (new Function('return ' + dataExpr))();
               
               if (result && typeof result === 'object') {
                 setImportedData(result);
@@ -134,13 +135,14 @@ function GearboxDataImporter({ onDataUpdate }) {
         // 尝试作为JavaScript对象解析
         try {
           const varName = match[1]; // 提取变量名，例如 advanceGearboxData
-          // 安全地执行代码提取数据
-          const funcBody = `
-            ${pasteContent}
-            return typeof ${varName} !== 'undefined' ? ${varName} : null;
-          `;
-          const dataFunc = new Function(funcBody);
-          const result = dataFunc();
+          // 安全提取数据：仅取赋值表达式，不执行整个粘贴内容
+          const dataStartIdx = match.index + match[0].length;
+          const dataExpr = pasteContent.substring(dataStartIdx).replace(/;\s*(export\b[\s\S]*)?$/, '').trim();
+          const dangerousPattern = /\b(eval|Function|import|require|fetch|XMLHttpRequest|setTimeout|setInterval|document\.|window\.)\s*\(/;
+          if (dangerousPattern.test(dataExpr)) {
+            throw new Error('粘贴内容包含不安全的代码模式，已拒绝执行');
+          }
+          const result = (new Function('return ' + dataExpr))();
           
           if (result && typeof result === 'object') {
             setImportedData(result);

@@ -76,11 +76,11 @@ const CouplingSelectionResultComponent = ({
     if (margin < 0) {
       return <Badge bg="danger" className="ms-2">负余量</Badge>;
     } else if (margin < 5) {
-      return <Badge bg="warning" className="ms-2">过低</Badge>;
-    } else if (margin > 50) {
-      return <Badge bg="warning" className="ms-2">过高</Badge>;
+      return <Badge bg="danger" className="ms-2">不足</Badge>;
     } else if (margin < 10) {
-      return <Badge bg="info" className="ms-2">偏低</Badge>;
+      return <Badge bg="warning" className="ms-2">偏低</Badge>;
+    } else if (margin > 100) {
+      return <Badge bg="info" className="ms-2">充裕(可选小型号)</Badge>;
     } else {
       return <Badge bg="success" className="ms-2">合适</Badge>;
     }

@@ -4,9 +4,7 @@
  */
 import React, { useCallback, useState } from 'react';
 import { Table, Button, Form, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CalculateIcon from '@mui/icons-material/Calculate';
+import { Plus as AddIcon, Trash2 as DeleteIcon, Calculator as CalculateIcon } from 'lucide-react';
 import { calculateShaftStiffness } from '../../utils/torsionalVibration';
 
 const ShaftStiffnessEditor = ({ shafts = [], onChange, colors = {}, theme = 'light' }) => {

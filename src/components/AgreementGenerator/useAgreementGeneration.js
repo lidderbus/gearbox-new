@@ -178,13 +178,13 @@ const prepareTemplateData = ({
 
     // 成套配件
     couplingModel: selectedCouplingModel || selectedComponents?.coupling?.model || '主机厂配',
-    pumpModel: selectedComponents?.pump?.model || '',
+    pumpModel: selectedComponents?.pump?.model || (/^(GW|SGW)/.test(gearbox.model || '') ? '' : '无需备用泵'),
 
     // 成套方选择
     couplingBySupplier: (gearbox.couplingSupplier === 'SUPPLIER') ? 'checked' : '',
     couplingByDemander: (gearbox.couplingSupplier === 'DEMANDER' || !gearbox.couplingSupplier) ? 'checked' : '',
-    pumpBySupplier: (gearbox.pumpSupplier === 'SUPPLIER' || !gearbox.pumpSupplier) ? 'checked' : '',
-    pumpByDemander: gearbox.pumpSupplier === 'DEMANDER' ? 'checked' : '',
+    pumpBySupplier: (selectedComponents?.pump?.model || /^(GW|SGW)/.test(gearbox.model || '')) ? ((gearbox.pumpSupplier === 'SUPPLIER' || !gearbox.pumpSupplier) ? 'checked' : '') : '',
+    pumpByDemander: (selectedComponents?.pump?.model || /^(GW|SGW)/.test(gearbox.model || '')) ? (gearbox.pumpSupplier === 'DEMANDER' ? 'checked' : '') : '',
 
     // 技术参数
     transmissionCapacity: gearbox.transmissionCapacity || gearboxParams.transmissionCapacity || '',

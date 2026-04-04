@@ -5,14 +5,7 @@
  */
 import React, { useState, useMemo, useCallback } from 'react';
 import { Card, Alert, Button, Row, Col, Badge, Modal, Table } from 'react-bootstrap';
-import BuildIcon from '@mui/icons-material/Build';
-import SpeedIcon from '@mui/icons-material/Speed';
-import SettingsIcon from '@mui/icons-material/Settings';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import WarningIcon from '@mui/icons-material/Warning';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import CloseIcon from '@mui/icons-material/Close';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Wrench as BuildIcon, Gauge as SpeedIcon, Settings as SettingsIcon, CheckCircle as CheckCircleIcon, AlertTriangle as WarningIcon, Wand2 as AutoFixHighIcon, X as CloseIcon, Eye as VisibilityIcon } from 'lucide-react';
 
 import {
   diagnoseError,

@@ -71,6 +71,8 @@ const ExportDialog = ({
           row['重量(kg)'] = product.weight || '';
           row['传动效率'] = product.efficiency ? `${(product.efficiency * 100).toFixed(0)}%` : '';
           row['控制方式'] = product.controlType || '';
+          row['输出连接'] = product.outputInterfaces || '';
+          row['旋转方向'] = product.rotationDirection || '';
           row['中心距(mm)'] = product.centerDistance || '';
           row['外形尺寸'] = product.dimensions || '';
           row['减速比'] = product.ratios?.map(r => r.toFixed(2)).join(', ') || '';

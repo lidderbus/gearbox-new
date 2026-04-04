@@ -362,6 +362,18 @@ const SelectionInterface = () => {
                           <td>控制方式:</td>
                           <td>{selectionResult.result.gearbox.controlType || 'N/A'}</td>
                         </tr>
+                        {selectionResult.result.gearbox.outputInterfaces && (
+                        <tr>
+                          <td>输出连接:</td>
+                          <td>{selectionResult.result.gearbox.outputInterfaces}</td>
+                        </tr>
+                        )}
+                        {selectionResult.result.gearbox.rotationDirection && (
+                        <tr>
+                          <td>旋转方向:</td>
+                          <td>{selectionResult.result.gearbox.rotationDirection}</td>
+                        </tr>
+                        )}
                         <tr>
                           <td>出厂价格:</td>
                           <td>{formatPrice(selectionResult.result.gearbox.price)}</td>

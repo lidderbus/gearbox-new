@@ -3,7 +3,8 @@
  * 包含: 扭矩对比柱状图、评分雷达图、扭矩余量仪表盘
  */
 import React, { useMemo, useRef, useEffect } from 'react';
-import ReactECharts from 'echarts-for-react';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
+import echarts from '../../config/echartsSetup';
 import { Card, Row, Col } from 'react-bootstrap';
 
 // 颜色配置
@@ -157,7 +158,8 @@ export const TorqueComparisonChart = ({
   }), [requiredTorque, actualTorque, maxTorque, couplingName]);
 
   return (
-    <ReactECharts
+    <ReactEChartsCore
+      echarts={echarts}
       option={option}
       style={{ height, width: '100%' }}
       opts={{ renderer: 'canvas' }}
@@ -173,6 +175,8 @@ export const ScoreRadarChart = ({
   height = 280
 }) => {
   const option = useMemo(() => {
+    if (!scoreBreakdown) return {};
+
     // 标准化评分到0-100
     const indicators = [
       { name: '扭矩余量', max: 100 },
@@ -184,11 +188,11 @@ export const ScoreRadarChart = ({
 
     // 将实际分数转换为百分比
     const values = [
-      (scoreBreakdown.torqueMargin / 25) * 100,
-      (scoreBreakdown.recommendedMatch / 30) * 100,
-      (scoreBreakdown.speedMargin / 15) * 100,
-      (scoreBreakdown.priceScore / 20) * 100,
-      (scoreBreakdown.weightScore / 10) * 100
+      ((scoreBreakdown.torqueMargin || 0) / 25) * 100,
+      ((scoreBreakdown.recommendedMatch || 0) / 30) * 100,
+      ((scoreBreakdown.speedMargin || 0) / 15) * 100,
+      ((scoreBreakdown.priceScore || 0) / 20) * 100,
+      ((scoreBreakdown.weightScore || 0) / 10) * 100
     ];
 
     return {
@@ -268,8 +272,13 @@ export const ScoreRadarChart = ({
     };
   }, [scoreBreakdown]);
 
+  if (!scoreBreakdown) {
+    return <div style={{ height, display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="text-muted">暂无评分数据</div>;
+  }
+
   return (
-    <ReactECharts
+    <ReactEChartsCore
+      echarts={echarts}
       option={option}
       style={{ height, width: '100%' }}
       opts={{ renderer: 'canvas' }}
@@ -372,7 +381,8 @@ export const TorqueMarginGauge = ({
   }), [margin]);
 
   return (
-    <ReactECharts
+    <ReactEChartsCore
+      echarts={echarts}
       option={option}
       style={{ height, width: '100%' }}
       opts={{ renderer: 'canvas' }}
@@ -514,7 +524,8 @@ export const MultiCouplingComparison = ({
   }, [couplings, requiredTorque]);
 
   return (
-    <ReactECharts
+    <ReactEChartsCore
+      echarts={echarts}
       option={option}
       style={{ height, width: '100%' }}
       opts={{ renderer: 'canvas' }}
@@ -580,7 +591,13 @@ const CouplingCharts = ({
             <Card className="h-100 border-0 bg-light">
               <Card.Body className="p-2">
                 <ScoreRadarChart
-                  scoreBreakdown={selectedCoupling.scoreBreakdown}
+                  scoreBreakdown={selectedCoupling.scoreDetails ? {
+                    torqueMargin: selectedCoupling.scoreDetails.torqueMargin?.score || 0,
+                    recommendedMatch: selectedCoupling.scoreDetails.recommendation?.score || 0,
+                    speedMargin: selectedCoupling.scoreDetails.speedMargin?.score || 0,
+                    priceScore: selectedCoupling.scoreDetails.price?.score || 0,
+                    weightScore: selectedCoupling.scoreDetails.weight?.score || 0
+                  } : null}
                   height={180}
                 />
               </Card.Body>

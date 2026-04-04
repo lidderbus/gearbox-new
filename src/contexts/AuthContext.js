@@ -1,7 +1,7 @@
 // src/contexts/AuthContext.js
 // 安全加固版本 - 2026-01-08
 // 改进: 移除硬编码密码, 使用环境变量哈希验证, AES加密存储
-import React, { createContext, useState, useContext, useEffect, useCallback, useRef } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback, useRef, useMemo } from 'react';
 import CryptoJS from 'crypto-js';
 import { userRoles } from '../auth/roles';
 
@@ -54,8 +54,7 @@ const hashPassword = (password) => {
 // 用户凭据配置 (从环境变量获取哈希值)
 // 注意: 在 .env.local 中配置 REACT_APP_ADMIN_HASH 和 REACT_APP_USER_HASH
 const getUserCredentials = () => {
-  // 默认哈希值 (admin密码: Gbox@2024!, user密码: 66666 的 SHA-256)
-  // 生产环境建议通过环境变量配置新密码的哈希值
+  // 默认哈希值 — 生产环境通过 .env.local 环境变量覆盖
   const defaultAdminHash = '769a098ee73b0a72b7a7b710817464c245b98e4be563a400c9e067f1573ff140';
   const defaultUserHash = '1a7648bc484b3d9ed9e2226d223a6193d64e5e1fcacd97868adec665fe12b924';
 
@@ -213,8 +212,7 @@ export const AuthProvider = ({ children }) => {
     return user.role === requiredRole;
   }, [user]);
 
-  // 提供上下文值
-  const contextValue = {
+  const contextValue = useMemo(() => ({
     user,
     isAuthenticated,
     loading,
@@ -222,8 +220,8 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     hasRole,
-    currentUser: user // 添加currentUser属性，保持与LoginPage组件兼容
-  };
+    currentUser: user
+  }), [user, isAuthenticated, loading, error, login, logout, hasRole]);
 
   return (
     <AuthContext.Provider value={contextValue}>
