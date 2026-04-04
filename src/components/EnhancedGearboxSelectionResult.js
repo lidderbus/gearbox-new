@@ -600,6 +600,23 @@ const EnhancedGearboxSelectionResult = ({
                 )}
                 {/* 数据验证警告 */}
                 <ValidationWarnings validation={validationResults.gearbox} type="gearbox" />
+                {/* 临界转速预检结果 */}
+                {result?.criticalSpeedCheck && (
+                  <Card className={`mt-2 border-${result.criticalSpeedCheck.safe ? 'success' : 'danger'}`}>
+                    <Card.Body className="py-2 px-3" style={{ fontSize: '0.85rem' }}>
+                      <div className="d-flex align-items-center mb-1">
+                        <i className={`bi ${result.criticalSpeedCheck.safe ? 'bi-check-circle-fill text-success' : 'bi-exclamation-triangle-fill text-danger'} me-2`}></i>
+                        <strong>临界转速预检 ({result.criticalSpeedCheck.method})</strong>
+                      </div>
+                      <div className="d-flex flex-wrap gap-3">
+                        <span>固有频率: <strong>{result.criticalSpeedCheck.naturalFreqHz} Hz</strong></span>
+                        <span>工作频率: <strong>{result.criticalSpeedCheck.operatingFreqHz} Hz</strong></span>
+                        <span>裕度: <strong className={result.criticalSpeedCheck.marginPercent < 20 ? 'text-danger' : 'text-success'}>{result.criticalSpeedCheck.marginPercent}%</strong></span>
+                      </div>
+                      <div className="text-muted mt-1" style={{ fontSize: '0.8rem' }}>{result.criticalSpeedCheck.recommendation}</div>
+                    </Card.Body>
+                  </Card>
+                )}
               </Col>
               <Col md={6}>
                 {(() => {

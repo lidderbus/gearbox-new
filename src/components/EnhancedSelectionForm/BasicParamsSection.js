@@ -2,13 +2,19 @@
 // 基本参数区块组件
 
 import React from 'react';
-import { Card, Form, Row, Col, Badge } from 'react-bootstrap';
+import { Card, Form, Row, Col, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import ShaftArrangementSelector from '../ShaftArrangementSelector';
 
 /**
  * 基本参数区块
  * 包含: 轴布置方式、主机功率、主机转速、速比
  */
+const HelpTip = ({ text }) => (
+  <OverlayTrigger placement="top" overlay={<Tooltip>{text}</Tooltip>}>
+    <i className="bi bi-info-circle ms-1" style={{ cursor: 'pointer', color: '#6c757d', fontSize: '0.85em' }}></i>
+  </OverlayTrigger>
+);
+
 const BasicParamsSection = ({
   formData,
   errors,
@@ -53,6 +59,7 @@ const BasicParamsSection = ({
             <Form.Group className="mb-3">
               <Form.Label>
                 主机功率 (kW) <span className="text-danger">*</span>
+                <HelpTip text="发动机额定连续功率(MCR)，单位千瓦。与转速一起决定传递能力需求 P/N" />
               </Form.Label>
               <Form.Control
                 type="number"
@@ -72,6 +79,7 @@ const BasicParamsSection = ({
             <Form.Group className="mb-3">
               <Form.Label>
                 主机转速 (rpm) <span className="text-danger">*</span>
+                <HelpTip text="发动机额定转速，单位转/分钟。低速750-1000(柴油机)，中速1000-1500，高速1500-2200，>3000将自动触发临界转速预检" />
               </Form.Label>
               <Form.Control
                 type="number"
@@ -118,6 +126,7 @@ const BasicParamsSection = ({
             <Form.Group className="mb-3">
               <Form.Label>
                 速比 <span className="text-danger">*</span>
+                <HelpTip text="齿轮箱减速比 = 输入转速 / 输出转速。常见值: 2.0~6.0。速比越大输出转速越低，适合大直径螺旋桨" />
               </Form.Label>
               <Form.Control
                 type="number"

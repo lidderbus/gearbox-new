@@ -2,8 +2,14 @@
 // 技术要求区块组件
 
 import React from 'react';
-import { Card, Form, Row, Col } from 'react-bootstrap';
+import { Card, Form, Row, Col, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { FORM_OPTIONS } from './useEnhancedSelectionForm';
+
+const HelpTip = ({ text }) => (
+  <OverlayTrigger placement="top" overlay={<Tooltip>{text}</Tooltip>}>
+    <i className="bi bi-info-circle ms-1" style={{ cursor: 'pointer', color: '#6c757d', fontSize: '0.85em' }}></i>
+  </OverlayTrigger>
+);
 
 /**
  * 技术要求区块
@@ -30,7 +36,7 @@ const TechRequirementsSection = ({
         <Row>
           <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>推力</Form.Label>
+              <Form.Label>推力 <HelpTip text="齿轮箱推力轴承的推力需求(kN)。螺旋桨产生的轴向推力需由齿轮箱承受。留空表示不限制，<80%需求将标记安全风险" /></Form.Label>
               <Form.Control
                 type="text"
                 value={formData.thrust}
@@ -43,7 +49,7 @@ const TechRequirementsSection = ({
 
           <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>监控系统</Form.Label>
+              <Form.Label>监控系统 <HelpTip text="齿轮箱状态监测系统。在线监测可实时预警温度/振动/油压异常，离线检测用于定期维保评估" /></Form.Label>
               <Form.Select
                 value={formData.monitoringSystem}
                 onChange={(e) => updateField('monitoringSystem', e.target.value)}
@@ -60,7 +66,7 @@ const TechRequirementsSection = ({
         <Row>
           <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>操控方式</Form.Label>
+              <Form.Label>操控方式 <HelpTip text="齿轮箱离合器的操作方式。气动适合大型船舶远程控制，液压适合中型船舶，手动适合小型船舶" /></Form.Label>
               <Form.Select
                 value={formData.controlMethod}
                 onChange={(e) => updateField('controlMethod', e.target.value)}
@@ -75,7 +81,7 @@ const TechRequirementsSection = ({
 
           <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>输入转向 (面向飞轮)</Form.Label>
+              <Form.Label>输入转向 (面向飞轮) <HelpTip text="面向发动机飞轮方向观察时的轴旋转方向。CW=顺时针, CCW=逆时针。影响齿轮螺旋方向设计" /></Form.Label>
               <Form.Select
                 value={formData.inputRotation}
                 onChange={(e) => updateField('inputRotation', e.target.value)}
