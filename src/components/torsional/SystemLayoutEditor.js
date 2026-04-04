@@ -34,6 +34,7 @@ import {
   FiDisc
 } from 'react-icons/fi';
 import { calculateTorsionalFlexibility } from '../../utils/transferMatrixMethod';
+import { COUPLING_DATABASE, getGearboxTorsionalData, getGearboxTorsionalList } from '../../data/torsionalMaterialDB';
 
 // ============================================================
 // 单元类型配置
@@ -153,6 +154,60 @@ const SystemLayoutEditor = ({
     onChange({ ...systemInput, units });
   }, [systemInput, onChange]);
 
+  // 插入齿轮箱4质量细分 (从GEARBOX_TORSIONAL_DATA自动生成)
+  const handleInsertGearboxUnits = useCallback((gearboxData) => {
+    const units = [...(systemInput.units || [])];
+    const lastUnitNumber = units.length > 0
+      ? Math.max(...units.map(u => u.unitNumber))
+      : 0;
+
+    // 生成4个齿轮质量单元 + 2个内部轴柔度
+    const ratio = gearboxData.standardRatio || 1;
+    const sub = gearboxData.subdivision;
+    const shafts = gearboxData.internalShafts;
+
+    // I1 输入端 (高速侧, speedRatio=1)
+    const newUnits = [
+      {
+        unitNumber: lastUnitNumber + 1,
+        name: `${gearboxData.name}-${sub[0].name}`,
+        type: 'gear', speedRatio: 1.0,
+        inertia: sub[0].inertia,
+        torsionalFlexibility: shafts[0] ? 1 / (shafts[0].stiffnessKNm * 1000) * 1e10 : 0,
+        outerDiameter: shafts[0]?.diameter || 0, innerDiameter: 0
+      },
+      // I2 主动齿轮
+      {
+        unitNumber: lastUnitNumber + 2,
+        name: `${gearboxData.name}-${sub[1].name}`,
+        type: 'gear', speedRatio: 1.0,
+        inertia: sub[1].inertia,
+        torsionalFlexibility: 0, // 齿轮啮合 (刚性)
+        outerDiameter: 0, innerDiameter: 0
+      },
+      // I3 从动齿轮 (低速侧)
+      {
+        unitNumber: lastUnitNumber + 3,
+        name: `${gearboxData.name}-${sub[2].name}`,
+        type: 'gear', speedRatio: ratio,
+        inertia: sub[2].inertia,
+        torsionalFlexibility: shafts[1] ? 1 / (shafts[1].stiffnessKNm * 1000) * 1e10 : 0,
+        outerDiameter: shafts[1]?.diameter || 0, innerDiameter: 0
+      },
+      // I4 输出法兰
+      {
+        unitNumber: lastUnitNumber + 4,
+        name: `${gearboxData.name}-${sub[3].name}`,
+        type: 'gear', speedRatio: ratio,
+        inertia: sub[3].inertia,
+        torsionalFlexibility: 0,
+        outerDiameter: shafts[1]?.diameter || 0, innerDiameter: 0
+      }
+    ];
+
+    onChange({ ...systemInput, units: [...units, ...newUnits] });
+  }, [systemInput, onChange]);
+
   // 添加齿轮啮合
   const addGearMesh = useCallback(() => {
     const gearMeshes = [...(systemInput.gearMeshes || [])];
@@ -259,6 +314,7 @@ const SystemLayoutEditor = ({
               addUnit={addUnit}
               removeUnit={removeUnit}
               updateUnit={updateUnit}
+              onInsertGearboxUnits={handleInsertGearboxUnits}
               theme={theme}
               colors={colors}
             />
@@ -577,24 +633,48 @@ const UnitsDataTable = ({
   addUnit,
   removeUnit,
   updateUnit,
+  onInsertGearboxUnits,
   theme,
   colors
 }) => {
+  const gearboxList = useMemo(() => getGearboxTorsionalList(), []);
+
+  const handleGearboxSelect = useCallback((modelKey) => {
+    const data = getGearboxTorsionalData(modelKey);
+    if (!data || !onInsertGearboxUnits) return;
+    onInsertGearboxUnits(data);
+  }, [onInsertGearboxUnits]);
+
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <Alert variant="info" className="mb-0 py-2 px-3">
+        <Alert variant="info" className="mb-0 py-2 px-3 flex-grow-1 me-2">
           <FiInfo className="me-2" />
           单元按从动力源到螺旋桨的顺序排列。柔度单位为 ×10⁻¹⁰ rad/N·m
         </Alert>
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={addUnit}
-          style={{ backgroundColor: colors.primary || '#3b82f6' }}
-        >
-          <FiPlus className="me-1" /> 添加单元
-        </Button>
+        <div className="d-flex gap-2">
+          {gearboxList.length > 0 && (
+            <Form.Select
+              size="sm"
+              style={{ width: '180px' }}
+              defaultValue=""
+              onChange={(e) => { if (e.target.value) handleGearboxSelect(e.target.value); e.target.value = ''; }}
+            >
+              <option value="">齿轮箱4质量填充...</option>
+              {gearboxList.map(g => (
+                <option key={g.key} value={g.key}>{g.series} - {g.name}</option>
+              ))}
+            </Form.Select>
+          )}
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={addUnit}
+            style={{ backgroundColor: colors.primary || '#3b82f6' }}
+          >
+            <FiPlus className="me-1" /> 添加单元
+          </Button>
+        </div>
       </div>
 
       <Table
@@ -839,10 +919,24 @@ const ElasticCouplingEditor = ({
   theme,
   colors
 }) => {
+  // 从数据库选择联轴器型号并自动填充参数
+  const handleCouplingModelSelect = useCallback((couplingId, modelKey) => {
+    const dbEntry = COUPLING_DATABASE[modelKey];
+    if (!dbEntry) return;
+    updateCoupling(couplingId, 'manufacturer', dbEntry.name);
+    updateCoupling(couplingId, 'dampingCoefficient', dbEntry.damping);
+    updateCoupling(couplingId, 'continuousAllowableTorque',
+      dbEntry.continuousTorque || dbEntry.maxTorque / 1000);
+    updateCoupling(couplingId, 'transientAllowableTorque',
+      dbEntry.transientTorque || (dbEntry.maxTorque / 1000) * 3.75);
+  }, [updateCoupling]);
+
+  const couplingModels = useMemo(() => Object.keys(COUPLING_DATABASE), []);
+
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <span className="text-muted">配置弹性联轴器参数（如HGTHT、VULKAN等）</span>
+        <span className="text-muted">配置弹性联轴器参数（选择型号可自动填充）</span>
         <Button
           variant="primary"
           size="sm"
@@ -872,7 +966,24 @@ const ElasticCouplingEditor = ({
             </Card.Header>
             <Card.Body className="py-2">
               <Row>
-                <Col md={4}>
+                <Col md={3}>
+                  <Form.Group className="mb-2">
+                    <Form.Label className="small">选择型号</Form.Label>
+                    <Form.Select
+                      size="sm"
+                      value={coupling.manufacturer || ''}
+                      onChange={(e) => handleCouplingModelSelect(coupling.couplingId, e.target.value)}
+                    >
+                      <option value="">手动输入...</option>
+                      {couplingModels.map(key => (
+                        <option key={key} value={key}>
+                          {COUPLING_DATABASE[key].series} - {key}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col md={2}>
                   <Form.Group className="mb-2">
                     <Form.Label className="small">制造厂/型号</Form.Label>
                     <Form.Control
@@ -880,7 +991,7 @@ const ElasticCouplingEditor = ({
                       size="sm"
                       value={coupling.manufacturer || ''}
                       onChange={(e) => updateCoupling(coupling.couplingId, 'manufacturer', e.target.value)}
-                      placeholder="如: HGTHT4.5/14"
+                      placeholder="如: HGTHT4"
                     />
                   </Form.Group>
                 </Col>
@@ -902,7 +1013,12 @@ const ElasticCouplingEditor = ({
                 </Col>
                 <Col md={2}>
                   <Form.Group className="mb-2">
-                    <Form.Label className="small">阻尼系数</Form.Label>
+                    <Form.Label className="small">
+                      阻尼系数 η
+                      <OverlayTrigger placement="top" overlay={<Tooltip>滞后损耗因子, 用于模态应变能法计算阻尼</Tooltip>}>
+                        <FiInfo size={12} className="ms-1 text-muted" />
+                      </OverlayTrigger>
+                    </Form.Label>
                     <Form.Control
                       type="number"
                       size="sm"
@@ -912,9 +1028,9 @@ const ElasticCouplingEditor = ({
                     />
                   </Form.Group>
                 </Col>
-                <Col md={2}>
+                <Col md={1.5}>
                   <Form.Group className="mb-2">
-                    <Form.Label className="small">持续许用 (kN·m)</Form.Label>
+                    <Form.Label className="small">持续 (kN·m)</Form.Label>
                     <Form.Control
                       type="number"
                       size="sm"
@@ -924,9 +1040,9 @@ const ElasticCouplingEditor = ({
                     />
                   </Form.Group>
                 </Col>
-                <Col md={2}>
+                <Col md={1.5}>
                   <Form.Group className="mb-2">
-                    <Form.Label className="small">瞬时许用 (kN·m)</Form.Label>
+                    <Form.Label className="small">瞬时 (kN·m)</Form.Label>
                     <Form.Control
                       type="number"
                       size="sm"

@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 33; // v33: 全量字段补全 — controlType 528个型号(432→0缺失), rotationDirection 582个型号(487→0缺失), dimensions补5个, weight补1个, 数据源:杭齿厂选型手册2025版5月版PDF全58页 (2026-03-30)
+export const APP_DATA_VERSION = 40; // v40: 扭振v3.0 — 模态应变能法阻尼(联轴器η+螺旋桨dp/i²+结构), HGTHT4/5/6.3/8系列联轴器库, DT900齿轮箱4质量数据, 联轴器型号下拉+齿轮箱自动填充UI (2026-04-04)
 
 export const DEFAULTS = {
     gearbox: {

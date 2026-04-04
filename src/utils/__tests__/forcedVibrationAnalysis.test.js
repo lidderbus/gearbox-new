@@ -8,7 +8,6 @@ import {
   DIESEL_HARMONIC_COEFFICIENTS,
   ELECTRIC_MOTOR_HARMONICS,
   PROPELLER_HARMONIC_COEFFICIENTS,
-  PROPELLER_SHAFT_STRESS_FACTOR,
   calculateAllowableStress,
   calculateAllAllowableStresses,
   calculateDieselExcitationTorque,
@@ -108,11 +107,7 @@ describe('PROPELLER_HARMONIC_COEFFICIENTS - 螺旋桨谐波系数', () => {
   });
 });
 
-describe('PROPELLER_SHAFT_STRESS_FACTOR - 螺旋桨轴应力修正系数', () => {
-  test('应为5.0（COMPASS校准值）', () => {
-    expect(PROPELLER_SHAFT_STRESS_FACTOR).toBe(5.0);
-  });
-});
+// PROPELLER_SHAFT_STRESS_FACTOR 已在v3.0中移除（改用模态应变能法阻尼）
 
 // ============================================================
 // calculateAllowableStress - 许用应力计算
@@ -210,9 +205,9 @@ describe('calculateAllAllowableStresses - 所有轴许用应力', () => {
 
 describe('calculateDieselExcitationTorque - 柴油机激励扭矩', () => {
   test('应正确计算平均扭矩', () => {
-    // T_mean = 9550 × P / n × 1000 (N·m)
+    // T_mean = 9550 × P / n (N·m) — v3.0已移除×1000
     // P = 400 kW, n = 1000 rpm
-    // T_mean = 9550 × 400 / 1000 × 1000 = 3820000 N·m
+    // T_mean = 9550 × 400 / 1000 = 3820 N·m
     const result = calculateDieselExcitationTorque({
       power: 400,
       speed: 1000,
@@ -221,8 +216,8 @@ describe('calculateDieselExcitationTorque - 柴油机激励扭矩', () => {
     });
 
     // μ_3 for 6缸四冲程 = 0.50
-    // T_q = 3820000 × 0.50 = 1910000 N·m
-    expect(result).toBeCloseTo(1910000, -4);
+    // T_q = 3820 × 0.50 = 1910 N·m
+    expect(result).toBeCloseTo(1910, -1);
   });
 
   test('应使用正确的谐波系数', () => {
@@ -236,11 +231,11 @@ describe('calculateDieselExcitationTorque - 柴油机激励扭矩', () => {
 
     const result = calculateDieselExcitationTorque(params);
 
-    // T_mean = 9550 × 100 / 1500 × 1000 = 636667 N·m
+    // T_mean = 9550 × 100 / 1500 = 636.67 N·m (v3.0)
     // μ_6 = 0.35
-    // T_q = 636667 × 0.35 ≈ 222833 N·m
-    const T_mean = 9550 * 100 / 1500 * 1000;
-    expect(result).toBeCloseTo(T_mean * 0.35, -2);
+    // T_q = 636.67 × 0.35 ≈ 222.83 N·m
+    const T_mean = 9550 * 100 / 1500;
+    expect(result).toBeCloseTo(T_mean * 0.35, 0);
   });
 
   test('二冲程应使用不同系数', () => {
@@ -274,8 +269,8 @@ describe('calculateDieselExcitationTorque - 柴油机激励扭矩', () => {
       harmonicOrder: 1
     });
 
-    const T_mean = 9550 * 100 / 1000 * 1000;
-    expect(result).toBeCloseTo(T_mean * 0.1, -2);
+    const T_mean = 9550 * 100 / 1000;
+    expect(result).toBeCloseTo(T_mean * 0.1, 0);
   });
 
   test('默认为四冲程', () => {
@@ -310,10 +305,10 @@ describe('calculateElectricExcitationTorque - 电机激励扭矩', () => {
       harmonicOrder: 1
     });
 
-    // T_mean = 9550 × 400 / 1800 × 1000 = 2122222 N·m
-    // μ_1 = 0.0012
-    const T_mean = 9550 * 400 / 1800 * 1000;
-    expect(result).toBeCloseTo(T_mean * 0.0012, -1);
+    // T_mean = 9550 × 400 / 1800 = 2122.22 N·m (v3.0)
+    // μ_1 = 0.005 (COMPASS校准值)
+    const T_mean = 9550 * 400 / 1800;
+    expect(result).toBeCloseTo(T_mean * 0.005, 1);
   });
 
   test('电机激励应远小于柴油机', () => {
@@ -340,8 +335,8 @@ describe('calculateElectricExcitationTorque - 电机激励扭矩', () => {
       harmonicOrder: 99  // 不存在的阶次
     });
 
-    const T_mean = 9550 * 100 / 1000 * 1000;
-    expect(result).toBeCloseTo(T_mean * 0.01, -2);
+    const T_mean = 9550 * 100 / 1000;
+    expect(result).toBeCloseTo(T_mean * 0.01, 0);
   });
 });
 
@@ -358,10 +353,10 @@ describe('calculatePropellerExcitationTorque - 螺旋桨激励扭矩', () => {
       harmonicOrder: 4
     });
 
-    // T_mean = 9550 × 400 / 300 × 1000 = 12733333 N·m
+    // T_mean = 9550 × 400 / 300 = 12733.33 N·m (v3.0)
     // μ_4 for 4叶 = 0.06
-    const T_mean = 9550 * 400 / 300 * 1000;
-    expect(result).toBeCloseTo(T_mean * 0.06, -3);
+    const T_mean = 9550 * 400 / 300;
+    expect(result).toBeCloseTo(T_mean * 0.06, 0);
   });
 
   test('3叶桨主阶次应为3', () => {
@@ -372,8 +367,8 @@ describe('calculatePropellerExcitationTorque - 螺旋桨激励扭矩', () => {
       harmonicOrder: 3
     });
 
-    const T_mean = 9550 * 100 / 300 * 1000;
-    expect(result).toBeCloseTo(T_mean * 0.08, -2);
+    const T_mean = 9550 * 100 / 300;
+    expect(result).toBeCloseTo(T_mean * 0.08, 0);
   });
 
   test('未知叶片数应使用默认系数0.02', () => {
@@ -384,8 +379,8 @@ describe('calculatePropellerExcitationTorque - 螺旋桨激励扭矩', () => {
       harmonicOrder: 1
     });
 
-    const T_mean = 9550 * 100 / 300 * 1000;
-    expect(result).toBeCloseTo(T_mean * 0.02, -2);
+    const T_mean = 9550 * 100 / 300;
+    expect(result).toBeCloseTo(T_mean * 0.02, 0);
   });
 });
 
@@ -663,10 +658,10 @@ describe('公式验证', () => {
   });
 
   test('扭矩公式 - T = 9550 × P / n', () => {
-    // 激励扭矩基于平均扭矩
+    // 激励扭矩基于平均扭矩 (v3.0: 不×1000)
     const P = 400;  // kW
     const n = 1500; // rpm
-    const T_mean_expected = 9550 * P / n * 1000;  // N·m
+    const T_mean_expected = 9550 * P / n;  // N·m
 
     // 使用6缸四冲程3阶作为测试
     const mu = 0.50;  // 6缸四冲程3阶系数
@@ -677,7 +672,7 @@ describe('公式验证', () => {
       harmonicOrder: 3
     });
 
-    expect(result).toBeCloseTo(T_mean_expected * mu, -3);
+    expect(result).toBeCloseTo(T_mean_expected * mu, 0);
   });
 
   test('极截面模数公式 - Wp = π(d⁴-di⁴)/(16d)', () => {
@@ -712,9 +707,9 @@ describe('工程案例验证', () => {
       harmonicOrder: 1
     });
 
-    // 激励扭矩应在合理范围
-    expect(torque).toBeGreaterThan(1000);
-    expect(torque).toBeLessThan(10000);
+    // v3.0: T_mean = 9550*400/1800 ≈ 2122 N·m, μ_1=0.005, T_q ≈ 10.6 N·m
+    expect(torque).toBeGreaterThan(5);
+    expect(torque).toBeLessThan(50);
   });
 
   test('典型6缸柴油机激励', () => {
@@ -726,8 +721,8 @@ describe('工程案例验证', () => {
       harmonicOrder: 3  // 主阶次
     });
 
-    // 平均扭矩 ≈ 3.82 kN·m, 激励扭矩 ≈ 1.91 kN·m (50%)
-    expect(torque).toBeGreaterThan(1000000);
+    // v3.0: T_mean = 9550*400/1000 = 3820 N·m, μ_3=0.50, T_q = 1910 N·m
+    expect(torque).toBeGreaterThan(1000);
   });
 
   test('许用应力应在合理范围', () => {

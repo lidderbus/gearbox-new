@@ -104,6 +104,8 @@ describe('ErrorBoundary', () => {
   });
 
   describe('retry functionality', () => {
+    const getRetryButton = () => screen.getByText(/重试|已达最大重试次数/);
+
     it('shows retry button with correct initial count', () => {
       render(
         <ErrorBoundary>
@@ -111,7 +113,7 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      expect(screen.getByRole('button')).toHaveTextContent('重试 (0/3)');
+      expect(getRetryButton()).toHaveTextContent('重试 (0/3)');
     });
 
     it('retry button is not disabled initially', () => {
@@ -121,7 +123,7 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      expect(screen.getByRole('button')).not.toBeDisabled();
+      expect(getRetryButton()).not.toBeDisabled();
     });
 
     it('increments retry count on click', () => {
@@ -131,11 +133,10 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      const retryButton = screen.getByRole('button');
-      fireEvent.click(retryButton);
+      fireEvent.click(getRetryButton());
 
       // After retry, error is thrown again so we see retry count
-      expect(screen.getByRole('button')).toHaveTextContent('重试 (1/3)');
+      expect(getRetryButton()).toHaveTextContent('重试 (1/3)');
     });
 
     it('disables retry button after max retries', () => {
@@ -146,20 +147,20 @@ describe('ErrorBoundary', () => {
       );
 
       // Verify initial state
-      expect(screen.getByRole('button')).toHaveTextContent('重试 (0/3)');
-      expect(screen.getByRole('button')).not.toBeDisabled();
+      expect(getRetryButton()).toHaveTextContent('重试 (0/3)');
+      expect(getRetryButton()).not.toBeDisabled();
 
       // Click retry 3 times - each click triggers error catch cycle
-      fireEvent.click(screen.getByRole('button'));
-      expect(screen.getByRole('button')).toHaveTextContent('重试 (1/3)');
+      fireEvent.click(getRetryButton());
+      expect(getRetryButton()).toHaveTextContent('重试 (1/3)');
 
-      fireEvent.click(screen.getByRole('button'));
-      expect(screen.getByRole('button')).toHaveTextContent('重试 (2/3)');
+      fireEvent.click(getRetryButton());
+      expect(getRetryButton()).toHaveTextContent('重试 (2/3)');
 
-      fireEvent.click(screen.getByRole('button'));
+      fireEvent.click(getRetryButton());
 
       // After 3 retries, button should be disabled with max retries message
-      const finalButton = screen.getByRole('button');
+      const finalButton = getRetryButton();
       expect(finalButton).toHaveTextContent('已达最大重试次数');
       expect(finalButton).toHaveAttribute('disabled');
     });

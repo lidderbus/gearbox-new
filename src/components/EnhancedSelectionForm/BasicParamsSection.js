@@ -2,7 +2,7 @@
 // 基本参数区块组件
 
 import React from 'react';
-import { Card, Form, Row, Col } from 'react-bootstrap';
+import { Card, Form, Row, Col, Badge } from 'react-bootstrap';
 import ShaftArrangementSelector from '../ShaftArrangementSelector';
 
 /**
@@ -87,6 +87,31 @@ const BasicParamsSection = ({
             </Form.Group>
           </Col>
         </Row>
+
+        {/* 传递能力实时计算 */}
+        {parseFloat(formData.enginePower) > 0 && parseFloat(formData.engineSpeed) > 0 && (
+          <div
+            className="mb-3 p-2 rounded"
+            style={{
+              backgroundColor: colors.inputBg || '#f8f9fa',
+              border: `1px dashed ${colors.border || '#dee2e6'}`,
+              fontSize: '0.9rem'
+            }}
+          >
+            <i className="bi bi-calculator me-2"></i>
+            <strong>传递能力需求 (P/N)：</strong>
+            <span style={{ color: '#0d6efd', fontWeight: 'bold' }}>
+              {(parseFloat(formData.enginePower) / parseFloat(formData.engineSpeed)).toFixed(4)}
+            </span>
+            <span className="text-muted ms-1">kW/(r/min)</span>
+            {parseFloat(formData.enginePower) / parseFloat(formData.engineSpeed) > 0.5 && (
+              <Badge bg="warning" text="dark" className="ms-2">大功率工况</Badge>
+            )}
+            {parseFloat(formData.enginePower) / parseFloat(formData.engineSpeed) < 0.01 && (
+              <Badge bg="info" className="ms-2">小型应用</Badge>
+            )}
+          </div>
+        )}
 
         <Row>
           <Col md={6}>

@@ -1,6 +1,6 @@
 {
-  "version": "2.0.0",
-  "lastUpdated": "2026-02-19",
+  "version": "2.2.0",
+  "lastUpdated": "2026-04-04",
   "description": "杭齿船用齿轮箱技术条款知识库 - 基于GW系列产品说明书扩展",
   "dataSources": [
     "HC系列产品说明书",
@@ -80,6 +80,24 @@
       "name": "故障排除",
       "icon": "bi-exclamation-diamond",
       "description": "常见故障现象、原因分析及处理方法"
+    },
+    {
+      "id": "energy-efficiency",
+      "name": "能效合规",
+      "icon": "bi-lightning-charge",
+      "description": "EEXI/CII能效指数要求、碳强度指标、IMO船舶能效管理"
+    },
+    {
+      "id": "propeller-matching",
+      "name": "螺旋桨选配",
+      "icon": "bi-fan",
+      "description": "螺旋桨匹配规则、桨距设置、空泡校核及水动力要求"
+    },
+    {
+      "id": "classification-requirements",
+      "name": "船级社认证",
+      "icon": "bi-award",
+      "description": "各船级社入级认证要求、图纸审核、型式试验标准"
     }
   ],
   "clauses": [
@@ -88,8 +106,19 @@
       "category": "pump",
       "title": "主泵配置要求",
       "content": "齿轮箱应配备齿轮驱动的主润滑油泵，由齿轮箱输入轴直接驱动，确保齿轮箱运转时自动供油。主泵流量需满足各摩擦副的最低润滑需求。",
-      "keywords": ["主泵", "润滑油泵", "齿轮泵", "驱动", "供油"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "主泵",
+        "润滑油泵",
+        "齿轮泵",
+        "驱动",
+        "供油"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "通用技术要求"
     },
@@ -98,8 +127,18 @@
       "category": "pump",
       "title": "备用泵要求",
       "content": "齿轮箱应配备电动备用润滑油泵，在主泵故障或主机停车后提供润滑油供给。备用泵应能在油压低于设定值时自动启动。",
-      "keywords": ["备用泵", "电动泵", "自动启动", "油压", "冗余"],
-      "applicableSeries": ["HC", "GW", "HCM"],
+      "keywords": [
+        "备用泵",
+        "电动泵",
+        "自动启动",
+        "油压",
+        "冗余"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM"
+      ],
       "importance": "mandatory",
       "source": "船级社规范",
       "variants": [
@@ -118,8 +157,17 @@
       "category": "pump",
       "title": "手动应急泵",
       "content": "对于有船级社入级要求的齿轮箱，应配备手动应急润滑油泵或具备应急润滑能力，确保在电力完全丧失时仍能提供最低限度的润滑。",
-      "keywords": ["手动泵", "应急", "船级社", "入级", "电力丧失"],
-      "applicableSeries": ["HC", "GW"],
+      "keywords": [
+        "手动泵",
+        "应急",
+        "船级社",
+        "入级",
+        "电力丧失"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW"
+      ],
       "importance": "conditional",
       "source": "船级社规范"
     },
@@ -128,8 +176,16 @@
       "category": "pump",
       "title": "GW系列泵驱动方式",
       "content": "GW系列齿轮箱的主润滑油泵由初级齿轮轴驱动（GWC/GWL系列）或由输入轴直接驱动（GWD/GWS/GWH/GWK系列），泵流量需满足各摩擦副的最低润滑需求。",
-      "keywords": ["GW", "泵驱动", "初级轴", "输入轴", "流量"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "GW",
+        "泵驱动",
+        "初级轴",
+        "输入轴",
+        "流量"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第III章"
     },
@@ -138,8 +194,19 @@
       "category": "valve",
       "title": "压力控制阀（溢流阀）",
       "content": "齿轮箱润滑系统应设有压力调节阀（溢流阀），用于控制系统油压在规定范围内。溢流阀应可调节，出厂前已调定至额定油压值。",
-      "keywords": ["溢流阀", "压力调节", "油压", "调定", "额定"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "溢流阀",
+        "压力调节",
+        "油压",
+        "调定",
+        "额定"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "通用技术要求"
     },
@@ -148,8 +215,16 @@
       "category": "valve",
       "title": "GW系列压力控制器",
       "content": "GW系列配备专用压力控制器，安装在齿轮箱箱体上。当系统油压低于设定值时，压力控制器发出信号启动备用泵或触发报警。出厂时压力控制器已调定，用户不应随意调节。",
-      "keywords": ["压力控制器", "GW", "报警", "备用泵启动", "调定"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "压力控制器",
+        "GW",
+        "报警",
+        "备用泵启动",
+        "调定"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第III章"
     },
@@ -158,8 +233,17 @@
       "category": "valve",
       "title": "离合阀（换向阀）",
       "content": "具有正倒车功能的齿轮箱应设有离合操纵阀，用于控制离合器的接合与分离。离合阀通常采用气动或液压操纵方式。",
-      "keywords": ["离合阀", "换向阀", "正倒车", "气动", "液压"],
-      "applicableSeries": ["HC", "GW"],
+      "keywords": [
+        "离合阀",
+        "换向阀",
+        "正倒车",
+        "气动",
+        "液压"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "通用技术要求",
       "variants": [
@@ -178,8 +262,19 @@
       "category": "valve",
       "title": "滤器与过滤要求",
       "content": "润滑油系统应配备双联滤器（可切换式），过滤精度不低于25μm。滤器应能在不停机的情况下切换清洗。进油管路应设有粗滤器。",
-      "keywords": ["双联滤器", "过滤", "25μm", "切换", "粗滤器"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "双联滤器",
+        "过滤",
+        "25μm",
+        "切换",
+        "粗滤器"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "通用技术要求"
     },
@@ -188,8 +283,20 @@
       "category": "cooling",
       "title": "冷却器配置",
       "content": "齿轮箱应配备润滑油冷却器，采用海水或淡水作为冷却介质。冷却器类型通常为管壳式或板式换热器。冷却器进出水管路应设有截止阀，便于维护时隔离。",
-      "keywords": ["冷却器", "管壳式", "板式", "海水", "淡水", "截止阀"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "冷却器",
+        "管壳式",
+        "板式",
+        "海水",
+        "淡水",
+        "截止阀"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "通用技术要求"
     },
@@ -198,8 +305,19 @@
       "category": "cooling",
       "title": "油温控制",
       "content": "润滑油工作温度应控制在规定范围内，超温时应发出报警信号。",
-      "keywords": ["油温", "温度控制", "报警", "超温", "冷却水"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "油温",
+        "温度控制",
+        "报警",
+        "超温",
+        "冷却水"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "通用技术要求",
       "variants": [
@@ -218,8 +336,16 @@
       "category": "cooling",
       "title": "GW系列冷却水参数",
       "content": "GW系列齿轮箱冷却系统技术要求：冷却水入口温度≤32℃，冷却水入口压力≤0.6MPa。冷却水量根据齿轮箱型号不同而异，具体参见各型号技术参数表。",
-      "keywords": ["冷却水", "入口温度", "入口压力", "0.6MPa", "32℃"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "冷却水",
+        "入口温度",
+        "入口压力",
+        "0.6MPa",
+        "32℃"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第I章",
       "technicalParams": {
@@ -232,8 +358,16 @@
       "category": "cooling",
       "title": "温控阀",
       "content": "GW系列齿轮箱配备自力式温度控制阀（温控阀），根据润滑油温度自动调节通过冷却器的油量或冷却水量，实现油温自动调节。温控阀为蜡式感温元件驱动，无需外部电源。",
-      "keywords": ["温控阀", "自力式", "蜡式", "自动调节", "无电源"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "温控阀",
+        "自力式",
+        "蜡式",
+        "自动调节",
+        "无电源"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "recommended",
       "source": "GW系列产品说明书-第III章"
     },
@@ -242,8 +376,17 @@
       "category": "control",
       "title": "操纵系统一般要求",
       "content": "齿轮箱操纵系统应实现正车、倒车、空挡三个位置的可靠切换。操纵系统应设有联锁装置，防止误操作。",
-      "keywords": ["操纵", "正车", "倒车", "空挡", "联锁"],
-      "applicableSeries": ["HC", "GW"],
+      "keywords": [
+        "操纵",
+        "正车",
+        "倒车",
+        "空挡",
+        "联锁"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "通用技术要求"
     },
@@ -252,8 +395,16 @@
       "category": "control",
       "title": "气动遥控系统",
       "content": "GW系列齿轮箱可配备气动遥控系统，通过压缩空气驱动气缸推动换向拨叉实现远程操纵。气动遥控系统工作气压通常为0.5~0.7MPa，气源应经过滤和除水处理。",
-      "keywords": ["气动遥控", "压缩空气", "气缸", "拨叉", "过滤除水"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "气动遥控",
+        "压缩空气",
+        "气缸",
+        "拨叉",
+        "过滤除水"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "recommended",
       "source": "GW系列产品说明书-第VI章",
       "technicalParams": {
@@ -266,8 +417,16 @@
       "category": "control",
       "title": "电气遥控系统",
       "content": "GW系列齿轮箱也可配备电气遥控系统，通过电磁阀控制液压或气动执行机构实现换向操纵。电气遥控系统应设有就地操纵和远程操纵两种模式，并可在两种模式间切换。",
-      "keywords": ["电气遥控", "电磁阀", "就地操纵", "远程操纵", "模式切换"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "电气遥控",
+        "电磁阀",
+        "就地操纵",
+        "远程操纵",
+        "模式切换"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "recommended",
       "source": "GW系列产品说明书-第VI章"
     },
@@ -276,8 +435,16 @@
       "category": "control",
       "title": "换向时间与操纵规范",
       "content": "GW系列齿轮箱换向时间≤15秒。操纵时应注意：换向前应先将主机转速降至怠速，待齿轮箱完全换向后再逐步加速。严禁在高转速下直接换向，否则可能损坏离合器和齿轮。",
-      "keywords": ["换向时间", "15秒", "怠速", "操纵规范", "严禁高速换向"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "换向时间",
+        "15秒",
+        "怠速",
+        "操纵规范",
+        "严禁高速换向"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第VI章",
       "technicalParams": {
@@ -289,8 +456,19 @@
       "category": "safety",
       "title": "报警与监控系统",
       "content": "齿轮箱应配备完善的监控报警系统，至少包括：润滑油压力低报警、润滑油温度高报警。",
-      "keywords": ["报警", "监控", "油压低", "油温高", "传感器"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "报警",
+        "监控",
+        "油压低",
+        "油温高",
+        "传感器"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "船级社规范",
       "variants": [
@@ -309,8 +487,17 @@
       "category": "safety",
       "title": "应急操纵",
       "content": "对于配备遥控系统的齿轮箱，应保留就地手动应急操纵功能。当遥控系统故障时，操作人员可在齿轮箱本体上直接操纵换向。",
-      "keywords": ["应急操纵", "手动", "就地", "遥控故障", "备用操纵"],
-      "applicableSeries": ["HC", "GW"],
+      "keywords": [
+        "应急操纵",
+        "手动",
+        "就地",
+        "遥控故障",
+        "备用操纵"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "船级社规范"
     },
@@ -319,8 +506,16 @@
       "category": "safety",
       "title": "拖带航行注意事项",
       "content": "GW系列齿轮箱在拖带航行（主机停车、螺旋桨由水流驱动反转）时，必须保持备用泵运行，确保齿轮箱内部持续获得润滑。长时间拖带航行应定期检查油温和油位。严禁在无润滑状态下拖带航行。",
-      "keywords": ["拖带航行", "备用泵", "螺旋桨反转", "润滑", "严禁无油"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "拖带航行",
+        "备用泵",
+        "螺旋桨反转",
+        "润滑",
+        "严禁无油"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "critical",
       "source": "GW系列产品说明书-第X章"
     },
@@ -329,8 +524,17 @@
       "category": "safety",
       "title": "工作倾斜度限制",
       "content": "GW系列齿轮箱允许的工作倾斜度：纵倾10°，横倾15°。超过此角度可能导致润滑油液面不均，部分齿轮和轴承得不到充分润滑。安装设计时应确保船舶在各种工况下齿轮箱倾斜角度不超过限值。",
-      "keywords": ["倾斜度", "纵倾", "横倾", "10度", "15度", "油面"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "倾斜度",
+        "纵倾",
+        "横倾",
+        "10度",
+        "15度",
+        "油面"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第I章",
       "technicalParams": {
@@ -343,8 +547,20 @@
       "category": "testing",
       "title": "出厂试验要求",
       "content": "齿轮箱出厂前应进行台架试验，包括：空载运转试验、负载运转试验、温升试验、噪音测试、密封检查等。试验结果应符合产品技术条件要求。",
-      "keywords": ["出厂试验", "台架试验", "空载", "负载", "温升", "噪音"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "出厂试验",
+        "台架试验",
+        "空载",
+        "负载",
+        "温升",
+        "噪音"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "通用技术要求"
     },
@@ -353,8 +569,17 @@
       "category": "testing",
       "title": "GW系列试运转程序",
       "content": "GW系列齿轮箱安装完成后的试运转程序：首先检查注油量和油位，确认管路连接正确无泄漏。启动备用泵预润滑至少3分钟。怠速运行30分钟，检查油压、油温、噪声和振动。逐步加载至额定工况运行2小时，记录各参数。全过程密切关注油温变化和异常噪声。",
-      "keywords": ["试运转", "预润滑", "怠速", "逐步加载", "3分钟", "30分钟"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "试运转",
+        "预润滑",
+        "怠速",
+        "逐步加载",
+        "3分钟",
+        "30分钟"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第VII章"
     },
@@ -363,8 +588,19 @@
       "category": "testing",
       "title": "系泊试验与航行试验",
       "content": "对于船级社入级的齿轮箱，需在船上完成系泊试验和航行试验。系泊试验验证各监控点工作正常、操纵系统响应灵敏。航行试验验证齿轮箱在实际负载和海况条件下的工作性能。",
-      "keywords": ["系泊试验", "航行试验", "船级社", "入级", "监控点"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "系泊试验",
+        "航行试验",
+        "船级社",
+        "入级",
+        "监控点"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "conditional",
       "source": "船级社规范"
     },
@@ -373,8 +609,17 @@
       "category": "structure",
       "title": "GWC系列结构特征",
       "content": "GWC系列：二级减速（初级减速+终级减速）加换向级。输入轴与输出轴同心布置，输出旋转方向与输入同向。GWC系列适用于需要大速比、同心传动的标准应用场景，是GW系列中应用最广泛的构型。",
-      "keywords": ["GWC", "二级减速", "同心", "同向旋转", "初级", "终级"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "GWC",
+        "二级减速",
+        "同心",
+        "同向旋转",
+        "初级",
+        "终级"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第II章",
       "technicalParams": {
@@ -389,8 +634,16 @@
       "category": "structure",
       "title": "GWD系列结构特征",
       "content": "GWD系列：一级减速（无初级，仅终级减速）加换向级。输入轴与输出轴角向异中心布置，输出旋转方向与输入反向。GWD系列结构紧凑，适用于速比要求较小的应用。",
-      "keywords": ["GWD", "一级减速", "角向异中心", "反向旋转", "紧凑"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "GWD",
+        "一级减速",
+        "角向异中心",
+        "反向旋转",
+        "紧凑"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第II章",
       "technicalParams": {
@@ -405,8 +658,15 @@
       "category": "structure",
       "title": "GWS系列结构特征",
       "content": "GWS系列：与GWD系列传动原理类似，一级减速加换向级。输入轴与输出轴垂直异中心布置。GWS系列适用于主机与推进轴系存在垂直偏移的特殊机舱布置。",
-      "keywords": ["GWS", "一级减速", "垂直异中心", "特殊布置"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "GWS",
+        "一级减速",
+        "垂直异中心",
+        "特殊布置"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第II章",
       "technicalParams": {
@@ -421,8 +681,15 @@
       "category": "structure",
       "title": "GWH系列结构特征",
       "content": "GWH系列：终级减速加换向级。输入轴与输出轴水平异中心布置。适用于输入输出轴需要水平偏移的机舱布局要求。",
-      "keywords": ["GWH", "终级减速", "水平异中心", "机舱布局"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "GWH",
+        "终级减速",
+        "水平异中心",
+        "机舱布局"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第II章",
       "technicalParams": {
@@ -436,8 +703,16 @@
       "category": "structure",
       "title": "GWL系列结构特征",
       "content": "GWL系列：无倒顺车功能，仅具备初级减速和终级减速两级减速。输入轴与输出轴同心布置，输出方向同向。GWL系列适用于不需要换向功能的应用，如发电用齿轮箱或单向传动场景。",
-      "keywords": ["GWL", "无换向", "二级减速", "同心", "发电用"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "GWL",
+        "无换向",
+        "二级减速",
+        "同心",
+        "发电用"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第II章",
       "technicalParams": {
@@ -452,8 +727,16 @@
       "category": "structure",
       "title": "GWK系列结构特征",
       "content": "GWK系列：无倒顺车功能，单级减速。输入轴与输出轴垂直异中心布置，输出方向反向。GWK系列结构最为简单紧凑，适用于小速比、单向传动的应用。",
-      "keywords": ["GWK", "无换向", "单级减速", "垂直异中心", "紧凑"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "GWK",
+        "无换向",
+        "单级减速",
+        "垂直异中心",
+        "紧凑"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第II章",
       "technicalParams": {
@@ -468,8 +751,17 @@
       "category": "structure",
       "title": "GW系列通用技术参数",
       "content": "GW系列齿轮箱通用技术指标：机械效率η≥97%，换向时间≤15秒（具有换向功能的系列），大修期10000小时，润滑油最高温度80℃。所有GW系列齿轮箱均采用渐开线圆柱齿轮传动，齿面经硬化和精磨处理。",
-      "keywords": ["效率", "97%", "换向时间", "大修期", "10000小时", "渐开线"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "效率",
+        "97%",
+        "换向时间",
+        "大修期",
+        "10000小时",
+        "渐开线"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第I章",
       "technicalParams": {
@@ -486,8 +778,16 @@
       "category": "structure",
       "title": "双机并车配置",
       "content": "GW系列部分型号支持双机并车配置（双机驱动单桨）。双机配置时需注意两台主机的旋转方向匹配，齿轮箱提供左旋和右旋两种配置。双机并车时，单机可脱开运行，另一台主机继续驱动。",
-      "keywords": ["双机并车", "双机单桨", "左旋", "右旋", "脱开运行"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "双机并车",
+        "双机单桨",
+        "左旋",
+        "右旋",
+        "脱开运行"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "recommended",
       "source": "GW系列产品说明书-第XIII章"
     },
@@ -496,8 +796,19 @@
       "category": "installation",
       "title": "吊运要求",
       "content": "齿轮箱吊运时应使用箱体上标记的吊装点或吊装螺栓，严禁使用非指定位置吊装。吊索与齿轮箱水平面的夹角应不小于45°。吊运过程中应避免碰撞和剧烈晃动。齿轮箱重量参见铭牌或技术参数表。",
-      "keywords": ["吊运", "吊装点", "吊索角度", "45度", "碰撞"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "吊运",
+        "吊装点",
+        "吊索角度",
+        "45度",
+        "碰撞"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第IV章"
     },
@@ -506,8 +817,19 @@
       "category": "installation",
       "title": "机舱安装基座",
       "content": "齿轮箱安装基座应具有足够的刚度和强度，基座面应平整。齿轮箱底脚与基座之间采用调整垫片调平，垫片组总厚度不宜超过25mm。基座设计应便于齿轮箱校中和日后维护。",
-      "keywords": ["基座", "刚度", "垫片", "25mm", "调平"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "基座",
+        "刚度",
+        "垫片",
+        "25mm",
+        "调平"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第IV章",
       "technicalParams": {
@@ -519,8 +841,19 @@
       "category": "installation",
       "title": "联轴节装配",
       "content": "齿轮箱输入端联轴器（高弹性联轴器）装配时，应严格按照联轴器说明书要求进行。联轴器安装前应检查配合面的清洁度和尺寸精度。装配完成后应检测联轴器的径向跳动和端面跳动，确保在允许范围内。",
-      "keywords": ["联轴器", "高弹性", "径向跳动", "端面跳动", "配合面"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "联轴器",
+        "高弹性",
+        "径向跳动",
+        "端面跳动",
+        "配合面"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第IV章"
     },
@@ -529,8 +862,19 @@
       "category": "installation",
       "title": "轴线校正（对中）",
       "content": "齿轮箱安装后应进行轴线校正（对中）。校正内容包括：主机输出轴与齿轮箱输入轴的轴心偏移量和角度偏差。校正方法：使用百分表在联轴器法兰面测量径向偏移和轴向偏差。偏差值应符合联轴器制造商的要求。",
-      "keywords": ["轴线校正", "对中", "百分表", "径向偏移", "轴向偏差"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "轴线校正",
+        "对中",
+        "百分表",
+        "径向偏移",
+        "轴向偏差"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第V章"
     },
@@ -539,8 +883,19 @@
       "category": "installation",
       "title": "热膨胀补偿",
       "content": "齿轮箱和主机在运行温度下会发生热膨胀，导致轴线位置变化。安装校正时应考虑热态补偿量：主机和齿轮箱的热膨胀方向通常为向上抬升，校正时应预留适当的冷态偏移量。具体补偿值应参考主机和齿轮箱制造商提供的热膨胀数据。",
-      "keywords": ["热膨胀", "补偿", "冷态偏移", "抬升", "热态"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "热膨胀",
+        "补偿",
+        "冷态偏移",
+        "抬升",
+        "热态"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第V章"
     },
@@ -549,8 +904,19 @@
       "category": "installation",
       "title": "输出轴法兰连接",
       "content": "齿轮箱输出轴法兰与推进轴系的连接应使用铰制孔螺栓，螺栓材质和数量应满足强度要求。法兰对接前应检查法兰面的平行度和同心度。连接螺栓应按规定力矩均匀拧紧。",
-      "keywords": ["输出法兰", "铰制孔螺栓", "推进轴系", "拧紧力矩", "平行度"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "输出法兰",
+        "铰制孔螺栓",
+        "推进轴系",
+        "拧紧力矩",
+        "平行度"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第IV章"
     },
@@ -559,8 +925,17 @@
       "category": "lubrication",
       "title": "润滑油规格要求",
       "content": "GW系列齿轮箱推荐使用中负荷工业齿轮油，粘度等级根据工作环境温度选择。常温环境推荐ISO VG 68或ISO VG 100。极寒环境可选用较低粘度等级。严禁混合使用不同品牌或不同类型的润滑油。",
-      "keywords": ["润滑油", "中负荷", "ISO VG 68", "ISO VG 100", "粘度", "严禁混合"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "润滑油",
+        "中负荷",
+        "ISO VG 68",
+        "ISO VG 100",
+        "粘度",
+        "严禁混合"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第VIII章",
       "technicalParams": {
@@ -573,8 +948,19 @@
       "category": "lubrication",
       "title": "注油量与油位检查",
       "content": "齿轮箱注油量应严格按照技术参数表规定执行。注油时应通过油位观察窗或油尺检查油位，油位应在上下限标记之间。首次注油或换油后应运行齿轮箱数分钟，待油充满各管路和冷却器后重新检查油位并补充至规定值。",
-      "keywords": ["注油量", "油位", "观察窗", "油尺", "上下限"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "注油量",
+        "油位",
+        "观察窗",
+        "油尺",
+        "上下限"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第VIII章"
     },
@@ -583,8 +969,16 @@
       "category": "lubrication",
       "title": "油压要求",
       "content": "GW系列齿轮箱正常工作油压参见各型号技术参数表。油压低于设定值时触发低油压报警。启动主机前应先启动备用泵预润滑，确认油压正常后方可启动主机。运行中应定期检查油压表读数。",
-      "keywords": ["油压", "额定油压", "低油压报警", "预润滑", "油压表"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "油压",
+        "额定油压",
+        "低油压报警",
+        "预润滑",
+        "油压表"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第VIII章"
     },
@@ -593,8 +987,16 @@
       "category": "lubrication",
       "title": "润滑方式",
       "content": "GW系列齿轮箱采用强制润滑方式，由主泵将润滑油压送至各轴承、齿轮啮合面和离合器摩擦片。部分低速齿轮采用飞溅润滑作为辅助。齿轮箱内部油道为铸造成型，无需外部管路连接内部润滑点。",
-      "keywords": ["强制润滑", "飞溅润滑", "压送", "油道", "铸造"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "强制润滑",
+        "飞溅润滑",
+        "压送",
+        "油道",
+        "铸造"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第VIII章"
     },
@@ -603,8 +1005,16 @@
       "category": "accessories",
       "title": "标准附件清单",
       "content": "GW系列齿轮箱标准附件包括：润滑油冷却器、双联滤器、压力控制器、温度控制器、油位观察窗、放油阀、通气帽、铭牌。标准附件随齿轮箱一起出厂，安装时应确认附件完整。",
-      "keywords": ["标准附件", "冷却器", "滤器", "控制器", "出厂"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "标准附件",
+        "冷却器",
+        "滤器",
+        "控制器",
+        "出厂"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第XII章"
     },
@@ -613,8 +1023,17 @@
       "category": "accessories",
       "title": "选装附件",
       "content": "GW系列齿轮箱可选装附件包括：电动备用泵、油温传感器（PT100）、油压传感器、转速传感器、功率输出（PTO）接口、减振器、弹性支撑。选装附件应在订货时明确，以便工厂预留安装接口。",
-      "keywords": ["选装附件", "备用泵", "PT100", "PTO", "减振器", "订货时明确"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "选装附件",
+        "备用泵",
+        "PT100",
+        "PTO",
+        "减振器",
+        "订货时明确"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "recommended",
       "source": "GW系列产品说明书-第XII章"
     },
@@ -623,8 +1042,16 @@
       "category": "accessories",
       "title": "滤器规格",
       "content": "GW系列齿轮箱配套双联滤器，过滤精度25μm，设有压差指示器。当滤芯堵塞导致压差超过设定值时，压差指示器发出信号提示更换滤芯。可在不停机情况下切换至备用滤芯侧进行清洗或更换。",
-      "keywords": ["滤器", "25μm", "压差指示器", "不停机切换", "滤芯"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "滤器",
+        "25μm",
+        "压差指示器",
+        "不停机切换",
+        "滤芯"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第III章/第XII章",
       "technicalParams": {
@@ -638,8 +1065,16 @@
       "category": "accessories",
       "title": "冷却器规格",
       "content": "GW系列齿轮箱标配管壳式润滑油冷却器，冷却介质为海水或淡水。冷却器应定期检查和清洗管束，海水侧应定期更换锌块（防腐蚀牺牲阳极）。冷却器换热面积和冷却水量根据齿轮箱型号配置。",
-      "keywords": ["冷却器", "管壳式", "锌块", "牺牲阳极", "清洗管束"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "冷却器",
+        "管壳式",
+        "锌块",
+        "牺牲阳极",
+        "清洗管束"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第III章/第XII章"
     },
@@ -648,8 +1083,19 @@
       "category": "accessories",
       "title": "通气帽",
       "content": "齿轮箱箱体顶部安装通气帽，用于平衡箱体内外气压，防止运行中箱体内压力过高导致密封泄漏。通气帽内设有过滤元件，防止灰尘和水分进入箱体。应定期清洗通气帽滤芯。",
-      "keywords": ["通气帽", "气压平衡", "密封", "过滤", "灰尘水分"],
-      "applicableSeries": ["HC", "GW", "HCM", "DT"],
+      "keywords": [
+        "通气帽",
+        "气压平衡",
+        "密封",
+        "过滤",
+        "灰尘水分"
+      ],
+      "applicableSeries": [
+        "HC",
+        "GW",
+        "HCM",
+        "DT"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第III章"
     },
@@ -658,8 +1104,17 @@
       "category": "accessories",
       "title": "传感器配置",
       "content": "GW系列可配置的传感器包括：油温传感器（PT100热电阻，安装在回油管路）、油压传感器（安装在主油道）、转速传感器（磁电式，安装在输出轴）。传感器信号接入船舶报警监控系统，实现远程监控。",
-      "keywords": ["传感器", "PT100", "油压", "转速", "磁电式", "远程监控"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "传感器",
+        "PT100",
+        "油压",
+        "转速",
+        "磁电式",
+        "远程监控"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "recommended",
       "source": "GW系列产品说明书-第III章/第XII章",
       "technicalParams": {
@@ -673,8 +1128,17 @@
       "category": "maintenance",
       "title": "GW系列保养周期表",
       "content": "GW系列齿轮箱维护保养周期：每日检查油压和油温；每周检查油位和有无泄漏；每500小时检查滤器和清洗磁性堵头；首次500小时换油；每2000~3000小时或每年换油；每5000小时检查离合器片磨损；每10000小时进行大修检查（拆检齿轮、轴承、离合器）。",
-      "keywords": ["保养周期", "每日", "每周", "500小时", "换油", "大修"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "保养周期",
+        "每日",
+        "每周",
+        "500小时",
+        "换油",
+        "大修"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第IX章",
       "technicalParams": {
@@ -691,8 +1155,17 @@
       "category": "maintenance",
       "title": "换油周期与油品监测",
       "content": "GW系列齿轮箱润滑油首次运行500小时后应更换新油（磨合期换油）。此后正常换油周期为2000~3000运行小时或每年一次（以先到者为准）。建议定期取样进行油品分析（粘度、酸值、水分、金属颗粒含量），根据分析结果决定是否提前换油。",
-      "keywords": ["换油", "500小时", "磨合期", "油品分析", "粘度", "酸值"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "换油",
+        "500小时",
+        "磨合期",
+        "油品分析",
+        "粘度",
+        "酸值"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第IX章",
       "technicalParams": {
@@ -706,8 +1179,16 @@
       "category": "maintenance",
       "title": "磁性堵头清洗",
       "content": "齿轮箱放油口设有磁性堵头，用于吸附润滑油中的金属碎屑。每500运行小时或每次换油时应拆下磁性堵头，清除吸附的金属颗粒。如发现大量或大颗粒金属碎屑，应引起重视，可能预示齿轮或轴承异常磨损。",
-      "keywords": ["磁性堵头", "金属碎屑", "清洗", "磨损预警", "500小时"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "磁性堵头",
+        "金属碎屑",
+        "清洗",
+        "磨损预警",
+        "500小时"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第IX章"
     },
@@ -716,8 +1197,17 @@
       "category": "maintenance",
       "title": "冷却器维护",
       "content": "冷却器应定期清洗以保持换热效率。海水冷却时，管束海水侧易结垢和附着海生物，建议每3~6个月清洗一次。淡水冷却时清洗周期可适当延长。海水侧的锌块（牺牲阳极）应定期检查和更换，防止冷却器管束腐蚀。",
-      "keywords": ["冷却器维护", "清洗", "结垢", "锌块", "牺牲阳极", "腐蚀"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "冷却器维护",
+        "清洗",
+        "结垢",
+        "锌块",
+        "牺牲阳极",
+        "腐蚀"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "mandatory",
       "source": "GW系列产品说明书-第IX章"
     },
@@ -726,8 +1216,17 @@
       "category": "troubleshooting",
       "title": "齿轮箱过热",
       "content": "故障现象：润滑油温度超过80℃报警值。可能原因：(1)冷却水量不足或冷却水温度过高；(2)冷却器管束脏污结垢；(3)润滑油量不足；(4)润滑油变质粘度下降；(5)轴承损坏导致摩擦发热；(6)齿轮啮合异常。处理方法：首先检查冷却水系统，清洗冷却器；检查油位和油质；如仍过热应停机检查轴承和齿轮。",
-      "keywords": ["过热", "油温高", "80℃", "冷却水", "轴承", "齿轮啮合"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "过热",
+        "油温高",
+        "80℃",
+        "冷却水",
+        "轴承",
+        "齿轮啮合"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "critical",
       "source": "GW系列产品说明书-第XI章",
       "faultType": "overheat"
@@ -737,8 +1236,16 @@
       "category": "troubleshooting",
       "title": "油压不足",
       "content": "故障现象：油压低于报警设定值。可能原因：(1)油位过低；(2)主泵磨损或故障；(3)溢流阀调定压力偏低或阀芯卡滞；(4)滤器严重堵塞；(5)油管路泄漏；(6)润滑油粘度过低（油温过高或油品不对）。处理方法：立即降速运行；检查油位并补充；检查泵和溢流阀；清洗或更换滤芯。",
-      "keywords": ["油压不足", "低油压", "主泵", "溢流阀", "滤器堵塞"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "油压不足",
+        "低油压",
+        "主泵",
+        "溢流阀",
+        "滤器堵塞"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "critical",
       "source": "GW系列产品说明书-第XI章",
       "faultType": "lowPressure"
@@ -748,8 +1255,16 @@
       "category": "troubleshooting",
       "title": "漏油",
       "content": "故障现象：齿轮箱外部可见油渍或油滴。可能原因：(1)密封件老化或损坏；(2)箱体结合面垫片失效；(3)通气帽堵塞导致箱体内压过高；(4)油位过高；(5)管路接头松动。处理方法：清洁泄漏区域确定泄漏点；更换密封件或垫片；检查和清洗通气帽；确认油位正确；拧紧松动接头。",
-      "keywords": ["漏油", "密封件", "垫片", "通气帽堵塞", "接头松动"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "漏油",
+        "密封件",
+        "垫片",
+        "通气帽堵塞",
+        "接头松动"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "critical",
       "source": "GW系列产品说明书-第XI章",
       "faultType": "oilLeak"
@@ -759,8 +1274,16 @@
       "category": "troubleshooting",
       "title": "换向时柴油机熄火",
       "content": "故障现象：操纵齿轮箱换向时主机（柴油机）突然熄火。可能原因：(1)主机怠速过低，换向负载过大；(2)离合器调整不当，接合过猛；(3)操纵气压过高导致离合器接合冲击过大。处理方法：适当提高主机怠速转速；调整离合器接合缓冲装置；调节操纵气压至合理范围。",
-      "keywords": ["换向熄火", "怠速过低", "离合器接合", "气压过高", "缓冲"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "换向熄火",
+        "怠速过低",
+        "离合器接合",
+        "气压过高",
+        "缓冲"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "critical",
       "source": "GW系列产品说明书-第XI章",
       "faultType": "engineStall"
@@ -770,8 +1293,16 @@
       "category": "troubleshooting",
       "title": "螺旋桨达不到额定转速",
       "content": "故障现象：主机已达额定转速，但螺旋桨转速低于设计值。可能原因：(1)离合器打滑（摩擦片磨损或油压不足）；(2)螺旋桨过重或船底脏污阻力增大；(3)齿轮箱内部齿轮损坏。处理方法：检查离合器油压和摩擦片状况；检查船底和螺旋桨；必要时停机拆检齿轮箱。",
-      "keywords": ["转速不足", "离合器打滑", "摩擦片磨损", "螺旋桨", "船底脏污"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "转速不足",
+        "离合器打滑",
+        "摩擦片磨损",
+        "螺旋桨",
+        "船底脏污"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "critical",
       "source": "GW系列产品说明书-第XI章",
       "faultType": "lowSpeed"
@@ -781,8 +1312,16 @@
       "category": "troubleshooting",
       "title": "空挡时螺旋桨不停转",
       "content": "故障现象：齿轮箱置于空挡位置，但螺旋桨仍在转动。可能原因：(1)离合器分离不完全（摩擦片粘连或回位弹簧失效）；(2)操纵系统行程不足，拨叉未完全回位；(3)润滑油粘度过高，拖带效应明显。处理方法：检查操纵系统行程和拨叉位置；检查离合器回位弹簧；冬季低温启动时适当预热润滑油。",
-      "keywords": ["空挡不停", "离合器粘连", "回位弹簧", "拨叉行程", "拖带效应"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "空挡不停",
+        "离合器粘连",
+        "回位弹簧",
+        "拨叉行程",
+        "拖带效应"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "critical",
       "source": "GW系列产品说明书-第XI章",
       "faultType": "neutralDrag"
@@ -792,11 +1331,394 @@
       "category": "troubleshooting",
       "title": "异常噪声",
       "content": "故障现象：齿轮箱运行中出现异常噪声（撞击声、摩擦声或啸叫声）。可能原因：(1)齿轮啮合异常（齿面损伤或异物）；(2)轴承磨损或损坏；(3)联轴器对中不良导致振动；(4)齿轮箱底脚松动；(5)内部零件松脱。处理方法：立即降速观察；检查联轴器对中和底脚紧固；如噪声持续或加剧应停机拆检。",
-      "keywords": ["异常噪声", "撞击声", "啸叫", "轴承磨损", "对中不良", "底脚松动"],
-      "applicableSeries": ["GW"],
+      "keywords": [
+        "异常噪声",
+        "撞击声",
+        "啸叫",
+        "轴承磨损",
+        "对中不良",
+        "底脚松动"
+      ],
+      "applicableSeries": [
+        "GW"
+      ],
       "importance": "critical",
       "source": "GW系列产品说明书-第XI章",
       "faultType": "abnormalNoise"
+    },
+    {
+      "id": "testing-004",
+      "category": "testing",
+      "title": "静水压力试验",
+      "content": "齿轮箱油腔应进行静水压力试验，试验压力为工作压力的1.5倍，保压时间不少于15分钟，无渗漏为合格。",
+      "keywords": [
+        "压力试验",
+        "油腔",
+        "渗漏"
+      ],
+      "importance": "high"
+    },
+    {
+      "id": "testing-005",
+      "category": "testing",
+      "title": "空载跑合试验",
+      "content": "新装配齿轮箱应进行空载跑合试验：25%额定转速运行30min → 50%运行30min → 75%运行30min → 100%运行60min，逐级检查油温、油压、振动、噪声。",
+      "keywords": [
+        "空载",
+        "跑合",
+        "分级加载"
+      ],
+      "importance": "high"
+    },
+    {
+      "id": "testing-006",
+      "category": "testing",
+      "title": "效率测试",
+      "content": "齿轮箱传动效率通过输入功率与输出功率之比计算。单级传动效率应≥98%，双级传动效率应≥96%。测试应在额定工况下稳定运行1小时后进行。",
+      "keywords": [
+        "效率",
+        "传动效率",
+        "功率"
+      ],
+      "importance": "medium"
+    },
+    {
+      "id": "testing-007",
+      "category": "testing",
+      "title": "背压试验",
+      "content": "液压离合器接合压力试验：逐步升压至额定工作压力，检查离合器接合是否平稳、无冲击、打滑。记录接合压力值和接合时间。",
+      "keywords": [
+        "离合器",
+        "接合压力",
+        "背压"
+      ],
+      "importance": "medium"
+    },
+    {
+      "id": "cooling-005",
+      "category": "cooling",
+      "title": "冷却器选型要求",
+      "content": "冷却器散热量应大于齿轮箱产生热量的1.2倍。推荐板式热交换器，换热效率高、体积小。管式换热器适用于海水冷却回路。",
+      "keywords": [
+        "冷却器",
+        "散热量",
+        "板式换热器"
+      ],
+      "importance": "high"
+    },
+    {
+      "id": "cooling-006",
+      "category": "cooling",
+      "title": "冷却水温度控制",
+      "content": "齿轮箱冷却水进口温度不应超过36°C，出口温度不应超过55°C，进出口温差控制在10~15°C。超温时应检查冷却水流量和冷却器效率。",
+      "keywords": [
+        "水温",
+        "温差",
+        "温度控制"
+      ],
+      "importance": "medium"
+    },
+    {
+      "id": "cooling-007",
+      "category": "cooling",
+      "title": "强制循环冷却",
+      "content": "大功率齿轮箱(>500kW)应采用强制循环润滑冷却系统，配备独立的润滑油泵和冷却器。油泵流量应满足齿轮箱最大润滑量的1.5倍。",
+      "keywords": [
+        "强制循环",
+        "润滑油泵",
+        "大功率"
+      ],
+      "importance": "high"
+    },
+    {
+      "id": "control-005",
+      "category": "control",
+      "title": "转速传感器安装",
+      "content": "转速传感器应安装在齿轮箱输出轴端或飞轮处，传感器间隙0.5~1.5mm。信号线应与动力线分开布置，使用屏蔽电缆。",
+      "keywords": [
+        "转速传感器",
+        "间隙",
+        "屏蔽"
+      ],
+      "importance": "medium"
+    },
+    {
+      "id": "control-006",
+      "category": "control",
+      "title": "离合器电磁阀",
+      "content": "液压离合器电磁阀应选用船用防水型(IP67)，工作电压DC24V±10%。阀体材料推荐不锈钢(海洋环境)。电磁阀响应时间≤0.5s。",
+      "keywords": [
+        "电磁阀",
+        "IP67",
+        "液压离合器"
+      ],
+      "importance": "high"
+    },
+    {
+      "id": "control-007",
+      "category": "control",
+      "title": "PLC控制接口",
+      "content": "齿轮箱控制系统与船舶PLC接口应包括：离合器接合/脱开信号、油温报警、油压报警、转速信号。建议预留RS485/CAN总线通信接口。",
+      "keywords": [
+        "PLC",
+        "通信接口",
+        "CAN总线"
+      ],
+      "importance": "medium"
+    },
+    {
+      "id": "maintenance-005",
+      "category": "maintenance",
+      "title": "润滑油更换周期",
+      "content": "首次运行500小时更换润滑油和滤芯。正常运行每2000小时或12个月（以先到者为准）更换一次。恶劣工况（高温/高湿/高负载）应缩短至1500小时。",
+      "keywords": [
+        "更换周期",
+        "润滑油",
+        "滤芯"
+      ],
+      "importance": "high"
+    },
+    {
+      "id": "maintenance-006",
+      "category": "maintenance",
+      "title": "齿面检查方法",
+      "content": "打开检查窗口，用内窥镜或目视检查齿面状态。重点关注：点蚀、胶合、磨损、裂纹。轻微点蚀面积<齿面10%可继续使用，超过时需评估。",
+      "keywords": [
+        "齿面检查",
+        "点蚀",
+        "内窥镜"
+      ],
+      "importance": "high"
+    },
+    {
+      "id": "maintenance-007",
+      "category": "maintenance",
+      "title": "轴承间隙测量",
+      "content": "定期测量轴承径向间隙和轴向间隙。径向间隙超过初始值2倍时应更换轴承。推力轴承轴向间隙标准值0.15~0.30mm，超过0.50mm应更换。",
+      "keywords": [
+        "轴承间隙",
+        "径向间隙",
+        "轴向间隙"
+      ],
+      "importance": "high"
+    },
+    {
+      "id": "pump-005",
+      "category": "pump",
+      "title": "备用泵自动切换",
+      "content": "主油泵失效时备用泵应在3秒内自动启动。切换控制通过油压继电器实现，低于设定压力(通常0.1MPa)时触发。每月应进行一次自动切换测试。",
+      "keywords": [
+        "自动切换",
+        "备用泵",
+        "油压继电器"
+      ],
+      "importance": "high"
+    },
+    {
+      "id": "pump-006",
+      "category": "pump",
+      "title": "泵的安装位置",
+      "content": "润滑油泵安装应低于齿轮箱油池最低油位，确保自吸能力。吸油管路应尽量短且少弯，管径不小于泵进口口径。吸油口应设粗滤网(80~100目)。",
+      "keywords": [
+        "安装位置",
+        "自吸",
+        "吸油管"
+      ],
+      "importance": "medium"
+    },
+    {
+      "id": "safety-005",
+      "category": "safety",
+      "title": "防爆要求",
+      "content": "在有爆炸危险区域使用的齿轮箱，电气部件应符合ExdIIBT4防爆标准。传感器、电磁阀、加热器等均需防爆认证。通气口应安装阻火器。",
+      "keywords": [
+        "防爆",
+        "ExdIIBT4",
+        "阻火器"
+      ],
+      "importance": "high"
+    },
+    {
+      "id": "safety-006",
+      "category": "safety",
+      "title": "起吊安全",
+      "content": "齿轮箱起吊应使用指定吊耳，严禁使用输入/输出轴或管路接口起吊。起吊绳与水平面夹角不小于60°。起吊前确认吊耳无裂纹和变形。",
+      "keywords": [
+        "起吊",
+        "吊耳",
+        "安全"
+      ],
+      "importance": "high"
+    },
+    {
+      "id": "energy-001",
+      "category": "energy-efficiency",
+      "title": "EEXI合规要求",
+      "content": "根据IMO MEPC.333(76)决议，自2023年1月1日起所有现有船舶须满足EEXI(现有船舶能效指数)要求。齿轮箱传动效率直接影响EEXI计算，选型时应优先选择传动效率≥97%的型号。EEXI计算公式: EEXI = (P × SFC × CF) / (Capacity × Vref)。",
+      "keywords": ["EEXI", "能效指数", "IMO", "MEPC", "传动效率", "碳排放"],
+      "applicableSeries": ["HC", "GW", "GCS", "GCD", "GCST"],
+      "importance": "mandatory",
+      "source": "IMO MEPC.333(76)"
+    },
+    {
+      "id": "energy-002",
+      "category": "energy-efficiency",
+      "title": "CII碳强度指标评级",
+      "content": "CII(Carbon Intensity Indicator)要求船舶年度运营碳强度逐年下降。评级标准: A级(优秀) CII<0.94×参考值, B级(良好), C级(达标), D级(不合格), E级(严重违规)。2024年起年度收紧3.2%。齿轮箱高效传动方案可将CII评级提升1-2级。",
+      "keywords": ["CII", "碳强度", "评级", "年度运营", "部分负荷", "A级"],
+      "applicableSeries": ["HC", "GW", "GCS", "GCD"],
+      "importance": "mandatory",
+      "source": "IMO MEPC.339(76)"
+    },
+    {
+      "id": "energy-003",
+      "category": "energy-efficiency",
+      "title": "替代燃料兼容性",
+      "content": "采用LNG/甲醇/氨等替代燃料时，齿轮箱润滑系统和密封材料需评估兼容性。LNG动力船的CO2排放因子为2.75(vs HFO的3.114)，对EEXI有显著改善。双燃料发动机的扭矩特性可能与纯柴油机不同，需重新校核联轴器选型。",
+      "keywords": ["LNG", "甲醇", "氨", "替代燃料", "双燃料", "排放因子"],
+      "applicableSeries": ["HC", "GW", "GCS"],
+      "importance": "high",
+      "source": "IMO GHG Strategy 2023"
+    },
+    {
+      "id": "energy-004",
+      "category": "energy-efficiency",
+      "title": "轴带发电机能效贡献",
+      "content": "PTO模式下轴带发电机可替代辅机发电，减少总燃油消耗。但需确保齿轮箱在PTO工况下的传递能力余量≥15%。轴带发电机功率回收效率通常为93-96%，对EEXI和CII均有正面影响。",
+      "keywords": ["PTO", "轴带发电机", "能效", "功率回收", "辅机"],
+      "applicableSeries": ["HC", "GW"],
+      "importance": "medium",
+      "source": "杭齿技术标准"
+    },
+    {
+      "id": "energy-005",
+      "category": "energy-efficiency",
+      "title": "CPP系统部分负荷优化",
+      "content": "CPP(可调螺距螺旋桨)通过变桨距优化部分负荷效率，相比FPP(定距桨)在50-80%负荷范围可提升推进效率2-8%。对CII改善贡献显著，尤其适用于航线变化大的船舶。CPP齿轮箱需配套配油器和液压控制单元。",
+      "keywords": ["CPP", "可调螺距", "部分负荷", "FPP", "推进效率"],
+      "applicableSeries": ["GCS", "GCST", "GCD", "GSH"],
+      "importance": "high",
+      "source": "IMO MEPC 80"
+    },
+    {
+      "id": "energy-006",
+      "category": "energy-efficiency",
+      "title": "混动系统能效策略",
+      "content": "PTI/PTO混合动力系统在低速工况使用电动推进、高速工况使用柴油主机，实现全工况能效最优。���轮箱需支持PTI/PTO切换，且离合器接合/分离时间应<3秒。混动系统可使年度平均CII降低15-25%。",
+      "keywords": ["PTI", "PTO", "混合动力", "电动推进", "离合器"],
+      "applicableSeries": ["HC", "GW", "DT"],
+      "importance": "high",
+      "source": "杭齿技术标准"
+    },
+    {
+      "id": "prop-001",
+      "category": "propeller-matching",
+      "title": "螺旋桨直径选择原则",
+      "content": "螺旋桨直径受船尾线型和吃水限制。经验公式: D ≈ 0.3 × P^0.25 (m, P为功率kW)。直径越大效率越高，但受限于船体间隙(桨叶端距船壳≥100mm或0.1D，取较大值)。CPP系统桨叶可更换，设计直径可略保守。",
+      "keywords": ["螺旋桨直径", "船尾线型", "吃水", "间隙", "经验公式"],
+      "importance": "high",
+      "source": "ITTC推荐"
+    },
+    {
+      "id": "prop-002",
+      "category": "propeller-matching",
+      "title": "桨距比与效率优化",
+      "content": "桨距比(P/D)是螺旋桨效率的关键参数。一般船舶P/D范围0.8-1.2，高速船可达1.4。桨距比过大导致空泡风险增加，过小则效率下降。CPP系统设计桨距比应使设计工况点在效率峰值±5%范围内。",
+      "keywords": ["桨距比", "效率", "空泡", "设计工况", "P/D"],
+      "importance": "high",
+      "source": "ITTC推荐"
+    },
+    {
+      "id": "prop-003",
+      "category": "propeller-matching",
+      "title": "盘面比与空泡关系",
+      "content": "盘面比(Ae/Ao)决定叶面载荷分布。推荐根据Burrill空泡图确定最小盘面比。一般货船0.45-0.55，大功率船0.55-0.70。盘面比过小空泡剧烈，过大则桨叶摩擦阻力增加。CCS规范要求空泡面积不超过叶面的5%。",
+      "keywords": ["盘面比", "空泡", "Burrill", "叶面载荷", "CCS"],
+      "importance": "high",
+      "source": "CCS船级社规范"
+    },
+    {
+      "id": "prop-004",
+      "category": "propeller-matching",
+      "title": "CPP变距范围设定",
+      "content": "CPP系统调距范围通常为正桨+20°~+30°、倒桨-12°~-18°。全桨距范围应覆盖: 设计工况(正桨额定角)、部分负荷(正桨减小角)、泊位(零桨距)、倒车(负桨距)。调距速率标准为2-4°/秒，应急快速调距≥6°/秒。",
+      "keywords": ["CPP", "变距范围", "桨距角", "调距速率", "倒车"],
+      "applicableSeries": ["GCS", "GCST", "GCD"],
+      "importance": "mandatory",
+      "source": "杭齿技术标准"
+    },
+    {
+      "id": "prop-005",
+      "category": "propeller-matching",
+      "title": "螺旋桨与齿轮箱功率匹配",
+      "content": "齿��箱最大连续功率(MCR)应≥主机MCR×服务裕度(通常1.10-1.15)。传递能力P/N值需在所有工况下满足要求。减速比选择需使螺旋桨工作在最佳效率转速范围(通常200-400rpm)。GCS/GCD系列内置配油器安装接口。",
+      "keywords": ["功率匹配", "MCR", "服务裕度", "传递能力", "减速比"],
+      "applicableSeries": ["GCS", "GCST", "GCD", "GSH", "GCC"],
+      "importance": "mandatory",
+      "source": "杭齿技术标准"
+    },
+    {
+      "id": "prop-006",
+      "category": "propeller-matching",
+      "title": "叶片材料选择",
+      "content": "标准桨叶材料为镍铝青铜(NAB)，屈服强度245MPa，抗空泡侵蚀性能优异。冰区航行(ICE Class IA/IB)需选用高强度不锈钢或特种合金。CCS要求冰区螺旋桨安全系数≥2.5(vs常规2.0)。",
+      "keywords": ["镍铝青铜", "NAB", "冰区", "材料", "安全系数"],
+      "importance": "high",
+      "source": "CCS船级社规范"
+    },
+    {
+      "id": "class-001",
+      "category": "classification-requirements",
+      "title": "CCS入级图纸审查",
+      "content": "CCS入级审查需提交: 齿轮箱总装图、传动系统原理图、轴系强度计算书、扭振计算书、齿轮强度计算书(含接触应力和弯曲应力)。审图周期通常4-6周。杭齿主要产品已通过CCS型式认可，可缩短审图时间。",
+      "keywords": ["CCS", "图纸审查", "入级", "型式认可", "计算书"],
+      "importance": "mandatory",
+      "source": "CCS《钢质海船入级规范》"
+    },
+    {
+      "id": "class-002",
+      "category": "classification-requirements",
+      "title": "DNV型式认可要求",
+      "content": "DNV型式认可(Type Approval)适用于批量产品。需提交设计文件、材料证书、制造工艺文件，并通过工厂审核和样机试验。认可有效期通常5年。DNV对齿轮箱噪声要求较CCS更严格(船内≤80dB(A))。",
+      "keywords": ["DNV", "型式认可", "Type Approval", "工厂审核", "噪声"],
+      "importance": "high",
+      "source": "DNV GL Rules"
+    },
+    {
+      "id": "class-003",
+      "category": "classification-requirements",
+      "title": "多船级社双重认证",
+      "content": "出口船舶常需双重认证(如CCS+LR或CCS+BV)。杭齿HC/GW主要系列已获得CCS、DNV、LR、ABS、BV等多家船级社认证。双重认证时以较严格标准为准。证书更新需在到期前6个月申请。",
+      "keywords": ["双重认证", "出口", "LR", "ABS", "BV", "证书"],
+      "importance": "high",
+      "source": "IACS统一要求"
+    },
+    {
+      "id": "class-004",
+      "category": "classification-requirements",
+      "title": "冰区等级附加要求",
+      "content": "冰区航行(ICE Class)对齿轮箱提出附加要求: 低温启动(-25°C)润滑油加热、螺旋桨轴承加强、推力轴承增大30%容量、传动系统冲击校核(冰载荷脉冲)。CCS冰区符号: B/B*/B1/B2/B3，对应不同冰厚。",
+      "keywords": ["冰区", "ICE Class", "低温启动", "冰载荷", "润滑油加热"],
+      "importance": "high",
+      "source": "CCS《极地水域航行船舶指南》"
+    },
+    {
+      "id": "class-005",
+      "category": "classification-requirements",
+      "title": "船级社监造要点",
+      "content": "监造检验包括: 材料复验(齿轮钢、轴承钢化学成分和力学性能)、齿轮加工精度(ISO 6级以上)、装配精度(中心距公差、齿侧间隙)、功能试验(空载运转、加载试验、密性试验)。CCS要求监造验船师现场签字确认。",
+      "keywords": ["监造", "检验", "齿轮精度", "功能试验", "验船师"],
+      "importance": "mandatory",
+      "source": "CCS《产品检验规则》"
+    },
+    {
+      "id": "class-006",
+      "category": "classification-requirements",
+      "title": "证书有效期管理",
+      "content": "船级社产品证书有效期通常5年，到期前需进行复审或换证检验。中间检验(2.5年)需提交运行记录和维护报告。杭齿为客户提供证书跟踪服务，在证书到期前3个月自动提醒。证书失效将影响船舶营运许可。",
+      "keywords": ["证书", "有效期", "复审", "换证", "中间检验"],
+      "importance": "high",
+      "source": "IACS统一要求"
     }
   ]
 }

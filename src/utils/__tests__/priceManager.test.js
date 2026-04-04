@@ -531,10 +531,9 @@ describe('更多系列折扣率', () => {
     expect(getStandardDiscountRate('GC200', 'gearbox')).toBe(0.10);
   });
 
-  test('HCL系列当前返回HC标准折扣 (因HC前缀优先匹配)', () => {
-    // 注: HCL配置了0.12折扣率，但代码先匹配HC前缀返回0.16
-    // 这是已知的实现行为，如需单独处理HCL需要修改优先级
-    expect(getStandardDiscountRate('HCL400', 'gearbox')).toBe(0.16);
+  test('HCL系列应返回HCL专用折扣率0.12', () => {
+    // HCL现在有独立的折扣率配置，不再被HC前缀覆盖
+    expect(getStandardDiscountRate('HCL400', 'gearbox')).toBe(0.12);
   });
 
   test('SG系列应返回10%折扣 (GW折扣)', () => {
@@ -550,9 +549,9 @@ describe('更多系列折扣率', () => {
     expect(getStandardDiscountRate('HCX400')).toBe(0);
   });
 
-  test('HCA系列应为固定价格系列', () => {
-    expect(isFixedPriceSeries('HCA300')).toBe(true);
-    expect(getStandardDiscountRate('HCA300')).toBe(0);
+  test('HCA系列使用标准折扣率（非固定价格系列）', () => {
+    // HCA不在FIXED_PRICE_SERIES中，使用标准折扣率
+    expect(isFixedPriceSeries('HCA300')).toBe(false);
   });
 
   test('HCV系列应为固定价格系列', () => {
@@ -590,11 +589,11 @@ describe('PRICE_CONSTANTS 配置验证', () => {
     expect(PRICE_CONSTANTS.MARKET_PRICE_MULTIPLIER).toBe(1.1);
   });
 
-  test('固定价格系列应包含HCM/HCQ/HCX/HCA/HCV/MV', () => {
+  test('固定价格系列应包含HCM/HCQ/HCX/HCV/MV', () => {
     expect(PRICE_CONSTANTS.FIXED_PRICE_SERIES).toContain('HCM');
     expect(PRICE_CONSTANTS.FIXED_PRICE_SERIES).toContain('HCQ');
     expect(PRICE_CONSTANTS.FIXED_PRICE_SERIES).toContain('HCX');
-    expect(PRICE_CONSTANTS.FIXED_PRICE_SERIES).toContain('HCA');
+    // HCA不在固定价格系列中（使用标准折扣率）
     expect(PRICE_CONSTANTS.FIXED_PRICE_SERIES).toContain('HCV');
     expect(PRICE_CONSTANTS.FIXED_PRICE_SERIES).toContain('MV');
   });

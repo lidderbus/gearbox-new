@@ -1846,16 +1846,17 @@ describe('selectGearbox - 警告信息生成', () => {
       ratios: [2.5],
       transferCapacity: [0.15],
       inputSpeedRange: [1000, 2500],
-      thrust: 30 // 不足
+      thrust: 30 // 不足(60%需求，进入近似匹配)
     });
     const mockData = createMockData([gearbox]);
 
-    // 要求50kN但只有30kN
+    // 要求50kN但只有30kN — 推力<80%需求，标记安全风险
     const result = selectGearbox(200, 2000, 2.5, 50, 'HC', mockData);
 
-    if (result.warning) {
-      expect(result.warning).toContain('推力');
-    }
+    // 推力严重不足的型号进入近似匹配，检查recommendations中的warnings/failureReason
+    const hasWarning = result.warning?.includes('推力') ||
+      result.recommendations?.some(r => r.failureReason?.includes('推力') || r.warnings?.some(w => w.includes('推力')));
+    expect(hasWarning || !result.success).toBeTruthy();
   });
 
   test('有特殊打包价格时应返回priceInfo (special package price info)', () => {
@@ -2139,9 +2140,10 @@ describe('autoSelectGearbox - 警告整合', () => {
 
     const result = autoSelectGearbox(requirements, mockData);
 
-    if (result.warning) {
-      expect(result.warning).toContain('推力');
-    }
+    // 推力严重不足(60%需求)进入近似匹配，检查warnings/failureReason
+    const hasWarning = result.warning?.includes('推力') ||
+      result.recommendations?.some(r => r.failureReason?.includes('推力') || r.warnings?.some(w => w.includes('推力')));
+    expect(hasWarning || !result.success).toBeTruthy();
   });
 
   test('减速比偏差大警告 (ratio diff warning in autoSelect)', () => {

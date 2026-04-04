@@ -2,7 +2,15 @@
  * 强迫振动分析模块
  *
  * 实现船舶轴系扭振强迫响应计算
- * 包括柴油机激励、螺旋桨激励、应力计算
+ * 包括柴油机激励、螺旋桨激励、复数Holzer直接法
+ *
+ * v2.0 (2026-04-04) COMPASS校准修正:
+ *   - T_mean = 9550 × P / n (N·m, 不×1000)
+ *   - 螺旋桨叶片次频率 = z × n_motor / (60 × i) (基于螺旋桨转速)
+ *   - 每谐次独立计算复数振幅差→应力→RMS合成 (保留相位信息)
+ *   - 螺旋桨阻尼: dp(n) = dp_rated × (n/n_rated) (线性)
+ *   - 广义质量: M_r = Σ(J_i × φ_i²) (不再近似为1)
+ *   - 移除 PROPELLER_SHAFT_STRESS_FACTOR 经验因子
  *
  * @module forcedVibrationAnalysis
  */
@@ -61,31 +69,20 @@ export const DIESEL_HARMONIC_COEFFICIENTS = {
 };
 
 /**
- * 电机激励谐波系数
- * 注: 系数已校准以匹配COMPASS @1800rpm参考值
+ * 电机激励谐波系数 (相对于平均扭矩)
  *
- * 校准基准: 海巡06402系统
- * - 电机功率: 400kW / 1800rpm
- * - 中间轴应力目标: 0.022 N/mm²
+ * 校准基准: COMPASS SRM09 64TEU电池动力集装箱船
+ * - 电机功率: 249kW / 1500rpm, 弹性联轴器HGTHT4
+ * - 激励阶次: 1, 2, 6, 12 (电磁激励)
+ *
+ * 注: COMPASS参考资料中 1次0.005, 2次0.003, 6次0.001, 12次0.0005
  */
 export const ELECTRIC_MOTOR_HARMONICS = {
-  1: 0.0012,   // 基波（不平衡）- 校准值
-  2: 0.0006,   // 二次
-  6: 0.0003,   // 六次
-  12: 0.0001   // 十二次
+  1: 0.005,    // 基波（电磁不平衡）
+  2: 0.003,    // 二次
+  6: 0.001,    // 六次
+  12: 0.0005   // 十二次
 };
-
-/**
- * 螺旋桨轴应力修正系数
- *
- * COMPASS参考值分析发现螺旋桨轴应力需要额外修正
- * 原因: 螺旋桨端激励对轴系末端的响应放大效应
- *
- * 校准基准: 海巡06402 @1800rpm
- * - 中间轴应力: 0.022 N/mm² (直接匹配)
- * - 螺旋桨轴应力: 0.142 N/mm² (需要5x修正)
- */
-export const PROPELLER_SHAFT_STRESS_FACTOR = 5.0;
 
 /**
  * 螺旋桨激励谐波系数
@@ -204,8 +201,8 @@ export function calculateDieselExcitationTorque(params) {
     strokeType = '4-stroke'
   } = params;
 
-  // 平均扭矩 (N·m)
-  const T_mean = 9550 * power / speed * 1000; // kW → W
+  // 平均扭矩 (N·m): T = 9550 × P(kW) / n(rpm)
+  const T_mean = 9550 * power / speed;
 
   // 获取谐波系数
   const coefficients = DIESEL_HARMONIC_COEFFICIENTS[strokeType]?.[cylinderCount] || {};
@@ -227,8 +224,8 @@ export function calculateDieselExcitationTorque(params) {
 export function calculateElectricExcitationTorque(params) {
   const { power, speed, harmonicOrder } = params;
 
-  // 平均扭矩 (N·m)
-  const T_mean = 9550 * power / speed * 1000;
+  // 平均扭矩 (N·m): T = 9550 × P(kW) / n(rpm)
+  const T_mean = 9550 * power / speed;
 
   // 获取谐波系数
   const mu = ELECTRIC_MOTOR_HARMONICS[harmonicOrder] || 0.01;
@@ -249,14 +246,137 @@ export function calculateElectricExcitationTorque(params) {
 export function calculatePropellerExcitationTorque(params) {
   const { power, speed, bladeCount, harmonicOrder } = params;
 
-  // 平均扭矩 (N·m)
-  const T_mean = 9550 * power / speed * 1000;
+  // 平均扭矩 (N·m): T = 9550 × P(kW) / n(rpm)
+  const T_mean = 9550 * power / speed;
 
   // 获取谐波系数
   const coefficients = PROPELLER_HARMONIC_COEFFICIENTS[bladeCount] || {};
   const mu = coefficients[harmonicOrder] || 0.02;
 
   return T_mean * mu;
+}
+
+// ============================================================
+// 模态阻尼比计算 (v3.0 COMPASS校准改进)
+// ============================================================
+
+/** 钢轴基底结构阻尼比 */
+const STRUCTURAL_DAMPING_RATIO = 0.005;
+
+/**
+ * 模态应变能法计算每阶模态的等效粘性阻尼比
+ *
+ * v3.0: 替代全局标量dampingRatio=0.02, 实现物理正确的阻尼分配
+ *
+ * 每阶模态的有效阻尼比 = 结构阻尼 + 联轴器滞后阻尼 + 螺旋桨粘性阻尼
+ *   ζ_r = ζ_structural + η × U_coupling / (2 × U_total) + dp × φ_prop² / (2 × ω_n × M_r)
+ *
+ * @param {Object[]} naturalModes - 自由振动结果 [{omega, modeShape:{amplitudes}}]
+ * @param {Object[]} units - 单元数组 [{inertia, torsionalFlexibility, type, unitNumber}]
+ * @param {Object[]} elasticCouplings - 联轴器数据 [{unitNumber, dampingCoefficient}]
+ * @param {number} propellerDamping - 当前转速的螺旋桨阻尼系数 dp (N·m·s/rad)
+ * @returns {number[]} 每阶模态的等效粘性阻尼比
+ */
+export function calculateModalDampingRatios(naturalModes, units, elasticCouplings = [], propellerDamping = 0) {
+  if (!naturalModes || !units || naturalModes.length === 0) return [];
+
+  const n = units.length;
+
+  // 找出联轴器所在单元号 (用于识别联轴器弹性段)
+  const couplingUnitNumbers = new Set(
+    elasticCouplings.map(c => c.unitNumber).filter(u => u != null)
+  );
+
+  // 预计算各弹性段的刚度 (SI: N·m/rad)
+  const segmentStiffness = [];
+  for (let i = 0; i < n - 1; i++) {
+    const c = units[i].torsionalFlexibility;
+    if (c > 0) {
+      segmentStiffness.push({ idx: i, K: 1 / (c * 1e-10), isCoupling: false });
+    }
+  }
+
+  // 标记联轴器段
+  // Holzer约定: units[i].torsionalFlexibility 是单元i与单元i+1之间的弹性段
+  // 联轴器的柔度挂在联轴器质量单元自身上 (即units[coupling_idx].torsionalFlexibility)
+  // 因此只需检查拥有柔度的单元(units[seg.idx])是否为联轴器
+  for (const seg of segmentStiffness) {
+    const ownerUnit = units[seg.idx];
+    if (ownerUnit?.type === 'coupling') {
+      seg.isCoupling = true;
+    } else if (couplingUnitNumbers.has(ownerUnit?.unitNumber)) {
+      seg.isCoupling = true;
+    }
+  }
+
+  // 获取联轴器的滞后损耗因子η
+  // 制造商标称的"相对阻尼"ψ是比阻尼容量(specific damping capacity)
+  // 与模态应变能法使用的损耗因子η的关系: η = ψ / 2
+  // 校准基准: COMPASS SRM09 64TEU电池船, HGTHT4(ψ=1.15→η=0.575), RMSE=0.35 N/mm²
+  const psi = elasticCouplings.reduce((max, c) => {
+    const d = c.dampingCoefficient || c.damping || 0;
+    return d > max ? d : max;
+  }, 0);
+  const eta = psi / 2; // ψ→η换算
+
+  // 找螺旋桨单元 (最后一个type=propeller的单元, 或最后一个单元)
+  let propellerIdx = n - 1;
+  for (let i = n - 1; i >= 0; i--) {
+    if (units[i].type === 'propeller') {
+      propellerIdx = i;
+      break;
+    }
+  }
+
+  // 对每阶模态计算等效阻尼比
+  return naturalModes.map(mode => {
+    const omegaN = mode.omega;
+    const phi = mode.modeShape?.amplitudes;
+    if (!phi || phi.length < 2 || omegaN <= 0) return STRUCTURAL_DAMPING_RATIO;
+
+    // 1. 计算各弹性段应变能
+    let U_total = 0;
+    let U_coupling = 0;
+    for (const seg of segmentStiffness) {
+      const i = seg.idx;
+      if (i >= phi.length || i + 1 >= phi.length) continue;
+      const deltaPhi = phi[i] - phi[i + 1];
+      const U = 0.5 * seg.K * deltaPhi * deltaPhi;
+      U_total += U;
+      if (seg.isCoupling) U_coupling += U;
+    }
+
+    // 2. 联轴器阻尼贡献 (模态应变能法)
+    let zetaCoupling = 0;
+    if (eta > 0 && U_total > 0) {
+      zetaCoupling = eta * U_coupling / (2 * U_total);
+    }
+
+    // 3. 广义质量 M_r
+    let M_r = 0;
+    for (let i = 0; i < Math.min(n, phi.length); i++) {
+      M_r += (units[i].inertia || 0) * phi[i] * phi[i];
+    }
+    if (M_r <= 0) M_r = 1;
+
+    // 4. 螺旋桨阻尼贡献 (粘性阻尼转模态阻尼比)
+    //    dp 为螺旋桨实际坐标系下的阻尼系数
+    //    等效系统中需折算: dp_eq = dp / i² (能量等效)
+    //    ζ_prop = dp_eq × φ_prop² / (2 × ω_n × M_r)
+    let zetaPropeller = 0;
+    if (propellerDamping > 0 && propellerIdx < phi.length) {
+      const propellerSpeedRatio = units[propellerIdx].speedRatio || 1;
+      const dpEquiv = propellerDamping / (propellerSpeedRatio * propellerSpeedRatio);
+      const phiProp = phi[propellerIdx];
+      zetaPropeller = dpEquiv * phiProp * phiProp / (2 * omegaN * M_r);
+    }
+
+    // 5. 合成
+    const zetaTotal = STRUCTURAL_DAMPING_RATIO + zetaCoupling + zetaPropeller;
+
+    // 限制在合理范围内 (防止数值异常)
+    return Math.max(0.001, Math.min(zetaTotal, 2.0));
+  });
 }
 
 // ============================================================
@@ -267,11 +387,16 @@ export function calculatePropellerExcitationTorque(params) {
  * 计算单一激励频率下的强迫振动响应
  * 使用模态叠加法
  *
+ * v2.0修正: 广义质量 M_r = Σ(J_i × φ_i²) 替代近似值1
+ * v3.0修正: 支持每阶独立模态阻尼比 (联轴器+螺旋桨)
+ *
  * @param {Object} params - 参数
- * @param {Object[]} naturalModes - 固有振型数据
- * @param {number[]} excitationTorques - 各单元激励扭矩 (N·m)
- * @param {number} excitationFreq - 激励频率 (Hz)
- * @param {number} dampingRatio - 阻尼比
+ * @param {Object[]} params.naturalModes - 固有振型数据
+ * @param {number[]} params.excitationTorques - 各单元激励扭矩 (N·m)
+ * @param {number} params.excitationFreq - 激励频率 (Hz)
+ * @param {number} params.dampingRatio - 阻尼比 (标量兜底)
+ * @param {number[]} [params.dampingRatios] - 每阶模态阻尼比数组 (v3.0, 优先使用)
+ * @param {Object[]} [params.units] - 单元数组 (含inertia, 用于广义质量计算)
  * @returns {Object} 响应数据
  */
 export function calculateForcedResponse(params) {
@@ -279,7 +404,9 @@ export function calculateForcedResponse(params) {
     naturalModes,
     excitationTorques,
     excitationFreq,
-    dampingRatio = 0.02 // 默认2%阻尼
+    dampingRatio = 0.02,
+    dampingRatios = null,
+    units = null
   } = params;
 
   const omegaExc = 2 * PI * excitationFreq;
@@ -288,13 +415,20 @@ export function calculateForcedResponse(params) {
   // 各单元响应振幅
   const responseAmplitudes = new Array(n).fill(0);
 
-  // 模态叠加
-  for (const mode of naturalModes) {
+  // 模态叠加 (v3.0: 索引遍历, 支持每阶独立阻尼)
+  for (let modeIdx = 0; modeIdx < naturalModes.length; modeIdx++) {
+    const mode = naturalModes[modeIdx];
     const omegaN = mode.omega;
     const phi = mode.modeShape.amplitudes;
 
-    // 广义质量 (近似为1，因为振型已归一化)
-    const M_r = 1;
+    // 广义质量 M_r = Σ(J_i × φ_i²)
+    let M_r = 0;
+    if (units && units.length === n) {
+      for (let i = 0; i < n; i++) {
+        M_r += (units[i].inertia || 0) * phi[i] * phi[i];
+      }
+    }
+    if (M_r <= 0) M_r = 1; // 兼容无units的旧调用
 
     // 广义力
     let F_r = 0;
@@ -305,10 +439,15 @@ export function calculateForcedResponse(params) {
     // 频率比
     const r = omegaExc / omegaN;
 
+    // v3.0: 每阶模态独立阻尼比 (联轴器+螺旋桨+结构)
+    const zeta = (dampingRatios && dampingRatios[modeIdx] != null)
+      ? dampingRatios[modeIdx]
+      : dampingRatio;
+
     // 动力放大系数 (复数形式的模)
     // H(r) = 1 / sqrt((1-r²)² + (2ζr)²)
     const denominator = Math.sqrt(
-      Math.pow(1 - r * r, 2) + Math.pow(2 * dampingRatio * r, 2)
+      Math.pow(1 - r * r, 2) + Math.pow(2 * zeta * r, 2)
     );
     const H = 1 / denominator;
 
@@ -419,6 +558,17 @@ export function runForcedVibrationAnalysis(systemInput, freeVibrationResults) {
   // 各转速点的结果
   const combinedResults = [];
 
+  // v3.0: 预计算额定工况螺旋桨阻尼参数
+  const ratedPower = powerSource?.ratedPower || 400;
+  const ratedSpeed = powerSource?.ratedSpeed || 1500;
+
+  // 确定齿轮减速比 (提到循环外, 只需计算一次)
+  const gearRatio = systemInput.systemLayout?.gearRatio ||
+    (units.find(u => u.speedRatio > 1)?.speedRatio) || 1;
+
+  // 额定螺旋桨转速和阻尼
+  const ratedPropellerSpeed = ratedSpeed / gearRatio;
+
   for (let speed = speedRange.min; speed <= speedRange.max; speed += speedStep) {
     const speedResult = {
       speed,
@@ -430,27 +580,53 @@ export function runForcedVibrationAnalysis(systemInput, freeVibrationResults) {
       massAmplitude: 0
     };
 
+    // v3.0: 计算当前转速的螺旋桨阻尼 (速度相关)
+    // 策略: 有联轴器时, 联轴器η已包含系统主要阻尼(COMPASS Normal模式)
+    //       无联轴器时(刚性法兰), 需要螺旋桨阻尼作为主要阻尼源
+    const hasCouplingDamping = elasticCouplings.some(c =>
+      (c.dampingCoefficient || c.damping || 0) > 0
+    );
+    let dp = 0;
+    if (!hasCouplingDamping) {
+      const propellerSpeed = speed / gearRatio;
+      dp = calculatePropellerDampingAtSpeed(ratedPower, ratedPropellerSpeed, propellerSpeed);
+    }
+
+    // v3.0: 计算每阶模态阻尼比
+    const modalDampingRatios = calculateModalDampingRatios(
+      naturalFrequencies, units, elasticCouplings, dp
+    );
+
     // 各激励阶次的响应
     for (const order of excitationOrders) {
-      const excitationFreq = order * speed / 60;
+      // v2.0修正: 螺旋桨激励阶次的频率 = z × n_motor / (60 × i)
+      // 电机激励阶次的频率 = q × n_motor / 60
+      const isPropellerOrder = propeller?.considerPropellerExcitation &&
+        isPropellerHarmonic(order, propeller.bladeCount || 4);
+      const excitationFreq = isPropellerOrder
+        ? order * speed / (60 * gearRatio)  // 螺旋桨: 基于螺旋桨转速
+        : order * speed / 60;               // 电机: 基于电机转速
 
       // 计算激励扭矩
       const excitationTorques = calculateExcitationTorques(
         units, powerSource, propeller, order, speed
       );
 
-      // 计算响应
+      // v3.0: 传入每阶模态阻尼比 (替代全局标量dampingRatio)
       const response = calculateForcedResponse({
         naturalModes: naturalFrequencies,
         excitationTorques,
         excitationFreq,
-        dampingRatio
+        dampingRatios: modalDampingRatios,
+        dampingRatio,  // 标量兜底
+        units
       });
 
       speedResult.harmonicResults.push({
         order,
         excitationFreq,
-        response
+        response,
+        isPropellerOrder
       });
     }
 
@@ -459,9 +635,9 @@ export function runForcedVibrationAnalysis(systemInput, freeVibrationResults) {
       speedResult.harmonicResults.map(h => h.response.maxAmplitude)
     );
 
-    // 计算关键轴段应力
-    const stresses = calculateKeyStresses(
-      units, speedResult, naturalFrequencies, systemInput
+    // v2.0修正: 每谐次独立计算应力→RMS合成 (保留相位信息)
+    const stresses = calculateKeyStressesV2(
+      units, speedResult, systemInput
     );
 
     speedResult.intermediateShaftStress = stresses.intermediateShaft;
@@ -490,6 +666,18 @@ export function runForcedVibrationAnalysis(systemInput, freeVibrationResults) {
     barredSpeedRanges,
     timestamp: new Date().toISOString()
   };
+}
+
+/**
+ * 判断一个激励阶次是否属于螺旋桨谐波
+ *
+ * @param {number} order - 激励阶次
+ * @param {number} bladeCount - 叶片数
+ * @returns {boolean}
+ */
+function isPropellerHarmonic(order, bladeCount) {
+  const propCoeffs = PROPELLER_HARMONIC_COEFFICIENTS[bladeCount];
+  return propCoeffs ? propCoeffs[order] !== undefined : false;
 }
 
 /**
@@ -540,28 +728,38 @@ function calculateExcitationTorques(units, powerSource, propeller, order, speed)
 
   // 动力源激励（作用在第一个单元）
   if (powerSource) {
-    const power = powerSource.ratedPower || 400;
+    const ratedPower = powerSource.ratedPower || 400;
+    const ratedSpeed = powerSource.ratedSpeed || 1500;
 
     if (powerSource.type === 'diesel') {
+      // 柴油机: 激励基于额定工况扭矩 (气缸压力谐波与转速无关)
       torques[0] = calculateDieselExcitationTorque({
-        power,
-        speed: powerSource.ratedSpeed || speed,
+        power: ratedPower,
+        speed: ratedSpeed,
         cylinderCount: powerSource.cylinderCount || 6,
         harmonicOrder: order
       });
     } else if (powerSource.type === 'electric') {
+      // v3.0修正: 电机激励基于当前运行扭矩 (电磁谐波与负载成比例)
+      // 螺旋桨定律: P(n) = P_rated × (n/n_rated)³
+      const powerAtSpeed = ratedPower * Math.pow(speed / ratedSpeed, 3);
       torques[0] = calculateElectricExcitationTorque({
-        power,
-        speed: powerSource.ratedSpeed || speed,
+        power: powerAtSpeed,
+        speed,
         harmonicOrder: order
       });
     }
   }
 
   // 螺旋桨激励（作用在最后一个单元）
+  // v3.0修正: 螺旋桨定律 P(n) = P_rated × (n/n_rated)³
+  // 使用实际功率而非额定功率，否则低速时激励严重高估
   if (propeller?.considerPropellerExcitation) {
+    const ratedPower = powerSource?.ratedPower || 400;
+    const ratedSpeed = powerSource?.ratedSpeed || 1500;
+    const powerAtSpeed = ratedPower * Math.pow(speed / ratedSpeed, 3);
     const propTorque = calculatePropellerExcitationTorque({
-      power: powerSource?.ratedPower || 400,
+      power: powerAtSpeed,
       speed,
       bladeCount: propeller.bladeCount || 4,
       harmonicOrder: order
@@ -708,9 +906,9 @@ function calculateKeyStresses(units, speedResult, naturalFrequencies, systemInpu
   const propellerInnerD = propellerUnit?.innerDiameter || 0;
 
   // 螺旋桨轴振幅通常更大，使用该位置振幅
-  // 应用螺旋桨轴应力修正系数 (基于COMPASS校准)
+  // 注: v2.0已不再使用此方法,保留向后兼容
   const propellerScale = unitAmplitudes[propellerIdx] || amplitudeScale;
-  const scaledT_propeller = holzerT_propeller * propellerScale * PROPELLER_SHAFT_STRESS_FACTOR;
+  const scaledT_propeller = holzerT_propeller * propellerScale;
   const propellerStress = calculateTorsionalStress(
     scaledT_propeller, propellerD, propellerInnerD
   );
@@ -745,7 +943,213 @@ function calculateKeyStresses(units, speedResult, naturalFrequencies, systemInpu
 }
 
 /**
- * 计算齿轮啮合扭矩
+ * v2.0: 每谐次独立计算应力, 然后RMS合成
+ *
+ * COMPASS方法:
+ *   1. 对每个激励阶次, 模态叠加得到各质量响应振幅
+ *   2. 用相邻质量的振幅差 × 刚度 = 该谐次的扭矩
+ *   3. 扭矩 / Wp = 该谐次应力
+ *   4. RMS合成所有谐次应力 → 合成应力
+ *
+ * 关键: 不能先对振幅RMS再算应力(丢失相位信息), 必须先算应力再RMS
+ *
+ * @param {Object[]} units - 单元数组
+ * @param {Object} speedResult - 含 harmonicResults 的转速点结果
+ * @param {Object} systemInput - 系统输入
+ * @returns {Object} 应力数据
+ */
+function calculateKeyStressesV2(units, speedResult, systemInput) {
+  const n = units.length;
+  const gearRatio = systemInput.systemLayout?.gearRatio ||
+    (units.find(u => u.speedRatio > 1)?.speedRatio) || 1;
+
+  // 找中间轴和螺旋桨轴位置
+  let intermediateIdx = findShaftIndex(units, 'intermediate');
+  let propellerIdx = findShaftIndex(units, 'propeller');
+
+  // 每个轴段: 收集各谐次的应力
+  const shaftSegments = [];
+  for (let i = 0; i < n - 1; i++) {
+    if (units[i].torsionalFlexibility > 0) {
+      const K = 1 / (units[i].torsionalFlexibility * 1e-10);
+      const isLowSpeed = (units[i + 1].speedRatio || 1) > 1;
+      const ratio = isLowSpeed ? (units[i + 1].speedRatio || 1) : 1;
+      const d = units[i + 1].outerDiameter || units[i].outerDiameter || 0;
+      const di = units[i + 1].innerDiameter || units[i].innerDiameter || 0;
+      shaftSegments.push({ idx: i, K, ratio, d, di, stresses: [] });
+    }
+  }
+
+  // 对每个谐次, 独立计算各轴段应力
+  for (const harmonic of speedResult.harmonicResults) {
+    if (!harmonic.response?.responseAmplitudes) continue;
+    const amp = harmonic.response.responseAmplitudes;
+
+    for (const seg of shaftSegments) {
+      const i = seg.idx;
+      if (i >= amp.length || i + 1 >= amp.length) {
+        seg.stresses.push(0);
+        continue;
+      }
+
+      // 振幅差 × 刚度 = 等效扭矩
+      const deltaTheta = Math.abs(amp[i] - amp[i + 1]);
+      const T_eq = seg.K * deltaTheta;
+
+      // 低速侧需速比换算: T_real = T_eq × i
+      const T_real = T_eq * seg.ratio;
+
+      // 应力 = T_real / Wp
+      if (seg.d > 0) {
+        const stress = calculateTorsionalStress(T_real, seg.d, seg.di);
+        seg.stresses.push(stress);
+      } else {
+        seg.stresses.push(0);
+      }
+    }
+  }
+
+  // RMS合成各谐次应力
+  for (const seg of shaftSegments) {
+    seg.rmsStress = Math.sqrt(seg.stresses.reduce((s, v) => s + v * v, 0));
+  }
+
+  // 提取中间轴和螺旋桨轴应力
+  let intermediateStress = 0;
+  let propellerStress = 0;
+
+  // 中间轴: 找柔度段索引匹配中间轴位置
+  const isSeg = shaftSegments.find(s => s.idx === intermediateIdx || s.idx === intermediateIdx - 1);
+  if (isSeg) intermediateStress = isSeg.rmsStress;
+
+  // 螺旋桨轴: 找最后的有直径轴段
+  const psSeg = shaftSegments.find(s => s.idx === propellerIdx || s.idx === propellerIdx - 1);
+  if (psSeg) propellerStress = psSeg.rmsStress;
+
+  // 如果没有精确匹配, 用位置推断
+  if (intermediateStress === 0 && shaftSegments.length > 0) {
+    // 低速侧第一个有直径的轴段
+    const lowSpeedSegs = shaftSegments.filter(s => s.ratio > 1 && s.d > 0);
+    if (lowSpeedSegs.length > 0) intermediateStress = lowSpeedSegs[0].rmsStress;
+  }
+  if (propellerStress === 0 && shaftSegments.length > 0) {
+    const lowSpeedSegs = shaftSegments.filter(s => s.ratio > 1 && s.d > 0);
+    if (lowSpeedSegs.length > 1) propellerStress = lowSpeedSegs[lowSpeedSegs.length - 1].rmsStress;
+    else if (lowSpeedSegs.length === 1 && intermediateStress > 0) propellerStress = lowSpeedSegs[0].rmsStress;
+  }
+
+  // 齿轮和联轴器扭矩 (同样逐谐次RMS)
+  const gearMeshTorques = calculateGearMeshTorquesV2(units, speedResult.harmonicResults);
+  const couplingTorque = calculateCouplingTorqueV2(units, speedResult.harmonicResults);
+
+  return {
+    intermediateShaft: intermediateStress,
+    propellerShaft: propellerStress,
+    gearMeshTorques,
+    couplingTorque,
+    _shaftSegments: shaftSegments
+  };
+}
+
+/**
+ * 查找轴段索引
+ */
+function findShaftIndex(units, type) {
+  const n = units.length;
+  if (type === 'intermediate') {
+    let idx = units.findIndex(u =>
+      u.type === 'shaft' && (u.name?.includes('中间') || u.name?.includes('I.S.'))
+    );
+    if (idx < 0) idx = units.findIndex(u => u.type === 'shaft');
+    if (idx < 0) idx = Math.min(2, n - 1);
+    return idx;
+  }
+  if (type === 'propeller') {
+    let idx = -1;
+    for (let i = n - 1; i >= 0; i--) {
+      if (units[i].type === 'shaft' && (
+        units[i].name?.includes('艉') || units[i].name?.includes('P.S.') ||
+        units[i].name?.includes('螺旋桨')
+      )) { idx = i; break; }
+    }
+    if (idx < 0) {
+      for (let i = n - 1; i >= 0; i--) {
+        if (units[i].type === 'shaft') { idx = i; break; }
+      }
+    }
+    if (idx < 0) idx = Math.max(0, n - 2);
+    return idx;
+  }
+  return 0;
+}
+
+/**
+ * v2.0: 齿轮扭矩 - 逐谐次RMS
+ */
+function calculateGearMeshTorquesV2(units, harmonicResults) {
+  const gearUnits = units
+    .map((u, idx) => ({ ...u, idx }))
+    .filter(u => u.type === 'gear');
+
+  if (gearUnits.length < 2) return [];
+
+  const torques = [];
+  for (let g = 0; g < gearUnits.length - 1; g += 2) {
+    const driving = gearUnits[g];
+    const driven = gearUnits[g + 1];
+
+    const stiffness = driving.torsionalFlexibility
+      ? 1 / (driving.torsionalFlexibility * 1e-10)
+      : 1e7;
+
+    let sumSq = 0;
+    for (const h of harmonicResults) {
+      if (!h.response?.responseAmplitudes) continue;
+      const amp = h.response.responseAmplitudes;
+      const dTh = Math.abs((amp[driving.idx] || 0) - (amp[driven.idx] || 0));
+      const ratio = (driven.speedRatio || 1) > 1 ? (driven.speedRatio || 1) : 1;
+      const t = stiffness * dTh * ratio / 1000;
+      sumSq += t * t;
+    }
+    torques.push(Math.sqrt(sumSq));
+  }
+  return torques;
+}
+
+/**
+ * v2.0: 联轴器扭矩 - 逐谐次RMS
+ */
+function calculateCouplingTorqueV2(units, harmonicResults) {
+  const couplingUnits = units
+    .map((u, idx) => ({ ...u, idx }))
+    .filter(u => u.type === 'coupling');
+
+  if (couplingUnits.length === 0) return 0;
+
+  let maxRmsTorque = 0;
+  for (const coupling of couplingUnits) {
+    const idx = coupling.idx;
+    const stiffness = coupling.torsionalFlexibility
+      ? 1 / (coupling.torsionalFlexibility * 1e-10)
+      : 5e5;
+
+    let sumSq = 0;
+    for (const h of harmonicResults) {
+      if (!h.response?.responseAmplitudes) continue;
+      const amp = h.response.responseAmplitudes;
+      if (idx > 0 && idx < amp.length) {
+        const dTh = Math.abs(amp[idx] - amp[idx - 1]);
+        const t = stiffness * dTh / 1000;
+        sumSq += t * t;
+      }
+    }
+    maxRmsTorque = Math.max(maxRmsTorque, Math.sqrt(sumSq));
+  }
+  return maxRmsTorque;
+}
+
+/**
+ * 计算齿轮啮合扭矩 (旧版, 保留兼容)
  *
  * @param {Object[]} units - 单元数组
  * @param {number[]} amplitudes - 各单元振幅
@@ -1013,18 +1417,37 @@ export function identifyBarredSpeedRanges(combinedResults, allowableStress, spee
 // ============================================================
 
 /**
- * Archer法螺旋桨阻尼
- * dp = P / (2π × n²)
+ * Archer法螺旋桨阻尼 (额定工况)
+ * dp_rated = P_rated / (2π × n_rated²)
  *
- * @param {number} power - 功率 (kW)
- * @param {number} speed - 转速 (rpm)
- * @returns {number} 阻尼系数 (N·m·s/rad)
+ * 注: 实际工况阻尼 dp(n) = dp_rated × (n/n_rated)
+ * 因为 P(n) = P_rated × (n/n_rated)³ (螺旋桨定律)
+ * 代入 dp = P/(2πn²) 得 dp(n) = dp_rated × (n/n_rated)
+ *
+ * @param {number} power - 额定功率 (kW)
+ * @param {number} speed - 额定转速 (rpm)
+ * @returns {number} 额定阻尼系数 (N·m·s/rad)
  */
 export function calculatePropellerDampingArcher(power, speed) {
   if (speed <= 0) return 0;
   const P_watts = power * 1000;
   const n_rps = speed / 60;
   return P_watts / (2 * Math.PI * n_rps * n_rps);
+}
+
+/**
+ * 计算指定转速下的螺旋桨阻尼 (线性模型)
+ * dp(n) = dp_rated × (n / n_rated)
+ *
+ * @param {number} ratedPower - 额定功率 (kW)
+ * @param {number} ratedSpeed - 额定转速 (rpm)
+ * @param {number} actualSpeed - 实际转速 (rpm)
+ * @returns {number} 实际阻尼系数 (N·m·s/rad)
+ */
+export function calculatePropellerDampingAtSpeed(ratedPower, ratedSpeed, actualSpeed) {
+  if (ratedSpeed <= 0 || actualSpeed <= 0) return 0;
+  const dpRated = calculatePropellerDampingArcher(ratedPower, ratedSpeed);
+  return dpRated * (actualSpeed / ratedSpeed);
 }
 
 /**
@@ -1072,5 +1495,6 @@ export default {
   identifyBarredSpeedRanges,
   calculatePropellerDamping,
   calculatePropellerDampingArcher,
-  calculatePropellerDampingSchwaneke
+  calculatePropellerDampingSchwaneke,
+  calculatePropellerDampingAtSpeed
 };

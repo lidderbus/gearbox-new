@@ -164,7 +164,7 @@ const EnhancedGearboxSelectionResult = ({
         <Card.Body>
           <div className="text-center py-4">
             <i className="bi bi-exclamation-triangle-fill text-warning" style={{ fontSize: '2rem' }}></i>
-            <p className="mt-3">没有找到符合条件的齿轮箱。请调整选型参数后重试。</p>
+            <p className="mt-3">没有找到符合条件的齿轮箱。建议尝试：降低功率要求、放宽转速范围、或切换系列类型后重试。</p>
             {result && result.message && (
               <Alert variant="warning" className="mt-3">
                 <i className="bi bi-info-circle-fill me-2"></i>
@@ -342,6 +342,33 @@ const EnhancedGearboxSelectionResult = ({
           className="mb-3"
           style={{ borderBottomColor: colors?.border || '#ddd' }}
         >
+          {/* 全部候选列表视图 */}
+          <Tab eventKey="list" title={`全部候选 (${recommendations.length})`}>
+            <Table striped hover size="sm">
+              <thead>
+                <tr><th>#</th><th>型号</th><th>系列</th><th>减速比</th><th>传递能力</th><th>余量</th><th>推力kN</th><th>重量kg</th><th>参考价</th><th></th></tr>
+              </thead>
+              <tbody>
+                {recommendations.map((g, idx) => (
+                  <tr key={g.model + idx} className={idx === selectedIndex ? 'table-primary' : ''} style={{cursor:'pointer'}} onClick={() => onSelectGearbox(idx)}>
+                    <td>{idx + 1}</td>
+                    <td><strong>{g.model}</strong></td>
+                    <td><Badge bg={g.model?.startsWith('GW') ? 'danger' : g.model?.startsWith('HCM') ? 'success' : 'primary'} className="small">{(g.originalType || g.model?.match(/^[A-Z]+/)?.[0] || '')}</Badge></td>
+                    <td>{g.selectedRatio || g.ratio || '-'}</td>
+                    <td>{g.selectedCapacity?.toFixed(4) || '-'}</td>
+                    <td>
+                      {g.capacityMargin != null ? `${g.capacityMargin.toFixed(1)}%` : '-'}
+                      {g.capacityMargin <= 0 ? <Badge bg="danger" className="ms-1">危险</Badge> : g.capacityMargin < 5 ? <Badge bg="warning" className="ms-1">低</Badge> : null}
+                    </td>
+                    <td>{g.thrust || '-'}</td>
+                    <td>{g.weight || '-'}</td>
+                    <td>{g.marketPrice ? `${(g.marketPrice/10000).toFixed(1)}万` : g.packagePrice ? `${(g.packagePrice/10000).toFixed(1)}万` : '询价'}</td>
+                    <td>{idx === selectedIndex ? <Badge bg="primary">当前</Badge> : <Button size="sm" variant="outline-primary" onClick={(e) => {e.stopPropagation(); onSelectGearbox(idx);}}>选择</Button>}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Tab>
           {/* 齿轮箱详细信息标签页 */}
           <Tab eventKey="details" title="齿轮箱详情">
             <Row>
@@ -380,6 +407,36 @@ const EnhancedGearboxSelectionResult = ({
                   seriesType={selectedGearbox.model}
                   style={{ marginBottom: '12px' }}
                 />
+                {/* 系列适配匹配信息 */}
+                {selectedGearbox._seriesMatchInfo && selectedGearbox._seriesMatchInfo.reasons.length > 0 && (
+                  <div style={{
+                    backgroundColor: '#f6ffed',
+                    border: '1px solid #b7eb8f',
+                    borderRadius: '4px',
+                    padding: '6px 12px',
+                    fontSize: '12px',
+                    marginBottom: '12px',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '6px',
+                    alignItems: 'center'
+                  }}>
+                    <span style={{ fontWeight: 'bold', color: '#52c41a', marginRight: '4px' }}>
+                      ✓ 系列适配
+                    </span>
+                    {selectedGearbox._seriesMatchInfo.reasons.map((reason, idx) => (
+                      <span key={idx} style={{
+                        backgroundColor: '#52c41a',
+                        color: 'white',
+                        padding: '1px 8px',
+                        borderRadius: '10px',
+                        fontSize: '11px'
+                      }}>
+                        {reason}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <RecommendationReasonCard
                   selectedGearbox={selectedGearbox}
                   allRecommendations={recommendations}
@@ -527,6 +584,20 @@ const EnhancedGearboxSelectionResult = ({
                     )}
                   </tbody>
                 </Table>
+                {/* 选型安全警告 (结构化warnings数组) */}
+                {selectedGearbox.warnings && selectedGearbox.warnings.length > 0 && (
+                  <Alert variant={isPartialMatch ? 'danger' : 'warning'} className="py-2 mb-2">
+                    <div className="d-flex align-items-center mb-1">
+                      <i className={`bi ${isPartialMatch ? 'bi-exclamation-octagon-fill' : 'bi-exclamation-triangle-fill'} me-2`}></i>
+                      <strong>选型安全提示 ({selectedGearbox.warnings.length})</strong>
+                    </div>
+                    <ul className="mb-0 ps-4" style={{ fontSize: '0.85rem' }}>
+                      {selectedGearbox.warnings.map((w, idx) => (
+                        <li key={idx}>{w}</li>
+                      ))}
+                    </ul>
+                  </Alert>
+                )}
                 {/* 数据验证警告 */}
                 <ValidationWarnings validation={validationResults.gearbox} type="gearbox" />
               </Col>
@@ -660,22 +731,32 @@ const EnhancedGearboxSelectionResult = ({
             />
           </Tab>
 
-          {/* 3D预览标签页 */}
-          <Tab eventKey="preview3d" title="3D预览">
-            <Suspense fallback={
-              <div className="text-center py-5">
-                <div className="spinner-border text-primary" role="status">
-                  <span className="visually-hidden">加载3D模型中...</span>
-                </div>
-                <p className="mt-3 text-muted">正在加载3D预览组件...</p>
+          {/* 产品图库标签页 (替代3D预览) */}
+          <Tab eventKey="preview3d" title="产品图库">
+            <div className="p-3">
+              <h6 className="mb-3"><i className="bi bi-images me-2"></i>{selectedGearbox.model} 产品图片</h6>
+              <Row>
+                <Col md={6} className="mb-3">
+                  <Card>
+                    <Card.Header className="py-1 small">产品实拍</Card.Header>
+                    <Card.Body className="text-center p-2">
+                      <ProductThumbnail model={selectedGearbox.model} type="gearbox" size={280} onClick={handleImageClick} />
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={6} className="mb-3">
+                  <Card>
+                    <Card.Header className="py-1 small">外形尺寸图</Card.Header>
+                    <Card.Body className="text-center p-2">
+                      <ProductThumbnail model={selectedGearbox.model} type="gearbox" size={280} useTechnical onClick={handleImageClick} />
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+              <div className="text-muted small mt-2">
+                <i className="bi bi-info-circle me-1"></i>点击图片可放大查看。图片来源: 杭齿前进官方产品资料
               </div>
-            }>
-              <Gearbox3DPreview
-                gearbox={selectedGearbox}
-                colors={colors}
-                theme={theme}
-              />
-            </Suspense>
+            </div>
           </Tab>
 
           {/* 组合选型标签页 */}

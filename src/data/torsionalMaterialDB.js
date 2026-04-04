@@ -54,9 +54,52 @@ export const COUPLING_DATABASE = {
   'HGT500':  { series: 'HGT', name: 'HGT500',  stiffness: 62.0, damping: 1.15, maxTorque: 8500, inertia: 2.0, maxSpeed: 2200 },
   'HGT560':  { series: 'HGT', name: 'HGT560',  stiffness: 85.0, damping: 1.18, maxTorque: 12000, inertia: 3.0, maxSpeed: 2000 },
   'HGT630':  { series: 'HGT', name: 'HGT630',  stiffness: 115.0, damping: 1.20, maxTorque: 16000, inertia: 4.2, maxSpeed: 1800 },
-  // HGTHT系列 — 特殊高弹
-  'HGTHT4.5/14': { series: 'HGTHT', name: 'HGTHT4.5/14', stiffness: 36.0, damping: 1.15, maxTorque: 1800, inertia: 0.305, maxSpeed: 3000 }
+  // HGTHT系列 — 特殊高弹联轴器 (前进高弹)
+  // stiffness: 动态刚度 kN·m/rad, damping: 滞后损耗因子η, inertia: 主动侧含盘+法兰 kgm²
+  'HGTHT4':      { series: 'HGTHT', name: 'HGTHT4',      stiffness: 25.7,  damping: 1.15, maxTorque: 1600,  inertia: 1.54,  maxSpeed: 3000,
+                   continuousTorque: 1.6, transientTorque: 6.0, powerLoss: 0.27 },
+  'HGTHT4.5/14': { series: 'HGTHT', name: 'HGTHT4.5/14', stiffness: 36.0,  damping: 1.15, maxTorque: 1800,  inertia: 0.305, maxSpeed: 3000 },
+  'HGTHT5':      { series: 'HGTHT', name: 'HGTHT5',      stiffness: 40.0,  damping: 1.15, maxTorque: 2500,  inertia: 0.35,  maxSpeed: 2800 },
+  'HGTHT6.3':    { series: 'HGTHT', name: 'HGTHT6.3',    stiffness: 55.0,  damping: 1.15, maxTorque: 4000,  inertia: 0.45,  maxSpeed: 2400 },
+  'HGTHT8':      { series: 'HGTHT', name: 'HGTHT8',      stiffness: 75.0,  damping: 1.15, maxTorque: 6000,  inertia: 0.55,  maxSpeed: 2200 },
+  'HGTHT8.6':    { series: 'HGTHT', name: 'HGTHT8.6',    stiffness: 95.0,  damping: 1.15, maxTorque: 8600,  inertia: 0.65,  maxSpeed: 2000 }
 };
+
+// ============ 齿轮箱扭振数据库 (4质量细分) ============
+// 数据来源: 齿轮箱制造商扭振计算参数表
+// 注: inertia为绝对值(非折算值), stiffnessKNm为绝对刚度(kN·m/rad)
+
+export const GEARBOX_TORSIONAL_DATA = {
+  'DT900': {
+    series: 'DT', name: 'DT900',
+    // I1:输入法兰, I2:主动齿轮, I3:从动齿轮, I4:输出法兰
+    subdivision: [
+      { code: 'I1', name: '输入法兰', inertia: 0.1136 },
+      { code: 'I2', name: '主动齿轮', inertia: 0.0282 },
+      { code: 'I3', name: '从动齿轮', inertia: 3.4254 },
+      { code: 'I4', name: '输出法兰', inertia: 0.1733 }
+    ],
+    // C1:输入轴, C2:输出轴
+    internalShafts: [
+      { code: 'C1', name: '输入轴', stiffnessKNm: 1143.1, diameter: 75, Rm: 800 },
+      { code: 'C2', name: '输出轴', stiffnessKNm: 4101.4, diameter: 102, Rm: 800 }
+    ],
+    standardRatio: 5.0476,
+    note: '绝对值, 非折算值; 数据源: DT900扭振参数表 2026-04'
+  }
+};
+
+/** 获取齿轮箱扭振数据 */
+export function getGearboxTorsionalData(model) {
+  return GEARBOX_TORSIONAL_DATA[model] || null;
+}
+
+/** 获取齿轮箱扭振数据列表 */
+export function getGearboxTorsionalList() {
+  return Object.entries(GEARBOX_TORSIONAL_DATA).map(([key, g]) => ({
+    key, name: g.name, series: g.series
+  }));
+}
 
 // ============ 船型预设 ============
 export const VESSEL_PRESETS = {
@@ -229,4 +272,4 @@ export function getPreset(key) {
   return VESSEL_PRESETS[key] || null;
 }
 
-export default { SHAFT_MATERIALS, COUPLING_DATABASE, VESSEL_PRESETS, BOLT_GRADES };
+export default { SHAFT_MATERIALS, COUPLING_DATABASE, GEARBOX_TORSIONAL_DATA, VESSEL_PRESETS, BOLT_GRADES };

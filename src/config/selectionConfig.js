@@ -6,12 +6,14 @@
 
 // ========== 默认评分权重 ==========
 export const DEFAULT_SCORING_WEIGHTS = {
-  costEffectiveness: 37,  // 性价比权重
-  ratioMatch: 25,         // 速比匹配权重
-  capacityMargin: 15,     // 能力余量权重
-  thrustSatisfy: 10,      // 推力满足权重
-  specialPackage: 5,      // 特价打包权重
-  shaftMatch: 8           // 轴布置匹配权重
+  costEffectiveness: 30,       // 性价比权重 (含TCO生命周期成本因子)
+  ratioMatch: 21,              // 速比匹配权重
+  capacityMargin: 12,          // 能力余量权重
+  thrustSatisfy: 8,            // 推力满足权重
+  specialPackage: 5,           // 特价打包权重
+  shaftMatch: 7,               // 轴布置匹配权重
+  seriesCapabilityFit: 9,      // 系列特性适配权重
+  interfaceMatch: 8            // 接口匹配权重 (原硬编码，现纳入统一体系)
 };
 
 // ========== 预设配置 ==========
@@ -27,12 +29,14 @@ export const PRESET_CONFIGURATIONS = {
     label: '性价比优先',
     description: '优先考虑价格因素，适合预算敏感项目',
     weights: {
-      costEffectiveness: 47,
-      ratioMatch: 20,
-      capacityMargin: 12,
-      thrustSatisfy: 8,
+      costEffectiveness: 39,
+      ratioMatch: 17,
+      capacityMargin: 9,
+      thrustSatisfy: 6,
       specialPackage: 5,
-      shaftMatch: 8
+      shaftMatch: 7,
+      seriesCapabilityFit: 9,
+      interfaceMatch: 8
     }
   },
   precisionPriority: {
@@ -40,12 +44,14 @@ export const PRESET_CONFIGURATIONS = {
     label: '精度优先',
     description: '优先考虑速比精确匹配，适合高精度应用',
     weights: {
-      costEffectiveness: 17,
-      ratioMatch: 35,
-      capacityMargin: 25,
-      thrustSatisfy: 10,
+      costEffectiveness: 13,
+      ratioMatch: 28,
+      capacityMargin: 21,
+      thrustSatisfy: 7,
       specialPackage: 5,
-      shaftMatch: 8
+      shaftMatch: 7,
+      seriesCapabilityFit: 11,
+      interfaceMatch: 8
     }
   },
   performancePriority: {
@@ -53,12 +59,14 @@ export const PRESET_CONFIGURATIONS = {
     label: '性能优先',
     description: '优先考虑能力余量和推力，适合重载工况',
     weights: {
-      costEffectiveness: 12,
-      ratioMatch: 25,
-      capacityMargin: 30,
-      thrustSatisfy: 20,
+      costEffectiveness: 9,
+      ratioMatch: 20,
+      capacityMargin: 25,
+      thrustSatisfy: 17,
       specialPackage: 5,
-      shaftMatch: 8
+      shaftMatch: 7,
+      seriesCapabilityFit: 9,
+      interfaceMatch: 8
     }
   }
 };
@@ -72,7 +80,7 @@ export const APPLICATION_TOLERANCES = {
     tolerances: {
       maxRatioDiffPercent: 10,
       maxCapacityMargin: 50,
-      minCapacityMargin: 5
+      minCapacityMargin: 10
     }
   },
   auxiliary: {
@@ -112,7 +120,7 @@ export const APPLICATION_TOLERANCES = {
     tolerances: {
       maxRatioDiffPercent: 15,
       maxCapacityMargin: 80,
-      minCapacityMargin: 5
+      minCapacityMargin: 10
     }
   },
   hybrid: {
@@ -131,7 +139,20 @@ export const APPLICATION_TOLERANCES = {
 export const DEFAULT_TOLERANCES = {
   maxRatioDiffPercent: 10,
   maxCapacityMargin: 50,
-  minCapacityMargin: 5
+  minCapacityMargin: 10
+};
+
+// ========== 排序阈值配置 ==========
+export const SORTING_THRESHOLDS = {
+  scoreDiffThreshold: 3,            // 单系列内评分差异阈值（>此值按分数排序）
+  autoSelectScoreDiffThreshold: 5,  // 跨系列自动选型评分差异阈值
+  pricePerCapacityDiffThreshold: 1000, // 单位容量价格差异阈值（元）
+  optimalCapacityMargin: 12.5,      // 最优余量中心点（%）
+  nearMatchMinScore: 60,            // 近似匹配最低保留分数
+  nearMatchMaxPerSeries: 2,         // 每系列最多保留近似匹配数
+  nearMatchPenalty: 0.85,           // 近似匹配分数衰减系数
+  autoSelectPackageBonus: 15,       // 自动选型打包价加分（完全匹配）
+  autoSelectPartialPackageBonus: 10 // 自动选型打包价加分（近似匹配）
 };
 
 // ========== 辅助函数 ==========
@@ -143,7 +164,7 @@ export const DEFAULT_TOLERANCES = {
  */
 export function validateWeights(weights) {
   const errors = [];
-  const requiredKeys = ['costEffectiveness', 'ratioMatch', 'capacityMargin', 'thrustSatisfy', 'specialPackage', 'shaftMatch'];
+  const requiredKeys = ['costEffectiveness', 'ratioMatch', 'capacityMargin', 'thrustSatisfy', 'specialPackage', 'shaftMatch', 'seriesCapabilityFit', 'interfaceMatch'];
 
   // 检查必需字段
   for (const key of requiredKeys) {
@@ -172,7 +193,7 @@ export function validateWeights(weights) {
  * @returns {Object} - 归一化后的权重
  */
 export function normalizeWeights(weights) {
-  const keys = ['costEffectiveness', 'ratioMatch', 'capacityMargin', 'thrustSatisfy', 'specialPackage', 'shaftMatch'];
+  const keys = ['costEffectiveness', 'ratioMatch', 'capacityMargin', 'thrustSatisfy', 'specialPackage', 'shaftMatch', 'seriesCapabilityFit', 'interfaceMatch'];
   const total = keys.reduce((sum, key) => sum + (weights[key] || 0), 0);
 
   if (total === 0) {

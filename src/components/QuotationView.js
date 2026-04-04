@@ -142,7 +142,7 @@ const QuotationView = ({
               onClick={() => setShowPriceDetails(!showPriceDetails)}
             >
               <i className={`bi bi-info-circle${showPriceDetails ? '-fill' : ''} me-1`}></i>
-              {showPriceDetails ? '隐藏价格详情' : '显示价格详情'}
+              {showPriceDetails ? '收起成本分析' : '查看成本分析'}
             </Button>
             <Button
               variant="outline-secondary"
@@ -361,14 +361,12 @@ const QuotationView = ({
                     ))}
                   </tbody>
                   <tfoot>
-                    {/* 小计行 */}
-                    {(quotation.discountAmount > 0 || quotation.taxAmount > 0) && (
-                      <tr>
-                        <td colSpan="6" className="text-end"><strong>小计：</strong></td>
-                        <td className="text-end">{formatCurrency(quotation.originalAmount)}</td>
-                        <td colSpan="2"></td>
-                      </tr>
-                    )}
+                    {/* 小计行 (始终显示，符合商业文件规范) */}
+                    <tr>
+                      <td colSpan="6" className="text-end"><strong>小计：</strong></td>
+                      <td className="text-end">{formatCurrency(quotation.originalAmount)}</td>
+                      <td colSpan="2"></td>
+                    </tr>
                     
                     {/* 折扣行 */}
                     {quotation.discountAmount > 0 && (
@@ -479,7 +477,7 @@ const QuotationView = ({
                     <Form.Label>保存名称</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="输入报价单名称"
+                      placeholder="例如: 38m渔船_HC600A_2026-03"
                       value={saveNameInput}
                       onChange={(e) => setSaveNameInput(e.target.value)}
                       style={{

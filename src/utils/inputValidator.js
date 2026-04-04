@@ -77,6 +77,39 @@ const VALIDATION_RULES = {
       'IV类:扭矩变化大': 1.6,
       'V类:扭矩变化很大': 1.8
     }
+  },
+  propellerDiameter: {
+    min: 0.5,
+    max: 10.0,
+    unit: 'm',
+    label: '螺旋桨直径',
+    tips: {
+      low: '螺旋桨直径过小，可能效率不足',
+      high: '螺旋桨直径超过常规范围，请确认数据准确性',
+      empty: '螺旋桨直径为选填项（CPP系统建议填写）'
+    }
+  },
+  bladeCount: {
+    min: 3,
+    max: 7,
+    label: '桨叶数',
+    commonValues: [3, 4, 5, 6],
+    tips: {
+      low: '桨叶数不应少于3',
+      high: '桨叶数超过7不常见，请确认',
+      empty: '桨叶数为选填项'
+    }
+  },
+  pitchAngle: {
+    min: -25,
+    max: 35,
+    unit: '°',
+    label: '螺距角',
+    tips: {
+      low: '负螺距角用于倒车工况',
+      high: '螺距角过大可能导致空泡',
+      empty: '螺距角为选填项'
+    }
   }
 };
 
@@ -150,6 +183,23 @@ export const validateField = (fieldName, value, context = {}) => {
       );
       if (speedRange) {
         result.details = { engineType: speedRange.description };
+      }
+      // 高转速临界转速风险警告
+      if (numValue > 3000) {
+        result.status = ValidationStatus.WARNING;
+        result.message = '转速>3000rpm，建议关注临界转速风险，选型结果将自动进行扭振预检';
+        result.details = { ...result.details, criticalSpeedRisk: true };
+      }
+      break;
+
+    case 'bladeCount':
+      if (rule.commonValues && !rule.commonValues.includes(numValue)) {
+        const nearestBlade = rule.commonValues.reduce((prev, curr) =>
+          Math.abs(curr - numValue) < Math.abs(prev - numValue) ? curr : prev
+        );
+        result.status = ValidationStatus.INFO;
+        result.message = `非常见桨叶数，建议: ${nearestBlade}`;
+        result.suggestion = nearestBlade;
       }
       break;
 
@@ -259,6 +309,44 @@ const performCrossValidation = (params) => {
         type: 'prop-speed-low',
         message: `螺旋桨转速约 ${Math.round(propSpeed)} rpm，可能过低`,
         severity: 'info'
+      });
+    }
+  }
+
+  // 大功率建议CPP系统
+  if (power > 2000) {
+    warnings.push({
+      type: 'cpp-suggestion',
+      message: `功率 ${power}kW 超过2000kW，建议考虑CPP可调螺距螺旋桨系统以优化部分负荷效率`,
+      severity: 'info'
+    });
+  }
+
+  // 高转速临界转速风险
+  if (speed > 3000) {
+    warnings.push({
+      type: 'critical-speed-risk',
+      message: `主机转速 ${speed}rpm 超过3000rpm，选型结果将自动进行临界转速预检`,
+      severity: 'warning'
+    });
+  }
+
+  // 螺旋桨直径与功率交叉验证
+  const propDiameter = parseFloat(params.propellerDiameter) || 0;
+  if (propDiameter > 0 && power > 0) {
+    const estimatedD = 0.3 * Math.pow(power, 0.25);
+    if (propDiameter > estimatedD * 1.5) {
+      warnings.push({
+        type: 'prop-diameter-high',
+        message: `螺旋桨直径 ${propDiameter}m 相对于功率 ${power}kW 偏大，建议值约 ${estimatedD.toFixed(1)}m`,
+        severity: 'info'
+      });
+    }
+    if (propDiameter < estimatedD * 0.5) {
+      warnings.push({
+        type: 'prop-diameter-low',
+        message: `螺旋桨直径 ${propDiameter}m 相对于功率 ${power}kW 偏小，建议值约 ${estimatedD.toFixed(1)}m`,
+        severity: 'warning'
       });
     }
   }
