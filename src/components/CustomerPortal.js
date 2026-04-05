@@ -5,6 +5,7 @@ import { Container, Row, Col, Card, Form, Table, Badge, Button, InputGroup } fro
 import { trackFeature } from '../utils/analytics';
 import { inquiryStore } from '../services/documentStorage';
 import { generateDocNumber } from '../utils/documentNumbering';
+import ExportToolbar from './ExportToolbar';
 
 const STORAGE_KEY = 'customer_inquiries';
 const MAX_ITEMS = 200;
@@ -188,6 +189,21 @@ export default function CustomerPortal({ colors, theme }) {
     return list;
   }, [inquiries, filterStatus, search]);
 
+  const getExportData = useCallback(() => {
+    const headers = ['编号', '单位名称', '联系人', '电话', '功率(kW)', '转速(rpm)', '用途', '意向型号', '速比', '推力', '状态', '创建日期', '备注'];
+    const sLabel = (k) => STATUS_MAP.find(s => s.key === k)?.label || k;
+    const rows = filtered.map(r => [
+      r.id, r.customer, r.contact, r.phone, r.power, r.speed, r.application,
+      r.gearbox, r.ratio, r.thrust, sLabel(r.status), fmtDate(r.createdAt), r.remark,
+    ]);
+    return {
+      filename: `询价记录_${new Date().toISOString().slice(0, 10)}`,
+      title: '客户询价管理',
+      headers,
+      rows,
+    };
+  }, [filtered]);
+
   const stats = useMemo(() => {
     const now = new Date();
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
@@ -227,9 +243,7 @@ export default function CustomerPortal({ colors, theme }) {
           <small className="text-muted">询价提交 / 状态跟踪 / 数据导出（共 {inquiries.length} 条）</small>
         </Col>
         <Col xs="auto" className="d-flex gap-2">
-          <Button variant="outline-secondary" size="sm" onClick={() => exportCSV(filtered)}>
-            <i className="bi bi-download me-1"></i>导出CSV
-          </Button>
+          <ExportToolbar getData={getExportData} disabled={filtered.length === 0} />
           <Button variant="primary" size="sm" onClick={() => setShowForm(!showForm)}>
             <i className={`bi bi-${showForm ? 'chevron-up' : 'plus'} me-1`}></i>{showForm ? '收起' : '新建询价'}
           </Button>

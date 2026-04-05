@@ -4,22 +4,25 @@
  * 处理报价单保存、比较和历史记录管理
  */
 
+import { quotationStore, relationStore } from '../services/documentStorage';
+
 // 保存报价单到本地存储
 export const saveQuotation = (quotation, name, projectInfo) => {
   if (!quotation || !quotation.success) {
     console.error('无法保存无效的报价单数据');
     return false;
   }
-  
+
   try {
     const saveName = name || `${projectInfo?.projectName || '未命名项目'} - ${new Date().toLocaleDateString()}`;
-    
+    const saveId = `quotation_${Date.now()}`;
+
     // 从本地存储获取已保存的报价单
     const quotationSaves = JSON.parse(localStorage.getItem('quotationSaves') || '[]');
-    
+
     // 创建新的保存项
     const newSave = {
-      id: `quotation_${Date.now()}`,
+      id: saveId,
       name: saveName,
       date: new Date().toISOString(),
       data: quotation,
@@ -28,11 +31,38 @@ export const saveQuotation = (quotation, name, projectInfo) => {
         projectName: projectInfo?.projectName
       }
     };
-    
+
     // 更新保存列表
     const updatedSaves = [newSave, ...quotationSaves].slice(0, 20); // 最多保存20个
     localStorage.setItem('quotationSaves', JSON.stringify(updatedSaves));
-    
+
+    // 同步到 quotationStore (文档管理仪表板)
+    try {
+      quotationStore.save({
+        id: saveId,
+        docNumber: quotation.quotationNumber || saveId,
+        customerName: projectInfo?.customerName || quotation.customerInfo?.name,
+        projectName: projectInfo?.projectName,
+        items: quotation.items,
+        totalAmount: quotation.totalAmount,
+        status: 'draft',
+        model: quotation.selectedComponents?.gearbox?.model || quotation.items?.[0]?.model,
+      });
+    } catch (e) {
+      console.warn('同步报价单到 quotationStore 失败:', e);
+    }
+
+    // 建立询单→报价单关联 (文档溯源链)
+    try {
+      const sourceInquiryId = sessionStorage.getItem('source_inquiry_id');
+      if (sourceInquiryId) {
+        relationStore.addRelation(saveId, 'quotation', sourceInquiryId, 'inquiry', 'derived_from');
+        sessionStorage.removeItem('source_inquiry_id');
+      }
+    } catch (e) {
+      console.warn('建立文档关联失败:', e);
+    }
+
     return true;
   } catch (error) {
     console.error("保存报价单错误:", error);

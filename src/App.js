@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { userRoles } from './auth/roles';
 import './App.css';
+import './styles/print-unified.css';
 import ModernNavBar from './components/ModernNavBar';
 import { suppressRepairWarnings, logger } from './config/logging';
 import { toast } from './utils/toast';

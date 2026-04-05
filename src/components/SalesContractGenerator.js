@@ -5,7 +5,7 @@ import React, { useState, useCallback, useMemo, lazy, Suspense } from 'react';
 import { Card, Form, Row, Col, Button, Alert, Badge, Spinner } from 'react-bootstrap';
 import { generateContract } from '../utils/contractGenerator';
 import { generateDocNumber } from '../utils/documentNumbering';
-import { contractStore } from '../services/documentStorage';
+import { contractStore, relationStore } from '../services/documentStorage';
 
 const ContractView = lazy(() => import('./ContractView'));
 
@@ -158,9 +158,10 @@ const SalesContractGenerator = ({
       }
 
       // Save to document storage
+      const contractId = contractData.docNumber || contractData.contractNumber;
       try {
         contractStore.save({
-          id: contractData.docNumber || contractData.contractNumber,
+          id: contractId,
           contractNumber: contractData.contractNumber,
           docNumber: contractData.docNumber,
           buyerName: contractData.buyerInfo?.name,
@@ -168,6 +169,15 @@ const SalesContractGenerator = ({
           model: selectedComponents?.gearbox?.model,
           data: contractData,
         });
+      } catch (e) {
+        // Non-critical
+      }
+
+      // 建立合同→报价单关联 (文档溯源链)
+      try {
+        if (quotation?.quotationNumber) {
+          relationStore.addRelation(contractId, 'contract', quotation.quotationNumber, 'quotation', 'derived_from');
+        }
       } catch (e) {
         // Non-critical
       }

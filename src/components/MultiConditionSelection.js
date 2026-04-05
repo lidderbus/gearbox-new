@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, InputGroup } from 'react-bootstrap';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer, Tooltip } from 'recharts';
+import ExportToolbar from './ExportToolbar';
 
 let embeddedData = [];
 try {
@@ -177,6 +178,29 @@ export default function MultiConditionSelection({ colors, theme }) {
     setConditions(prev => prev.filter((_, i) => i !== idx));
   }, [conditions.length]);
 
+  const getExportData = useCallback(() => {
+    if (!results || !results.items.length) return null;
+    const validConds = conditions.filter(c => c.power || c.speed || c.ratio);
+    const headers = ['排名', '型号', '系列', '满足工况数', '加权得分'];
+    validConds.forEach((c, i) => {
+      const label = c.label || `工况${i + 1}`;
+      headers.push(`${label}(匹配)`, `${label}(得分)`);
+    });
+    const rows = results.items.map((r, i) => {
+      const row = [i + 1, r.model, r.series, `${r.matchCount}/${results.totalConditions}`, r.score];
+      r.details.forEach(d => {
+        row.push(d.matched ? '是' : '否', r.conditionScores[d.idx - 1] || 0);
+      });
+      return row;
+    });
+    return {
+      filename: `多工况选型结果_${new Date().toISOString().slice(0, 10)}`,
+      title: '多工况复合选型结果',
+      headers,
+      rows,
+    };
+  }, [results, conditions]);
+
   const runSelection = useCallback(() => {
     const validConds = conditions.filter(c => c.power || c.speed || c.ratio);
     if (validConds.length === 0) return;
@@ -271,9 +295,7 @@ export default function MultiConditionSelection({ colors, theme }) {
           <Card className="mb-3">
             <Card.Header className="d-flex justify-content-between align-items-center">
               <span>选型结果 — {results.items.length} 个型号满足 {results.totalConditions} 组工况中的至少1组</span>
-              <Button size="sm" variant="outline-success" onClick={() => exportResultsCSV(results, conditions)} disabled={results.items.length === 0}>
-                <i className="bi bi-download me-1"></i>导出CSV
-              </Button>
+              <ExportToolbar getData={getExportData} disabled={results.items.length === 0} />
             </Card.Header>
             <Card.Body className="p-0">
               {results.items.length === 0 ? (

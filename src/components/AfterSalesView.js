@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, InputGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { trackFeature } from '../utils/analytics';
+import ExportToolbar from './ExportToolbar';
 
 const STORAGE_KEY = 'aftersales_tickets';
 const MAX_TICKETS = 200;
@@ -164,23 +165,22 @@ export default function AfterSalesView({ colors, theme }) {
     if (expandedId === id) setExpandedId(null);
   };
 
-  const handleExportCsv = () => {
+  const getExportData = useCallback(() => {
     const headers = ['工单号', '客户', '齿轮箱型号', '序列号', '服务类型', '紧急程度', '状态', '故障描述', '工程师', '联系电话', '创建日期'];
     const rows = filtered.map(t => [
       t.id, t.customer, t.gearbox, t.sn,
       SERVICE_TYPES.find(s => s.key === t.type)?.label || '',
       PRIORITY_MAP[t.priority]?.label || '普通',
       STATUS_MAP[t.status]?.label || '',
-      `"${(t.desc || '').replace(/"/g, '""')}"`, t.engineer, t.phone || '', t.date,
+      t.desc || '', t.engineer, t.phone || '', t.date,
     ]);
-    const bom = '\uFEFF';
-    const csv = bom + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = `售后工单_${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click(); URL.revokeObjectURL(url);
-  };
+    return {
+      filename: `售后工单_${new Date().toISOString().slice(0, 10)}`,
+      title: '售后服务工单',
+      headers,
+      rows,
+    };
+  }, [filtered]);
 
   const typeCounts = useMemo(() => {
     const m = {};
@@ -200,9 +200,7 @@ export default function AfterSalesView({ colors, theme }) {
           <small className="text-muted">齿轮箱售后工单管理 &middot; 共 {tickets.length} 条工单</small>
         </Col>
         <Col xs="auto" className="d-flex gap-2">
-          <Button variant="outline-secondary" size="sm" onClick={handleExportCsv} title="导出CSV">
-            <i className="bi bi-download me-1"></i>导出
-          </Button>
+          <ExportToolbar getData={getExportData} disabled={filtered.length === 0} />
           <Button variant="primary" size="sm" onClick={() => setShowModal(true)}>
             <i className="bi bi-plus me-1"></i>新建工单
           </Button>

@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Modal, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { trackFeature } from '../utils/analytics';
+import ExportToolbar from './ExportToolbar';
 
 // ── 常量 ──
 const STORAGE_KEY = 'gearbox_projects';
@@ -226,6 +227,20 @@ export default function ProjectTracker({ colors, theme }) {
     }));
   }, []);
 
+  const getExportData = useCallback(() => {
+    const headers = ['项目编号', '项目名称', '客户', '齿轮箱型号', '金额(元)', '状态', '日期', '负责人', '备注'];
+    const rows = filtered.map(p => {
+      const s = STATUS_MAP[p.status];
+      return [p.id, p.name, p.customer, p.gearbox, p.amount, s?.label || p.status, p.date, p.salesman, p.note || ''];
+    });
+    return {
+      filename: `项目列表_${new Date().toISOString().slice(0, 10)}`,
+      title: '项目追踪',
+      headers,
+      rows,
+    };
+  }, [filtered]);
+
   const formField = (label, key, placeholder, type = 'text') => (
     <Form.Group className="mb-2">
       <Form.Label className="small mb-1">{label}</Form.Label>
@@ -243,9 +258,7 @@ export default function ProjectTracker({ colors, theme }) {
       <Row className="mb-3 align-items-center">
         <Col><h5 className="mb-0"><i className="bi bi-kanban me-2"></i>项目追踪</h5></Col>
         <Col xs="auto">
-          <Button size="sm" variant="outline-secondary" className="me-2" onClick={() => exportCSV(filtered)}>
-            <i className="bi bi-download me-1"></i>导出CSV
-          </Button>
+          <span className="me-2"><ExportToolbar getData={getExportData} disabled={filtered.length === 0} /></span>
           <Button size="sm" variant="primary" onClick={openNew}>
             <i className="bi bi-plus-lg me-1"></i>新建项目
           </Button>

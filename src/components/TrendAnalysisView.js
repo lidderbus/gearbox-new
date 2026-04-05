@@ -2,6 +2,7 @@
 // 历史数据趋势分析：选型频次、报价趋势、热门型号分析 (Recharts版)
 import React, { useState, useMemo, useCallback } from 'react';
 import { Container, Row, Col, Card, ButtonGroup, Button, Alert } from 'react-bootstrap';
+import ExportToolbar from './ExportToolbar';
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell
@@ -147,7 +148,28 @@ export default function TrendAnalysisView({ colors, theme }) {
 
   const hasQuotations = filteredQuotations.length > 0;
 
-  const handleExport = useCallback(() => exportCsv(monthlyData, topModels), [monthlyData, topModels]);
+  const getExportData = useCallback(() => {
+    // Combine monthly trend and top models into a single sheet
+    const headers = ['月份', '选型次数', '报价次数'];
+    const rows = monthlyData.map(r => [r.month, r.selections, r.quotations]);
+    // Append a separator and top models section
+    rows.push([], ['--- 热门型号 TOP10 ---', '', '']);
+    rows.push(['排名', '型号', '次数']);
+    topModels.forEach(([model, count], i) => {
+      rows.push([i + 1, model, count]);
+    });
+    return {
+      filename: `趋势分析_${new Date().toISOString().slice(0, 10)}`,
+      title: '趋势分析',
+      subtitle: '选型频次与报价趋势',
+      headers,
+      rows,
+      sheets: [
+        { name: '月度趋势', headers: ['月份', '选型次数', '报价次数'], rows: monthlyData.map(r => [r.month, r.selections, r.quotations]) },
+        { name: '热门型号', headers: ['排名', '型号', '次数'], rows: topModels.map(([model, count], i) => [i + 1, model, count]) },
+      ],
+    };
+  }, [monthlyData, topModels]);
 
   const noData = totalCount === 0 && filteredQuotations.length === 0;
 
@@ -167,9 +189,7 @@ export default function TrendAnalysisView({ colors, theme }) {
           </ButtonGroup>
         </Col>
         <Col xs="auto">
-          <Button size="sm" variant="outline-success" onClick={handleExport} disabled={noData}>
-            <i className="bi bi-download me-1"></i>导出CSV
-          </Button>
+          <ExportToolbar getData={getExportData} disabled={noData} />
         </Col>
       </Row>
 

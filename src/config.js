@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 43; // v43: 全模块专业化 Phase1+2 — 询单/项目/询价/售后4模块真实化, 扭振计算书接入引擎, 批量选型Top3+XLSX, 反向选型图表导出, 多工况雷达图+权重, 整体方案自定义船型, 趋势Recharts, 资料打包项目+选择, 权限持久化 (2026-04-05)
+export const APP_DATA_VERSION = 44; // v44: Phase3统一框架 — ExportToolbar(CSV/XLSX/打印三合一)9模块接入, relationStore文档追溯链(询单→报价→协议→合同), print-unified.css(公司页眉/A4/分页/Badge), unifiedExporter.js (2026-04-05)
 
 export const DEFAULTS = {
     gearbox: {

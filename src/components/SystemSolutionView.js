@@ -5,6 +5,7 @@ import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, ListGroup
 import { getRecommendedPump, getRecommendedCouplingInfo } from '../data/gearboxMatchingMaps';
 import { calculateFactoryPrice, getStandardDiscountRate } from '../utils/priceManager';
 import { printHtmlContent } from '../utils/pdfExportUtils';
+import ExportToolbar from './ExportToolbar';
 
 let embeddedData = [];
 try {
@@ -207,6 +208,25 @@ export default function SystemSolutionView({ colors, theme }) {
   const costInfo = useMemo(() => buildCostBreakdown(solution), [solution]);
   const vesselInfo = activeVessel;
 
+  const getExportData = useCallback(() => {
+    if (!solution || solution.gearboxOptions.length === 0) return null;
+    const headers = ['排名', '型号', '系列', '最大能力(kW/rpm)', '余量(%)', '推力(kN)', '重��(kg)', '出厂价', '联轴器', '备用泵'];
+    const rows = solution.gearboxOptions.map((g, i) => [
+      i === 0 ? '最佳' : i < 3 ? '推荐' : i + 1,
+      g.model, g.series, g.maxCapacity, `+${g.margin}%`,
+      g.thrust || '', g.weight || '',
+      g.factoryPrice > 0 ? g.factoryPrice : '询价',
+      g.coupling || '', g.pump || '',
+    ]);
+    return {
+      filename: `整体方案_${solution.vessel.label}_${solution.power}kW_${new Date().toISOString().slice(0, 10)}`,
+      title: '整体方案推荐',
+      subtitle: `${solution.vessel.label} / ${solution.propConfig.label} / ${solution.power}kW@${solution.speed}rpm`,
+      headers,
+      rows,
+    };
+  }, [solution]);
+
   return (
     <Container fluid className="py-3">
       <Row className="mb-3">
@@ -300,9 +320,12 @@ export default function SystemSolutionView({ colors, theme }) {
                 方案 — {solution.vessel.label} / {solution.propConfig.label} / {solution.power}kW@{solution.speed}rpm
                 <small className="ms-2">(需{solution.requiredCap.toFixed(4)} kW/rpm)</small>
               </span>
-              <Button size="sm" variant="light" onClick={handleExport}>
-                <i className="bi bi-file-earmark-pdf me-1"></i>导出方案
-              </Button>
+              <span className="d-flex gap-2">
+                <ExportToolbar getData={getExportData} disabled={!solution || solution.gearboxOptions.length === 0} showPrint={false} />
+                <Button size="sm" variant="light" onClick={handleExport}>
+                  <i className="bi bi-file-earmark-pdf me-1"></i>导出方案
+                </Button>
+              </span>
             </Card.Header>
             <Card.Body>
               <Row>

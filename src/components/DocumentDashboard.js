@@ -8,6 +8,7 @@ import {
   quotationStore,
   agreementStore,
   contractStore,
+  relationStore,
   getDocumentStats,
   exportAllDocuments,
   importAllDocuments,
@@ -643,6 +644,34 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
                   </Col>
                 ))}
               </Row>
+              {/* 关联文档 (文档溯源链) */}
+              {(() => {
+                const relations = relationStore.findRelations(previewDoc.id);
+                if (relations.length === 0) return null;
+                const TYPE_LABELS = { inquiry: '技术询单', quotation: '报价单', agreement: '技术协议', contract: '销售合同' };
+                return (
+                  <div className="mt-3 pt-2" style={{ borderTop: `1px solid ${borderColor}` }}>
+                    <div style={{ fontSize: '0.85em', fontWeight: 600, marginBottom: 6 }}>
+                      <i className="bi bi-diagram-3 me-1"></i>关联文档
+                    </div>
+                    <ListGroup variant="flush">
+                      {relations.map((r, i) => {
+                        const isSource = r.sourceId === previewDoc.id;
+                        const linkedId = isSource ? r.targetId : r.sourceId;
+                        const linkedType = isSource ? r.targetType : r.sourceType;
+                        return (
+                          <ListGroup.Item key={i} className="py-1 px-0" style={{ backgroundColor: 'transparent', borderColor, fontSize: '0.85em', color: textColor }}>
+                            <Badge bg={r.relationType === 'derived_from' ? 'info' : 'secondary'} className="me-2">
+                              {isSource ? (r.relationType === 'derived_from' ? '来源' : '关联') : (r.relationType === 'derived_from' ? '派生' : '关联')}
+                            </Badge>
+                            {TYPE_LABELS[linkedType] || linkedType}: <strong>{linkedId}</strong>
+                          </ListGroup.Item>
+                        );
+                      })}
+                    </ListGroup>
+                  </div>
+                );
+              })()}
               {/* 时间信息 */}
               <div className="mt-2 pt-2" style={{ borderTop: `1px solid ${borderColor}`, fontSize: '0.8em', color: mutedColor }}>
                 {previewDoc.createdAt && (

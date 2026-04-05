@@ -7,6 +7,7 @@ import { autoSelectGearbox } from '../utils/selectionAlgorithm';
 import { saveSelectionToHistory } from '../utils/selectionHistory';
 import { initialData } from '../data/initialData';
 import { formatPrice } from '../utils/priceCalculator';
+import ExportToolbar from './ExportToolbar';
 
 /**
  * 默认选型需求模板
@@ -356,6 +357,31 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
   }, [results]);
 
   /**
+   * ExportToolbar getData callback
+   */
+  const getExportData = useCallback(() => {
+    if (results.length === 0) return null;
+    const headers = ['需求名称', '功率(kW)', '转速(rpm)', '速比', '状态', '推荐齿轮箱', '推荐联轴器', '推荐备用泵', '总价格'];
+    const rows = results.map(r => [
+      r.requirementName,
+      r.input.motorPower,
+      r.input.motorSpeed,
+      r.input.targetRatio,
+      r.success ? '成功' : '失败',
+      r.gearbox?.model || '-',
+      r.coupling?.model || '-',
+      r.pump?.model || '-',
+      r.totalPrice || '-',
+    ]);
+    return {
+      filename: `批量选型结果_${new Date().toISOString().slice(0, 10)}`,
+      title: '批量选型结果',
+      headers,
+      rows,
+    };
+  }, [results]);
+
+  /**
    * 统计信息
    */
   const stats = useMemo(() => {
@@ -533,21 +559,15 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
                   <Badge bg="success" className="me-2">成功: {stats.successful}</Badge>
                   <Badge bg="danger" className="me-2">失败: {stats.failed}</Badge>
                 </div>
-                <div>
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    className="me-2"
-                    onClick={exportResults}
-                  >
-                    导出CSV
-                  </Button>
+                <div className="d-flex align-items-center gap-2">
+                  <ExportToolbar getData={getExportData} disabled={results.length === 0} showPrint={true} />
                   <Button
                     variant="outline-success"
                     size="sm"
                     onClick={exportXLSX}
+                    title="自定义双Sheet Excel导出"
                   >
-                    导出Excel
+                    <i className="bi bi-file-earmark-spreadsheet me-1"></i>高级Excel
                   </Button>
                 </div>
               </div>

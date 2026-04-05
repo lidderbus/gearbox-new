@@ -7,6 +7,7 @@ import { getRecommendedPump, getRecommendedCouplingInfo } from '../data/gearboxM
 import { calculateFactoryPrice, getStandardDiscountRate } from '../utils/priceManager';
 import { resolveModelAlias } from '../utils/modelAliasResolver';
 import { printHtmlContent } from '../utils/pdfExportUtils';
+import ExportToolbar from './ExportToolbar';
 
 // 合并 embeddedGearboxData 各系列数组
 let embeddedData = [];
@@ -158,6 +159,25 @@ export default function ReverseSelectionView({ colors, theme }) {
     return calculateFactoryPrice({ model: detail.model, basePrice: detail.price, discountRate: detail.discountRate ?? getStandardDiscountRate(detail.model) });
   }, [detail]);
 
+  // Export data for ExportToolbar
+  const getExportData = useCallback(() => {
+    const headers = ['型号', '系列', '减速比范围', '减速比数量', '传递能力范围(kW/rpm)', '转速范围(rpm)', '推力(kN)', '重量(kg)'];
+    const rows = filteredModels.map(m => [
+      m.model, m.series,
+      m.ratioMin != null ? (m.ratioMin === m.ratioMax ? String(m.ratioMin) : `${m.ratioMin}~${m.ratioMax}`) : '',
+      m.ratioCount,
+      m.capacityMin != null ? (m.capacityMin === m.capacityMax ? String(m.capacityMax) : `${m.capacityMin}~${m.capacityMax}`) : '',
+      m.minSpeed && m.maxSpeed ? `${m.minSpeed}~${m.maxSpeed}` : '',
+      m.thrust || '', m.weight || '',
+    ]);
+    return {
+      filename: `反向选型_型号列表_${new Date().toISOString().slice(0, 10)}`,
+      title: '反向选型 — 型号参数列表',
+      headers,
+      rows,
+    };
+  }, [filteredModels]);
+
   // 功率包络图数据
   const powerEnvelopeData = useMemo(() => {
     if (!detail || !detail.powerRanges.length) return [];
@@ -246,10 +266,13 @@ export default function ReverseSelectionView({ colors, theme }) {
 
   return (
     <Container fluid className="py-3">
-      <Row className="mb-3">
+      <Row className="mb-3 align-items-center">
         <Col>
           <h5><i className="bi bi-arrow-return-left me-2"></i>反向选型 — 型号查参数</h5>
-          <small className="text-muted">输入齿轮箱型号，反查减速比、传递能力、适配功率范围、配套设备等 ({allModels.length}型号)</small>
+          <small className="text-muted">输入齿轮箱型号，反查减速比、传递能力、适配功率范围、配套设备等 ({allModels.length}���号)</small>
+        </Col>
+        <Col xs="auto">
+          <ExportToolbar getData={getExportData} disabled={filteredModels.length === 0} showPrint={false} />
         </Col>
       </Row>
 

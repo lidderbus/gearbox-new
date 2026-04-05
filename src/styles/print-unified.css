@@ -1,0 +1,180 @@
+/* 统一打印样式 — 所有模块共享 */
+
+@media print {
+  /* 隐藏非打印元素 */
+  .no-print,
+  .sidebar-nav,
+  .navbar,
+  .theme-toggle,
+  .export-toolbar,
+  .btn-group,
+  .toast-container,
+  footer {
+    display: none !important;
+  }
+
+  /* 基础设置 */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans SC', 'SimSun', sans-serif;
+    font-size: 11pt;
+    color: #000;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* A4页面 */
+  @page {
+    size: A4;
+    margin: 15mm 12mm 20mm 12mm;
+  }
+
+  @page :first {
+    margin-top: 10mm;
+  }
+
+  /* 分页控制 */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+
+  table, tr, .card, .print-section {
+    page-break-inside: avoid;
+  }
+
+  p, li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  /* 打印页眉 */
+  .print-header {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #1a73e8;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+  }
+
+  .print-header h2 {
+    font-size: 16pt;
+    color: #1a73e8 !important;
+    margin: 0;
+  }
+
+  .print-header .company-info {
+    text-align: right;
+    font-size: 9pt;
+    color: #666;
+    line-height: 1.4;
+  }
+
+  /* 打印页脚 */
+  .print-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 8pt;
+    color: #999;
+    border-top: 1px solid #eee;
+    padding-top: 4px;
+  }
+
+  /* 表格打印 */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    font-size: 10pt;
+  }
+
+  th {
+    background-color: #f0f0f0 !important;
+    border: 1px solid #999 !important;
+    padding: 4px 6px !important;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  td {
+    border: 1px solid #ccc !important;
+    padding: 3px 6px !important;
+  }
+
+  /* Badge打印 */
+  .badge {
+    border: 1px solid #999;
+    padding: 1px 4px;
+    font-size: 9pt;
+  }
+
+  /* Card打印 */
+  .card {
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    margin-bottom: 8px;
+  }
+
+  .card-header {
+    background-color: #f5f5f5 !important;
+    border-bottom: 1px solid #ddd !important;
+    font-weight: bold;
+  }
+
+  /* 隐藏交互元素 */
+  .form-control,
+  .form-select,
+  .btn:not(.print-visible),
+  .modal,
+  .dropdown-menu,
+  .progress,
+  .spinner-border {
+    display: none !important;
+  }
+
+  /* 链接显示URL */
+  a[href]:after {
+    content: none;
+  }
+
+  /* 图表区域 */
+  .recharts-responsive-container {
+    page-break-inside: avoid;
+  }
+}
+
+/* 打印报告专用类(非@media,供exportPrint生成的HTML用) */
+.unified-print-report {
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 0 12mm;
+  font-family: 'Noto Sans SC', 'SimSun', sans-serif;
+}
+
+.unified-print-report table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0;
+  font-size: 12px;
+}
+
+.unified-print-report th {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  padding: 4px 8px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.unified-print-report td {
+  border: 1px solid #ddd;
+  padding: 4px 8px;
+}

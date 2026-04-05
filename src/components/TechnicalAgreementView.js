@@ -5,6 +5,8 @@ import AgreementGenerator from './AgreementGenerator';
 import ErrorBoundary from './ErrorBoundary'; // 导入错误边界组件
 import { optimizedHtmlToPdf, printHtmlContent } from '../utils/pdfExportUtils';
 import { needsStandbyPump } from '../utils/enhancedPumpSelection';
+import { agreementStore, relationStore } from '../services/documentStorage';
+import { generateDocNumber } from '../utils/documentNumbering';
 
 /**
  * 技术协议视图组件
@@ -51,15 +53,42 @@ const TechnicalAgreementView = ({
   // 处理协议生成完成
   const handleAgreementGenerated = (generatedAgreement) => {
     setAgreement(generatedAgreement);
-    
+
     // 根据协议语言设置成功消息
     if (generatedAgreement.language === 'bilingual') {
       setSuccess(`中英文对照技术协议已成功生成 (布局: ${getBilingualLayoutName(generatedAgreement.bilingualLayout)})`);
     } else {
       setSuccess(`${generatedAgreement.language === 'zh' ? '中文' : '英文'}技术协议已成功生成`);
     }
-    
+
     setError('');
+
+    // 保存到 agreementStore 并建立文档溯源链
+    try {
+      const agreementId = generateDocNumber('agreement');
+      agreementStore.save({
+        id: agreementId,
+        model: selectedComponents?.gearbox?.model,
+        gearboxModel: selectedComponents?.gearbox?.model,
+        customerName: projectInfo?.customerName,
+        projectName: projectInfo?.projectName,
+        classification: requirementData?.classification,
+        power: selectedComponents?.gearbox?.power,
+        speed: selectedComponents?.gearbox?.speed,
+        language: generatedAgreement.language,
+        status: 'draft',
+      });
+      // 尝试关联到最近保存的报价单
+      try {
+        const recentQuotations = JSON.parse(localStorage.getItem('quotationSaves') || '[]');
+        if (recentQuotations.length > 0) {
+          const sourceQuotationId = recentQuotations[0].id;
+          relationStore.addRelation(agreementId, 'agreement', sourceQuotationId, 'quotation', 'derived_from');
+        }
+      } catch (e) { /* ignore */ }
+    } catch (e) {
+      console.warn('保存协议到 agreementStore 失败:', e);
+    }
   };
   
   // 获取布局名称

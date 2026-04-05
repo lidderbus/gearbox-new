@@ -5,6 +5,7 @@ import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, InputGrou
 import { inquiryStore } from '../services/documentStorage';
 import { generateDocNumber } from '../utils/documentNumbering';
 import { trackFeature } from '../utils/analytics';
+import ExportToolbar from './ExportToolbar';
 
 const STATUSES = [
   { key: 'new', label: '新建', color: 'info' },
@@ -121,25 +122,27 @@ export default function InquiryView({ colors, theme }) {
       };
       localStorage.setItem('selection_wizard_params', JSON.stringify(params));
     } catch (e) { /* ignore storage errors */ }
+    // Track source inquiry for document traceability chain
+    try {
+      sessionStorage.setItem('source_inquiry_id', inq.id);
+    } catch (e2) { /* ignore storage errors */ }
     trackFeature('inquiry_to_selection', { id: inq.id, model: inq.model });
     // Navigate to the input parameters tab
     window.location.hash = '#/input';
   }, []);
 
-  // CSV export
-  const handleExport = useCallback(() => {
+  // Export data for ExportToolbar
+  const getExportData = useCallback(() => {
     const headers = ['编号', '客户', '联系人', '电话', '邮箱', '船型', '功率(kW)', '转速(rpm)', '目标速比', '推力(kN)', '意向型号', '船检', '特殊要求', '交货日期', '交货地点', '状态', '创建时间'];
     const statusMap = Object.fromEntries(STATUSES.map(s => [s.key, s.label]));
     const rows = inquiries.map(i => [i.id, i.customer, i.contact, i.phone, i.email, i.shipType, i.power, i.speed, i.ratioTarget, i.thrustReq, i.model, i.classSociety, i.specialReq, i.deliveryDate, i.deliveryPlace, statusMap[i.status] || i.status, i.createdAt]);
-    const bom = '\uFEFF';
-    const csv = bom + [headers, ...rows].map(r => r.map(c => `"${(c || '').toString().replace(/"/g, '""')}"`).join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = `技术询单_${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click(); URL.revokeObjectURL(url);
-    flash('CSV导出成功');
-  }, [inquiries, flash]);
+    return {
+      filename: `技术询单_${new Date().toISOString().slice(0, 10)}`,
+      title: '技术询单管理',
+      headers,
+      rows,
+    };
+  }, [inquiries]);
 
   const statusBadge = (status) => {
     const s = STATUSES.find(st => st.key === status);
@@ -155,9 +158,7 @@ export default function InquiryView({ colors, theme }) {
           <small className="text-muted">客户技术需求收集、跟踪与转化</small>
         </Col>
         <Col xs="auto">
-          <Button variant="outline-success" size="sm" className="me-2" onClick={handleExport}>
-            <i className="bi bi-download me-1"></i>导出CSV
-          </Button>
+          <span className="me-2"><ExportToolbar getData={getExportData} disabled={inquiries.length === 0} /></span>
           <Button variant="primary" size="sm" onClick={() => setShowForm(!showForm)}>
             <i className={`bi bi-${showForm ? 'chevron-up' : 'plus'} me-1`}></i>{showForm ? '收起' : '新建询单'}
           </Button>
