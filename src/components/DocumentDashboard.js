@@ -2,7 +2,7 @@
 // 文档管理仪表板 — 展示所有文档类型的概览、统计和快捷操作
 
 import React, { useState, useMemo, useCallback } from 'react';
-import { Card, Row, Col, Badge, Button, ListGroup, Form, Modal } from 'react-bootstrap';
+import { Card, Row, Col, Badge, Button, ListGroup, Form, Modal, Nav } from 'react-bootstrap';
 import {
   inquiryStore,
   quotationStore,
@@ -21,11 +21,93 @@ const DOC_TYPES = [
   { key: 'contract', label: '销售合同', icon: 'bi-file-earmark-ruled', color: '#dc3545', store: contractStore },
 ];
 
+/** 计算文档年龄的友好显示 */
+const getDocAge = (dateStr) => {
+  if (!dateStr) return '';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return '刚刚';
+  if (minutes < 60) return `${minutes}分钟前`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}小时前`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}天前`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months}个月前`;
+  return `${Math.floor(months / 12)}年前`;
+};
+
+/** 计算文档相关localStorage占用大小 (MB) */
+const getDocStorageSize = () => {
+  const keys = ['doc_inquiries', 'doc_quotations', 'doc_agreements', 'doc_contracts', 'doc_relations'];
+  let total = 0;
+  keys.forEach(key => {
+    const val = localStorage.getItem(key);
+    if (val) total += val.length * 2; // UTF-16 每字符2字节
+  });
+  return (total / (1024 * 1024)).toFixed(2);
+};
+
+/** 获取文档预览字段 */
+const getDocPreviewFields = (doc, type) => {
+  switch (type) {
+    case 'quotation':
+      return [
+        { label: '客户', value: doc.customerName || doc.buyerName || '-' },
+        { label: '项目', value: doc.projectName || '-' },
+        { label: '产品', value: (doc.items || []).map(i => i.model || i.name || '').filter(Boolean).join(', ') || '-' },
+        { label: '数量', value: (doc.items || []).length ? `${doc.items.length} 项` : '-' },
+        { label: '总金额', value: doc.totalAmount ? `¥${Number(doc.totalAmount).toLocaleString()}` : '-' },
+        { label: '状态', value: doc.status === 'submitted' ? '已提交' : doc.status === 'draft' ? '草稿' : (doc.status || '-') },
+      ];
+    case 'contract':
+      return [
+        { label: '买方', value: doc.buyerName || doc.customerName || '-' },
+        { label: '项目', value: doc.projectName || '-' },
+        { label: '产品', value: doc.products || doc.model || '-' },
+        { label: '合同金额', value: doc.totalAmount ? `¥${Number(doc.totalAmount).toLocaleString()}` : '-' },
+        { label: '合同编号', value: doc.contractNumber || '-' },
+        { label: '签订日期', value: doc.signDate || doc.createdAt ? new Date(doc.signDate || doc.createdAt).toLocaleDateString('zh-CN') : '-' },
+      ];
+    case 'agreement':
+      return [
+        { label: '齿轮箱型号', value: doc.model || doc.gearboxModel || '-' },
+        { label: '客户', value: doc.customerName || doc.buyerName || '-' },
+        { label: '项目', value: doc.projectName || '-' },
+        { label: '船级社', value: doc.classification || doc.classificationSociety || '-' },
+        { label: '功率', value: doc.power ? `${doc.power} kW` : '-' },
+        { label: '转速', value: doc.speed ? `${doc.speed} rpm` : '-' },
+      ];
+    case 'inquiry':
+      return [
+        { label: '客户', value: doc.customerName || doc.company || '-' },
+        { label: '功率', value: doc.power ? `${doc.power} kW` : '-' },
+        { label: '转速', value: doc.speed ? `${doc.speed} rpm` : '-' },
+        { label: '船型', value: doc.shipType || doc.vesselType || '-' },
+        { label: '用途', value: doc.application || '-' },
+        { label: '联系人', value: doc.contactName || doc.contact || '-' },
+      ];
+    default:
+      return [
+        { label: 'ID', value: doc.id || '-' },
+        { label: '创建时间', value: doc.createdAt ? new Date(doc.createdAt).toLocaleString('zh-CN') : '-' },
+      ];
+  }
+};
+
 const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedType, setSelectedType] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showBackupModal, setShowBackupModal] = useState(false);
+  // Selective export state
+  const [checkedIds, setCheckedIds] = useState(new Set());
+  // Project bundling state
+  const [viewMode, setViewMode] = useState('list'); // 'list' | 'project'
+  const [selectedProject, setSelectedProject] = useState(null);
+  // Document preview state
+  const [previewDoc, setPreviewDoc] = useState(null);
+  const [previewType, setPreviewType] = useState(null);
 
   const refresh = useCallback(() => setRefreshKey(k => k + 1), []);
 
@@ -99,6 +181,97 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
     }
   }, [refresh]);
 
+  // localStorage 文档占用大小
+  const storageSize = useMemo(() => {
+    void refreshKey;
+    return getDocStorageSize();
+  }, [refreshKey]);
+
+  // 选择性导出：切换选中
+  const toggleCheck = useCallback((id) => {
+    setCheckedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }, []);
+
+  // 全选/取消
+  const toggleSelectAll = useCallback(() => {
+    if (checkedIds.size === docList.length) {
+      setCheckedIds(new Set());
+    } else {
+      setCheckedIds(new Set(docList.map(d => d.id)));
+    }
+  }, [checkedIds.size, docList]);
+
+  // 导出选中文档
+  const handleExportSelected = useCallback(() => {
+    const selected = docList.filter(d => checkedIds.has(d.id));
+    if (selected.length === 0) { alert('请先勾选要导出的文档'); return; }
+    const blob = new Blob([JSON.stringify({
+      version: '1.0',
+      exportedAt: new Date().toISOString(),
+      type: selectedType,
+      typeName: DOC_TYPES.find(t => t.key === selectedType)?.label,
+      documents: selected,
+    }, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${DOC_TYPES.find(t => t.key === selectedType)?.label || '文档'}_选中导出_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [docList, checkedIds, selectedType]);
+
+  // 按项目分组的所有文档
+  const projectGroups = useMemo(() => {
+    void refreshKey;
+    const groups = {};
+    DOC_TYPES.forEach(dt => {
+      dt.store.getAll().forEach(doc => {
+        const pName = doc.projectName || '未分配项目';
+        if (!groups[pName]) groups[pName] = { inquiry: [], quotation: [], agreement: [], contract: [] };
+        groups[pName][dt.key].push(doc);
+      });
+    });
+    // 排序：有名称的在前，按文档总数降序
+    return Object.entries(groups)
+      .map(([name, docs]) => ({
+        name,
+        docs,
+        total: docs.inquiry.length + docs.quotation.length + docs.agreement.length + docs.contract.length,
+      }))
+      .sort((a, b) => {
+        if (a.name === '未分配项目') return 1;
+        if (b.name === '未分配项目') return -1;
+        return b.total - a.total;
+      });
+  }, [refreshKey]);
+
+  // 导出项目包
+  const handleExportProject = useCallback((project) => {
+    const blob = new Blob([JSON.stringify({
+      version: '1.0',
+      exportedAt: new Date().toISOString(),
+      projectName: project.name,
+      ...project.docs,
+    }, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `项目包_${project.name}_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, []);
+
+  // 清除选中状态当切换类型
+  const handleTypeSelect = useCallback((key) => {
+    setSelectedType(prev => prev === key ? null : key);
+    setCheckedIds(new Set());
+    setViewMode('list');
+  }, []);
+
   const cardBg = colors.card || (theme === 'dark' ? '#2d2d2d' : '#fff');
   const borderColor = colors.border || (theme === 'dark' ? '#444' : '#dee2e6');
   const textColor = colors.text || (theme === 'dark' ? '#e0e0e0' : '#212529');
@@ -114,11 +287,13 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
             : dt.key === 'agreement' ? 'agreements'
             : 'contracts';
           const count = stats[countKey] || 0;
+          const recentKey = `recent${dt.key.charAt(0).toUpperCase()}${dt.key.slice(1)}`;
+          const recentDoc = stats[recentKey];
           const isActive = selectedType === dt.key;
           return (
             <Col key={dt.key} xs={6} md={3} className="mb-3">
               <Card
-                onClick={() => setSelectedType(isActive ? null : dt.key)}
+                onClick={() => handleTypeSelect(dt.key)}
                 style={{
                   cursor: 'pointer',
                   backgroundColor: isActive ? dt.color : cardBg,
@@ -137,16 +312,25 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
                       本年编号: {numberCounts[dt.key]}
                     </small>
                   )}
+                  {recentDoc && recentDoc.createdAt && (
+                    <div style={{ fontSize: '0.72em', opacity: 0.65, marginTop: 2 }}>
+                      最近: {getDocAge(recentDoc.createdAt)}
+                    </div>
+                  )}
                 </Card.Body>
               </Card>
             </Col>
           );
         })}
       </Row>
+      {/* localStorage 文档存储大小 */}
+      <div className="text-end mb-2" style={{ fontSize: '0.78em', color: mutedColor }}>
+        <i className="bi bi-database me-1"></i>文档存储占用: {storageSize} MB
+      </div>
 
       {/* 工具栏 */}
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-        <div>
+        <div className="d-flex align-items-center gap-2">
           {selectedType ? (
             <h5 style={{ color: textColor, margin: 0 }}>
               <i className={`bi ${DOC_TYPES.find(t => t.key === selectedType)?.icon} me-2`}></i>
@@ -158,17 +342,43 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
               <i className="bi bi-grid me-2"></i>文档总览
             </h5>
           )}
+          {/* 视图模式切换 */}
+          {!selectedType && (
+            <Nav variant="pills" activeKey={viewMode} onSelect={setViewMode} className="ms-3">
+              <Nav.Item>
+                <Nav.Link eventKey="list" style={{ fontSize: '0.8em', padding: '2px 10px' }}>
+                  <i className="bi bi-list-ul me-1"></i>列表
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="project" style={{ fontSize: '0.8em', padding: '2px 10px' }}>
+                  <i className="bi bi-folder me-1"></i>按项目
+                </Nav.Link>
+              </Nav.Item>
+            </Nav>
+          )}
         </div>
-        <div className="d-flex gap-2">
+        <div className="d-flex gap-2 flex-wrap">
           {selectedType && (
-            <Form.Control
-              size="sm"
-              type="text"
-              placeholder="搜索..."
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              style={{ width: 200, backgroundColor: colors.inputBg, color: textColor, borderColor }}
-            />
+            <>
+              <Form.Control
+                size="sm"
+                type="text"
+                placeholder="搜索..."
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                style={{ width: 160, backgroundColor: colors.inputBg, color: textColor, borderColor }}
+              />
+              <Button variant="outline-info" size="sm" onClick={toggleSelectAll} title={checkedIds.size === docList.length ? '取消全选' : '全选'}>
+                <i className={`bi ${checkedIds.size === docList.length && docList.length > 0 ? 'bi-check-square' : 'bi-square'} me-1`}></i>
+                {checkedIds.size === docList.length && docList.length > 0 ? '取消' : '全选'}
+              </Button>
+              {checkedIds.size > 0 && (
+                <Button variant="outline-success" size="sm" onClick={handleExportSelected}>
+                  <i className="bi bi-download me-1"></i>导出选中 ({checkedIds.size})
+                </Button>
+              )}
+            </>
           )}
           <Button variant="outline-secondary" size="sm" onClick={() => setShowBackupModal(true)}>
             <i className="bi bi-download me-1"></i>备份/恢复
@@ -195,7 +405,19 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
                   style={{ backgroundColor: cardBg, borderColor, color: textColor }}
                   className="d-flex justify-content-between align-items-center"
                 >
-                  <div style={{ minWidth: 0, flex: 1 }}>
+                  {/* 复选框 */}
+                  <Form.Check
+                    type="checkbox"
+                    checked={checkedIds.has(doc.id)}
+                    onChange={() => toggleCheck(doc.id)}
+                    className="me-2"
+                    style={{ minWidth: 20 }}
+                  />
+                  <div
+                    style={{ minWidth: 0, flex: 1, cursor: 'pointer' }}
+                    onClick={() => { setPreviewDoc(doc); setPreviewType(selectedType); }}
+                    title="点击查看详情"
+                  >
                     <div className="d-flex align-items-center gap-2">
                       <strong style={{ fontSize: '0.95em' }}>
                         {doc.docNumber || doc.contractNumber || doc.id}
@@ -213,9 +435,11 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
                     </small>
                     <div>
                       <small style={{ color: mutedColor, fontSize: '0.75em' }}>
-                        {doc.createdAt ? new Date(doc.createdAt).toLocaleString('zh-CN') : ''}
+                        {doc.createdAt ? (
+                          <span>{getDocAge(doc.createdAt)} ({new Date(doc.createdAt).toLocaleString('zh-CN')})</span>
+                        ) : ''}
                         {doc.updatedAt && doc.updatedAt !== doc.createdAt && (
-                          <span className="ms-2">更新: {new Date(doc.updatedAt).toLocaleString('zh-CN')}</span>
+                          <span className="ms-2">更新: {getDocAge(doc.updatedAt)}</span>
                         )}
                       </small>
                     </div>
@@ -233,8 +457,82 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
             )}
           </ListGroup>
         </Card>
+      ) : viewMode === 'project' ? (
+        /* 按项目分组视图 */
+        <div>
+          {projectGroups.length === 0 ? (
+            <Card style={{ backgroundColor: cardBg, borderColor }}>
+              <Card.Body className="text-center py-4" style={{ color: mutedColor }}>
+                <i className="bi bi-folder2-open d-block mb-2" style={{ fontSize: '2rem' }}></i>
+                暂无项目文档
+              </Card.Body>
+            </Card>
+          ) : (
+            projectGroups.map(project => {
+              const isExpanded = selectedProject === project.name;
+              return (
+                <Card key={project.name} className="mb-2" style={{ backgroundColor: cardBg, borderColor }}>
+                  <Card.Header
+                    style={{ backgroundColor: cardBg, borderColor, color: textColor, cursor: 'pointer' }}
+                    onClick={() => setSelectedProject(isExpanded ? null : project.name)}
+                  >
+                    <div className="d-flex justify-content-between align-items-center">
+                      <div>
+                        <i className={`bi ${isExpanded ? 'bi-folder2-open' : 'bi-folder'} me-2`} style={{ color: '#f0ad4e' }}></i>
+                        <strong>{project.name}</strong>
+                        <Badge bg="secondary" className="ms-2">{project.total}</Badge>
+                      </div>
+                      <div className="d-flex align-items-center gap-2">
+                        {DOC_TYPES.map(dt => {
+                          const cnt = project.docs[dt.key].length;
+                          return cnt > 0 ? (
+                            <Badge key={dt.key} style={{ backgroundColor: dt.color, fontSize: '0.7em' }}>
+                              {dt.label.slice(0, 2)} {cnt}
+                            </Badge>
+                          ) : null;
+                        })}
+                        <Button
+                          variant="outline-success"
+                          size="sm"
+                          onClick={(e) => { e.stopPropagation(); handleExportProject(project); }}
+                          title="导出项目包"
+                        >
+                          <i className="bi bi-box-arrow-up me-1"></i>导出
+                        </Button>
+                      </div>
+                    </div>
+                  </Card.Header>
+                  {isExpanded && (
+                    <ListGroup variant="flush">
+                      {DOC_TYPES.map(dt =>
+                        project.docs[dt.key].map(doc => (
+                          <ListGroup.Item
+                            key={doc.id}
+                            style={{ backgroundColor: cardBg, borderColor, color: textColor, cursor: 'pointer', paddingLeft: 24 }}
+                            onClick={() => { setPreviewDoc(doc); setPreviewType(dt.key); }}
+                          >
+                            <div className="d-flex justify-content-between align-items-center">
+                              <div>
+                                <i className={`bi ${dt.icon} me-2`} style={{ color: dt.color, fontSize: '0.85em' }}></i>
+                                <span style={{ fontSize: '0.9em' }}>{doc.docNumber || doc.contractNumber || doc.id}</span>
+                                <Badge bg="light" text="dark" className="ms-2" style={{ fontSize: '0.65em' }}>{dt.label}</Badge>
+                              </div>
+                              <small style={{ color: mutedColor, fontSize: '0.75em' }}>
+                                {getDocAge(doc.createdAt)}
+                              </small>
+                            </div>
+                          </ListGroup.Item>
+                        ))
+                      )}
+                    </ListGroup>
+                  )}
+                </Card>
+              );
+            })
+          )}
+        </div>
       ) : (
-        /* 最近文档概览 */
+        /* 最近文档概览 (列表模式) */
         <Row>
           {DOC_TYPES.map(dt => {
             const recent = dt.store.getRecent(3);
@@ -243,7 +541,7 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
                 <Card style={{ backgroundColor: cardBg, borderColor }} className="h-100">
                   <Card.Header
                     style={{ backgroundColor: cardBg, borderColor, color: textColor, cursor: 'pointer' }}
-                    onClick={() => setSelectedType(dt.key)}
+                    onClick={() => handleTypeSelect(dt.key)}
                   >
                     <div className="d-flex justify-content-between align-items-center">
                       <span><i className={`bi ${dt.icon} me-2`} style={{ color: dt.color }}></i>{dt.label}</span>
@@ -257,11 +555,15 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
                       </ListGroup.Item>
                     ) : (
                       recent.map(doc => (
-                        <ListGroup.Item key={doc.id} style={{ backgroundColor: cardBg, borderColor, color: textColor, fontSize: '0.85em' }}>
+                        <ListGroup.Item
+                          key={doc.id}
+                          style={{ backgroundColor: cardBg, borderColor, color: textColor, fontSize: '0.85em', cursor: 'pointer' }}
+                          onClick={() => { setPreviewDoc(doc); setPreviewType(dt.key); }}
+                        >
                           <div className="d-flex justify-content-between">
                             <span>{doc.docNumber || doc.contractNumber || doc.projectName || doc.id}</span>
                             <small style={{ color: mutedColor }}>
-                              {doc.createdAt ? new Date(doc.createdAt).toLocaleDateString('zh-CN') : ''}
+                              {getDocAge(doc.createdAt)}
                             </small>
                           </div>
                         </ListGroup.Item>
@@ -307,6 +609,61 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
             />
           </div>
         </Modal.Body>
+      </Modal>
+
+      {/* 文档预览模态框 */}
+      <Modal show={!!previewDoc} onHide={() => { setPreviewDoc(null); setPreviewType(null); }} centered size="lg">
+        <Modal.Header closeButton style={{ backgroundColor: cardBg, color: textColor, borderColor }}>
+          <Modal.Title style={{ fontSize: '1.1rem' }}>
+            <i className={`bi ${DOC_TYPES.find(t => t.key === previewType)?.icon || 'bi-file-text'} me-2`}
+               style={{ color: DOC_TYPES.find(t => t.key === previewType)?.color }}></i>
+            {DOC_TYPES.find(t => t.key === previewType)?.label || '文档'}详情
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ backgroundColor: cardBg, color: textColor }}>
+          {previewDoc && (
+            <div>
+              {/* 文档编号和状态 */}
+              <div className="d-flex align-items-center gap-2 mb-3 pb-2" style={{ borderBottom: `1px solid ${borderColor}` }}>
+                <h5 className="mb-0" style={{ color: DOC_TYPES.find(t => t.key === previewType)?.color }}>
+                  {previewDoc.docNumber || previewDoc.contractNumber || previewDoc.id}
+                </h5>
+                {previewDoc.status && (
+                  <Badge bg={previewDoc.status === 'submitted' ? 'success' : previewDoc.status === 'draft' ? 'warning' : 'secondary'}>
+                    {previewDoc.status === 'submitted' ? '已提交' : previewDoc.status === 'draft' ? '草稿' : previewDoc.status}
+                  </Badge>
+                )}
+              </div>
+              {/* 关键字段 */}
+              <Row>
+                {getDocPreviewFields(previewDoc, previewType).map((field, idx) => (
+                  <Col xs={6} key={idx} className="mb-3">
+                    <div style={{ fontSize: '0.78em', color: mutedColor, marginBottom: 2 }}>{field.label}</div>
+                    <div style={{ fontSize: '0.95em', fontWeight: 500 }}>{field.value}</div>
+                  </Col>
+                ))}
+              </Row>
+              {/* 时间信息 */}
+              <div className="mt-2 pt-2" style={{ borderTop: `1px solid ${borderColor}`, fontSize: '0.8em', color: mutedColor }}>
+                {previewDoc.createdAt && (
+                  <span>
+                    <i className="bi bi-clock me-1"></i>创建: {getDocAge(previewDoc.createdAt)} ({new Date(previewDoc.createdAt).toLocaleString('zh-CN')})
+                  </span>
+                )}
+                {previewDoc.updatedAt && previewDoc.updatedAt !== previewDoc.createdAt && (
+                  <span className="ms-3">
+                    <i className="bi bi-pencil me-1"></i>更新: {getDocAge(previewDoc.updatedAt)}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer style={{ backgroundColor: cardBg, borderColor }}>
+          <Button variant="secondary" size="sm" onClick={() => { setPreviewDoc(null); setPreviewType(null); }}>
+            关闭
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );

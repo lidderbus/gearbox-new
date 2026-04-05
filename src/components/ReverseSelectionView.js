@@ -2,9 +2,11 @@
 // 反向选型：根据已知齿轮箱型号，反查适配参数（功率、转速、减速比范围、适配主机推荐）
 import React, { useState, useMemo, useCallback } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, InputGroup, ListGroup, Collapse } from 'react-bootstrap';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { getRecommendedPump, getRecommendedCouplingInfo } from '../data/gearboxMatchingMaps';
 import { calculateFactoryPrice, getStandardDiscountRate } from '../utils/priceManager';
 import { resolveModelAlias } from '../utils/modelAliasResolver';
+import { printHtmlContent } from '../utils/pdfExportUtils';
 
 // 合并 embeddedGearboxData 各系列数组
 let embeddedData = [];
@@ -156,6 +158,92 @@ export default function ReverseSelectionView({ colors, theme }) {
     return calculateFactoryPrice({ model: detail.model, basePrice: detail.price, discountRate: detail.discountRate ?? getStandardDiscountRate(detail.model) });
   }, [detail]);
 
+  // 功率包络图数据
+  const powerEnvelopeData = useMemo(() => {
+    if (!detail || !detail.powerRanges.length) return [];
+    return detail.powerRanges.map(pr => ({
+      ratio: String(pr.ratio),
+      minPower: pr.powerAtMinSpeed || 0,
+      maxPower: pr.powerAtMaxSpeed || 0,
+      capacity: pr.capacity,
+    }));
+  }, [detail]);
+
+  // 用户验证参考功率值 (用于图表参考线)
+  const verifyPowerNum = verifyPower ? parseFloat(verifyPower) : null;
+
+  // 导出验证报告
+  const handleExportReport = useCallback(() => {
+    if (!detail || !verifyResult) return;
+    const statusMap = { fail: '不足', danger: '偏紧', ideal: '理想', ok: '偏大', oversized: '过大' };
+    const statusColorMap = { fail: '#dc3545', danger: '#ffc107', ideal: '#198754', ok: '#0dcaf0', oversized: '#6c757d' };
+    const overallStatus = verifyResult.allFail ? '不通过' : (verifyResult.best?.status === 'ideal' ? '通过' : '有条件通过');
+    const overallColor = verifyResult.allFail ? '#dc3545' : (verifyResult.best?.status === 'ideal' ? '#198754' : '#ffc107');
+
+    const html = `
+      <div style="font-family: 'Microsoft YaHei', sans-serif; padding: 20px; max-width: 800px; margin: 0 auto;">
+        <h2 style="text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px;">反向选型验证报告</h2>
+        <p style="text-align: center; color: #666; font-size: 13px;">生成时间: ${new Date().toLocaleString('zh-CN')}</p>
+
+        <h3 style="margin-top: 20px;">一、齿轮箱信息</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+          <tr><td style="border: 1px solid #ddd; padding: 6px 10px; width: 30%; background: #f8f9fa;">型号</td><td style="border: 1px solid #ddd; padding: 6px 10px;"><strong>${detail.model}</strong></td></tr>
+          <tr><td style="border: 1px solid #ddd; padding: 6px 10px; background: #f8f9fa;">系列</td><td style="border: 1px solid #ddd; padding: 6px 10px;">${SERIES_INFO[detail.series]?.label || detail.series} (${SERIES_INFO[detail.series]?.desc || ''})</td></tr>
+          <tr><td style="border: 1px solid #ddd; padding: 6px 10px; background: #f8f9fa;">输入转速范围</td><td style="border: 1px solid #ddd; padding: 6px 10px;">${detail.minSpeed} ~ ${detail.maxSpeed} rpm</td></tr>
+          <tr><td style="border: 1px solid #ddd; padding: 6px 10px; background: #f8f9fa;">推力</td><td style="border: 1px solid #ddd; padding: 6px 10px;">${detail.thrust ? detail.thrust + ' kN' : '—'}</td></tr>
+          ${factoryPrice > 0 ? `<tr><td style="border: 1px solid #ddd; padding: 6px 10px; background: #f8f9fa;">出厂价</td><td style="border: 1px solid #ddd; padding: 6px 10px;">¥${factoryPrice.toLocaleString()}</td></tr>` : ''}
+        </table>
+
+        <h3>二、验证参数</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+          <tr><td style="border: 1px solid #ddd; padding: 6px 10px; width: 30%; background: #f8f9fa;">输入功率</td><td style="border: 1px solid #ddd; padding: 6px 10px;">${verifyResult.power} kW</td></tr>
+          <tr><td style="border: 1px solid #ddd; padding: 6px 10px; background: #f8f9fa;">输入转速</td><td style="border: 1px solid #ddd; padding: 6px 10px;">${verifyResult.speed} rpm ${verifyResult.speedOk === false ? '<span style="color: #dc3545;">(超出范围!)</span>' : verifyResult.speedOk === true ? '<span style="color: #198754;">(在范围内)</span>' : ''}</td></tr>
+          <tr><td style="border: 1px solid #ddd; padding: 6px 10px; background: #f8f9fa;">所需传递能力</td><td style="border: 1px solid #ddd; padding: 6px 10px;">${verifyResult.required.toFixed(4)} kW/rpm</td></tr>
+          <tr><td style="border: 1px solid #ddd; padding: 6px 10px; background: #f8f9fa;">综合判定</td><td style="border: 1px solid #ddd; padding: 6px 10px;"><strong style="color: ${overallColor}; font-size: 16px;">${overallStatus}</strong></td></tr>
+        </table>
+
+        <h3>三、各减速比验证明细</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 13px;">
+          <thead>
+            <tr style="background: #f8f9fa;"><th style="border: 1px solid #ddd; padding: 6px;">减速比</th><th style="border: 1px solid #ddd; padding: 6px;">传递能力</th><th style="border: 1px solid #ddd; padding: 6px;">所需</th><th style="border: 1px solid #ddd; padding: 6px;">余量</th><th style="border: 1px solid #ddd; padding: 6px;">输出转速</th><th style="border: 1px solid #ddd; padding: 6px;">判定</th></tr>
+          </thead>
+          <tbody>
+            ${verifyResult.ratioResults.map(r => `
+              <tr style="background: ${r.status === 'fail' ? '#f8d7da' : r.status === 'ideal' ? '#d1e7dd' : r.status === 'danger' ? '#fff3cd' : 'white'};">
+                <td style="border: 1px solid #ddd; padding: 6px;">${r.ratio}</td>
+                <td style="border: 1px solid #ddd; padding: 6px;">${r.capacity.toFixed(3)}</td>
+                <td style="border: 1px solid #ddd; padding: 6px;">${verifyResult.required.toFixed(3)}</td>
+                <td style="border: 1px solid #ddd; padding: 6px;"><strong>${r.margin !== null ? r.margin.toFixed(1) + '%' : '—'}</strong></td>
+                <td style="border: 1px solid #ddd; padding: 6px;">${r.outputSpeed.toFixed(0)} rpm</td>
+                <td style="border: 1px solid #ddd; padding: 6px; color: ${statusColorMap[r.status] || '#333'}; font-weight: bold;">${statusMap[r.status] || '—'}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+
+        ${verifyResult.best ? `
+          <h3>四、推荐减速比</h3>
+          <p>最佳匹配: <strong>${verifyResult.best.ratio}</strong> (余量 ${verifyResult.best.margin.toFixed(1)}%, 输出转速 ${verifyResult.best.outputSpeed.toFixed(0)} rpm)</p>
+        ` : ''}
+
+        ${verifyResult.allFail && verifyResult.suggestions.length > 0 ? `
+          <h3>四、替代型号建议</h3>
+          <ul>${verifyResult.suggestions.map(s => `<li>${s.model} (最大容量 ${s.cap}, 余量 ${s.margin}%)</li>`).join('')}</ul>
+        ` : ''}
+
+        <p style="text-align: center; color: #999; margin-top: 30px; font-size: 11px; border-top: 1px solid #eee; padding-top: 10px;">
+          杭州前进齿轮箱集团 — 反向选型系统
+        </p>
+      </div>
+    `;
+
+    const container = document.createElement('div');
+    container.innerHTML = html;
+    document.body.appendChild(container);
+    printHtmlContent(container, { title: `反向选型验证报告 - ${detail.model}` });
+    setTimeout(() => document.body.removeChild(container), 1000);
+  }, [detail, verifyResult, factoryPrice]);
+
   return (
     <Container fluid className="py-3">
       <Row className="mb-3">
@@ -302,18 +390,54 @@ export default function ReverseSelectionView({ colors, theme }) {
                   </tbody>
                 </Table>
 
+                {/* ===== 功率包络图 ===== */}
+                {powerEnvelopeData.length > 0 && powerEnvelopeData[0].maxPower > 0 && (
+                  <Card className="mb-3">
+                    <Card.Header className="py-1 px-2">
+                      <small><i className="bi bi-bar-chart me-1"></i><strong>功率包络图</strong> — 各减速比适配功率范围</small>
+                    </Card.Header>
+                    <Card.Body className="py-2 px-1">
+                      <ResponsiveContainer width="100%" height={Math.max(180, powerEnvelopeData.length * 28 + 60)}>
+                        <BarChart data={powerEnvelopeData} layout="vertical" margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
+                          <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                          <XAxis type="number" tick={{ fontSize: 11 }} label={{ value: '功率 (kW)', position: 'insideBottom', offset: -2, fontSize: 11 }} />
+                          <YAxis type="category" dataKey="ratio" tick={{ fontSize: 11 }} width={50} label={{ value: '减速比', angle: -90, position: 'insideLeft', offset: 10, fontSize: 11 }} />
+                          <Tooltip
+                            formatter={(value, name) => [`${value.toLocaleString()} kW`, name === 'minPower' ? '最低功率' : '最高功率']}
+                            labelFormatter={v => `减速比 ${v}`}
+                          />
+                          <Bar dataKey="minPower" fill="#90cdf4" name="最低功率" stackId="range" barSize={16} />
+                          <Bar dataKey="maxPower" fill="#3182ce" name="最高功率" barSize={16} />
+                          {verifyPowerNum > 0 && (
+                            <ReferenceLine x={verifyPowerNum} stroke="#e53e3e" strokeWidth={2} strokeDasharray="5 3"
+                              label={{ value: `验证: ${verifyPowerNum}kW`, fill: '#e53e3e', fontSize: 11, position: 'top' }} />
+                          )}
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </Card.Body>
+                  </Card>
+                )}
+
                 {/* ===== 选型验证模块 ===== */}
                 <Card className="mb-3 border-primary">
                   <Card.Header className="py-1 px-2 d-flex justify-content-between align-items-center"
                     style={{ cursor: 'pointer', background: verifyOpen ? '#e7f1ff' : undefined }}
                     onClick={() => setVerifyOpen(v => !v)}>
                     <small><i className={`bi bi-${verifyOpen ? 'chevron-down' : 'chevron-right'} me-1`}></i><strong>选型验证</strong> — 输入功率转速验证该型号是否匹配</small>
-                    {verifyResult && (
-                      verifyResult.allFail || verifyResult.speedOk === false
-                        ? <Badge bg="danger">不通过</Badge>
-                        : verifyResult.best?.status === 'ideal' ? <Badge bg="success">通过</Badge>
-                        : <Badge bg="warning">注意</Badge>
-                    )}
+                    <span className="d-flex align-items-center gap-1">
+                      {verifyResult && (
+                        <Button size="sm" variant="outline-success" className="py-0 px-1" title="导出验证报告"
+                          onClick={e => { e.stopPropagation(); handleExportReport(); }}>
+                          <i className="bi bi-printer me-1"></i><small>导出报告</small>
+                        </Button>
+                      )}
+                      {verifyResult && (
+                        verifyResult.allFail || verifyResult.speedOk === false
+                          ? <Badge bg="danger">不通过</Badge>
+                          : verifyResult.best?.status === 'ideal' ? <Badge bg="success">通过</Badge>
+                          : <Badge bg="warning">注意</Badge>
+                      )}
+                    </span>
                   </Card.Header>
                   <Collapse in={verifyOpen}>
                     <Card.Body className="py-2 px-2">
@@ -360,10 +484,25 @@ export default function ReverseSelectionView({ colors, theme }) {
                           <tbody>
                             {verifyResult.ratioResults.map((r, i) => (
                               <tr key={i} className={r.status === 'fail' ? 'table-danger' : r.status === 'ideal' ? 'table-success' : r.status === 'danger' ? 'table-warning' : ''}>
-                                <td>{r.ratio}</td>
+                                <td><strong>{r.ratio}</strong></td>
                                 <td>{r.capacity.toFixed(3)}</td>
                                 <td>{verifyResult.required.toFixed(3)}</td>
-                                <td><strong>{r.margin !== null ? `${r.margin.toFixed(1)}%` : '—'}</strong></td>
+                                <td style={{ minWidth: 90 }}>
+                                  {r.margin !== null ? (
+                                    <div className="d-flex align-items-center gap-1">
+                                      <div style={{ flex: 1, height: 6, borderRadius: 3, background: '#e9ecef', overflow: 'hidden' }}>
+                                        <div style={{
+                                          width: `${Math.min(100, Math.max(0, r.margin < 0 ? 0 : (r.margin / 60) * 100))}%`,
+                                          height: '100%', borderRadius: 3,
+                                          background: r.status === 'fail' ? '#dc3545' : r.status === 'danger' ? '#ffc107' : r.status === 'ideal' ? '#198754' : r.status === 'ok' ? '#0dcaf0' : '#6c757d',
+                                        }} />
+                                      </div>
+                                      <strong style={{ fontSize: 11, color: r.status === 'fail' ? '#dc3545' : r.status === 'ideal' ? '#198754' : undefined }}>
+                                        {r.margin.toFixed(1)}%
+                                      </strong>
+                                    </div>
+                                  ) : '—'}
+                                </td>
                                 <td>{r.outputSpeed.toFixed(0)}rpm</td>
                                 <td>{
                                   r.status === 'fail' ? <Badge bg="danger">不足</Badge> :
@@ -376,6 +515,20 @@ export default function ReverseSelectionView({ colors, theme }) {
                             ))}
                           </tbody>
                         </Table>
+                        {/* 验证汇总卡片 */}
+                        {verifyResult.best && !verifyResult.allFail && (
+                          <Alert variant={verifyResult.best.status === 'ideal' ? 'success' : 'warning'} className="py-1 px-2 small mb-2">
+                            <i className={`bi bi-${verifyResult.best.status === 'ideal' ? 'check-circle-fill' : 'exclamation-triangle-fill'} me-1`}></i>
+                            <strong>最佳匹配:</strong> 减速比 <strong>{verifyResult.best.ratio}</strong>,
+                            余量 <strong>{verifyResult.best.margin.toFixed(1)}%</strong>,
+                            输出转速 <strong>{verifyResult.best.outputSpeed.toFixed(0)} rpm</strong>
+                            {verifyResult.ratioResults.filter(r => r.status === 'ideal').length > 1 && (
+                              <span className="ms-1">
+                                (共 {verifyResult.ratioResults.filter(r => r.status === 'ideal').length} 个理想减速比)
+                              </span>
+                            )}
+                          </Alert>
+                        )}
                         {verifyResult.allFail && verifyResult.suggestions.length > 0 && (
                           <Alert variant="info" className="py-1 px-2 small mb-0">
                             <i className="bi bi-arrow-right-circle me-1"></i>

@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 42; // v42: P2专业化增强 — 自定义选型模板保存/加载(20个), 选型失败约束松弛建议(5维), 模糊搜索(Levenshtein容错), 基于v41评测修复 (2026-04-05)
+export const APP_DATA_VERSION = 43; // v43: 全模块专业化 Phase1+2 — 询单/项目/询价/售后4模块真实化, 扭振计算书接入引擎, 批量选型Top3+XLSX, 反向选型图表导出, 多工况雷达图+权重, 整体方案自定义船型, 趋势Recharts, 资料打包项目+选择, 权限持久化 (2026-04-05)
 
 export const DEFAULTS = {
     gearbox: {

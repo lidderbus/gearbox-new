@@ -2,6 +2,7 @@
 // 多工况复合选型：同时指定多组工况参数，筛选满足所有工况的齿轮箱
 import React, { useState, useMemo, useCallback } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, InputGroup } from 'react-bootstrap';
+import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer, Tooltip } from 'recharts';
 
 let embeddedData = [];
 try {
@@ -17,7 +18,14 @@ function getSeries(model) {
   return '';
 }
 
-const EMPTY_CONDITION = { power: '', speed: '', ratio: '', label: '' };
+const EMPTY_CONDITION = { power: '', speed: '', ratio: '', label: '', weight: 2 };
+const MAX_CONDITIONS = 8;
+const WEIGHT_OPTIONS = [
+  { value: 3, label: '高(3x)' },
+  { value: 2, label: '中(2x)' },
+  { value: 1, label: '低(1x)' },
+];
+const RADAR_COLORS = ['#0d6efd', '#dc3545', '#198754'];
 
 function checkModelFit(item, conditions) {
   const ratios = Array.isArray(item.ratios) ? item.ratios : [];
@@ -25,9 +33,11 @@ function checkModelFit(item, conditions) {
   const minSpeed = item.inputSpeedRange ? item.inputSpeedRange[0] : 0;
   const maxSpeed = item.inputSpeedRange ? item.inputSpeedRange[1] : 99999;
 
-  let totalScore = 0;
+  let totalWeightedScore = 0;
+  let totalWeight = 0;
   let matchCount = 0;
   const details = [];
+  const conditionScores = []; // per-condition normalized scores (0-100) for radar chart
 
   conditions.forEach((cond, idx) => {
     const power = parseFloat(cond.power);
@@ -35,6 +45,7 @@ function checkModelFit(item, conditions) {
     const ratio = parseFloat(cond.ratio);
     if (isNaN(power) && isNaN(speed) && isNaN(ratio)) return;
 
+    const condWeight = cond.weight || 2;
     let condScore = 0;
     let condMatch = true;
     const checks = [];
@@ -52,7 +63,6 @@ function checkModelFit(item, conditions) {
 
     // 检查减速比 + 传递能力（联合校验）
     if (!isNaN(ratio)) {
-      // 找最接近的减速比
       let bestIdx = -1, bestDiff = Infinity;
       ratios.forEach((r, i) => {
         if (typeof r === 'number') {
@@ -65,7 +75,6 @@ function checkModelFit(item, conditions) {
         condScore += 25;
         checks.push({ param: '减速比', ok: true, detail: `i=${ratios[bestIdx]} (偏差${(bestDiff/ratio*100).toFixed(1)}%)` });
 
-        // 用该减速比对应的传递能力校验功率
         if (!isNaN(power) && !isNaN(speed) && speed > 0) {
           const requiredCap = power / speed;
           const actualCap = caps[bestIdx] || 0;
@@ -86,7 +95,6 @@ function checkModelFit(item, conditions) {
         checks.push({ param: '减速比', ok: false, reason: '无数据' });
       }
     } else if (!isNaN(power) && !isNaN(speed) && speed > 0) {
-      // 只有功率+转速，检查任意减速比能否满足
       const requiredCap = power / speed;
       const maxCap = caps.length ? Math.max(...caps.filter(v => typeof v === 'number')) : 0;
       if (maxCap >= requiredCap) {
@@ -100,15 +108,58 @@ function checkModelFit(item, conditions) {
     }
 
     if (condMatch) matchCount++;
-    totalScore += condScore;
-    details.push({ idx: idx + 1, checks, matched: condMatch, label: cond.label || `工况${idx + 1}` });
+    totalWeightedScore += condScore * condWeight;
+    totalWeight += condWeight;
+    conditionScores.push(condScore); // raw score per condition (0-100)
+    details.push({ idx: idx + 1, checks, matched: condMatch, label: cond.label || `工况${idx + 1}`, weight: condWeight });
   });
 
-  return { score: totalScore, matchCount, details, model: item.model || item.name, series: getSeries(item.model || item.name) };
+  const weightedScore = totalWeight > 0 ? totalWeightedScore / totalWeight : 0;
+
+  return {
+    score: Math.round(weightedScore * 100) / 100,
+    matchCount,
+    details,
+    conditionScores,
+    model: item.model || item.name,
+    series: getSeries(item.model || item.name)
+  };
+}
+
+function exportResultsCSV(results, conditions) {
+  if (!results || !results.items.length) return;
+
+  const validConds = conditions.filter(c => c.power || c.speed || c.ratio);
+  const headers = ['排名', '型号', '系列', '满足工况数', '加权得分'];
+  validConds.forEach((c, i) => {
+    const label = c.label || `工况${i + 1}`;
+    headers.push(`${label}(匹配)`, `${label}(得分)`);
+  });
+
+  const rows = results.items.map((r, i) => {
+    const row = [i + 1, r.model, r.series, `${r.matchCount}/${results.totalConditions}`, r.score];
+    r.details.forEach(d => {
+      row.push(d.matched ? '是' : '否', r.conditionScores[d.idx - 1] || 0);
+    });
+    return row;
+  });
+
+  const BOM = '\uFEFF';
+  const csv = BOM + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `多工况选型结果_${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 export default function MultiConditionSelection({ colors, theme }) {
-  const [conditions, setConditions] = useState([{ ...EMPTY_CONDITION, label: '自由航行' }, { ...EMPTY_CONDITION, label: '满载工况' }]);
+  const [conditions, setConditions] = useState([
+    { ...EMPTY_CONDITION, label: '自由航行' },
+    { ...EMPTY_CONDITION, label: '满载工况' }
+  ]);
   const [seriesFilter, setSeriesFilter] = useState('all');
   const [results, setResults] = useState(null);
 
@@ -117,7 +168,7 @@ export default function MultiConditionSelection({ colors, theme }) {
   }, []);
 
   const addCondition = useCallback(() => {
-    if (conditions.length >= 5) return;
+    if (conditions.length >= MAX_CONDITIONS) return;
     setConditions(prev => [...prev, { ...EMPTY_CONDITION, label: `工况${prev.length + 1}` }]);
   }, [conditions.length]);
 
@@ -142,6 +193,25 @@ export default function MultiConditionSelection({ colors, theme }) {
     setResults({ items: scored, totalConditions: validConds.length });
   }, [conditions, seriesFilter]);
 
+  // Radar chart data for top 3 models
+  const radarData = useMemo(() => {
+    if (!results || results.items.length === 0) return null;
+    const top3 = results.items.slice(0, 3);
+    // Each condition becomes an axis
+    const validConds = conditions.filter(c => c.power || c.speed || c.ratio);
+    if (validConds.length < 2) return null; // radar needs at least 2 axes
+
+    const data = validConds.map((cond, ci) => {
+      const point = { condition: cond.label || `工况${ci + 1}` };
+      top3.forEach((r, mi) => {
+        point[r.model] = r.conditionScores[ci] || 0;
+      });
+      return point;
+    });
+
+    return { data, models: top3.map(r => r.model) };
+  }, [results, conditions]);
+
   return (
     <Container fluid className="py-3">
       <Row className="mb-3">
@@ -152,20 +222,22 @@ export default function MultiConditionSelection({ colors, theme }) {
 
       <Card className="mb-3">
         <Card.Header className="d-flex justify-content-between align-items-center">
-          <span>工况参数 ({conditions.length}/5)</span>
+          <span>工况参数 ({conditions.length}/{MAX_CONDITIONS})</span>
           <div className="d-flex gap-2">
             <Form.Select size="sm" style={{ width: 150 }} value={seriesFilter} onChange={e => setSeriesFilter(e.target.value)}>
               <option value="all">全部系列</option>
               {['HC','HCD','HCA','GWC','GW','GC','HCM','DT','MV','SGW','HCQ'].map(s => <option key={s} value={s}>{s}系列</option>)}
             </Form.Select>
-            <Button size="sm" variant="outline-primary" onClick={addCondition} disabled={conditions.length >= 5}><i className="bi bi-plus"></i> 添加工况</Button>
+            <Button size="sm" variant="outline-primary" onClick={addCondition} disabled={conditions.length >= MAX_CONDITIONS}>
+              <i className="bi bi-plus"></i> 添加工况
+            </Button>
           </div>
         </Card.Header>
         <Card.Body>
           {conditions.map((cond, idx) => (
             <Row key={idx} className="mb-2 align-items-center">
               <Col xs="auto">
-                <Form.Control size="sm" style={{ width: 100 }} placeholder="工况名" value={cond.label} onChange={e => updateCondition(idx, 'label', e.target.value)} />
+                <Form.Control size="sm" style={{ width: 90 }} placeholder="工况名" value={cond.label} onChange={e => updateCondition(idx, 'label', e.target.value)} />
               </Col>
               <Col>
                 <InputGroup size="sm">
@@ -178,59 +250,102 @@ export default function MultiConditionSelection({ colors, theme }) {
                 </InputGroup>
               </Col>
               <Col xs="auto">
+                <Form.Select size="sm" style={{ width: 90 }} value={cond.weight} onChange={e => updateCondition(idx, 'weight', parseInt(e.target.value))}>
+                  {WEIGHT_OPTIONS.map(w => <option key={w.value} value={w.value}>{w.label}</option>)}
+                </Form.Select>
+              </Col>
+              <Col xs="auto">
                 <Button size="sm" variant="outline-danger" onClick={() => removeCondition(idx)} disabled={conditions.length <= 1}><i className="bi bi-trash"></i></Button>
               </Col>
             </Row>
           ))}
-          <div className="mt-3 text-end">
+          <div className="mt-2 d-flex justify-content-between align-items-center">
+            <small className="text-muted">权重: 高(3x)=关键工况, 中(2x)=常用工况, 低(1x)=偶尔工况</small>
             <Button variant="primary" onClick={runSelection}><i className="bi bi-play-fill me-1"></i>开始选型</Button>
           </div>
         </Card.Body>
       </Card>
 
       {results && (
-        <Card>
-          <Card.Header>选型结果 — {results.items.length} 个型号满足 {results.totalConditions} 组工况中的至少1组</Card.Header>
-          <Card.Body className="p-0">
-            {results.items.length === 0 ? (
-              <Alert variant="warning" className="m-3">未找到满足任何工况的型号</Alert>
-            ) : (
-              <div style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                <Table hover size="sm" className="mb-0">
-                  <thead className="sticky-top bg-light">
-                    <tr><th>型号</th><th>系列</th><th>满足工况</th><th>得分</th><th>校验详情</th></tr>
-                  </thead>
-                  <tbody>
-                    {results.items.map((r, i) => (
-                      <tr key={r.model + i} className={r.matchCount === results.totalConditions ? 'table-success' : ''}>
-                        <td><strong>{r.model}</strong></td>
-                        <td><Badge bg="secondary">{r.series}</Badge></td>
-                        <td><Badge bg={r.matchCount === results.totalConditions ? 'success' : 'warning'}>{r.matchCount}/{results.totalConditions}</Badge></td>
-                        <td>{r.score}</td>
-                        <td>
-                          <div className="d-flex flex-wrap gap-1">
-                            {r.details.map((d, di) => (
-                              <span key={di}>
-                                <Badge bg={d.matched ? 'outline-success' : 'outline-danger'} text={d.matched ? 'success' : 'danger'} className="border me-1">
-                                  {d.label}: {d.matched ? '✓' : '✗'}
-                                </Badge>
-                                {d.checks.filter(c => c.detail || !c.ok).map((c, ci) => (
-                                  <small key={ci} className={`me-1 ${c.ok ? 'text-success' : 'text-danger'}`}>
-                                    {c.param}{c.detail ? `(${c.detail})` : c.reason ? `(${c.reason})` : ''}
-                                  </small>
-                                ))}
-                              </span>
-                            ))}
-                          </div>
-                        </td>
-                      </tr>
+        <>
+          <Card className="mb-3">
+            <Card.Header className="d-flex justify-content-between align-items-center">
+              <span>选型结果 — {results.items.length} 个型号满足 {results.totalConditions} 组工况中的至少1组</span>
+              <Button size="sm" variant="outline-success" onClick={() => exportResultsCSV(results, conditions)} disabled={results.items.length === 0}>
+                <i className="bi bi-download me-1"></i>导出CSV
+              </Button>
+            </Card.Header>
+            <Card.Body className="p-0">
+              {results.items.length === 0 ? (
+                <Alert variant="warning" className="m-3">未找到满足任何工况的型号</Alert>
+              ) : (
+                <div style={{ maxHeight: '50vh', overflowY: 'auto' }}>
+                  <Table hover size="sm" className="mb-0">
+                    <thead className="sticky-top bg-light">
+                      <tr><th>型号</th><th>系列</th><th>满足工况</th><th>加权得分</th><th>校验详情</th></tr>
+                    </thead>
+                    <tbody>
+                      {results.items.map((r, i) => (
+                        <tr key={r.model + i} className={r.matchCount === results.totalConditions ? 'table-success' : ''}>
+                          <td><strong>{r.model}</strong></td>
+                          <td><Badge bg="secondary">{r.series}</Badge></td>
+                          <td><Badge bg={r.matchCount === results.totalConditions ? 'success' : 'warning'}>{r.matchCount}/{results.totalConditions}</Badge></td>
+                          <td>{r.score}</td>
+                          <td>
+                            <div className="d-flex flex-wrap gap-1">
+                              {r.details.map((d, di) => (
+                                <span key={di}>
+                                  <Badge bg={d.matched ? 'outline-success' : 'outline-danger'} text={d.matched ? 'success' : 'danger'} className="border me-1">
+                                    {d.label}({WEIGHT_OPTIONS.find(w => w.value === d.weight)?.label || '中'}): {d.matched ? '\u2713' : '\u2717'}
+                                  </Badge>
+                                  {d.checks.filter(c => c.detail || !c.ok).map((c, ci) => (
+                                    <small key={ci} className={`me-1 ${c.ok ? 'text-success' : 'text-danger'}`}>
+                                      {c.param}{c.detail ? `(${c.detail})` : c.reason ? `(${c.reason})` : ''}
+                                    </small>
+                                  ))}
+                                </span>
+                              ))}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </div>
+              )}
+            </Card.Body>
+          </Card>
+
+          {/* Radar chart for top 3 models */}
+          {radarData && (
+            <Card className="mb-3">
+              <Card.Header>Top 3 型号工况得分雷达图</Card.Header>
+              <Card.Body>
+                <ResponsiveContainer width="100%" height={340}>
+                  <RadarChart data={radarData.data} cx="50%" cy="50%" outerRadius="75%">
+                    <PolarGrid strokeDasharray="3 3" />
+                    <PolarAngleAxis dataKey="condition" tick={{ fontSize: 12 }} />
+                    <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 10 }} />
+                    <Tooltip />
+                    {radarData.models.map((model, i) => (
+                      <Radar
+                        key={model}
+                        name={model}
+                        dataKey={model}
+                        stroke={RADAR_COLORS[i]}
+                        fill={RADAR_COLORS[i]}
+                        fillOpacity={0.15}
+                        strokeWidth={2}
+                        dot={{ r: 3 }}
+                      />
                     ))}
-                  </tbody>
-                </Table>
-              </div>
-            )}
-          </Card.Body>
-        </Card>
+                    <Legend wrapperStyle={{ fontSize: 12 }} />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </Card.Body>
+            </Card>
+          )}
+        </>
       )}
     </Container>
   );

@@ -114,16 +114,23 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
     try {
       const result = await autoSelectGearbox(numericReq, initialData);
       // autoSelectGearbox 返回 { success, recommendations, flexibleCoupling, standbyPump, ... }
-      const bestGearbox = result.recommendations?.[0] || null;
+      const top3 = (result.recommendations || []).slice(0, 3).map(rec => ({
+        model: rec.model,
+        ratio: rec.selectedRatio || rec.ratio,
+        capacityMargin: rec.capacityMargin,
+        price: rec.marketPrice || rec.price || 0
+      }));
+      const bestGearbox = top3[0] || null;
       return {
         requirementId: requirement.id,
         requirementName: requirement.name || '未命名',
         input: numericReq,
         success: result.success,
-        gearbox: bestGearbox ? { model: bestGearbox.model, price: bestGearbox.marketPrice || bestGearbox.price } : null,
+        top3,
+        gearbox: bestGearbox ? { model: bestGearbox.model, price: bestGearbox.price } : null,
         coupling: result.flexibleCoupling ? { model: result.flexibleCoupling.model, price: result.flexibleCoupling.price } : null,
         pump: result.standbyPump ? { model: result.standbyPump.model, price: result.standbyPump.price } : null,
-        totalPrice: (bestGearbox?.marketPrice || bestGearbox?.price || 0) + (result.flexibleCoupling?.price || 0) + (result.standbyPump?.price || 0),
+        totalPrice: (bestGearbox?.price || 0) + (result.flexibleCoupling?.price || 0) + (result.standbyPump?.price || 0),
         message: result.message,
         timestamp: new Date().toISOString()
       };
@@ -133,6 +140,7 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
         requirementName: requirement.name || '未命名',
         input: numericReq,
         success: false,
+        top3: [],
         result: null,
         message: err.message,
         timestamp: new Date().toISOString()
@@ -254,10 +262,10 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
       r.input.motorSpeed,
       r.input.targetRatio,
       r.success ? '成功' : '失败',
-      r.result?.gearbox?.model || '-',
-      r.result?.coupling?.model || '-',
-      r.result?.pump?.model || '-',
-      r.result?.totalPrice || '-'
+      r.gearbox?.model || '-',
+      r.coupling?.model || '-',
+      r.pump?.model || '-',
+      r.totalPrice || '-'
     ]);
 
     const csvContent = [headers, ...rows]
@@ -274,13 +282,99 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
   }, [results]);
 
   /**
+   * 导出结果为XLSX (2 sheets)
+   */
+  const exportXLSX = useCallback(async () => {
+    if (results.length === 0) return;
+
+    try {
+      const { loadXLSX } = await import('../utils/dynamicImports');
+      const XLSX = await loadXLSX();
+      const wb = XLSX.utils.book_new();
+
+      // Sheet 1: 选型结果
+      const sheetHeaders = [
+        '序号', '需求名称', '功率(kW)', '转速(rpm)', '速比', '推力(kN)',
+        '推荐型号1', '速比1', '余量1(%)', '价格1',
+        '推荐型号2', '速比2', '余量2(%)', '价格2',
+        '推荐型号3', '速比3', '余量3(%)', '价格3',
+        '联轴器', '备用泵'
+      ];
+      const sheetRows = results.map((r, idx) => {
+        const row = [
+          idx + 1,
+          r.requirementName,
+          r.input.motorPower,
+          r.input.motorSpeed,
+          r.input.targetRatio,
+          r.input.thrust || '-'
+        ];
+        for (let i = 0; i < 3; i++) {
+          const rec = r.top3?.[i];
+          if (rec) {
+            row.push(rec.model, rec.ratio?.toFixed(2) || '-', rec.capacityMargin?.toFixed(1) || '-', rec.price || '-');
+          } else {
+            row.push('-', '-', '-', '-');
+          }
+        }
+        row.push(r.coupling?.model || '-', r.pump?.model || '-');
+        return row;
+      });
+      const ws1 = XLSX.utils.aoa_to_sheet([sheetHeaders, ...sheetRows]);
+      ws1['!cols'] = sheetHeaders.map((h) => ({ wch: h.length < 6 ? 10 : 14 }));
+      XLSX.utils.book_append_sheet(wb, ws1, '选型结果');
+
+      // Sheet 2: 汇总统计
+      const successCount = results.filter(r => r.success).length;
+      const failCount = results.length - successCount;
+      const allModels = new Set();
+      let totalEstimate = 0;
+      results.forEach(r => {
+        if (r.success && r.top3?.[0]) {
+          allModels.add(r.top3[0].model);
+          totalEstimate += r.totalPrice || 0;
+        }
+      });
+      const summaryData = [
+        ['汇总统计', ''],
+        ['总需求数', results.length],
+        ['成功数', successCount],
+        ['失败数', failCount],
+        ['成功率', `${results.length > 0 ? ((successCount / results.length) * 100).toFixed(1) : 0}%`],
+        ['涉及型号数', allModels.size],
+        ['总预估金额', totalEstimate > 0 ? `¥${totalEstimate.toLocaleString()}` : '-']
+      ];
+      const ws2 = XLSX.utils.aoa_to_sheet(summaryData);
+      ws2['!cols'] = [{ wch: 14 }, { wch: 20 }];
+      XLSX.utils.book_append_sheet(wb, ws2, '汇总统计');
+
+      XLSX.writeFile(wb, `批量选型结果_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    } catch (err) {
+      console.error('XLSX导出失败:', err);
+      setError('Excel导出失败: ' + err.message);
+    }
+  }, [results]);
+
+  /**
    * 统计信息
    */
   const stats = useMemo(() => {
     const total = results.length;
     const successful = results.filter(r => r.success).length;
     const failed = total - successful;
-    return { total, successful, failed };
+    // 统计推荐频次最高的型号 (取首选推荐)
+    const modelCount = {};
+    results.forEach(r => {
+      if (r.success && r.top3?.[0]?.model) {
+        const m = r.top3[0].model;
+        modelCount[m] = (modelCount[m] || 0) + 1;
+      }
+    });
+    const topModels = Object.entries(modelCount)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([model, count]) => ({ model, count }));
+    return { total, successful, failed, topModels };
   }, [results]);
 
   /**
@@ -430,20 +524,57 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
             />
           )}
 
-          {/* 结果统计 */}
+          {/* 结果统计 & 汇总 */}
           {results.length > 0 && (
             <div className="mb-3">
-              <Badge bg="primary" className="me-2">总计: {stats.total}</Badge>
-              <Badge bg="success" className="me-2">成功: {stats.successful}</Badge>
-              <Badge bg="danger" className="me-2">失败: {stats.failed}</Badge>
-              <Button
-                variant="outline-primary"
-                size="sm"
-                className="float-end"
-                onClick={exportResults}
-              >
-                导出结果
-              </Button>
+              <div className="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                  <Badge bg="primary" className="me-2">总计: {stats.total}</Badge>
+                  <Badge bg="success" className="me-2">成功: {stats.successful}</Badge>
+                  <Badge bg="danger" className="me-2">失败: {stats.failed}</Badge>
+                </div>
+                <div>
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    className="me-2"
+                    onClick={exportResults}
+                  >
+                    导出CSV
+                  </Button>
+                  <Button
+                    variant="outline-success"
+                    size="sm"
+                    onClick={exportXLSX}
+                  >
+                    导出Excel
+                  </Button>
+                </div>
+              </div>
+              {/* 汇总信息区 */}
+              <Row className="mb-3">
+                <Col md={6}>
+                  <div className="small mb-1" style={{ color: colors?.text }}>
+                    选型成功率: {stats.total > 0 ? ((stats.successful / stats.total) * 100).toFixed(0) : 0}%
+                  </div>
+                  <ProgressBar style={{ height: '8px' }}>
+                    <ProgressBar variant="success" now={stats.total > 0 ? (stats.successful / stats.total) * 100 : 0} key={1} />
+                    <ProgressBar variant="danger" now={stats.total > 0 ? (stats.failed / stats.total) * 100 : 0} key={2} />
+                  </ProgressBar>
+                </Col>
+                <Col md={6}>
+                  {stats.topModels.length > 0 && (
+                    <div className="small" style={{ color: colors?.text }}>
+                      <span style={{ fontWeight: 600 }}>推荐频次最高型号: </span>
+                      {stats.topModels.map((item, i) => (
+                        <Badge key={item.model} bg="light" text="dark" className="me-1" style={{ fontSize: '0.75rem' }}>
+                          {item.model} x{item.count}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </Col>
+              </Row>
             </div>
           )}
 
@@ -457,7 +588,7 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
                   <th>转速</th>
                   <th>速比</th>
                   <th>状态</th>
-                  <th>齿轮箱</th>
+                  <th>推荐齿轮箱 (Top 3)</th>
                   <th>联轴器</th>
                   <th>备用泵</th>
                   <th>价格</th>
@@ -475,7 +606,28 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
                         {result.success ? '成功' : '失败'}
                       </Badge>
                     </td>
-                    <td>{result.gearbox?.model || '-'}</td>
+                    <td>
+                      {result.top3?.length > 0 ? (
+                        <div>
+                          {/* 首选推荐 - 突出显示 */}
+                          <div style={{ fontWeight: 600 }}>
+                            {result.top3[0].model}
+                            <span className="text-muted ms-1" style={{ fontSize: '0.8em' }}>
+                              i={result.top3[0].ratio?.toFixed(2)} | {result.top3[0].capacityMargin?.toFixed(1)}%
+                            </span>
+                          </div>
+                          {/* 备选推荐 */}
+                          {result.top3.slice(1).map((alt, i) => (
+                            <div key={i} style={{ fontSize: '0.78em', color: '#888', lineHeight: 1.4 }}>
+                              {i === 0 ? '2.' : '3.'} {alt.model}
+                              <span className="ms-1">
+                                i={alt.ratio?.toFixed(2)} | {alt.capacityMargin?.toFixed(1)}% | {alt.price ? formatPrice(alt.price) : '询价'}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : '-'}
+                    </td>
                     <td>{result.coupling?.model || '-'}</td>
                     <td>{result.pump?.model || '-'}</td>
                     <td>
