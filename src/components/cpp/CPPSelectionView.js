@@ -19,7 +19,7 @@ import {
   estimateEEDI
 } from '../../utils/cppHydrodynamics';
 import HydrodynamicChart, { OperatingPointsChart, EfficiencyBreakdownChart } from './HydrodynamicChart';
-import CCSCompliancePanel, { CCSComplianceSummary, CCSWarningBanner } from './CCSCompliancePanel';
+import CCSCompliancePanel, { CCSComplianceSummary } from './CCSCompliancePanel';
 import ClassificationCompliancePanel from './ClassificationCompliancePanel';
 import EnergyEfficiencyPanel from './EnergyEfficiencyPanel';
 import SmartMonitoringPanel from './SmartMonitoringPanel';

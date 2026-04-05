@@ -42,7 +42,7 @@ import useSelectionHandlers from './hooks/useSelectionHandlers';
 import usePriceHandlers from './hooks/usePriceHandlers';
 import useFormHandlers from './hooks/useFormHandlers';
 import useKeyboardShortcuts from './hooks/useKeyboardShortcuts';
-import ShortcutHelpModal from './components/ShortcutHelpModal';
+const ShortcutHelpModal = React.lazy(() => import('./components/ShortcutHelpModal'));
 
 // === 非import语句 (lazy组件、常量等) ===
 // 性能优化: 非关键组件使用React.lazy懒加载
@@ -1755,7 +1755,9 @@ function App({ appData: initialAppData, setAppData }) {
       )}
 
       {/* 用户反馈浮动按钮 */}
-      <ShortcutHelpModal show={showShortcuts} onHide={() => setShowShortcuts(false)} />
+      <Suspense fallback={null}>
+        <ShortcutHelpModal show={showShortcuts} onHide={() => setShowShortcuts(false)} />
+      </Suspense>
       <FeedbackWidget position="bottom-right" />
       <ToastContainer />
 
