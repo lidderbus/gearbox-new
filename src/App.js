@@ -90,6 +90,7 @@ const ReceivablesManagement = lazy(() => import('./components/ReceivablesManagem
 
 // 增强选型表单 - 完整技术询单 (2026-01-10新增)
 const EnhancedSelectionForm = lazy(() => import('./components/EnhancedSelectionForm'));
+const InquiryView = lazy(() => import('./components/InquiryView'));
 
 // ===== 21项系统优化新增模块 (2026-03-21) =====
 // Phase 1: 选型能力升级
@@ -959,7 +960,7 @@ function App({ appData: initialAppData, setAppData }) {
 
           <Tab eventKey="inquiry" title={<span><i className="bi bi-file-earmark-plus me-1"></i>技术询单</span>}>
             <Suspense fallback={<LazyLoadFallback />}>
-              <EnhancedSelectionForm theme={theme} colors={colors} />
+              <InquiryView colors={colors} theme={theme} />
             </Suspense>
           </Tab>
 

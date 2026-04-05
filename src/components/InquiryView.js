@@ -4,6 +4,7 @@ import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, InputGroup } from 'react-bootstrap';
 import { inquiryStore } from '../services/documentStorage';
 import { generateDocNumber } from '../utils/documentNumbering';
+import { trackFeature } from '../utils/analytics';
 
 const STATUSES = [
   { key: 'new', label: '新建', color: 'info' },
@@ -86,6 +87,7 @@ export default function InquiryView({ colors, theme }) {
     const docNumber = generateDocNumber('inquiry');
     const doc = { ...form, id: docNumber, status: 'new' };
     inquiryStore.save(doc);
+    trackFeature('inquiry_create', { id: docNumber, customer: form.customer });
     setForm(EMPTY_FORM);
     setShowForm(false);
     reload();
@@ -108,7 +110,20 @@ export default function InquiryView({ colors, theme }) {
   }, [reload, flash]);
 
   const handleSelection = useCallback((inq) => {
-    alert(`请在选型中心使用此参数：\n功率: ${inq.power} kW\n转速: ${inq.speed} rpm${inq.ratioTarget ? '\n目标速比: ' + inq.ratioTarget : ''}`);
+    // Save inquiry params to selection wizard storage for InputParametersTab to pick up
+    try {
+      const params = {
+        power: inq.power,
+        speed: inq.speed,
+        targetRatio: inq.ratioTarget || '',
+        thrustRequirement: inq.thrustReq || '',
+        workCondition: '',
+      };
+      localStorage.setItem('selection_wizard_params', JSON.stringify(params));
+    } catch (e) { /* ignore storage errors */ }
+    trackFeature('inquiry_to_selection', { id: inq.id, model: inq.model });
+    // Navigate to the input parameters tab
+    window.location.hash = '#/input';
   }, []);
 
   // CSV export

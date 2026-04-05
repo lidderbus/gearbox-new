@@ -2,6 +2,7 @@
 // 售后服务 - 齿轮箱售后工单管理系统 (localStorage持久化)
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, InputGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { trackFeature } from '../utils/analytics';
 
 const STORAGE_KEY = 'aftersales_tickets';
 const MAX_TICKETS = 200;
@@ -145,6 +146,7 @@ export default function AfterSalesView({ colors, theme }) {
       statusHistory: [{ status: 'pending', time: now.toISOString() }],
     };
     setTickets(prev => [ticket, ...prev].slice(0, MAX_TICKETS));
+    trackFeature('ticket_create', { id: ticket.id, type: ticket.type, customer: ticket.customer });
     setForm({ ...EMPTY_FORM });
     setShowModal(false);
   };

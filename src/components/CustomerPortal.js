@@ -2,6 +2,9 @@
 // 客户询价管理 - 询价提交、状态流转、统计分析
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, InputGroup } from 'react-bootstrap';
+import { trackFeature } from '../utils/analytics';
+import { inquiryStore } from '../services/documentStorage';
+import { generateDocNumber } from '../utils/documentNumbering';
 
 const STORAGE_KEY = 'customer_inquiries';
 const MAX_ITEMS = 200;
@@ -113,14 +116,39 @@ export default function CustomerPortal({ colors, theme }) {
       updatedAt: now,
     };
     setInquiries(prev => [entry, ...prev]);
+    trackFeature('customer_inquiry_submit', { id: entry.id, customer: entry.customer });
     setForm({ ...EMPTY_FORM });
     setShowForm(false);
   }, [form, inquiries]);
 
   const changeStatus = useCallback((id, newStatus) => {
-    setInquiries(prev => prev.map(i =>
-      i.id === id ? { ...i, status: newStatus, updatedAt: new Date().toISOString() } : i
-    ));
+    setInquiries(prev => prev.map(i => {
+      if (i.id !== id) return i;
+      const updated = { ...i, status: newStatus, updatedAt: new Date().toISOString() };
+      // When reaching "已报价", sync to document management inquiryStore for cross-module visibility
+      if (newStatus === 'quoted') {
+        try {
+          const docId = generateDocNumber('inquiry');
+          inquiryStore.save({
+            id: docId,
+            customer: updated.customer,
+            contact: updated.contact,
+            phone: updated.phone,
+            shipType: updated.application || '',
+            power: String(updated.power || ''),
+            speed: String(updated.speed || ''),
+            ratioTarget: updated.ratio || '',
+            thrustReq: updated.thrust || '',
+            model: updated.gearbox || '',
+            classSociety: '',
+            specialReq: updated.remark || '',
+            status: 'quoted',
+            sourcePortalId: updated.id,
+          });
+        } catch (e) { /* ignore sync errors */ }
+      }
+      return updated;
+    }));
   }, []);
 
   const deleteInquiry = useCallback((id) => {
@@ -129,12 +157,20 @@ export default function CustomerPortal({ colors, theme }) {
   }, []);
 
   const goSelection = useCallback((inq) => {
-    const parts = [`功率: ${inq.power}kW`];
-    if (inq.speed) parts.push(`转速: ${inq.speed}rpm`);
-    if (inq.gearbox) parts.push(`意向型号: ${inq.gearbox}`);
-    if (inq.ratio) parts.push(`速比: ${inq.ratio}`);
-    if (inq.thrust) parts.push(`推力: ${inq.thrust}`);
-    alert(`选型参数 (${inq.customer}):\n${parts.join('\n')}\n\n请前往选型计算页面输入以上参数进行匹配。`);
+    // Save inquiry params to selection wizard storage for InputParametersTab to pick up
+    try {
+      const params = {
+        power: String(inq.power || ''),
+        speed: String(inq.speed || ''),
+        targetRatio: inq.ratio || '',
+        thrustRequirement: inq.thrust || '',
+        workCondition: '',
+      };
+      localStorage.setItem('selection_wizard_params', JSON.stringify(params));
+    } catch (e) { /* ignore storage errors */ }
+    trackFeature('customer_inquiry_to_selection', { id: inq.id });
+    // Navigate to the input parameters tab
+    window.location.hash = '#/input';
   }, []);
 
   const filtered = useMemo(() => {

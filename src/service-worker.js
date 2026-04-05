@@ -33,7 +33,7 @@ registerRoute(
   ({ url }) => url.origin === self.location.origin &&
     url.pathname.match(/\.(js|css|woff2?|ttf|eot)$/),
   new CacheFirst({
-    cacheName: 'gearbox-static-v40',
+    cacheName: 'gearbox-static-v43',
     plugins: [
       new CacheableResponsePlugin({ statuses: [0, 200] }),
       new ExpirationPlugin({ maxEntries: 200, maxAgeSeconds: 30 * 24 * 60 * 60 }),
@@ -46,7 +46,7 @@ registerRoute(
   ({ url }) => url.origin === self.location.origin &&
     url.pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|webp)$/),
   new CacheFirst({
-    cacheName: 'gearbox-images-v40',
+    cacheName: 'gearbox-images-v43',
     plugins: [
       new CacheableResponsePlugin({ statuses: [0, 200] }),
       new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 30 * 24 * 60 * 60 }),

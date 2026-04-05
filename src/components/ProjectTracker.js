@@ -2,6 +2,7 @@
 // 项目追踪看板 - 选型项目进度管理 (v2.0 - 完整CRUD + localStorage持久化)
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Modal, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { trackFeature } from '../utils/analytics';
 
 // ── 常量 ──
 const STORAGE_KEY = 'gearbox_projects';
@@ -201,6 +202,7 @@ export default function ProjectTracker({ colors, theme }) {
           date: new Date().toISOString().slice(0, 10),
           statusHistory: [{ status: 'inquiry', time: new Date().toISOString() }],
         };
+        trackFeature('project_create', { id: newP.id, customer: newP.customer });
         return [newP, ...prev];
       });
     }
@@ -215,6 +217,7 @@ export default function ProjectTracker({ colors, theme }) {
   }, [deleteTarget, expandedId]);
 
   const handleStatusChange = useCallback((id, newStatus) => {
+    trackFeature('project_status_change', { id, status: newStatus });
     setProjects(prev => prev.map(p => {
       if (p.id !== id) return p;
       const history = Array.isArray(p.statusHistory) ? [...p.statusHistory] : [];
