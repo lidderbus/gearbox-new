@@ -19,6 +19,7 @@ import CapacityCalculationCard from './selection/CapacityCalculationCard';
 import RelaxationSuggestions from './selection/RelaxationSuggestions';
 import { exportSelectionSummary } from '../utils/selectionSummaryExport';
 import { calculatePowerRange, extractSeriesFromModel } from '../utils/gearboxDataEnhancer';
+import EquipmentInfoCard from './EquipmentInfoCard';
 
 // 导入子组件
 import {
@@ -807,20 +808,7 @@ const EnhancedGearboxSelectionResult = ({
                 <h6 className="mt-4" style={{ color: colors?.headerText }}>高弹联轴器</h6>
                 {couplingResult && couplingResult.success ? (
                   <>
-                  <ListGroup>
-                    <ListGroup.Item style={{ backgroundColor: colors?.card, color: colors?.text, borderColor: colors?.border }}>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div>
-                          <strong>{couplingResult.model}</strong>
-                          <div>
-                            <small>扭矩: {couplingResult.torque} {couplingResult.torqueUnit || 'kN·m'}</small>
-                            <small className="ms-3">余量: {couplingResult.torqueMargin?.toFixed(1)}%</small>
-                          </div>
-                        </div>
-                        <Badge bg="success">已选择</Badge>
-                      </div>
-                    </ListGroup.Item>
-                  </ListGroup>
+                  <EquipmentInfoCard type="coupling" data={couplingResult} />
                   {/* Downgrade suggestion when margin > 50% */}
                   {couplingResult.torqueMargin > 50 && couplingResult.recommendations?.length > 1 && (() => {
                     const better = couplingResult.recommendations.find(
@@ -845,20 +833,7 @@ const EnhancedGearboxSelectionResult = ({
                     当前选择的齿轮箱型号不需要配备备用泵
                   </Alert>
                 ) : pumpResult && pumpResult.success ? (
-                  <ListGroup>
-                    <ListGroup.Item style={{ backgroundColor: colors?.card, color: colors?.text, borderColor: colors?.border }}>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div>
-                          <strong>{pumpResult.model}</strong>
-                          <div>
-                            <small>流量: {pumpResult.flow} L/min</small>
-                            <small className="ms-3">压力: {pumpResult.pressure} MPa</small>
-                          </div>
-                        </div>
-                        <Badge bg="success">已选择</Badge>
-                      </div>
-                    </ListGroup.Item>
-                  </ListGroup>
+                  <EquipmentInfoCard type="pump" data={pumpResult} />
                 ) : (
                   <Alert variant="warning">未找到合适的备用泵，但该齿轮箱型号需要配备备用泵</Alert>
                 )}

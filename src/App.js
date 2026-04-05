@@ -41,6 +41,8 @@ import useHistoryHandlers from './hooks/useHistoryHandlers';
 import useSelectionHandlers from './hooks/useSelectionHandlers';
 import usePriceHandlers from './hooks/usePriceHandlers';
 import useFormHandlers from './hooks/useFormHandlers';
+import useKeyboardShortcuts from './hooks/useKeyboardShortcuts';
+import ShortcutHelpModal from './components/ShortcutHelpModal';
 
 // === 非import语句 (lazy组件、常量等) ===
 // 性能优化: 非关键组件使用React.lazy懒加载
@@ -122,6 +124,9 @@ const CustomerPortal = lazy(() => import('./components/CustomerPortal'));
 const DataBackupView = lazy(() => import('./components/DataBackupView'));
 const MobileOptimization = lazy(() => import('./components/MobileOptimization'));
 const ApiDocumentation = lazy(() => import('./components/ApiDocumentation'));
+
+// 首次使用引导 (lazy loaded - only on first visit)
+const OnboardingGuide = lazy(() => import('./components/OnboardingGuide'));
 
 // Modal components (lazy loaded - only loaded when opened)
 const QuotationOptionsModal = lazy(() => import('./components/QuotationOptionsModal'));
@@ -317,6 +322,12 @@ function App({ appData: initialAppData, setAppData }) {
   const [comparisonResult, setComparisonResult] = useState(null);
 
   const [showDiagnosticPanel, setShowDiagnosticPanel] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+
+  useKeyboardShortcuts({
+    'ctrl+/': () => setShowShortcuts(true),
+    'ctrl+p': () => window.print(),
+  });
 
   // 使用表单处理函数 Hook
   const {
@@ -1744,8 +1755,14 @@ function App({ appData: initialAppData, setAppData }) {
       )}
 
       {/* 用户反馈浮动按钮 */}
+      <ShortcutHelpModal show={showShortcuts} onHide={() => setShowShortcuts(false)} />
       <FeedbackWidget position="bottom-right" />
       <ToastContainer />
+
+      {/* 首次使用引导 */}
+      <Suspense fallback={null}>
+        <OnboardingGuide />
+      </Suspense>
       </Container>
     </div>
     </SelectionResultProvider>

@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 44; // v44: Phase3统一框架 — ExportToolbar(CSV/XLSX/打印三合一)9模块接入, relationStore文档追溯链(询单→报价→协议→合同), print-unified.css(公司页眉/A4/分页/Badge), unifiedExporter.js (2026-04-05)
+export const APP_DATA_VERSION = 45; // v45: Phase4体验打磨 — NotificationCenter(超期提醒+桌面通知), 快捷键(Ctrl+P/E//), OnboardingGuide(7步引导), EquipmentInfoCard(联轴器/泵可视化卡片), 基于v44统一框架 (2026-04-05)
 
 export const DEFAULTS = {
     gearbox: {

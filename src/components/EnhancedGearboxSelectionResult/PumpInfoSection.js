@@ -2,6 +2,7 @@
 // 备用泵信息展示组件
 import React from 'react';
 import { Table, Badge, Alert } from 'react-bootstrap';
+import EquipmentInfoCard from '../EquipmentInfoCard';
 import ValidationWarnings from './ValidationWarnings';
 import { formatPrice } from '../../utils/priceFormatter';
 
@@ -136,6 +137,9 @@ const PumpInfoSection = ({
           )}
         </tbody>
       </Table>
+
+      {/* 备用泵设备信息卡 */}
+      <EquipmentInfoCard type="pump" data={pumpResult} />
 
       {/* DT系列特殊说明 */}
       {isDTGearbox && isElectricPump && (

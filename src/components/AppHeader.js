@@ -1,9 +1,11 @@
 // src/components/AppHeader.js
 // 应用头部组件 - 包含工具栏和提示信息
 
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Row, Col, Button, Alert, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+
+const NotificationCenter = lazy(() => import('./NotificationCenter'));
 
 /**
  * 应用头部工具栏组件
@@ -53,6 +55,9 @@ const AppHeader = ({
                 </Button>
               </>
             )}
+            <Suspense fallback={null}>
+              <NotificationCenter />
+            </Suspense>
             <Button
               variant={theme === 'light' ? 'outline-secondary' : 'outline-light'}
               size="sm"

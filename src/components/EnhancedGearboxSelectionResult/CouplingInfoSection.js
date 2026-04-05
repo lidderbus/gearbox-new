@@ -4,6 +4,7 @@ import React from 'react';
 import { Row, Col, Table, Badge, Alert } from 'react-bootstrap';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import ProductThumbnail from '../ProductThumbnail';
+import EquipmentInfoCard from '../EquipmentInfoCard';
 import ValidationWarnings from './ValidationWarnings';
 
 /**
@@ -125,6 +126,8 @@ const CouplingInfoSection = ({
               </PieChart>
             </ResponsiveContainer>
           </div>
+          {/* 联轴器设备信息卡 */}
+          <EquipmentInfoCard type="coupling" data={couplingResult} />
         </Col>
       </Row>
       {couplingResult.warning && (

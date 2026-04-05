@@ -8,6 +8,7 @@ import { saveSelectionToHistory } from '../utils/selectionHistory';
 import { initialData } from '../data/initialData';
 import { formatPrice } from '../utils/priceCalculator';
 import ExportToolbar from './ExportToolbar';
+import EquipmentInfoCard from './EquipmentInfoCard';
 
 /**
  * 默认选型需求模板
@@ -129,8 +130,30 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
         success: result.success,
         top3,
         gearbox: bestGearbox ? { model: bestGearbox.model, price: bestGearbox.price } : null,
-        coupling: result.flexibleCoupling ? { model: result.flexibleCoupling.model, price: result.flexibleCoupling.price } : null,
-        pump: result.standbyPump ? { model: result.standbyPump.model, price: result.standbyPump.price } : null,
+        coupling: result.flexibleCoupling ? {
+          model: result.flexibleCoupling.model,
+          price: result.flexibleCoupling.price,
+          torque: result.flexibleCoupling.torque,
+          torqueUnit: result.flexibleCoupling.torqueUnit,
+          torqueMargin: result.flexibleCoupling.torqueMargin,
+          requiredTorque: result.flexibleCoupling.requiredTorque,
+          maxSpeed: result.flexibleCoupling.maxSpeed,
+          weight: result.flexibleCoupling.weight,
+          marketPrice: result.flexibleCoupling.marketPrice,
+          matchType: result.flexibleCoupling.matchType
+        } : null,
+        pump: result.standbyPump ? {
+          model: result.standbyPump.model,
+          price: result.standbyPump.price,
+          flow: result.standbyPump.flow,
+          pressure: result.standbyPump.pressure,
+          motorPower: result.standbyPump.motorPower,
+          weight: result.standbyPump.weight,
+          marketPrice: result.standbyPump.marketPrice,
+          matchType: result.standbyPump.matchType,
+          type: result.standbyPump.type,
+          series: result.standbyPump.series
+        } : null,
         totalPrice: (bestGearbox?.price || 0) + (result.flexibleCoupling?.price || 0) + (result.standbyPump?.price || 0),
         message: result.message,
         timestamp: new Date().toISOString()
@@ -648,8 +671,16 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
                         </div>
                       ) : '-'}
                     </td>
-                    <td>{result.coupling?.model || '-'}</td>
-                    <td>{result.pump?.model || '-'}</td>
+                    <td style={{ minWidth: 160 }}>
+                      {result.coupling ? (
+                        <EquipmentInfoCard type="coupling" data={result.coupling} compact />
+                      ) : '-'}
+                    </td>
+                    <td style={{ minWidth: 160 }}>
+                      {result.pump ? (
+                        <EquipmentInfoCard type="pump" data={result.pump} compact />
+                      ) : '-'}
+                    </td>
                     <td>
                       {result.totalPrice
                         ? formatPrice(result.totalPrice)
