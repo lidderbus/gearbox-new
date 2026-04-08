@@ -1,7 +1,7 @@
 
 // src/data/embeddedData.js
 // 自动生成 by scripts/generate-embedded-data.js
-// 生成时间: 2026-04-08T09:14:19.234Z
+// 生成时间: 2026-04-08T09:23:05.177Z
 // 总型号数: 669 (原215 + 新增0)
 // 数据来源: completeGearboxData.js (700型号) + 原 embeddedData.js 手工数据
 
@@ -30,7 +30,7 @@ export { safeParseFloat };
 
 export const embeddedGearboxData = {
     "_version": 3,
-    "_lastFixed": "2026-04-08T09:14:19.234Z",
+    "_lastFixed": "2026-04-08T09:23:05.177Z",
     "hcGearboxes": [
         {
             "model": "40A",
@@ -46,8 +46,8 @@ export const embeddedGearboxData = {
             ],
             "transferCapacity": [
                 0.0294,
-                0.0294,
                 0.0235,
+                0.02,
                 0.02
             ],
             "thrust": 5.5,
@@ -321,10 +321,10 @@ export const embeddedGearboxData = {
                 0.1,
                 0.1,
                 0.1,
+                0.1,
                 0.093,
                 0.088,
-                0.077,
-                0.07
+                0.077
             ],
             "thrust": 29.4,
             "centerDistance": 225,
