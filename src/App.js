@@ -125,6 +125,10 @@ const DataBackupView = lazy(() => import('./components/DataBackupView'));
 const MobileOptimization = lazy(() => import('./components/MobileOptimization'));
 const ApiDocumentation = lazy(() => import('./components/ApiDocumentation'));
 
+// 产品系列可视化 (2026-04-07新增)
+const SeriesOverviewDashboard = lazy(() => import('./components/SeriesOverviewDashboard'));
+const PowerRatioHeatmap = lazy(() => import('./components/PowerRatioHeatmap'));
+
 // 首次使用引导 (lazy loaded - only on first visit)
 const OnboardingGuide = lazy(() => import('./components/OnboardingGuide'));
 
@@ -903,7 +907,7 @@ function App({ appData: initialAppData, setAppData }) {
           <ol className="breadcrumb mb-1" style={{fontSize: '13px'}}>
             <li className="breadcrumb-item"><a href="#/" onClick={(e) => {e.preventDefault(); setActiveTab('home');}} style={{color: colors.primary, textDecoration: 'none', cursor: 'pointer'}}>首页</a></li>
             <li className="breadcrumb-item active" aria-current="page" style={{color: colors.muted}}>{
-              {input:'输入参数',result:'选型结果',batch:'批量选型',reverse:'反向选型','multi-condition':'多工况选型','overall-solution':'整体方案','smart-search':'智能搜索',coupling:'联轴器配套','high-elastic':'高弹选型','pump-selection':'备用泵选型',cummins:'康明斯配套','engine-matching':'多品牌主机',technical:'技术协议',quotation:'报价单','technical-inquiry':'技术询单',contract:'销售合同','doc-pack':'资料打包','torsional-calc':'扭振计算书',cpp:'可调桨','azimuth-thruster':'全回转','bow-thruster':'侧推器','shaft-design':'轴系设计','drawing-library':'外形图库','manual-library':'说明书库','template-library':'协议模板库','matching-cases':'配机案例','installation-guide':'安装指导','standards':'标准法规','data-versions':'资料版本','param-comparison':'参数对照','torsional-analysis':'扭振分析','efficiency-analysis':'能效分析','efficiency-optimization':'能效优化',statistics:'数据统计','usage-analysis':'使用分析','trend-analysis':'趋势分析','competitor-comparison':'竞品对比','project-tracking':'项目追踪','customer-inquiry':'客户询价','after-sales':'售后服务','classification-society':'船级社认证',query:'数据查询','product-center':'产品中心',history:'选型历史','hcm-selection':'HCM高速',roles:'角色权限',backup:'数据备份','api-doc':'API文档',mobile:'移动端',about:'关于','system-solution':'整体方案'}[activeTab] || activeTab
+              {input:'输入参数',result:'选型结果',batch:'批量选型',reverse:'反向选型','multi-condition':'多工况选型','overall-solution':'整体方案','smart-search':'智能搜索',coupling:'联轴器配套','high-elastic':'高弹选型','pump-selection':'备用泵选型',cummins:'康明斯配套','engine-matching':'多品牌主机',technical:'技术协议',quotation:'报价单','technical-inquiry':'技术询单',contract:'销售合同','doc-pack':'资料打包','torsional-calc':'扭振计算书',cpp:'可调桨','azimuth-thruster':'全回转','bow-thruster':'侧推器','shaft-design':'轴系设计','drawing-library':'外形图库','manual-library':'说明书库','template-library':'协议模板库','matching-cases':'配机案例','installation-guide':'安装指导','standards':'标准法规','data-versions':'资料版本','param-comparison':'参数对照','torsional-analysis':'扭振分析','efficiency-analysis':'能效分析','efficiency-optimization':'能效优化',statistics:'数据统计','usage-analysis':'使用分析','trend-analysis':'趋势分析','competitor-comparison':'竞品对比','project-tracking':'项目追踪','customer-inquiry':'客户询价','after-sales':'售后服务','classification-society':'船级社认证',query:'数据查询','product-center':'产品中心',history:'选型历史','hcm-selection':'HCM高速',roles:'角色权限',backup:'数据备份','api-doc':'API文档',mobile:'移动端',about:'关于','system-solution':'整体方案','series-overview':'系列总览','power-ratio-heatmap':'覆盖热力图'}[activeTab] || activeTab
             }</li>
           </ol>
         </nav>
@@ -1546,6 +1550,20 @@ function App({ appData: initialAppData, setAppData }) {
           <Tab eventKey="trend-analysis" title={<span><i className="bi bi-graph-up me-1"></i>趋势分析</span>}>
             <Suspense fallback={<LazyLoadFallback />}>
               <TrendAnalysisView colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* 系列总览仪表盘 */}
+          <Tab eventKey="series-overview" title={<span><i className="bi bi-grid-3x3-gap me-1"></i>系列总览</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <SeriesOverviewDashboard colors={colors} theme={theme} />
+            </Suspense>
+          </Tab>
+
+          {/* 功率-速比覆盖热力图 */}
+          <Tab eventKey="power-ratio-heatmap" title={<span><i className="bi bi-grid-3x2-gap me-1"></i>覆盖热力图</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <PowerRatioHeatmap colors={colors} theme={theme} />
             </Suspense>
           </Tab>
 

@@ -1,7 +1,7 @@
 
 // src/data/embeddedData.js
 // 自动生成 by scripts/generate-embedded-data.js
-// 生成时间: 2026-04-08T11:41:12.827Z
+// 生成时间: 2026-04-08T15:33:18.515Z
 // 总型号数: 669 (原215 + 新增0)
 // 数据来源: completeGearboxData.js (700型号) + 原 embeddedData.js 手工数据
 
@@ -30,7 +30,7 @@ export { safeParseFloat };
 
 export const embeddedGearboxData = {
     "_version": 3,
-    "_lastFixed": "2026-04-08T11:41:12.827Z",
+    "_lastFixed": "2026-04-08T15:33:18.515Z",
     "hcGearboxes": [
         {
             "model": "40A",
@@ -9120,7 +9120,7 @@ export const embeddedGearboxData = {
             "model": "GWC70.85",
             "inputSpeedRange": [
                 300,
-                425
+                950
             ],
             "ratios": [
                 1.98,
@@ -9202,7 +9202,7 @@ export const embeddedGearboxData = {
             "model": "GWC75.90",
             "inputSpeedRange": [
                 200,
-                465
+                950
             ],
             "ratios": [
                 2.01,
@@ -9412,7 +9412,7 @@ export const embeddedGearboxData = {
             "model": "2GWH1060",
             "inputSpeedRange": [
                 400,
-                900
+                2000
             ],
             "ratios": [
                 2.53,
@@ -9738,7 +9738,7 @@ export const embeddedGearboxData = {
             "model": "GWC70.82",
             "inputSpeedRange": [
                 300,
-                465
+                1150
             ],
             "ratios": [
                 2.05,
@@ -13893,7 +13893,7 @@ export const embeddedGearboxData = {
             "model": "GWS45.68",
             "inputSpeedRange": [
                 400,
-                1400
+                1200
             ],
             "ratios": [
                 4.5,
@@ -14696,7 +14696,7 @@ export const embeddedGearboxData = {
         {
             "model": "GWS70.111",
             "inputSpeedRange": [
-                400,
+                200,
                 900
             ],
             "ratios": [
@@ -20639,7 +20639,7 @@ export const embeddedGearboxData = {
         {
             "model": "HCA1400",
             "inputSpeedRange": [
-                1600,
+                1000,
                 2100
             ],
             "ratios": [
@@ -21613,7 +21613,7 @@ export const embeddedGearboxData = {
             "model": "HCV230",
             "inputSpeedRange": [
                 1000,
-                2200
+                2000
             ],
             "ratios": [
                 1.49,
@@ -21722,7 +21722,7 @@ export const embeddedGearboxData = {
             "model": "2GWH1830",
             "inputSpeedRange": [
                 400,
-                900
+                1900
             ],
             "ratios": [
                 2.53,
@@ -21753,7 +21753,7 @@ export const embeddedGearboxData = {
             "model": "2GWH3140",
             "inputSpeedRange": [
                 400,
-                800
+                1600
             ],
             "ratios": [
                 2.53,
@@ -21785,7 +21785,7 @@ export const embeddedGearboxData = {
             "model": "2GWH4100",
             "inputSpeedRange": [
                 400,
-                700
+                1600
             ],
             "ratios": [
                 2.53,
@@ -21816,7 +21816,7 @@ export const embeddedGearboxData = {
             "model": "2GWH5410",
             "inputSpeedRange": [
                 400,
-                600
+                1400
             ],
             "ratios": [
                 2.53,
@@ -21847,7 +21847,7 @@ export const embeddedGearboxData = {
             "model": "2GWH7050",
             "inputSpeedRange": [
                 400,
-                600
+                1200
             ],
             "ratios": [
                 2.53,
@@ -21878,7 +21878,7 @@ export const embeddedGearboxData = {
             "model": "2GWH9250",
             "inputSpeedRange": [
                 400,
-                600
+                1200
             ],
             "ratios": [
                 2.53,

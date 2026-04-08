@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 46; // v46: 传递能力全面PDF手册核对 — 修复~190个型号(HCA/HCQ/HCV TC=比率值bug 20个+HCD/HCT全系列PDF覆盖35个+embeddedData同步116个+GWC P系列8个+HC断点5个+其他) + 说明书库45PDF + generate-embedded-data.js同步机制 (2026-04-08)
+export const APP_DATA_VERSION = 49; // v49: PDF手册全量审计V2(306型号参考) — 修复73处: v48的46处(33字段偏移+13其他) + v49新增27处(14铝合金中心距+7转速+5尺寸+1推力) (2026-04-08)
 
 export const DEFAULTS = {
     gearbox: {

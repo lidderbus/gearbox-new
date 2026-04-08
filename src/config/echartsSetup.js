@@ -3,7 +3,7 @@
 // 替代全量 import 可减少 ~1MB bundle 体积
 
 import * as echarts from 'echarts/core';
-import { BarChart, LineChart, ScatterChart, PieChart, RadarChart, GaugeChart } from 'echarts/charts';
+import { BarChart, LineChart, ScatterChart, PieChart, RadarChart, GaugeChart, ParallelChart, HeatmapChart, CustomChart } from 'echarts/charts';
 import {
   GridComponent,
   TooltipComponent,
@@ -15,14 +15,15 @@ import {
   DataZoomComponent,
   ToolboxComponent,
   VisualMapComponent,
+  ParallelComponent,
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 
 echarts.use([
-  BarChart, LineChart, ScatterChart, PieChart, RadarChart, GaugeChart,
+  BarChart, LineChart, ScatterChart, PieChart, RadarChart, GaugeChart, ParallelChart, HeatmapChart, CustomChart,
   GridComponent, TooltipComponent, LegendComponent, TitleComponent,
   MarkAreaComponent, MarkPointComponent, MarkLineComponent,
-  DataZoomComponent, ToolboxComponent, VisualMapComponent,
+  DataZoomComponent, ToolboxComponent, VisualMapComponent, ParallelComponent,
   CanvasRenderer,
 ]);
 

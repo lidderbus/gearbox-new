@@ -72,6 +72,8 @@ const NAV_GROUPS = [
       { key: 'statistics', label: '数据统计', icon: 'bi-bar-chart' },
       { key: 'analytics', label: '使用分析', icon: 'bi-graph-up-arrow' },
       { key: 'trend-analysis', label: '趋势分析', icon: 'bi-graph-up' },
+      { key: 'series-overview', label: '系列总览', icon: 'bi-grid-3x3-gap' },
+      { key: 'power-ratio-heatmap', label: '覆盖热力图', icon: 'bi-grid-3x2-gap' },
       { key: 'competitor', label: '竞品对比', icon: 'bi-bar-chart-fill' },
     ],
   },

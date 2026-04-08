@@ -20,6 +20,7 @@ import RelaxationSuggestions from './selection/RelaxationSuggestions';
 import { exportSelectionSummary } from '../utils/selectionSummaryExport';
 import { calculatePowerRange, extractSeriesFromModel } from '../utils/gearboxDataEnhancer';
 import EquipmentInfoCard from './EquipmentInfoCard';
+import SelectionComparisonCharts from './SelectionComparisonCharts';
 
 // 导入子组件
 import {
@@ -753,6 +754,16 @@ const EnhancedGearboxSelectionResult = ({
               propulsionConfig={propulsionConfig}
               selectedGearbox={selectedGearbox}
               colors={colors}
+            />
+          </Tab>
+
+          {/* 可视化对比标签页 */}
+          <Tab eventKey="charts" title="可视化对比">
+            <SelectionComparisonCharts
+              recommendations={recommendations}
+              theme={theme}
+              colors={colors}
+              targetRatio={result.targetRatio}
             />
           </Tab>
 
