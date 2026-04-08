@@ -313,6 +313,34 @@ function main() {
         console.log(`  ${key}: +${count}`);
     }
 
+    // 4.5 同步已有模型的 transferCapacity (用 completeGearboxData 权威数据覆盖)
+    let syncCount = 0;
+    const completeMap = new Map(completeData.map(item => [item.model, item]));
+    for (const [collKey, arr] of Object.entries(collections)) {
+        for (const embedded of arr) {
+            const complete = completeMap.get(embedded.model);
+            if (!complete) continue;
+            // 同步传递能力
+            if (Array.isArray(complete.transmissionCapacityPerRatio) && complete.transmissionCapacityPerRatio.length > 0) {
+                const oldCap = JSON.stringify(embedded.transferCapacity || []);
+                const newCap = complete.transmissionCapacityPerRatio;
+                if (JSON.stringify(newCap) !== oldCap) {
+                    embedded.transferCapacity = newCap;
+                    syncCount++;
+                }
+            }
+            // 同步减速比
+            if (Array.isArray(complete.ratios) && complete.ratios.length > 0) {
+                embedded.ratios = complete.ratios;
+            }
+            // 同步转速范围
+            if (complete.minSpeed != null && complete.maxSpeed != null) {
+                embedded.inputSpeedRange = [complete.minSpeed, complete.maxSpeed];
+            }
+        }
+    }
+    console.log(`\n同步已有模型传递能力: ${syncCount} 个更新`);
+
     // 5. 统计最终结果
     let totalFinal = 0;
     console.log('\n最终各集合型号数:');

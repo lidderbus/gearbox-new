@@ -121,7 +121,7 @@ deploy_to_server() {
     trap 'echo -e "${RED}部署中断，正在重新锁定...${NC}"; server_lock; exit 1' INT TERM ERR
 
     echo -e "${YELLOW}上传文件到 ${SERVER_IP}...${NC}"
-    rsync -avz --delete -e "ssh -i ${SSH_KEY}" ${LOCAL_BUILD_DIR}/ ${SERVER}:${REMOTE_PATH}/
+    rsync -avz --delete --exclude='manuals' -e "ssh -i ${SSH_KEY}" ${LOCAL_BUILD_DIR}/ ${SERVER}:${REMOTE_PATH}/
 
     # 锁定（lock 内含 chown + chmod）
     server_lock

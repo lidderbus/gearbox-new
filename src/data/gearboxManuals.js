@@ -1,7 +1,7 @@
 // src/data/gearboxManuals.js
 // 齿轮箱产品说明书映射表
-// 数据来源: 杭齿产品说明书电子版 (35个PDF文件)
-// 更新时间: 2026-01-20
+// 数据来源: 杭齿产品说明书电子版 (35个PDF说明书 + 1个SGW补充 + 9个产品介绍)
+// 更新时间: 2026-04-07
 
 /**
  * 说明书映射表
@@ -277,6 +277,72 @@ export const gearboxManuals = {
     title: 'HCT1100型船用齿轮箱使用说明书',
     category: 'large-power',
     fileSize: '31MB'
+  },
+
+  // SGW系列
+  'SGW42.45': {
+    path: '/manuals/large-power/SGW42.45补充使用说明书（最终版）.pdf',
+    title: 'SGW42.45补充使用说明书',
+    category: 'large-power',
+    fileSize: '1MB'
+  },
+
+  // =====================
+  // 产品介绍 (9个)
+  // =====================
+  'GWC系列介绍': {
+    path: '/manuals/product-intro/GWC系列船用齿轮箱.pdf',
+    title: 'GWC系列船用齿轮箱产品介绍',
+    category: 'product-intro',
+    fileSize: '1MB'
+  },
+  'HCQ-HCV介绍': {
+    path: '/manuals/product-intro/HCQ-HCV船用齿轮箱.pdf',
+    title: 'HCQ/HCV船用齿轮箱产品介绍',
+    category: 'product-intro',
+    fileSize: '1MB'
+  },
+  'CPP基本选型': {
+    path: '/manuals/product-intro/调距螺旋桨 CPP基本选型.pdf',
+    title: '调距螺旋桨CPP基本选型',
+    category: 'product-intro',
+    fileSize: '1MB'
+  },
+  '离合分动箱': {
+    path: '/manuals/product-intro/离合分动箱-配工程船-演说文稿.pdf',
+    title: '离合分动箱-配工程船',
+    category: 'product-intro',
+    fileSize: '1MB'
+  },
+  '离合减速齿轮箱': {
+    path: '/manuals/product-intro/离合减速齿轮箱-配变距桨.pdf',
+    title: '离合减速齿轮箱-配变距桨',
+    category: 'product-intro',
+    fileSize: '1MB'
+  },
+  '双机并车': {
+    path: '/manuals/product-intro/双机并车船用齿轮箱-配变距桨.pdf',
+    title: '双机并车船用齿轮箱-配变距桨',
+    category: 'product-intro',
+    fileSize: '1MB'
+  },
+  '辅助产品销售手册': {
+    path: '/manuals/product-intro/演示稿-11年05月船用辅助产品销售手册2.pdf',
+    title: '船用辅助产品销售手册',
+    category: 'product-intro',
+    fileSize: '4MB'
+  },
+  '2GWH系列手册': {
+    path: '/manuals/product-intro/演示稿-11年11月船用2GWH系列产品销售指导手册2.pdf',
+    title: '2GWH系列产品销售指导手册',
+    category: 'product-intro',
+    fileSize: '1MB'
+  },
+  'GCS系列手册': {
+    path: '/manuals/product-intro/演示稿-11年11月船用GCS系列产品销售指导手册2.pdf',
+    title: 'GCS系列产品销售指导手册',
+    category: 'product-intro',
+    fileSize: '1MB'
   }
 };
 
@@ -343,7 +409,8 @@ export function hasManual(model) {
 export function getAllManuals() {
   const result = {
     smallPower: [],
-    largePower: []
+    largePower: [],
+    productIntro: []
   };
 
   const seen = new Set(); // 去重用
@@ -359,6 +426,8 @@ export function getAllManuals() {
 
     if (info.category === 'small-power') {
       result.smallPower.push(item);
+    } else if (info.category === 'product-intro') {
+      result.productIntro.push(item);
     } else {
       result.largePower.push(item);
     }

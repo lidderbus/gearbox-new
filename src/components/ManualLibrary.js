@@ -47,7 +47,7 @@ const ManualLibrary = ({ colors, theme }) => {
     const seen = new Set();
     const result = [];
 
-    [...manuals.smallPower, ...manuals.largePower].forEach(manual => {
+    [...manuals.smallPower, ...manuals.largePower, ...manuals.productIntro].forEach(manual => {
       if (!seen.has(manual.path)) {
         seen.add(manual.path);
         result.push(manual);
@@ -63,7 +63,9 @@ const ManualLibrary = ({ colors, theme }) => {
       ? allManualsList
       : activeCategory === 'small-power'
         ? manuals.smallPower
-        : manuals.largePower;
+        : activeCategory === 'product-intro'
+          ? manuals.productIntro
+          : manuals.largePower;
 
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
@@ -102,9 +104,9 @@ const ManualLibrary = ({ colors, theme }) => {
 
   // 获取分类Badge
   const getCategoryBadge = (category) => {
-    return category === 'small-power'
-      ? <Badge bg="success">中小功率</Badge>
-      : <Badge bg="primary">大功率</Badge>;
+    if (category === 'small-power') return <Badge bg="success">中小功率</Badge>;
+    if (category === 'product-intro') return <Badge bg="warning" text="dark">产品介绍</Badge>;
+    return <Badge bg="primary">大功率</Badge>;
   };
 
   return (
@@ -153,6 +155,7 @@ const ManualLibrary = ({ colors, theme }) => {
               <option value="all">全部分类 ({allManualsList.length})</option>
               <option value="small-power">中小功率 ({manuals.smallPower.length})</option>
               <option value="large-power">大功率 ({manuals.largePower.length})</option>
+              <option value="product-intro">产品介绍 ({manuals.productIntro.length})</option>
             </Form.Select>
           </Col>
         </Row>
@@ -302,7 +305,8 @@ const ManualLibrary = ({ colors, theme }) => {
               <Col md={6}>
                 <ul style={{ color: colors?.text, marginBottom: 0, fontSize: '0.9rem' }}>
                   <li><strong>中小功率</strong>: 120/135/300/40A/400A/600A等系列</li>
-                  <li><strong>大功率</strong>: GWC/GWS/HC900/HCT系列等</li>
+                  <li><strong>大功率</strong>: GWC/GWS/HC900/HCT/SGW系列等</li>
+                  <li><strong>产品介绍</strong>: GWC/HCQ/2GWH/GCS/CPP等系列</li>
                   <li><strong>选型结果</strong>: 在选型结果页面也可直接查看说明书</li>
                 </ul>
               </Col>

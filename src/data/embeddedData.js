@@ -1,7 +1,7 @@
 
 // src/data/embeddedData.js
 // 自动生成 by scripts/generate-embedded-data.js
-// 生成时间: 2026-03-30T22:01:58.678Z
+// 生成时间: 2026-04-08T08:02:25.536Z
 // 总型号数: 669 (原215 + 新增0)
 // 数据来源: completeGearboxData.js (700型号) + 原 embeddedData.js 手工数据
 
@@ -30,7 +30,7 @@ export { safeParseFloat };
 
 export const embeddedGearboxData = {
     "_version": 3,
-    "_lastFixed": "2026-03-30T22:01:58.678Z",
+    "_lastFixed": "2026-04-08T08:02:25.535Z",
     "hcGearboxes": [
         {
             "model": "40A",
@@ -39,10 +39,10 @@ export const embeddedGearboxData = {
                 2000
             ],
             "ratios": [
-                2.5,
-                3,
-                3.5,
-                4
+                2.07,
+                2.96,
+                3.44,
+                3.83
             ],
             "transferCapacity": [
                 0.0294,
@@ -305,15 +305,15 @@ export const embeddedGearboxData = {
                 2000
             ],
             "ratios": [
-                2.07,
-                2.48,
-                2.95,
-                3.35,
-                3.83,
-                4.5,
+                2.03,
+                2.59,
+                3.04,
+                3.62,
+                4.11,
+                4.65,
                 5.06,
                 5.47,
-                5.88
+                5.81
             ],
             "transferCapacity": [
                 0.1,
@@ -435,26 +435,16 @@ export const embeddedGearboxData = {
                 2500
             ],
             "ratios": [
-                2,
-                2.54,
-                3.04,
-                3.52,
-                3.95,
-                4.53,
-                5.12,
-                5.56,
-                5.88
+                5.05,
+                5.63,
+                6.06,
+                6.47
             ],
             "transferCapacity": [
                 0.11,
                 0.11,
-                0.11,
-                0.11,
-                0.11,
                 0.099,
-                0.088,
-                0.077,
-                0.07
+                0.093
             ],
             "thrust": 40,
             "centerDistance": 296,
@@ -479,23 +469,27 @@ export const embeddedGearboxData = {
                 2500
             ],
             "ratios": [
+                1.87,
+                2.04,
+                2.54,
                 3,
-                4.05,
-                4.53,
-                5.12,
-                5.5,
-                5.95,
-                6.39,
-                6.82
+                3.53,
+                4.1,
+                4.47,
+                4.61,
+                4.94,
+                5.44
             ],
             "transferCapacity": [
-                0.28,
+                0.257,
+                0.257,
+                0.257,
                 0.243,
                 0.221,
                 0.184,
                 0.184,
+                0.184,
                 0.147,
-                0.133,
                 0.125
             ],
             "thrust": 39.2,
@@ -519,17 +513,13 @@ export const embeddedGearboxData = {
                 2500
             ],
             "ratios": [
-                1.5,
-                1.87,
                 2.04,
-                2.23,
                 2.54,
                 3,
-                3.53
+                3.47,
+                3.95
             ],
             "transferCapacity": [
-                0.28,
-                0.28,
                 0.28,
                 0.28,
                 0.28,
@@ -559,8 +549,10 @@ export const embeddedGearboxData = {
                 2500
             ],
             "ratios": [
+                1.5,
                 1.87,
                 2.04,
+                2.23,
                 2.54,
                 3,
                 3.53,
@@ -571,6 +563,8 @@ export const embeddedGearboxData = {
                 5.44
             ],
             "transferCapacity": [
+                0.257,
+                0.257,
                 0.257,
                 0.257,
                 0.257,
@@ -731,27 +725,23 @@ export const embeddedGearboxData = {
                 3.33,
                 3.42,
                 3.6,
-                3.96,
-                4.33,
-                4.43,
-                4.7,
-                5
+                4.06,
+                4.61,
+                4.94
             ],
             "transferCapacity": [
                 0.331,
-                0.3258367346938776,
-                0.3199183673469388,
-                0.31324489795918364,
-                0.30581632653061225,
-                0.2976326530612245,
-                0.2886938775510204,
+                0.331,
+                0.331,
+                0.331,
+                0.331,
+                0.331,
+                0.331,
+                0.331,
+                0.331,
+                0.331,
                 0.279,
-                0.2685510204081633,
-                0.2573469387755102,
-                0.2453877551020408,
-                0.2326734693877551,
-                0.2192040816326531,
-                0.20497959183673467,
+                0.19,
                 0.19
             ],
             "thrust": 82,
@@ -793,8 +783,8 @@ export const embeddedGearboxData = {
                 0.331,
                 0.331,
                 0.331,
+                0.331,
                 0.293,
-                0.272,
                 0.272,
                 0.267
             ],
@@ -837,7 +827,7 @@ export const embeddedGearboxData = {
                 0.331,
                 0.309,
                 0.294,
-                0.279,
+                0.294,
                 0.279
             ],
             "thrust": 82,
@@ -880,7 +870,7 @@ export const embeddedGearboxData = {
                 0.316,
                 0.297,
                 0.274,
-                0.262,
+                0.274,
                 0.262,
                 0.204
             ],
@@ -980,7 +970,7 @@ export const embeddedGearboxData = {
             "model": "HC600P",
             "inputSpeedRange": [
                 1000,
-                2500
+                2100
             ],
             "ratios": [
                 2,
@@ -1026,17 +1016,25 @@ export const embeddedGearboxData = {
                 2.96,
                 3.18,
                 3.33,
-                3.55
+                3.55,
+                3.79,
+                4.06,
+                4.2,
+                4.47
             ],
             "transferCapacity": [
-                1.4,
-                1.471,
-                1.71,
-                1.994,
-                2.231,
-                2.5,
-                2.652,
-                2.652
+                0.93,
+                0.93,
+                0.93,
+                0.9,
+                0.85,
+                0.75,
+                0.695,
+                0.65,
+                0.65,
+                0.65,
+                0.65,
+                0.65
             ],
             "thrust": 250,
             "centerDistance": 450,
@@ -1055,8 +1053,8 @@ export const embeddedGearboxData = {
         {
             "model": "HC1600P",
             "inputSpeedRange": [
-                1000,
-                2500
+                500,
+                1650
             ],
             "ratios": [
                 2.03,
@@ -1089,8 +1087,8 @@ export const embeddedGearboxData = {
         {
             "model": "HC2000P",
             "inputSpeedRange": [
-                1000,
-                2500
+                600,
+                1500
             ],
             "ratios": [
                 1.97,
@@ -1125,8 +1123,8 @@ export const embeddedGearboxData = {
         {
             "model": "HC2700P",
             "inputSpeedRange": [
-                1000,
-                2500
+                500,
+                1600
             ],
             "ratios": [
                 1.54,
@@ -1227,8 +1225,8 @@ export const embeddedGearboxData = {
         {
             "model": "HCD800P",
             "inputSpeedRange": [
-                1000,
-                2500
+                600,
+                2100
             ],
             "ratios": [
                 2.04,
@@ -1267,8 +1265,8 @@ export const embeddedGearboxData = {
         {
             "model": "HCD1400P",
             "inputSpeedRange": [
-                1000,
-                2500
+                600,
+                1900
             ],
             "ratios": [
                 3.5,
@@ -1339,8 +1337,8 @@ export const embeddedGearboxData = {
         {
             "model": "HCD2000P",
             "inputSpeedRange": [
-                1000,
-                2500
+                600,
+                1500
             ],
             "ratios": [
                 3,
@@ -1375,8 +1373,8 @@ export const embeddedGearboxData = {
         {
             "model": "HCD2700P",
             "inputSpeedRange": [
-                1000,
-                2500
+                500,
+                1600
             ],
             "ratios": [
                 3.65,
@@ -1499,8 +1497,8 @@ export const embeddedGearboxData = {
         {
             "model": "HCT1200P",
             "inputSpeedRange": [
-                1000,
-                2500
+                600,
+                1900
             ],
             "ratios": [
                 2.04,
@@ -1623,8 +1621,8 @@ export const embeddedGearboxData = {
         {
             "model": "HCT2000P",
             "inputSpeedRange": [
-                500,
-                1400
+                600,
+                1500
             ],
             "ratios": [
                 5.19,
@@ -1720,13 +1718,21 @@ export const embeddedGearboxData = {
                 3.7,
                 3.74,
                 3.95,
-                4.14
+                4.14,
+                4.45,
+                5,
+                5.25,
+                5.58
             ],
             "transferCapacity": [
                 0.93,
-                0.93,
-                0.93,
-                0.93
+                0.92,
+                0.75,
+                0.69,
+                0.62,
+                0.62,
+                0.62,
+                0.62
             ],
             "thrust": 0,
             "centerDistance": 0,
@@ -1776,7 +1782,7 @@ export const embeddedGearboxData = {
             "model": "HC5000P",
             "inputSpeedRange": [
                 500,
-                1100
+                1200
             ],
             "ratios": [
                 2.04,
@@ -1805,7 +1811,7 @@ export const embeddedGearboxData = {
         {
             "model": "HC6000P",
             "inputSpeedRange": [
-                450,
+                500,
                 1000
             ],
             "ratios": [
@@ -1936,8 +1942,8 @@ export const embeddedGearboxData = {
                 0.49,
                 0.49,
                 0.49,
+                0.49,
                 0.485,
-                0.45,
                 0.423,
                 0.395,
                 0.367,
@@ -2023,16 +2029,16 @@ export const embeddedGearboxData = {
                 9
             ],
             "transferCapacity": [
-                0.625,
-                0.625,
-                0.625,
-                0.625,
-                0.625,
-                0.588,
-                0.551,
-                0.515,
-                0.48,
-                0.48
+                0.72,
+                0.72,
+                0.72,
+                0.72,
+                0.706,
+                0.654,
+                0.61,
+                0.566,
+                0.5,
+                0.5
             ],
             "thrust": 140,
             "centerDistance": 450,
@@ -2075,25 +2081,25 @@ export const embeddedGearboxData = {
                 16.58,
                 17.91,
                 20.12,
-                22.11
+                22.1
             ],
             "transferCapacity": [
-                0.625,
-                0.625,
-                0.625,
-                0.625,
-                0.625,
-                0.625,
-                0.625,
-                0.609,
-                0.575,
-                0.549,
-                0.52,
-                0.491,
-                0.463,
-                0.435,
-                0.408,
-                0.382,
+                0.72,
+                0.72,
+                0.72,
+                0.72,
+                0.72,
+                0.72,
+                0.72,
+                0.7,
+                0.65,
+                0.58,
+                0.55,
+                0.5,
+                0.48,
+                0.45,
+                0.43,
+                0.4,
                 0.378,
                 0.278,
                 0.278
@@ -2219,10 +2225,10 @@ export const embeddedGearboxData = {
                 21.94
             ],
             "transferCapacity": [
-                0.597,
-                0.551,
-                0.491,
-                0.414
+                0.642,
+                0.592,
+                0.527,
+                0.485
             ],
             "thrust": 240,
             "centerDistance": 736,
@@ -2291,25 +2297,23 @@ export const embeddedGearboxData = {
                 2.17,
                 2.5,
                 2.64,
+                2.83,
                 3.04,
                 3.23,
                 3.48,
                 3.59,
-                4.06,
-                5.47,
-                5.83
+                4.06
             ],
             "transferCapacity": [
                 0.735,
-                0.7265,
-                0.718,
-                0.7095,
-                0.701,
-                0.6925,
-                0.684,
-                0.6755,
-                0.667,
-                0.6585,
+                0.735,
+                0.735,
+                0.735,
+                0.735,
+                0.735,
+                0.735,
+                0.735,
+                0.735,
                 0.65
             ],
             "thrust": 110,
@@ -2477,18 +2481,18 @@ export const embeddedGearboxData = {
                 4.47
             ],
             "transferCapacity": [
-                0.9378571428571434,
-                0.9121829988193627,
-                0.8862255017709563,
-                0.8599846517119242,
-                0.8334604486422664,
-                0.806652892561983,
-                0.7795619834710739,
-                0.7521877213695392,
-                0.7245301062573786,
-                0.6965891381345924,
-                0.6683648170011806,
-                0.639857142857143
+                1.03,
+                1.03,
+                1.03,
+                1.03,
+                1.03,
+                1.03,
+                1.03,
+                1.03,
+                0.93,
+                0.93,
+                0.93,
+                0.93
             ],
             "thrust": 120,
             "centerDistance": 380,
@@ -2523,14 +2527,14 @@ export const embeddedGearboxData = {
                 5.58
             ],
             "transferCapacity": [
+                1.03,
+                1.03,
+                1.03,
+                1.03,
+                1.03,
                 0.93,
-                0.93,
-                0.93,
-                0.93,
-                0.93,
-                0.833,
-                0.695,
-                0.65
+                0.809,
+                0.735
             ],
             "thrust": 140,
             "centerDistance": 450,
@@ -2562,17 +2566,21 @@ export const embeddedGearboxData = {
                 6.39,
                 6.85,
                 7.35,
-                7.9
+                7.9,
+                8.46,
+                8.9
             ],
             "transferCapacity": [
-                0.93,
-                0.93,
-                0.93,
-                0.93,
-                0.93,
-                0.93,
-                0.93,
-                0.93
+                1.014,
+                1.014,
+                1.014,
+                1.014,
+                1.014,
+                1.014,
+                1.014,
+                1.014,
+                0.846,
+                0.846
             ],
             "thrust": 150,
             "centerDistance": 500,
@@ -2612,19 +2620,19 @@ export const embeddedGearboxData = {
                 14.54
             ],
             "transferCapacity": [
-                0.93,
-                0.93,
-                0.93,
-                0.93,
+                1.014,
+                1.014,
+                1.014,
+                1.014,
+                0.9,
+                0.9,
+                0.9,
                 0.83,
-                0.82,
+                0.8,
                 0.78,
-                0.74,
-                0.72,
-                0.7,
-                0.65,
-                0.625,
-                0.6
+                0.68,
+                0.66,
+                0.65
             ],
             "thrust": 220,
             "centerDistance": 580,
@@ -2646,7 +2654,7 @@ export const embeddedGearboxData = {
             "model": "HCT1280/2",
             "inputSpeedRange": [
                 700,
-                1800
+                1900
             ],
             "ratios": [
                 8.04,
@@ -2729,7 +2737,7 @@ export const embeddedGearboxData = {
                 1.081,
                 1.081,
                 1.081,
-                1,
+                1.03,
                 0.95
             ],
             "thrust": 175,
@@ -2940,11 +2948,11 @@ export const embeddedGearboxData = {
                 4
             ],
             "transferCapacity": [
-                1.26,
-                1.2,
-                1.1,
-                1,
-                0.9
+                1.29,
+                1.29,
+                1.29,
+                1.29,
+                1.29
             ],
             "thrust": 170,
             "centerDistance": 415,
@@ -2979,13 +2987,13 @@ export const embeddedGearboxData = {
                 5.94
             ],
             "transferCapacity": [
-                1.26,
-                1.26,
-                1.26,
-                1.26,
-                1.26,
-                1.26,
-                1.12,
+                1.29,
+                1.29,
+                1.29,
+                1.29,
+                1.29,
+                1.29,
+                1.25,
                 1.05
             ],
             "thrust": 200,
@@ -3027,20 +3035,20 @@ export const embeddedGearboxData = {
                 12.52
             ],
             "transferCapacity": [
-                1.26,
-                1.26,
-                1.26,
-                1.26,
-                1.26,
-                1.26,
-                1.26,
+                1.29,
+                1.29,
+                1.29,
+                1.29,
+                1.29,
+                1.29,
+                1.29,
+                1.25,
                 1.18,
-                1.122,
-                1.06,
-                0.998,
-                0.924,
-                0.867,
-                0.811
+                1.14,
+                1.07,
+                0.99,
+                0.92,
+                0.82
             ],
             "thrust": 250,
             "centerDistance": 585,
@@ -3072,29 +3080,29 @@ export const embeddedGearboxData = {
                 10.08,
                 10.6,
                 11.2,
-                12,
-                12.5,
-                13.43,
-                14.24,
-                15.12,
-                16.1,
-                16.9
+                11.94,
+                12.44,
+                13.36,
+                14.16,
+                15.05,
+                16.02,
+                16.86
             ],
             "transferCapacity": [
-                1.26,
-                1.26,
-                1.26,
-                1.26,
-                1.26,
-                1.26,
-                1.26,
-                1.26,
-                1.218,
+                1.29,
+                1.29,
+                1.29,
+                1.29,
+                1.29,
+                1.29,
+                1.29,
+                1.29,
+                1.221,
+                1.211,
                 1.134,
-                1.069,
-                1.007,
-                0.946,
-                0.78
+                1.052,
+                0.956,
+                0.816
             ],
             "thrust": 270,
             "centerDistance": 680,
@@ -3168,15 +3176,15 @@ export const embeddedGearboxData = {
                 6.05
             ],
             "transferCapacity": [
-                1.58,
-                1.58,
-                1.58,
-                1.58,
-                1.58,
-                1.58,
-                1.57,
-                1.48,
-                1.36
+                1.62,
+                1.62,
+                1.62,
+                1.62,
+                1.62,
+                1.62,
+                1.59,
+                1.5,
+                1.39
             ],
             "thrust": 220,
             "centerDistance": 560,
@@ -3220,23 +3228,23 @@ export const embeddedGearboxData = {
                 11
             ],
             "transferCapacity": [
-                1.58,
-                1.58,
-                1.58,
-                1.58,
-                1.58,
-                1.58,
-                1.58,
-                1.58,
+                1.62,
+                1.62,
+                1.62,
+                1.62,
+                1.62,
+                1.62,
+                1.62,
+                1.62,
                 1.58,
                 1.55,
                 1.55,
-                1.41,
-                1.38,
+                1.48,
+                1.42,
+                1.383,
+                1.383,
                 1.34,
-                1.3,
-                1.287,
-                1.18
+                1.22
             ],
             "thrust": 270,
             "centerDistance": 625,
@@ -3278,21 +3286,21 @@ export const embeddedGearboxData = {
                 13.92
             ],
             "transferCapacity": [
-                1.58,
-                1.58,
-                1.58,
-                1.58,
-                1.58,
-                1.58,
-                1.58,
-                1.58,
+                1.62,
+                1.62,
+                1.62,
+                1.62,
+                1.62,
+                1.62,
+                1.62,
+                1.62,
+                1.55,
                 1.48,
-                1.43,
-                1.4,
-                1.246,
-                1.18,
-                1.18,
-                1.18
+                1.42,
+                1.32,
+                1.22,
+                1.22,
+                1.22
             ],
             "thrust": 340,
             "centerDistance": 690,
@@ -3326,13 +3334,13 @@ export const embeddedGearboxData = {
                 4.47
             ],
             "transferCapacity": [
-                2.1,
-                2.1,
-                2.1,
-                2.1,
-                2.1,
-                2.1,
-                1.85
+                2.05,
+                2,
+                1.9,
+                1.75,
+                1.6,
+                1.45,
+                1.3
             ],
             "thrust": 270,
             "centerDistance": 490,
@@ -3407,7 +3415,7 @@ export const embeddedGearboxData = {
                 9.42,
                 10.05,
                 10.68,
-                11.54
+                11.43
             ],
             "transferCapacity": [
                 2.1,
@@ -3491,10 +3499,10 @@ export const embeddedGearboxData = {
                 2000
             ],
             "ratios": [
-                2
+                1
             ],
             "transferCapacity": [
-                0.1
+                0.031
             ],
             "thrust": 10,
             "centerDistance": null,
@@ -3517,10 +3525,10 @@ export const embeddedGearboxData = {
                 2000
             ],
             "ratios": [
-                2
+                1
             ],
             "transferCapacity": [
-                0.1
+                0.105
             ],
             "thrust": 10,
             "centerDistance": null,
@@ -3543,10 +3551,10 @@ export const embeddedGearboxData = {
                 2000
             ],
             "ratios": [
-                2
+                1
             ],
             "transferCapacity": [
-                0.1
+                0.262
             ],
             "thrust": 10,
             "centerDistance": null,
@@ -3565,14 +3573,14 @@ export const embeddedGearboxData = {
         {
             "model": "HCL250A",
             "inputSpeedRange": [
-                1000,
-                2000
+                750,
+                2500
             ],
             "ratios": [
-                2
+                1
             ],
             "transferCapacity": [
-                0.1
+                0.262
             ],
             "thrust": 10,
             "centerDistance": null,
@@ -3595,10 +3603,10 @@ export const embeddedGearboxData = {
                 2000
             ],
             "ratios": [
-                2
+                1
             ],
             "transferCapacity": [
-                0.1
+                0.335
             ],
             "thrust": 10,
             "centerDistance": null,
@@ -3647,10 +3655,10 @@ export const embeddedGearboxData = {
                 2000
             ],
             "ratios": [
-                2
+                1
             ],
             "transferCapacity": [
-                0.1
+                0.628
             ],
             "thrust": 10,
             "centerDistance": null,
@@ -3703,24 +3711,18 @@ export const embeddedGearboxData = {
                 2000
             ],
             "ratios": [
-                1.97,
-                2.52,
-                3.03,
-                3.54,
-                3.95,
-                4.5,
-                5.06,
-                5.47
+                2.07,
+                2.48,
+                2.95,
+                3.35,
+                3.83
             ],
             "transferCapacity": [
                 0.012,
                 0.012,
                 0.012,
                 0.012,
-                0.012,
-                0.011,
-                0.01,
-                0.009
+                0.012
             ],
             "thrust": 3.5,
             "centerDistance": 135,
@@ -3781,15 +3783,13 @@ export const embeddedGearboxData = {
                 3000
             ],
             "ratios": [
-                1.97,
-                2.52,
+                2.03,
+                2.46,
                 3.04,
-                3.54,
-                3.96,
-                4.65,
-                5.06,
-                5.47,
-                5.81
+                3.57,
+                4.05,
+                4.39,
+                4.7
             ],
             "transferCapacity": [
                 0.02,
@@ -3797,10 +3797,8 @@ export const embeddedGearboxData = {
                 0.018,
                 0.016,
                 0.014,
-                0.011,
-                0.01,
-                0.009,
-                0.008
+                0.013,
+                0.011
             ],
             "thrust": 5.5,
             "centerDistance": 125,
@@ -3906,8 +3904,8 @@ export const embeddedGearboxData = {
             ],
             "ratios": [
                 4.08,
+                4.55,
                 4.81,
-                5.55,
                 5.1,
                 5.47,
                 6.2
@@ -4001,18 +3999,17 @@ export const embeddedGearboxData = {
         {
             "model": "HC1201",
             "inputSpeedRange": [
-                700,
-                1500
+                600,
+                1900
             ],
             "ratios": [
+                1.6,
+                2.03,
                 2.5,
-                3,
-                3.43,
-                3.96,
-                4.17,
-                4.39,
-                4.9,
-                5.47
+                2.96,
+                3.55,
+                4.06,
+                4.47
             ],
             "transferCapacity": [
                 0.93,
@@ -4021,8 +4018,7 @@ export const embeddedGearboxData = {
                 0.93,
                 0.93,
                 0.93,
-                0.83,
-                0.73
+                0.93
             ],
             "thrust": 140,
             "centerDistance": 450,
@@ -4064,7 +4060,7 @@ export const embeddedGearboxData = {
                 1.035,
                 1.035,
                 1.035,
-                0.93,
+                1.035,
                 0.93,
                 0.9,
                 0.86,
@@ -4100,7 +4096,11 @@ export const embeddedGearboxData = {
                 4.04,
                 4.27,
                 4.32,
-                4.52
+                4.52,
+                5.05,
+                5.25,
+                5.5,
+                5.86
             ],
             "transferCapacity": [
                 1.2,
@@ -4108,7 +4108,11 @@ export const embeddedGearboxData = {
                 1.2,
                 1.2,
                 1.2,
-                1.2
+                1.2,
+                1.2,
+                1.103,
+                1.103,
+                1.035
             ],
             "thrust": 175,
             "centerDistance": 485,
@@ -4133,22 +4137,16 @@ export const embeddedGearboxData = {
                 2500
             ],
             "ratios": [
-                2.03,
-                2.46,
-                3.04,
-                3.57,
-                4.05,
-                4.39,
-                4.7
+                2.5,
+                3,
+                3.5,
+                4
             ],
             "transferCapacity": [
                 0.0199,
                 0.0199,
                 0.019,
-                0.0177,
-                0.016,
-                0.014,
-                0.013
+                0.0177
             ],
             "thrust": 5,
             "centerDistance": 135,
@@ -4209,25 +4207,13 @@ export const embeddedGearboxData = {
             ],
             "ratios": [
                 1.48,
-                1.94,
-                2.45,
-                2.96,
-                3.35,
-                4,
-                4.53,
-                5.06,
-                5.47
+                2,
+                2.28
             ],
             "transferCapacity": [
-                0.131,
-                0.131,
-                0.131,
-                0.131,
-                0.131,
-                0.118,
-                0.106,
-                0.094,
-                0.087
+                0.147,
+                0.147,
+                0.147
             ],
             "thrust": 27.5,
             "centerDistance": 190,
@@ -4364,18 +4350,16 @@ export const embeddedGearboxData = {
                 2500
             ],
             "ratios": [
-                2,
+                1.53,
+                2.03,
                 2.5,
-                3,
-                3.5,
-                4
+                2.96
             ],
             "transferCapacity": [
-                0.037,
-                0.034,
-                0.03,
-                0.027,
-                0.024
+                0.048,
+                0.048,
+                0.048,
+                0.044
             ],
             "thrust": 14.7,
             "centerDistance": 142,
@@ -4412,7 +4396,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 52,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                1000,
+                2500
+            ]
         },
         {
             "model": "HCD0FM",
@@ -4430,7 +4418,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 28,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                1000,
+                2100
+            ]
         },
         {
             "model": "HCD1000/2",
@@ -4452,7 +4444,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 2000,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                600,
+                2100
+            ]
         },
         {
             "model": "HCD1200",
@@ -4564,7 +4560,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 38,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                1000,
+                2000
+            ]
         },
         {
             "model": "HCD2000/2",
@@ -4582,7 +4582,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 4200,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                600,
+                1500
+            ]
         },
         {
             "model": "HCD2400",
@@ -4639,7 +4643,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 45,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                1000,
+                2500
+            ]
         },
         {
             "model": "HCD3800",
@@ -4708,7 +4716,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 620,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                1000,
+                1800
+            ]
         },
         {
             "model": "HCD440",
@@ -4840,7 +4852,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 950,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                1000,
+                2100
+            ]
         },
         {
             "model": "HCD68",
@@ -4858,7 +4874,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 48,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                1000,
+                2500
+            ]
         },
         {
             "model": "HCD700",
@@ -4921,7 +4941,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 1350,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                600,
+                2100
+            ]
         },
         {
             "model": "HCDS1200",
@@ -5257,7 +5281,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 180,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                1000,
+                2500
+            ]
         },
         {
             "model": "HCDX400",
@@ -5279,7 +5307,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 260,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                1000,
+                1800
+            ]
         },
         {
             "model": "HCDX600",
@@ -5303,7 +5335,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 400,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                1000,
+                2100
+            ]
         },
         {
             "model": "HCDX800",
@@ -5327,7 +5363,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 550,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                600,
+                2100
+            ]
         },
         {
             "model": "HCG1068",
@@ -5699,21 +5739,13 @@ export const embeddedGearboxData = {
                 1.55,
                 1.83,
                 2.04,
-                2.23,
-                2.57,
-                2.77,
-                2.91,
-                3.17
+                2.23
             ],
             "transferCapacity": [
-                1.4031,
-                1.3822,
-                1.3508,
-                1.3351,
-                1.3194,
-                1.2984,
-                1.2984,
-                1.2984
+                2.77,
+                2.77,
+                2.77,
+                2.77
             ],
             "weight": 1230,
             "efficiency": 0.97,
@@ -6169,12 +6201,7 @@ export const embeddedGearboxData = {
                 3
             ],
             "transferCapacity": [
-                3,
-                3,
-                3,
-                3,
-                3,
-                3
+                0.837
             ],
             "thrust": 10,
             "centerDistance": 800,
@@ -6205,12 +6232,7 @@ export const embeddedGearboxData = {
                 3
             ],
             "transferCapacity": [
-                3,
-                3,
-                3,
-                3,
-                3,
-                3
+                0.837
             ],
             "thrust": 450,
             "centerDistance": 450,
@@ -6271,18 +6293,16 @@ export const embeddedGearboxData = {
                 1900
             ],
             "ratios": [
-                2,
                 2.5,
                 3.04,
                 3.48,
                 4.06
             ],
             "transferCapacity": [
-                0.735,
-                0.735,
-                0.735,
-                0.735,
-                0.65
+                1.59,
+                1.68,
+                1.72,
+                1.77
             ],
             "thrust": 0.735,
             "centerDistance": 110,
@@ -6578,7 +6598,7 @@ export const embeddedGearboxData = {
             "model": "HCT1000",
             "inputSpeedRange": [
                 600,
-                2100
+                1900
             ],
             "ratios": [
                 1.59,
@@ -6689,16 +6709,16 @@ export const embeddedGearboxData = {
                 2.825,
                 2.825,
                 2.825,
+                2.825,
+                2.825,
+                2.825,
+                2.825,
                 2.69,
                 2.525,
                 2.451,
-                2.451,
                 2.301,
                 2.186,
-                2.186,
                 2,
-                2,
-                1.8,
                 1.8
             ],
             "thrust": 450,
@@ -6831,7 +6851,7 @@ export const embeddedGearboxData = {
         {
             "model": "HCT700",
             "inputSpeedRange": [
-                1000,
+                600,
                 2100
             ],
             "ratios": [
@@ -7370,11 +7390,11 @@ export const embeddedGearboxData = {
                 3.95
             ],
             "transferCapacity": [
-                1.92,
-                1.92,
-                1.92,
-                1.92,
-                1.92
+                1.351,
+                1.351,
+                1.351,
+                1.351,
+                1.351
             ],
             "thrust": 280,
             "centerDistance": 1000,
@@ -7394,7 +7414,7 @@ export const embeddedGearboxData = {
             "model": "GWS39.41P",
             "inputSpeedRange": [
                 400,
-                1800
+                1600
             ],
             "ratios": [
                 2,
@@ -7404,11 +7424,11 @@ export const embeddedGearboxData = {
                 3.95
             ],
             "transferCapacity": [
-                2.4,
-                2.4,
-                2.4,
-                2.4,
-                2.4
+                1.353,
+                1.353,
+                1.353,
+                1.353,
+                1.353
             ],
             "thrust": 440,
             "centerDistance": 1000,
@@ -7428,7 +7448,7 @@ export const embeddedGearboxData = {
             "model": "GWS42.45P",
             "inputSpeedRange": [
                 400,
-                1800
+                1600
             ],
             "ratios": [
                 1.97,
@@ -7438,11 +7458,11 @@ export const embeddedGearboxData = {
                 4
             ],
             "transferCapacity": [
-                3,
-                3,
-                3,
-                3,
-                3
+                1.394,
+                1.394,
+                1.394,
+                1.394,
+                1.394
             ],
             "thrust": 600,
             "centerDistance": 1000,
@@ -7462,7 +7482,7 @@ export const embeddedGearboxData = {
             "model": "GWS45.49P",
             "inputSpeedRange": [
                 400,
-                1800
+                1400
             ],
             "ratios": [
                 2.03,
@@ -7472,11 +7492,11 @@ export const embeddedGearboxData = {
                 3.95
             ],
             "transferCapacity": [
-                3.5,
-                3.5,
-                3.5,
-                3.5,
-                3.5
+                1.333,
+                1.333,
+                1.333,
+                1.333,
+                1.333
             ],
             "thrust": 670,
             "centerDistance": 1000,
@@ -7496,7 +7516,7 @@ export const embeddedGearboxData = {
             "model": "GWS49.54P",
             "inputSpeedRange": [
                 400,
-                1800
+                1200
             ],
             "ratios": [
                 1.97,
@@ -7506,11 +7526,11 @@ export const embeddedGearboxData = {
                 3.95
             ],
             "transferCapacity": [
-                4.2,
-                4.2,
-                4.2,
-                4.2,
-                4.2
+                1.333,
+                1.5,
+                1.5,
+                1.5,
+                1.5
             ],
             "thrust": 850,
             "centerDistance": 1000,
@@ -7529,8 +7549,8 @@ export const embeddedGearboxData = {
         {
             "model": "GWS52.59P",
             "inputSpeedRange": [
-                400,
-                1800
+                1000,
+                2100
             ],
             "ratios": [
                 1.97,
@@ -7540,11 +7560,11 @@ export const embeddedGearboxData = {
                 3.95
             ],
             "transferCapacity": [
-                5,
-                5,
-                5,
-                5,
-                5
+                3.64,
+                3.64,
+                3.64,
+                3.64,
+                3.64
             ],
             "thrust": 1000,
             "centerDistance": 1000,
@@ -7563,8 +7583,8 @@ export const embeddedGearboxData = {
         {
             "model": "GWS60.66P",
             "inputSpeedRange": [
-                400,
-                1800
+                1000,
+                2100
             ],
             "ratios": [
                 2,
@@ -7574,11 +7594,11 @@ export const embeddedGearboxData = {
                 3.95
             ],
             "transferCapacity": [
-                6,
-                6,
-                6,
-                6,
-                6
+                5.05,
+                5.05,
+                5.05,
+                5.05,
+                5.05
             ],
             "thrust": 1100,
             "centerDistance": 1000,
@@ -7597,8 +7617,8 @@ export const embeddedGearboxData = {
         {
             "model": "GWC28.30P",
             "inputSpeedRange": [
-                400,
-                2000
+                1000,
+                2500
             ],
             "ratios": [
                 2.55,
@@ -7610,13 +7630,13 @@ export const embeddedGearboxData = {
                 9.26
             ],
             "transferCapacity": [
-                0.865,
-                0.711,
-                0.578,
-                0.504,
-                0.44,
-                0.393,
-                0.35
+                0.6798,
+                0.5527,
+                0.4819,
+                0.3758,
+                0.2773,
+                0.2136,
+                0.1839
             ],
             "thrust": 80,
             "centerDistance": 280,
@@ -7635,8 +7655,8 @@ export const embeddedGearboxData = {
         {
             "model": "GWC30.32P",
             "inputSpeedRange": [
-                400,
-                2000
+                1000,
+                2500
             ],
             "ratios": [
                 2.55,
@@ -7649,14 +7669,14 @@ export const embeddedGearboxData = {
                 9.92
             ],
             "transferCapacity": [
-                1.122,
-                0.894,
-                0.75,
-                0.647,
-                0.57,
-                0.501,
-                0.451,
-                0.404
+                0.8547,
+                0.717,
+                0.6185,
+                0.479,
+                0.3595,
+                0.3161,
+                0.2446,
+                0.2192
             ],
             "thrust": 100,
             "centerDistance": 300,
@@ -7675,8 +7695,8 @@ export const embeddedGearboxData = {
         {
             "model": "GWC32.35P",
             "inputSpeedRange": [
-                400,
-                2000
+                1000,
+                2500
             ],
             "ratios": [
                 2.54,
@@ -7690,15 +7710,15 @@ export const embeddedGearboxData = {
                 9.04
             ],
             "transferCapacity": [
-                1.4175,
-                1.1481,
-                0.9659,
-                0.816,
-                0.72,
-                0.6353,
-                0.5733,
-                0.5236,
-                0.48
+                1.0976,
+                0.9234,
+                0.7801,
+                0.6883,
+                0.6073,
+                0.4589,
+                0.4026,
+                0.344,
+                0.3086
             ],
             "thrust": 120,
             "centerDistance": 320,
@@ -7717,30 +7737,34 @@ export const embeddedGearboxData = {
         {
             "model": "GWC36.39P",
             "inputSpeedRange": [
-                400,
-                1900
+                1000,
+                2500
             ],
             "ratios": [
-                1.97,
+                1.09,
                 2.45,
                 2.98,
                 3.47,
                 3.95,
                 4.4,
-                5.01,
-                5.47,
-                5.97
+                5.86,
+                6.78,
+                7.89,
+                8.77,
+                9.95
             ],
             "transferCapacity": [
-                1.92,
-                1.546,
-                1.272,
-                1.09,
-                0.96,
-                0.862,
-                0.756,
-                0.693,
-                0.634
+                3.5334,
+                1.5717,
+                1.2925,
+                1.1099,
+                0.9751,
+                0.8757,
+                0.6453,
+                0.5682,
+                0.4883,
+                0.4393,
+                0.3872
             ],
             "thrust": 140,
             "centerDistance": 360,
@@ -7759,30 +7783,34 @@ export const embeddedGearboxData = {
         {
             "model": "GWC39.41P",
             "inputSpeedRange": [
-                400,
-                1900
+                1000,
+                2500
             ],
             "ratios": [
-                2,
+                1.26,
                 2.47,
                 3.05,
                 3.48,
                 4.05,
                 4.48,
-                5,
-                5.5,
-                6
+                5.93,
+                6.95,
+                7.75,
+                8.69,
+                9.79
             ],
             "transferCapacity": [
-                2.4,
-                1.92,
-                1.6,
-                1.37,
-                1.2,
-                1.07,
-                0.96,
-                0.87,
-                0.8
+                4.3146,
+                2.1959,
+                1.7762,
+                1.5583,
+                1.3384,
+                1.2093,
+                0.9053,
+                0.7803,
+                0.6997,
+                0.624,
+                0.5539
             ],
             "thrust": 180,
             "centerDistance": 390,
@@ -7801,30 +7829,32 @@ export const embeddedGearboxData = {
         {
             "model": "GWC42.45P",
             "inputSpeedRange": [
-                400,
-                1800
+                1000,
+                2100
             ],
             "ratios": [
-                2,
+                1.64,
                 2.55,
                 3.02,
                 3.58,
                 4,
                 4.47,
-                5,
-                5.5,
-                6
+                6.19,
+                6.9,
+                8.15,
+                9.17
             ],
             "transferCapacity": [
-                3,
-                2.4,
-                2,
-                1.7,
-                1.5,
-                1.35,
-                1.2,
-                1.1,
-                1
+                4.2204,
+                2.7189,
+                2.2887,
+                1.934,
+                1.7304,
+                1.5478,
+                1.1673,
+                1.0032,
+                0.8493,
+                0.7548
             ],
             "thrust": 220,
             "centerDistance": 420,
@@ -7843,8 +7873,8 @@ export const embeddedGearboxData = {
         {
             "model": "GWC45.49P",
             "inputSpeedRange": [
-                400,
-                1800
+                1000,
+                2100
             ],
             "ratios": [
                 2.12,
@@ -7853,20 +7883,24 @@ export const embeddedGearboxData = {
                 3.47,
                 3.95,
                 4.37,
-                5,
-                5.5,
-                6
+                5.92,
+                6.68,
+                8.07,
+                8.61,
+                9.61
             ],
             "transferCapacity": [
-                3.5,
-                3,
-                2.6,
-                2.2,
-                1.9,
-                1.7,
-                1.5,
-                1.35,
-                1.25
+                4.2638,
+                3.411,
+                2.9072,
+                2.4282,
+                2.1319,
+                1.9235,
+                1.4063,
+                1.2589,
+                1.0421,
+                0.9767,
+                0.8751
             ],
             "thrust": 280,
             "centerDistance": 450,
@@ -7885,8 +7919,8 @@ export const embeddedGearboxData = {
         {
             "model": "GWC49.54P",
             "inputSpeedRange": [
-                400,
-                1600
+                1000,
+                2100
             ],
             "ratios": [
                 2.46,
@@ -7894,19 +7928,23 @@ export const embeddedGearboxData = {
                 3.45,
                 3.95,
                 4.53,
-                5,
-                5.5,
-                6
+                5.93,
+                7.11,
+                8.08,
+                8.73,
+                9.88
             ],
             "transferCapacity": [
-                4.2,
-                3.5,
-                3,
-                2.6,
-                2.25,
-                2,
-                1.8,
-                1.65
+                4.4244,
+                3.7294,
+                3.1577,
+                2.7533,
+                2.3996,
+                1.8145,
+                1.5312,
+                1.3474,
+                1.2471,
+                1.1019
             ],
             "thrust": 350,
             "centerDistance": 490,
@@ -7925,28 +7963,30 @@ export const embeddedGearboxData = {
         {
             "model": "GWC52.59P",
             "inputSpeedRange": [
-                400,
-                1600
+                1000,
+                2100
             ],
             "ratios": [
+                1.93,
                 2.48,
                 2.96,
                 3.53,
                 3.95,
                 4.43,
-                5,
-                5.5,
-                6
+                4.97,
+                5.4,
+                5.93
             ],
             "transferCapacity": [
-                5,
-                4.2,
-                3.5,
-                3.15,
-                2.8,
-                2.5,
-                2.25,
-                2.05
+                7.438,
+                5.797,
+                4.853,
+                4.081,
+                3.64,
+                3.246,
+                2.893,
+                2.663,
+                2.426
             ],
             "thrust": 420,
             "centerDistance": 520,
@@ -7965,28 +8005,34 @@ export const embeddedGearboxData = {
         {
             "model": "GWC60.66P",
             "inputSpeedRange": [
-                400,
-                1500
+                1000,
+                2100
             ],
             "ratios": [
+                2.01,
                 2.5,
                 3.07,
                 3.57,
                 4.05,
                 4.48,
-                5,
-                5.5,
-                6
+                5.08,
+                5.51,
+                6.12,
+                6.52,
+                6.97
             ],
             "transferCapacity": [
-                6,
-                5,
-                4.3,
-                3.8,
-                3.4,
-                3.05,
-                2.8,
-                2.55
+                9.913,
+                7.982,
+                6.492,
+                5.581,
+                4.923,
+                4.448,
+                3.927,
+                3.622,
+                3.261,
+                3.06,
+                3
             ],
             "thrust": 500,
             "centerDistance": 600,
@@ -8005,26 +8051,36 @@ export const embeddedGearboxData = {
         {
             "model": "GWC63.71P",
             "inputSpeedRange": [
-                400,
-                1400
+                1000,
+                2100
             ],
             "ratios": [
-                3,
-                3.5,
-                4,
-                4.5,
-                5,
-                5.5,
-                6
+                2.01,
+                2.51,
+                3.03,
+                3.45,
+                4.11,
+                4.55,
+                5.04,
+                5.47,
+                5.95,
+                6.48,
+                6.96,
+                7.48
             ],
             "transferCapacity": [
-                7,
+                12.23,
+                9.8,
+                8.117,
+                7.135,
                 6,
-                5.25,
-                4.65,
-                4.2,
+                5.411,
+                4.888,
+                4.5,
+                4.137,
                 3.8,
-                3.5
+                3.541,
+                3.294
             ],
             "thrust": 600,
             "centerDistance": 630,
@@ -8184,15 +8240,15 @@ export const embeddedGearboxData = {
                 5.97
             ],
             "transferCapacity": [
-                1.92,
-                1.546,
-                1.272,
-                1.09,
-                0.96,
-                0.862,
-                0.756,
-                0.693,
-                0.634
+                2.045,
+                1.644,
+                1.352,
+                1.161,
+                1.02,
+                0.916,
+                0.804,
+                0.737,
+                0.675
             ],
             "thrust": 140,
             "centerDistance": 360,
@@ -8226,15 +8282,15 @@ export const embeddedGearboxData = {
                 5.99
             ],
             "transferCapacity": [
-                2.585,
-                2.068,
-                1.672,
-                1.467,
-                1.26,
-                1.138,
-                1.022,
-                0.927,
-                0.852
+                2.872,
+                2.297,
+                1.858,
+                1.63,
+                1.4,
+                1.265,
+                1.135,
+                1.03,
+                0.947
             ],
             "thrust": 175,
             "centerDistance": 390,
@@ -8268,15 +8324,15 @@ export const embeddedGearboxData = {
                 5.93
             ],
             "transferCapacity": [
-                3.28,
-                2.577,
-                2.169,
-                1.832,
-                1.64,
-                1.467,
-                1.312,
-                1.171,
-                1.106
+                3.62,
+                2.844,
+                2.394,
+                2.023,
+                1.81,
+                1.619,
+                1.448,
+                1.293,
+                1.221
             ],
             "thrust": 220,
             "centerDistance": 420,
@@ -8310,15 +8366,15 @@ export const embeddedGearboxData = {
                 5.98
             ],
             "transferCapacity": [
-                4.24,
-                3.392,
-                2.89,
-                2.414,
-                2.12,
-                1.913,
-                1.725,
-                1.52,
-                1.398
+                4.46,
+                3.568,
+                3.041,
+                2.54,
+                2.23,
+                2.012,
+                1.815,
+                1.6,
+                1.471
             ],
             "thrust": 270,
             "centerDistance": 450,
@@ -8352,15 +8408,15 @@ export const embeddedGearboxData = {
                 6.04
             ],
             "transferCapacity": [
-                4.648,
-                3.62,
-                3.055,
-                2.64,
-                2.279,
-                1.97,
-                1.84,
-                1.66,
-                1.51
+                4.845,
+                3.815,
+                3.185,
+                2.748,
+                2.435,
+                2.146,
+                1.915,
+                1.73,
+                1.609
             ],
             "thrust": 270,
             "centerDistance": 450,
@@ -8394,15 +8450,15 @@ export const embeddedGearboxData = {
                 6
             ],
             "transferCapacity": [
-                5.5,
-                4.54,
-                3.827,
-                3.24,
-                2.825,
-                2.462,
-                2.273,
-                2.036,
-                1.861
+                5.88,
+                4.628,
+                3.901,
+                3.303,
+                2.88,
+                2.51,
+                2.318,
+                2.076,
+                1.898
             ],
             "thrust": 290,
             "centerDistance": 490,
@@ -8436,15 +8492,15 @@ export const embeddedGearboxData = {
                 6.01
             ],
             "transferCapacity": [
-                5.55,
-                5.06,
-                4.15,
-                3.62,
-                3.16,
-                2.82,
-                2.52,
-                2.29,
-                2.1
+                6.409,
+                5.226,
+                4.288,
+                3.735,
+                3.26,
+                2.913,
+                2.603,
+                2.366,
+                2.171
             ],
             "thrust": 290,
             "centerDistance": 490,
@@ -8520,15 +8576,15 @@ export const embeddedGearboxData = {
                 5.93
             ],
             "transferCapacity": [
-                7.438,
-                5.797,
-                4.853,
-                4.081,
-                3.64,
-                3.246,
-                2.893,
-                2.663,
-                2.426
+                7.779,
+                6.063,
+                5.076,
+                4.268,
+                3.807,
+                3.395,
+                3.026,
+                2.785,
+                2.538
             ],
             "thrust": 300,
             "centerDistance": 520,
@@ -8601,22 +8657,22 @@ export const embeddedGearboxData = {
                 4.52,
                 5.04,
                 5.46,
-                5.96,
+                5.95,
                 6.49,
                 6.94
             ],
             "transferCapacity": [
-                7.756,
-                6.353,
-                5.18,
-                4.534,
-                3.852,
-                3.458,
-                3.102,
-                2.867,
-                2.631,
-                2.41,
-                2.254
+                7.798,
+                6.404,
+                5.216,
+                4.566,
+                3.88,
+                3.485,
+                3.126,
+                2.885,
+                2.648,
+                2.427,
+                2.27
             ],
             "thrust": 300,
             "centerDistance": 620,
@@ -8643,24 +8699,24 @@ export const embeddedGearboxData = {
                 2.5,
                 3.07,
                 3.57,
-                3.95,
-                4.49,
-                5.04,
+                4.05,
+                4.48,
+                5.08,
                 5.51,
-                6.04,
-                6.5,
-                6.94
+                6.12,
+                6.52,
+                6.97
             ],
             "transferCapacity": [
-                9.913,
-                7.982,
-                6.492,
-                5.581,
-                4.923,
-                4.448,
-                3.927,
-                3.622,
-                3.261,
+                10.026,
+                8.073,
+                6.567,
+                5.645,
+                4.98,
+                4.5,
+                3.973,
+                3.664,
+                3.299,
                 3.06,
                 3
             ],
@@ -8744,17 +8800,17 @@ export const embeddedGearboxData = {
                 6.94
             ],
             "transferCapacity": [
-                9.913,
-                8.3641,
-                7.4347,
-                6.8628,
-                6.3726,
-                5.05,
-                4.5128,
-                4.1224,
-                3.7627,
-                3.4962,
-                3.375
+                11.6,
+                9.344,
+                7.723,
+                6.726,
+                5.87,
+                5.246,
+                4.688,
+                4.282,
+                3.909,
+                3.632,
+                3.4
             ],
             "thrust": 540,
             "centerDistance": 740,
@@ -8837,18 +8893,18 @@ export const embeddedGearboxData = {
                 7.48
             ],
             "transferCapacity": [
-                12.23,
-                9.8,
-                8.117,
-                7.135,
-                6,
-                5.411,
-                4.888,
-                4.5,
-                4.137,
-                3.8,
-                3.541,
-                3.294
+                13.148,
+                10.535,
+                8.725,
+                7.67,
+                6.45,
+                5.818,
+                5.256,
+                4.837,
+                4.448,
+                4.243,
+                3.954,
+                3.678
             ],
             "thrust": 710,
             "centerDistance": 630,
@@ -8916,35 +8972,33 @@ export const embeddedGearboxData = {
             "model": "GWC66.75",
             "inputSpeedRange": [
                 300,
-                1200
+                950
             ],
             "ratios": [
-                2.02,
-                2.5,
-                3.03,
-                3.45,
-                4.11,
-                4.55,
-                5.04,
-                5.47,
-                5.95,
-                6.48,
-                6.96,
-                7.48
+                2.05,
+                2.55,
+                2.99,
+                3.48,
+                3.95,
+                4.49,
+                4.97,
+                5.51,
+                6.12,
+                6.59,
+                6.95
             ],
             "transferCapacity": [
-                14.53,
-                11.68,
-                9.73,
-                8.53,
-                7.19,
-                6.49,
-                5.86,
-                5.39,
-                4.95,
-                4.55,
-                4.25,
-                3.95
+                14.406,
+                11.582,
+                9.9,
+                8.491,
+                7.48,
+                6.59,
+                5.95,
+                5.366,
+                4.831,
+                4.488,
+                4.253
             ],
             "thrust": 800,
             "centerDistance": 660,
@@ -8964,35 +9018,35 @@ export const embeddedGearboxData = {
             "model": "GWC70.76",
             "inputSpeedRange": [
                 300,
-                1200
+                950
             ],
             "ratios": [
-                2.02,
-                2.5,
-                3.03,
-                3.45,
-                4.11,
-                4.55,
-                5.04,
-                5.47,
-                5.95,
-                6.48,
-                6.96,
-                7.48
+                2.05,
+                2.53,
+                3.09,
+                3.58,
+                3.95,
+                4.57,
+                5.05,
+                5.58,
+                5.77,
+                6.17,
+                6.54,
+                6.94
             ],
             "transferCapacity": [
-                17.1,
-                13.73,
-                11.39,
-                10.01,
-                8.44,
-                7.61,
-                6.88,
-                6.33,
-                5.81,
-                5.34,
-                4.99,
-                4.64
+                15.718,
+                12.734,
+                10.414,
+                8.986,
+                8.15,
+                7.039,
+                6.378,
+                5.773,
+                5.562,
+                5.216,
+                4.934,
+                4.5
             ],
             "thrust": 950,
             "centerDistance": 700,
@@ -9060,35 +9114,21 @@ export const embeddedGearboxData = {
             "model": "GWC70.85",
             "inputSpeedRange": [
                 300,
-                1000
+                425
             ],
             "ratios": [
-                2.02,
-                2.5,
-                3.03,
-                3.45,
-                4.11,
-                4.55,
-                5.04,
-                5.47,
-                5.95,
-                6.48,
-                6.96,
-                7.48
+                1.98,
+                2.45,
+                3.01,
+                3.49,
+                3.95
             ],
             "transferCapacity": [
-                21,
-                16.88,
-                13.98,
-                12.31,
-                10.37,
-                9.35,
-                8.46,
-                7.78,
-                7.14,
-                6.56,
-                6.12,
-                5.68
+                21.441,
+                17.291,
+                14.089,
+                12.131,
+                10.72
             ],
             "thrust": 1100,
             "centerDistance": 850,
@@ -9155,36 +9195,22 @@ export const embeddedGearboxData = {
         {
             "model": "GWC75.90",
             "inputSpeedRange": [
-                300,
-                1000
+                200,
+                465
             ],
             "ratios": [
-                2.02,
-                2.5,
-                3.03,
-                3.45,
-                4.11,
-                4.55,
-                5.04,
-                5.47,
-                5.95,
-                6.48,
-                6.96,
-                7.48
+                2.01,
+                2.51,
+                3.01,
+                3.51,
+                4
             ],
             "transferCapacity": [
-                24,
-                19.3,
-                16,
-                14.05,
-                11.85,
-                10.69,
-                9.67,
-                8.88,
-                8.17,
-                7.51,
-                7.01,
-                6.51
+                22.423,
+                17.966,
+                15,
+                12.833,
+                11.282
             ],
             "thrust": 1250,
             "centerDistance": 900,
@@ -9252,35 +9278,29 @@ export const embeddedGearboxData = {
             "model": "GWC78.88",
             "inputSpeedRange": [
                 300,
-                1000
+                950
             ],
             "ratios": [
-                2.02,
-                2.5,
-                3.03,
-                3.45,
-                4.11,
-                4.55,
-                5.04,
+                2.04,
+                2.49,
+                2.98,
+                3.48,
+                3.95,
+                4.49,
+                5.01,
                 5.47,
-                5.95,
-                6.48,
-                6.96,
-                7.48
+                6.09
             ],
             "transferCapacity": [
-                24,
-                19.3,
-                16,
-                14.05,
-                11.85,
-                10.69,
-                9.67,
-                8.88,
-                8.17,
-                7.51,
-                7.01,
-                6.51
+                23.372,
+                19.099,
+                15.983,
+                13.708,
+                12.063,
+                10.615,
+                9.511,
+                8.712,
+                7.83
             ],
             "thrust": 1250,
             "centerDistance": 900,
@@ -9347,8 +9367,8 @@ export const embeddedGearboxData = {
         {
             "model": "GWC78.96",
             "inputSpeedRange": [
-                300,
-                1000
+                200,
+                900
             ],
             "ratios": [
                 4.97,
@@ -9386,29 +9406,19 @@ export const embeddedGearboxData = {
             "model": "2GWH1060",
             "inputSpeedRange": [
                 400,
-                2000
+                900
             ],
             "ratios": [
-                2,
-                2.5,
-                3,
-                3.5,
-                4,
-                4.5,
-                5,
-                5.5,
-                6
+                2.53,
+                3.54,
+                4.55,
+                5.56
             ],
             "transferCapacity": [
                 1.12,
-                1.12,
-                1.12,
-                1.12,
-                1.12,
-                1.12,
-                1.12,
-                1.12,
-                1.12
+                0.935,
+                0.935,
+                0.75
             ],
             "thrust": 175,
             "standardCenterDistance": 1460,
@@ -9431,26 +9441,10 @@ export const embeddedGearboxData = {
                 1700
             ],
             "ratios": [
-                1.98,
-                2.47,
-                3.05,
-                3.48,
-                4.05,
-                4.48,
-                5,
-                5.51,
-                5.99
+                4.16
             ],
             "transferCapacity": [
-                2.585,
-                2.068,
-                1.672,
-                1.467,
-                1.26,
-                1.138,
-                1.022,
-                0.927,
-                0.852
+                3.57
             ],
             "thrust": 175,
             "centerDistance": 390,
@@ -9473,26 +9467,10 @@ export const embeddedGearboxData = {
                 1600
             ],
             "ratios": [
-                2,
-                2.55,
-                3.02,
-                3.58,
-                4,
-                4.47,
-                5,
-                5.6,
-                5.93
+                5.6
             ],
             "transferCapacity": [
-                3.28,
-                2.577,
-                2.169,
-                1.832,
-                1.64,
-                1.467,
-                1.312,
-                1.171,
-                1.106
+                5
             ],
             "thrust": 220,
             "centerDistance": 420,
@@ -9552,7 +9530,11 @@ export const embeddedGearboxData = {
             "centerDistance": 1200,
             "weight": 1500,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1000
+            ]
         },
         {
             "model": "2GWH600",
@@ -9572,7 +9554,11 @@ export const embeddedGearboxData = {
             "centerDistance": 1400,
             "weight": 2200,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1000
+            ]
         },
         {
             "model": "2GWH800",
@@ -9592,7 +9578,11 @@ export const embeddedGearboxData = {
             "centerDistance": 1460,
             "weight": 2800,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                900
+            ]
         },
         {
             "model": "GWC20.34",
@@ -9604,7 +9594,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 125,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1400
+            ]
         },
         {
             "model": "GWC20.54",
@@ -9616,7 +9610,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 148,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1400
+            ]
         },
         {
             "model": "GWC26.58",
@@ -9628,7 +9626,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 198,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1400
+            ]
         },
         {
             "model": "GWC36.58",
@@ -9640,7 +9642,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 205,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1200
+            ]
         },
         {
             "model": "GWC36.59",
@@ -9652,7 +9658,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 270,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1200
+            ]
         },
         {
             "model": "GWC46.59",
@@ -9664,7 +9674,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 270,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1200
+            ]
         },
         {
             "model": "GWC46.60",
@@ -9676,7 +9690,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 355,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1200
+            ]
         },
         {
             "model": "GWC56.61",
@@ -9688,7 +9706,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 360,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1000
+            ]
         },
         {
             "model": "GWC61.65",
@@ -9700,7 +9722,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 560,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1000
+            ]
         },
         {
             "model": "GWC70.82",
@@ -9835,7 +9861,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 495,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1400
+            ]
         },
         {
             "model": "GWCD36.70",
@@ -9847,7 +9877,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 550,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1200
+            ]
         },
         {
             "model": "GWCD46.71",
@@ -9859,7 +9893,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 600,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1200
+            ]
         },
         {
             "model": "GWCD56.72",
@@ -9871,7 +9909,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 700,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1000
+            ]
         },
         {
             "model": "GWCD67.80",
@@ -9883,7 +9925,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 850,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                300,
+                900
+            ]
         },
         {
             "model": "GWCD79.85",
@@ -9895,7 +9941,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 970,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                200,
+                800
+            ]
         },
         {
             "model": "GWCD90.100",
@@ -9907,7 +9957,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 1350,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                200,
+                600
+            ]
         },
         {
             "model": "GWD28.30",
@@ -15093,22 +15147,22 @@ export const embeddedGearboxData = {
         {
             "model": "HCM1600",
             "inputSpeedRange": [
-                500,
-                1650
+                1000,
+                2100
             ],
             "ratios": [
-                2.03,
-                2.54,
-                3,
-                3.5,
-                4
+                1.5,
+                2,
+                2.1,
+                2.5,
+                3
             ],
             "transferCapacity": [
-                0.19,
-                0.19,
-                0.19,
-                0.19,
-                0.19
+                1.19,
+                1.19,
+                1.19,
+                1.19,
+                1.19
             ],
             "thrust": 60,
             "centerDistance": 245,
@@ -15218,15 +15272,23 @@ export const embeddedGearboxData = {
             "model": "HCM165",
             "inputSpeedRange": [
                 1500,
-                3500
+                3600
             ],
             "ratios": [
                 1.18,
-                1.25
+                1.22,
+                1.24,
+                1.97,
+                2.5,
+                2.92
             ],
             "transferCapacity": [
-                0.1,
-                0.14
+                2.92,
+                2.92,
+                2.92,
+                2.92,
+                2.92,
+                2.92
             ],
             "thrust": 6,
             "centerDistance": 130,
@@ -15245,18 +15307,24 @@ export const embeddedGearboxData = {
         {
             "model": "HCM303",
             "inputSpeedRange": [
-                1500,
-                2500
+                1000,
+                2100
             ],
             "ratios": [
                 1,
+                1.03,
                 1.15,
-                1.19
+                1.16,
+                1.19,
+                1.49
             ],
             "transferCapacity": [
-                0.3,
-                0.3,
-                0.3
+                1.49,
+                1.49,
+                1.49,
+                1.49,
+                1.49,
+                1.49
             ],
             "thrust": 10,
             "centerDistance": 150,
@@ -15301,14 +15369,32 @@ export const embeddedGearboxData = {
         {
             "model": "HCM403",
             "inputSpeedRange": [
-                1500,
-                2500
+                1000,
+                2300
             ],
             "ratios": [
-                1
+                1,
+                1.1,
+                1.11,
+                1.2,
+                1.51,
+                1.53,
+                1.78,
+                2.03,
+                2.21,
+                2.6
             ],
             "transferCapacity": [
-                0.32
+                2.6,
+                2.6,
+                2.6,
+                2.6,
+                2.6,
+                2.6,
+                2.6,
+                2.6,
+                2.6,
+                2.6
             ],
             "thrust": 16,
             "centerDistance": 180,
@@ -15439,14 +15525,26 @@ export const embeddedGearboxData = {
         {
             "model": "HCAM303",
             "inputSpeedRange": [
-                1500,
-                2500
+                1000,
+                2300
             ],
             "ratios": [
-                1.19
+                1,
+                1.03,
+                1.1,
+                1.16,
+                1.19,
+                1.2,
+                1.49
             ],
             "transferCapacity": [
-                0.3
+                1.49,
+                1.49,
+                1.49,
+                1.49,
+                1.49,
+                1.49,
+                1.49
             ],
             "thrust": 11,
             "centerDistance": 155,
@@ -15465,18 +15563,18 @@ export const embeddedGearboxData = {
         {
             "model": "HCAM403",
             "inputSpeedRange": [
-                1500,
-                2500
+                1000,
+                2300
             ],
             "ratios": [
-                1,
                 1.1,
-                1.2
+                1.2,
+                1.51
             ],
             "transferCapacity": [
-                0.35,
-                0.35,
-                0.35
+                0.258,
+                0.232,
+                0.181
             ],
             "thrust": 17,
             "centerDistance": 185,
@@ -15495,20 +15593,18 @@ export const embeddedGearboxData = {
         {
             "model": "HCAM500",
             "inputSpeedRange": [
-                1500,
-                2600
+                1000,
+                2300
             ],
             "ratios": [
-                1.35,
-                1.43,
-                2.03,
-                3
+                1.1,
+                1.2,
+                1.51
             ],
             "transferCapacity": [
-                0.48,
-                0.48,
-                0.48,
-                0.48
+                0.32,
+                0.32,
+                0.32
             ],
             "thrust": 24,
             "centerDistance": 200,
@@ -16029,16 +16125,16 @@ export const embeddedGearboxData = {
                 5.98
             ],
             "transferCapacity": [
-                0.0801,
-                0.0699,
-                0.0606,
-                0.052,
-                0.0442,
-                0.0373,
-                0.0311,
-                0.0257,
-                0.0211,
-                0.0173
+                0.083,
+                0.083,
+                0.067,
+                0.056,
+                0.047,
+                0.042,
+                0.033,
+                0.03,
+                0.024,
+                0.014
             ],
             "thrust": 14.7,
             "centerDistance": 142,
@@ -16105,24 +16201,28 @@ export const embeddedGearboxData = {
                 1500
             ],
             "ratios": [
-                1.53,
+                1.5,
                 2.03,
-                2.5,
-                2.96,
-                3.55,
-                4,
-                4.53,
-                5.05
+                2.48,
+                2.95,
+                3.57,
+                4.05,
+                4.52,
+                4.99,
+                5.5,
+                5.94
             ],
             "transferCapacity": [
-                0.1705,
-                0.1398,
-                0.1119,
-                0.0868,
-                0.0644,
-                0.0448,
-                0.028,
-                0.0139
+                0.16,
+                0.16,
+                0.15,
+                0.134,
+                0.092,
+                0.073,
+                0.05,
+                0.04,
+                0.022,
+                0.02
             ],
             "thrust": 30,
             "centerDistance": 165,
@@ -16243,7 +16343,7 @@ export const embeddedGearboxData = {
                 0.443,
                 0.4,
                 0.327,
-                0.283,
+                0.27,
                 0.214,
                 0.186,
                 0.158
@@ -16269,16 +16369,15 @@ export const embeddedGearboxData = {
                 1500
             ],
             "ratios": [
-                1.5,
-                2.03,
-                2.48,
-                2.95,
-                3.57,
-                4.05,
-                4.52,
-                4.99,
-                5.5,
-                5.94
+                1.52,
+                2,
+                2.39,
+                3,
+                3.44,
+                3.96,
+                4.57,
+                5.05,
+                5.4
             ],
             "transferCapacity": [
                 0.634,
@@ -16289,8 +16388,7 @@ export const embeddedGearboxData = {
                 0.332,
                 0.243,
                 0.206,
-                0.173,
-                0.133
+                0.173
             ],
             "thrust": 60,
             "centerDistance": 264,
@@ -16416,15 +16514,15 @@ export const embeddedGearboxData = {
             "transferCapacity": [
                 1.466,
                 1.466,
-                1.466,
-                1.466,
-                1.466,
-                1.466,
-                1.466,
-                1.466,
-                1.466,
-                1.466,
-                1.466
+                1.306,
+                1.146,
+                1,
+                0.82,
+                0.58,
+                0.434,
+                0.36,
+                0.373,
+                0.226
             ],
             "thrust": 110,
             "centerDistance": 340,
@@ -16543,7 +16641,11 @@ export const embeddedGearboxData = {
             ],
             "weight": 3600,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                750,
+                1500
+            ]
         },
         {
             "model": "DT4000",
@@ -16559,29 +16661,33 @@ export const embeddedGearboxData = {
             ],
             "weight": 5000,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                750,
+                1500
+            ]
         }
     ],
     "hcqGearboxes": [
         {
             "model": "HC038A",
             "inputSpeedRange": [
-                2000,
-                3000
+                1500,
+                3200
             ],
             "ratios": [
-                2.07,
-                2.48,
-                2.95,
-                3.35,
-                3.83
+                1.51,
+                2.03,
+                2.52,
+                2.92,
+                3.45
             ],
             "transferCapacity": [
-                0.012,
-                0.012,
-                0.012,
-                0.012,
-                0.012
+                0.028,
+                0.028,
+                0.028,
+                0.025,
+                0.02
             ],
             "thrust": 3.5,
             "centerDistance": 135,
@@ -16636,28 +16742,14 @@ export const embeddedGearboxData = {
         {
             "model": "HCQH1000",
             "inputSpeedRange": [
-                1500,
-                2100
+                1000,
+                2300
             ],
             "ratios": [
-                1.5,
-                2,
-                2.5,
-                3,
-                3.5,
-                4,
-                4.5,
-                5
+                2.26
             ],
             "transferCapacity": [
-                0.1,
-                0.1,
-                0.1,
-                0.1,
-                0.1,
-                0.1,
-                0.1,
-                0.1
+                0.735
             ],
             "thrust": 30,
             "centerDistance": 310,
@@ -16678,28 +16770,18 @@ export const embeddedGearboxData = {
         {
             "model": "HCQ1001",
             "inputSpeedRange": [
-                1500,
-                2100
+                1000,
+                2300
             ],
             "ratios": [
-                1.5,
-                2,
-                2.5,
+                2.88,
                 3,
-                3.5,
-                4,
-                4.5,
-                5
+                3.23
             ],
             "transferCapacity": [
-                0.12,
-                0.12,
-                0.12,
-                0.12,
-                0.12,
-                0.12,
-                0.12,
-                0.12
+                0.735,
+                0.735,
+                0.735
             ],
             "thrust": 30,
             "centerDistance": 335,
@@ -16724,16 +16806,28 @@ export const embeddedGearboxData = {
                 2500
             ],
             "ratios": [
-                1.5,
-                2,
+                1.53,
+                2.03,
                 2.5,
-                3
+                2.96,
+                3.54,
+                3.96,
+                4.48,
+                4.96,
+                5.52,
+                5.98
             ],
             "transferCapacity": [
-                0.04,
-                0.04,
-                0.04,
-                0.04
+                0.28,
+                0.28,
+                0.28,
+                0.28,
+                0.28,
+                0.28,
+                0.252,
+                0.227,
+                0.204,
+                0.188
             ],
             "thrust": 15,
             "centerDistance": 400,
@@ -16786,28 +16880,16 @@ export const embeddedGearboxData = {
         {
             "model": "HCQ1000",
             "inputSpeedRange": [
-                1500,
-                2100
+                1000,
+                2300
             ],
             "ratios": [
-                1.5,
-                2,
-                2.5,
-                3,
-                3.5,
-                4,
-                4.5,
-                5
+                1.18,
+                2.84
             ],
             "transferCapacity": [
-                0.1,
-                0.1,
-                0.1,
-                0.1,
-                0.1,
-                0.1,
-                0.1,
-                0.1
+                0.735,
+                0.65
             ],
             "thrust": 30,
             "centerDistance": 310,
@@ -16843,15 +16925,15 @@ export const embeddedGearboxData = {
                 3
             ],
             "transferCapacity": [
-                1.03,
-                1.03,
-                1.03,
-                1.03,
-                0.9,
-                0.9,
-                0.9,
-                0.9,
-                0.9
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3
             ],
             "thrust": 110,
             "centerDistance": 340,
@@ -16872,20 +16954,20 @@ export const embeddedGearboxData = {
         {
             "model": "HCQ1600",
             "inputSpeedRange": [
-                750,
-                1500
+                1000,
+                2100
             ],
             "ratios": [
-                1.5,
-                2,
-                2.5,
-                3
+                1.51,
+                1.97,
+                2.48,
+                2.76
             ],
             "transferCapacity": [
-                0.2,
-                0.2,
-                0.2,
-                0.2
+                1.204,
+                1.204,
+                1.204,
+                1
             ],
             "thrust": 40,
             "centerDistance": 340,
@@ -16906,20 +16988,16 @@ export const embeddedGearboxData = {
         {
             "model": "HCQ1601",
             "inputSpeedRange": [
-                750,
-                1500
+                1000,
+                2100
             ],
             "ratios": [
-                1.5,
-                2,
-                2.5,
-                3
+                3.04,
+                3.24
             ],
             "transferCapacity": [
-                0.25,
-                0.25,
-                0.25,
-                0.25
+                1.204,
+                1
             ],
             "thrust": 50,
             "centerDistance": 370,
@@ -16944,20 +17022,16 @@ export const embeddedGearboxData = {
                 2500
             ],
             "ratios": [
-                2,
                 2.52,
-                3,
                 3.57,
                 4.05,
                 4.45
             ],
             "transferCapacity": [
-                0.11,
-                0.11,
-                0.11,
-                0.11,
-                0.11,
-                0.11
+                1.6,
+                1.64,
+                1.73,
+                1.78
             ],
             "thrust": 30,
             "centerDistance": 225,
@@ -16980,28 +17054,18 @@ export const embeddedGearboxData = {
                 2500
             ],
             "ratios": [
-                1.87,
-                2.04,
                 2.54,
                 3,
-                3.53,
-                4.1,
-                4.47,
-                4.61,
-                4.94,
-                5.44
+                3.59,
+                4.14,
+                4.3
             ],
             "transferCapacity": [
-                0.22,
-                0.22,
-                0.22,
-                0.22,
-                0.22,
-                0.22,
-                0.22,
-                0.22,
-                0.22,
-                0.22
+                1.62,
+                1.66,
+                1.74,
+                1.79,
+                1.84
             ],
             "thrust": 50,
             "centerDistance": 264,
@@ -17024,16 +17088,26 @@ export const embeddedGearboxData = {
                 3500
             ],
             "ratios": [
-                1.49,
-                2.07,
-                2.54,
-                3
+                1.64,
+                2.03,
+                2.52,
+                3,
+                3.53,
+                4,
+                4.48,
+                4.95,
+                5.56
             ],
             "transferCapacity": [
-                0.079,
-                0.077,
-                0.069,
-                0.062
+                0.064,
+                0.064,
+                0.058,
+                0.051,
+                0.046,
+                0.041,
+                0.037,
+                0.034,
+                0.03
             ],
             "thrust": 16,
             "centerDistance": 146,
@@ -17059,20 +17133,26 @@ export const embeddedGearboxData = {
                 2600
             ],
             "ratios": [
-                1.03,
-                1.25,
-                1.5,
+                1.64,
                 2.03,
-                2.48,
-                2.95
+                2.52,
+                3.04,
+                3.57,
+                4,
+                4.48,
+                5.05,
+                5.56
             ],
             "transferCapacity": [
-                0.11,
-                0.11,
-                0.11,
-                0.098,
-                0.098,
-                0.098
+                0.087,
+                0.087,
+                0.087,
+                0.078,
+                0.07,
+                0.063,
+                0.056,
+                0.05,
+                0.045
             ],
             "thrust": 25,
             "centerDistance": 165,
@@ -17114,20 +17194,20 @@ export const embeddedGearboxData = {
                 2.95
             ],
             "transferCapacity": [
-                0.25,
-                0.25,
-                0.25,
-                0.25,
-                0.25,
-                0.25,
-                0.235,
-                0.235,
-                0.235,
-                0.23,
-                0.23,
-                0.23,
-                0.23,
-                0.23
+                2.95,
+                2.95,
+                2.95,
+                2.95,
+                2.95,
+                2.95,
+                2.95,
+                2.95,
+                2.95,
+                2.95,
+                2.95,
+                2.95,
+                2.95,
+                2.95
             ],
             "thrust": 40,
             "centerDistance": 203,
@@ -17231,20 +17311,28 @@ export const embeddedGearboxData = {
                 2300
             ],
             "ratios": [
-                1.03,
-                1.46,
-                1.56,
-                1.88,
-                2,
-                2.45
+                1.48,
+                2.04,
+                2.52,
+                3.04,
+                3.57,
+                4,
+                4.47,
+                5.05,
+                5.56,
+                5.95
             ],
             "transferCapacity": [
-                0.404,
-                0.404,
-                0.404,
-                0.382,
-                0.382,
-                0.382
+                0.36,
+                0.36,
+                0.36,
+                0.36,
+                0.36,
+                0.36,
+                0.324,
+                0.288,
+                0.261,
+                0.243
             ],
             "thrust": 55,
             "centerDistance": 235,
@@ -17270,12 +17358,22 @@ export const embeddedGearboxData = {
                 2300
             ],
             "ratios": [
-                2.71,
-                2.95
+                1.58,
+                2.03,
+                2.48,
+                2.96,
+                3.46,
+                3.94,
+                4.39
             ],
             "transferCapacity": [
-                0.404,
-                0.404
+                0.377,
+                0.377,
+                0.377,
+                0.377,
+                0.377,
+                0.339,
+                0.305
             ],
             "thrust": 60,
             "centerDistance": 264,
@@ -17416,7 +17514,7 @@ export const embeddedGearboxData = {
             "model": "HCQ800A",
             "inputSpeedRange": [
                 1000,
-                2100
+                2500
             ],
             "ratios": [
                 1.28,
@@ -17522,22 +17620,22 @@ export const embeddedGearboxData = {
         {
             "model": "GCS320",
             "inputSpeedRange": [
-                1000,
-                2500
+                400,
+                1800
             ],
             "ratios": [
-                2,
-                2.5,
-                3,
-                3.5,
+                1.97,
+                2.52,
+                2.96,
+                3.52,
                 4
             ],
             "transferCapacity": [
-                0.15,
-                0.15,
-                0.15,
-                0.15,
-                0.15
+                0.57,
+                0.57,
+                0.57,
+                0.57,
+                0.57
             ],
             "thrust": 50,
             "centerDistance": null,
@@ -17558,22 +17656,22 @@ export const embeddedGearboxData = {
         {
             "model": "GCH390",
             "inputSpeedRange": [
-                1000,
-                2500
+                400,
+                1800
             ],
             "ratios": [
-                2,
-                2.5,
-                3,
-                3.5,
-                4
+                2.03,
+                2.48,
+                2.92,
+                3.48,
+                3.95
             ],
             "transferCapacity": [
-                0.2,
-                0.2,
-                0.2,
-                0.2,
-                0.2
+                0.96,
+                0.96,
+                0.96,
+                0.96,
+                0.96
             ],
             "thrust": 70,
             "centerDistance": null,
@@ -17626,22 +17724,22 @@ export const embeddedGearboxData = {
         {
             "model": "GCS540",
             "inputSpeedRange": [
-                1000,
-                2000
+                400,
+                1200
             ],
             "ratios": [
-                2,
-                2.5,
+                1.97,
+                2.47,
                 3,
-                3.5,
-                4
+                3.52,
+                3.95
             ],
             "transferCapacity": [
-                0.3,
-                0.3,
-                0.3,
-                0.3,
-                0.3
+                2.825,
+                2.825,
+                2.825,
+                2.825,
+                2.825
             ],
             "thrust": 100,
             "centerDistance": null,
@@ -17660,22 +17758,30 @@ export const embeddedGearboxData = {
         {
             "model": "GCH750",
             "inputSpeedRange": [
-                1000,
-                2000
+                300,
+                950
             ],
             "ratios": [
-                2,
-                2.5,
+                1.97,
+                2.47,
                 3,
-                3.5,
-                4
+                3.52,
+                3.95,
+                4.48,
+                4.96,
+                5.43,
+                6
             ],
             "transferCapacity": [
-                0.4,
-                0.4,
-                0.4,
-                0.4,
-                0.4
+                8.111,
+                8.111,
+                8.111,
+                8.111,
+                8.111,
+                8.111,
+                8.111,
+                8.111,
+                8.111
             ],
             "thrust": 130,
             "centerDistance": null,
@@ -17694,22 +17800,22 @@ export const embeddedGearboxData = {
         {
             "model": "GCS1000",
             "inputSpeedRange": [
-                1000,
-                2000
+                200,
+                800
             ],
             "ratios": [
                 2,
-                2.5,
-                3,
+                2.54,
+                2.96,
                 3.5,
-                4
+                3.95
             ],
             "transferCapacity": [
-                0.5,
-                0.5,
-                0.5,
-                0.5,
-                0.5
+                17.5,
+                17.5,
+                17.5,
+                17.5,
+                17.5
             ],
             "thrust": 150,
             "centerDistance": null,
@@ -17728,22 +17834,20 @@ export const embeddedGearboxData = {
         {
             "model": "GCSE20",
             "inputSpeedRange": [
-                2000,
-                3000
+                400,
+                1400
             ],
             "ratios": [
-                2,
-                2.5,
-                3,
-                3.5,
-                4
+                6.5,
+                7,
+                7.5,
+                8
             ],
             "transferCapacity": [
-                0.1,
-                0.1,
-                0.1,
-                0.1,
-                0.1
+                2.12,
+                2.12,
+                2.12,
+                2.12
             ],
             "thrust": 30,
             "centerDistance": null,
@@ -17777,7 +17881,11 @@ export const embeddedGearboxData = {
             "centerDistance": 1018,
             "weight": 1800,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1400
+            ]
         },
         {
             "model": "GC1400",
@@ -17797,7 +17905,11 @@ export const embeddedGearboxData = {
             "centerDistance": 1350,
             "weight": 2500,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1200
+            ]
         },
         {
             "model": "GC600",
@@ -17817,7 +17929,11 @@ export const embeddedGearboxData = {
             "centerDistance": 590,
             "weight": 850,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1800
+            ]
         },
         {
             "model": "GC800",
@@ -17837,7 +17953,11 @@ export const embeddedGearboxData = {
             "centerDistance": 855,
             "weight": 1200,
             "efficiency": 0.97,
-            "source": "杭齿厂选型手册2025版5月版"
+            "source": "杭齿厂选型手册2025版5月版",
+            "inputSpeedRange": [
+                400,
+                1600
+            ]
         },
         {
             "model": "GCH1000",
@@ -19277,12 +19397,12 @@ export const embeddedGearboxData = {
                 4.47
             ],
             "transferCapacity": [
-                4.744,
-                4.744,
-                4.744,
-                4.744,
-                4.623,
-                4.183
+                5.43,
+                5.43,
+                5.43,
+                5.43,
+                5.43,
+                5.43
             ],
             "thrust": 450,
             "centerDistance": 700,
@@ -21464,8 +21584,8 @@ export const embeddedGearboxData = {
         {
             "model": "HCV100",
             "inputSpeedRange": [
-                1200,
-                2600
+                1000,
+                3500
             ],
             "ratios": [
                 2.02,
