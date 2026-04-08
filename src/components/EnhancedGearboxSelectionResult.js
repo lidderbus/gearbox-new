@@ -17,6 +17,7 @@ import MarginIndicator from './selection/MarginIndicator';
 import RecommendationReasonCard from './selection/RecommendationReasonCard';
 import CapacityCalculationCard from './selection/CapacityCalculationCard';
 import RelaxationSuggestions from './selection/RelaxationSuggestions';
+import DataCompletenessCard from './selection/DataCompletenessCard';
 import { exportSelectionSummary } from '../utils/selectionSummaryExport';
 import { calculatePowerRange, extractSeriesFromModel } from '../utils/gearboxDataEnhancer';
 import EquipmentInfoCard from './EquipmentInfoCard';
@@ -446,6 +447,7 @@ const EnhancedGearboxSelectionResult = ({
                   allRecommendations={recommendations}
                   targetRatio={result.targetRatio}
                 />
+                <DataCompletenessCard gearbox={selectedGearbox} />
                 <CapacityCalculationCard
                   power={result.enginePower}
                   speed={result.engineSpeed}
