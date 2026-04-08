@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 49; // v49: PDF手册全量审计V2(306型号参考) — 修复73处: v48的46处(33字段偏移+13其他) + v49新增27处(14铝合金中心距+7转速+5尺寸+1推力) (2026-04-08)
+export const APP_DATA_VERSION = 50; // v50: 推力+中心距100%补全 — 40处修复: 6推力补全+15中心距补全+2损坏值修复+12 HCL F/S推力纠正+9 HCL F/S中心距纠正+MV100A(倾角7°)中心距 (2026-04-07)
 
 export const DEFAULTS = {
     gearbox: {
