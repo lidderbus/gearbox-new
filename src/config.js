@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 45; // v45: Phase4体验打磨 — NotificationCenter(超期提醒+桌面通知), 快捷键(Ctrl+P/E//), OnboardingGuide(7步引导), EquipmentInfoCard(联轴器/泵可视化卡片), 基于v44统一框架 (2026-04-05)
+export const APP_DATA_VERSION = 46; // v46: 传递能力全面PDF手册核对 — 修复~190个型号(HCA/HCQ/HCV TC=比率值bug 20个+HCD/HCT全系列PDF覆盖35个+embeddedData同步116个+GWC P系列8个+HC断点5个+其他) + 说明书库45PDF + generate-embedded-data.js同步机制 (2026-04-08)
 
 export const DEFAULTS = {
     gearbox: {
