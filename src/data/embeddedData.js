@@ -1,7 +1,7 @@
 
 // src/data/embeddedData.js
 // 自动生成 by scripts/generate-embedded-data.js
-// 生成时间: 2026-04-08T08:02:25.536Z
+// 生成时间: 2026-04-08T09:14:19.234Z
 // 总型号数: 669 (原215 + 新增0)
 // 数据来源: completeGearboxData.js (700型号) + 原 embeddedData.js 手工数据
 
@@ -30,7 +30,7 @@ export { safeParseFloat };
 
 export const embeddedGearboxData = {
     "_version": 3,
-    "_lastFixed": "2026-04-08T08:02:25.535Z",
+    "_lastFixed": "2026-04-08T09:14:19.234Z",
     "hcGearboxes": [
         {
             "model": "40A",
@@ -191,9 +191,9 @@ export const embeddedGearboxData = {
                 0.039,
                 0.039,
                 0.039,
+                0.039,
                 0.031,
                 0.031,
-                0.027,
                 0.027
             ],
             "thrust": 16,
@@ -3132,15 +3132,19 @@ export const embeddedGearboxData = {
                 2.52,
                 3.13,
                 3.52,
-                3.91
+                3.91,
+                4.4,
+                4.5
             ],
             "transferCapacity": [
                 1.62,
-                1.58,
-                1.55,
+                1.62,
+                1.62,
+                1.62,
+                1.62,
+                1.62,
                 1.45,
-                1.35,
-                1.25
+                1.4
             ],
             "thrust": 190,
             "centerDistance": 450,
@@ -3334,13 +3338,13 @@ export const embeddedGearboxData = {
                 4.47
             ],
             "transferCapacity": [
-                2.05,
-                2,
-                1.9,
-                1.75,
-                1.6,
-                1.45,
-                1.3
+                2.1,
+                2.1,
+                2.1,
+                2.1,
+                2.1,
+                2.1,
+                1.85
             ],
             "thrust": 270,
             "centerDistance": 490,
@@ -4276,14 +4280,16 @@ export const embeddedGearboxData = {
                 2.48,
                 3,
                 3.5,
-                4
+                4,
+                4.56
             ],
             "transferCapacity": [
                 1.8,
                 1.8,
                 1.8,
                 1.8,
-                1.8
+                1.8,
+                1.58
             ],
             "thrust": 240,
             "centerDistance": 470,
@@ -16914,26 +16920,16 @@ export const embeddedGearboxData = {
                 2100
             ],
             "ratios": [
-                1.03,
                 1.52,
                 2,
-                2.03,
                 2.48,
-                2.5,
-                2.53,
-                2.93,
                 3
             ],
             "transferCapacity": [
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3
+                1.03,
+                1.03,
+                1.03,
+                0.9
             ],
             "thrust": 110,
             "centerDistance": 340,
@@ -17088,26 +17084,16 @@ export const embeddedGearboxData = {
                 3500
             ],
             "ratios": [
-                1.64,
-                2.03,
-                2.52,
-                3,
-                3.53,
-                4,
-                4.48,
-                4.95,
-                5.56
+                1.49,
+                2.07,
+                2.54,
+                3
             ],
             "transferCapacity": [
-                0.064,
-                0.064,
-                0.058,
-                0.051,
-                0.046,
-                0.041,
-                0.037,
-                0.034,
-                0.03
+                0.079,
+                0.077,
+                0.069,
+                0.062
             ],
             "thrust": 16,
             "centerDistance": 146,
@@ -17133,26 +17119,20 @@ export const embeddedGearboxData = {
                 2600
             ],
             "ratios": [
-                1.64,
+                1.03,
+                1.25,
+                1.5,
                 2.03,
-                2.52,
-                3.04,
-                3.57,
-                4,
-                4.48,
-                5.05,
-                5.56
+                2.48,
+                2.95
             ],
             "transferCapacity": [
-                0.087,
-                0.087,
-                0.087,
-                0.078,
-                0.07,
-                0.063,
-                0.056,
-                0.05,
-                0.045
+                0.11,
+                0.11,
+                0.11,
+                0.11,
+                0.098,
+                0.098
             ],
             "thrust": 25,
             "centerDistance": 165,
@@ -17182,32 +17162,20 @@ export const embeddedGearboxData = {
                 1.21,
                 1.36,
                 1.46,
-                1.5,
-                1.52,
                 1.74,
-                1.96,
                 2.05,
                 2.38,
-                2.5,
-                2.55,
-                2.57,
-                2.95
+                2.55
             ],
             "transferCapacity": [
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95
+                0.25,
+                0.25,
+                0.25,
+                0.25,
+                0.25,
+                0.25,
+                0.235,
+                0.23
             ],
             "thrust": 40,
             "centerDistance": 203,
@@ -17311,28 +17279,20 @@ export const embeddedGearboxData = {
                 2300
             ],
             "ratios": [
-                1.48,
-                2.04,
-                2.52,
-                3.04,
-                3.57,
-                4,
-                4.47,
-                5.05,
-                5.56,
-                5.95
+                1.03,
+                1.46,
+                1.56,
+                1.88,
+                2,
+                2.45
             ],
             "transferCapacity": [
-                0.36,
-                0.36,
-                0.36,
-                0.36,
-                0.36,
-                0.36,
-                0.324,
-                0.288,
-                0.261,
-                0.243
+                0.404,
+                0.404,
+                0.404,
+                0.404,
+                0.404,
+                0.382
             ],
             "thrust": 55,
             "centerDistance": 235,
@@ -17358,22 +17318,12 @@ export const embeddedGearboxData = {
                 2300
             ],
             "ratios": [
-                1.58,
-                2.03,
-                2.48,
-                2.96,
-                3.46,
-                3.94,
-                4.39
+                2.71,
+                2.95
             ],
             "transferCapacity": [
-                0.377,
-                0.377,
-                0.377,
-                0.377,
-                0.377,
-                0.339,
-                0.305
+                0.404,
+                0.404
             ],
             "thrust": 60,
             "centerDistance": 264,
@@ -20591,17 +20541,19 @@ export const embeddedGearboxData = {
             ],
             "ratios": [
                 1.1,
+                1.28,
                 1.5,
                 2.03,
                 2.52,
                 2.95
             ],
             "transferCapacity": [
-                2.96,
-                2.96,
-                2.96,
-                2.96,
-                2.96
+                0.11,
+                0.11,
+                0.11,
+                0.11,
+                0.11,
+                0.085
             ],
             "weight": 200,
             "dimensions": "625×567×530",
@@ -20691,22 +20643,14 @@ export const embeddedGearboxData = {
                 2100
             ],
             "ratios": [
-                1.03,
-                1.52,
-                2.03,
                 2.5,
-                2.53,
                 2.93,
                 3
             ],
             "transferCapacity": [
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3
+                1.03,
+                1.03,
+                1.03
             ],
             "weight": 1600,
             "dimensions": "1290×1170×850",
@@ -20766,10 +20710,10 @@ export const embeddedGearboxData = {
                 2.93
             ],
             "transferCapacity": [
-                2.93,
-                2.93,
-                2.93,
-                2.93
+                1.031,
+                1.031,
+                0.93,
+                0.88
             ],
             "weight": 1600,
             "dimensions": "1300×1170×850",
@@ -20825,20 +20769,16 @@ export const embeddedGearboxData = {
                 2300
             ],
             "ratios": [
-                1.5,
                 1.52,
                 1.96,
                 2.5,
-                2.57,
                 2.95
             ],
             "transferCapacity": [
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95,
-                2.95
+                0.25,
+                0.25,
+                0.25,
+                0.235
             ],
             "thrust": 40,
             "centerDistance": 278,
@@ -20904,8 +20844,8 @@ export const embeddedGearboxData = {
             ],
             "transferCapacity": [
                 0.25,
-                0.235,
-                0.235,
+                0.25,
+                0.25,
                 0.235
             ],
             "thrust": 40,
@@ -21031,22 +20971,18 @@ export const embeddedGearboxData = {
                 2500
             ],
             "ratios": [
-                1.18,
                 1.51,
                 1.97,
                 2.5,
                 2.73,
-                2.84,
                 2.92
             ],
             "transferCapacity": [
-                2.92,
-                2.92,
-                2.92,
-                2.92,
-                2.92,
-                2.92,
-                2.92
+                0.554,
+                0.554,
+                0.554,
+                0.514,
+                0.49
             ],
             "thrust": 90,
             "centerDistance": 100,
@@ -21106,12 +21042,10 @@ export const embeddedGearboxData = {
                 2500
             ],
             "ratios": [
-                1.18,
-                2.84
+                0.77
             ],
             "transferCapacity": [
-                2.96,
-                2.96
+                0.554
             ],
             "efficiency": 0.97,
             "basePrice": 163000,
@@ -21624,9 +21558,9 @@ export const embeddedGearboxData = {
                 2.52
             ],
             "transferCapacity": [
-                0.077,
-                0.077,
-                0.077
+                0.1,
+                0.1,
+                0.076
             ],
             "centerDistance": 393,
             "weight": 300,
@@ -21687,9 +21621,9 @@ export const embeddedGearboxData = {
                 2.48
             ],
             "transferCapacity": [
-                2.95,
-                2.95,
-                2.95
+                0.184,
+                0.17,
+                0.146
             ],
             "centerDistance": 480,
             "weight": 450,
