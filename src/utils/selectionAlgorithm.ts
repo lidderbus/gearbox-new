@@ -1037,8 +1037,8 @@ export const selectGearbox = (
       rejectionReasons.capacityTooLow++;
       failureReason = `传递能力 ${capacity} 不足以满足需求 ${requiredTransferCapacity.toFixed(6)}`;
 
-      // 容量接近的情况保存为近似匹配
-      if (capacity >= requiredTransferCapacity * 0.85) {
+      // 容量接近的情况保存为近似匹配(扩大到80%阈值，捕获更多候选)
+      if (capacity >= requiredTransferCapacity * 0.80) {
         const nearMatch: NearMatch = {
           ...gearbox,
           selectedRatio: gearbox.ratios[bestRatioIndex],
@@ -1223,24 +1223,21 @@ export const selectGearbox = (
       nearMatches.forEach(match => {
         let score = 0;
 
-        // 1. 能力余量评分 (与正选相同的分档)
+        // 1. 能力余量评分 — 钟形曲线(与正选一致)，负余量给最低分
         if (match.capacityMargin !== undefined) {
-          if (match.capacityMargin >= 10 && match.capacityMargin <= 20) score += W_CAPACITY;
-          else if (match.capacityMargin > 20 && match.capacityMargin <= 30) score += W_CAPACITY * 0.93;
-          else if (match.capacityMargin > 30 && match.capacityMargin <= MAX_CAPACITY_MARGIN) score += W_CAPACITY * 0.8;
-          else if (match.capacityMargin >= 5 && match.capacityMargin < 10) score += W_CAPACITY * 0.45;
-          else if (match.capacityMargin >= 0 && match.capacityMargin < 5) score += W_CAPACITY * 0.15;
-          else if (match.capacityMargin < 0 && match.capacityMargin >= -15) score += W_CAPACITY * 0.1;
+          if (match.capacityMargin >= 0) {
+            const optimalMargin = 15;
+            const marginDev = (match.capacityMargin - optimalMargin) / 15;
+            score += W_CAPACITY * Math.exp(-0.8 * marginDev * marginDev);
+          } else if (match.capacityMargin >= -15) {
+            score += W_CAPACITY * 0.1; // 传递能力不足，安全风险
+          }
         }
 
-        // 2. 减速比匹配评分 (放宽到35%，近似匹配允许更大偏差)
+        // 2. 减速比匹配评分 — 平滑幂函数(与正选一致)，近似匹配允许到35%
         if (match.ratioDiffPercent !== undefined) {
-          if (match.ratioDiffPercent <= 3) score += W_RATIO;
-          else if (match.ratioDiffPercent <= 7) score += W_RATIO * 0.88;
-          else if (match.ratioDiffPercent <= 12) score += W_RATIO * 0.72;
-          else if (match.ratioDiffPercent <= 18) score += W_RATIO * 0.48;
-          else if (match.ratioDiffPercent <= 25) score += W_RATIO * 0.32;
-          else if (match.ratioDiffPercent <= 35) score += W_RATIO * 0.15;
+          const nearRatioFit = Math.max(0, 1 - Math.pow(match.ratioDiffPercent / 37, 1.8));
+          score += W_RATIO * nearRatioFit;
         }
 
         // 3. 推力评分 (推力为安全硬约束，不足时严格降级)
@@ -1393,27 +1390,36 @@ export const selectGearbox = (
   const scoredGearboxes = matchingGearboxes.map(gearbox => {
     let score = 0;
 
-    // 1. Capacity Margin Score
-    if (gearbox.capacityMargin >= 10 && gearbox.capacityMargin <= 20) score += W_CAPACITY;
-    else if (gearbox.capacityMargin > 20 && gearbox.capacityMargin <= 30) score += W_CAPACITY * 0.93;
-    else if (gearbox.capacityMargin > 30 && gearbox.capacityMargin <= MAX_CAPACITY_MARGIN) score += W_CAPACITY * 0.8;
-    else if (gearbox.capacityMargin >= 5 && gearbox.capacityMargin < 10) score += W_CAPACITY * 0.45;
-    else if (gearbox.capacityMargin >= 0 && gearbox.capacityMargin < 5) score += W_CAPACITY * 0.15;
+    // 1. Capacity Margin Score — 钟形曲线，最优点15%（10-20%中心）
+    {
+      const optimalMargin = 15;
+      const marginDev = (gearbox.capacityMargin - optimalMargin) / 15;
+      const capacityFit = Math.exp(-0.8 * marginDev * marginDev);
+      score += W_CAPACITY * capacityFit;
+    }
 
-    // 2. Ratio Match Score
-    if (gearbox.ratioDiffPercent <= 3) score += W_RATIO;
-    else if (gearbox.ratioDiffPercent <= 7) score += W_RATIO * 0.88;
-    else if (gearbox.ratioDiffPercent <= 12) score += W_RATIO * 0.72;
-    else if (gearbox.ratioDiffPercent <= 18) score += W_RATIO * 0.48;
-    else if (gearbox.ratioDiffPercent <= MAX_RATIO_DIFF_PERCENT) score += W_RATIO * 0.32;
+    // 2. Ratio Match Score — 平滑幂函数，消除阶梯断崖
+    {
+      const ratioFit = Math.max(0, 1 - Math.pow(gearbox.ratioDiffPercent / (MAX_RATIO_DIFF_PERCENT * 1.05), 1.8));
+      score += W_RATIO * ratioFit;
+    }
 
     // 3. Cost-Effectiveness Score - calculated later
     const basePrice = gearbox.basePrice || gearbox.price || 0;
 
-    // 4. Thrust Match Score
+    // 4. Thrust Match Score — 连续余量评分
     if (thrustRequirement > 0) {
-      score += gearbox.thrustMet ? W_THRUST : 0;
-      if (!gearbox.thrustMet) logger.warn(`Gearbox ${gearbox.model} thrust ${gearbox.thrust} < required ${thrustRequirement}`);
+      if (gearbox.thrustMet && typeof gearbox.thrust === 'number' && gearbox.thrust > 0) {
+        const thrustMarginPct = ((gearbox.thrust - thrustRequirement) / thrustRequirement) * 100;
+        // 推力余量越大越好，但收益递减: 0%→70%基础分，20%+→100%
+        const thrustFit = 0.7 + 0.3 * Math.min(1, thrustMarginPct / 20);
+        score += W_THRUST * thrustFit;
+        (gearbox as any)._thrustMargin = thrustMarginPct;
+      } else if (gearbox.thrustMet) {
+        score += W_THRUST * 0.7; // 无推力数据但标记已满足
+      } else {
+        score += 0;
+      }
     } else {
       score += W_THRUST * 0.5;
     }
