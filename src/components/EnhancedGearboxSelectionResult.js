@@ -19,6 +19,7 @@ import CapacityCalculationCard from './selection/CapacityCalculationCard';
 import RelaxationSuggestions from './selection/RelaxationSuggestions';
 import DataCompletenessCard from './selection/DataCompletenessCard';
 import ScoreBreakdownCard from './selection/ScoreBreakdownCard';
+import MiniScoreBar from './selection/MiniScoreBar';
 import { exportSelectionSummary } from '../utils/selectionSummaryExport';
 import { calculatePowerRange, extractSeriesFromModel } from '../utils/gearboxDataEnhancer';
 import EquipmentInfoCard from './EquipmentInfoCard';
@@ -355,13 +356,14 @@ const EnhancedGearboxSelectionResult = ({
           <Tab eventKey="list" title={`全部候选 (${recommendations.length})`}>
             <Table striped hover size="sm">
               <thead>
-                <tr><th>#</th><th>型号</th><th>系列</th><th>减速比</th><th>传递能力</th><th>余量</th><th>推力kN</th><th>重量kg</th><th>参考价</th><th></th></tr>
+                <tr><th>#</th><th>型号</th><th>评分</th><th>系列</th><th>减速比</th><th>传递能力</th><th>余量</th><th>推力kN</th><th>重量kg</th><th>参考价</th><th></th></tr>
               </thead>
               <tbody>
                 {recommendations.map((g, idx) => (
                   <tr key={g.model + idx} className={idx === selectedIndex ? 'table-primary' : ''} style={{cursor:'pointer'}} onClick={() => onSelectGearbox(idx)}>
                     <td>{idx + 1}</td>
                     <td><strong>{g.model}</strong></td>
+                    <td><MiniScoreBar gearbox={g} /></td>
                     <td><Badge bg={g.model?.startsWith('GW') ? 'danger' : g.model?.startsWith('HCM') ? 'success' : 'primary'} className="small">{(g.originalType || g.model?.match(/^[A-Z]+/)?.[0] || '')}</Badge></td>
                     <td>{g.selectedRatio || g.ratio || '-'}</td>
                     <td>{g.selectedCapacity?.toFixed(4) || '-'}</td>
@@ -654,6 +656,7 @@ const EnhancedGearboxSelectionResult = ({
                         )}
                         <DataCompletenessBadge gearbox={gearbox} className="ms-1" size="sm" />
                       </td>
+                      <td><MiniScoreBar gearbox={gearbox} width={60} /></td>
                       <td>{gearbox.series || extractSeriesFromModel(gearbox.model)}</td>
                       <td>
                         {gearbox.selectedRatio?.toFixed(2) || gearbox.ratio?.toFixed(2) || '-'}
@@ -705,6 +708,7 @@ const EnhancedGearboxSelectionResult = ({
                           <thead>
                             <tr>
                               <th>型号</th>
+                              <th>评分</th>
                               <th>系列</th>
                               <th>减速比</th>
                               <th>传递能力</th>
