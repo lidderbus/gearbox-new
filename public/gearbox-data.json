@@ -1838,63 +1838,6 @@
       "discountRate": 0.1,
       "factoryPrice": 24975,
       "marketPrice": 27500
-    },
-    {
-      "model": "HCL250A",
-      "inputSpeedRange": [
-        750,
-        2500
-      ],
-      "torque": 2.5,
-      "transferCapacity": 0.262,
-      "weight": 210,
-      "basePrice": 0,
-      "price": 0,
-      "discountRate": 0.12,
-      "factoryPrice": 0
-    },
-    {
-      "model": "HCL30",
-      "inputSpeedRange": [
-        750,
-        2500
-      ],
-      "torque": 0.3,
-      "transferCapacity": 0.031,
-      "weight": 100,
-      "basePrice": 0,
-      "price": 0,
-      "discountRate": 0.12,
-      "factoryPrice": 0
-    },
-    {
-      "model": "HCL100",
-      "inputSpeedRange": [
-        750,
-        2500
-      ],
-      "torque": 1,
-      "transferCapacity": 0.105,
-      "weight": 156,
-      "basePrice": 0,
-      "price": 0,
-      "discountRate": 0.12,
-      "factoryPrice": 0
-    },
-    {
-      "model": "HCL320",
-      "inputSpeedRange": [
-        500,
-        2500
-      ],
-      "torque": 3.2,
-      "transferCapacity": 0.335,
-      "weight": 210,
-      "dimensions": "554x425x635",
-      "basePrice": 0,
-      "price": 0,
-      "discountRate": 0.12,
-      "factoryPrice": 0
     }
   ],
   "standbyPumps": [

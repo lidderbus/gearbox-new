@@ -43,6 +43,9 @@ export const enhancedCouplingSelection = (
     };
   }
 
+  // 安全过滤: HCL系列是液压离合器齿轮箱，不是高弹联轴器
+  couplingsData = couplingsData.filter(c => !c.model || !c.model.startsWith('HCL'));
+
   // 获取主要参数
   const { engineTorque, engineSpeed } = gearboxSelectionResult;
   const selectedGearbox = gearboxSelectionResult.recommendations && gearboxSelectionResult.recommendations.length > 0 
