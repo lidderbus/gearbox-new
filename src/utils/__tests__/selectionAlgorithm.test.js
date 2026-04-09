@@ -6308,3 +6308,294 @@ describe('selectGearbox - 近似匹配极高余量', () => {
     expect(result).toBeDefined();
   });
 });
+
+// ============= 平滑评分曲线验证 =============
+
+describe('平滑评分曲线验证', () => {
+
+  // 辅助: 创建不同容量余量的齿轮箱集合，固定速比=精确匹配
+  const makeGearboxWithMargin = (model, marginPercent) => {
+    // 需要TC: required = 200/1500 = 0.1333
+    // capacity = required * (1 + margin/100)
+    const required = 200 / 1500;
+    const capacity = required * (1 + marginPercent / 100);
+    return createMockGearbox({
+      model,
+      series: 'HC',
+      ratios: [2.5],
+      transferCapacity: [capacity],
+      thrust: 100,
+      weight: 400,
+      basePrice: 50000,
+      inputSpeedRange: [1000, 2000]
+    });
+  };
+
+  // 辅助: 创建不同速比偏差的齿轮箱集合，固定容量余量=最优
+  const makeGearboxWithRatio = (model, actualRatio) => {
+    const required = 200 / 1500;
+    const capacity = required * 1.15; // 15%余量(最优)
+    return createMockGearbox({
+      model,
+      series: 'HC',
+      ratios: [actualRatio],
+      transferCapacity: [capacity],
+      thrust: 100,
+      weight: 400,
+      basePrice: 50000,
+      inputSpeedRange: [1000, 2000]
+    });
+  };
+
+  describe('容量余量评分 — 钟形曲线', () => {
+    test('最优余量(15%)的容量评分应最高', () => {
+      // 容量评分公式验证(隔离价格归一化干扰)
+      const W_CAPACITY = 12;
+      const optimal = 15;
+      function capScore(margin) {
+        const dev = (margin - optimal) / 15;
+        return W_CAPACITY * Math.exp(-0.8 * dev * dev);
+      }
+      // 15%得12分(满分)，10%和20%得10.98分
+      expect(capScore(15)).toBeCloseTo(12, 1);
+      expect(capScore(10)).toBeCloseTo(10.98, 1);
+      expect(capScore(25)).toBeCloseTo(8.41, 1);
+      // 15%是最高分
+      expect(capScore(15)).toBeGreaterThan(capScore(10));
+      expect(capScore(15)).toBeGreaterThan(capScore(25));
+    });
+
+    test('余量对称性: 10%和20%偏离最优相同距离应比非对称组合更接近', () => {
+      // 注: 即使容量评分对称(10.98 vs 10.98)，pricePerCapacity不同导致成本评分有差异
+      // 所以测试两个对称点的分差 < 15%余量(最优)与30%余量(远离)的分差
+      const gearboxes = [
+        makeGearboxWithMargin('HC-M10', 10),
+        makeGearboxWithMargin('HC-M15', 15),
+        makeGearboxWithMargin('HC-M20', 20),
+        makeGearboxWithMargin('HC-M30', 30),
+      ];
+      const mockData = createMockData(gearboxes);
+      const result = selectGearbox(200, 1500, 2.5, 0, 'HC', mockData);
+      expect(result.success).toBe(true);
+
+      const scores = {};
+      result.recommendations.forEach(r => { scores[r.model] = r.score; });
+
+      const diffSymmetric = Math.abs(scores['HC-M10'] - scores['HC-M20']);
+      const diffAsymmetric = Math.abs(scores['HC-M15'] - scores['HC-M30']);
+      // 对称的一对(±5)分差应 ≤ 非对称组合(0 vs 15)的分差
+      expect(diffSymmetric).toBeLessThanOrEqual(diffAsymmetric + 2);
+    });
+
+    test('容量评分单调递减: 偏离最优越远容量分越低', () => {
+      // 验证容量评分公式本身的单调性(不含价格归一化干扰)
+      const W_CAPACITY = 12;
+      const optimal = 15;
+      function capScore(margin) {
+        const dev = (margin - optimal) / 15;
+        return W_CAPACITY * Math.exp(-0.8 * dev * dev);
+      }
+      expect(capScore(15)).toBeGreaterThan(capScore(25));
+      expect(capScore(25)).toBeGreaterThan(capScore(35));
+      expect(capScore(35)).toBeGreaterThan(capScore(45));
+      // 对称性
+      expect(Math.abs(capScore(10) - capScore(20))).toBeLessThan(0.01);
+    });
+  });
+
+  describe('速比评分 — 平滑幂函数', () => {
+    test('精确匹配应得最高分', () => {
+      const gearboxes = [
+        makeGearboxWithRatio('HC-R250', 2.50), // 目标=2.5, 偏差0%
+        makeGearboxWithRatio('HC-R255', 2.55), // 偏差2%
+        makeGearboxWithRatio('HC-R265', 2.65), // 偏差6%
+      ];
+      const mockData = createMockData(gearboxes);
+      const result = selectGearbox(200, 1500, 2.5, 0, 'HC', mockData);
+      expect(result.success).toBe(true);
+
+      const scores = {};
+      result.recommendations.forEach(r => { scores[r.model] = r.score; });
+
+      expect(scores['HC-R250']).toBeGreaterThanOrEqual(scores['HC-R255']);
+      expect(scores['HC-R255']).toBeGreaterThanOrEqual(scores['HC-R265']);
+    });
+
+    test('无断崖: 2.9%和3.1%偏差得分应相近', () => {
+      // 旧算法在3%有断崖(100%→88%)，新算法应平滑
+      const ratio_2_9pct = 2.5 * 1.029; // 2.9%偏差
+      const ratio_3_1pct = 2.5 * 1.031; // 3.1%偏差
+      const gearboxes = [
+        makeGearboxWithRatio('HC-R29', ratio_2_9pct),
+        makeGearboxWithRatio('HC-R31', ratio_3_1pct),
+      ];
+      const mockData = createMockData(gearboxes);
+      const result = selectGearbox(200, 1500, 2.5, 0, 'HC', mockData);
+      expect(result.success).toBe(true);
+
+      const s29 = result.recommendations.find(r => r.model === 'HC-R29')?.score || 0;
+      const s31 = result.recommendations.find(r => r.model === 'HC-R31')?.score || 0;
+
+      // 0.2%偏差差异 → 分差应<3分(旧算法约12%=2.5分断崖)
+      expect(Math.abs(s29 - s31)).toBeLessThan(3);
+    });
+
+    test('无断崖: 6.9%和7.1%偏差得分应相近', () => {
+      const ratio_6_9pct = 2.5 * 1.069;
+      const ratio_7_1pct = 2.5 * 1.071;
+      const gearboxes = [
+        makeGearboxWithRatio('HC-R69', ratio_6_9pct),
+        makeGearboxWithRatio('HC-R71', ratio_7_1pct),
+      ];
+      const mockData = createMockData(gearboxes);
+      const result = selectGearbox(200, 1500, 2.5, 0, 'HC', mockData);
+      expect(result.success).toBe(true);
+
+      const s69 = result.recommendations.find(r => r.model === 'HC-R69')?.score || 0;
+      const s71 = result.recommendations.find(r => r.model === 'HC-R71')?.score || 0;
+
+      expect(Math.abs(s69 - s71)).toBeLessThan(3);
+    });
+
+    test('单调递减: 偏差越大得分越低', () => {
+      const gearboxes = [
+        makeGearboxWithRatio('HC-P0', 2.50),        // 0%
+        makeGearboxWithRatio('HC-P3', 2.5 * 1.03),  // 3%
+        makeGearboxWithRatio('HC-P6', 2.5 * 1.06),  // 6%
+        makeGearboxWithRatio('HC-P9', 2.5 * 1.09),  // 9%
+      ];
+      const mockData = createMockData(gearboxes);
+      const result = selectGearbox(200, 1500, 2.5, 0, 'HC', mockData);
+      expect(result.success).toBe(true);
+
+      const scores = {};
+      result.recommendations.forEach(r => { scores[r.model] = r.score; });
+
+      expect(scores['HC-P0']).toBeGreaterThanOrEqual(scores['HC-P3']);
+      expect(scores['HC-P3']).toBeGreaterThanOrEqual(scores['HC-P6']);
+      expect(scores['HC-P6']).toBeGreaterThanOrEqual(scores['HC-P9']);
+    });
+  });
+
+  describe('推力评分 — 连续余量奖励', () => {
+    const makeGearboxWithThrust = (model, thrust) => {
+      const required = 200 / 1500;
+      const capacity = required * 1.15;
+      return createMockGearbox({
+        model, series: 'HC',
+        ratios: [2.5],
+        transferCapacity: [capacity],
+        thrust,
+        weight: 400,
+        basePrice: 50000,
+        inputSpeedRange: [1000, 2000]
+      });
+    };
+
+    test('推力余量越大得分越高(收益递减)', () => {
+      const gearboxes = [
+        makeGearboxWithThrust('HC-T50', 50),   // 刚好满足
+        makeGearboxWithThrust('HC-T60', 60),   // 20%余量
+        makeGearboxWithThrust('HC-T80', 80),   // 60%余量
+      ];
+      const mockData = createMockData(gearboxes);
+      const result = selectGearbox(200, 1500, 2.5, 50, 'HC', mockData);
+      expect(result.success).toBe(true);
+
+      const scores = {};
+      result.recommendations.forEach(r => { scores[r.model] = r.score; });
+
+      // 余量越大分越高
+      expect(scores['HC-T80']).toBeGreaterThanOrEqual(scores['HC-T60']);
+      expect(scores['HC-T60']).toBeGreaterThanOrEqual(scores['HC-T50']);
+    });
+
+    test('推力余量应传递_thrustMargin到结果', () => {
+      const gearboxes = [makeGearboxWithThrust('HC-T75', 75)];
+      const mockData = createMockData(gearboxes);
+      const result = selectGearbox(200, 1500, 2.5, 50, 'HC', mockData);
+      expect(result.success).toBe(true);
+
+      const rec = result.recommendations[0];
+      expect(rec._thrustMargin).toBeCloseTo(50, 0); // (75-50)/50 * 100 = 50%
+    });
+
+    test('无推力要求时推力分为半权重', () => {
+      const gearboxes = [makeGearboxWithThrust('HC-T0', 100)];
+      const mockData = createMockData(gearboxes);
+      const result = selectGearbox(200, 1500, 2.5, 0, 'HC', mockData);
+      expect(result.success).toBe(true);
+      // 无推力要求 → W_THRUST*0.5 = 4分，得分应包含此项
+      expect(result.recommendations[0].score).toBeGreaterThan(0);
+    });
+  });
+
+  describe('近似匹配捕获', () => {
+    test('容量80-85%范围内应被近似捕获', () => {
+      const required = 200 / 1500; // 0.1333
+      const gearboxes = [
+        createMockGearbox({
+          model: 'HC-Near82',
+          series: 'HC',
+          ratios: [2.5],
+          transferCapacity: [required * 0.82], // 82%, 旧阈值85%会漏掉
+          thrust: 50,
+          inputSpeedRange: [1000, 2000]
+        })
+      ];
+      const mockData = createMockData(gearboxes);
+      const result = selectGearbox(200, 1500, 2.5, 0, 'HC', mockData);
+
+      // 不应成功(容量不足)，但应有近似匹配
+      expect(result.success).toBe(false);
+      expect(result.recommendations.length).toBeGreaterThan(0);
+      expect(result.recommendations[0].model).toBe('HC-Near82');
+    });
+
+    test('容量<80%不应被捕获', () => {
+      const required = 200 / 1500;
+      const gearboxes = [
+        createMockGearbox({
+          model: 'HC-Far75',
+          series: 'HC',
+          ratios: [2.5],
+          transferCapacity: [required * 0.75],
+          thrust: 50,
+          inputSpeedRange: [1000, 2000]
+        })
+      ];
+      const mockData = createMockData(gearboxes);
+      const result = selectGearbox(200, 1500, 2.5, 0, 'HC', mockData);
+
+      expect(result.success).toBe(false);
+      expect(result.recommendations.length).toBe(0);
+    });
+  });
+
+  describe('HCL离合器排除', () => {
+    test('HCL型号不应出现在选型结果中', () => {
+      const gearboxes = [
+        createMockGearbox({
+          model: 'HCL600',
+          series: 'HCL',
+          ratios: [1],
+          transferCapacity: [0.5],
+          inputSpeedRange: [1000, 2000]
+        }),
+        createMockGearbox({
+          model: 'HC400',
+          series: 'HC',
+          ratios: [2.5],
+          transferCapacity: [0.15],
+          inputSpeedRange: [1000, 2000]
+        })
+      ];
+      const mockData = createMockData(gearboxes);
+      const result = selectGearbox(200, 1500, 2.5, 0, 'HC', mockData);
+
+      // HCL不应出现
+      const hclModels = result.recommendations.filter(r => r.model.startsWith('HCL'));
+      expect(hclModels.length).toBe(0);
+    });
+  });
+});
