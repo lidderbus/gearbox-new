@@ -789,6 +789,11 @@ export const selectGearbox = (
       continue;
     }
 
+    // HCL是液压离合器(减速比1:1)，不参与齿轮箱选型
+    if (gearbox.model.startsWith('HCL')) {
+      continue;
+    }
+
     let failureReason: string | null = null;
 
     // 系列特性过滤（替代旧的离合器硬编码过滤）

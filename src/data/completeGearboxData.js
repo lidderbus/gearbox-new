@@ -26414,7 +26414,7 @@ export const completeGearboxData = [
                         0.105
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#0寸",
@@ -26465,7 +26465,7 @@ export const completeGearboxData = [
                         1.047
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "domestic": [
                                 "φ770"
@@ -26507,7 +26507,7 @@ export const completeGearboxData = [
                         1.047
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "domestic": [
                                 "φ770"
@@ -26549,7 +26549,7 @@ export const completeGearboxData = [
                         1.047
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "domestic": [
                                 "φ770"
@@ -26593,7 +26593,7 @@ export const completeGearboxData = [
                         0.105
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#0寸",
@@ -26644,7 +26644,7 @@ export const completeGearboxData = [
                         0.105
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#0寸",
@@ -26693,7 +26693,7 @@ export const completeGearboxData = [
                         0.262
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#1.5寸",
@@ -26744,7 +26744,7 @@ export const completeGearboxData = [
                         0.262
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#1.5寸",
@@ -26799,7 +26799,7 @@ export const completeGearboxData = [
                         0.262
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#1.5寸",
@@ -26851,7 +26851,7 @@ export const completeGearboxData = [
                         0.262
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#1.5寸",
@@ -26901,7 +26901,7 @@ export const completeGearboxData = [
                         0.031
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#0寸",
@@ -26956,7 +26956,7 @@ export const completeGearboxData = [
                         0.031
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#0寸",
@@ -27009,7 +27009,7 @@ export const completeGearboxData = [
                         0.031
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#0寸",
@@ -27060,7 +27060,7 @@ export const completeGearboxData = [
                         0.335
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#4寸",
@@ -27113,7 +27113,7 @@ export const completeGearboxData = [
                         0.335
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#4寸",
@@ -27164,7 +27164,7 @@ export const completeGearboxData = [
                         0.335
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#4寸",
@@ -27213,7 +27213,7 @@ export const completeGearboxData = [
                         0.628
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#4寸",
@@ -27269,7 +27269,7 @@ export const completeGearboxData = [
                         0.628
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#4寸",
@@ -27323,7 +27323,7 @@ export const completeGearboxData = [
                         0.628
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "sae": [
                                 "SAE1#4寸",
@@ -27417,7 +27417,7 @@ export const completeGearboxData = [
                         0.837
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "domestic": [
                                 "φ770"
@@ -27445,15 +27445,10 @@ export const completeGearboxData = [
                 "minSpeed": 1000,
                 "maxSpeed": 1800,
                 "ratios": [
-                        1.5,
-                        1.77,
-                        2.04,
-                        2.5,
-                        2.86,
-                        3
+                        1
                 ],
                 "thrust": 90,
-                "centerDistance": 800,
+                "centerDistance": 250,
                 "maxPower": 1507,
                 "minPower": 628,
                 "powerSource": "传动能力计算",
@@ -27465,7 +27460,7 @@ export const completeGearboxData = [
                         0.837
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "domestic": [
                                 "φ770"
@@ -27492,15 +27487,10 @@ export const completeGearboxData = [
                 "minSpeed": 750,
                 "maxSpeed": 1000,
                 "ratios": [
-                        1.5,
-                        1.77,
-                        2.04,
-                        2.5,
-                        2.86,
-                        3
+                        1
                 ],
                 "thrust": 90,
-                "centerDistance": 260,
+                "centerDistance": 250,
                 "maxPower": 1507,
                 "minPower": 628,
                 "powerSource": "传动能力计算",
@@ -27512,7 +27502,7 @@ export const completeGearboxData = [
                         0.837
                 ],
                 "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/bf8ebc03-6d35-44db-94c9-e3af23be9de5.png",
-                "introduction": "HCL系列船用齿轮箱是轻型船用齿轮箱,适用于小型船舶和快艇。",
+                "introduction": "HCL系列液压离合器，减速比1:1直驱，适用于辅机驱动、发电机组、泵组驱动等。",
                 "inputInterfaces": {
                         "domestic": [
                                 "φ770"
