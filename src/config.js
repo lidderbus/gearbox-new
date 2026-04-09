@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 50; // v50: 推力+中心距100%补全+HCL离合器排除 — 40处数据修复+HCL800F/S减速比纠正+选型算法排除23个HCL离合器 (2026-04-09)
+export const APP_DATA_VERSION = 51; // v51: 七项增强 — 选型报告PDF(7section)+应用场景推荐(8船型类别)+Pareto多目标优化(3维散点+权重滑块)+3D预览集成+数据质量仪表盘(热力图+仪表盘)+场景预设扩展(军用/内河/远洋) (2026-04-09)
 
 export const DEFAULTS = {
     gearbox: {

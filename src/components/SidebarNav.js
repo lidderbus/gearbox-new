@@ -95,6 +95,7 @@ const NAV_GROUPS = [
       { key: 'product-center', label: '产品中心', icon: 'bi-box-seam' },
       { key: 'history', label: '选型历史', icon: 'bi-clock-history' },
       { key: 'hcm-selection', label: 'HCM高速', icon: 'bi-speedometer2' },
+      { key: 'data-quality', label: '数据质量', icon: 'bi-clipboard-data' },
     ],
   },
   {

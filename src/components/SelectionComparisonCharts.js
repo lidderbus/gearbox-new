@@ -1,9 +1,11 @@
 // src/components/SelectionComparisonCharts.js
 // 选型结果高级可视化对比图表 — 雷达图 / 散点图 / 平行坐标图
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense } from 'react';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import echarts from '../config/echartsSetup';
 import { formatPrice } from '../utils/priceFormatter';
+
+const ParetoFrontChart = React.lazy(() => import('./ParetoFrontChart'));
 
 // Series color mapping
 const SERIES_COLORS = {
@@ -579,8 +581,10 @@ const SelectionComparisonCharts = ({
   theme = 'light',
   colors = {},
   targetRatio,
+  onSelect,
 }) => {
   const isDark = theme === 'dark';
+  const [showPareto, setShowPareto] = useState(false);
 
   // Empty state
   if (!recommendations || recommendations.length === 0) {
@@ -645,6 +649,21 @@ const SelectionComparisonCharts = ({
           colors={colors}
         />
       </ChartSection>
+
+      <div className="mt-3">
+        <button
+          className={`btn btn-outline-info btn-sm`}
+          onClick={() => setShowPareto(!showPareto)}
+        >
+          <i className="bi bi-diagram-3 me-1"></i>
+          {showPareto ? '隐藏帕累托前沿' : '显示帕累托前沿'}
+        </button>
+        {showPareto && (
+          <Suspense fallback={<div className="text-center py-3">加载中...</div>}>
+            <ParetoFrontChart recommendations={recommendations} onSelectGearbox={onSelect} />
+          </Suspense>
+        )}
+      </div>
     </div>
   );
 };

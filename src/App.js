@@ -129,6 +129,9 @@ const ApiDocumentation = lazy(() => import('./components/ApiDocumentation'));
 const SeriesOverviewDashboard = lazy(() => import('./components/SeriesOverviewDashboard'));
 const PowerRatioHeatmap = lazy(() => import('./components/PowerRatioHeatmap'));
 
+// 数据质量仪表盘 (E8)
+const DataQualityDashboard = lazy(() => import('./components/DataQualityDashboard'));
+
 // 首次使用引导 (lazy loaded - only on first visit)
 const OnboardingGuide = lazy(() => import('./components/OnboardingGuide'));
 
@@ -1477,6 +1480,13 @@ function App({ appData: initialAppData, setAppData }) {
                 </Suspense>
               </Col>
             </Row>
+          </Tab>
+
+          {/* 数据质量仪表盘 (E8) */}
+          <Tab eventKey="data-quality" title={<span><i className="bi bi-clipboard-data me-1"></i>数据质量</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <DataQualityDashboard />
+            </Suspense>
           </Tab>
 
           <Tab eventKey="engine-cases" title={<span><i className="bi bi-journal-text me-1"></i>配机案例</span>}>

@@ -307,6 +307,182 @@ export const SELECTION_PRESETS = {
         typicalModels: ['HCQ502', 'HCA301']
       }
     ]
+  },
+
+  // 军用系列
+  military: {
+    category: '军用',
+    icon: '⚓',
+    presets: [
+      {
+        id: 'military-patrol',
+        name: '巡逻艇',
+        description: '30-50米级高速巡逻艇',
+        params: {
+          motorPower: 800,
+          motorSpeed: 1800,
+          targetRatio: 2.5,
+          thrust: 80,
+          application: 'propulsion',
+          workCondition: 'IV类:扭矩变化大',
+          temperature: 45,
+          safetyFactor: 1.8
+        },
+        recommendedSeries: ['HCT', 'GWC'],
+        typicalModels: ['HCT800', 'GWC42.45'],
+        certifications: ['CCS', 'BV'],
+        controlType: '电控'
+      },
+      {
+        id: 'military-landing',
+        name: '登陆艇',
+        description: '大型登陆/运输艇',
+        params: {
+          motorPower: 1500,
+          motorSpeed: 1200,
+          targetRatio: 4.0,
+          thrust: 150,
+          application: 'propulsion',
+          workCondition: 'III类:扭矩变化中等',
+          temperature: 40,
+          safetyFactor: 1.5
+        },
+        recommendedSeries: ['HC', 'HCD', 'HCT'],
+        typicalModels: ['HC1600', 'HCD1400'],
+        certifications: ['CCS'],
+        controlType: '电控/气控'
+      }
+    ]
+  },
+
+  // 内河系列
+  inland: {
+    category: '内河',
+    icon: '\uD83C\uDFDE\uFE0F',
+    presets: [
+      {
+        id: 'inland-cargo',
+        name: '内河货船',
+        description: '500-3000吨内河散货/集装箱船',
+        params: {
+          motorPower: 400,
+          motorSpeed: 1500,
+          targetRatio: 4.0,
+          thrust: 40,
+          application: 'propulsion',
+          workCondition: 'III类:扭矩变化中等',
+          temperature: 35,
+          safetyFactor: 1.3
+        },
+        recommendedSeries: ['HC', 'HCD'],
+        typicalModels: ['HC400', 'HCD450'],
+        certifications: ['CCS'],
+        controlType: '推拉软轴/电控'
+      },
+      {
+        id: 'inland-passenger',
+        name: '内河客船',
+        description: '100-300客位内河客船',
+        params: {
+          motorPower: 250,
+          motorSpeed: 1800,
+          targetRatio: 3.5,
+          thrust: 25,
+          application: 'propulsion',
+          workCondition: 'II类:扭矩变化较小',
+          temperature: 30,
+          safetyFactor: 1.3
+        },
+        recommendedSeries: ['HC', 'HCQ'],
+        typicalModels: ['HC300', 'HCQ502'],
+        certifications: ['CCS'],
+        controlType: '电控'
+      },
+      {
+        id: 'inland-tanker',
+        name: '内河油化船',
+        description: '1000-5000吨级油/化学品船',
+        params: {
+          motorPower: 600,
+          motorSpeed: 1200,
+          targetRatio: 4.5,
+          thrust: 50,
+          application: 'propulsion',
+          workCondition: 'III类:扭矩变化中等',
+          temperature: 35,
+          safetyFactor: 1.5
+        },
+        recommendedSeries: ['HC', 'HCD'],
+        typicalModels: ['HC600A', 'HCD700'],
+        certifications: ['CCS'],
+        controlType: '电控/气控'
+      }
+    ]
+  },
+
+  // 远洋系列
+  ocean: {
+    category: '远洋',
+    icon: '\uD83D\uDEA2',
+    presets: [
+      {
+        id: 'ocean-cargo',
+        name: '远洋货船',
+        description: '万吨级散货/杂货船',
+        params: {
+          motorPower: 3000,
+          motorSpeed: 750,
+          targetRatio: 5.0,
+          thrust: 300,
+          application: 'propulsion',
+          workCondition: 'III类:扭矩变化中等',
+          temperature: 45,
+          safetyFactor: 1.5
+        },
+        recommendedSeries: ['GWC', 'GWS'],
+        typicalModels: ['GWC60.66', 'GWC63.71'],
+        certifications: ['CCS', 'DNV', 'BV'],
+        controlType: '气控/电控'
+      },
+      {
+        id: 'ocean-container',
+        name: '集装箱船',
+        description: '大型集装箱运输船',
+        params: {
+          motorPower: 5000,
+          motorSpeed: 600,
+          targetRatio: 5.5,
+          thrust: 500,
+          application: 'propulsion',
+          workCondition: 'III类:扭矩变化中等',
+          temperature: 45,
+          safetyFactor: 1.5
+        },
+        recommendedSeries: ['GWC', 'GWS'],
+        typicalModels: ['GWC70.76', 'GWC75.90'],
+        certifications: ['CCS', 'DNV', 'LR'],
+        controlType: '气控/电控'
+      },
+      {
+        id: 'ocean-tanker',
+        name: '油轮',
+        description: '远洋成品油/原油运输船',
+        params: {
+          motorPower: 4000,
+          motorSpeed: 700,
+          targetRatio: 5.0,
+          thrust: 400,
+          application: 'propulsion',
+          workCondition: 'III类:扭矩变化中等',
+          temperature: 45,
+          safetyFactor: 1.5
+        },
+        recommendedSeries: ['GWC', 'GWS'],
+        typicalModels: ['GWC66.75', 'GWC70.85'],
+        certifications: ['CCS', 'DNV', 'LR', 'BV'],
+        controlType: '气控/电控'
+      }
+    ]
   }
 };
 

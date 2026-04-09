@@ -37,6 +37,9 @@ import {
 // 懒加载3D预览组件
 const Gearbox3DPreview = lazy(() => import('./Gearbox3DPreview'));
 
+// 动态导入选型报告生成器（避免bundle膨胀）
+const loadReportGenerator = () => import('../utils/selectionReportGenerator');
+
 /**
  * 增强的齿轮箱选型结果组件
  * 包含齿轮箱选型结果、高弹联轴器信息和对比功能
@@ -797,6 +800,13 @@ const EnhancedGearboxSelectionResult = ({
             </div>
           </Tab>
 
+          {/* 3D预览标签页 */}
+          <Tab eventKey="3d" title={<><i className="bi bi-box me-1"></i>3D预览</>}>
+            <Suspense fallback={<div className="text-center py-4">加载3D预览...</div>}>
+              <Gearbox3DPreview gearbox={selectedGearbox} />
+            </Suspense>
+          </Tab>
+
           {/* 组合选型标签页 */}
           <Tab eventKey="combined" title="组合选型">
             <Row>
@@ -997,18 +1007,37 @@ const EnhancedGearboxSelectionResult = ({
           </Card.Body>
         </Card>
 
-        <div className="d-flex justify-content-end mt-4">
+        <div className="d-flex justify-content-end mt-4 flex-wrap gap-2">
+          <Button
+            variant="outline-danger"
+            onClick={async () => {
+              try {
+                const { generateSelectionReportPDF } = await loadReportGenerator();
+                await generateSelectionReportPDF(
+                  result,
+                  result?.engineData || {},
+                  result?.requirementData || {},
+                  result?.projectInfo || {},
+                  { coupling: result?.flexibleCoupling, pump: result?.standbyPump }
+                );
+                toast.success('选型报告PDF已生成');
+              } catch (e) {
+                console.error('PDF report generation failed:', e);
+                toast.error('PDF生成失败: ' + e.message);
+              }
+            }}
+          >
+            <i className="bi bi-file-earmark-pdf me-1"></i> 导出选型报告
+          </Button>
           <Button
             variant="outline-secondary"
             onClick={() => exportSelectionSummary(selectedGearbox, result)}
-            className="me-2"
           >
             <i className="bi bi-printer me-1"></i> 导出摘要
           </Button>
           <Button
             variant="outline-primary"
             onClick={onGenerateQuotation}
-            className="me-2"
           >
             <i className="bi bi-currency-yen me-1"></i> 生成报价单
           </Button>
