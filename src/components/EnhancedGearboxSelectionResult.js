@@ -18,6 +18,7 @@ import RecommendationReasonCard from './selection/RecommendationReasonCard';
 import CapacityCalculationCard from './selection/CapacityCalculationCard';
 import RelaxationSuggestions from './selection/RelaxationSuggestions';
 import DataCompletenessCard from './selection/DataCompletenessCard';
+import ScoreBreakdownCard from './selection/ScoreBreakdownCard';
 import { exportSelectionSummary } from '../utils/selectionSummaryExport';
 import { calculatePowerRange, extractSeriesFromModel } from '../utils/gearboxDataEnhancer';
 import EquipmentInfoCard from './EquipmentInfoCard';
@@ -448,6 +449,12 @@ const EnhancedGearboxSelectionResult = ({
                 <RecommendationReasonCard
                   selectedGearbox={selectedGearbox}
                   allRecommendations={recommendations}
+                  targetRatio={result.targetRatio}
+                />
+                <ScoreBreakdownCard
+                  selectedGearbox={selectedGearbox}
+                  allRecommendations={recommendations}
+                  thrustRequirement={result.thrustRequirement || 0}
                   targetRatio={result.targetRatio}
                 />
                 <DataCompletenessCard gearbox={selectedGearbox} />
