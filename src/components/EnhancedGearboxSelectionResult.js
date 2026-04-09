@@ -20,6 +20,7 @@ import RelaxationSuggestions from './selection/RelaxationSuggestions';
 import DataCompletenessCard from './selection/DataCompletenessCard';
 import ScoreBreakdownCard from './selection/ScoreBreakdownCard';
 import MiniScoreBar from './selection/MiniScoreBar';
+import NearMatchBanner from './selection/NearMatchBanner';
 import { exportSelectionSummary } from '../utils/selectionSummaryExport';
 import { calculatePowerRange, extractSeriesFromModel } from '../utils/gearboxDataEnhancer';
 import EquipmentInfoCard from './EquipmentInfoCard';
@@ -353,16 +354,28 @@ const EnhancedGearboxSelectionResult = ({
           style={{ borderBottomColor: colors?.border || '#ddd' }}
         >
           {/* 全部候选列表视图 */}
-          <Tab eventKey="list" title={`全部候选 (${recommendations.length})`}>
+          <Tab eventKey="list" title={`全部候选 (${recommendations.length})${result.success === false ? ' ⚠' : ''}`}>
+            {(() => {
+              const hasPartials = recommendations.some(g => g.isPartialMatch);
+              return (
             <Table striped hover size="sm">
               <thead>
-                <tr><th>#</th><th>型号</th><th>评分</th><th>系列</th><th>减速比</th><th>传递能力</th><th>余量</th><th>推力kN</th><th>重量kg</th><th>参考价</th><th></th></tr>
+                <tr>
+                  <th>#</th><th>型号</th><th>评分</th><th>系列</th><th>减速比</th><th>传递能力</th><th>余量</th><th>推力kN</th><th>重量kg</th><th>参考价</th>
+                  {hasPartials && <th style={{fontSize:'0.75rem'}}>不满足项</th>}
+                  <th></th>
+                </tr>
               </thead>
               <tbody>
                 {recommendations.map((g, idx) => (
-                  <tr key={g.model + idx} className={idx === selectedIndex ? 'table-primary' : ''} style={{cursor:'pointer'}} onClick={() => onSelectGearbox(idx)}>
+                  <tr key={g.model + idx}
+                    className={idx === selectedIndex ? 'table-primary' : g.isPartialMatch ? 'table-warning' : ''}
+                    style={{cursor:'pointer'}} onClick={() => onSelectGearbox(idx)}>
                     <td>{idx + 1}</td>
-                    <td><strong>{g.model}</strong></td>
+                    <td>
+                      <strong>{g.model}</strong>
+                      {g.isPartialMatch && <i className="bi bi-exclamation-triangle-fill text-warning ms-1" style={{fontSize:'0.7rem'}}></i>}
+                    </td>
                     <td><MiniScoreBar gearbox={g} /></td>
                     <td><Badge bg={g.model?.startsWith('GW') ? 'danger' : g.model?.startsWith('HCM') ? 'success' : 'primary'} className="small">{(g.originalType || g.model?.match(/^[A-Z]+/)?.[0] || '')}</Badge></td>
                     <td>{g.selectedRatio || g.ratio || '-'}</td>
@@ -374,11 +387,24 @@ const EnhancedGearboxSelectionResult = ({
                     <td>{g.thrust || '-'}</td>
                     <td>{g.weight || '-'}</td>
                     <td>{g.marketPrice ? `${(g.marketPrice/10000).toFixed(1)}万` : g.packagePrice ? `${(g.packagePrice/10000).toFixed(1)}万` : '询价'}</td>
+                    {hasPartials && (
+                      <td style={{fontSize:'0.7rem', maxWidth:160}}>
+                        {g.failureReason ? (
+                          <span className="text-danger">{g.failureReason.length > 40 ? g.failureReason.substring(0, 38) + '…' : g.failureReason}</span>
+                        ) : g.isPartialMatch ? (
+                          <span className="text-muted">-</span>
+                        ) : (
+                          <Badge bg="success" style={{fontSize:'0.65rem'}}>全部满足</Badge>
+                        )}
+                      </td>
+                    )}
                     <td>{idx === selectedIndex ? <Badge bg="primary">当前</Badge> : <Button size="sm" variant="outline-primary" onClick={(e) => {e.stopPropagation(); onSelectGearbox(idx);}}>选择</Button>}</td>
                   </tr>
                 ))}
               </tbody>
             </Table>
+              );
+            })()}
           </Tab>
           {/* 齿轮箱详细信息标签页 */}
           <Tab eventKey="details" title="齿轮箱详情">
@@ -1079,19 +1105,27 @@ const EnhancedGearboxSelectionResult = ({
               <i className={`bi bi-${comparisonMode ? 'check-circle' : 'bar-chart'} me-1`}></i>
               {comparisonMode ? '退出对比' : '对比模式'}
             </Button>
-            {isPartialMatch && (
-              <Badge bg="warning">部分匹配</Badge>
+            {isPartialMatch ? (
+              <Badge bg="warning" style={{ fontSize: '0.75rem' }}>
+                <i className="bi bi-exclamation-triangle-fill me-1"></i>近似匹配
+              </Badge>
+            ) : result.success !== false ? null : (
+              <Badge bg="info" style={{ fontSize: '0.75rem' }}>
+                <i className="bi bi-search me-1"></i>近似结果
+              </Badge>
             )}
           </div>
         </div>
       </Card.Header>
       <Card.Body>
+        {/* 近似匹配横幅 — 选型未完全成功时显示 */}
+        <NearMatchBanner result={result} recommendations={recommendations} />
         {/* 添加备用泵需求提示 */}
         <Alert variant={needsPumpFlag ? "primary" : "info"} className="mb-3">
           <i className="bi bi-info-circle me-2"></i>
           <strong>备用泵需求：</strong>
-          {needsPumpFlag ? 
-            "该齿轮箱型号需要配备备用泵" : 
+          {needsPumpFlag ?
+            "该齿轮箱型号需要配备备用泵" :
             "该齿轮箱型号不需要配备备用泵"}
         </Alert>
         
