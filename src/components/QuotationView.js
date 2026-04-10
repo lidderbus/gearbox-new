@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Button, Alert, Row, Col, Table, Badge, Form, Dropdown } from 'react-bootstrap';
 import { printHtmlContent } from '../utils/pdfExportUtils';
+import SmartPricingCard from './SmartPricingCard';
 
 const QuotationView = ({ 
   quotation, 
@@ -435,6 +436,16 @@ const QuotationView = ({
                 </div>
               )}
               
+              {/* 智能报价建议 */}
+              {quotation.items && quotation.items.length > 0 && (
+                <SmartPricingCard
+                  model={quotation.items[0]?.model}
+                  basePrice={quotation.items[0]?.unitPrice}
+                  quantity={quotation.items[0]?.quantity || 1}
+                  customerName={quotation.customerInfo?.name}
+                />
+              )}
+
               {/* 报价说明 */}
               <div className="mt-4">
                 <h6 style={{ color: colors?.headerText }}>报价说明</h6>
