@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 51; // v51: 七项增强 — 选型报告PDF(7section)+应用场景推荐(8船型类别)+Pareto多目标优化(3维散点+权重滑块)+3D预览集成+数据质量仪表盘(热力图+仪表盘)+场景预设扩展(军用/内河/远洋) (2026-04-09)
+export const APP_DATA_VERSION = 52; // v52: 选型算法平滑化+评分可视化+HCL排除+数据100%补全+近似匹配增强+ERP数据同步585型号 (2026-04-10)
 
 export const DEFAULTS = {
     gearbox: {
