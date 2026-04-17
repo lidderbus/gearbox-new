@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generatedAt": "2026-04-17T11:36:42.243Z",
+    "generatedAt": "2026-04-17T12:36:53.837Z",
     "marketDataTag": "erp-2026-04",
     "salesInvoiceCount": 507,
     "purchaseInvoiceCount": 408,
@@ -18,11 +18,11 @@
       "lastSoldDate": "2026-03-30",
       "customerCount": 5,
       "topCustomers": [
-        "德清县建豪造船有限公司",
-        "日照佳益船舶机械有限公司",
+        "德清县建豪造船",
+        "日照佳益船舶机械",
         "个体户",
-        "湖州上卫物资有限公司",
-        "常州金时川工程机械有限公司"
+        "湖州上卫物资",
+        "常州金时川工程机械"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -37,9 +37,9 @@
       "lastSoldDate": "2026-03-30",
       "customerCount": 4,
       "topCustomers": [
-        "德清县建豪造船有限公司",
-        "日照佳益船舶机械有限公司",
-        "湖州上卫物资有限公司",
+        "德清县建豪造船",
+        "日照佳益船舶机械",
+        "湖州上卫物资",
         "个体户"
       ],
       "shipTypes": [
@@ -70,11 +70,11 @@
       "lastSoldDate": "2026-03-16",
       "customerCount": 5,
       "topCustomers": [
-        "德清县建豪造船有限公司",
-        "张家港保税区潍柴产品销售服务有限公司",
-        "南通明炜船舶配件有限公司",
-        "常州金时川工程机械有限公司",
-        "江苏多力特起重机械制造有限公司"
+        "德清县建豪造船",
+        "张家港保税区潍柴产品销售服务",
+        "南通明炜船舶配件",
+        "常州金时川工程机械",
+        "江苏多力特起重机械制造"
       ],
       "shipTypes": [
         "船用齿轮箱",
@@ -90,11 +90,11 @@
       "lastSoldDate": "2026-03-13",
       "customerCount": 12,
       "topCustomers": [
-        "上海思腾动力设备有限公司",
-        "上海玥灏贸易有限公司",
-        "南通朋汇动力设备有限公司",
-        "上海屹贝国际贸易有限公司",
-        "张家港保税区潍柴产品销售服务有限公司"
+        "上海思腾动力设备",
+        "上海玥灏贸易",
+        "南通朋汇动力设备",
+        "上海屹贝国际贸易",
+        "张家港保税区潍柴产品销售服务"
       ],
       "shipTypes": [
         "船用齿轮箱",
@@ -113,11 +113,11 @@
       "lastSoldDate": "2026-03-30",
       "customerCount": 6,
       "topCustomers": [
-        "杭齿传动（安徽）有限公司",
-        "常州市东海游艇有限公司",
-        "上海东真船舶工程有限公司",
-        "江苏金洋造船有限公司",
-        "上海思腾动力设备有限公司"
+        "杭齿传动",
+        "常州市东海游艇",
+        "上海东真船舶工程",
+        "江苏金洋造船",
+        "上海思腾动力设备"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -134,11 +134,11 @@
       "lastSoldDate": "2026-03-25",
       "customerCount": 7,
       "topCustomers": [
-        "上海思腾动力设备有限公司",
-        "常州晟航机电设备有限公司",
-        "福建拓博实业有限公司",
-        "宜兴市兴东船业有限公司",
-        "德清县建豪造船有限公司"
+        "上海思腾动力设备",
+        "常州晟航机电设备",
+        "福建拓博实业",
+        "宜兴市兴东船业",
+        "德清县建豪造船"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -155,10 +155,10 @@
       "lastSoldDate": "2026-03-30",
       "customerCount": 4,
       "topCustomers": [
-        "常州玻璃钢造船厂有限公司",
-        "江苏大津重工有限公司",
-        "江苏星瑞防务科技有限公司",
-        "福州奋辉船舶设备有限公司"
+        "常州玻璃钢造船厂",
+        "江苏大津重工",
+        "江苏星瑞防务科技",
+        "福州奋辉船舶设备"
       ],
       "shipTypes": [
         "船用齿轮箱",
@@ -177,8 +177,8 @@
       "lastSoldDate": "2026-02-09",
       "customerCount": 2,
       "topCustomers": [
-        "无锡市兴隆船舶有限公司",
-        "上海玥灏贸易有限公司"
+        "无锡市兴隆船舶",
+        "上海玥灏贸易"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -195,11 +195,11 @@
       "lastSoldDate": "2026-03-25",
       "customerCount": 18,
       "topCustomers": [
-        "常州玻璃钢造船厂有限公司",
-        "德高仕泵业（江苏）有限公司",
-        "常州潍重船电产品销售服务有限公司",
-        "上海献航船舶工程有限公司",
-        "无锡市兴隆船舶有限公司"
+        "常州玻璃钢造船厂",
+        "德高仕泵业",
+        "常州潍重船电产品销售服务",
+        "上海献航船舶工程",
+        "无锡市兴隆船舶"
       ],
       "shipTypes": [
         "船用齿轮箱",
@@ -217,7 +217,7 @@
       "lastSoldDate": "2026-01-30",
       "customerCount": 1,
       "topCustomers": [
-        "德清县建豪造船有限公司"
+        "德清县建豪造船"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -230,13 +230,13 @@
       "avgCostPrice": null,
       "realMarginPct": null,
       "lastSoldDate": "2026-01-28",
-      "customerCount": 6,
+      "customerCount": 5,
       "topCustomers": [
-        "无锡市兴隆船舶有限公司",
-        "无锡东方船研高性能船艇工程有限公司",
-        "无锡东方船研高性能船艇工程有限公司靖江分公司",
-        "上海梓腾机电设备有限公司",
-        "常州潍重船电产品销售服务有限公司"
+        "无锡东方船研高性能船艇工程",
+        "无锡市兴隆船舶",
+        "上海梓腾机电设备",
+        "常州潍重船电产品销售服务",
+        "上海思腾动力设备"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -253,11 +253,11 @@
       "lastSoldDate": "2026-01-15",
       "customerCount": 6,
       "topCustomers": [
-        "常州潍重船电产品销售服务有限公司",
-        "南通朋汇动力设备有限公司",
-        "湖北迪周机械有限公司",
-        "扬州潍柴产品销售服务有限公司",
-        "德清县建豪造船有限公司"
+        "常州潍重船电产品销售服务",
+        "南通朋汇动力设备",
+        "湖北迪周机械",
+        "扬州潍柴产品销售服务",
+        "德清县建豪造船"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -274,8 +274,8 @@
       "lastSoldDate": "2026-03-30",
       "customerCount": 2,
       "topCustomers": [
-        "湖州上卫物资有限公司",
-        "日照佳益船舶机械有限公司"
+        "湖州上卫物资",
+        "日照佳益船舶机械"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -290,7 +290,7 @@
       "lastSoldDate": "2025-12-30",
       "customerCount": 1,
       "topCustomers": [
-        "恒正融（杭州）科技有限公司"
+        "恒正融科技"
       ],
       "shipTypes": [
         "高弹联轴器"
@@ -305,7 +305,7 @@
       "lastSoldDate": "2025-12-29",
       "customerCount": 1,
       "topCustomers": [
-        "上海中赢动力科技有限公司"
+        "上海中赢动力科技"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -320,9 +320,9 @@
       "lastSoldDate": "2026-03-30",
       "customerCount": 3,
       "topCustomers": [
-        "德清县建豪造船有限公司",
-        "湖州上卫物资有限公司",
-        "日照佳益船舶机械有限公司"
+        "德清县建豪造船",
+        "湖州上卫物资",
+        "日照佳益船舶机械"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -337,10 +337,10 @@
       "lastSoldDate": "2025-12-28",
       "customerCount": 4,
       "topCustomers": [
-        "德清县建豪造船有限公司",
-        "日照佳益船舶机械有限公司",
-        "南通俊东进出口有限公司",
-        "常州潍重船电产品销售服务有限公司"
+        "德清县建豪造船",
+        "日照佳益船舶机械",
+        "南通俊东进出口",
+        "常州潍重船电产品销售服务"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -357,9 +357,9 @@
       "lastSoldDate": "2025-12-28",
       "customerCount": 3,
       "topCustomers": [
-        "上海思腾动力设备有限公司",
-        "江阴潍柴产品销售服务有限公司",
-        "上海献航船舶工程有限公司"
+        "上海思腾动力设备",
+        "江阴潍柴产品销售服务",
+        "上海献航船舶工程"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -376,8 +376,8 @@
       "lastSoldDate": "2025-12-26",
       "customerCount": 2,
       "topCustomers": [
-        "江苏国盛船舶有限公司",
-        "湖北迪周机械有限公司"
+        "江苏国盛船舶",
+        "湖北迪周机械"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -394,11 +394,11 @@
       "lastSoldDate": "2026-03-13",
       "customerCount": 5,
       "topCustomers": [
-        "上海献航船舶工程有限公司",
-        "合肥倍豪海洋装备技术有限公司",
-        "上海华亚船舶燃料有限公司",
-        "丹华船务（上海）有限责任公司",
-        "安徽万鼎船舶配套设备有限公司"
+        "上海献航船舶工程",
+        "合肥倍豪海洋装备技术",
+        "上海华亚船舶燃料",
+        "丹华船务",
+        "安徽万鼎船舶配套"
       ],
       "shipTypes": [
         "船用离合器"
@@ -415,7 +415,7 @@
       "lastSoldDate": "2025-12-25",
       "customerCount": 1,
       "topCustomers": [
-        "苏州苏净船用机械有限公司"
+        "江苏苏净船用机械"
       ],
       "shipTypes": [
         "液压离合器"
@@ -432,7 +432,7 @@
       "lastSoldDate": "2025-12-23",
       "customerCount": 1,
       "topCustomers": [
-        "上海思腾动力设备有限公司"
+        "上海思腾动力设备"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -449,7 +449,7 @@
       "lastSoldDate": "2025-12-23",
       "customerCount": 1,
       "topCustomers": [
-        "上海思腾动力设备有限公司"
+        "上海思腾动力设备"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -466,11 +466,11 @@
       "lastSoldDate": "2026-03-30",
       "customerCount": 9,
       "topCustomers": [
-        "本特力船舶科技（苏州）有限公司",
-        "上海思腾动力设备有限公司",
-        "江阴潍柴产品销售服务有限公司",
-        "德清县建豪造船有限公司",
-        "湖北迪周机械有限公司"
+        "本特力船舶科技",
+        "上海思腾动力设备",
+        "江阴潍柴产品销售服务",
+        "德清县建豪造船",
+        "湖北迪周机械"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -487,7 +487,7 @@
       "lastSoldDate": "2025-12-23",
       "customerCount": 1,
       "topCustomers": [
-        "无锡泽柳智能装备有限公司"
+        "无锡泽柳智能装备"
       ],
       "shipTypes": [
         "齿轮箱"
@@ -504,10 +504,10 @@
       "lastSoldDate": "2025-12-19",
       "customerCount": 4,
       "topCustomers": [
-        "无锡东方船研高性能船艇工程有限公司靖江分公司",
-        "南通俊东进出口有限公司",
-        "上海维重机械设备有限公司",
-        "上海瑞舜船舶设备有限公司"
+        "无锡东方船研高性能船艇工程",
+        "南通俊东进出口",
+        "上海维重机械设备",
+        "上海瑞舜船舶设备"
       ],
       "shipTypes": [
         "船用齿轮箱",
@@ -526,7 +526,7 @@
       "lastSoldDate": "2025-12-11",
       "customerCount": 1,
       "topCustomers": [
-        "上海通庆船舶设备有限公司"
+        "上海通庆船舶设备"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -543,8 +543,8 @@
       "lastSoldDate": "2025-12-11",
       "customerCount": 2,
       "topCustomers": [
-        "上海思腾动力设备有限公司",
-        "上海广津机电工程有限公司"
+        "上海思腾动力设备",
+        "上海广津机电工程"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -561,10 +561,10 @@
       "lastSoldDate": "2025-12-04",
       "customerCount": 4,
       "topCustomers": [
-        "江苏通洋船舶有限公司",
-        "张家港鑫龙泰环保机械有限公司",
-        "道康姆柴油机（上海）有限公司",
-        "上海思腾动力设备有限公司"
+        "江苏通洋船舶",
+        "张家港鑫龙泰环保机械",
+        "道康姆柴油机",
+        "上海思腾动力设备"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -581,9 +581,9 @@
       "lastSoldDate": "2025-11-24",
       "customerCount": 3,
       "topCustomers": [
-        "上海彼世克机械设备有限公司",
-        "安徽宏宇潍柴产品销售服务有限公司",
-        "安徽择择科技有限公司"
+        "上海彼世克机械设备",
+        "安徽宏宇潍柴产品销售",
+        "安徽择择科技"
       ],
       "shipTypes": [
         "配件"
@@ -600,9 +600,9 @@
       "lastSoldDate": "2025-11-20",
       "customerCount": 3,
       "topCustomers": [
-        "上海广津机电工程有限公司",
-        "上海献航船舶工程有限公司",
-        "重庆鼎卓机电设备有限公司"
+        "上海广津机电工程",
+        "上海献航船舶工程",
+        "重庆鼎卓机电设备"
       ],
       "shipTypes": [
         "船用齿轮箱",
@@ -635,7 +635,7 @@
       "lastSoldDate": "2025-11-20",
       "customerCount": 2,
       "topCustomers": [
-        "德清县建豪造船有限公司",
+        "德清县建豪造船",
         "个体户"
       ],
       "shipTypes": [
@@ -651,7 +651,7 @@
       "lastSoldDate": "2025-11-20",
       "customerCount": 1,
       "topCustomers": [
-        "德清县建豪造船有限公司"
+        "德清县建豪造船"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -666,10 +666,10 @@
       "lastSoldDate": "2026-03-30",
       "customerCount": 4,
       "topCustomers": [
-        "张家港保税区潍柴产品销售服务有限公司",
-        "上海思腾动力设备有限公司",
-        "常州潍重船电产品销售服务有限公司",
-        "湖州上卫物资有限公司"
+        "张家港保税区潍柴产品销售服务",
+        "上海思腾动力设备",
+        "常州潍重船电产品销售服务",
+        "湖州上卫物资"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -686,7 +686,7 @@
       "lastSoldDate": "2025-11-19",
       "customerCount": 1,
       "topCustomers": [
-        "上海源昂供应链有限公司"
+        "上海源昂供应链"
       ],
       "shipTypes": [
         "配件"
@@ -701,9 +701,9 @@
       "lastSoldDate": "2025-11-17",
       "customerCount": 3,
       "topCustomers": [
-        "江苏兴业船艇有限公司",
-        "武汉翔海海运有限公司",
-        "泉州锦顺泓船务有限责任公司"
+        "江苏兴业船艇",
+        "武汉翔海海运",
+        "泉州锦顺泓船务"
       ],
       "shipTypes": [
         "高弹联轴器"
@@ -718,7 +718,7 @@
       "lastSoldDate": "2025-11-13",
       "customerCount": 1,
       "topCustomers": [
-        "江苏星瑞防务科技有限公司"
+        "江苏星瑞防务科技"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -735,9 +735,9 @@
       "lastSoldDate": "2025-11-11",
       "customerCount": 3,
       "topCustomers": [
-        "江苏苏洋船舶工程有限公司",
-        "上海齐耀重工有限公司",
-        "上海思腾动力设备有限公司"
+        "江苏苏洋船舶工程",
+        "上海齐耀重工",
+        "上海思腾动力设备"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -754,7 +754,7 @@
       "lastSoldDate": "2025-11-05",
       "customerCount": 1,
       "topCustomers": [
-        "丹华船务（上海）有限责任公司"
+        "丹华船务"
       ],
       "shipTypes": [
         "配件"
@@ -769,7 +769,7 @@
       "lastSoldDate": "2025-11-05",
       "customerCount": 1,
       "topCustomers": [
-        "安徽择择科技有限公司"
+        "安徽择择科技"
       ],
       "shipTypes": [
         "配件"
@@ -784,7 +784,7 @@
       "lastSoldDate": "2025-10-31",
       "customerCount": 2,
       "topCustomers": [
-        "无锡市兴隆船舶有限公司",
+        "无锡市兴隆船舶",
         "中国船舶集团有限公司第七一一研究所"
       ],
       "shipTypes": [
@@ -803,10 +803,10 @@
       "lastSoldDate": "2025-10-30",
       "customerCount": 4,
       "topCustomers": [
-        "上海献航船舶工程有限公司",
-        "安徽万鼎船舶配套设备有限公司",
-        "莆田市秀屿区石南轮渡有限公司",
-        "福建拓博实业有限公司"
+        "上海献航船舶工程",
+        "安徽万鼎船舶配套",
+        "莆田市秀屿区石南轮渡",
+        "福建拓博实业"
       ],
       "shipTypes": [
         "船用离合器"
@@ -823,8 +823,8 @@
       "lastSoldDate": "2025-10-29",
       "customerCount": 2,
       "topCustomers": [
-        "潍坊星维机械有限公司",
-        "南通俊东进出口有限公司"
+        "潍坊星维机械",
+        "南通俊东进出口"
       ],
       "shipTypes": [
         "齿轮箱"
@@ -841,7 +841,7 @@
       "lastSoldDate": "2025-10-27",
       "customerCount": 1,
       "topCustomers": [
-        "十堰恒久汽车零件有限公司"
+        "十堰恒久汽车零件"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -856,7 +856,7 @@
       "lastSoldDate": "2025-10-27",
       "customerCount": 1,
       "topCustomers": [
-        "江阴潍柴产品销售服务有限公司"
+        "江阴潍柴产品销售服务"
       ],
       "shipTypes": [
         "船用离合器"
@@ -871,7 +871,7 @@
       "lastSoldDate": "2025-10-27",
       "customerCount": 1,
       "topCustomers": [
-        "无锡东方高速艇发展有限公司"
+        "无锡东方高速艇发展"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -888,8 +888,8 @@
       "lastSoldDate": "2025-10-23",
       "customerCount": 2,
       "topCustomers": [
-        "上海思腾动力设备有限公司",
-        "本特力船舶科技（苏州）有限公司"
+        "上海思腾动力设备",
+        "本特力船舶科技"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -906,7 +906,7 @@
       "lastSoldDate": "2025-09-29",
       "customerCount": 1,
       "topCustomers": [
-        "上海献航船舶工程有限公司"
+        "上海献航船舶工程"
       ],
       "shipTypes": [
         "船用离合器"
@@ -923,7 +923,7 @@
       "lastSoldDate": "2025-09-25",
       "customerCount": 1,
       "topCustomers": [
-        "德清县建豪造船有限公司"
+        "德清县建豪造船"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -938,7 +938,7 @@
       "lastSoldDate": "2025-09-23",
       "customerCount": 1,
       "topCustomers": [
-        "义乌市淘派进出口有限公司"
+        "义乌市淘派进出口"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -955,8 +955,8 @@
       "lastSoldDate": "2025-09-17",
       "customerCount": 2,
       "topCustomers": [
-        "中船动力研究院有限公司",
-        "嘉兴市浙北造船有限公司"
+        "中船动力研究院",
+        "嘉兴市浙北造船"
       ],
       "shipTypes": [
         "减速齿轮箱"
@@ -973,7 +973,7 @@
       "lastSoldDate": "2025-09-04",
       "customerCount": 1,
       "topCustomers": [
-        "常州玻璃钢造船厂有限公司"
+        "常州玻璃钢造船厂"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -990,7 +990,7 @@
       "lastSoldDate": "2025-08-04",
       "customerCount": 1,
       "topCustomers": [
-        "无锡东方船研高性能船艇工程有限公司靖江分公司"
+        "无锡东方船研高性能船艇工程"
       ],
       "shipTypes": [
         "减速齿轮箱"
@@ -1005,9 +1005,9 @@
       "lastSoldDate": "2025-07-24",
       "customerCount": 3,
       "topCustomers": [
-        "上海屹洋船舶机电设备有限公司",
-        "上海业郝实业有限公司",
-        "上海国和海运集团有限公司"
+        "上海屹洋船舶机电设备",
+        "上海业郝实业",
+        "上海国和海运集团"
       ],
       "shipTypes": [
         "密封件",
@@ -1023,8 +1023,8 @@
       "lastSoldDate": "2026-03-11",
       "customerCount": 2,
       "topCustomers": [
-        "江苏大津重工有限公司",
-        "常州玻璃钢造船厂有限公司"
+        "江苏大津重工",
+        "常州玻璃钢造船厂"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -1041,7 +1041,7 @@
       "lastSoldDate": "2025-07-18",
       "customerCount": 1,
       "topCustomers": [
-        "上海思腾动力设备有限公司"
+        "上海思腾动力设备"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -1058,7 +1058,7 @@
       "lastSoldDate": "2025-07-18",
       "customerCount": 1,
       "topCustomers": [
-        "南通俊东进出口有限公司"
+        "南通俊东进出口"
       ],
       "shipTypes": [
         "船用离合器"
@@ -1088,7 +1088,7 @@
       "lastSoldDate": "2025-07-04",
       "customerCount": 1,
       "topCustomers": [
-        "上海丁斐唐国际商贸有限公司"
+        "上海丁斐唐国际商贸"
       ],
       "shipTypes": [
         "高弹联轴器"
@@ -1101,10 +1101,9 @@
       "avgCostPrice": null,
       "realMarginPct": null,
       "lastSoldDate": "2025-06-30",
-      "customerCount": 2,
+      "customerCount": 1,
       "topCustomers": [
-        "安徽宏宇潍柴产品销售",
-        "安徽宏宇潍柴产品销售服务有限公司"
+        "安徽宏宇潍柴产品销售"
       ],
       "shipTypes": [
         "推进齿轮箱"
@@ -1119,8 +1118,8 @@
       "lastSoldDate": "2025-06-27",
       "customerCount": 2,
       "topCustomers": [
-        "潍坊星维机械有限公司",
-        "上海鸿杰实业有限公司"
+        "潍坊星维机械",
+        "上海鸿杰实业"
       ],
       "shipTypes": [
         "船用齿轮箱",
@@ -1138,7 +1137,7 @@
       "lastSoldDate": "2025-06-27",
       "customerCount": 1,
       "topCustomers": [
-        "宁波中策贸易有限公司"
+        "宁波中策贸易"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -1170,7 +1169,7 @@
       "lastSoldDate": "2025-06-25",
       "customerCount": 1,
       "topCustomers": [
-        "杭齿传动（安徽）有限公司"
+        "杭齿传动"
       ],
       "shipTypes": [
         "船用离合器"
@@ -1187,7 +1186,7 @@
       "lastSoldDate": "2025-06-20",
       "customerCount": 1,
       "topCustomers": [
-        "石狮市永益船运有限公司"
+        "石狮市永益船运"
       ],
       "shipTypes": [
         "高弹联轴器"
@@ -1217,8 +1216,8 @@
       "lastSoldDate": "2025-06-06",
       "customerCount": 2,
       "topCustomers": [
-        "浙江凯灵船厂（舟山四八零六工厂）",
-        "上海海发船舶设备有限公司"
+        "浙江凯灵船厂",
+        "上海海发船舶设备"
       ],
       "shipTypes": [
         "端盖",
@@ -1234,7 +1233,7 @@
       "lastSoldDate": "2025-06-06",
       "customerCount": 1,
       "topCustomers": [
-        "上海献航船舶工程有限公司"
+        "上海献航船舶工程"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -1251,7 +1250,7 @@
       "lastSoldDate": "2025-06-03",
       "customerCount": 1,
       "topCustomers": [
-        "无锡东方船研高性能船艇工程有限公司靖江分公司"
+        "无锡东方船研高性能船艇工程"
       ],
       "shipTypes": [
         "柴油机"
@@ -1266,7 +1265,7 @@
       "lastSoldDate": "2025-05-27",
       "customerCount": 1,
       "topCustomers": [
-        "上海宝和船舶用品供应有限公司"
+        "上海宝和船舶用品供应"
       ],
       "shipTypes": [
         "滤清器"
@@ -1281,7 +1280,7 @@
       "lastSoldDate": "2025-05-26",
       "customerCount": 1,
       "topCustomers": [
-        "江苏凯邦推进科技有限公司"
+        "江苏凯邦推进科技"
       ],
       "shipTypes": [
         "高弹联轴器"
@@ -1296,7 +1295,7 @@
       "lastSoldDate": "2025-05-21",
       "customerCount": 1,
       "topCustomers": [
-        "上海琪幻船舶技术服务有限公司"
+        "上海琪幻船舶技术服务"
       ],
       "shipTypes": [
         "配件"
@@ -1311,7 +1310,7 @@
       "lastSoldDate": "2025-05-20",
       "customerCount": 1,
       "topCustomers": [
-        "常州玻璃钢造船厂有限公司"
+        "常州玻璃钢造船厂"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -1328,7 +1327,7 @@
       "lastSoldDate": "2025-05-15",
       "customerCount": 1,
       "topCustomers": [
-        "上海盛忻船舶设备有限公司"
+        "上海盛忻船舶设备"
       ],
       "shipTypes": [
         "配件"
@@ -1343,7 +1342,7 @@
       "lastSoldDate": "2025-05-14",
       "customerCount": 1,
       "topCustomers": [
-        "上海思腾动力设备有限公司"
+        "上海思腾动力设备"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -1360,7 +1359,7 @@
       "lastSoldDate": "2025-05-12",
       "customerCount": 1,
       "topCustomers": [
-        "上海敖海船舶设备有限公司"
+        "上海敖海船舶设备"
       ],
       "shipTypes": [
         "配件"
@@ -1375,8 +1374,8 @@
       "lastSoldDate": "2025-05-07",
       "customerCount": 2,
       "topCustomers": [
-        "上海思腾动力设备有限公司",
-        "常州潍重船电产品销售服务有限公司"
+        "上海思腾动力设备",
+        "常州潍重船电产品销售服务"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -1391,7 +1390,7 @@
       "lastSoldDate": "2025-04-21",
       "customerCount": 1,
       "topCustomers": [
-        "南通俊东进出口有限公司"
+        "南通俊东进出口"
       ],
       "shipTypes": [
         "高弹联轴器"
@@ -1406,7 +1405,7 @@
       "lastSoldDate": "2025-04-17",
       "customerCount": 1,
       "topCustomers": [
-        "上海远洋渔业有限公司"
+        "上海远洋渔业"
       ],
       "shipTypes": [
         "配件"
@@ -1421,7 +1420,7 @@
       "lastSoldDate": "2025-04-17",
       "customerCount": 1,
       "topCustomers": [
-        "南通中集太平洋海洋工程有限公司"
+        "南通中集太平洋海洋工程"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -1438,7 +1437,7 @@
       "lastSoldDate": "2025-03-26",
       "customerCount": 1,
       "topCustomers": [
-        "上海琪幻船舶技术服务有限公司"
+        "上海琪幻船舶技术服务"
       ],
       "shipTypes": [
         "配件"
@@ -1453,7 +1452,7 @@
       "lastSoldDate": "2025-03-18",
       "customerCount": 1,
       "topCustomers": [
-        "江苏凯邦推进科技有限公司"
+        "江苏凯邦推进科技"
       ],
       "shipTypes": [
         "高弹联轴器"
@@ -1468,7 +1467,7 @@
       "lastSoldDate": "2025-03-18",
       "customerCount": 1,
       "topCustomers": [
-        "浙江凯灵船厂（舟山四八零六工厂）"
+        "浙江凯灵船厂"
       ],
       "shipTypes": [
         "配件"
@@ -1498,7 +1497,7 @@
       "lastSoldDate": "2025-02-07",
       "customerCount": 1,
       "topCustomers": [
-        "丹华船务（上海）有限责任公司"
+        "丹华船务"
       ],
       "shipTypes": [
         "配件"
@@ -1513,7 +1512,7 @@
       "lastSoldDate": "2025-02-07",
       "customerCount": 1,
       "topCustomers": [
-        "莆田市秀屿区石南轮渡有限公司"
+        "莆田市秀屿区石南轮渡"
       ],
       "shipTypes": [
         "配件"
@@ -1528,7 +1527,7 @@
       "lastSoldDate": "2025-01-20",
       "customerCount": 1,
       "topCustomers": [
-        "苏州思善齐自动化科技有限公司"
+        "苏州思善齐自动化科技"
       ],
       "shipTypes": [
         "推进齿轮箱"
@@ -1543,7 +1542,7 @@
       "lastSoldDate": "2025-01-19",
       "customerCount": 1,
       "topCustomers": [
-        "江苏星瑞防务科技有限公司"
+        "江苏星瑞防务科技"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -1558,7 +1557,7 @@
       "lastSoldDate": "2025-01-16",
       "customerCount": 1,
       "topCustomers": [
-        "杭州吾牛机械有限公司"
+        "杭州吾牛机械"
       ],
       "shipTypes": [
         "船用离合器"
@@ -1588,7 +1587,7 @@
       "lastSoldDate": "2025-01-08",
       "customerCount": 1,
       "topCustomers": [
-        "上海思腾动力设备有限公司"
+        "上海思腾动力设备"
       ],
       "shipTypes": [
         "船用离合器"
@@ -1603,7 +1602,7 @@
       "lastSoldDate": "2025-01-08",
       "customerCount": 1,
       "topCustomers": [
-        "江苏海宏建设工程有限公司"
+        "江苏海宏建设工程"
       ],
       "shipTypes": [
         "配件"
@@ -1618,7 +1617,7 @@
       "lastSoldDate": "2025-01-08",
       "customerCount": 1,
       "topCustomers": [
-        "东营市桐福石油设备有限责任公司"
+        "东营市桐福石油设备"
       ],
       "shipTypes": [
         "配件"
@@ -1633,7 +1632,7 @@
       "lastSoldDate": "2025-01-04",
       "customerCount": 1,
       "topCustomers": [
-        "江苏省镇江船厂（集团）有限公司"
+        "江苏省镇江船厂"
       ],
       "shipTypes": [
         "齿轮箱+齿轮箱及轴系"

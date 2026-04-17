@@ -69,6 +69,36 @@ function isValidModel(model) {
     return true;
 }
 
+// 客户名归一化 (端口自 shared-data-service-v3.js:224)
+// 去除"有限公司"等法人后缀 + 常见别名归一,避免 customerCount 膨胀
+const CUSTOMER_ALIASES = {
+    '苏州苏净船用机械': '江苏苏净船用机械',
+    '安徽倍豪海洋装备技术': '合肥倍豪海洋装备技术',
+    '安徽宏宇潍柴产品销售服务': '安徽宏宇潍柴产品销售',
+    '江苏金洋造船厂': '江苏金洋造船',
+    '安徽万鼎船舶配套设备': '安徽万鼎船舶配套',
+    '无锡东方船研高性能船艇工程有限公司靖江分公司': '无锡东方船研高性能船艇工程',
+    '无锡东方船研高性能船艇工程': '无锡东方船研高性能船艇工程',
+    '常州市东海游艇船舶': '常州市东海游艇',
+    '常州市东海船舶': '常州市东海游艇',
+    '常州潍重船电产品销售服务': '常州潍重船电产品销售服务',
+    '常州潍重船产品销售服务': '常州潍重船电产品销售服务',
+    '张家港永丰行进出口': '张家港市永丰行进出口',
+    '上海通庆船舶': '上海通庆船舶设备',
+    '上海诚涵船舶设备': '上海诚函船舶设备',
+};
+function normalizeCustomerName(name) {
+    if (!name) return '';
+    let s = String(name).trim();
+    if (s.indexOf('另星') === 0) return '个体户';
+    for (const alias in CUSTOMER_ALIASES) {
+        if (s.indexOf(alias) === 0 || s === alias) return CUSTOMER_ALIASES[alias];
+    }
+    s = s.replace(/（.*?）/g, '').replace(/\(.*?\)/g, '');
+    s = s.replace(/(有限责任公司|有限公司|股份有限公司|分公司|公司|有限责任|有限|股份|集团)$/g, '');
+    return s;
+}
+
 // 粗略船型关键词 (用于 shipTypes)
 const SHIP_TYPE_KEYWORDS = [
     ['渔船', '渔'], ['拖船', '拖轮', '拖'], ['游艇', '游艇'],
@@ -131,8 +161,9 @@ function buildEnrichment() {
             const b = bucket(bm);
             b.salesCount += qty;
             b.salesRevenue += share;
-            if (customer) {
-                b.customers.set(customer, (b.customers.get(customer) || 0) + share);
+            const normCustomer = normalizeCustomerName(customer);
+            if (normCustomer) {
+                b.customers.set(normCustomer, (b.customers.get(normCustomer) || 0) + share);
             }
             if (date && (!b.lastSoldDate || date > b.lastSoldDate)) b.lastSoldDate = date;
             if (p.type) b.shipTypeHints.push(p.type);

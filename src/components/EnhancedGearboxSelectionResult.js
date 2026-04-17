@@ -12,7 +12,8 @@ import { DataCompletenessBadge } from './selection/GearboxScorer';
 import { useIsMobile } from '../hooks/useIsMobile';
 import SwipeableResultCards from './responsive/SwipeableResultCards';
 import { getManualInfo } from '../data/gearboxManuals';
-import { formatPrice } from '../utils/priceFormatter';
+import { formatPrice, getDisplayPrice, getPriceModeLabel } from '../utils/priceFormatter';
+import { getPriceMode, setPriceMode, PRICE_MODE } from '../data/priceDiscount';
 import MarginIndicator from './selection/MarginIndicator';
 import RecommendationReasonCard from './selection/RecommendationReasonCard';
 import CapacityCalculationCard from './selection/CapacityCalculationCard';
@@ -25,6 +26,7 @@ import { exportSelectionSummary } from '../utils/selectionSummaryExport';
 import { calculatePowerRange, extractSeriesFromModel } from '../utils/gearboxDataEnhancer';
 import EquipmentInfoCard from './EquipmentInfoCard';
 import SelectionComparisonCharts from './SelectionComparisonCharts';
+import marketEnrichment from '../data/marketEnrichment.json';
 
 // 导入子组件
 import {
@@ -36,6 +38,11 @@ import {
   PriceComparisonChart,
   PerformanceChart
 } from './EnhancedGearboxSelectionResult/index';
+
+const HOT_THRESHOLD = (marketEnrichment && marketEnrichment._meta && marketEnrichment._meta.hotSellerThreshold) || 7;
+
+// 懒加载选型漏斗图
+const SelectionFunnelChart = lazy(() => import('./SelectionFunnelChart'));
 
 // 懒加载3D预览组件
 const Gearbox3DPreview = lazy(() => import('./Gearbox3DPreview'));
@@ -59,6 +66,7 @@ const EnhancedGearboxSelectionResult = ({
 }) => {
   // 状态管理 - 所有Hooks必须在组件顶层无条件调用
   const [activeTab, setActiveTab] = useState('details');
+  const [priceMode, setPriceModeState] = useState(getPriceMode());
   const [comparisonMode, setComparisonMode] = useState(false);
   const [comparedGearboxes, setComparedGearboxes] = useState([]);
   const [showLowScore, setShowLowScore] = useState(false);
@@ -347,8 +355,34 @@ const EnhancedGearboxSelectionResult = ({
   const renderTabsContent = () => {
     return (
       <>
-        <Tabs 
-          activeKey={activeTab} 
+        {/* 价格模式切换 */}
+        <div className="d-flex align-items-center gap-3 mb-3 px-2 py-2" style={{ background: 'rgba(0,0,0,0.03)', borderRadius: 8, fontSize: '0.85rem' }}>
+          <span className="text-muted fw-bold">价格显示:</span>
+          <Form.Check
+            type="radio"
+            id="price-mode-external"
+            label="外部报价（含利润）"
+            name="priceMode"
+            checked={priceMode === PRICE_MODE.EXTERNAL}
+            onChange={() => { setPriceMode(PRICE_MODE.EXTERNAL); setPriceModeState(PRICE_MODE.EXTERNAL); }}
+            inline
+          />
+          <Form.Check
+            type="radio"
+            id="price-mode-internal"
+            label="内部进价（采购成本）"
+            name="priceMode"
+            checked={priceMode === PRICE_MODE.INTERNAL}
+            onChange={() => { setPriceMode(PRICE_MODE.INTERNAL); setPriceModeState(PRICE_MODE.INTERNAL); }}
+            inline
+          />
+          <Badge bg={priceMode === PRICE_MODE.INTERNAL ? 'info' : 'success'}>
+            {priceMode === PRICE_MODE.INTERNAL ? '进价模式' : '报价模式'}
+          </Badge>
+        </div>
+
+        <Tabs
+          activeKey={activeTab}
           onSelect={(k) => setActiveTab(k)}
           className="mb-3"
           style={{ borderBottomColor: colors?.border || '#ddd' }}
@@ -361,7 +395,7 @@ const EnhancedGearboxSelectionResult = ({
             <Table striped hover size="sm">
               <thead>
                 <tr>
-                  <th>#</th><th>型号</th><th>评分</th><th>系列</th><th>减速比</th><th>传递能力</th><th>余量</th><th>推力kN</th><th>重量kg</th><th>参考价</th>
+                  <th>#</th><th>型号</th><th>评分</th><th>系列</th><th>减速比</th><th>传递能力</th><th>余量</th><th>推力kN</th><th>重量kg</th><th>{priceMode === PRICE_MODE.INTERNAL ? '进价' : '报价'}</th>
                   {hasPartials && <th style={{fontSize:'0.75rem'}}>不满足项</th>}
                   <th></th>
                 </tr>
@@ -386,7 +420,7 @@ const EnhancedGearboxSelectionResult = ({
                     </td>
                     <td>{g.thrust || '-'}</td>
                     <td>{g.weight || '-'}</td>
-                    <td>{g.marketPrice ? `${(g.marketPrice/10000).toFixed(1)}万` : g.packagePrice ? `${(g.packagePrice/10000).toFixed(1)}万` : '询价'}</td>
+                    <td>{(() => { const p = getDisplayPrice(g); return p > 0 ? `${(p/10000).toFixed(1)}万` : '询价'; })()}</td>
                     {hasPartials && (
                       <td style={{fontSize:'0.7rem', maxWidth:160}}>
                         {g.failureReason ? (
@@ -422,6 +456,15 @@ const EnhancedGearboxSelectionResult = ({
                     <h5 style={{ color: colors?.headerText || '#333', marginBottom: '4px' }}>
                       选中齿轮箱: {selectedGearbox.model}
                       <DataCompletenessBadge gearbox={selectedGearbox} className="ms-2" />
+                      {selectedGearbox.marketData && selectedGearbox.marketData.salesCount >= HOT_THRESHOLD && (
+                        <Badge
+                          bg="danger"
+                          className="ms-2"
+                          title={`累计售出 ${selectedGearbox.marketData.salesCount} 台 / ${selectedGearbox.marketData.customerCount} 家客户${selectedGearbox.marketData.lastSoldDate ? ' / 最近 ' + selectedGearbox.marketData.lastSoldDate : ''}`}
+                        >
+                          <i className="bi bi-fire me-1"></i>畅销
+                        </Badge>
+                      )}
                     </h5>
                     <div className="d-flex align-items-center gap-2">
                       <small style={{ color: '#666' }}>点击图片查看大图和技术图纸</small>
@@ -618,8 +661,62 @@ const EnhancedGearboxSelectionResult = ({
                     </tr>
                     <tr>
                       <td>价格</td>
-                      <td>{formatPrice(selectedGearbox.marketPrice)}</td>
+                      <td>
+                        <div className="d-flex align-items-center gap-2 flex-wrap">
+                          <strong>{formatPrice(getDisplayPrice(selectedGearbox))}</strong>
+                          <Badge bg={getPriceMode() === PRICE_MODE.INTERNAL ? 'info' : 'success'} className="ms-1">
+                            {getPriceModeLabel()}
+                          </Badge>
+                          {selectedGearbox.factoryPrice > 0 && selectedGearbox.marketPrice > 0 && (
+                            <small className="text-muted">
+                              (进价 {formatPrice(selectedGearbox.factoryPrice)} / 报价 {formatPrice(selectedGearbox.marketPrice)})
+                            </small>
+                          )}
+                        </div>
+                      </td>
                     </tr>
+                    {selectedGearbox.marketData && (selectedGearbox.marketData.avgSalePrice || selectedGearbox.marketData.salesCount > 0) && (
+                      <tr>
+                        <td>
+                          市场数据
+                          <div><small className="text-muted">近15月 ERP 实际成交</small></div>
+                        </td>
+                        <td>
+                          <div className="d-flex flex-column gap-1">
+                            {selectedGearbox.marketData.avgSalePrice && (
+                              <div>
+                                <strong className="text-primary">市场参考价 {formatPrice(selectedGearbox.marketData.avgSalePrice)}</strong>
+                                {selectedGearbox.marketData.realMarginPct != null && (
+                                  <Badge
+                                    bg={selectedGearbox.marketData.realMarginPct >= 20 ? 'success' : selectedGearbox.marketData.realMarginPct >= 10 ? 'warning' : 'danger'}
+                                    className="ms-2"
+                                  >
+                                    毛利 {selectedGearbox.marketData.realMarginPct}%
+                                  </Badge>
+                                )}
+                              </div>
+                            )}
+                            {selectedGearbox.marketData.salesCount > 0 && (
+                              <div className="d-flex align-items-center gap-1 flex-wrap">
+                                <Badge bg="info">累计 {selectedGearbox.marketData.salesCount} 台</Badge>
+                                <Badge bg="secondary">{selectedGearbox.marketData.customerCount} 家客户</Badge>
+                                {selectedGearbox.marketData.lastSoldDate && (
+                                  <small className="text-muted">最近成交 {selectedGearbox.marketData.lastSoldDate}</small>
+                                )}
+                              </div>
+                            )}
+                            {selectedGearbox.marketData.topCustomers && selectedGearbox.marketData.topCustomers.length > 0 && (
+                              <div className="d-flex align-items-center gap-1 flex-wrap" style={{ fontSize: '0.85em' }}>
+                                <small className="text-muted">TOP 客户:</small>
+                                {selectedGearbox.marketData.topCustomers.slice(0, 3).map((c, i) => (
+                                  <Badge key={i} bg="light" text="dark" className="border">{c}</Badge>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    )}
                     {isPartialMatch && selectedGearbox.failureReason && (
                       <tr className="table-warning">
                         <td>匹配度不足原因</td>
@@ -807,6 +904,9 @@ const EnhancedGearboxSelectionResult = ({
               colors={colors}
               targetRatio={result.targetRatio}
             />
+            <Suspense fallback={null}>
+              <SelectionFunnelChart result={result} />
+            </Suspense>
           </Tab>
 
           {/* 产品图库标签页 (替代3D预览) */}

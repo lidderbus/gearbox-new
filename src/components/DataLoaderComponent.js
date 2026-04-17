@@ -2,6 +2,7 @@
 // 性能优化: 使用动态导入实现数据懒加载，减少首屏加载时间
 import { useEffect, useState } from 'react';
 import { adaptEnhancedData } from '../utils/dataAdapter';
+import { applyMarketEnrichment } from '../utils/dataLoader';
 import { logger } from '../config/logging';
 
 /**
@@ -63,6 +64,12 @@ const EnhancedDataLoader = ({ onDataLoaded, setLoading, setError }) => {
         setLoadingState('adapting');
         logger.debug('DataLoader: 适配数据');
         const adaptedData = adaptEnhancedData(processedData);
+
+        // 4.5 ERP 市场富化数据挂载 (marketData 子对象)
+        const enrichMeta = applyMarketEnrichment(adaptedData);
+        if (enrichMeta) {
+          logger.debug(`DataLoader: 市场数据挂载 ${enrichMeta.appliedCount}/${enrichMeta.totalModels} (${enrichMeta.coveragePct}%)`);
+        }
 
         // 5. 保存到本地存储
         try {
