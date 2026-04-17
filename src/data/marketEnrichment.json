@@ -1,11 +1,11 @@
 {
   "_meta": {
-    "generatedAt": "2026-04-17T12:36:53.837Z",
+    "generatedAt": "2026-04-17T13:38:46.180Z",
     "marketDataTag": "erp-2026-04",
     "salesInvoiceCount": 507,
-    "purchaseInvoiceCount": 408,
+    "purchaseInvoiceCount": 477,
     "contractCount": 197,
-    "enrichedModelCount": 107,
+    "enrichedModelCount": 103,
     "hotSellerThreshold": 7
   },
   "records": {
@@ -82,13 +82,13 @@
       ]
     },
     "300": {
-      "salesCount": 46,
-      "salesRevenue": 865176,
-      "avgSalePrice": 18808,
+      "salesCount": 41,
+      "salesRevenue": 839500,
+      "avgSalePrice": 20476,
       "avgCostPrice": 18208,
-      "realMarginPct": 3.2,
+      "realMarginPct": 11.1,
       "lastSoldDate": "2026-03-13",
-      "customerCount": 12,
+      "customerCount": 10,
       "topCustomers": [
         "上海思腾动力设备",
         "上海玥灏贸易",
@@ -98,8 +98,7 @@
       ],
       "shipTypes": [
         "船用齿轮箱",
-        "增速箱",
-        "配件"
+        "增速箱"
       ],
       "contractQty": 30,
       "contractRevenue": 683440
@@ -166,7 +165,12 @@
         "配件"
       ],
       "contractQty": 34,
-      "contractRevenue": 4370000
+      "contractRevenue": 4370000,
+      "priceAnomaly": {
+        "catalogPrice": 30000,
+        "ratio": 4.01,
+        "hint": "成交均价显著高于目录,可能是套装/服务打包,或目录价偏低待校正"
+      }
     },
     "HCA302": {
       "salesCount": 3,
@@ -187,13 +191,13 @@
       "contractRevenue": 235000
     },
     "120C": {
-      "salesCount": 64,
-      "salesRevenue": 958413,
-      "avgSalePrice": 14975,
+      "salesCount": 63,
+      "salesRevenue": 957360,
+      "avgSalePrice": 15196,
       "avgCostPrice": 11420,
-      "realMarginPct": 23.7,
+      "realMarginPct": 24.8,
       "lastSoldDate": "2026-03-25",
-      "customerCount": 18,
+      "customerCount": 17,
       "topCustomers": [
         "常州玻璃钢造船厂",
         "德高仕泵业",
@@ -202,8 +206,7 @@
         "无锡市兴隆船舶"
       ],
       "shipTypes": [
-        "船用齿轮箱",
-        "配件"
+        "船用齿轮箱"
       ],
       "contractQty": 63,
       "contractRevenue": 897746
@@ -385,27 +388,6 @@
       "contractQty": 5,
       "contractRevenue": 157388
     },
-    "HCL250F": {
-      "salesCount": 25,
-      "salesRevenue": 270794,
-      "avgSalePrice": 10832,
-      "avgCostPrice": 7451,
-      "realMarginPct": 31.2,
-      "lastSoldDate": "2026-03-13",
-      "customerCount": 5,
-      "topCustomers": [
-        "上海献航船舶工程",
-        "合肥倍豪海洋装备技术",
-        "上海华亚船舶燃料",
-        "丹华船务",
-        "安徽万鼎船舶配套"
-      ],
-      "shipTypes": [
-        "船用离合器"
-      ],
-      "contractQty": 38,
-      "contractRevenue": 378968
-    },
     "HCLN4300": {
       "salesCount": 2,
       "salesRevenue": 1045000,
@@ -458,13 +440,13 @@
       "contractRevenue": 561816
     },
     "HC400": {
-      "salesCount": 25,
-      "salesRevenue": 662727,
-      "avgSalePrice": 26509,
+      "salesCount": 24,
+      "salesRevenue": 656443,
+      "avgSalePrice": 27352,
       "avgCostPrice": 21425,
-      "realMarginPct": 19.2,
-      "lastSoldDate": "2026-03-30",
-      "customerCount": 9,
+      "realMarginPct": 21.7,
+      "lastSoldDate": "2026-03-25",
+      "customerCount": 8,
       "topCustomers": [
         "本特力船舶科技",
         "上海思腾动力设备",
@@ -496,18 +478,17 @@
       "contractRevenue": 49300
     },
     "GWC42.45": {
-      "salesCount": 6,
-      "salesRevenue": 2413459,
-      "avgSalePrice": 402243,
+      "salesCount": 5,
+      "salesRevenue": 2384170,
+      "avgSalePrice": 476834,
       "avgCostPrice": 188274,
-      "realMarginPct": 53.2,
+      "realMarginPct": 60.5,
       "lastSoldDate": "2025-12-19",
-      "customerCount": 4,
+      "customerCount": 3,
       "topCustomers": [
         "无锡东方船研高性能船艇工程",
         "南通俊东进出口",
-        "上海维重机械设备",
-        "上海瑞舜船舶设备"
+        "上海维重机械设备"
       ],
       "shipTypes": [
         "船用齿轮箱",
@@ -515,7 +496,12 @@
         "齿轮箱"
       ],
       "contractQty": 4,
-      "contractRevenue": 830000
+      "contractRevenue": 830000,
+      "priceAnomaly": {
+        "catalogPrice": 185800,
+        "ratio": 2.57,
+        "hint": "成交均价显著高于目录,可能是套装/服务打包,或目录价偏低待校正"
+      }
     },
     "BS80": {
       "salesCount": 90,
@@ -724,7 +710,12 @@
         "船用齿轮箱"
       ],
       "contractQty": 16,
-      "contractRevenue": 1248000
+      "contractRevenue": 1248000,
+      "priceAnomaly": {
+        "catalogPrice": 17800,
+        "ratio": 4.38,
+        "hint": "成交均价显著高于目录,可能是套装/服务打包,或目录价偏低待校正"
+      }
     },
     "HCD600A": {
       "salesCount": 6,
@@ -745,74 +736,22 @@
       "contractQty": 6,
       "contractRevenue": 435000
     },
-    "HCT800": {
-      "salesCount": 2,
-      "salesRevenue": 9105,
-      "avgSalePrice": 4553,
-      "avgCostPrice": null,
-      "realMarginPct": null,
-      "lastSoldDate": "2025-11-05",
-      "customerCount": 1,
-      "topCustomers": [
-        "丹华船务"
-      ],
-      "shipTypes": [
-        "配件"
-      ]
-    },
-    "HC1000": {
-      "salesCount": 1,
-      "salesRevenue": 4755,
-      "avgSalePrice": 4755,
-      "avgCostPrice": null,
-      "realMarginPct": null,
-      "lastSoldDate": "2025-11-05",
-      "customerCount": 1,
-      "topCustomers": [
-        "安徽择择科技"
-      ],
-      "shipTypes": [
-        "配件"
-      ]
-    },
     "HCQ401": {
-      "salesCount": 3,
-      "salesRevenue": 170641,
-      "avgSalePrice": 56880,
+      "salesCount": 2,
+      "salesRevenue": 159000,
+      "avgSalePrice": 79500,
       "avgCostPrice": null,
       "realMarginPct": null,
       "lastSoldDate": "2025-10-31",
-      "customerCount": 2,
+      "customerCount": 1,
       "topCustomers": [
-        "无锡市兴隆船舶",
-        "中国船舶集团有限公司第七一一研究所"
+        "无锡市兴隆船舶"
       ],
       "shipTypes": [
-        "船用齿轮箱",
-        "配件"
+        "船用齿轮箱"
       ],
       "contractQty": 2,
       "contractRevenue": 159000
-    },
-    "HCL320F": {
-      "salesCount": 7,
-      "salesRevenue": 59730,
-      "avgSalePrice": 8533,
-      "avgCostPrice": null,
-      "realMarginPct": null,
-      "lastSoldDate": "2025-10-30",
-      "customerCount": 4,
-      "topCustomers": [
-        "上海献航船舶工程",
-        "安徽万鼎船舶配套",
-        "莆田市秀屿区石南轮渡",
-        "福建拓博实业"
-      ],
-      "shipTypes": [
-        "船用离合器"
-      ],
-      "contractQty": 4,
-      "contractRevenue": 34390
     },
     "T300": {
       "salesCount": 8,
@@ -877,7 +816,12 @@
         "船用齿轮箱"
       ],
       "contractQty": 2,
-      "contractRevenue": 216000
+      "contractRevenue": 216000,
+      "priceAnomaly": {
+        "catalogPrice": 28000,
+        "ratio": 3.86,
+        "hint": "成交均价显著高于目录,可能是套装/服务打包,或目录价偏低待校正"
+      }
     },
     "HC1200": {
       "salesCount": 4,
@@ -1030,7 +974,12 @@
         "船用齿轮箱"
       ],
       "contractQty": 8,
-      "contractRevenue": 2616000
+      "contractRevenue": 2616000,
+      "priceAnomaly": {
+        "catalogPrice": 42000,
+        "ratio": 7.54,
+        "hint": "成交均价显著高于目录,可能是套装/服务打包,或目录价偏低待校正"
+      }
     },
     "HCD2000": {
       "salesCount": 3,
@@ -1286,21 +1235,6 @@
         "高弹联轴器"
       ]
     },
-    "GWC52.59": {
-      "salesCount": 2,
-      "salesRevenue": 20219,
-      "avgSalePrice": 10110,
-      "avgCostPrice": null,
-      "realMarginPct": null,
-      "lastSoldDate": "2025-05-21",
-      "customerCount": 1,
-      "topCustomers": [
-        "上海琪幻船舶技术服务"
-      ],
-      "shipTypes": [
-        "配件"
-      ]
-    },
     "HCAM250": {
       "salesCount": 3,
       "salesRevenue": 360000,
@@ -1316,22 +1250,12 @@
         "船用齿轮箱"
       ],
       "contractQty": 4,
-      "contractRevenue": 360000
-    },
-    "GWC66.75": {
-      "salesCount": 1,
-      "salesRevenue": 53270,
-      "avgSalePrice": 53270,
-      "avgCostPrice": null,
-      "realMarginPct": null,
-      "lastSoldDate": "2025-05-15",
-      "customerCount": 1,
-      "topCustomers": [
-        "上海盛忻船舶设备"
-      ],
-      "shipTypes": [
-        "配件"
-      ]
+      "contractRevenue": 360000,
+      "priceAnomaly": {
+        "catalogPrice": 19000,
+        "ratio": 6.32,
+        "hint": "成交均价显著高于目录,可能是套装/服务打包,或目录价偏低待校正"
+      }
     },
     "HCA138": {
       "salesCount": 2,
@@ -1349,21 +1273,6 @@
       ],
       "contractQty": 2,
       "contractRevenue": 69360
-    },
-    "GWC70.76": {
-      "salesCount": 1,
-      "salesRevenue": 2832,
-      "avgSalePrice": 2832,
-      "avgCostPrice": null,
-      "realMarginPct": null,
-      "lastSoldDate": "2025-05-12",
-      "customerCount": 1,
-      "topCustomers": [
-        "上海敖海船舶设备"
-      ],
-      "shipTypes": [
-        "配件"
-      ]
     },
     "HC600": {
       "salesCount": 5,
@@ -1428,21 +1337,6 @@
       "contractQty": 2,
       "contractRevenue": 1720000
     },
-    "GWC60.66": {
-      "salesCount": 1,
-      "salesRevenue": 12257,
-      "avgSalePrice": 12257,
-      "avgCostPrice": null,
-      "realMarginPct": null,
-      "lastSoldDate": "2025-03-26",
-      "customerCount": 1,
-      "topCustomers": [
-        "上海琪幻船舶技术服务"
-      ],
-      "shipTypes": [
-        "配件"
-      ]
-    },
     "HGTQWX1400": {
       "salesCount": 1,
       "salesRevenue": 7700,
@@ -1456,21 +1350,6 @@
       ],
       "shipTypes": [
         "高弹联轴器"
-      ]
-    },
-    "GWS45.49": {
-      "salesCount": 1,
-      "salesRevenue": 20065,
-      "avgSalePrice": 20065,
-      "avgCostPrice": null,
-      "realMarginPct": null,
-      "lastSoldDate": "2025-03-18",
-      "customerCount": 1,
-      "topCustomers": [
-        "浙江凯灵船厂"
-      ],
-      "shipTypes": [
-        "配件"
       ]
     },
     "HCT1200": {
@@ -1546,22 +1425,12 @@
       ],
       "shipTypes": [
         "船用齿轮箱"
-      ]
-    },
-    "HCL320S": {
-      "salesCount": 1,
-      "salesRevenue": 7744,
-      "avgSalePrice": 7744,
-      "avgCostPrice": null,
-      "realMarginPct": null,
-      "lastSoldDate": "2025-01-16",
-      "customerCount": 1,
-      "topCustomers": [
-        "杭州吾牛机械"
       ],
-      "shipTypes": [
-        "船用离合器"
-      ]
+      "priceAnomaly": {
+        "catalogPrice": 24000,
+        "ratio": 4.58,
+        "hint": "成交均价显著高于目录,可能是套装/服务打包,或目录价偏低待校正"
+      }
     },
     "HCXZ4750": {
       "salesCount": 1,
@@ -1608,21 +1477,6 @@
         "配件"
       ]
     },
-    "GWC39.41": {
-      "salesCount": 1,
-      "salesRevenue": 6422,
-      "avgSalePrice": 6422,
-      "avgCostPrice": null,
-      "realMarginPct": null,
-      "lastSoldDate": "2025-01-08",
-      "customerCount": 1,
-      "topCustomers": [
-        "东营市桐福石油设备"
-      ],
-      "shipTypes": [
-        "配件"
-      ]
-    },
     "GCD60.66T": {
       "salesCount": 1,
       "salesRevenue": 410000,
@@ -1637,6 +1491,23 @@
       "shipTypes": [
         "齿轮箱+齿轮箱及轴系"
       ]
+    },
+    "HCL250F": {
+      "salesCount": 4,
+      "salesRevenue": 90000,
+      "avgSalePrice": 22500,
+      "avgCostPrice": 7451,
+      "realMarginPct": 66.9,
+      "lastSoldDate": "2026-03-13",
+      "customerCount": 1,
+      "topCustomers": [
+        "合肥倍豪海洋装备技术"
+      ],
+      "shipTypes": [
+        "船用离合器"
+      ],
+      "contractQty": 38,
+      "contractRevenue": 378968
     },
     "2LZF": {
       "salesCount": 0,
@@ -1662,11 +1533,66 @@
       "contractQty": 2,
       "contractRevenue": 220636
     },
+    "MGCP100B": {
+      "salesCount": 0,
+      "salesRevenue": 0,
+      "avgSalePrice": null,
+      "avgCostPrice": 10437,
+      "realMarginPct": null,
+      "lastSoldDate": null,
+      "customerCount": 0,
+      "topCustomers": [],
+      "shipTypes": []
+    },
+    "SO40604": {
+      "salesCount": 0,
+      "salesRevenue": 0,
+      "avgSalePrice": null,
+      "avgCostPrice": 234513,
+      "realMarginPct": null,
+      "lastSoldDate": null,
+      "customerCount": 0,
+      "topCustomers": [],
+      "shipTypes": []
+    },
+    "SO60726": {
+      "salesCount": 0,
+      "salesRevenue": 0,
+      "avgSalePrice": null,
+      "avgCostPrice": 654690,
+      "realMarginPct": null,
+      "lastSoldDate": null,
+      "customerCount": 0,
+      "topCustomers": [],
+      "shipTypes": []
+    },
     "HCL250A": {
       "salesCount": 0,
       "salesRevenue": 0,
       "avgSalePrice": null,
       "avgCostPrice": 7304,
+      "realMarginPct": null,
+      "lastSoldDate": null,
+      "customerCount": 0,
+      "topCustomers": [],
+      "shipTypes": []
+    },
+    "SO60982": {
+      "salesCount": 0,
+      "salesRevenue": 0,
+      "avgSalePrice": null,
+      "avgCostPrice": 472092,
+      "realMarginPct": null,
+      "lastSoldDate": null,
+      "customerCount": 0,
+      "topCustomers": [],
+      "shipTypes": []
+    },
+    "SO40816": {
+      "salesCount": 0,
+      "salesRevenue": 0,
+      "avgSalePrice": null,
+      "avgCostPrice": 264154,
       "realMarginPct": null,
       "lastSoldDate": null,
       "customerCount": 0,
@@ -1698,6 +1624,19 @@
       "shipTypes": [],
       "contractQty": 20,
       "contractRevenue": 2660000
+    },
+    "HCL320F": {
+      "salesCount": 0,
+      "salesRevenue": 0,
+      "avgSalePrice": null,
+      "avgCostPrice": null,
+      "realMarginPct": null,
+      "lastSoldDate": null,
+      "customerCount": 0,
+      "topCustomers": [],
+      "shipTypes": [],
+      "contractQty": 4,
+      "contractRevenue": 34390
     },
     "HCT800/1": {
       "salesCount": 0,

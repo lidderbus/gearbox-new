@@ -21,6 +21,29 @@ const vm = require('vm');
 
 const ERP_DIR = path.resolve(__dirname, '../../erp-dashboard/public');
 const OUT_PATH = path.resolve(__dirname, '../src/data/marketEnrichment.json');
+const EMBEDDED_DATA_PATH = path.resolve(__dirname, '../src/data/embeddedData.js');
+
+// 价格合理性阈值: 成交均价低于目录 30% 判定为零件/服务污染
+const PARTS_CONTAMINATION_THRESHOLD = 0.30;
+// 成交均价高于目录 2.5x 打 priceAnomaly 标记(可能是套装/服务打包/目录偏低)
+const PRICE_ANOMALY_RATIO = 2.5;
+
+// ============================================================
+// 加载 embeddedData 的目录价索引 (用于 parts 污染识别)
+// ============================================================
+
+function loadCatalogPrices() {
+    const text = fs.readFileSync(EMBEDDED_DATA_PATH, 'utf8');
+    const catalog = {};
+    const re = /"model":\s*"([^"]+)"[^}]*?"(basePrice|price)":\s*(\d+)/g;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+        const model = m[1].toUpperCase();
+        const val = parseInt(m[3], 10);
+        if (!catalog[model]) catalog[model] = val;
+    }
+    return catalog;
+}
 
 // ============================================================
 // 加载 ERP 数据 (JS 文件里的全局变量,用 vm 沙箱取出)
@@ -123,7 +146,8 @@ function buildEnrichment() {
     const salesInvoices = loadErpGlobal('js/sales-invoice-data.js', 'salesInvoiceData');
     const purchaseInvoices = loadErpGlobal('purchase-invoice-data.js', 'purchaseInvoiceData');
     const contracts = loadErpGlobal('contract-data.js', 'realContractData');
-    console.log(`[enrich]   sales=${salesInvoices.length}, purchase=${purchaseInvoices.length}, contracts=${contracts.length}`);
+    const catalogPrices = loadCatalogPrices();
+    console.log(`[enrich]   sales=${salesInvoices.length}, purchase=${purchaseInvoices.length}, contracts=${contracts.length}, catalog=${Object.keys(catalogPrices).length} 型号含价`);
 
     // baseModel → 聚合桶
     const buckets = new Map();
@@ -146,6 +170,7 @@ function buildEnrichment() {
 
     // --- 1. 销售发票 ---
     let unmappedSales = 0;
+    let partsContaminationSkipped = 0;
     for (const inv of salesInvoices) {
         const products = inv?.productInfo?.products;
         if (!Array.isArray(products) || products.length === 0) { unmappedSales++; continue; }
@@ -158,6 +183,15 @@ function buildEnrichment() {
             if (!bm) continue;
             const qty = Number(p.qty) || 1;
             const share = amount * (qty / totalQty);
+            const unitPrice = share / qty;
+
+            // 价格合理性闸口: 成交单价 < 目录价 30% 时判定为零件/服务污染,跳过聚合
+            const catalogPrice = catalogPrices[bm];
+            if (catalogPrice && unitPrice < catalogPrice * PARTS_CONTAMINATION_THRESHOLD) {
+                partsContaminationSkipped++;
+                continue;
+            }
+
             const b = bucket(bm);
             b.salesCount += qty;
             b.salesRevenue += share;
@@ -169,7 +203,7 @@ function buildEnrichment() {
             if (p.type) b.shipTypeHints.push(p.type);
         }
     }
-    console.log(`[enrich] 销售聚合完成: ${buckets.size} 个型号 (未匹配 ${unmappedSales} 张发票)`);
+    console.log(`[enrich] 销售聚合完成: ${buckets.size} 个型号 (未匹配 ${unmappedSales} 张发票, 零件污染剔除 ${partsContaminationSkipped} 行)`);
 
     // --- 2. 采购发票 (整机) ---
     let costLines = 0;
@@ -211,6 +245,7 @@ function buildEnrichment() {
     // --- 4. 输出 marketData 记录 ---
     const records = {};
     const salesCounts = [];
+    let priceAnomalyCount = 0;
     for (const [bm, b] of buckets) {
         const hasSales = b.salesCount > 0;
         const hasCost = b.costQty > 0;
@@ -221,6 +256,18 @@ function buildEnrichment() {
         const realMarginPct = (avgSalePrice && avgCostPrice)
             ? Math.round(((avgSalePrice - avgCostPrice) / avgSalePrice) * 1000) / 10
             : null;
+
+        // 价格异常标记: 成交均价远高于目录(catalog 偏低或含套装/服务)
+        const catalogPrice = catalogPrices[bm];
+        let priceAnomaly = null;
+        if (catalogPrice && avgSalePrice && avgSalePrice > catalogPrice * PRICE_ANOMALY_RATIO) {
+            priceAnomaly = {
+                catalogPrice,
+                ratio: Math.round((avgSalePrice / catalogPrice) * 100) / 100,
+                hint: '成交均价显著高于目录,可能是套装/服务打包,或目录价偏低待校正',
+            };
+            priceAnomalyCount++;
+        }
 
         const topCustomers = [...b.customers.entries()]
             .sort((a, b) => b[1] - a[1])
@@ -241,9 +288,11 @@ function buildEnrichment() {
             shipTypes,
             contractQty: b.contractQty || undefined,
             contractRevenue: b.contractRevenue ? Math.round(b.contractRevenue) : undefined,
+            priceAnomaly: priceAnomaly || undefined,
         };
         if (hasSales) salesCounts.push(b.salesCount);
     }
+    console.log(`[enrich] 价格异常标记 ${priceAnomalyCount} 个型号 (avgSale/catalog > ${PRICE_ANOMALY_RATIO}x)`);
 
     // 畅销阈值 = 有销量型号的 P75 分位,向上取整到 2
     salesCounts.sort((a, b) => a - b);

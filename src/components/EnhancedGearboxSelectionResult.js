@@ -694,6 +694,16 @@ const EnhancedGearboxSelectionResult = ({
                                     毛利 {selectedGearbox.marketData.realMarginPct}%
                                   </Badge>
                                 )}
+                                {selectedGearbox.marketData.priceAnomaly && (
+                                  <Badge
+                                    bg="warning"
+                                    text="dark"
+                                    className="ms-2"
+                                    title={`目录价 ${formatPrice(selectedGearbox.marketData.priceAnomaly.catalogPrice)} / 实际成交 ${selectedGearbox.marketData.priceAnomaly.ratio}x — ${selectedGearbox.marketData.priceAnomaly.hint}`}
+                                  >
+                                    <i className="bi bi-exclamation-triangle me-1"></i>价差 {selectedGearbox.marketData.priceAnomaly.ratio}x
+                                  </Badge>
+                                )}
                               </div>
                             )}
                             {selectedGearbox.marketData.salesCount > 0 && (
