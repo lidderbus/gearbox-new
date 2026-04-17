@@ -3,9 +3,13 @@
 // Computes all metrics from runtime embedded data (no server needed)
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Card, Table, Badge, Row, Col, ProgressBar, Alert } from 'react-bootstrap';
+import { Card, Table, Badge, Row, Col, ProgressBar, Alert, Modal, Button } from 'react-bootstrap';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import echarts from '../config/echartsSetup';
+import marketEnrichment from '../data/marketEnrichment.json';
+
+const MARKET_RECORDS = (marketEnrichment && marketEnrichment.records) || {};
+const MARKET_META = (marketEnrichment && marketEnrichment._meta) || {};
 
 // Critical fields that should be populated for a complete gearbox record
 // Note: embeddedData uses transferCapacity (not transmissionCapacityPerRatio)
@@ -155,6 +159,18 @@ const DataQualityDashboard = () => {
     // Missing thrust
     const missingThrust = data.filter((g) => !g.thrust || g.thrust === 0).length;
 
+    // 市场数据覆盖率 (有 ERP 销售/合同/采购记录的型号)
+    const hasMarketList = [];
+    const noMarketList = [];
+    data.forEach((g) => {
+      const hit = g.model && MARKET_RECORDS[String(g.model).toUpperCase()];
+      if (hit) hasMarketList.push(g);
+      else if (g.model) noMarketList.push(g);
+    });
+    const marketCoverage = data.length > 0
+      ? Math.round((hasMarketList.length / data.length) * 100)
+      : 0;
+
     return {
       heatmapData,
       seriesNames,
@@ -164,8 +180,13 @@ const DataQualityDashboard = () => {
       totalModels: data.length,
       missingPrice,
       missingThrust,
+      marketCoverage,
+      marketHitCount: hasMarketList.length,
+      noMarketList,
     };
   }, [data]);
+
+  const [showNoMarketModal, setShowNoMarketModal] = useState(false);
 
   if (loading) {
     return <div className="text-center py-5">加载数据中...</div>;
@@ -251,6 +272,40 @@ const DataQualityDashboard = () => {
     ],
   };
 
+  const marketGaugeOption = {
+    series: [
+      {
+        type: 'gauge',
+        startAngle: 200,
+        endAngle: -20,
+        min: 0,
+        max: 100,
+        pointer: { show: true },
+        progress: { show: true, width: 18 },
+        axisLine: { lineStyle: { width: 18 } },
+        axisTick: { show: false },
+        splitLine: { show: false },
+        axisLabel: { show: false },
+        detail: {
+          valueAnimation: true,
+          fontSize: 22,
+          offsetCenter: [0, '60%'],
+          formatter: '{value}%',
+        },
+        title: { offsetCenter: [0, '85%'], fontSize: 13 },
+        data: [{ value: analysis.marketCoverage, name: '市场数据覆盖' }],
+        itemStyle: {
+          color:
+            analysis.marketCoverage >= 30
+              ? '#52c41a'
+              : analysis.marketCoverage >= 15
+                ? '#faad14'
+                : '#1890ff',
+        },
+      },
+    ],
+  };
+
   return (
     <div className="data-quality-dashboard p-2">
       <h5 className="mb-3">
@@ -272,20 +327,37 @@ const DataQualityDashboard = () => {
           </Card>
         </Col>
         <Col md={3}>
-          <Card className="h-100">
-            <Card.Body className="d-flex flex-column justify-content-center text-center">
-              <h2 className="text-primary mb-1">{analysis.totalModels}</h2>
-              <div className="text-muted">型号总数</div>
-              <hr />
-              <h4 className="text-warning mb-1">{analysis.missingPrice}</h4>
-              <div className="text-muted">缺失价格</div>
-              <hr />
-              <h4 className="text-danger mb-1">{analysis.missingThrust}</h4>
-              <div className="text-muted">缺失推力</div>
+          <Card className="text-center h-100" style={{ cursor: 'pointer' }} onClick={() => setShowNoMarketModal(true)} title="点击查看无市场数据的型号">
+            <Card.Body className="p-2">
+              <ReactEChartsCore
+                echarts={echarts}
+                option={marketGaugeOption}
+                style={{ height: 160 }}
+                notMerge
+                lazyUpdate
+              />
+              <div className="text-muted" style={{ fontSize: 12 }}>
+                {analysis.marketHitCount}/{analysis.totalModels} 型号有 ERP 交易记录
+                {MARKET_META.marketDataTag && <span className="ms-1">({MARKET_META.marketDataTag})</span>}
+              </div>
             </Card.Body>
           </Card>
         </Col>
-        <Col md={6}>
+        <Col md={3}>
+          <Card className="h-100">
+            <Card.Body className="d-flex flex-column justify-content-center text-center p-2">
+              <h3 className="text-primary mb-1">{analysis.totalModels}</h3>
+              <div className="text-muted" style={{ fontSize: 12 }}>型号总数</div>
+              <hr className="my-2" />
+              <h4 className="text-warning mb-1">{analysis.missingPrice}</h4>
+              <div className="text-muted" style={{ fontSize: 12 }}>缺失价格</div>
+              <hr className="my-2" />
+              <h4 className="text-danger mb-1">{analysis.missingThrust}</h4>
+              <div className="text-muted" style={{ fontSize: 12 }}>缺失推力</div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={3}>
           <Card className="h-100">
             <Card.Header className="py-2">
               <strong>系列完整度排名</strong>
@@ -367,6 +439,53 @@ const DataQualityDashboard = () => {
           </Table>
         </Card.Body>
       </Card>
+
+      <Modal show={showNoMarketModal} onHide={() => setShowNoMarketModal(false)} size="lg" scrollable>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <i className="bi bi-exclamation-triangle me-2 text-warning"></i>
+            无 ERP 交易记录的型号 ({analysis.noMarketList.length})
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Alert variant="info" className="py-2">
+            这些型号在近 15 个月的销售发票 / 采购发票 / 合同中未出现。可能是冷门型号、新型号、或历史型号。
+            市场数据来源版本: <strong>{MARKET_META.marketDataTag || 'N/A'}</strong>,
+            生成时间: <small>{MARKET_META.generatedAt || '—'}</small>
+          </Alert>
+          <Table striped size="sm">
+            <thead>
+              <tr>
+                <th>型号</th>
+                <th>系列</th>
+                <th>价格</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              {analysis.noMarketList.slice(0, 30).map((g) => (
+                <tr key={g.model}>
+                  <td><code>{g.model}</code></td>
+                  <td><Badge bg="secondary">{g.series || extractSeries(g.model)}</Badge></td>
+                  <td>{g.price ? `¥${g.price.toLocaleString()}` : <span className="text-muted">询价</span>}</td>
+                  <td>
+                    {!g.price && <Badge bg="warning" text="dark" className="me-1">缺价</Badge>}
+                    <Badge bg="info">无交易</Badge>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+          {analysis.noMarketList.length > 30 && (
+            <div className="text-center text-muted">
+              仅显示前 30 条,总计 {analysis.noMarketList.length} 条
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowNoMarketModal(false)}>关闭</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

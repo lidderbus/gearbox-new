@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 52; // v52: 选型算法平滑化+评分可视化+HCL排除+数据100%补全+近似匹配增强+ERP数据同步585型号 (2026-04-10)
+export const APP_DATA_VERSION = 54; // v54: ERP市场富化数据接入 (销售/采购/合同 → marketData子对象, 72型号命中) (2026-04-17)
 
 export const DEFAULTS = {
     gearbox: {

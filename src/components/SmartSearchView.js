@@ -4,11 +4,29 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, InputGroup, ListGroup } from 'react-bootstrap';
 import { getRecommendedPump, getRecommendedCouplingInfo } from '../data/gearboxMatchingMaps';
 import { calculateFactoryPrice, getStandardDiscountRate } from '../utils/priceManager';
+import marketEnrichment from '../data/marketEnrichment.json';
+
+const MARKET_RECORDS = (marketEnrichment && marketEnrichment.records) || {};
+const HOT_THRESHOLD = (marketEnrichment && marketEnrichment._meta && marketEnrichment._meta.hotSellerThreshold) || 7;
+
+function getMarketData(model) {
+  if (!model) return null;
+  return MARKET_RECORDS[String(model).toUpperCase()] || null;
+}
 
 let embeddedData = [];
 try {
   const raw = require('../data/embeddedData').embeddedGearboxData || {};
-  Object.keys(raw).forEach(k => { if (Array.isArray(raw[k])) embeddedData = embeddedData.concat(raw[k]); });
+  Object.keys(raw).forEach(k => {
+    if (Array.isArray(raw[k])) {
+      raw[k].forEach(item => {
+        if (item && item.model) {
+          const md = getMarketData(item.model);
+          embeddedData.push(md ? { ...item, marketData: md } : item);
+        }
+      });
+    }
+  });
 } catch(e) {}
 
 function getSeries(model) {
@@ -260,9 +278,22 @@ export default function SmartSearchView({ colors, theme }) {
                         <tr><th>型号</th><th>匹配方式</th><th>相关度</th><th>系列</th><th>减速比数</th></tr>
                       </thead>
                       <tbody>
-                        {results.map((r, i) => (
+                        {results.map((r, i) => {
+                          const isHot = r.marketData && r.marketData.salesCount >= HOT_THRESHOLD;
+                          return (
                           <tr key={r.model + i} style={{ cursor: 'pointer' }} className={selectedResult?.model === r.model ? 'table-primary' : ''} onClick={() => setSelectedResult(r)}>
-                            <td><strong>{r.model}</strong></td>
+                            <td>
+                              <strong>{r.model}</strong>
+                              {isHot && (
+                                <Badge
+                                  bg="danger"
+                                  className="ms-1"
+                                  title={`累计售出 ${r.marketData.salesCount} 台 / ${r.marketData.customerCount} 家客户${r.marketData.lastSoldDate ? ' / 最近 ' + r.marketData.lastSoldDate : ''}`}
+                                >
+                                  <i className="bi bi-fire me-1"></i>畅销
+                                </Badge>
+                              )}
+                            </td>
                             <td><Badge bg={r.matchType === '模糊匹配' || r.matchType === '系列模糊' ? 'warning' : r.score >= 80 ? 'success' : r.score >= 60 ? 'info' : 'secondary'} text={r.matchType === '模糊匹配' || r.matchType === '系列模糊' ? 'dark' : undefined}>{r.matchType}</Badge>{(r.matchType === '模糊匹配' || r.matchType === '系列模糊') && <Badge bg="warning" text="dark" className="ms-1">近似</Badge>}</td>
                             <td>
                               <div className="d-flex align-items-center gap-1">
@@ -275,7 +306,8 @@ export default function SmartSearchView({ colors, theme }) {
                             <td><Badge bg="outline-secondary" text="secondary" className="border">{getSeries(r.model)}</Badge></td>
                             <td>{(Array.isArray(r.ratios) ? r.ratios : []).length}</td>
                           </tr>
-                        ))}
+                          );
+                        })}
                       </tbody>
                     </Table>
                   )}
@@ -297,6 +329,45 @@ export default function SmartSearchView({ colors, theme }) {
                     <ListGroup.Item className="d-flex justify-content-between py-1"><span>推力</span><span>{detailInfo.thrust ? `${detailInfo.thrust} kN` : '—'}</span></ListGroup.Item>
                     <ListGroup.Item className="d-flex justify-content-between py-1"><span>重量</span><span>{detailInfo.weight ? `${detailInfo.weight} kg` : '—'}</span></ListGroup.Item>
                     {detailInfo.factoryPrice > 0 && <ListGroup.Item className="d-flex justify-content-between py-1"><span>出厂价</span><strong className="text-success">¥{detailInfo.factoryPrice.toLocaleString()}</strong></ListGroup.Item>}
+                    {selectedResult.marketData?.avgSalePrice && (
+                      <ListGroup.Item className="d-flex justify-content-between py-1">
+                        <span>市场参考价 <small className="text-muted">(近15月成交均价)</small></span>
+                        <strong className="text-primary">¥{selectedResult.marketData.avgSalePrice.toLocaleString()}</strong>
+                      </ListGroup.Item>
+                    )}
+                    {selectedResult.marketData?.salesCount > 0 && (
+                      <ListGroup.Item className="d-flex justify-content-between py-1">
+                        <span>累计销量 / 客户数</span>
+                        <span>
+                          <Badge bg="info" className="me-1">{selectedResult.marketData.salesCount}台</Badge>
+                          <Badge bg="secondary">{selectedResult.marketData.customerCount}家</Badge>
+                        </span>
+                      </ListGroup.Item>
+                    )}
+                    {selectedResult.marketData?.lastSoldDate && (
+                      <ListGroup.Item className="d-flex justify-content-between py-1">
+                        <span>最近成交日期</span>
+                        <span className="text-muted">{selectedResult.marketData.lastSoldDate}</span>
+                      </ListGroup.Item>
+                    )}
+                    {selectedResult.marketData?.realMarginPct != null && (
+                      <ListGroup.Item className="d-flex justify-content-between py-1">
+                        <span>真实毛利率</span>
+                        <strong className={selectedResult.marketData.realMarginPct >= 20 ? 'text-success' : selectedResult.marketData.realMarginPct >= 10 ? 'text-warning' : 'text-danger'}>
+                          {selectedResult.marketData.realMarginPct}%
+                        </strong>
+                      </ListGroup.Item>
+                    )}
+                    {selectedResult.marketData?.topCustomers?.length > 0 && (
+                      <ListGroup.Item className="py-1">
+                        <div className="text-muted mb-1">TOP 客户</div>
+                        <div className="d-flex flex-wrap gap-1">
+                          {selectedResult.marketData.topCustomers.map((c, i) => (
+                            <Badge key={i} bg="light" text="dark" className="border">{c}</Badge>
+                          ))}
+                        </div>
+                      </ListGroup.Item>
+                    )}
                     {detailInfo.coupling && <ListGroup.Item className="d-flex justify-content-between py-1"><span>联轴器</span><span>{detailInfo.coupling}</span></ListGroup.Item>}
                     {detailInfo.pump && <ListGroup.Item className="d-flex justify-content-between py-1"><span>备用泵</span><span>{detailInfo.pump}</span></ListGroup.Item>}
                   </ListGroup>

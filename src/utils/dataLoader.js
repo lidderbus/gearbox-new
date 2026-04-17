@@ -13,6 +13,39 @@ import {
 } from './priceManager';
 // 性能优化: 导入懒加载工具
 import { loadQuickData, loadRemainingData, loadFullData, getLoadingStatus } from './dataLazyLoader';
+// 市场富化数据 (ERP 销售/采购/合同聚合, 由 scripts/enrich-from-erp.js 产出)
+import marketEnrichment from '../data/marketEnrichment.json';
+
+/**
+ * 把 marketEnrichment 按 baseModel(uppercase) 挂到 data 各 collection 数组的每条记录上。
+ * 原地修改 — 返回 _marketDataMeta 方便 UI 读取 hotSellerThreshold / marketDataTag。
+ */
+export function applyMarketEnrichment(data) {
+  if (!data || !marketEnrichment || !marketEnrichment.records) return null;
+  const records = marketEnrichment.records;
+  let hits = 0;
+  let total = 0;
+  for (const key of Object.keys(data)) {
+    if (!Array.isArray(data[key])) continue;
+    if (key === 'flexibleCouplings' || key === 'standbyPumps') continue;
+    for (const item of data[key]) {
+      if (!item || !item.model) continue;
+      total++;
+      const md = records[String(item.model).toUpperCase()];
+      if (md) {
+        item.marketData = md;
+        hits++;
+      }
+    }
+  }
+  data._marketDataMeta = {
+    ...marketEnrichment._meta,
+    appliedCount: hits,
+    totalModels: total,
+    coveragePct: total > 0 ? Math.round((hits / total) * 1000) / 10 : 0,
+  };
+  return data._marketDataMeta;
+}
 
 export async function loadAndPrepareData(options = {}) {
   const { onProgress } = options;
@@ -78,10 +111,17 @@ export async function loadAndPrepareData(options = {}) {
     if (!validation.success) {
       logger.warn("DataLoader: 验证发现问题，但继续运行:", validation.issues);
     }
-    
+
+    // 6.5 市场富化数据挂载 (ERP → marketData 子对象)
+    onProgress?.('merging market enrichment');
+    const meta = applyMarketEnrichment(finalData);
+    if (meta) {
+      logger.debug(`DataLoader: 市场数据挂载完成 ${meta.appliedCount}/${meta.totalModels} (${meta.coveragePct}%)`);
+    }
+
     // 7. 保存到本地
     saveToLocalStorage(finalData);
-    
+
     return finalData;
     
   } catch (error) {
@@ -226,6 +266,7 @@ export async function loadQuickModeData(options = {}) {
     const adaptedData = adaptBasicData(baseData);
     const priceFixResult = processPriceData(adaptedData);
     const finalData = fixSpecificModelPrices(priceFixResult.data);
+    applyMarketEnrichment(finalData);
 
     // 4. 后台加载剩余数据 (使用闭包保存联轴器和备用泵引用)
     setTimeout(() => {
@@ -245,6 +286,7 @@ export async function loadQuickModeData(options = {}) {
             const fullAdaptedData = adaptBasicData(fullBaseData);
             const fullPriceResult = processPriceData(fullAdaptedData);
             const fullFinalData = fixSpecificModelPrices(fullPriceResult.data);
+            applyMarketEnrichment(fullFinalData);
             onBackgroundComplete(fullFinalData);
           }
         }
