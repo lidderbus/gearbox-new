@@ -12,7 +12,7 @@ import { DataCompletenessBadge } from './selection/GearboxScorer';
 import { useIsMobile } from '../hooks/useIsMobile';
 import SwipeableResultCards from './responsive/SwipeableResultCards';
 import { getManualInfo } from '../data/gearboxManuals';
-import { formatPrice, getDisplayPrice, getPriceModeLabel } from '../utils/priceFormatter';
+import { formatPrice, getDisplayPrice, getPriceModeLabel, isPriceMissing, getPriceBadge } from '../utils/priceFormatter';
 import { getPriceMode, setPriceMode, PRICE_MODE } from '../data/priceDiscount';
 import MarginIndicator from './selection/MarginIndicator';
 import RecommendationReasonCard from './selection/RecommendationReasonCard';
@@ -27,6 +27,9 @@ import { calculatePowerRange, extractSeriesFromModel } from '../utils/gearboxDat
 import EquipmentInfoCard from './EquipmentInfoCard';
 import SelectionComparisonCharts from './SelectionComparisonCharts';
 import marketEnrichment from '../data/marketEnrichment.json';
+import { evaluatePTOThermalMargin } from '../utils/ptoThermalMargin';
+import { resolvePackage } from '../utils/packageResolver';
+import { savePackageQuotation } from '../utils/quotationManager';
 
 // 导入子组件
 import {
@@ -60,6 +63,7 @@ const EnhancedGearboxSelectionResult = ({
   onSelectGearbox,
   onGenerateQuotation,
   onGenerateAgreement,
+  onGenerateFullPackage,
   colors,
   theme = 'light',
   propulsionConfig = null
@@ -332,11 +336,29 @@ const EnhancedGearboxSelectionResult = ({
           </Alert>
         )}
 
-        <div className="d-flex justify-content-end mt-4">
+        {/* UI-接入#2 (2026-04-24): 冰级推力放大提示 */}
+        {result.iceFactor > 1 && result.thrustRequirementRaw > 0 && (
+          <Alert variant="info" className="mt-2">
+            <i className="bi bi-snow me-2"></i>
+            冰级 <strong>{result.iceClass}</strong> 已激活,推力需求按 <strong>×{result.iceFactor}</strong> 放大:
+            {' '}{result.thrustRequirementRaw.toFixed(1)}kN → <strong>{result.thrustRequirement.toFixed(1)}kN</strong>
+            {' '}(考虑冰块冲击峰值载荷)
+          </Alert>
+        )}
+
+        <div className="d-flex justify-content-end mt-4 gap-2 flex-wrap">
+          {onGenerateFullPackage && (
+            <Button
+              variant="primary"
+              onClick={onGenerateFullPackage}
+              title="一键生成报价单 + 技术协议,并自动跳转合同 Tab"
+            >
+              <i className="bi bi-stack me-1"></i> 一键生成完整文件包
+            </Button>
+          )}
           <Button
             variant="outline-primary"
             onClick={onGenerateQuotation}
-            className="me-2"
           >
             <i className="bi bi-currency-yen me-1"></i> 生成报价单
           </Button>
@@ -420,7 +442,16 @@ const EnhancedGearboxSelectionResult = ({
                     </td>
                     <td>{g.thrust || '-'}</td>
                     <td>{g.weight || '-'}</td>
-                    <td>{(() => { const p = getDisplayPrice(g); return p > 0 ? `${(p/10000).toFixed(1)}万` : '询价'; })()}</td>
+                    <td>{(() => {
+                      const p = getDisplayPrice(g);
+                      if (p > 0) return `${(p/10000).toFixed(1)}万`;
+                      const badge = getPriceBadge(g);
+                      return (
+                        <Badge bg={badge.variant} title={badge.tooltip}>
+                          <i className="bi bi-telephone me-1"></i>{badge.text}
+                        </Badge>
+                      );
+                    })()}</td>
                     {hasPartials && (
                       <td style={{fontSize:'0.7rem', maxWidth:160}}>
                         {g.failureReason ? (
@@ -777,6 +808,18 @@ const EnhancedGearboxSelectionResult = ({
                   const highScore = others.filter(({ gearbox }) => (gearbox.score || 0) >= 60).slice(0, 10);
                   const lowScore = others.filter(({ gearbox }) => (gearbox.score || 0) < 60).slice(0, 10);
 
+                  // v62: 无备选时显示占位, 不再展示空表头 (0/0)
+                  if (others.length === 0) {
+                    return (
+                      <Card className="mb-3" style={{ backgroundColor: colors?.card, borderColor: colors?.border }}>
+                        <Card.Body className="text-center text-muted py-3">
+                          <i className="bi bi-info-circle me-2"></i>暂无其他匹配齿轮箱
+                          <div style={{ fontSize: '0.8rem', marginTop: 4 }}>当前推荐已是最优匹配, 或工况筛选过严</div>
+                        </Card.Body>
+                      </Card>
+                    );
+                  }
+
                   const renderRow = ({ gearbox, index }) => (
                     <tr key={gearbox.model + index} className={gearbox.isPartialMatch ? 'table-warning' : ''}>
                       <td>
@@ -893,6 +936,9 @@ const EnhancedGearboxSelectionResult = ({
               needsPumpFlag={needsPumpFlag}
               selectedGearbox={selectedGearbox}
               validation={validationResults.pump}
+              inputSpeed={result?.engineSpeed}
+              ratio={selectedGearbox?.selectedRatio}
+              temperature={result?.requirementData?.temperature}
               colors={colors}
             />
           </Tab>
@@ -904,6 +950,38 @@ const EnhancedGearboxSelectionResult = ({
               selectedGearbox={selectedGearbox}
               colors={colors}
             />
+            {/* UI-接入#3 (2026-04-24): PTO/PTI 热功率建模 */}
+            {result?.hybridConfig && (result.hybridConfig.modes?.pto || result.hybridConfig.modes?.pti) && (() => {
+              const tm = evaluatePTOThermalMargin({
+                enginePower: result.enginePower,
+                ratedCapacity: selectedGearbox?.selectedCapacity,
+                engineSpeed: result.engineSpeed,
+                hybridConfig: result.hybridConfig
+              });
+              const utilVariant = tm.utilizationPct > 100 ? 'danger'
+                : tm.utilizationPct > 85 ? 'warning' : 'success';
+              return (
+                <Alert variant={utilVariant} className="mt-3">
+                  <div className="d-flex align-items-center mb-2">
+                    <i className="bi bi-thermometer-half me-2" style={{ fontSize: '1.2rem' }}></i>
+                    <strong>PTO/PTI 热功率评估</strong>
+                    <Badge bg={utilVariant} className="ms-2">热利用率 {tm.utilizationPct}%</Badge>
+                    {!tm.safe && <Badge bg="danger" className="ms-1">过热风险</Badge>}
+                  </div>
+                  <div className="small mb-1">
+                    {tm.notes}
+                  </div>
+                  <div className="small">
+                    负载: <strong>{tm.thermalLoadKW} kW</strong> / 散热上限: <strong>{tm.thermalLimitKW} kW</strong>
+                  </div>
+                  {tm.warnings.length > 0 && (
+                    <ul className="mb-0 mt-2 ps-3" style={{ fontSize: '0.82rem' }}>
+                      {tm.warnings.map((w, i) => <li key={i}>{w}</li>)}
+                    </ul>
+                  )}
+                </Alert>
+              );
+            })()}
           </Tab>
 
           {/* 可视化对比标签页 */}
@@ -956,6 +1034,47 @@ const EnhancedGearboxSelectionResult = ({
 
           {/* 组合选型标签页 */}
           <Tab eventKey="combined" title="组合选型">
+            {/* S2: 配套包推荐 (跨系列扩展到 HC/HCT/HCD) */}
+            {(() => {
+              if (!selectedGearbox?.model) return null;
+              const pkg = resolvePackage(selectedGearbox.model);
+              if (!pkg) return null;
+              const handleGeneratePackage = () => {
+                try {
+                  const ok = savePackageQuotation(pkg, {});
+                  if (ok) toast.success('配套包已保存到报价管理');
+                  else toast.error('保存配套包失败');
+                } catch (e) {
+                  toast.error(`保存配套包失败: ${e.message || e}`);
+                }
+              };
+              return (
+                <Alert variant="primary" className="mb-3 d-flex align-items-start justify-content-between">
+                  <div style={{ flex: 1 }}>
+                    <div className="d-flex align-items-center mb-1">
+                      <i className="bi bi-box-seam me-2"></i>
+                      <strong>配套包推荐</strong>
+                      <Badge bg="info" className="ms-2">来源: {pkg.source}</Badge>
+                      {pkg.hasInquiry && <Badge bg="warning" text="dark" className="ms-1">含询价项</Badge>}
+                    </div>
+                    <small className="text-muted">
+                      齿轮箱 <strong>{pkg.gearbox?.model || '—'}</strong>
+                      {' + '} 高弹 <strong>{pkg.coupling?.model || '—'}</strong>
+                      {' + '} 备用泵 <strong>{pkg.pump?.model || '—'}</strong>
+                      <br/>
+                      包装价: {pkg.packagePrice != null
+                        ? <strong className="text-danger">{formatPrice(pkg.packagePrice)}</strong>
+                        : <span>组件价之和 {formatPrice(pkg.totalCalculated)} (含询价)</span>
+                      }
+                      <span className="ms-2 text-muted">{pkg.priceVersionTag}</span>
+                    </small>
+                  </div>
+                  <Button size="sm" variant="primary" onClick={handleGeneratePackage}>
+                    <i className="bi bi-save me-1"></i>一键生成配套包报价
+                  </Button>
+                </Alert>
+              );
+            })()}
             <Row>
               <Col md={6}>
                 <h6 style={{ color: colors?.headerText }}>齿轮箱</h6>
@@ -1182,6 +1301,15 @@ const EnhancedGearboxSelectionResult = ({
           >
             <i className="bi bi-printer me-1"></i> 导出摘要
           </Button>
+          {onGenerateFullPackage && (
+            <Button
+              variant="primary"
+              onClick={onGenerateFullPackage}
+              title="一键生成报价单 + 技术协议,并自动跳转合同 Tab"
+            >
+              <i className="bi bi-stack me-1"></i> 一键生成完整文件包
+            </Button>
+          )}
           <Button
             variant="outline-primary"
             onClick={onGenerateQuotation}

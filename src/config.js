@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 54; // v54: ERP市场富化数据接入 (销售/采购/合同 → marketData子对象, 72型号命中) (2026-04-17)
+export const APP_DATA_VERSION = 64; // v64: 配套设备模块 10 项优化 — 价格水印+泵 enrichment+多选对比+扭矩对比筛选+评分透明+配套包HC/HCT/HCD+泵反算+扭振 1-DOF+SI/英制 (2026-04-25)
 
 export const DEFAULTS = {
     gearbox: {

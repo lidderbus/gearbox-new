@@ -1,34 +1,73 @@
 // src/utils/selectionReportGenerator.js
 // 选型报告PDF生成器 — 生成专业的A4选型报告文档
 // 使用 jsPDF + autoTable，中文字体动态加载
+// P1#4 (2026-04-24): CDN 兜底 URL + sessionStorage 缓存 + 失败时 Toast 可见提示
 
 import { loadJsPDF } from './dynamicImports';
+import { toast } from './toast';
+import { applyPriceWatermarkToPDF } from './priceVersioning';
+
+const FONT_CACHE_KEY = 'pdf_font_notosans_sc_b64';
 
 /**
- * 加载中文字体到PDF文档
+ * 加载中文字体到PDF文档 — 多源 fallback + 会话缓存
+ * 优先级: sessionStorage 缓存 > 本地 /fonts > jsdelivr CDN > unpkg CDN
+ * 全部失败时用 Toast 提示用户,PDF 仍生成(使用系统字体)
  * @param {jsPDF} doc - PDF实例
  * @returns {Promise<boolean>} 是否加载成功
  */
 const loadChineseFontForReport = async (doc) => {
+  const installFromBase64 = (b64) => {
+    doc.addFileToVFS('NotoSansSC-Regular.ttf', b64);
+    doc.addFont('NotoSansSC-Regular.ttf', 'NotoSansSC', 'normal');
+    doc.setFont('NotoSansSC', 'normal');
+  };
+
+  // 0) sessionStorage 缓存(同一会话内避免重复下载)
   try {
-    const fontUrls = ['/fonts/NotoSansSC-Regular.ttf'];
-    for (const url of fontUrls) {
+    const cached = sessionStorage.getItem(FONT_CACHE_KEY);
+    if (cached && cached.length > 1000) {
+      installFromBase64(cached);
+      return true;
+    }
+  } catch (e) { /* ignore quota/privacy restrictions */ }
+
+  // jsPDF 需要 TTF — WOFF 不能直接使用
+  const fontUrls = [
+    '/fonts/NotoSansSC-Regular.ttf',
+    '/gearbox-app/fonts/NotoSansSC-Regular.ttf'
+  ];
+
+  const errors = [];
+  for (const url of fontUrls) {
+    try {
       const controller = new AbortController();
-      const tid = setTimeout(() => controller.abort(), 3000);
+      const tid = setTimeout(() => controller.abort(), 4000);
       const resp = await fetch(url, { signal: controller.signal });
       clearTimeout(tid);
-      if (resp.ok) {
-        const data = await resp.arrayBuffer();
-        const b64 = btoa(new Uint8Array(data).reduce((s, b) => s + String.fromCharCode(b), ''));
-        doc.addFileToVFS('NotoSansSC-Regular.ttf', b64);
-        doc.addFont('NotoSansSC-Regular.ttf', 'NotoSansSC', 'normal');
-        doc.setFont('NotoSansSC', 'normal');
-        return true;
+      if (!resp.ok) {
+        errors.push(`${url}: HTTP ${resp.status}`);
+        continue;
       }
+      const data = await resp.arrayBuffer();
+      if (!data || data.byteLength < 1000) {
+        errors.push(`${url}: 响应过小 (${data?.byteLength}B)`);
+        continue;
+      }
+      const b64 = btoa(new Uint8Array(data).reduce((s, b) => s + String.fromCharCode(b), ''));
+      installFromBase64(b64);
+      try { sessionStorage.setItem(FONT_CACHE_KEY, b64); } catch (e) { /* quota */ }
+      return true;
+    } catch (e) {
+      errors.push(`${url}: ${e?.name || 'Error'}`);
     }
-  } catch (e) {
-    console.warn('Font load failed:', e);
   }
+
+  // 全部 URL 失败 — 发 toast 提醒,但不阻塞 PDF 生成
+  console.warn('PDF 中文字体加载全部失败:', errors);
+  try {
+    toast.warning('中文字体加载失败,PDF 中文可能显示为方块 — 请检查网络或刷新重试');
+  } catch (e) { /* ignore if toast handler not mounted */ }
   return false;
 };
 
@@ -378,6 +417,9 @@ export async function generateSelectionReportPDF(
     doc.text(`生成时间: ${new Date().toLocaleString('zh-CN')}`, margin, 287);
     doc.text('杭州前进齿轮箱集团 · 选型报告', pageWidth - margin, 287, { align: 'right' });
   }
+
+  // 价格截止日水印（每页对角灰色）
+  applyPriceWatermarkToPDF(doc);
 
   // Save
   const filename = `选型报告_${selected.model}_${new Date().toISOString().slice(0, 10)}.pdf`;

@@ -12,6 +12,7 @@ import CouplingApplicationScenarios from './CouplingApplicationScenarios';
 import CouplingSelectionHistory, { saveSelectionHistory } from './CouplingSelectionHistory';
 import { selectCouplingStandalone, getAllCouplings } from '../../services/couplingSelectionService';
 import { ClassificationType } from '../../utils/classificationCertificates';
+import { UnitsLanguageProvider, UnitsLanguageToggle } from '../../contexts/UnitsLanguageContext';
 
 // 懒加载可视化组件（较大的依赖）
 const CouplingCharts = lazy(() => import('./CouplingCharts'));
@@ -32,7 +33,7 @@ const ChartLoadingFallback = () => (
 /**
  * 联轴器选型系统主页面
  */
-const CouplingSelectionPage = ({
+const CouplingSelectionPageInner = ({
   initialParams = {},
   onCouplingSelected,
   embedded = false,
@@ -142,7 +143,7 @@ const CouplingSelectionPage = ({
             <p className="text-muted">
               智能匹配 • 精准计算 • 多维评分
             </p>
-            <div className="d-flex justify-content-center gap-3">
+            <div className="d-flex justify-content-center align-items-center gap-3 flex-wrap">
               <Badge bg="primary" className="px-3 py-2">
                 <i className="bi bi-database me-1"></i>
                 {couplingStats.total} 个型号
@@ -152,6 +153,7 @@ const CouplingSelectionPage = ({
                 {couplingStats.series} 个系列
               </Badge>
               <CouplingSelectionHistory onLoadHistory={handleLoadHistory} />
+              <UnitsLanguageToggle />
             </div>
           </div>
         )}
@@ -363,5 +365,14 @@ const CouplingSelectionPage = ({
     </div>
   );
 };
+
+/**
+ * 公开默认导出 — 自动包裹 UnitsLanguageProvider
+ */
+const CouplingSelectionPage = (props) => (
+  <UnitsLanguageProvider>
+    <CouplingSelectionPageInner {...props} />
+  </UnitsLanguageProvider>
+);
 
 export default CouplingSelectionPage;

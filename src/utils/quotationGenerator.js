@@ -8,8 +8,10 @@
 // import * as XLSX from 'xlsx';
 import { loadXLSX, loadJsPDF, loadFileSaver } from './dynamicImports';
 import { getGWPackagePriceConfig, checkPackageMatch } from '../data/packagePriceConfig';
+import { getPriceMode, PRICE_MODE } from '../data/priceDiscount';
 // 导入增强版备用泵需求判断函数
 import { needsStandbyPump } from '../utils/enhancedPumpSelection';
+import { applyPriceWatermarkToPDF, getExportWatermarkText } from './priceVersioning';
 
 /**
  * 供方信息配置 — 集中管理，便于维护
@@ -213,7 +215,7 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
             package: gearboxPackagePrice,
             market: gearboxMarketPrice
         },
-        selectedPrice: 'market', // Default to market price
+        selectedPrice: getPriceMode() === PRICE_MODE.INTERNAL ? 'factory' : 'market',
         get unitPrice() {
             return this.prices[this.selectedPrice] || 0;
         },
@@ -973,7 +975,10 @@ export async function exportQuotationToPDF(quotation, filename = '报价单') {
     doc.text(`付款条件：${quotation.paymentTerms}`, 14, finalY + 32);
     doc.text(`交货时间：${quotation.deliveryTime}`, 14, finalY + 39);
     doc.text(`其他说明：${quotation.notes}`, 14, finalY + 46);
-    
+
+    // 价格截止日水印（每页对角灰色）
+    applyPriceWatermarkToPDF(doc);
+
     // 保存PDF
     doc.save(`${filename}.pdf`);
 }

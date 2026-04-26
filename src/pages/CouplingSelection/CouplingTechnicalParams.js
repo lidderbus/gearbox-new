@@ -77,6 +77,79 @@ const CouplingTechnicalParams = ({
     </Table>
   );
 
+  // M1: 渲染 1-DOF 扭振估算
+  const renderTorsionalEstimate = () => {
+    const est = coupling.torsionalEstimate;
+    if (!est || !est.success) return null;
+    const lowMargin = est.marginPct != null && est.marginPct < 10;
+    const inAvoid = est.withinAvoidanceZone;
+    const variant = (lowMargin || inAvoid) ? 'danger' : 'success';
+    return (
+      <Card className={`mt-3 border-${variant}`}>
+        <Card.Header className={`bg-${variant} text-white py-2`}>
+          <i className="bi bi-activity me-2"></i>
+          扭振 1-DOF 快速估算
+          <Badge bg="light" text="dark" className="ms-2" style={{ fontSize: '0.7em' }}>非工程级</Badge>
+        </Card.Header>
+        <Card.Body>
+          <Table size="sm" borderless className="mb-2">
+            <tbody>
+              <tr>
+                <td width="40%"><strong>第一阶共振转速估算</strong></td>
+                <td><strong>{est.firstNaturalSpeed_rpm} rpm</strong></td>
+              </tr>
+              <tr>
+                <td>等效惯量 J<sub>eq</sub></td>
+                <td>{est.Jeq} kg·m²</td>
+              </tr>
+              <tr>
+                <td>角频率 ω</td>
+                <td>{est.omega_rad_s} rad/s</td>
+              </tr>
+              {est.marginPct != null && (
+                <tr className={lowMargin ? 'table-danger' : ''}>
+                  <td><strong>距工作转速裕度</strong></td>
+                  <td>
+                    <strong>{est.marginPct}%</strong>
+                    {lowMargin && <span className="ms-2 text-danger">⚠ 裕度不足 10%</span>}
+                  </td>
+                </tr>
+              )}
+              {inAvoid && (
+                <tr className="table-danger">
+                  <td><strong>避振区间命中</strong></td>
+                  <td className="text-danger">⚠ 一阶共振转速落入指定避振区间，工程必须复算</td>
+                </tr>
+              )}
+              <tr>
+                <td>公式</td>
+                <td><code>{est.formula}</code></td>
+              </tr>
+            </tbody>
+          </Table>
+          <Button
+            size="sm"
+            variant="outline-primary"
+            onClick={() => {
+              try {
+                sessionStorage.setItem('torsional_prefill', JSON.stringify({
+                  source: 'coupling-quick-estimate',
+                  couplingModel: coupling.model,
+                  k: coupling.dynamicStiffness ?? coupling.staticStiffness,
+                  estimate: est,
+                  ts: new Date().toISOString()
+                }));
+              } catch (e) { /* ignore storage failures */ }
+              window.location.hash = '#/torsional-vibration';
+            }}
+          >
+            <i className="bi bi-arrow-up-right-square me-1"></i>跳转到工程级扭振模块复算
+          </Button>
+        </Card.Body>
+      </Card>
+    );
+  };
+
   // 渲染价格信息
   const renderPriceInfo = () => (
     <Table bordered hover size="sm">
@@ -273,6 +346,7 @@ const CouplingTechnicalParams = ({
         >
           <Tab eventKey="technical" title="技术参数">
             {renderTechnicalParams()}
+            {renderTorsionalEstimate()}
           </Tab>
           <Tab eventKey="price" title="价格信息">
             {renderPriceInfo()}

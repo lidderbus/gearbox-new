@@ -37,12 +37,16 @@ export const saveQuotation = (quotation, name, projectInfo) => {
     localStorage.setItem('quotationSaves', JSON.stringify(updatedSaves));
 
     // 同步到 quotationStore (文档管理仪表板)
+    // P0-1: 从 session 读取 current_project_id, 让报价单挂入项目主线
+    let currentProjectId = null;
+    try { currentProjectId = sessionStorage.getItem('current_project_id') || null; } catch (e) { /* ignore */ }
     try {
       quotationStore.save({
         id: saveId,
         docNumber: quotation.quotationNumber || saveId,
         customerName: projectInfo?.customerName || quotation.customerInfo?.name,
         projectName: projectInfo?.projectName,
+        projectId: currentProjectId || undefined,
         items: quotation.items,
         totalAmount: quotation.totalAmount,
         status: 'draft',
@@ -50,6 +54,23 @@ export const saveQuotation = (quotation, name, projectInfo) => {
       });
     } catch (e) {
       console.warn('同步报价单到 quotationStore 失败:', e);
+    }
+
+    // 同步到 gearbox_quotations (智能报价引擎+趋势分析)
+    try {
+      const gqList = JSON.parse(localStorage.getItem('gearbox_quotations') || '[]');
+      gqList.unshift({
+        id: saveId,
+        date: new Date().toISOString(),
+        items: quotation.items || [],
+        totalAmount: quotation.totalAmount,
+        discountPercentage: quotation.discountPercentage || quotation.options?.discountPercentage || 10,
+        customerInfo: { name: projectInfo?.customerName || quotation.customerInfo?.name || '' },
+        model: quotation.selectedComponents?.gearbox?.model || quotation.items?.[0]?.model || '',
+      });
+      localStorage.setItem('gearbox_quotations', JSON.stringify(gqList.slice(0, 100)));
+    } catch (e) {
+      console.warn('同步报价单到 gearbox_quotations 失败:', e);
     }
 
     // 建立询单→报价单关联 (文档溯源链)
@@ -68,6 +89,46 @@ export const saveQuotation = (quotation, name, projectInfo) => {
     console.error("保存报价单错误:", error);
     return false;
   }
+};
+
+/**
+ * S2: 保存"配套包"报价 (齿轮箱+联轴器+备用泵 一键打包)
+ * @param {Object} pkg - resolvePackage() 的输出 { gearbox, coupling, pump, packagePrice, ... }
+ * @param {Object} [meta] - { customerName, projectName, name }
+ * @returns {boolean}
+ */
+export const savePackageQuotation = (pkg, meta = {}) => {
+  if (!pkg || !pkg.gearbox?.model) {
+    console.error('savePackageQuotation: 配套包数据无效');
+    return false;
+  }
+  const items = [];
+  if (pkg.gearbox)  items.push({ type: 'gearbox',  model: pkg.gearbox.model,  price: pkg.gearbox.price ?? 0 });
+  if (pkg.coupling) items.push({ type: 'coupling', model: pkg.coupling.model, price: pkg.coupling.price ?? 0 });
+  if (pkg.pump)     items.push({ type: 'pump',     model: pkg.pump.model,     price: pkg.pump.price ?? 0 });
+
+  // saveQuotation 要求 success=true; 包装为兼容形态
+  const wrapper = {
+    success: true,
+    type: 'package',
+    quotationNumber: `PKG-${Date.now()}`,
+    selectedComponents: { gearbox: { model: pkg.gearbox.model } },
+    items,
+    totalAmount: pkg.packagePrice ?? pkg.totalCalculated ?? 0,
+    customerInfo: { name: meta.customerName || '配套包待报价' },
+    options: { discountPercentage: 10 },
+    notes: `配套包来源: ${pkg.source} · ${pkg.priceVersionTag}`,
+    hasInquiry: !!pkg.hasInquiry,
+    generatedAt: pkg.generatedAt
+  };
+  return saveQuotation(
+    wrapper,
+    meta.name || `配套包_${pkg.gearbox.model}_${new Date().toISOString().slice(0,10)}`,
+    {
+      customerName: meta.customerName || '配套包待报价',
+      projectName: meta.projectName || `${pkg.gearbox.model} 整机配套`
+    }
+  );
 };
 
 // 获取保存的报价单列表
@@ -142,6 +203,16 @@ export const deleteSavedQuotation = (quotationId) => {
     }
     
     localStorage.setItem('quotationSaves', JSON.stringify(filtered));
+
+    // 同步删除 gearbox_quotations
+    try {
+      const gqList = JSON.parse(localStorage.getItem('gearbox_quotations') || '[]');
+      const gqFiltered = gqList.filter(q => q.id !== quotationId);
+      if (gqFiltered.length !== gqList.length) {
+        localStorage.setItem('gearbox_quotations', JSON.stringify(gqFiltered));
+      }
+    } catch (e) { /* ignore */ }
+
     return true;
   } catch (error) {
     console.error("删除保存报价单错误:", error);

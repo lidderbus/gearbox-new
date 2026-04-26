@@ -2,6 +2,7 @@
 // 联轴器选型服务 - 封装选型算法并提供简洁API
 
 import { enhancedCouplingSelection } from '../utils/enhancedCouplingSelection';
+import { estimateFirstResonance } from '../utils/couplingTorsionalQuickEstimate';
 // 性能优化: 改为动态导入
 // import { flexibleCouplings } from '../data/flexibleCouplings';
 import { couplingWorkFactorMap, getTemperatureFactor, getWorkFactor, WorkFactorMode, ScoringMode, getScoringWeights } from '../data/gearboxMatchingMaps';
@@ -131,7 +132,8 @@ export const selectCouplingStandalone = (params) => {
     workFactorMode = 'FACTORY',  // 工况系数模式: 'FACTORY' | 'JB_CCS'
     temperature = 30,
     hasCover = false,
-    needDetachable = false
+    needDetachable = false,
+    torsionalInputs = null   // M1: 用户填写的扭振输入
   } = params;
 
   // 验证必要参数
@@ -163,6 +165,23 @@ export const selectCouplingStandalone = (params) => {
     needDetachable
   });
 
+  // M1: 给每个候选附加 1-DOF 扭振估算 (k 来自候选的动态扭转刚度)
+  if (torsionalInputs && Array.isArray(result.recommendations)) {
+    result.recommendations = result.recommendations.map(c => {
+      const k = c.dynamicStiffness ?? c.staticStiffness ?? null;
+      if (!k) return c;
+      const estimate = estimateFirstResonance({
+        couplingTorsionalStiffness: k,
+        flywheelInertia: torsionalInputs.flywheelInertia,
+        shaftEquivalentInertia: torsionalInputs.shaftEquivalentInertia,
+        propellerInertia: torsionalInputs.propellerInertia,
+        operatingSpeed: speed,
+        avoidanceZones: torsionalInputs.avoidanceZones || []
+      });
+      return { ...c, torsionalEstimate: estimate };
+    });
+  }
+
   // 增强返回结果
   return {
     ...result,
@@ -174,8 +193,10 @@ export const selectCouplingStandalone = (params) => {
       stFactor: torqueCalc.stFactor,
       workFactorMode: torqueCalc.workFactorMode,
       requiredTorque_kNm: torqueCalc.requiredTorque_kNm,
-      gearboxModel: gearboxModel || '未指定'
-    }
+      gearboxModel: gearboxModel || '未指定',
+      torsionalInputsUsed: !!torsionalInputs
+    },
+    torsionalInputs
   };
 };
 

@@ -6,6 +6,8 @@
 // import html2canvas from 'html2canvas';
 import { loadJsPDF, loadHtml2Canvas } from './dynamicImports';
 import { logger } from '../config/logging';
+import DOMPurify from 'dompurify';
+import { applyPriceWatermarkToPDF } from './priceVersioning';
 
 // 中文字体Base64压缩数据（仅供示例，实际使用需要完整字体数据）
 const notoSansSCBase64 = 'AAEKS...'; // 此处省略实际Base64字体数据，实际使用时需要完整字体
@@ -305,6 +307,9 @@ export const optimizedHtmlToPdf = async (element, options = {}) => {
     // 移除临时元素
     document.body.removeChild(container);
 
+    // 价格截止日水印（每页对角灰色）
+    applyPriceWatermarkToPDF(pdf);
+
     // 保存PDF
     pdf.save(filename);
     debug && logger.debug(`PDF成功保存: ${filename}`);
@@ -439,7 +444,12 @@ export const exportHtmlContentToPDF = async (htmlContent, filename = 'document',
   try {
     // 创建临时容器
     const tempContainer = document.createElement('div');
-    tempContainer.innerHTML = htmlContent;
+    tempContainer.innerHTML = DOMPurify.sanitize(htmlContent, {
+      ALLOWED_TAGS: ['div', 'span', 'table', 'tr', 'td', 'th', 'thead', 'tbody', 'tfoot',
+        'h1', 'h2', 'h3', 'h4', 'h5', 'p', 'br', 'hr', 'strong', 'em', 'b', 'i',
+        'img', 'ul', 'ol', 'li', 'sup', 'sub', 'section', 'header', 'footer', 'style'],
+      ALLOWED_ATTR: ['class', 'style', 'id', 'src', 'alt', 'width', 'height', 'colspan', 'rowspan']
+    });
     tempContainer.style.position = 'absolute';
     tempContainer.style.left = '-9999px';
     tempContainer.style.top = '0';

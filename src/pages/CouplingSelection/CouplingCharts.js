@@ -2,10 +2,12 @@
  * 高弹联轴器选型 - ECharts数据可视化组件
  * 包含: 扭矩对比柱状图、评分雷达图、扭矩余量仪表盘
  */
-import React, { useMemo, useRef, useEffect } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import echarts from '../../config/echartsSetup';
-import { Card, Row, Col } from 'react-bootstrap';
+import { Card, Row, Col, Form, Button, Badge } from 'react-bootstrap';
+import LazyMountOnVisible from '../../components/common/LazyMountOnVisible';
+import { exportCouplingComparisonToExcel } from '../../utils/dataExporter';
 
 // 颜色配置
 const CHART_COLORS = {
@@ -542,6 +544,59 @@ const CouplingCharts = ({
   calculationDetails,
   colors = {}
 }) => {
+  // S4: 多联轴器对比图筛选 / 排序状态 (Hooks 必须在任何提前 return 之前调用)
+  const [filterClass, setFilterClass] = useState('all');     // 船检
+  const [filterSpeedBand, setFilterSpeedBand] = useState('all'); // 转速段
+  const [filterTorqueBand, setFilterTorqueBand] = useState('all'); // 扭矩段
+  const [sortKey, setSortKey] = useState('rated-desc');     // 排序键
+
+  // 多联轴器候选 (取前 12, 由筛选/排序进一步缩窄)
+  const candidatePool = recommendations?.slice(0, 12) || (selectedCoupling ? [selectedCoupling] : []);
+
+  const filteredSortedCouplings = useMemo(() => {
+    const inSpeedBand = (c) => {
+      const speed = c.maxSpeed || c.ratedSpeed || 0;
+      switch (filterSpeedBand) {
+        case '600-900':   return speed >= 600 && speed < 900;
+        case '900-1200':  return speed >= 900 && speed < 1200;
+        case '1200-1500': return speed >= 1200 && speed < 1500;
+        case '1500+':     return speed >= 1500;
+        default: return true;
+      }
+    };
+    const inTorqueBand = (c) => {
+      const t = c.ratedTorque || 0;
+      switch (filterTorqueBand) {
+        case '<10':    return t < 10;
+        case '10-50':  return t >= 10 && t < 50;
+        case '50-200': return t >= 50 && t < 200;
+        case '>200':   return t >= 200;
+        default: return true;
+      }
+    };
+    const matchClass = (c) => {
+      if (filterClass === 'all') return true;
+      const certs = c.certifications || c.classificationApproved || [];
+      const arr = Array.isArray(certs) ? certs : String(certs).split(/[,\s]+/);
+      return arr.some(v => String(v).toUpperCase().includes(filterClass.toUpperCase()));
+    };
+
+    let list = candidatePool.filter(c => inSpeedBand(c) && inTorqueBand(c) && matchClass(c));
+
+    list = [...list].sort((a, b) => {
+      switch (sortKey) {
+        case 'rated-asc':  return (a.ratedTorque || 0) - (b.ratedTorque || 0);
+        case 'rated-desc': return (b.ratedTorque || 0) - (a.ratedTorque || 0);
+        case 'speed-asc':  return (a.maxSpeed || 0) - (b.maxSpeed || 0);
+        case 'speed-desc': return (b.maxSpeed || 0) - (a.maxSpeed || 0);
+        case 'score-desc': return (b.score || 0) - (a.score || 0);
+        default: return 0;
+      }
+    });
+
+    return list.slice(0, 5); // 前 5 入图
+  }, [candidatePool, filterClass, filterSpeedBand, filterTorqueBand, sortKey]);
+
   if (!selectedCoupling || !calculationDetails) {
     return null;
   }
@@ -549,8 +604,18 @@ const CouplingCharts = ({
   const { requiredTorque } = calculationDetails;
   const margin = ((selectedCoupling.ratedTorque - requiredTorque) / requiredTorque * 100);
 
-  // 获取前5个推荐用于对比
-  const topCouplings = recommendations?.slice(0, 5) || [selectedCoupling];
+  // 等价于现在显示的列表
+  const topCouplings = filteredSortedCouplings.length > 0 ? filteredSortedCouplings : [selectedCoupling];
+
+  const handleExportComparison = () => {
+    exportCouplingComparisonToExcel(topCouplings, {
+      filterClass,
+      filterSpeedBand,
+      filterTorqueBand,
+      sortKey,
+      requiredTorque
+    });
+  };
 
   return (
     <Card className="shadow-sm mb-3">
@@ -566,7 +631,9 @@ const CouplingCharts = ({
           <Col xs={12} md={4}>
             <Card className="h-100 border-0 bg-light">
               <Card.Body className="p-2">
-                <TorqueMarginGauge margin={margin} height={180} />
+                <LazyMountOnVisible minHeight={180}>
+                  <TorqueMarginGauge margin={margin} height={180} />
+                </LazyMountOnVisible>
               </Card.Body>
             </Card>
           </Col>
@@ -575,13 +642,15 @@ const CouplingCharts = ({
           <Col xs={12} md={4}>
             <Card className="h-100 border-0 bg-light">
               <Card.Body className="p-2">
-                <TorqueComparisonChart
-                  requiredTorque={requiredTorque}
-                  actualTorque={selectedCoupling.ratedTorque}
-                  maxTorque={selectedCoupling.maxTorque || selectedCoupling.ratedTorque * 1.5}
-                  couplingName={selectedCoupling.model}
-                  height={180}
-                />
+                <LazyMountOnVisible minHeight={180}>
+                  <TorqueComparisonChart
+                    requiredTorque={requiredTorque}
+                    actualTorque={selectedCoupling.ratedTorque}
+                    maxTorque={selectedCoupling.maxTorque || selectedCoupling.ratedTorque * 1.5}
+                    couplingName={selectedCoupling.model}
+                    height={180}
+                  />
+                </LazyMountOnVisible>
               </Card.Body>
             </Card>
           </Col>
@@ -590,32 +659,115 @@ const CouplingCharts = ({
           <Col xs={12} md={4}>
             <Card className="h-100 border-0 bg-light">
               <Card.Body className="p-2">
-                <ScoreRadarChart
-                  scoreBreakdown={selectedCoupling.scoreDetails ? {
-                    torqueMargin: selectedCoupling.scoreDetails.torqueMargin?.score || 0,
-                    recommendedMatch: selectedCoupling.scoreDetails.recommendation?.score || 0,
-                    speedMargin: selectedCoupling.scoreDetails.speedMargin?.score || 0,
-                    priceScore: selectedCoupling.scoreDetails.price?.score || 0,
-                    weightScore: selectedCoupling.scoreDetails.weight?.score || 0
-                  } : null}
-                  height={180}
-                />
+                <LazyMountOnVisible minHeight={180}>
+                  <ScoreRadarChart
+                    scoreBreakdown={selectedCoupling.scoreDetails ? {
+                      torqueMargin: selectedCoupling.scoreDetails.torqueMargin?.score || 0,
+                      recommendedMatch: selectedCoupling.scoreDetails.recommendation?.score || 0,
+                      speedMargin: selectedCoupling.scoreDetails.speedMargin?.score || 0,
+                      priceScore: selectedCoupling.scoreDetails.price?.score || 0,
+                      weightScore: selectedCoupling.scoreDetails.weight?.score || 0
+                    } : null}
+                    height={180}
+                  />
+                </LazyMountOnVisible>
               </Card.Body>
             </Card>
           </Col>
         </Row>
 
-        {/* 多联轴器对比 */}
-        {topCouplings.length > 1 && (
+        {/* 多联轴器对比 + 筛选/排序/导出工具栏 (S4) */}
+        {candidatePool.length > 1 && (
           <Row className="mt-2">
             <Col xs={12}>
               <Card className="border-0 bg-light">
                 <Card.Body className="p-2">
-                  <MultiCouplingComparison
-                    couplings={topCouplings}
-                    requiredTorque={requiredTorque}
-                    height={260}
-                  />
+                  <div className="d-flex flex-wrap align-items-center mb-2" style={{ gap: '0.5rem' }}>
+                    <small className="text-muted me-1">船检:</small>
+                    <Form.Select
+                      size="sm"
+                      style={{ width: 'auto' }}
+                      value={filterClass}
+                      onChange={(e) => setFilterClass(e.target.value)}
+                    >
+                      <option value="all">全部</option>
+                      <option value="CCS">CCS</option>
+                      <option value="DNV">DNV</option>
+                      <option value="LR">LR</option>
+                      <option value="ABS">ABS</option>
+                      <option value="BV">BV</option>
+                      <option value="NK">NK</option>
+                      <option value="KR">KR</option>
+                    </Form.Select>
+
+                    <small className="text-muted ms-2 me-1">转速段:</small>
+                    <Form.Select
+                      size="sm"
+                      style={{ width: 'auto' }}
+                      value={filterSpeedBand}
+                      onChange={(e) => setFilterSpeedBand(e.target.value)}
+                    >
+                      <option value="all">全部</option>
+                      <option value="600-900">600-900 rpm</option>
+                      <option value="900-1200">900-1200 rpm</option>
+                      <option value="1200-1500">1200-1500 rpm</option>
+                      <option value="1500+">1500+ rpm</option>
+                    </Form.Select>
+
+                    <small className="text-muted ms-2 me-1">扭矩段:</small>
+                    <Form.Select
+                      size="sm"
+                      style={{ width: 'auto' }}
+                      value={filterTorqueBand}
+                      onChange={(e) => setFilterTorqueBand(e.target.value)}
+                    >
+                      <option value="all">全部</option>
+                      <option value="<10">{'< 10 kN·m'}</option>
+                      <option value="10-50">10-50 kN·m</option>
+                      <option value="50-200">50-200 kN·m</option>
+                      <option value=">200">{'> 200 kN·m'}</option>
+                    </Form.Select>
+
+                    <small className="text-muted ms-2 me-1">排序:</small>
+                    <Form.Select
+                      size="sm"
+                      style={{ width: 'auto' }}
+                      value={sortKey}
+                      onChange={(e) => setSortKey(e.target.value)}
+                    >
+                      <option value="rated-desc">额定扭矩 ↓</option>
+                      <option value="rated-asc">额定扭矩 ↑</option>
+                      <option value="speed-desc">最大转速 ↓</option>
+                      <option value="speed-asc">最大转速 ↑</option>
+                      <option value="score-desc">综合评分 ↓</option>
+                    </Form.Select>
+
+                    <Badge bg="light" text="dark" className="ms-2">命中 {topCouplings.length}</Badge>
+
+                    <Button
+                      size="sm"
+                      variant="outline-primary"
+                      className="ms-auto"
+                      onClick={handleExportComparison}
+                      disabled={!topCouplings.length}
+                    >
+                      <i className="bi bi-file-earmark-excel me-1"></i>导出 Excel
+                    </Button>
+                  </div>
+
+                  {topCouplings.length > 1 ? (
+                    <LazyMountOnVisible minHeight={260}>
+                      <MultiCouplingComparison
+                        couplings={topCouplings}
+                        requiredTorque={requiredTorque}
+                        height={260}
+                      />
+                    </LazyMountOnVisible>
+                  ) : (
+                    <div className="text-center text-muted small py-4">
+                      当前筛选条件下仅匹配 1 个候选，请放宽条件后再对比。
+                    </div>
+                  )}
                 </Card.Body>
               </Card>
             </Col>

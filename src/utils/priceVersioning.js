@@ -266,6 +266,66 @@ export const PriceVersionManager = {
 };
 
 /**
+ * 获取导出文档水印文本（Excel/PDF 通用）
+ * 给定单行字符串：「价格数据截至 YYYY-MM-DD · 版本 vX [状态]」
+ * @returns {string}
+ */
+export const getExportWatermarkText = () => {
+  const status = getPriceStatus();
+  const tag = status === PriceStatus.EXPIRED
+    ? ' [已过期，仅供参考]'
+    : status === PriceStatus.EXPIRING_SOON
+      ? ' [即将更新]'
+      : '';
+  return `价格数据截至 ${PRICE_VERSION.lastUpdated} · 版本 ${PRICE_VERSION.version}${tag}`;
+};
+
+/**
+ * 在 jsPDF 实例上叠加对角灰色水印（每页一张）
+ * @param {object} pdf - jsPDF 实例
+ * @param {object} [opts] - { fontSize=42, opacity=0.12, color=[150,150,150] }
+ */
+export const applyPriceWatermarkToPDF = (pdf, opts = {}) => {
+  if (!pdf || typeof pdf.text !== 'function') return;
+  const text = getExportWatermarkText();
+  const { fontSize = 42, opacity = 0.12, color = [150, 150, 150] } = opts;
+
+  try {
+    const pageCount = typeof pdf.getNumberOfPages === 'function'
+      ? pdf.getNumberOfPages()
+      : (pdf.internal && pdf.internal.getNumberOfPages ? pdf.internal.getNumberOfPages() : 1);
+
+    const pageWidth = pdf.internal?.pageSize?.getWidth?.() || 210;
+    const pageHeight = pdf.internal?.pageSize?.getHeight?.() || 297;
+
+    for (let i = 1; i <= pageCount; i++) {
+      pdf.setPage(i);
+      const prevFontSize = pdf.getFontSize?.();
+
+      if (typeof pdf.setGState === 'function' && typeof pdf.GState === 'function') {
+        pdf.setGState(new pdf.GState({ opacity }));
+      }
+      pdf.setFontSize(fontSize);
+      pdf.setTextColor(color[0], color[1], color[2]);
+      pdf.text(text, pageWidth / 2, pageHeight / 2, {
+        angle: -45,
+        align: 'center'
+      });
+
+      // 还原状态
+      if (typeof pdf.setGState === 'function' && typeof pdf.GState === 'function') {
+        pdf.setGState(new pdf.GState({ opacity: 1 }));
+      }
+      if (prevFontSize) pdf.setFontSize(prevFontSize);
+      pdf.setTextColor(0, 0, 0);
+    }
+  } catch (e) {
+    // 水印失败不应阻断导出
+    console.warn('[priceVersioning] applyPriceWatermarkToPDF failed:', e?.message || e);
+  }
+};
+
+/**
  * 价格警告组件的props生成器
  * @returns {Object} 适用于React组件的props
  */
@@ -297,5 +357,7 @@ export default {
   formatPriceVersion,
   checkPriceUpdate,
   PriceVersionManager,
-  getPriceWarningProps
+  getPriceWarningProps,
+  getExportWatermarkText,
+  applyPriceWatermarkToPDF
 };

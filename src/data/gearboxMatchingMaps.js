@@ -924,6 +924,35 @@ export const getScoringWeights = (mode = ScoringMode.BALANCED) => {
 };
 
 /**
+ * 评分维度的中文说明 — 用于 UI tooltip / "为何推荐" 解释
+ * 各 key 与 scoringWeightConfigs 的字段一致
+ */
+export const SCORING_DIMENSION_LABELS = {
+  torqueMargin:   '扭矩余量',
+  recommendation: '推荐匹配',
+  speedMargin:    '速度余量',
+  price:          '价格',
+  weight:         '重量'
+};
+
+export const SCORING_DIMENSION_DESCRIPTIONS = {
+  torqueMargin:   '联轴器额定扭矩 vs 所需扭矩的安全裕度。10-30% 为理想区间，过低存在断裂风险，过高代表选型偏保守、价格虚高。',
+  recommendation: '该联轴器是否在齿轮箱厂家推荐配套清单内。命中清单的产品在装机尺寸、安装接口、售后兼容性上均已验证。',
+  speedMargin:    '联轴器最大允许转速 vs 主机额定转速的余量。船舶应用至少 15% 余量。',
+  price:          '联轴器基础价/相对成本。在同等扭矩等级中价格越低得分越高（标准化后）。',
+  weight:         '联轴器重量。在同等性能下越轻安装越方便、轴承负载越小。'
+};
+
+/**
+ * 评分模式的中文说明
+ */
+export const SCORING_MODE_LABELS = {
+  [ScoringMode.SAFETY]:   '安全优先',
+  [ScoringMode.ECONOMIC]: '经济优先',
+  [ScoringMode.BALANCED]: '平衡模式'
+};
+
+/**
  * 获取工况系数
  * @param {string} workCondition 工况类别
  * @param {string} mode 模式: 'FACTORY' | 'JB_CCS'

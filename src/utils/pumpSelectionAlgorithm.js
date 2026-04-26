@@ -6,6 +6,8 @@
 // 性能优化: 改为动态导入
 // import { standbyPumps, pumpCategories, pumpSeriesInfo } from '../data/standbyPumps';
 
+import { getPumpEnrichment } from '../data/standbyPumpsEnrichment';
+
 // 缓存动态加载的数据
 let cachedStandbyPumps = [];
 let cachedPumpCategories = {};
@@ -312,6 +314,70 @@ function calculateSuggestion(flowReq, pressureReq, pumpList) {
 }
 
 /**
+ * M3: 由主泵 Q/p 反算备用泵需求 + 推荐 TOP3
+ *
+ * 工程依据：
+ *   - 备用泵流量 ≥ 主泵 × 安全系数 (典型 1.0~1.2, 默认 1.1)
+ *   - 备用泵压力 ≥ 主泵最低供油压力 × 安全系数
+ *   - 应用类型不同, DT 电推系统强制 2CYA 系列
+ *
+ * @param {Object} params
+ * @param {number} params.mainQ - 主泵流量 L/min
+ * @param {number} params.mainP - 主泵压力 MPa
+ * @param {number} [params.safetyFactor=1.1] - 1.0~1.2
+ * @param {string} [params.applicationType='general']
+ * @returns {Object} {requiredFlow, requiredPressure, success, recommendations[]}
+ */
+export const calculateStandbyFromMain = ({
+  mainQ,
+  mainP,
+  safetyFactor = 1.1,
+  applicationType = 'general'
+} = {}) => {
+  const q = parseFloat(mainQ);
+  const p = parseFloat(mainP);
+  const f = Math.min(Math.max(parseFloat(safetyFactor) || 1.1, 1.0), 1.5); // 钳位 [1.0, 1.5]
+
+  if (!Number.isFinite(q) || q <= 0) {
+    return {
+      success: false,
+      message: '请输入有效的主泵流量 (> 0 L/min)',
+      requiredFlow: null,
+      requiredPressure: null,
+      recommendations: []
+    };
+  }
+  if (!Number.isFinite(p) || p <= 0) {
+    return {
+      success: false,
+      message: '请输入有效的主泵压力 (> 0 MPa)',
+      requiredFlow: q * f,
+      requiredPressure: null,
+      recommendations: []
+    };
+  }
+
+  const requiredFlow = +(q * f).toFixed(2);
+  const requiredPressure = +(p * f).toFixed(2);
+
+  const result = selectPumpByParameters({
+    flowRequired: requiredFlow,
+    pressureRequired: requiredPressure,
+    applicationType
+  });
+
+  return {
+    success: result.success,
+    message: result.message,
+    requiredFlow,
+    requiredPressure,
+    safetyFactorApplied: f,
+    derivedFrom: { mainQ: q, mainP: p },
+    recommendations: (result.recommendations || []).slice(0, 3)
+  };
+};
+
+/**
  * 检查齿轮箱是否需要备用泵
  * 更新日期: 2026-01-30
  * 扩展支持: GC/GCH/GCS/GCSE, MV/MA/MB, SGW/2GWH
@@ -367,14 +433,17 @@ export const needsStandbyPump = (gearboxModel, options = {}) => {
 
 /**
  * 格式化泵信息用于显示
+ * 包含 enrichment 合并: 电气/船检/NPSH/油粘度等扩展字段
  */
 export const formatPumpInfo = (pump) => {
   if (!pump) return null;
 
   const isElectric = pump.type === 'electric' || pump.series === '2CYA';
+  const enrichment = getPumpEnrichment(pump.model, pump.series);
 
   return {
     ...pump,
+    ...enrichment,
     displayName: pump.model,
     typeLabel: isElectric ? '电动备用泵' : '齿轮备用泵',
     seriesLabel: cachedPumpSeriesInfo[pump.series]?.name || pump.series,
@@ -383,11 +452,23 @@ export const formatPumpInfo = (pump) => {
   };
 };
 
+/**
+ * 给原始 pump 对象拼接 enrichment（用于列表批量呈现）
+ * @param {Array<Object>} pumps
+ * @returns {Array<Object>}
+ */
+export const enrichPumpList = (pumps) => {
+  if (!Array.isArray(pumps)) return [];
+  return pumps.map(p => ({ ...p, ...getPumpEnrichment(p.model, p.series) }));
+};
+
 export default {
   selectPumpByParameters,
   selectPumpByGearbox,
   needsStandbyPump,
+  calculateStandbyFromMain,
   getPumpCategories,
   getPumpSeriesInfo,
-  formatPumpInfo
+  formatPumpInfo,
+  enrichPumpList
 };

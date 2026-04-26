@@ -2,7 +2,7 @@
 // 联轴器选型输入表单组件
 
 import React, { useState, useCallback } from 'react';
-import { Card, Form, Row, Col, Button, InputGroup, Badge, Dropdown, Alert } from 'react-bootstrap';
+import { Card, Form, Row, Col, Button, InputGroup, Badge, Dropdown, Alert, Collapse } from 'react-bootstrap';
 import { WORK_CONDITIONS, QUICK_TEMPLATES, calculateEngineTorque } from '../../services/couplingSelectionService';
 import { WorkFactorMode, ScoringMode } from '../../data/gearboxMatchingMaps';
 import {
@@ -35,8 +35,17 @@ const CouplingSelectionForm = ({
     classificationType: initialValues.classificationType || ClassificationType.NONE,
     temperature: initialValues.temperature || 30,
     hasCover: initialValues.hasCover || false,
-    needDetachable: initialValues.needDetachable || false
+    needDetachable: initialValues.needDetachable || false,
+    // M1: 扭振输入 (可选, 选型完成后用于 1-DOF 共振估算)
+    flywheelInertia: initialValues.flywheelInertia || '',
+    shaftEquivalentInertia: initialValues.shaftEquivalentInertia || '',
+    propellerInertia: initialValues.propellerInertia || '',
+    excitationOrders: initialValues.excitationOrders || '4,6,8',  // 柴油机典型阶次
+    avoidanceLow: initialValues.avoidanceLow || '',
+    avoidanceHigh: initialValues.avoidanceHigh || ''
   });
+
+  const [torsionalExpanded, setTorsionalExpanded] = useState(false);
 
   // 实时计算的扭矩
   const calculatedTorque = formData.power && formData.speed
@@ -83,6 +92,27 @@ const CouplingSelectionForm = ({
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
     if (onSubmit) {
+      // M1: 解析扭振输入
+      const orders = String(formData.excitationOrders || '')
+        .split(/[,，\s]+/)
+        .map(s => parseFloat(s))
+        .filter(n => Number.isFinite(n) && n > 0);
+      const avoidanceZones = (() => {
+        const lo = parseFloat(formData.avoidanceLow);
+        const hi = parseFloat(formData.avoidanceHigh);
+        if (Number.isFinite(lo) && Number.isFinite(hi) && hi > lo) return [{ lo, hi }];
+        return [];
+      })();
+      const torsionalInputs = (formData.flywheelInertia || formData.shaftEquivalentInertia || formData.propellerInertia)
+        ? {
+            flywheelInertia: parseFloat(formData.flywheelInertia) || 0,
+            shaftEquivalentInertia: parseFloat(formData.shaftEquivalentInertia) || 0,
+            propellerInertia: parseFloat(formData.propellerInertia) || 0,
+            excitationOrders: orders,
+            avoidanceZones
+          }
+        : null;
+
       onSubmit({
         power: parseFloat(formData.power),
         speed: parseFloat(formData.speed),
@@ -93,7 +123,8 @@ const CouplingSelectionForm = ({
         classificationType: formData.classificationType,
         temperature: parseFloat(formData.temperature),
         hasCover: formData.hasCover,
-        needDetachable: formData.needDetachable
+        needDetachable: formData.needDetachable,
+        torsionalInputs
       });
     }
   }, [formData, onSubmit]);
@@ -398,6 +429,109 @@ const CouplingSelectionForm = ({
               </Form.Group>
             </Col>
           </Row>
+
+          {/* M1: 扭振输入 (可选折叠) */}
+          <Card className="mb-3 border-0" style={{ backgroundColor: 'rgba(13, 110, 253, 0.04)' }}>
+            <Card.Body className="py-2">
+              <div
+                className="d-flex align-items-center"
+                style={{ cursor: 'pointer' }}
+                onClick={() => setTorsionalExpanded(e => !e)}
+              >
+                <i className={`bi ${torsionalExpanded ? 'bi-chevron-down' : 'bi-chevron-right'} me-2`}></i>
+                <strong>扭振参数 (可选)</strong>
+                <Badge bg="info" className="ms-2" style={{ fontSize: '0.7em' }}>1-DOF 快速估算</Badge>
+                <small className="text-muted ms-auto">填写后将估算一阶共振转速及避振裕度</small>
+              </div>
+              <Collapse in={torsionalExpanded}>
+                <div className="mt-3">
+                  <Alert variant="warning" className="py-2 mb-3 small">
+                    本估算基于单自由度扭振模型 (k 来自联轴器, J = J<sub>飞轮</sub> + J<sub>轴系</sub> + J<sub>推进器</sub>)，
+                    仅做表单实时反馈用，工程必须复算（传递矩阵 / 受迫振动）。
+                  </Alert>
+                  <Row>
+                    <Col md={4}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>飞轮惯量 J<sub>flywheel</sub> (kg·m²)</Form.Label>
+                        <Form.Control
+                          type="number" min="0" step="0.1"
+                          name="flywheelInertia"
+                          value={formData.flywheelInertia}
+                          onChange={handleInputChange}
+                          placeholder="例: 2.5"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={4}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>轴系当量惯量 J<sub>shaft</sub> (kg·m²)</Form.Label>
+                        <Form.Control
+                          type="number" min="0" step="0.1"
+                          name="shaftEquivalentInertia"
+                          value={formData.shaftEquivalentInertia}
+                          onChange={handleInputChange}
+                          placeholder="例: 1.2"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={4}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>推进器惯量 J<sub>prop</sub> (kg·m²)</Form.Label>
+                        <Form.Control
+                          type="number" min="0" step="0.1"
+                          name="propellerInertia"
+                          value={formData.propellerInertia}
+                          onChange={handleInputChange}
+                          placeholder="例: 3.8 (4叶)"
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={4}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>激励阶次 (逗号分隔)</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="excitationOrders"
+                          value={formData.excitationOrders}
+                          onChange={handleInputChange}
+                          placeholder="例: 4,6,8 (柴油机)"
+                        />
+                        <Form.Text className="text-muted">
+                          柴油 4/6/8/12 缸常用 4/6/8/12; 电机 1; 螺旋桨 3-5 (叶数)
+                        </Form.Text>
+                      </Form.Group>
+                    </Col>
+                    <Col md={4}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>避振区间下限 (rpm)</Form.Label>
+                        <Form.Control
+                          type="number" min="0" step="10"
+                          name="avoidanceLow"
+                          value={formData.avoidanceLow}
+                          onChange={handleInputChange}
+                          placeholder="例: 850"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={4}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>避振区间上限 (rpm)</Form.Label>
+                        <Form.Control
+                          type="number" min="0" step="10"
+                          name="avoidanceHigh"
+                          value={formData.avoidanceHigh}
+                          onChange={handleInputChange}
+                          placeholder="例: 1100"
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </div>
+              </Collapse>
+            </Card.Body>
+          </Card>
 
           {/* 实时计算显示 */}
           {calculatedTorque > 0 && (

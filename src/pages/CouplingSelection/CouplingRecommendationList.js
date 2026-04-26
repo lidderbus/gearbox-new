@@ -1,10 +1,14 @@
 // src/pages/CouplingSelection/CouplingRecommendationList.js
 // 联轴器推荐列表组件
 
-import React, { useState, useMemo } from 'react';
-import { Card, Table, Badge, Button, ProgressBar, Alert, Row, Col, Collapse } from 'react-bootstrap';
+import React, { useState, useMemo, useCallback } from 'react';
+import { Card, Table, Badge, Button, ProgressBar, Alert, Row, Col, Collapse, Form } from 'react-bootstrap';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { getCouplingSeriesInfo } from '../../services/couplingSelectionService';
+import GenericComparisonTable from '../../components/common/GenericComparisonTable';
+import WeightAdjusterPanel from '../../components/common/WeightAdjusterPanel';
+import { formatPrice } from '../../utils/priceFormatter';
+import { getScoringWeights, ScoringMode } from '../../data/gearboxMatchingMaps';
 
 /**
  * 获取扭矩余量状态
@@ -38,7 +42,10 @@ const CouplingRecommendationCard = ({
   isSelected,
   onSelect,
   showDetails = false,
-  colors = {}
+  colors = {},
+  isCompared = false,
+  onToggleCompare,
+  compareDisabled = false
 }) => {
   const [expanded, setExpanded] = useState(showDetails);
   const seriesInfo = getCouplingSeriesInfo(coupling.model);
@@ -68,6 +75,16 @@ const CouplingRecommendationCard = ({
     >
       <Card.Header className="d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center gap-2">
+          {onToggleCompare && (
+            <Form.Check
+              type="checkbox"
+              checked={isCompared}
+              disabled={!isCompared && compareDisabled}
+              onChange={() => onToggleCompare(coupling)}
+              title="勾选加入对比 (最多 4 个)"
+              aria-label={`勾选 ${coupling.model} 加入对比`}
+            />
+          )}
           {rank <= 3 && (
             <Badge bg={rank === 1 ? 'warning' : rank === 2 ? 'secondary' : 'info'} className="me-2">
               #{rank}
@@ -235,6 +252,60 @@ const CouplingRecommendationList = ({
 }) => {
   const [showAll, setShowAll] = useState(showAllResults);
 
+  // M2: 评分权重透明化 — 当前应用的权重 (来自结果或默认 BALANCED)
+  const inferredMode = result?.scoringMode || ScoringMode.BALANCED;
+  const defaultWeights = useMemo(() => getScoringWeights(inferredMode), [inferredMode]);
+  const [overrideWeights, setOverrideWeights] = useState(null);
+  const activeWeights = overrideWeights || defaultWeights;
+
+  /**
+   * M2: 用 override 权重对推荐重新打分排序
+   * 公式: newScore = Σ (detail.score / detail.maxScore × newWeight)
+   * 不改原始 scoreDetails (保留作为对照)
+   */
+  const rerankedRecommendations = useMemo(() => {
+    if (!result?.recommendations) return [];
+    if (!overrideWeights) return result.recommendations;
+    return [...result.recommendations].map(rec => {
+      const det = rec.scoreDetails || {};
+      const newScore = Object.keys(overrideWeights).reduce((sum, dim) => {
+        const d = det[dim];
+        if (!d || !d.maxScore) return sum;
+        return sum + (d.score / d.maxScore) * overrideWeights[dim];
+      }, 0);
+      return { ...rec, score: Math.round(newScore * 10) / 10, _isReranked: true };
+    }).sort((a, b) => (b.score || 0) - (a.score || 0));
+  }, [result?.recommendations, overrideWeights]);
+
+  // S5: 多选对比
+  const [comparedCouplings, setComparedCouplings] = useState([]);
+  const [showCompareModal, setShowCompareModal] = useState(false);
+  const toggleCompare = useCallback((coupling) => {
+    setComparedCouplings(prev => {
+      const exists = prev.find(c => c.model === coupling.model);
+      if (exists) return prev.filter(c => c.model !== coupling.model);
+      if (prev.length >= 4) return prev;
+      return [...prev, coupling];
+    });
+  }, []);
+
+  const compareColumns = useMemo(() => ([
+    { key: 'series',         label: '系列',           highlightDiff: true,
+      format: (_, r) => getCouplingSeriesInfo(r.model)?.name || r.series || '—' },
+    { key: 'ratedTorque',    label: '额定扭矩 (kN·m)', bestPolicy: 'max' },
+    { key: 'maxTorque',      label: '最大扭矩 (kN·m)', bestPolicy: 'max' },
+    { key: 'torqueMargin',   label: '扭矩余量 (%)',
+      format: (v) => v == null ? '—' : `${Number(v).toFixed(1)}%` },
+    { key: 'maxSpeed',       label: '最大转速 (rpm)',  bestPolicy: 'max' },
+    { key: 'weight',         label: '重量 (kg)',       bestPolicy: 'min' },
+    { key: 'score',          label: '综合评分',         bestPolicy: 'max',
+      format: (v) => v == null ? '—' : Number(v).toFixed(1) },
+    { key: 'basePrice',      label: '基础价 (元)',      bestPolicy: 'min',
+      format: (v) => v ? formatPrice(v) : '询价' },
+    { key: 'classificationApproved', label: '船检证书', highlightDiff: true,
+      format: (v) => Array.isArray(v) ? v.join(', ') : (v || '—') }
+  ]), []);
+
   // 没有结果时显示
   if (!result || !result.success) {
     return (
@@ -253,7 +324,8 @@ const CouplingRecommendationList = ({
     );
   }
 
-  const { recommendations, warning, calculationDetails } = result;
+  const { warning, calculationDetails } = result;
+  const recommendations = rerankedRecommendations.length ? rerankedRecommendations : result.recommendations;
   const displayedCouplings = showAll
     ? recommendations
     : recommendations.slice(0, maxInitialDisplay);
@@ -304,6 +376,52 @@ const CouplingRecommendationList = ({
           </Alert>
         )}
 
+        {/* M2: 评分权重透明面板 */}
+        <WeightAdjusterPanel
+          weights={activeWeights}
+          mode={inferredMode}
+          onApplyWeights={(w) => setOverrideWeights(w)}
+        />
+        {overrideWeights && (
+          <div className="mb-2 d-flex align-items-center">
+            <Badge bg="warning" text="dark">已使用自定义权重重排序</Badge>
+            <Button variant="link" size="sm" className="ms-2" onClick={() => setOverrideWeights(null)}>
+              恢复默认排序
+            </Button>
+          </div>
+        )}
+
+        {/* S5: 多选对比浮动操作条 */}
+        {comparedCouplings.length > 0 && (
+          <Alert variant="primary" className="d-flex align-items-center justify-content-between py-2 mb-2">
+            <div>
+              <strong>已勾选 {comparedCouplings.length} 个候选</strong>
+              <small className="text-muted ms-2">{comparedCouplings.map(c => c.model).join('、')}</small>
+            </div>
+            <div className="d-flex" style={{ gap: '0.5rem' }}>
+              <Button
+                variant="primary"
+                size="sm"
+                disabled={comparedCouplings.length < 2}
+                onClick={() => setShowCompareModal(true)}
+              >
+                <i className="bi bi-columns-gap me-1"></i>对比 ({comparedCouplings.length})
+              </Button>
+              <Button variant="outline-secondary" size="sm" onClick={() => setComparedCouplings([])}>
+                清空
+              </Button>
+            </div>
+          </Alert>
+        )}
+
+        <GenericComparisonTable
+          show={showCompareModal}
+          onHide={() => setShowCompareModal(false)}
+          rows={comparedCouplings}
+          columns={compareColumns}
+          title="联轴器型号对比"
+        />
+
         {/* 推荐列表 */}
         {displayedCouplings.map((coupling, index) => (
           <CouplingRecommendationCard
@@ -314,6 +432,9 @@ const CouplingRecommendationList = ({
             onSelect={onSelectCoupling}
             showDetails={index === 0}
             colors={colors}
+            isCompared={comparedCouplings.some(c => c.model === coupling.model)}
+            onToggleCompare={toggleCompare}
+            compareDisabled={comparedCouplings.length >= 4}
           />
         ))}
 
