@@ -39,6 +39,7 @@ import { generateTorsionalReport, buildReportData } from '../../utils/torsionalP
 import { getStandardsList, getForbiddenZone } from '../../data/torsionalStandardsDB';
 import { getMaterialList, getCouplingList, getPresetList, getPreset, getCoupling } from '../../data/torsionalMaterialDB';
 import { checkCompliance } from '../../utils/torsionalComplianceChecker';
+import { useSelectionResult } from '../../contexts/SelectionResultContext';
 
 const TorsionalAnalysis = ({
   colors = {},
@@ -64,6 +65,9 @@ const TorsionalAnalysis = ({
   const [selectedStandard, setSelectedStandard] = useState('CCS_INLAND_2016');
   const [selectedMaterial, setSelectedMaterial] = useState('45_STEEL');
   const [complianceResult, setComplianceResult] = useState(null);
+  // P2#12 — 多船级社规范对比 (CCS/ABS/DNV/LR/BV/DNV_GL/IACS_UR_M51 同步运行)
+  const [multiCompareResults, setMultiCompareResults] = useState(null);
+  const [multiCompareLoading, setMultiCompareLoading] = useState(false);
 
   // 共用状态
   const [loading, setLoading] = useState(false);
@@ -88,6 +92,24 @@ const TorsionalAnalysis = ({
       }));
     }
   }, [selectionResult, engineData]);
+
+  // P1-3: 若上游 CPP/Azimuth/Thruster 已选型, 自动预填扭振参数
+  const { propulsionPayload } = useSelectionResult();
+  const [propulsionAutoFilled, setPropulsionAutoFilled] = useState(false);
+  useEffect(() => {
+    if (propulsionPayload && !propulsionAutoFilled) {
+      const inputSpeed = propulsionPayload.inputSpeed;
+      const ratio = propulsionPayload.ratio;
+      if (inputSpeed && ratio) {
+        setInput(prev => ({
+          ...prev,
+          operatingSpeed: parseFloat(inputSpeed) || prev.operatingSpeed,
+          gearRatio: parseFloat(ratio) || prev.gearRatio,
+        }));
+        setPropulsionAutoFilled(true);
+      }
+    }
+  }, [propulsionPayload, propulsionAutoFilled]);
 
   // 数据库列表
   const standardsList = useMemo(() => getStandardsList(), []);
@@ -234,6 +256,36 @@ const TorsionalAnalysis = ({
     }
   }, [input, onAnalysisComplete, selectedStandard]);
 
+  // P2#12 — 多船级社规范对比: 用当前 result 跑遍所有 standards
+  const handleMultiCompare = useCallback(() => {
+    if (!result) {
+      setError('请先运行单规范分析,再进行多规范对比');
+      return;
+    }
+    setMultiCompareLoading(true);
+    try {
+      const all = standardsList.map(s => {
+        try {
+          const compliance = checkCompliance({ ...result, standardCode: s.code }, input, s.code);
+          return {
+            code: s.code,
+            name: s.name,
+            region: s.region,
+            type: s.type,
+            passed: compliance?.overall?.passed ?? compliance?.passed ?? null,
+            checks: compliance?.checks || [],
+            failureCount: (compliance?.checks || []).filter(c => !c.passed).length
+          };
+        } catch (e) {
+          return { code: s.code, name: s.name, region: s.region, error: e.message };
+        }
+      });
+      setMultiCompareResults(all);
+    } finally {
+      setMultiCompareLoading(false);
+    }
+  }, [result, input, standardsList]);
+
   // 重置参数
   const handleReset = useCallback(() => {
     if (analysisMode === 'simple') {
@@ -360,6 +412,13 @@ const TorsionalAnalysis = ({
 
   return (
     <Card style={cardStyle} className="torsional-analysis">
+      {/* P1-3: 推进数据贯通指示 */}
+      {propulsionAutoFilled && propulsionPayload && (
+        <Alert variant="info" className="py-2 mb-0" style={{ fontSize: '0.85em', borderRadius: 0 }}>
+          <i className="bi bi-link-45deg me-2"></i>
+          已从 <strong>{propulsionPayload.source}</strong> 选型 ({propulsionPayload.gearboxModel || '齿轮箱'}) 自动预填工作转速 = {Math.round(propulsionPayload.inputSpeed)} rpm,速比 = {propulsionPayload.ratio}
+        </Alert>
+      )}
       <Card.Header
         className="d-flex justify-content-between align-items-center flex-wrap gap-2"
         style={{ backgroundColor: defaultColors.headerBg }}
@@ -714,9 +773,19 @@ const TorsionalAnalysis = ({
                         <strong>{complianceResult.standardName}</strong> 合规校验:
                         {' '}{complianceResult.summary.passCount}/{complianceResult.summary.total} 项通过
                       </span>
-                      {complianceResult.summary.failCount > 0 && (
-                        <Badge bg="danger">{complianceResult.summary.failCount} 项不合规</Badge>
-                      )}
+                      <div className="d-flex align-items-center gap-2">
+                        {complianceResult.summary.failCount > 0 && (
+                          <Badge bg="danger">{complianceResult.summary.failCount} 项不合规</Badge>
+                        )}
+                        <Button
+                          size="sm"
+                          variant="outline-primary"
+                          onClick={handleMultiCompare}
+                          disabled={multiCompareLoading}
+                        >
+                          {multiCompareLoading ? '运行中…' : '多船级社规范对比 →'}
+                        </Button>
+                      </div>
                     </div>
                     {complianceResult.checks.filter(c => c.status === 'fail').length > 0 && (
                       <ul className="mb-0 mt-2">
@@ -726,6 +795,63 @@ const TorsionalAnalysis = ({
                       </ul>
                     )}
                   </Alert>
+                )}
+
+                {/* P2#12 — 多船级社规范对比表 */}
+                {multiCompareResults && multiCompareResults.length > 0 && (
+                  <Card className="mb-3">
+                    <Card.Header className="d-flex justify-content-between align-items-center">
+                      <span>
+                        <i className="bi bi-table me-2"></i>多船级社规范对比 ({multiCompareResults.length} 家)
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="link"
+                        className="text-muted p-0"
+                        onClick={() => setMultiCompareResults(null)}
+                      >
+                        关闭
+                      </Button>
+                    </Card.Header>
+                    <Card.Body className="p-0">
+                      <table className="table table-sm mb-0" style={{ color: defaultColors.text }}>
+                        <thead style={{ backgroundColor: defaultColors.headerBg }}>
+                          <tr>
+                            <th>规范</th>
+                            <th>地区</th>
+                            <th>类型</th>
+                            <th>通过</th>
+                            <th>不合规项</th>
+                            <th>主要差异</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {multiCompareResults.map(r => (
+                            <tr key={r.code}>
+                              <td><strong>{r.name}</strong></td>
+                              <td>{r.region}</td>
+                              <td><Badge bg="secondary">{r.type}</Badge></td>
+                              <td>
+                                {r.error ? (
+                                  <Badge bg="warning" text="dark">无法计算</Badge>
+                                ) : r.passed === true ? (
+                                  <Badge bg="success">通过</Badge>
+                                ) : r.passed === false ? (
+                                  <Badge bg="danger">不通过</Badge>
+                                ) : (
+                                  <Badge bg="info">部分</Badge>
+                                )}
+                              </td>
+                              <td>{r.error ? '—' : (r.failureCount || 0)}</td>
+                              <td className="text-muted small">
+                                {r.error || (r.checks?.filter(c => !c.passed)?.[0]?.name) || '全部通过'}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </Card.Body>
+                  </Card>
                 )}
                 <AnalysisResultPanel
                   result={result}

@@ -2,7 +2,7 @@
 // 多工况复合选型：同时指定多组工况参数，筛选满足所有工况的齿轮箱
 import React, { useState, useMemo, useCallback } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, InputGroup } from 'react-bootstrap';
-import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer, Tooltip } from 'recharts';
+import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, ReferenceLine } from 'recharts';
 import ExportToolbar from './ExportToolbar';
 
 let embeddedData = [];
@@ -21,6 +21,25 @@ function getSeries(model) {
 
 const EMPTY_CONDITION = { power: '', speed: '', ratio: '', label: '', weight: 2 };
 const MAX_CONDITIONS = 8;
+// v62: 典型工况谱模板 (基于 ISO 8178/船型经验)
+const PRESET_TEMPLATES = {
+  tug: { name: '拖轮 (自由70%+拖带30%)', conds: [
+    { power: 800, speed: 1800, ratio: 5.5, label: '自由航行', weight: 3 },
+    { power: 600, speed: 1500, ratio: 5.5, label: '拖带工况', weight: 2 },
+  ]},
+  passenger: { name: '客船 (巡航80%+机动20%)', conds: [
+    { power: 500, speed: 1800, ratio: 4.5, label: '巡航工况', weight: 3 },
+    { power: 300, speed: 1500, ratio: 4.5, label: '机动工况', weight: 1 },
+  ]},
+  fishing: { name: '渔船 (航行50%+作业50%)', conds: [
+    { power: 400, speed: 1800, ratio: 6.0, label: '航行工况', weight: 2 },
+    { power: 250, speed: 1200, ratio: 6.0, label: '拖网作业', weight: 2 },
+  ]},
+  cargo: { name: '货船 (满载70%+空载30%)', conds: [
+    { power: 1500, speed: 1800, ratio: 4.0, label: '满载航行', weight: 3 },
+    { power: 1000, speed: 1600, ratio: 4.0, label: '空载航行', weight: 1 },
+  ]},
+};
 const WEIGHT_OPTIONS = [
   { value: 3, label: '高(3x)' },
   { value: 2, label: '中(2x)' },
@@ -39,6 +58,8 @@ function checkModelFit(item, conditions) {
   let matchCount = 0;
   const details = [];
   const conditionScores = []; // per-condition normalized scores (0-100) for radar chart
+  // P2#7 — 工况包络: 每工况记录功率裕度 % (>=0 满足, <0 超限), null 表示不可计算
+  const conditionMargins = [];
 
   conditions.forEach((cond, idx) => {
     const power = parseFloat(cond.power);
@@ -49,6 +70,7 @@ function checkModelFit(item, conditions) {
     const condWeight = cond.weight || 2;
     let condScore = 0;
     let condMatch = true;
+    let condMargin = null; // 功率裕度 %
     const checks = [];
 
     // 检查转速
@@ -80,10 +102,12 @@ function checkModelFit(item, conditions) {
           const requiredCap = power / speed;
           const actualCap = caps[bestIdx] || 0;
           if (actualCap >= requiredCap) {
-            const margin = ((actualCap / requiredCap - 1) * 100).toFixed(1);
+            const marginPct = (actualCap / requiredCap - 1) * 100;
+            condMargin = marginPct;
             condScore += 50;
-            checks.push({ param: '功率', ok: true, detail: `余量+${margin}%` });
+            checks.push({ param: '功率', ok: true, detail: `余量+${marginPct.toFixed(1)}%` });
           } else if (actualCap > 0) {
+            condMargin = (actualCap / requiredCap - 1) * 100; // 负值表示超限
             condMatch = false;
             checks.push({ param: '功率', ok: false, reason: `需${requiredCap.toFixed(4)},实际${actualCap}kW/rpm` });
           }
@@ -99,10 +123,12 @@ function checkModelFit(item, conditions) {
       const requiredCap = power / speed;
       const maxCap = caps.length ? Math.max(...caps.filter(v => typeof v === 'number')) : 0;
       if (maxCap >= requiredCap) {
-        const margin = ((maxCap / requiredCap - 1) * 100).toFixed(1);
+        const marginPct = (maxCap / requiredCap - 1) * 100;
+        condMargin = marginPct;
         condScore += 50;
-        checks.push({ param: '功率', ok: true, detail: `最大余量+${margin}%` });
+        checks.push({ param: '功率', ok: true, detail: `最大余量+${marginPct.toFixed(1)}%` });
       } else if (maxCap > 0) {
+        condMargin = (maxCap / requiredCap - 1) * 100;
         condMatch = false;
         checks.push({ param: '功率', ok: false, reason: `需${requiredCap.toFixed(4)},最大${maxCap}kW/rpm` });
       }
@@ -112,6 +138,7 @@ function checkModelFit(item, conditions) {
     totalWeightedScore += condScore * condWeight;
     totalWeight += condWeight;
     conditionScores.push(condScore); // raw score per condition (0-100)
+    conditionMargins.push(condMargin); // P2#7 — 包络曲线数据
     details.push({ idx: idx + 1, checks, matched: condMatch, label: cond.label || `工况${idx + 1}`, weight: condWeight });
   });
 
@@ -122,6 +149,7 @@ function checkModelFit(item, conditions) {
     matchCount,
     details,
     conditionScores,
+    conditionMargins, // P2#7 — 包络曲线数据
     model: item.model || item.name,
     series: getSeries(item.model || item.name)
   };
@@ -236,11 +264,31 @@ export default function MultiConditionSelection({ colors, theme }) {
     return { data, models: top3.map(r => r.model) };
   }, [results, conditions]);
 
+  // P2#7 — 工况包络曲线: top 3 候选在每工况下的功率裕度 % 分布 (>=0 满足, <0 超限)
+  const envelopeData = useMemo(() => {
+    if (!results || results.items.length === 0) return null;
+    const top3 = results.items.slice(0, 3);
+    const validConds = conditions.filter(c => c.power || c.speed || c.ratio);
+    if (validConds.length < 1) return null;
+    if (top3.every(r => !r.conditionMargins || r.conditionMargins.every(m => m === null))) return null;
+
+    const data = validConds.map((cond, ci) => {
+      const point = { condition: cond.label || `工况${ci + 1}` };
+      top3.forEach(r => {
+        const m = r.conditionMargins?.[ci];
+        point[r.model] = m === null || m === undefined ? null : Math.round(m * 10) / 10;
+      });
+      return point;
+    });
+
+    return { data, models: top3.map(r => r.model) };
+  }, [results, conditions]);
+
   return (
     <Container fluid className="py-3">
       <Row className="mb-3">
         <Col><h5><i className="bi bi-layers me-2"></i>多工况复合选型</h5>
-          <small className="text-muted">同时指定多组工况（如自由航行+拖带），筛选满足所有工况的齿轮箱 ({embeddedData.length}型号)</small>
+          <small className="text-muted">同时指定多组工况（如自由航行+拖带），筛选满足所有工况的齿轮箱 (索引 {embeddedData.length} 型号 / 数据库 638 含 PTO/滑动轴承变体)</small>
         </Col>
       </Row>
 
@@ -248,6 +296,15 @@ export default function MultiConditionSelection({ colors, theme }) {
         <Card.Header className="d-flex justify-content-between align-items-center">
           <span>工况参数 ({conditions.length}/{MAX_CONDITIONS})</span>
           <div className="d-flex gap-2">
+            <Form.Select size="sm" style={{ width: 200 }} value="" onChange={e => {
+              const tpl = PRESET_TEMPLATES[e.target.value];
+              if (tpl) setConditions(tpl.conds.map(c => ({ ...c })));
+            }} title="加载典型工况谱模板, 自动填入功率/转速/减速比/权重">
+              <option value="">📋 加载工况模板...</option>
+              {Object.entries(PRESET_TEMPLATES).map(([k, t]) => (
+                <option key={k} value={k}>{t.name}</option>
+              ))}
+            </Form.Select>
             <Form.Select size="sm" style={{ width: 150 }} value={seriesFilter} onChange={e => setSeriesFilter(e.target.value)}>
               <option value="all">全部系列</option>
               {['HC','HCD','HCA','GWC','GW','GC','HCM','DT','MV','SGW','HCQ'].map(s => <option key={s} value={s}>{s}系列</option>)}
@@ -363,6 +420,46 @@ export default function MultiConditionSelection({ colors, theme }) {
                     ))}
                     <Legend wrapperStyle={{ fontSize: 12 }} />
                   </RadarChart>
+                </ResponsiveContainer>
+              </Card.Body>
+            </Card>
+          )}
+
+          {/* P2#7 — 工况包络曲线: 各候选在每工况下的功率裕度分布 */}
+          {envelopeData && (
+            <Card className="mb-3">
+              <Card.Header>
+                Top 3 工况包络曲线 — 功率裕度 (%)
+                <small className="text-muted ms-2">
+                  · 0% 线 = 临界, &gt;0% 满足, &lt;0% 超限
+                </small>
+              </Card.Header>
+              <Card.Body>
+                <ResponsiveContainer width="100%" height={340}>
+                  <LineChart data={envelopeData.data} margin={{ top: 12, right: 24, bottom: 6, left: 6 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="condition" tick={{ fontSize: 12 }} />
+                    <YAxis
+                      tick={{ fontSize: 11 }}
+                      label={{ value: '功率裕度 %', angle: -90, position: 'insideLeft', style: { fontSize: 11 } }}
+                    />
+                    <ReferenceLine y={0} stroke="#dc3545" strokeDasharray="4 4" label={{ value: '临界', fontSize: 10, fill: '#dc3545' }} />
+                    <ReferenceLine y={10} stroke="#ffc107" strokeDasharray="2 4" label={{ value: '推荐≥10%', fontSize: 10, fill: '#ffc107', position: 'insideBottomRight' }} />
+                    <Tooltip formatter={(v) => v === null || v === undefined ? '不可计算' : `${v}%`} />
+                    <Legend wrapperStyle={{ fontSize: 12 }} />
+                    {envelopeData.models.map((model, i) => (
+                      <Line
+                        key={model}
+                        type="monotone"
+                        dataKey={model}
+                        stroke={RADAR_COLORS[i]}
+                        strokeWidth={2.5}
+                        dot={{ r: 4 }}
+                        activeDot={{ r: 6 }}
+                        connectNulls
+                      />
+                    ))}
+                  </LineChart>
                 </ResponsiveContainer>
               </Card.Body>
             </Card>

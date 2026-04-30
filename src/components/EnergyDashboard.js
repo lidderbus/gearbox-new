@@ -32,6 +32,54 @@ import {
 } from '../utils/emissionCalculator';
 
 /**
+ * P2#13 — FuelEU Maritime 温室气体强度合规计算 (2025 生效)
+ * 参考: REGULATION (EU) 2023/1805 Article 4 + Annex II/IV
+ * - 基准 (2020): 91.16 gCO2eq/MJ
+ * - 罚款率: €2400 / t VLSFO 当量超额 (Article 23)
+ */
+const FUELEU_BASELINE_INTENSITY = 91.16;     // gCO2eq/MJ
+const FUELEU_VLSFO_LHV = 41000;              // MJ/t VLSFO
+const FUELEU_PENALTY_PER_T_VLSFO = 2400;     // €/t
+
+const FUELEU_TARGETS = [
+  { from: 2025, to: 2029, reduction: 0.02,  limit: 89.34 },
+  { from: 2030, to: 2034, reduction: 0.06,  limit: 85.69 },
+  { from: 2035, to: 2039, reduction: 0.145, limit: 77.94 },
+  { from: 2040, to: 2044, reduction: 0.31,  limit: 62.90 },
+  { from: 2045, to: 2049, reduction: 0.62,  limit: 34.64 },
+  { from: 2050, to: 2099, reduction: 0.80,  limit: 18.23 },
+];
+
+const FUELEU_WTW_INTENSITY = {
+  HFO: 91.6, LFO: 91.4, MDO: 91.5, MGO: 91.5,
+  LNG: 76.7, LPG: 75.5, METHANOL: 99.5, AMMONIA: 0,
+};
+
+function computeFuelEU({ year, annualFuelTons, fuelType, baselineCF, baselineLHV }) {
+  const actualIntensity = FUELEU_WTW_INTENSITY[fuelType]
+    || (baselineCF && baselineLHV ? (baselineCF * 1000 / baselineLHV) * 1.13 : FUELEU_BASELINE_INTENSITY);
+  const target = FUELEU_TARGETS.find(t => year >= t.from && year <= t.to)
+    || { limit: FUELEU_BASELINE_INTENSITY, reduction: 0, from: '—', to: '—' };
+  const annualEnergyMJ = (annualFuelTons || 0) * 1000 * (baselineLHV || 42.7);
+  const deficitGCO2eq = (actualIntensity - target.limit) * annualEnergyMJ;
+  const excessVLSFOTons = deficitGCO2eq > 0
+    ? deficitGCO2eq / (FUELEU_VLSFO_LHV * FUELEU_BASELINE_INTENSITY)
+    : 0;
+  const penaltyEUR = Math.round(excessVLSFOTons * FUELEU_PENALTY_PER_T_VLSFO);
+  return {
+    year,
+    actualIntensity,
+    targetLimit: target.limit,
+    targetReduction: target.reduction,
+    targetWindow: `${target.from}-${target.to}`,
+    deficitGCO2eq,
+    excessVLSFOTons,
+    penaltyEUR,
+    compliant: deficitGCO2eq <= 0,
+  };
+}
+
+/**
  * 安全格式化数字 - 防止 toFixed 调用失败
  * @param {*} value - 要格式化的值
  * @param {number} decimals - 小数位数
@@ -508,6 +556,16 @@ const EnergyDashboard = ({
     // 碳成本
     const carbonCost = calculateCarbonCost(emissionValues.CO2, 'euETS');
 
+    // P2#13 — FuelEU Maritime 温室气体强度合规
+    const fuelEUYear = parseInt(buildYear) >= 2025 ? parseInt(buildYear) : new Date().getFullYear();
+    const fuelEU = computeFuelEU({
+      year: fuelEUYear,
+      annualFuelTons: annualFuel,
+      fuelType,
+      baselineCF: CARBON_FACTORS[fuelType]?.CF,
+      baselineLHV: CARBON_FACTORS[fuelType]?.lowerHeat,
+    });
+
     // 燃油对比 — compareFuelEmissions(power, hours) 对比各燃料类型排放
     const fuelComparisonRaw = compareFuelEmissions(enginePower, parseFloat(annualHours));
     const fuelComparison = fuelComparisonRaw ? Object.entries(fuelComparisonRaw).map(([key, val]) => ({
@@ -551,6 +609,7 @@ const EnergyDashboard = ({
       emissions: safeEmissions,
       carbonFootprint: safeCarbonFootprint,
       carbonCost: safeCarbonCost,
+      fuelEU,
       fuelComparison: fuelComparison || [],
       hybridBenefit,
       baseline: {
@@ -1162,6 +1221,74 @@ const EnergyDashboard = ({
                 </Card>
               </Col>
             </Row>
+
+            {/* P2#13 — FuelEU Maritime 温室气体强度合规 */}
+            {calculatedData.fuelEU && (
+              <Row className="mt-4">
+                <Col md={12}>
+                  <Card style={{ borderLeft: `4px solid ${calculatedData.fuelEU.compliant ? '#198754' : '#dc3545'}` }}>
+                    <Card.Header className="d-flex justify-content-between align-items-center">
+                      <span>
+                        <i className="bi bi-eu me-2"></i>
+                        FuelEU Maritime 温室气体强度
+                        <Badge bg={calculatedData.fuelEU.compliant ? 'success' : 'danger'} className="ms-2">
+                          {calculatedData.fuelEU.compliant ? '合规' : '不合规'}
+                        </Badge>
+                      </span>
+                      <Badge bg="info" text="dark">REGULATION (EU) 2023/1805</Badge>
+                    </Card.Header>
+                    <Card.Body>
+                      <Row>
+                        <Col md={3}>
+                          <small className="text-muted">船龄年份</small>
+                          <div className="h4">{calculatedData.fuelEU.year}</div>
+                          <small className="text-muted">目标窗口 {calculatedData.fuelEU.targetWindow}</small>
+                        </Col>
+                        <Col md={3}>
+                          <small className="text-muted">实际 GHG 强度</small>
+                          <div className="h4">
+                            {safeFixed(calculatedData.fuelEU.actualIntensity, 2)}
+                            <small className="text-muted ms-1" style={{ fontSize: '0.6em' }}>gCO₂eq/MJ</small>
+                          </div>
+                          <small>WtW (well-to-wake)</small>
+                        </Col>
+                        <Col md={3}>
+                          <small className="text-muted">规范限值 ({(calculatedData.fuelEU.targetReduction * 100).toFixed(1)}% 削减)</small>
+                          <div className="h4 text-success">
+                            {safeFixed(calculatedData.fuelEU.targetLimit, 2)}
+                            <small className="text-muted ms-1" style={{ fontSize: '0.6em' }}>gCO₂eq/MJ</small>
+                          </div>
+                          <small>2020 基准 91.16</small>
+                        </Col>
+                        <Col md={3}>
+                          <small className="text-muted">罚款估算 (€2400/t VLSFO)</small>
+                          <div className={`h4 ${calculatedData.fuelEU.compliant ? 'text-success' : 'text-danger'}`}>
+                            {calculatedData.fuelEU.compliant ? (
+                              <span>€0 <small className="text-success" style={{ fontSize: '0.6em' }}>无罚款</small></span>
+                            ) : (
+                              <span>€{calculatedData.fuelEU.penaltyEUR.toLocaleString()}</span>
+                            )}
+                          </div>
+                          {!calculatedData.fuelEU.compliant && (
+                            <small className="text-muted">
+                              超额 {safeFixed(calculatedData.fuelEU.excessVLSFOTons, 2)} t VLSFO 当量
+                            </small>
+                          )}
+                        </Col>
+                      </Row>
+                      <Alert variant="info" className="mt-3 mb-0 py-2">
+                        <small>
+                          <i className="bi bi-info-circle me-1"></i>
+                          <strong>FuelEU Maritime</strong> 自 2025-01-01 起对停泊欧盟港口的 ≥5000 GT 船舶生效,
+                          按 well-to-wake (WtW) 口径限制 GHG 强度;
+                          目标轨迹: 2025/-2% · 2030/-6% · 2035/-14.5% · 2040/-31% · 2045/-62% · 2050/-80%。
+                        </small>
+                      </Alert>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+            )}
           </Tab>
         </Tabs>
 

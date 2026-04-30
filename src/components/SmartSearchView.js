@@ -4,6 +4,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, InputGroup, ListGroup } from 'react-bootstrap';
 import { getRecommendedPump, getRecommendedCouplingInfo } from '../data/gearboxMatchingMaps';
 import { calculateFactoryPrice, getStandardDiscountRate } from '../utils/priceManager';
+import { lookupPriceByModel } from '../utils/priceFormatter';
 import marketEnrichment from '../data/marketEnrichment.json';
 
 const MARKET_RECORDS = (marketEnrichment && marketEnrichment.records) || {};
@@ -172,13 +173,72 @@ function getRelatedModels(data, model) {
     .slice(0, 10);
 }
 
+// P2#8 — 功率段分面定义
+const POWER_BANDS = [
+  { key: 'all', label: '全部功率', min: 0, max: Infinity },
+  { key: 'low', label: '< 300 kW', min: 0, max: 300 },
+  { key: 'mid', label: '300 ~ 1000 kW', min: 300, max: 1000 },
+  { key: 'high', label: '1000 ~ 2000 kW', min: 1000, max: 2000 },
+  { key: 'top', label: '> 2000 kW', min: 2000, max: Infinity },
+];
+
+function computeMaxPower(item) {
+  // 估算功率上限: maxCap × 转速上限
+  const caps = Array.isArray(item.transferCapacity) ? item.transferCapacity.filter(v => typeof v === 'number') : [];
+  const maxCap = caps.length ? Math.max(...caps) : 0;
+  const maxSpeed = Array.isArray(item.inputSpeedRange) && item.inputSpeedRange[1] ? item.inputSpeedRange[1] : 1800;
+  return maxCap * maxSpeed; // kW
+}
+
 export default function SmartSearchView({ colors, theme }) {
   const [query, setQuery] = useState('');
   const [recentSearches, setRecentSearches] = useState(() => {
     try { return JSON.parse(localStorage.getItem('smart_search_history') || '[]'); } catch { return []; }
   });
 
-  const results = useMemo(() => searchModels(embeddedData, query), [query]);
+  // P2#8 — 分面状态: 系列 / 功率段 / 价格可见性
+  const [facetSeries, setFacetSeries] = useState('all');
+  const [facetPowerBand, setFacetPowerBand] = useState('all');
+  const [facetPriceOnly, setFacetPriceOnly] = useState(false);
+
+  const rawResults = useMemo(() => searchModels(embeddedData, query), [query]);
+
+  // 分面过滤
+  const results = useMemo(() => {
+    if (!query) return rawResults;
+    const band = POWER_BANDS.find(b => b.key === facetPowerBand);
+    return rawResults.filter(r => {
+      if (facetSeries !== 'all' && getSeries(r.model) !== facetSeries) return false;
+      if (band && (band.min !== 0 || band.max !== Infinity)) {
+        const p = computeMaxPower(r);
+        if (p < band.min || p >= band.max) return false;
+      }
+      if (facetPriceOnly) {
+        const inline = r.price || r.factoryPrice || r.marketPrice || 0;
+        if (inline > 0) return true;
+        const fb = lookupPriceByModel(r.model).factoryPrice;
+        if (!fb) return false;
+      }
+      return true;
+    });
+  }, [rawResults, facetSeries, facetPowerBand, facetPriceOnly, query]);
+
+  // 分面计数 (基于未过滤的 rawResults, 让用户看到每个分面有多少候选)
+  const facetCounts = useMemo(() => {
+    const seriesCounts = {};
+    const bandCounts = { all: rawResults.length, low: 0, mid: 0, high: 0, top: 0 };
+    rawResults.forEach(r => {
+      const s = getSeries(r.model) || 'OTHER';
+      seriesCounts[s] = (seriesCounts[s] || 0) + 1;
+      const p = computeMaxPower(r);
+      if (p < 300) bandCounts.low += 1;
+      else if (p < 1000) bandCounts.mid += 1;
+      else if (p < 2000) bandCounts.high += 1;
+      else bandCounts.top += 1;
+    });
+    return { seriesCounts, bandCounts };
+  }, [rawResults]);
+
   const [selectedResult, setSelectedResult] = useState(null);
   const related = useMemo(() => selectedResult ? getRelatedModels(embeddedData, selectedResult.model) : [], [selectedResult]);
 
@@ -188,10 +248,14 @@ export default function SmartSearchView({ colors, theme }) {
     const ratios = Array.isArray(selectedResult.ratios) ? selectedResult.ratios : [];
     const caps = Array.isArray(selectedResult.transferCapacity) ? selectedResult.transferCapacity : [];
     const price = selectedResult.price || 0;
-    const factoryPrice = price > 0 ? calculateFactoryPrice({
+    let factoryPrice = price > 0 ? calculateFactoryPrice({
       model: selectedResult.model, basePrice: price,
       discountRate: selectedResult.discountRate ?? getStandardDiscountRate(selectedResult.model)
     }) : 0;
+    if (!factoryPrice) {
+      const fb = lookupPriceByModel(selectedResult.model).factoryPrice;
+      if (fb) factoryPrice = fb;
+    }
     const pump = getRecommendedPump(selectedResult.model);
     const coupling = getRecommendedCouplingInfo(selectedResult.model);
     return {
@@ -224,7 +288,7 @@ export default function SmartSearchView({ colors, theme }) {
     <Container fluid className="py-3">
       <Row className="mb-3">
         <Col><h5><i className="bi bi-search-heart me-2"></i>智能搜索</h5>
-          <small className="text-muted">搜索型号、减速比、传递能力，支持模糊/容错搜索，自动关联推荐相近型号 ({embeddedData.length}型号)</small>
+          <small className="text-muted">搜索型号、减速比、传递能力，支持模糊/容错搜索，自动关联推荐相近型号 (索引 {embeddedData.length} 型号 / 数据库 638 含 PTO/滑动轴承变体)</small>
         </Col>
       </Row>
 
@@ -258,13 +322,104 @@ export default function SmartSearchView({ colors, theme }) {
       {!query ? (
         <Alert variant="light" className="text-center py-5 border">
           <i className="bi bi-search" style={{ fontSize: '3rem', opacity: 0.3 }}></i>
-          <p className="mt-3 mb-0 text-muted">输入关键词开始搜索 — 支持型号名、减速比数值、传递能力数值</p>
+          <p className="mt-3 mb-2 text-muted">输入关键词开始搜索 — 支持型号名、减速比数值、传递能力数值</p>
+          <div className="d-flex flex-wrap gap-2 justify-content-center mt-3">
+            <small className="text-muted me-2">热门:</small>
+            {['HC400', 'HC600', 'GWC36.45', 'HCQ700', '4.43', 'HCD400'].map(tag => (
+              <Badge key={tag} bg="primary" style={{ cursor: 'pointer', fontSize: '0.85rem', padding: '6px 12px' }} onClick={() => handleSearch(tag)}>
+                <i className="bi bi-search me-1"></i>{tag}
+              </Badge>
+            ))}
+          </div>
         </Alert>
       ) : (
+        <>
+          {/* P2#8 — 分面筛选: 系列 / 功率段 / 价格状态 */}
+          {rawResults.length > 0 && (
+            <Card className="mb-3">
+              <Card.Body className="py-2 px-3">
+                <Row className="align-items-center g-2">
+                  <Col md="auto">
+                    <small className="text-muted me-2">系列:</small>
+                    <Badge
+                      bg={facetSeries === 'all' ? 'primary' : 'light'}
+                      text={facetSeries === 'all' ? undefined : 'dark'}
+                      className="me-1"
+                      style={{ cursor: 'pointer', padding: '5px 10px' }}
+                      onClick={() => setFacetSeries('all')}
+                    >
+                      全部 ({rawResults.length})
+                    </Badge>
+                    {Object.entries(facetCounts.seriesCounts)
+                      .sort((a, b) => b[1] - a[1])
+                      .slice(0, 8)
+                      .map(([s, count]) => (
+                        <Badge
+                          key={s}
+                          bg={facetSeries === s ? 'primary' : 'light'}
+                          text={facetSeries === s ? undefined : 'dark'}
+                          className="me-1"
+                          style={{ cursor: 'pointer', padding: '5px 10px' }}
+                          onClick={() => setFacetSeries(s)}
+                        >
+                          {s} ({count})
+                        </Badge>
+                    ))}
+                  </Col>
+                  <Col md="auto">
+                    <small className="text-muted me-2">| 功率:</small>
+                    {POWER_BANDS.map(b => (
+                      <Badge
+                        key={b.key}
+                        bg={facetPowerBand === b.key ? 'success' : 'light'}
+                        text={facetPowerBand === b.key ? undefined : 'dark'}
+                        className="me-1"
+                        style={{ cursor: 'pointer', padding: '5px 10px' }}
+                        onClick={() => setFacetPowerBand(b.key)}
+                      >
+                        {b.label}
+                        {b.key !== 'all' && ` (${facetCounts.bandCounts[b.key] || 0})`}
+                      </Badge>
+                    ))}
+                  </Col>
+                  <Col md="auto">
+                    <Form.Check
+                      type="switch"
+                      id="facet-price-only"
+                      label="仅显示有价"
+                      checked={facetPriceOnly}
+                      onChange={(e) => setFacetPriceOnly(e.target.checked)}
+                    />
+                  </Col>
+                  {(facetSeries !== 'all' || facetPowerBand !== 'all' || facetPriceOnly) && (
+                    <Col md="auto">
+                      <Button
+                        size="sm"
+                        variant="outline-secondary"
+                        onClick={() => {
+                          setFacetSeries('all');
+                          setFacetPowerBand('all');
+                          setFacetPriceOnly(false);
+                        }}
+                      >
+                        <i className="bi bi-x-circle me-1"></i>清除筛选
+                      </Button>
+                    </Col>
+                  )}
+                </Row>
+              </Card.Body>
+            </Card>
+          )}
+
         <Row>
           <Col md={selectedResult ? 7 : 12}>
             <Card>
-              <Card.Header>搜索结果 ({results.length})</Card.Header>
+              <Card.Header>
+                搜索结果 ({results.length}
+                {results.length !== rawResults.length && (
+                  <span className="text-muted"> · 共 {rawResults.length} 项, 已过滤 {rawResults.length - results.length} 项</span>
+                )})
+              </Card.Header>
               <Card.Body className="p-0">
                 <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
                   {results.length === 0 ? (
@@ -328,7 +483,9 @@ export default function SmartSearchView({ colors, theme }) {
                     <ListGroup.Item className="d-flex justify-content-between py-1"><span>转速范围</span><span>{detailInfo.speedRange ? `${detailInfo.speedRange[0]}~${detailInfo.speedRange[1]} rpm` : '—'}</span></ListGroup.Item>
                     <ListGroup.Item className="d-flex justify-content-between py-1"><span>推力</span><span>{detailInfo.thrust ? `${detailInfo.thrust} kN` : '—'}</span></ListGroup.Item>
                     <ListGroup.Item className="d-flex justify-content-between py-1"><span>重量</span><span>{detailInfo.weight ? `${detailInfo.weight} kg` : '—'}</span></ListGroup.Item>
-                    {detailInfo.factoryPrice > 0 && <ListGroup.Item className="d-flex justify-content-between py-1"><span>出厂价</span><strong className="text-success">¥{detailInfo.factoryPrice.toLocaleString()}</strong></ListGroup.Item>}
+                    {detailInfo.factoryPrice > 0
+                      ? <ListGroup.Item className="d-flex justify-content-between py-1"><span>出厂价</span><strong className="text-success">¥{detailInfo.factoryPrice.toLocaleString()}</strong></ListGroup.Item>
+                      : <ListGroup.Item className="d-flex justify-content-between py-1"><span>出厂价</span><Badge bg="warning" text="dark" title="此型号暂无公开报价,请联系销售">询价</Badge></ListGroup.Item>}
                     {selectedResult.marketData?.avgSalePrice && (
                       <ListGroup.Item className="d-flex justify-content-between py-1">
                         <span>市场参考价 <small className="text-muted">(近15月成交均价)</small></span>
@@ -390,6 +547,7 @@ export default function SmartSearchView({ colors, theme }) {
             </Col>
           )}
         </Row>
+        </>
       )}
     </Container>
   );
