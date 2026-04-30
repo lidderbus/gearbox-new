@@ -31,53 +31,7 @@ import {
   CARBON_PRICES
 } from '../utils/emissionCalculator';
 
-/**
- * P2#13 — FuelEU Maritime 温室气体强度合规计算 (2025 生效)
- * 参考: REGULATION (EU) 2023/1805 Article 4 + Annex II/IV
- * - 基准 (2020): 91.16 gCO2eq/MJ
- * - 罚款率: €2400 / t VLSFO 当量超额 (Article 23)
- */
-const FUELEU_BASELINE_INTENSITY = 91.16;     // gCO2eq/MJ
-const FUELEU_VLSFO_LHV = 41000;              // MJ/t VLSFO
-const FUELEU_PENALTY_PER_T_VLSFO = 2400;     // €/t
-
-const FUELEU_TARGETS = [
-  { from: 2025, to: 2029, reduction: 0.02,  limit: 89.34 },
-  { from: 2030, to: 2034, reduction: 0.06,  limit: 85.69 },
-  { from: 2035, to: 2039, reduction: 0.145, limit: 77.94 },
-  { from: 2040, to: 2044, reduction: 0.31,  limit: 62.90 },
-  { from: 2045, to: 2049, reduction: 0.62,  limit: 34.64 },
-  { from: 2050, to: 2099, reduction: 0.80,  limit: 18.23 },
-];
-
-const FUELEU_WTW_INTENSITY = {
-  HFO: 91.6, LFO: 91.4, MDO: 91.5, MGO: 91.5,
-  LNG: 76.7, LPG: 75.5, METHANOL: 99.5, AMMONIA: 0,
-};
-
-function computeFuelEU({ year, annualFuelTons, fuelType, baselineCF, baselineLHV }) {
-  const actualIntensity = FUELEU_WTW_INTENSITY[fuelType]
-    || (baselineCF && baselineLHV ? (baselineCF * 1000 / baselineLHV) * 1.13 : FUELEU_BASELINE_INTENSITY);
-  const target = FUELEU_TARGETS.find(t => year >= t.from && year <= t.to)
-    || { limit: FUELEU_BASELINE_INTENSITY, reduction: 0, from: '—', to: '—' };
-  const annualEnergyMJ = (annualFuelTons || 0) * 1000 * (baselineLHV || 42.7);
-  const deficitGCO2eq = (actualIntensity - target.limit) * annualEnergyMJ;
-  const excessVLSFOTons = deficitGCO2eq > 0
-    ? deficitGCO2eq / (FUELEU_VLSFO_LHV * FUELEU_BASELINE_INTENSITY)
-    : 0;
-  const penaltyEUR = Math.round(excessVLSFOTons * FUELEU_PENALTY_PER_T_VLSFO);
-  return {
-    year,
-    actualIntensity,
-    targetLimit: target.limit,
-    targetReduction: target.reduction,
-    targetWindow: `${target.from}-${target.to}`,
-    deficitGCO2eq,
-    excessVLSFOTons,
-    penaltyEUR,
-    compliant: deficitGCO2eq <= 0,
-  };
-}
+import { computeFuelEU } from '../utils/fuelEUMaritime';
 
 /**
  * 安全格式化数字 - 防止 toFixed 调用失败
