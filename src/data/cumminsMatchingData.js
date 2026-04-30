@@ -374,9 +374,10 @@ export const gearboxDistribution = [
   { series: '其他', count: 9, percentage: 4.5 }
 ];
 
-// 统计数据
+// 统计数据 (P2#11 — 精确化: 加 dataAsOf, 去 200+ 估算口径)
 export const statistics = {
-  totalUnits: 200,
+  totalUnits: 200,            // 行业累计估算 (2024 财年内部统计口径)
+  totalUnitsExact: false,     // 标记为估算值 (UI 显示 "约 200" 而非 "200+")
   totalProjects: 35,
   engineSeries: ['K19', 'K38', 'K50', 'QSN'],
   gearboxSeries: ['HC', 'HCA', 'HCQ', 'HCAM', 'GWC'],
@@ -384,7 +385,8 @@ export const statistics = {
   topShipyards: ['中船英辉', '江苏通洋船舶', '平湖华海', '江龙船艇'],
   yearRange: '2022-2024',
   avgUnitsPerProject: 5.7,
-  successRate: '100%'
+  successRate: '100%',
+  dataAsOf: '2024-12-31'      // 数据截止日, UI 应回显
 };
 
 // 合作优势

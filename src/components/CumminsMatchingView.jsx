@@ -164,9 +164,17 @@ const CumminsMatchingView = ({ theme = 'light', colors = {} }) => {
                 <span>配套案例库</span>
               </h2>
               <p style={{ color: themeColors.textMuted }} className="mb-0">
-                累计配套 <strong className="text-primary">{statistics.totalUnits}+</strong> 台套 |
+                累计配套 <strong className="text-primary">{statistics.totalUnitsExact === false ? '约 ' : ''}{statistics.totalUnits}</strong> 台套 |
                 覆盖 <strong>{statistics.engineSeries.length}</strong> 大系列主机 |
                 数据周期: {statistics.yearRange}
+                {statistics.dataAsOf && (
+                  <>
+                    {' · '}
+                    <span title="本页数据由内部销售台账定期同步,显示截至该日的口径">
+                      数据更新于 {statistics.dataAsOf}
+                    </span>
+                  </>
+                )}
               </p>
             </div>
             <div className="d-flex gap-2">
@@ -192,8 +200,16 @@ const CumminsMatchingView = ({ theme = 'light', colors = {} }) => {
         <Col xs={6} md={3}>
           <Card className="h-100 border-0 shadow-sm" style={{ backgroundColor: themeColors.card }}>
             <Card.Body className="text-center py-3">
-              <div className="display-6 fw-bold text-primary">{statistics.totalUnits}+</div>
-              <small style={{ color: themeColors.textMuted }}>累计配套台数</small>
+              <div className="display-6 fw-bold text-primary">
+                {statistics.totalUnitsExact === false && <span style={{ fontSize: '0.6em', verticalAlign: 'top' }}>约 </span>}
+                {statistics.totalUnits}
+              </div>
+              <small style={{ color: themeColors.textMuted }}>
+                累计配套台数
+                {statistics.dataAsOf && (
+                  <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>截至 {statistics.dataAsOf}</div>
+                )}
+              </small>
             </Card.Body>
           </Card>
         </Col>

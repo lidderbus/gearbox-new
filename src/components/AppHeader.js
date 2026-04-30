@@ -1,9 +1,26 @@
 // src/components/AppHeader.js
 // 应用头部组件 - 包含工具栏和提示信息
 
-import React, { lazy, Suspense } from 'react';
-import { Row, Col, Button, Alert, Spinner } from 'react-bootstrap';
+import React, { lazy, Suspense, useMemo } from 'react';
+import { Row, Col, Button, Alert, Spinner, Badge, OverlayTrigger, Popover } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+
+// P2#9 (2026-04-30) — 诊断面板红角标 + hover 显示前 3 条空数据集
+const DIAGNOSTIC_COLLECTIONS = [
+  { key: 'hcGearboxes', name: 'HC系列齿轮箱' },
+  { key: 'gwGearboxes', name: 'GW系列齿轮箱' },
+  { key: 'hcmGearboxes', name: 'HCM系列齿轮箱' },
+  { key: 'dtGearboxes', name: 'DT系列齿轮箱' },
+  { key: 'hcqGearboxes', name: 'HCQ系列齿轮箱' },
+  { key: 'gcGearboxes', name: 'GC系列齿轮箱' },
+  { key: 'hcaGearboxes', name: 'HCA系列齿轮箱' },
+  { key: 'hcvGearboxes', name: 'HCV系列齿轮箱' },
+  { key: 'hcxGearboxes', name: 'HCX系列齿轮箱' },
+  { key: 'mvGearboxes', name: 'MV系列齿轮箱' },
+  { key: 'otherGearboxes', name: '其他系列齿轮箱' },
+  { key: 'flexibleCouplings', name: '高弹性联轴器' },
+  { key: 'standbyPumps', name: '备用泵' },
+];
 
 const NotificationCenter = lazy(() => import('./NotificationCenter'));
 
@@ -32,6 +49,47 @@ const AppHeader = ({
   // 数据状态
   appDataState
 }) => {
+  // P2#9 — 计算诊断空集合数 (前 3 条用于 hover 预览)
+  const diagnostics = useMemo(() => {
+    const issues = DIAGNOSTIC_COLLECTIONS
+      .map(col => ({
+        ...col,
+        count: Array.isArray(appDataState?.[col.key]) ? appDataState[col.key].length : 0
+      }))
+      .filter(c => c.count === 0);
+    return { issues, total: issues.length, top: issues.slice(0, 3) };
+  }, [appDataState]);
+
+  const diagnosticPopover = (
+    <Popover id="diagnostic-preview" style={{ maxWidth: 320 }}>
+      <Popover.Header as="h6" style={{ fontSize: '0.85rem' }}>
+        <i className="bi bi-exclamation-triangle-fill text-warning me-1"></i>
+        待处理诊断 ({diagnostics.total})
+      </Popover.Header>
+      <Popover.Body style={{ fontSize: '0.85rem', padding: '8px 12px' }}>
+        {diagnostics.total === 0 ? (
+          <span className="text-success">
+            <i className="bi bi-check-circle-fill me-1"></i>所有数据集就绪
+          </span>
+        ) : (
+          <>
+            {diagnostics.top.map(item => (
+              <div key={item.key} className="d-flex align-items-center mb-1">
+                <i className="bi bi-circle-fill text-danger me-2" style={{ fontSize: '0.5rem' }}></i>
+                <span>{item.name} <small className="text-muted">(空)</small></span>
+              </div>
+            ))}
+            {diagnostics.total > 3 && (
+              <div className="text-muted mt-1" style={{ fontSize: '0.8rem' }}>
+                其余 {diagnostics.total - 3} 项点击展开...
+              </div>
+            )}
+          </>
+        )}
+      </Popover.Body>
+    </Popover>
+  );
+
   return (
     <>
       <div className="app-header">
@@ -50,9 +108,39 @@ const AppHeader = ({
                 <Button as={Link} to="/database" variant="outline-success" size="sm" title="管理数据库">
                   <i className="bi bi-database me-1"></i> 数据库管理
                 </Button>
-                <Button variant="outline-info" size="sm" onClick={() => setShowDiagnosticPanel(true)} title="系统诊断">
-                  <i className="bi bi-wrench-adjustable me-1"></i> 系统诊断
-                </Button>
+                <OverlayTrigger
+                  trigger={['hover', 'focus']}
+                  placement="bottom"
+                  overlay={diagnosticPopover}
+                  delay={{ show: 200, hide: 100 }}
+                >
+                  <Button
+                    variant={diagnostics.total > 0 ? 'outline-danger' : 'outline-info'}
+                    size="sm"
+                    onClick={() => setShowDiagnosticPanel(true)}
+                    title={`系统诊断 (${diagnostics.total} 项待处理)`}
+                    style={{ position: 'relative' }}
+                  >
+                    <i className="bi bi-wrench-adjustable me-1"></i>
+                    系统诊断
+                    {diagnostics.total > 0 && (
+                      <Badge
+                        bg="danger"
+                        pill
+                        style={{
+                          position: 'absolute',
+                          top: -6,
+                          right: -6,
+                          fontSize: '0.65rem',
+                          minWidth: 18,
+                          padding: '2px 5px'
+                        }}
+                      >
+                        {diagnostics.total}
+                      </Badge>
+                    )}
+                  </Button>
+                </OverlayTrigger>
               </>
             )}
             <Suspense fallback={null}>

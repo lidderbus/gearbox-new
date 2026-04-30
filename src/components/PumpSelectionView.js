@@ -59,8 +59,11 @@ const PumpSelectionViewInner = ({
     loadData();
   }, []);
 
-  // 选型模式
-  const [selectionMode, setSelectionMode] = useState('auto');
+  // 选型模式 — P2#10 (2026-04-30): 未选齿轮箱时默认进 "参数选型" 独立模式,
+  // 不再因缺前置选型而显示空白页
+  const [selectionMode, setSelectionMode] = useState(
+    selectedGearbox?.model ? 'auto' : 'manual'
+  );
 
   // 手动选型参数
   const [flowRequired, setFlowRequired] = useState('');
@@ -363,7 +366,17 @@ const PumpSelectionViewInner = ({
         </>
       ) : (
         <Alert variant="secondary">
-          请先在"齿轮箱选型"中选择一个齿轮箱型号，或使用"参数选型"功能手动选择备用泵。
+          <div className="mb-2">
+            请先在"齿轮箱选型"中选择一个齿轮箱型号，或使用"参数选型"独立模式按流量/压力规格筛选备用泵。
+          </div>
+          <Button
+            variant="outline-primary"
+            size="sm"
+            onClick={() => setSelectionMode('manual')}
+          >
+            <i className="bi bi-arrow-right-circle me-1"></i>
+            切换到参数选型 (独立模式)
+          </Button>
         </Alert>
       )}
     </div>
