@@ -2,17 +2,20 @@ import React, { useState } from 'react';
 import { Card, Button, Alert, Row, Col, Table, Badge, Form, Dropdown } from 'react-bootstrap';
 import { printHtmlContent } from '../utils/pdfExportUtils';
 import SmartPricingCard from './SmartPricingCard';
+import ERPExportPreview from './ERPExportPreview';
 
-const QuotationView = ({ 
-  quotation, 
-  gearbox, 
-  colors, 
-  onSave, 
-  onExport, 
-  onGenerateAgreement, 
-  onAddCustomItem, 
-  onUpdatePrices, 
-  onRemoveItem 
+const QuotationView = ({
+  quotation,
+  gearbox,
+  colors,
+  projectInfo,
+  onSave,
+  onExport,
+  onGenerateAgreement,
+  onAddCustomItem,
+  onUpdatePrices,
+  onRemoveItem,
+  onApplyStrategy
 }) => {
   // State management
   const [error, setError] = useState('');
@@ -21,6 +24,7 @@ const QuotationView = ({
   const [showPriceDetails, setShowPriceDetails] = useState(false);
   const [showSaveForm, setShowSaveForm] = useState(false);
   const [saveNameInput, setSaveNameInput] = useState('');
+  const [showERPPreview, setShowERPPreview] = useState(false); // P2#6 ERP 同步预览
 
   // 使用报价单中保存的备用泵需求信息
   const requiresPump = quotation?.options?.needsPump;
@@ -210,9 +214,41 @@ const QuotationView = ({
         {quotation && (
           <div className="quotation-preview-content">
             {/* 报价单标题 */}
-            <div className="text-center p-4" style={{ borderBottom: `1px solid ${colors?.border}` }}>
-              <h3 style={{ color: colors?.headerText }}>报 价 单</h3>
-              <div className="small text-muted mt-1">报价单号：{quotation.quotationNumber} | 日期：{quotation.date} | 有效期至：{quotation.expiryDate}</div>
+            <div className="text-center p-4" style={{ borderBottom: `1px solid ${colors?.border}`, position: 'relative' }}>
+              {/* P1#6 — 草稿/正式状态徽章 */}
+              {quotation.quotationStatus === 'draft' && (
+                <Badge
+                  bg="danger"
+                  className="position-absolute"
+                  style={{ top: 8, right: 12, fontSize: '0.85rem', padding: '6px 12px' }}
+                >
+                  <i className="bi bi-file-earmark-x me-1"></i>草稿
+                  {quotation.priceVersionUsed?.daysOverdue > 0 && (
+                    <span className="ms-1">· 价格过期 {quotation.priceVersionUsed.daysOverdue} 天</span>
+                  )}
+                </Badge>
+              )}
+              {quotation.quotationStatus === 'official' && (
+                <Badge
+                  bg="success"
+                  className="position-absolute"
+                  style={{ top: 8, right: 12, fontSize: '0.85rem', padding: '6px 12px' }}
+                >
+                  <i className="bi bi-patch-check-fill me-1"></i>正式
+                </Badge>
+              )}
+              <h3 style={{ color: colors?.headerText }}>
+                报 价 单
+                {quotation.quotationStatus === 'draft' && (
+                  <span className="ms-2 text-danger" style={{ fontSize: '0.6em' }}>[ 草稿 · 价格未更新 ]</span>
+                )}
+              </h3>
+              <div className="small text-muted mt-1">
+                报价单号：{quotation.quotationNumber} | 日期：{quotation.date} | 有效期至：{quotation.expiryDate}
+                {quotation.priceVersionUsed?.version && (
+                  <span className="ms-2">| 价格版本：{quotation.priceVersionUsed.version}</span>
+                )}
+              </div>
             </div>
             
             {/* 基本信息 */}
@@ -443,6 +479,7 @@ const QuotationView = ({
                   basePrice={quotation.items[0]?.unitPrice}
                   quantity={quotation.items[0]?.quantity || 1}
                   customerName={quotation.customerInfo?.name}
+                  onSelectStrategy={onApplyStrategy}
                 />
               )}
 
@@ -566,9 +603,17 @@ const QuotationView = ({
                   )}
                 </div>
                 <div>
-                  <Button 
-                    variant="outline-secondary" 
-                    className="me-2" 
+                  <Button
+                    variant="outline-info"
+                    className="me-2"
+                    onClick={() => setShowERPPreview(true)}
+                    title="查看保存时会同步到 ERP 各系统的 JSON 数据"
+                  >
+                    <i className="bi bi-shield-check me-1"></i> ERP 同步预览
+                  </Button>
+                  <Button
+                    variant="outline-secondary"
+                    className="me-2"
                     onClick={handlePrint}
                   >
                     <i className="bi bi-printer me-1"></i> 打印
@@ -586,7 +631,7 @@ const QuotationView = ({
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
-                  <Button 
+                  <Button
                     variant="primary"
                     onClick={onGenerateAgreement}
                   >
@@ -597,6 +642,15 @@ const QuotationView = ({
             </div>
           </div>
         )}
+
+        {/* P2#6 (2026-04-24): ERP 同步数据预览 Modal */}
+        <ERPExportPreview
+          show={showERPPreview}
+          onHide={() => setShowERPPreview(false)}
+          quotation={quotation}
+          projectInfo={projectInfo}
+          colors={colors}
+        />
       </Card.Body>
     </Card>
   );

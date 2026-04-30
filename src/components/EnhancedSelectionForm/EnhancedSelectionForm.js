@@ -8,6 +8,7 @@ import { useEnhancedSelectionForm } from './useEnhancedSelectionForm';
 import { loadJsPDF } from '../../utils/dynamicImports';
 import { autoSelectGearbox, selectPTOClutch } from '../../utils/selectionAlgorithm';
 import { initialData } from '../../data/initialData';
+import { formatPriceWithFallback } from '../../utils/priceFormatter';
 import { submitInquiry } from '../../api/inquiryApi';
 import CustomerInfoSection from './CustomerInfoSection';
 import EngineInfoSection from './EngineInfoSection';
@@ -476,9 +477,10 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
           doc.text(`余量: ${margin}%`, 25, yPos);
           yPos += 5;
 
-          // 价格
-          if (gearbox.price) {
-            doc.text(`参考价格: ¥${gearbox.price.toLocaleString()}`, 25, yPos);
+          // 价格 (P0#2 — 走 lookupPriceByModel 兜底, GW 公式可命中)
+          {
+            const priceTxt = formatPriceWithFallback(gearbox);
+            doc.text(`参考价格: ${priceTxt}`, 25, yPos);
             yPos += 5;
           }
 
@@ -518,7 +520,7 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
             capacity ? capacity.toFixed(4) : '-',
             `${((rec.capacityMargin || 0) * 100).toFixed(1)}%`,
             gearbox.weight ? `${gearbox.weight}kg` : '-',
-            gearbox.price ? `¥${gearbox.price.toLocaleString()}` : '-'
+            formatPriceWithFallback(gearbox, '-')
           ];
         });
 

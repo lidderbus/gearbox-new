@@ -5,6 +5,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Card, Table, ProgressBar, Alert, Badge, Button, Row, Col, Collapse } from 'react-bootstrap';
 import ScoreRadarChart from './ScoreRadarChart';
 import { deriveShaftArrangement } from '../../config/shaftArrangementConfig';
+import { formatPriceWithFallback } from '../../utils/priceFormatter';
 
 /**
  * 齿轮箱评分器组件
@@ -602,9 +603,7 @@ const GearboxScorer = ({
                   style={{ height: '0.5rem', marginBottom: '4px' }}
                 />
                 <small>
-                  {gearbox.price > 0
-                    ? `¥${gearbox.price.toLocaleString()}`
-                    : '价格数据缺失'}
+                  {formatPriceWithFallback(gearbox, '价格数据缺失')}
                 </small>
               </td>
             </tr>

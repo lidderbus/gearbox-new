@@ -6,6 +6,7 @@
 import { loadJsPDF } from './dynamicImports';
 import { toast } from './toast';
 import { applyPriceWatermarkToPDF } from './priceVersioning';
+import { formatPriceWithFallback } from './priceFormatter';
 
 const FONT_CACHE_KEY = 'pdf_font_notosans_sc_b64';
 
@@ -189,9 +190,7 @@ export async function generateSelectionReportPDF(
     g.capacityMargin != null ? `${g.capacityMargin.toFixed(1)}%` : '—',
     g.thrust ? `${g.thrust}` : '—',
     g.weight ? `${g.weight}` : '—',
-    g.factoryPrice || g.price
-      ? `¥${Number(g.factoryPrice || g.price).toLocaleString()}`
-      : '询价',
+    formatPriceWithFallback(g),
     g.score?.toFixed(1) || '—',
   ]);
 
@@ -265,9 +264,7 @@ export async function generateSelectionReportPDF(
       '价格+数据',
       `${estPriceAndData.toFixed(0)}`,
       '20',
-      selected.factoryPrice || selected.price
-        ? `¥${Number(selected.factoryPrice || selected.price).toLocaleString()}`
-        : '询价',
+      formatPriceWithFallback(selected),
     ],
   ];
 

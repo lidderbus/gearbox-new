@@ -2,6 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
 import { needsStandbyPump } from '../utils/enhancedPumpSelection';
+import {
+  getPriceStatus,
+  getDaysUntilExpiry,
+  PriceStatus,
+  PRICE_VERSION
+} from '../utils/priceVersioning';
 
 /**
  * 报价单选项设置对话框
@@ -36,6 +42,11 @@ const QuotationOptionsModal = ({
   // 状态
   const [options, setOptions] = useState(defaultOptions);
   const [error, setError] = useState('');
+  // P0#1 — 价格过期承认勾选
+  const priceStatus = getPriceStatus();
+  const isPriceExpired = priceStatus === PriceStatus.EXPIRED;
+  const priceOverdue = Math.abs(getDaysUntilExpiry());
+  const [acknowledgedExpired, setAcknowledgedExpired] = useState(false);
 
   // 初始化
   useEffect(() => {
@@ -79,6 +90,8 @@ const QuotationOptionsModal = ({
 
       // 清除错误信息
       setError('');
+      // 每次重新打开 modal 都重置过期承认勾选
+      setAcknowledgedExpired(false);
     }
   }, [show, hasSpecialPackagePrice, selectedComponents]);
 
@@ -122,7 +135,15 @@ const QuotationOptionsModal = ({
   // 应用选项
   const handleApply = () => {
     if (!isValid()) return;
-    onApply(options);
+    if (isPriceExpired && !acknowledgedExpired) {
+      setError(`价格数据已过期 ${priceOverdue} 天，请勾选"我已知晓..."后再继续。`);
+      return;
+    }
+    onApply({
+      ...options,
+      acknowledgedExpired: isPriceExpired ? acknowledgedExpired : undefined,
+      markAsDraft: isPriceExpired ? true : undefined
+    });
   };
 
   // 判断是否需要备用泵
@@ -153,6 +174,28 @@ const QuotationOptionsModal = ({
           <Alert variant="danger" onClose={() => setError('')} dismissible>
             <i className="bi bi-exclamation-triangle-fill me-2"></i>
             {error}
+          </Alert>
+        )}
+
+        {/* P0#1 / P1#6 — 价格过期警告 + 草稿确认 (强弱阻断混合) */}
+        {isPriceExpired && (
+          <Alert variant="danger" className="mb-3">
+            <div className="mb-2">
+              <i className="bi bi-exclamation-octagon-fill me-2"></i>
+              <strong>价格数据已过期 {priceOverdue} 天</strong>
+              （版本 {PRICE_VERSION.version}，截止 {PRICE_VERSION.expiryDate}）
+            </div>
+            <div className="small mb-2">
+              此报价单将自动标记为<strong>「草稿」</strong>，PDF 含对角水印，文件名带 <code>[草稿]_</code> 前缀，
+              不可作为对外正式商务文件使用。请尽快联系管理员更新价格数据。
+            </div>
+            <Form.Check
+              type="checkbox"
+              id="acknowledge-expired-price"
+              label={`我已知晓价格已过期 ${priceOverdue} 天，按草稿生成`}
+              checked={acknowledgedExpired}
+              onChange={(e) => setAcknowledgedExpired(e.target.checked)}
+            />
           </Alert>
         )}
 
@@ -400,8 +443,13 @@ const QuotationOptionsModal = ({
         <Button variant="secondary" onClick={onHide}>
           取消
         </Button>
-        <Button variant="primary" onClick={handleApply}>
-          生成报价单
+        <Button
+          variant={isPriceExpired ? 'warning' : 'primary'}
+          onClick={handleApply}
+          disabled={isPriceExpired && !acknowledgedExpired}
+          title={isPriceExpired && !acknowledgedExpired ? '请先勾选"我已知晓价格已过期"' : ''}
+        >
+          {isPriceExpired ? '生成报价单（草稿）' : '生成报价单'}
         </Button>
       </Modal.Footer>
     </Modal>

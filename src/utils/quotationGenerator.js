@@ -11,7 +11,15 @@ import { getGWPackagePriceConfig, checkPackageMatch } from '../data/packagePrice
 import { getPriceMode, PRICE_MODE } from '../data/priceDiscount';
 // 导入增强版备用泵需求判断函数
 import { needsStandbyPump } from '../utils/enhancedPumpSelection';
-import { applyPriceWatermarkToPDF, getExportWatermarkText } from './priceVersioning';
+import {
+    applyPriceWatermarkToPDF,
+    getExportWatermarkText,
+    PRICE_VERSION,
+    getPriceStatus,
+    getDaysUntilExpiry,
+    PriceStatus,
+    PriceVersionManager
+} from './priceVersioning';
 
 /**
  * 供方信息配置 — 集中管理，便于维护
@@ -341,11 +349,35 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
 
     // 在报价单对象中添加标记，表明是否使用了特殊打包价格
     // 使用特殊打包价格时，总价使用特殊打包价格，而不是累加价格
+    // 价格版本与报价单状态 (P0#1 / P1#6 二态机)
+    const priceStatusNow = getPriceStatus();
+    const priceDaysOverdue = getDaysUntilExpiry();
+    const isPriceExpiredNow = priceStatusNow === PriceStatus.EXPIRED;
+    const quotationStatus = isPriceExpiredNow || finalOptions.markAsDraft === true ? 'draft' : 'official';
+    try {
+        PriceVersionManager.logPriceUsage('quotation_generated', {
+            quotationStatus,
+            priceStatus: priceStatusNow,
+            priceDaysOverdue,
+            gearboxModel
+        });
+    } catch (e) { /* ignore audit failure */ }
+
     const result = {
         success: true,
         quotationNumber,
         date: formattedDate,
         expiryDate: formattedExpiryDate,
+        // P0#1 / P1#6 — 价格版本与草稿/正式二态机
+        quotationStatus,
+        priceVersionUsed: {
+            version: PRICE_VERSION.version,
+            effectiveDate: PRICE_VERSION.effectiveDate,
+            expiryDate: PRICE_VERSION.expiryDate,
+            lastUpdated: PRICE_VERSION.lastUpdated,
+            status: priceStatusNow,
+            daysOverdue: isPriceExpiredNow ? Math.abs(priceDaysOverdue) : 0
+        },
         customerInfo: {
             name: projectInfo?.customerName || 'N/A',
             contactPerson: projectInfo?.contactPerson || '',

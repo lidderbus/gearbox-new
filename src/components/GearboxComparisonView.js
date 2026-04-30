@@ -1,6 +1,7 @@
 // components/GearboxComparisonView.js
 import React, { useState, useMemo } from 'react';
 import { Card, Table, Badge, Form, Button, Modal, ListGroup, Row, Col } from 'react-bootstrap';
+import { formatPriceWithFallback } from '../utils/priceFormatter';
 
 /**
  * Enhanced Gearbox Comparison Component
@@ -454,7 +455,7 @@ const ModelSearchModal = ({
                 <div style={{ fontSize: '0.85rem', color: '#6c757d' }}>
                   {gearbox.minPower}-{gearbox.maxPower}kW |
                   {gearbox.ratios?.length || 0}个速比 |
-                  {gearbox.price ? `¥${gearbox.price.toLocaleString()}` : '价格待询'}
+                  {formatPriceWithFallback(gearbox, '价格待询')}
                 </div>
               </ListGroup.Item>
             ))}

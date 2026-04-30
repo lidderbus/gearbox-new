@@ -20,6 +20,8 @@ import {
 import { optimizedHtmlToPdf } from '../utils/pdfExportUtils';
 import { getGWPackagePriceConfig } from '../data/packagePriceConfig';
 import { needsStandbyPump } from '../utils/enhancedPumpSelection';
+import { getMarkupRate } from '../data/priceDiscount';
+import { getPriceStatus, getDaysUntilExpiry, PriceStatus } from '../utils/priceVersioning';
 
 /**
  * 报价单相关处理函数 Hook
@@ -75,6 +77,14 @@ const useQuotationHandlers = ({
 
   // 根据选项生成报价单
   const generateQuotationWithOptions = useCallback((options = {}) => {
+    // P0#1 — 价格已过期时弱阻断: 必须用户已勾选 acknowledgedExpired
+    if (getPriceStatus() === PriceStatus.EXPIRED && !options.acknowledgedExpired) {
+      const overdue = Math.abs(getDaysUntilExpiry());
+      setError(`价格数据已过期 ${overdue} 天，无法生成正式报价。请在"报价单选项"中勾选"我已知晓价格已过期，按草稿生成"。`);
+      setShowQuotationOptions(true);
+      return;
+    }
+
     setLoading(true);
     setError('');
     setSuccess('正在生成报价单...');
@@ -330,7 +340,7 @@ const useQuotationHandlers = ({
             usingSpecialPackagePrice = true;
             specialPackagePrice = gwConfig.packagePrice;
           } else {
-            let marketPrice = gearbox.marketPrice || gearbox.factoryPrice * 1.15;
+            let marketPrice = gearbox.marketPrice || gearbox.factoryPrice * getMarkupRate(gearbox.model);
             let factoryPrice = gearbox.factoryPrice || marketPrice * 0.85;
 
             // 检查是否需要将配件价格包含在齿轮箱价格中
@@ -340,7 +350,7 @@ const useQuotationHandlers = ({
             // 检查联轴器是否包含在齿轮箱价格中
             if (updatedQuotation.options?.includeCouplingInGearbox && selectedComponents.coupling) {
               const couplingMarket = selectedComponents.coupling.marketPrice ||
-                                   selectedComponents.coupling.factoryPrice * 1.15 || 0;
+                                   selectedComponents.coupling.factoryPrice * getMarkupRate(selectedComponents.coupling.model) || 0;
               const couplingFactory = selectedComponents.coupling.factoryPrice || couplingMarket * 0.9;
               includedAccessoriesMarketPrice += couplingMarket;
               includedAccessoriesFactoryPrice += couplingFactory;
@@ -352,7 +362,7 @@ const useQuotationHandlers = ({
                 updatedQuotation.options?.needsPump &&
                 selectedComponents.pump) {
               const pumpMarket = selectedComponents.pump.marketPrice ||
-                               selectedComponents.pump.factoryPrice * 1.15 || 0;
+                               selectedComponents.pump.factoryPrice * getMarkupRate(selectedComponents.pump.model) || 0;
               const pumpFactory = selectedComponents.pump.factoryPrice || pumpMarket * 0.9;
               includedAccessoriesMarketPrice += pumpMarket;
               includedAccessoriesFactoryPrice += pumpFactory;
@@ -374,7 +384,7 @@ const useQuotationHandlers = ({
 
         if (item.name === "高弹性联轴器" && selectedComponents.coupling) {
           const coupling = selectedComponents.coupling;
-          const marketPrice = coupling.marketPrice || coupling.factoryPrice * 1.15;
+          const marketPrice = coupling.marketPrice || coupling.factoryPrice * getMarkupRate(coupling.model);
           item.prices.market = marketPrice;
           item.prices.factory = coupling.factoryPrice || marketPrice * 0.85;
           item.prices.package = coupling.factoryPrice || marketPrice * 0.85;
@@ -382,7 +392,7 @@ const useQuotationHandlers = ({
 
         if (item.name === "备用泵" && selectedComponents.pump && needsPump && includePump) {
           const pump = selectedComponents.pump;
-          const marketPrice = pump.marketPrice || pump.factoryPrice * 1.15;
+          const marketPrice = pump.marketPrice || pump.factoryPrice * getMarkupRate(pump.model);
           item.prices.market = marketPrice;
           item.prices.factory = pump.factoryPrice || marketPrice * 0.85;
           item.prices.package = pump.factoryPrice || marketPrice * 0.85;
@@ -431,7 +441,9 @@ const useQuotationHandlers = ({
     setSuccess(`正在导出报价单为 ${format.toUpperCase()}...`);
 
     try {
-      const filename = `${projectInfo.projectName || '未命名项目'}-报价单`;
+      // P1#6 — 草稿态文件名加 [草稿] 前缀
+      const draftPrefix = quotation.quotationStatus === 'draft' ? '[草稿]_' : '';
+      const filename = `${draftPrefix}${projectInfo.projectName || '未命名项目'}-报价单`;
 
       if (format === 'excel') {
         try {
@@ -472,16 +484,80 @@ const useQuotationHandlers = ({
     }
   }, [quotation, projectInfo.projectName, setLoading, setError, setSuccess]);
 
+  // 应用智能报价策略
+  const handleApplyStrategy = useCallback((strategy) => {
+    if (!quotation || !quotation.success) {
+      setError('请先生成报价单');
+      return;
+    }
+    try {
+      const updatedQuotation = { ...quotation };
+      updatedQuotation.discountPercentage = strategy.discount;
+      updatedQuotation.options = { ...updatedQuotation.options, discountPercentage: strategy.discount };
+
+      if (strategy.discount > 0) {
+        updatedQuotation.discountAmount = Math.round(updatedQuotation.originalAmount * (strategy.discount / 100));
+        updatedQuotation.totalAmount = updatedQuotation.originalAmount - updatedQuotation.discountAmount;
+      } else {
+        updatedQuotation.discountAmount = 0;
+        updatedQuotation.totalAmount = updatedQuotation.originalAmount;
+      }
+      updatedQuotation.totalAmountInChinese = numberToChinese(updatedQuotation.totalAmount);
+
+      setQuotation(updatedQuotation);
+      setSuccess(`已应用「${strategy.name}」策略，下浮${strategy.discount}%`);
+    } catch (error) {
+      logger.error("应用报价策略错误:", error);
+      setError('应用报价策略失败: ' + error.message);
+    }
+  }, [quotation, setQuotation, setError, setSuccess]);
+
+  // P1#3 (2026-04-24): 一键三联 — 报价单 + 技术协议 + 跳转合同 Tab
+  // 默认选项快速生成,避免用户走 3 个 Tab 逐步操作
+  const handleGenerateFullPackage = useCallback(() => {
+    if (!selectedComponents.gearbox) {
+      setError('请先完成选型,确保有选中的齿轮箱');
+      setActiveTab('input');
+      return;
+    }
+    if (!selectionResult || !selectionResult.success) {
+      setError('当前的选型结果无效,无法生成完整文件包');
+      return;
+    }
+    setSuccess('正在生成一键三联文件包...');
+    // 步骤 1: 使用默认选项生成报价单 (includePump 依据备用泵需求自动判定)
+    const defaultOptions = {
+      includePump: !!selectedComponents.pump,
+      showCouplingPrice: true,
+      showPumpPrice: true,
+      autoGenerated: true
+    };
+    generateQuotationWithOptions(defaultOptions);
+
+    // 步骤 2: 延迟触发技术协议(等 state 同步完成) → 最终停在合同 Tab
+    setTimeout(() => {
+      try {
+        setActiveTab('agreement');
+        setSuccess('报价单 + 技术协议已生成;请在合同 Tab 填写双方信息后保存');
+        setTimeout(() => setActiveTab('contract'), 600);
+      } catch (e) {
+        logger.warn('一键三联跳转合同失败', e);
+      }
+    }, 400);
+  }, [selectedComponents, selectionResult, generateQuotationWithOptions, setActiveTab, setError, setSuccess]);
+
   return {
     handleGenerateQuotation,
     generateQuotationWithOptions,
+    handleGenerateFullPackage,
     handleAddCustomQuotationItem,
     handleRemoveQuotationItem,
     handleSaveQuotation,
     handleLoadSavedQuotation,
     handleCompareQuotations,
     handleUpdateQuotationPrices,
-    handleExportQuotation
+    handleExportQuotation,
+    handleApplyStrategy
   };
 };
 

@@ -2,14 +2,11 @@ import React, { useCallback } from 'react';
 import ThemeToggle from './ThemeToggle';
 
 const ModernNavBar = ({ activeTab, onNavigate, isMobile, onMenuToggle }) => {
+  // P1#4 (2026-04-30): 顶栏与侧栏去重 — 业务入口收敛到侧栏, 顶栏仅保留 首页/智能搜索/关于
+  // 旧 8 项 → 3 项, 移除: 齿轮箱选型/型号比较/备用泵选型/康明斯配套/技术协议/报价单 (均已在侧栏分组)
   const navItems = [
     { href: '#/', label: '首页', icon: '🏠', tabKey: 'home' },
-    { href: '#/selection', label: '齿轮箱选型', icon: '⚙️', tabKey: 'input' },
-    { href: '#/comparison', label: '型号比较', icon: '📊', tabKey: 'result' },
-    { href: '#/pump-selection', label: '备用泵选型', icon: '💧', tabKey: 'pump-selection' },
-    { href: '#/cummins', label: '康明斯配套', icon: '🔧', tabKey: 'cummins' },
-    { href: '#/technical', label: '技术协议', icon: '📄', tabKey: 'agreement' },
-    { href: '#/quotation', label: '报价单', icon: '💰', tabKey: 'quotation' },
+    { href: '#/smart-search', label: '智能搜索', icon: '🔍', tabKey: 'smart-search' },
     { href: '#/about', label: '关于', icon: 'ℹ️', tabKey: null }
   ];
 

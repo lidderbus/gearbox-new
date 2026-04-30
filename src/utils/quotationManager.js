@@ -49,7 +49,9 @@ export const saveQuotation = (quotation, name, projectInfo) => {
         projectId: currentProjectId || undefined,
         items: quotation.items,
         totalAmount: quotation.totalAmount,
-        status: 'draft',
+        // P1#6 — 透传报价单二态机 (官方/草稿)
+        status: quotation.quotationStatus || 'draft',
+        priceVersionUsed: quotation.priceVersionUsed,
         model: quotation.selectedComponents?.gearbox?.model || quotation.items?.[0]?.model,
       });
     } catch (e) {
