@@ -5542,5 +5542,3068 @@
       3.64,
       3.64
     ]
+  },
+  {
+    "model": "HCS138",
+    "table": 22,
+    "kind": "C",
+    "minSpeed": 1000,
+    "maxSpeed": 2500,
+    "thrust": 30.0,
+    "centerDistance": 225,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2,
+      2.52,
+      3,
+      3.57,
+      4.05,
+      4.45
+    ],
+    "capacities": [
+      0.11,
+      0.11,
+      0.11,
+      0.11,
+      0.11,
+      0.11
+    ]
+  },
+  {
+    "model": "HCS201",
+    "table": 22,
+    "kind": "C",
+    "minSpeed": 1000,
+    "maxSpeed": 2500,
+    "thrust": 40.0,
+    "centerDistance": 205,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.48,
+      2.95,
+      3.53
+    ],
+    "capacities": [
+      0.147,
+      0.132,
+      0.132
+    ]
+  },
+  {
+    "model": "HCS302",
+    "table": 22,
+    "kind": "C",
+    "minSpeed": 750,
+    "maxSpeed": 2500,
+    "thrust": 50.0,
+    "centerDistance": 264,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2,
+      2.54,
+      3,
+      3.59,
+      4.1,
+      4.43
+    ],
+    "capacities": [
+      0.257,
+      0.243,
+      0.217,
+      0.184,
+      0.184,
+      0.184
+    ]
+  },
+  {
+    "model": "HCDS302",
+    "table": 22,
+    "kind": "C",
+    "minSpeed": 1000,
+    "maxSpeed": 2500,
+    "thrust": 60.0,
+    "centerDistance": 355,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      4.0,
+      4.48,
+      5.05,
+      5.52,
+      5.9,
+      6.56,
+      7.06,
+      7.63
+    ],
+    "capacities": [
+      0.257,
+      0.221,
+      0.2,
+      0.184,
+      0.147,
+      0.13,
+      0.13,
+      0.13
+    ]
+  },
+  {
+    "model": "HCS400",
+    "table": 22,
+    "kind": "C",
+    "minSpeed": 1000,
+    "maxSpeed": 1800,
+    "thrust": 82.0,
+    "centerDistance": 264,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.5,
+      2.04,
+      2.5,
+      3.0,
+      3.42,
+      4.06
+    ],
+    "capacities": [
+      0.331,
+      0.279,
+      0.279,
+      0.279,
+      0.279,
+      0.279
+    ]
+  },
+  {
+    "model": "HCDS400",
+    "table": 22,
+    "kind": "C",
+    "minSpeed": 1000,
+    "maxSpeed": 1800,
+    "thrust": 82.0,
+    "centerDistance": 355,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      3.96,
+      4.43,
+      5,
+      5.53,
+      5.89
+    ],
+    "capacities": [
+      0.331,
+      0.293,
+      0.272,
+      0.272,
+      0.272
+    ]
+  },
+  {
+    "model": "HCS600",
+    "table": 22,
+    "kind": "C",
+    "minSpeed": 1000,
+    "maxSpeed": 2100,
+    "thrust": 90.0,
+    "centerDistance": 320,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2,
+      2.48,
+      3,
+      3.58,
+      3.89
+    ],
+    "capacities": [
+      0.48,
+      0.44,
+      0.4,
+      0.4,
+      0.4
+    ]
+  },
+  {
+    "model": "HCDS600",
+    "table": 22,
+    "kind": "C",
+    "minSpeed": 1000,
+    "maxSpeed": 2100,
+    "thrust": 90.0,
+    "centerDistance": 415,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      4.18,
+      4.43,
+      5,
+      5.44,
+      5.71
+    ],
+    "capacities": [
+      0.48,
+      0.46,
+      0.44,
+      0.4,
+      0.4
+    ]
+  },
+  {
+    "model": "HCDS800",
+    "table": 22,
+    "kind": "C",
+    "minSpeed": 600,
+    "maxSpeed": 1800,
+    "thrust": 110.0,
+    "centerDistance": 450,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      3.96,
+      4.39,
+      4.9,
+      5.47,
+      5.89
+    ],
+    "capacities": [
+      0.625,
+      0.588,
+      0.551,
+      0.515,
+      0.515
+    ]
+  },
+  {
+    "model": "HCTS800",
+    "table": 23,
+    "kind": "C",
+    "minSpeed": 600,
+    "maxSpeed": 1800,
+    "thrust": 140.0,
+    "centerDistance": 645,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      4.95,
+      5.57,
+      5.68,
+      5.93,
+      6.43,
+      6.86,
+      7.33,
+      7.84,
+      8.4
+    ],
+    "capacities": [
+      0.625,
+      0.588,
+      0.551,
+      0.515,
+      0.48,
+      0.48,
+      0.48,
+      0.48,
+      0.48
+    ]
+  },
+  {
+    "model": "HCS1000",
+    "table": 23,
+    "kind": "C",
+    "minSpeed": 600,
+    "maxSpeed": 1900,
+    "thrust": 110.0,
+    "centerDistance": 335,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2,
+      2.5,
+      3.04,
+      3.48,
+      4.06
+    ],
+    "capacities": [
+      0.735,
+      0.65,
+      0.65,
+      0.65,
+      0.65
+    ]
+  },
+  {
+    "model": "HCS1200",
+    "table": 23,
+    "kind": "C",
+    "minSpeed": 600,
+    "maxSpeed": 1900,
+    "thrust": 120.0,
+    "centerDistance": 380,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.03,
+      2.5,
+      2.96,
+      3.55,
+      4.06,
+      4.47
+    ],
+    "capacities": [
+      0.93,
+      0.8,
+      0.65,
+      0.65,
+      0.65,
+      0.65
+    ]
+  },
+  {
+    "model": "HCDS1200",
+    "table": 23,
+    "kind": "C",
+    "minSpeed": 600,
+    "maxSpeed": 1900,
+    "thrust": 140.0,
+    "centerDistance": 450,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      3.95,
+      4.45,
+      5.0,
+      5.58
+    ],
+    "capacities": [
+      0.93,
+      0.833,
+      0.65,
+      0.65
+    ]
+  },
+  {
+    "model": "HCTS1200",
+    "table": 23,
+    "kind": "C",
+    "minSpeed": 700,
+    "maxSpeed": 1800,
+    "thrust": 150.0,
+    "centerDistance": 705,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      5.05,
+      5.6,
+      5.98,
+      6.39,
+      6.85,
+      7.35,
+      7.9
+    ],
+    "capacities": [
+      0.93,
+      0.93,
+      0.93,
+      0.93,
+      0.93,
+      0.93,
+      0.93
+    ]
+  },
+  {
+    "model": "HCDS1400",
+    "table": 23,
+    "kind": "C",
+    "minSpeed": 600,
+    "maxSpeed": 1800,
+    "thrust": 175.0,
+    "centerDistance": 485,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      4.04,
+      4.52,
+      5.05,
+      5.5,
+      5.86
+    ],
+    "capacities": [
+      1.03,
+      0.778,
+      0.778,
+      0.778,
+      0.778
+    ]
+  },
+  {
+    "model": "HCTS1400",
+    "table": 23,
+    "kind": "C",
+    "minSpeed": 600,
+    "maxSpeed": 1800,
+    "thrust": 220.0,
+    "centerDistance": 775,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      4.06,
+      4.51,
+      5.03,
+      5.52,
+      5.97,
+      6.48,
+      7.03,
+      7.5,
+      8.01,
+      8.47,
+      8.98,
+      9.55
+    ],
+    "capacities": [
+      1.03,
+      1.0,
+      0.93,
+      0.85,
+      0.85,
+      0.85,
+      0.85,
+      0.85,
+      0.85,
+      0.85,
+      0.85,
+      0.85
+    ]
+  },
+  {
+    "model": "HCS1600",
+    "table": 24,
+    "kind": "C",
+    "minSpeed": 500,
+    "maxSpeed": 1650,
+    "thrust": 170.0,
+    "centerDistance": 415,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.03,
+      2.54,
+      3.0,
+      3.5,
+      4.0
+    ],
+    "capacities": [
+      1.213,
+      1.213,
+      1.213,
+      1.213,
+      1.213
+    ]
+  },
+  {
+    "model": "HCDS1600",
+    "table": 24,
+    "kind": "C",
+    "minSpeed": 500,
+    "maxSpeed": 1650,
+    "thrust": 200.0,
+    "centerDistance": 520,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.97,
+      3.5,
+      3.96,
+      4.48,
+      4.95,
+      5.25
+    ],
+    "capacities": [
+      1.213,
+      1.164,
+      1.164,
+      1.164,
+      1.164,
+      1.164
+    ]
+  },
+  {
+    "model": "HCTS1600",
+    "table": 24,
+    "kind": "C",
+    "minSpeed": 500,
+    "maxSpeed": 1650,
+    "thrust": 250.0,
+    "centerDistance": 815,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      5.55,
+      5.97,
+      6.59,
+      6.99,
+      7.44,
+      7.92,
+      8.46,
+      9.0,
+      9.53
+    ],
+    "capacities": [
+      1.213,
+      1.104,
+      0.93,
+      0.93,
+      0.93,
+      0.93,
+      0.93,
+      0.93,
+      0.93
+    ]
+  },
+  {
+    "model": "HCS2000",
+    "table": 24,
+    "kind": "C",
+    "minSpeed": 600,
+    "maxSpeed": 1500,
+    "thrust": 190.0,
+    "centerDistance": 450,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.28,
+      2.52,
+      3.13,
+      3.52,
+      3.91,
+      4.4
+    ],
+    "capacities": [
+      1.48,
+      1.42,
+      1.26,
+      1.26,
+      1.26,
+      1.26
+    ]
+  },
+  {
+    "model": "HCDS2000",
+    "table": 24,
+    "kind": "C",
+    "minSpeed": 600,
+    "maxSpeed": 1500,
+    "thrust": 220.0,
+    "centerDistance": 560,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      3.0,
+      3.58,
+      3.96,
+      4.45,
+      4.95,
+      5.26,
+      5.43,
+      5.75,
+      6.05
+    ],
+    "capacities": [
+      1.48,
+      1.42,
+      1.34,
+      1.23,
+      1.19,
+      1.19,
+      1.19,
+      1.19,
+      1.19
+    ]
+  },
+  {
+    "model": "HCTS2000",
+    "table": 24,
+    "kind": "C",
+    "minSpeed": 600,
+    "maxSpeed": 1500,
+    "thrust": 270.0,
+    "centerDistance": 870,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      5.19,
+      5.49,
+      5.94,
+      6.58,
+      7.01,
+      7.48,
+      8.0,
+      8.57,
+      8.84,
+      9.43,
+      10.04,
+      11
+    ],
+    "capacities": [
+      1.48,
+      1.42,
+      1.34,
+      1.23,
+      1.21,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "model": "HCS2700",
+    "table": 25,
+    "kind": "C",
+    "minSpeed": 500,
+    "maxSpeed": 1400,
+    "thrust": 270.0,
+    "centerDistance": 490,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.54,
+      2.03,
+      2.58,
+      3.09,
+      3.48,
+      3.95,
+      4.47
+    ],
+    "capacities": [
+      2.05,
+      1.96,
+      1.75,
+      1.75,
+      1.75,
+      1.75,
+      1.75
+    ]
+  },
+  {
+    "model": "HCDS2700",
+    "table": 25,
+    "kind": "C",
+    "minSpeed": 500,
+    "maxSpeed": 1400,
+    "thrust": 280.0,
+    "centerDistance": 630,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      3.65,
+      4.04,
+      4.5,
+      5.05,
+      5.48,
+      6.11
+    ],
+    "capacities": [
+      2.05,
+      1.96,
+      1.7,
+      1.7,
+      1.7,
+      1.7
+    ]
+  },
+  {
+    "model": "HCTS2700",
+    "table": 25,
+    "kind": "C",
+    "minSpeed": 500,
+    "maxSpeed": 1400,
+    "thrust": 340.0,
+    "centerDistance": 945,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      4.92,
+      5.43,
+      6.16,
+      6.58,
+      7.03,
+      7.53,
+      8.01,
+      8.54,
+      9.12,
+      9.42,
+      10.05
+    ],
+    "capacities": [
+      2.05,
+      1.92,
+      1.83,
+      1.76,
+      1.54,
+      1.54,
+      1.54,
+      1.54,
+      1.54,
+      1.54,
+      1.54
+    ]
+  },
+  {
+    "model": "SGWS49.54",
+    "table": 25,
+    "kind": "C",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 290.0,
+    "centerDistance": 540,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.97,
+      2.47,
+      3.0,
+      3.52,
+      3.95
+    ],
+    "capacities": [
+      2.647,
+      2.647,
+      2.647,
+      2.647,
+      2.647
+    ]
+  },
+  {
+    "model": "SGWS52.59",
+    "table": 25,
+    "kind": "C",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 360.0,
+    "centerDistance": 590,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.97,
+      2.47,
+      3.0,
+      3.52,
+      3.95
+    ],
+    "capacities": [
+      3.448,
+      3.448,
+      3.448,
+      3.448,
+      3.448
+    ]
+  },
+  {
+    "model": "SGWS60.66",
+    "table": 25,
+    "kind": "C",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 540.0,
+    "centerDistance": 668,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.0,
+      2.54,
+      2.96,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      4.625,
+      4.625,
+      4.625,
+      4.625,
+      4.625
+    ]
+  },
+  {
+    "model": "SGWS66.75",
+    "table": 25,
+    "kind": "C",
+    "minSpeed": 300,
+    "maxSpeed": 950,
+    "thrust": 730.0,
+    "centerDistance": 750,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.97,
+      2.47,
+      3.0,
+      3.52,
+      3.95
+    ],
+    "capacities": [
+      6.99,
+      6.99,
+      6.99,
+      6.99,
+      6.99
+    ]
+  },
+  {
+    "model": "SGWS70.76",
+    "table": 25,
+    "kind": "C",
+    "minSpeed": 300,
+    "maxSpeed": 950,
+    "thrust": 750.0,
+    "centerDistance": 768,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.94,
+      2.54,
+      3.0,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      8.111,
+      8.111,
+      8.111,
+      8.111,
+      8.111
+    ]
+  },
+  {
+    "model": "SGW30.32",
+    "table": 26,
+    "kind": "C",
+    "minSpeed": 400,
+    "maxSpeed": 870,
+    "thrust": 100.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.33,
+      3.52
+    ],
+    "capacities": []
+  },
+  {
+    "model": "SGW32.35",
+    "table": 26,
+    "kind": "C",
+    "minSpeed": 400,
+    "maxSpeed": 760,
+    "thrust": 113.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.92,
+      2.17
+    ],
+    "capacities": []
+  },
+  {
+    "model": "SGW39.41",
+    "table": 26,
+    "kind": "C",
+    "minSpeed": 400,
+    "maxSpeed": 1700,
+    "thrust": 175.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      4.16
+    ],
+    "capacities": []
+  },
+  {
+    "model": "SGW42.45",
+    "table": 26,
+    "kind": "C",
+    "minSpeed": 400,
+    "maxSpeed": 1600,
+    "thrust": 220.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      5.6
+    ],
+    "capacities": []
+  },
+  {
+    "model": "SGW49.54",
+    "table": 26,
+    "kind": "C",
+    "minSpeed": 400,
+    "maxSpeed": 880,
+    "thrust": 284.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      3.39
+    ],
+    "capacities": []
+  },
+  {
+    "model": "HCG1068",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1500,
+    "maxSpeed": 4000,
+    "thrust": 14.0,
+    "centerDistance": 127,
+    "dimensions": null,
+    "weight": 46,
+    "ratios": [
+      1.26,
+      1.51,
+      1.93,
+      2.48,
+      2.78
+    ],
+    "capacities": [
+      0.0442,
+      0.0442,
+      0.0442,
+      0.0433,
+      0.0433
+    ]
+  },
+  {
+    "model": "HCAG1090",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1500,
+    "maxSpeed": 4500,
+    "thrust": 16.0,
+    "centerDistance": 160,
+    "dimensions": null,
+    "weight": 106,
+    "ratios": [
+      1.57,
+      1.75,
+      1.96,
+      2.5,
+      2.9
+    ],
+    "capacities": [
+      0.0696,
+      0.0696,
+      0.0696,
+      0.0696,
+      0.06
+    ]
+  },
+  {
+    "model": "HCG1220",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1500,
+    "maxSpeed": 4500,
+    "thrust": 16.0,
+    "centerDistance": 135,
+    "dimensions": null,
+    "weight": 63,
+    "ratios": [
+      1.0,
+      1.96,
+      2.48,
+      3.0
+    ],
+    "capacities": [
+      0.0603,
+      0.0592,
+      0.0592,
+      0.0513
+    ]
+  },
+  {
+    "model": "HCG1280-1",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1500,
+    "maxSpeed": 3600,
+    "thrust": 16.0,
+    "centerDistance": 146,
+    "dimensions": null,
+    "weight": 73,
+    "ratios": [
+      1.0,
+      1.3,
+      2.0,
+      2.48,
+      3.0
+    ],
+    "capacities": [
+      0.0775,
+      0.0775,
+      0.0775,
+      0.0724,
+      0.0667
+    ]
+  },
+  {
+    "model": "HCM165",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1500,
+    "maxSpeed": 3600,
+    "thrust": null,
+    "centerDistance": 146,
+    "dimensions": null,
+    "weight": 130,
+    "ratios": [
+      1.18,
+      1.24
+    ],
+    "capacities": [
+      0.087,
+      0.087
+    ]
+  },
+  {
+    "model": "HCG1305-3",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1500,
+    "maxSpeed": 3000,
+    "thrust": 25.0,
+    "centerDistance": 155,
+    "dimensions": null,
+    "weight": 120,
+    "ratios": [
+      1.22,
+      1.97,
+      2.5,
+      2.92
+    ],
+    "capacities": [
+      0.1296,
+      0.1296,
+      0.1136,
+      0.1012
+    ]
+  },
+  {
+    "model": "HCNM280T",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1000,
+    "maxSpeed": 2100,
+    "thrust": null,
+    "centerDistance": 180,
+    "dimensions": null,
+    "weight": 260,
+    "ratios": [
+      2.48
+    ],
+    "capacities": [
+      0.193
+    ]
+  },
+  {
+    "model": "HCM303",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1000,
+    "maxSpeed": 2100,
+    "thrust": null,
+    "centerDistance": 190,
+    "dimensions": null,
+    "weight": 290,
+    "ratios": [
+      1.0,
+      1.15,
+      1.19
+    ],
+    "capacities": [
+      0.262,
+      0.262,
+      0.262
+    ]
+  },
+  {
+    "model": "HCAM303",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1000,
+    "maxSpeed": 2300,
+    "thrust": null,
+    "centerDistance": 180,
+    "dimensions": null,
+    "weight": 290,
+    "ratios": [
+      1.03,
+      1.16,
+      1.19,
+      1.49
+    ],
+    "capacities": [
+      0.262,
+      0.26,
+      0.26,
+      0.253
+    ]
+  },
+  {
+    "model": "HCM403",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1000,
+    "maxSpeed": 2300,
+    "thrust": null,
+    "centerDistance": 200,
+    "dimensions": null,
+    "weight": 390,
+    "ratios": [
+      1.0
+    ],
+    "capacities": [
+      0.315
+    ]
+  },
+  {
+    "model": "HCAM403",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1000,
+    "maxSpeed": 2300,
+    "thrust": null,
+    "centerDistance": 199,
+    "dimensions": null,
+    "weight": 390,
+    "ratios": [
+      1.1,
+      1.2,
+      1.51
+    ],
+    "capacities": [
+      0.315,
+      0.315,
+      0.292
+    ]
+  },
+  {
+    "model": "HCG1400",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1500,
+    "maxSpeed": 3000,
+    "thrust": 27.5,
+    "centerDistance": 175,
+    "dimensions": null,
+    "weight": 160,
+    "ratios": [
+      0.85,
+      0.93,
+      1.0,
+      1.11,
+      1,
+      23,
+      1.53,
+      1.78,
+      2.03,
+      2.21,
+      2.6,
+      2.96
+    ],
+    "capacities": [
+      0.1802,
+      0.1802,
+      0.1802,
+      0.1802,
+      0.1802,
+      0.1802,
+      0.1802,
+      0.1802,
+      0.1802,
+      0.1802,
+      0.1802,
+      0.1802
+    ]
+  },
+  {
+    "model": "HCG1500",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1500,
+    "maxSpeed": 3000,
+    "thrust": 40.0,
+    "centerDistance": 180,
+    "dimensions": null,
+    "weight": 185,
+    "ratios": [
+      1.13,
+      1.5,
+      1.97
+    ],
+    "capacities": [
+      0.2486,
+      0.2486,
+      0.2486
+    ]
+  },
+  {
+    "model": "HCG1665",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1500,
+    "maxSpeed": 3000,
+    "thrust": 40.0,
+    "centerDistance": 200,
+    "dimensions": null,
+    "weight": 248,
+    "ratios": [
+      1.11,
+      1.26,
+      1.74,
+      2.0,
+      2.59
+    ],
+    "capacities": [
+      0.29,
+      0.29,
+      0.29,
+      0.29,
+      0.2692
+    ]
+  },
+  {
+    "model": "HCG2050",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1500,
+    "maxSpeed": 2600,
+    "thrust": 40.0,
+    "centerDistance": 220,
+    "dimensions": null,
+    "weight": 342,
+    "ratios": [
+      1.5,
+      2.03,
+      2.52
+    ],
+    "capacities": [
+      0.3111,
+      0.3111,
+      0.3111
+    ]
+  },
+  {
+    "model": "HCG3050",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1000,
+    "maxSpeed": 2600,
+    "thrust": 50.0,
+    "centerDistance": 255,
+    "dimensions": null,
+    "weight": 570,
+    "ratios": [
+      1.5,
+      2.04,
+      2.5
+    ],
+    "capacities": [
+      0.4664,
+      0.4664,
+      0.4664
+    ]
+  },
+  {
+    "model": "HCAG3050",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1000,
+    "maxSpeed": 2600,
+    "thrust": 50.0,
+    "centerDistance": 326,
+    "dimensions": null,
+    "weight": 570,
+    "ratios": [
+      1.35,
+      2.03,
+      3.0
+    ],
+    "capacities": [
+      0.4664,
+      0.4664,
+      0.46
+    ]
+  },
+  {
+    "model": "HCVG3710",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1000,
+    "maxSpeed": 2500,
+    "thrust": 90.0,
+    "centerDistance": 331,
+    "dimensions": null,
+    "weight": 600,
+    "ratios": [
+      1.36,
+      1.483
+    ],
+    "capacities": [
+      0.515,
+      0.515
+    ]
+  },
+  {
+    "model": "HCAG5050",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1500,
+    "maxSpeed": 2500,
+    "thrust": 110.0,
+    "centerDistance": 369,
+    "dimensions": null,
+    "weight": 870,
+    "ratios": [
+      2.03,
+      2.47,
+      2.96
+    ],
+    "capacities": [
+      0.6319,
+      0.6319,
+      0.6319
+    ]
+  },
+  {
+    "model": "HCG5050",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1500,
+    "maxSpeed": 2500,
+    "thrust": 110.0,
+    "centerDistance": 340,
+    "dimensions": null,
+    "weight": 950,
+    "ratios": [
+      1.53,
+      2.03,
+      2.5,
+      2.96
+    ],
+    "capacities": [
+      0.6319,
+      0.6319,
+      0.6319,
+      0.6319
+    ]
+  },
+  {
+    "model": "HCG6400",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1600,
+    "maxSpeed": 2100,
+    "thrust": 110.0,
+    "centerDistance": 340,
+    "dimensions": null,
+    "weight": 950,
+    "ratios": [
+      1.48,
+      2.02,
+      2.55,
+      3.07
+    ],
+    "capacities": [
+      1.031,
+      1.031,
+      1.031,
+      0.89
+    ]
+  },
+  {
+    "model": "HCAG6400",
+    "table": 12,
+    "kind": "D",
+    "minSpeed": 1600,
+    "maxSpeed": 2100,
+    "thrust": 110.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1200,
+    "ratios": [
+      2.93,
+      3.0
+    ],
+    "capacities": [
+      1.03,
+      1.03
+    ]
+  },
+  {
+    "model": "HCG7650",
+    "table": 13,
+    "kind": "D",
+    "minSpeed": 1000,
+    "maxSpeed": 2100,
+    "thrust": 135.0,
+    "centerDistance": 340,
+    "dimensions": null,
+    "weight": 1230,
+    "ratios": [
+      1.55,
+      1.83,
+      2.04,
+      2.23,
+      2.57,
+      2.77,
+      2.91,
+      3.17
+    ],
+    "capacities": [
+      1.204,
+      1.1518,
+      1.139,
+      0.94,
+      0.94,
+      0.94,
+      0.94,
+      0.94
+    ]
+  },
+  {
+    "model": "HCAG7650",
+    "table": 13,
+    "kind": "D",
+    "minSpeed": 1000,
+    "maxSpeed": 2100,
+    "thrust": 135.0,
+    "centerDistance": 448,
+    "dimensions": null,
+    "weight": 1300,
+    "ratios": [
+      1.76,
+      2.03,
+      2.25,
+      2.46,
+      2.54,
+      2.75,
+      2.96
+    ],
+    "capacities": [
+      1.204,
+      1.152,
+      1.139,
+      1.139,
+      1.139,
+      1.139,
+      1.139
+    ]
+  },
+  {
+    "model": "HCG9060",
+    "table": 13,
+    "kind": "D",
+    "minSpeed": 1000,
+    "maxSpeed": 2100,
+    "thrust": 225.0,
+    "centerDistance": 390,
+    "dimensions": null,
+    "weight": 1575,
+    "ratios": [
+      1.58,
+      2.04,
+      2.54,
+      2.74,
+      2.96
+    ],
+    "capacities": [
+      1.356,
+      1.356,
+      1.356,
+      1.356,
+      1.356
+    ]
+  },
+  {
+    "model": "HCAG9055",
+    "table": 13,
+    "kind": "D",
+    "minSpeed": 1000,
+    "maxSpeed": 2100,
+    "thrust": 225.0,
+    "centerDistance": 469,
+    "dimensions": null,
+    "weight": 1570,
+    "ratios": [
+      1.97,
+      2.46,
+      2.95
+    ],
+    "capacities": [
+      1.356,
+      1.356,
+      1.356
+    ]
+  },
+  {
+    "model": "2GWH7050",
+    "table": 31,
+    "kind": "E",
+    "minSpeed": 400,
+    "maxSpeed": 600400,
+    "thrust": 750.0,
+    "centerDistance": 2700,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2,
+      2.5,
+      3,
+      3.5,
+      4,
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      7.43,
+      5.79,
+      4.85,
+      4.08,
+      3.64,
+      3.24,
+      2.89,
+      2.66,
+      2.42
+    ]
+  },
+  {
+    "model": "2GWH9250",
+    "table": 31,
+    "kind": "E",
+    "minSpeed": 400,
+    "maxSpeed": 600400,
+    "thrust": 1000.0,
+    "centerDistance": 3080,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2,
+      2.5,
+      3,
+      3.5,
+      4,
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      9.91,
+      7.98,
+      6.49,
+      5.58,
+      4.92,
+      4.44,
+      3.93,
+      3.62,
+      3.26
+    ]
+  },
+  {
+    "model": "2GWH1060",
+    "table": 32,
+    "kind": "E",
+    "minSpeed": 400,
+    "maxSpeed": 900400,
+    "thrust": 175.0,
+    "centerDistance": 1460,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2,
+      2.5,
+      3,
+      3.5,
+      4,
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      1.12,
+      0.89,
+      0.75,
+      0.65,
+      0.57,
+      0.5,
+      0.45,
+      0.4,
+      0.38
+    ]
+  },
+  {
+    "model": "2GWH1830",
+    "table": 32,
+    "kind": "E",
+    "minSpeed": 400,
+    "maxSpeed": 900400,
+    "thrust": 270.0,
+    "centerDistance": 1760,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2,
+      2.5,
+      3,
+      3.5,
+      4,
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      1.92,
+      1.55,
+      1.27,
+      1.09,
+      0.96,
+      0.86,
+      0.76,
+      0.69,
+      0.63
+    ]
+  },
+  {
+    "model": "2GWH3140",
+    "table": 32,
+    "kind": "E",
+    "minSpeed": 400,
+    "maxSpeed": 800400,
+    "thrust": 300.0,
+    "centerDistance": 2080,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2,
+      2.5,
+      3,
+      3.5,
+      4,
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      3.28,
+      2.58,
+      2.17,
+      1.83,
+      1.64,
+      1.47,
+      1.31,
+      1.17,
+      1.11
+    ]
+  },
+  {
+    "model": "2GWH4100",
+    "table": 32,
+    "kind": "E",
+    "minSpeed": 400,
+    "maxSpeed": 700400,
+    "thrust": 450.0,
+    "centerDistance": 2300,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2,
+      2.5,
+      3,
+      3.5,
+      4,
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      4.24,
+      3.39,
+      2.89,
+      2.41,
+      2.12,
+      1.91,
+      1.72,
+      1.52,
+      1.39
+    ]
+  },
+  {
+    "model": "2GWH5410",
+    "table": 32,
+    "kind": "E",
+    "minSpeed": 400,
+    "maxSpeed": 600400,
+    "thrust": 550.0,
+    "centerDistance": 2560,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2,
+      2.5,
+      3,
+      3.5,
+      4,
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      5.77,
+      4.54,
+      3.83,
+      3.24,
+      2.83,
+      2.46,
+      2.27,
+      2.04,
+      1.86
+    ]
+  },
+  {
+    "model": "HC400P",
+    "table": 36,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.5,
+      1.77,
+      2.04,
+      2.5,
+      2.86,
+      3.0,
+      3,
+      25,
+      3.33,
+      3.42,
+      4.06,
+      4.61,
+      4.94
+    ],
+    "capacities": [
+      0.331,
+      0.31,
+      0.29,
+      0.25,
+      0.19,
+      0.17,
+      0.17,
+      0.17,
+      0.17,
+      0.17,
+      0.17,
+      0.17,
+      0.17
+    ]
+  },
+  {
+    "model": "HCD400P",
+    "table": 36,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      3.96,
+      4.43,
+      4.7,
+      5.0,
+      5.53,
+      5.71,
+      5.89
+    ],
+    "capacities": [
+      0.331,
+      0.32,
+      0.268,
+      0.235,
+      0.235,
+      0.235,
+      0.235
+    ]
+  },
+  {
+    "model": "HCT400P",
+    "table": 36,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      6.09,
+      6.49,
+      6.93,
+      7.42,
+      7.95,
+      8.4,
+      9.0,
+      9.47
+    ],
+    "capacities": [
+      0.331,
+      0.309,
+      0.287,
+      0.265,
+      0.243,
+      0.243,
+      0.243,
+      0.243
+    ]
+  },
+  {
+    "model": "HC600P",
+    "table": 36,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2,
+      2.48,
+      3,
+      3.58,
+      3.89
+    ],
+    "capacities": [
+      0.49,
+      0.49,
+      0.49,
+      0.4,
+      0.36
+    ]
+  },
+  {
+    "model": "HCD600P",
+    "table": 36,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      4.18,
+      4.43,
+      4.7,
+      5,
+      5.44,
+      5.71
+    ],
+    "capacities": [
+      0.49,
+      0.47,
+      0.45,
+      0.41,
+      0.364,
+      0.324
+    ]
+  },
+  {
+    "model": "HCT600P",
+    "table": 36,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      6.06,
+      6.49,
+      6.97,
+      7.51,
+      8.04,
+      8.66,
+      9.35
+    ],
+    "capacities": [
+      0.45,
+      0.4,
+      0.37,
+      0.34,
+      0.338,
+      0.314,
+      0.291
+    ]
+  },
+  {
+    "model": "HCD800P",
+    "table": 37,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      3.43,
+      3.96,
+      4.17,
+      4.39,
+      4.91,
+      5.47,
+      5.89
+    ],
+    "capacities": [
+      0.625,
+      0.58,
+      0.525,
+      0.49,
+      0.49,
+      0.49,
+      0.49
+    ]
+  },
+  {
+    "model": "HCT800P",
+    "table": 37,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      4.95,
+      5.57,
+      5.93,
+      6.43,
+      6.86,
+      7.33,
+      7.84,
+      8.4
+    ],
+    "capacities": [
+      0.625,
+      0.588,
+      0.551,
+      0.515,
+      0.48,
+      0.48,
+      0.48,
+      0.48
+    ]
+  },
+  {
+    "model": "HC1200P",
+    "table": 37,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.6,
+      2.03,
+      2.48,
+      2.5,
+      2.96,
+      3.18,
+      3.33,
+      3.55,
+      3.79,
+      4.06,
+      4.2,
+      4.47
+    ],
+    "capacities": [
+      0.93,
+      0.9,
+      0.85,
+      0.75,
+      0.695,
+      0.65,
+      0.65,
+      0.65,
+      0.65,
+      0.65,
+      0.65,
+      0.65
+    ]
+  },
+  {
+    "model": "HC1200/1P",
+    "table": 37,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      3.7,
+      3.74,
+      3.95,
+      4.14,
+      4.45,
+      5.0,
+      5.25,
+      5.58
+    ],
+    "capacities": [
+      0.93,
+      0.92,
+      0.75,
+      0.69,
+      0.62,
+      0.62,
+      0.62,
+      0.62
+    ]
+  },
+  {
+    "model": "HCT1200P",
+    "table": 37,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      5.05,
+      5.6,
+      5.98,
+      6.39,
+      6.85,
+      7.35,
+      7.92
+    ],
+    "capacities": [
+      0.93,
+      0.85,
+      0.8,
+      0.7,
+      0.7,
+      0.7,
+      0.7
+    ]
+  },
+  {
+    "model": "HCD1400P",
+    "table": 37,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      4.04,
+      4,
+      27,
+      4.32,
+      4.52,
+      4.8,
+      5.05,
+      5.5,
+      5.86
+    ],
+    "capacities": [
+      1.081,
+      1.03,
+      0.93,
+      0.9,
+      0.8,
+      0.8,
+      0.8,
+      0.8,
+      0.8
+    ]
+  },
+  {
+    "model": "HCT1400P",
+    "table": 38,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      4.06,
+      4,
+      51,
+      5.03,
+      5.52,
+      5.97,
+      6.48,
+      7.03,
+      7.5,
+      8.01,
+      8.47,
+      8.6,
+      9.0,
+      9.12,
+      9.55
+    ],
+    "capacities": [
+      1.081,
+      1.03,
+      1,
+      0.96,
+      0.93,
+      0.9,
+      0.85,
+      0.85,
+      0.85,
+      0.85,
+      0.85,
+      0.85,
+      0.85,
+      0.85,
+      0.85
+    ]
+  },
+  {
+    "model": "HC1600P",
+    "table": 38,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.03,
+      2.54,
+      3.0,
+      3.5,
+      4.0
+    ],
+    "capacities": [
+      1.26,
+      1.26,
+      1.26,
+      1.25,
+      1.0
+    ]
+  },
+  {
+    "model": "HCD1600P",
+    "table": 38,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.97,
+      3.5,
+      3.96,
+      4.48,
+      4.95,
+      5,
+      25,
+      5.58,
+      5.94
+    ],
+    "capacities": [
+      1.26,
+      1.2,
+      1.06,
+      0.98,
+      0.86,
+      0.86,
+      0.86,
+      0.86,
+      0.86
+    ]
+  },
+  {
+    "model": "HCT1600P",
+    "table": 38,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      5.55,
+      5.97,
+      6.59,
+      6.99,
+      7.44,
+      7.92,
+      8.46,
+      9.0,
+      9.53,
+      10.17,
+      10.87,
+      11.65,
+      12.52
+    ],
+    "capacities": [
+      1.26,
+      1.213,
+      1.13,
+      1.01,
+      0.95,
+      0.9,
+      0.9,
+      0.867,
+      0.811,
+      0.811,
+      0.811,
+      0.811,
+      0.811
+    ]
+  },
+  {
+    "model": "HC2000P",
+    "table": 38,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.28,
+      2.52,
+      3.13,
+      3.52,
+      3.91,
+      4.4
+    ],
+    "capacities": [
+      1.58,
+      1.55,
+      1.33,
+      1.33,
+      1.33,
+      1.33
+    ]
+  },
+  {
+    "model": "GWS28.30P",
+    "table": 39,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.0,
+      2.56,
+      3.0,
+      3.57,
+      4.05
+    ],
+    "capacities": [
+      0.44,
+      0.44,
+      0.44,
+      0.44,
+      0.44
+    ]
+  },
+  {
+    "model": "GWC30.32P",
+    "table": 39,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.03,
+      2.55,
+      3.04,
+      3.52,
+      4.0,
+      4.55,
+      5.05,
+      5.64,
+      6.05
+    ],
+    "capacities": [
+      1.122,
+      0.894,
+      0.75,
+      0.647,
+      0.57,
+      0.501,
+      0.451,
+      0.404,
+      0.376
+    ]
+  },
+  {
+    "model": "GWS30.32P",
+    "table": 39,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.97,
+      2.52,
+      2.96,
+      3.52,
+      4
+    ],
+    "capacities": [
+      0.57,
+      0.57,
+      0.57,
+      0.57,
+      0.57
+    ]
+  },
+  {
+    "model": "GWC32.35P",
+    "table": 39,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.06,
+      2.54,
+      3.02,
+      3.58,
+      4.05,
+      4.59,
+      5.09,
+      5.57,
+      6.08
+    ],
+    "capacities": [
+      1.417,
+      1.148,
+      0.965,
+      0.816,
+      0.72,
+      0.635,
+      0.573,
+      0.523,
+      0.48
+    ]
+  },
+  {
+    "model": "GWS32.35P",
+    "table": 39,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.0,
+      2.56,
+      3.0,
+      3.57,
+      4.05
+    ],
+    "capacities": [
+      0.72,
+      0.72,
+      0.72,
+      0.72,
+      0.72
+    ]
+  },
+  {
+    "model": "HCD2000P",
+    "table": 40,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      3.0,
+      3.58,
+      3.96,
+      4.45,
+      4.95,
+      5.26,
+      5.43,
+      5.75,
+      6.05
+    ],
+    "capacities": [
+      1.58,
+      1.48,
+      1.4,
+      12,
+      12,
+      12,
+      12,
+      12,
+      12
+    ]
+  },
+  {
+    "model": "HCT2000P",
+    "table": 40,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      5.19,
+      5.49,
+      5.94,
+      6.58,
+      7.01,
+      7.48,
+      8.0,
+      8.57,
+      8.84,
+      9.43,
+      10.04,
+      11.0
+    ],
+    "capacities": [
+      1.58,
+      1.5,
+      1.42,
+      1.3,
+      1.3,
+      1.3,
+      1.3,
+      1.3,
+      1.3,
+      1.3,
+      1.3,
+      1.3
+    ]
+  },
+  {
+    "model": "HC2700P",
+    "table": 40,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.03,
+      2.58,
+      3.09,
+      3.48,
+      3.95,
+      4.47
+    ],
+    "capacities": [
+      2.1,
+      1.625,
+      1.625,
+      1.625,
+      1.625,
+      1.625
+    ]
+  },
+  {
+    "model": "HCD2700P",
+    "table": 40,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      3.65,
+      4.04,
+      4.5,
+      5.05,
+      5.48,
+      6.11
+    ],
+    "capacities": [
+      2.1,
+      2.01,
+      1.625,
+      1.625,
+      1.625,
+      1.625
+    ]
+  },
+  {
+    "model": "HCT2700P",
+    "table": 40,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      4.92,
+      5.43,
+      6.16,
+      6.58,
+      7.03,
+      7.53,
+      8.01,
+      8.54,
+      9.12,
+      9.42,
+      10.05,
+      10.68,
+      11.54
+    ],
+    "capacities": [
+      2.1,
+      2.035,
+      1.812,
+      1.75,
+      1.575,
+      1.5,
+      1.5,
+      1.5,
+      1.5,
+      1.5,
+      1.5,
+      1.5,
+      1.5
+    ]
+  },
+  {
+    "model": "GWC28.30P",
+    "table": 40,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.03,
+      2.55,
+      3.04,
+      3.52,
+      4.0,
+      4.55,
+      5.05,
+      5.64,
+      6.05
+    ],
+    "capacities": [
+      0.865,
+      0.711,
+      0.578,
+      0.504,
+      0.44,
+      0.393,
+      0.35,
+      0.31,
+      0
+    ]
+  },
+  {
+    "model": "GWC36.39P",
+    "table": 41,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.97,
+      2.45,
+      2.98,
+      3.47,
+      3.95,
+      4.4,
+      5.01,
+      5.47,
+      5.97
+    ],
+    "capacities": [
+      1.92,
+      1.546,
+      1.272,
+      1.09,
+      0.96,
+      0.862,
+      0.756,
+      0.693,
+      0.634
+    ]
+  },
+  {
+    "model": "GWS36.39P",
+    "table": 41,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.03,
+      2.48,
+      2.92,
+      3.48,
+      3.95
+    ],
+    "capacities": [
+      0.96,
+      0.96,
+      0.96,
+      0.96,
+      0.96
+    ]
+  },
+  {
+    "model": "GWC39.41P",
+    "table": 41,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.98,
+      2.47,
+      3.05,
+      3.48,
+      4.05,
+      4.48,
+      5.0,
+      5.51,
+      5.99
+    ],
+    "capacities": [
+      2.585,
+      2.068,
+      1.672,
+      1.467,
+      1.26,
+      1.138,
+      1.022,
+      0.927,
+      0.852
+    ]
+  },
+  {
+    "model": "GWS39.41P",
+    "table": 41,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.0,
+      2.54,
+      2.96,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      1.26,
+      1.26,
+      1.26,
+      1.26,
+      1.26
+    ]
+  },
+  {
+    "model": "GWC42.45P",
+    "table": 41,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.0,
+      2.55,
+      3.02,
+      3.58,
+      4.0,
+      4.47,
+      5.0,
+      5.6,
+      5.93
+    ],
+    "capacities": [
+      3.28,
+      2.577,
+      2.169,
+      1.833,
+      1.64,
+      1.467,
+      1.312,
+      1.171,
+      1.106
+    ]
+  },
+  {
+    "model": "GWS42.45P",
+    "table": 42,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.97,
+      2.55,
+      2.93,
+      3.58,
+      4.0
+    ],
+    "capacities": [
+      1.64,
+      1.64,
+      1.64,
+      1.64,
+      1.64
+    ]
+  },
+  {
+    "model": "GWC45.49P",
+    "table": 42,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.97,
+      2.47,
+      2.89,
+      3.47,
+      3.95,
+      4.37,
+      4.85,
+      5.5,
+      5.98
+    ],
+    "capacities": [
+      4.24,
+      3.392,
+      2.89,
+      2.414,
+      2.12,
+      1.913,
+      1.725,
+      1.52,
+      1.398
+    ]
+  },
+  {
+    "model": "GWS45.49P",
+    "table": 42,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.03,
+      2.48,
+      3.09,
+      3.48,
+      3.95
+    ],
+    "capacities": [
+      2.12,
+      2.12,
+      2.12,
+      2.12,
+      2.12
+    ]
+  },
+  {
+    "model": "GWC49.54P",
+    "table": 42,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.94,
+      2.46,
+      2.92,
+      3.45,
+      3.95,
+      4.53,
+      4.91,
+      5.48,
+      6.0
+    ],
+    "capacities": [
+      5.5,
+      4.54,
+      3.827,
+      3.24,
+      2.825,
+      2.462,
+      2.273,
+      2.036,
+      1.861
+    ]
+  },
+  {
+    "model": "GWS49.54P",
+    "table": 42,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.97,
+      2.47,
+      3.0,
+      3.52,
+      3.95
+    ],
+    "capacities": [
+      2.825,
+      2.825,
+      2.825,
+      2.825,
+      2.825
+    ]
+  },
+  {
+    "model": "GWC63.71P",
+    "table": 43,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      5.47,
+      5.95,
+      6.48,
+      6.96,
+      7.48
+    ],
+    "capacities": [
+      4.5,
+      4.137,
+      3.8,
+      3.541,
+      3.294
+    ]
+  },
+  {
+    "model": "GWC52.59P",
+    "table": 44,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.93,
+      2.48,
+      2.96,
+      3.53,
+      3.95,
+      4.43,
+      4.97,
+      5.4,
+      5.93
+    ],
+    "capacities": [
+      7.438,
+      5.797,
+      4.853,
+      4.081,
+      3.64,
+      3.246,
+      2.893,
+      2.663,
+      2.426
+    ]
+  },
+  {
+    "model": "GWS52.59P",
+    "table": 44,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      1.97,
+      2.47,
+      3.0,
+      3.52,
+      3.95
+    ],
+    "capacities": [
+      3.64,
+      3.64,
+      3.64,
+      3.64,
+      3.64
+    ]
+  },
+  {
+    "model": "GWC60.66P",
+    "table": 44,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.01,
+      2.5,
+      3.07,
+      3.57,
+      4.05,
+      4.48,
+      5.08,
+      5.51,
+      6.12,
+      6.52,
+      6.97
+    ],
+    "capacities": [
+      9.913,
+      7.982,
+      6.492,
+      5.581,
+      4.923,
+      4.448,
+      3.927,
+      3.622,
+      3.261,
+      3.06,
+      3
+    ]
+  },
+  {
+    "model": "GWS60.66P",
+    "table": 44,
+    "kind": "F",
+    "minSpeed": null,
+    "maxSpeed": null,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": null,
+    "ratios": [
+      2.0,
+      2.54,
+      2.96,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      5.05,
+      5.05,
+      5.05,
+      5.05,
+      5.05
+    ]
   }
 ]

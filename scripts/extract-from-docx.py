@@ -73,6 +73,7 @@ def expand_aligned(r_paras, c_paras):
         if len(out) == len(flat_r): return flat_r, out
     if len(flat_c) == 1: return flat_r, [flat_c[0]] * len(flat_r)
     if len(flat_r) == len(flat_c): return flat_r, flat_c
+    if not flat_c: return flat_r, []
     if len(flat_c) < len(flat_r): return flat_r, flat_c + [flat_c[-1]] * (len(flat_r) - len(flat_c))
     return flat_r, flat_c[:len(flat_r)]
 
@@ -160,6 +161,115 @@ for ti in [20, 21]:
                 'weight': wkg,
             })
 
+# ==== Type C: 双级齿轮箱 T22-T26 (HCS/HCTS/HCDS/SGW/SGWS) ====
+# 列: model | speed | i1慢档 | i2快档 | capacity | thrust | cd
+# DB 仅存慢档 i1, 取 i1 对应 capacity
+for ti in [22, 23, 24, 25, 26]:
+    if ti >= len(tables): continue
+    rows = tables[ti].findall('.//w:tr', NS)
+    if len(rows) < 2 or not header_has_model(rows): continue
+    pending = None
+    for r in rows[1:]:
+        cells = r.findall('.//w:tc', NS)
+        if len(cells) < 6: continue
+        cps = [cell_paragraphs(c) for c in cells]
+        m_text = model_name(cells[0])
+        if m_text:
+            if pending: results.append(pending)
+            sm, sx = parse_speed(cell_text(cells[1]))
+            pending = {
+                'model': m_text, 'table': ti, 'kind': 'C',
+                'minSpeed': sm, 'maxSpeed': sx,
+                '_r_paras': list(cps[2]), '_c_paras': list(cps[4]),
+                'thrust': parse_float(cell_text(cells[5])),
+                'centerDistance': parse_int(cell_text(cells[6])) if len(cells) > 6 else None,
+                'dimensions': None, 'weight': None,
+            }
+        elif pending is not None:
+            pending['_r_paras'].extend(cps[2])
+            pending['_c_paras'].extend(cps[4])
+    if pending: results.append(pending)
+
+# ==== Type D: HCG/HCAG 4 容量分级 T12-T13 ====
+# 行 R0: 标题; R1: 子标题 (休闲P/轻载L/中等M/持续C); R2+: 数据
+# 列: model | speed | ratio | P | L | M | C | thrust | cd | weight
+# 取 C (持续) 作为权威 capacity (最保守)
+for ti in [12, 13]:
+    if ti >= len(tables): continue
+    rows = tables[ti].findall('.//w:tr', NS)
+    if len(rows) < 3 or not header_has_model(rows): continue
+    pending = None
+    for r in rows[2:]:  # 跳过 2 行表头
+        cells = r.findall('.//w:tc', NS)
+        if len(cells) < 8: continue
+        cps = [cell_paragraphs(c) for c in cells]
+        m_text = model_name(cells[0])
+        if m_text:
+            if pending: results.append(pending)
+            sm, sx = parse_speed(cell_text(cells[1]))
+            pending = {
+                'model': m_text, 'table': ti, 'kind': 'D',
+                'minSpeed': sm, 'maxSpeed': sx,
+                '_r_paras': list(cps[2]), '_c_paras': list(cps[6]),  # C 列
+                'thrust': parse_float(cell_text(cells[7])) if len(cells) > 7 else None,
+                'centerDistance': parse_int(cell_text(cells[8])) if len(cells) > 8 else None,
+                'dimensions': None,
+                'weight': parse_int(cell_text(cells[9])) if len(cells) > 9 else None,
+            }
+        elif pending is not None:
+            pending['_r_paras'].extend(cps[2])
+            pending['_c_paras'].extend(cps[6])
+    if pending: results.append(pending)
+
+# ==== Type E: 2GWH 双输出 T31-T32 ====
+# 列: model | speed | ratio | capacity | thrust | cd
+for ti in [31, 32]:
+    if ti >= len(tables): continue
+    rows = tables[ti].findall('.//w:tr', NS)
+    if len(rows) < 2 or not header_has_model(rows): continue
+    for r in rows[1:]:
+        cells = r.findall('.//w:tc', NS)
+        if len(cells) < 6: continue
+        cps = [cell_paragraphs(c) for c in cells]
+        m_text = model_name(cells[0])
+        if not m_text: continue
+        sm, sx = parse_speed(cell_text(cells[1]))
+        results.append({
+            'model': m_text, 'table': ti, 'kind': 'E',
+            'minSpeed': sm, 'maxSpeed': sx,
+            '_r_paras': list(cps[2]), '_c_paras': list(cps[3]),
+            'thrust': parse_float(cell_text(cells[4])),
+            'centerDistance': parse_int(cell_text(cells[5])),
+            'dimensions': None, 'weight': None,
+        })
+
+# ==== Type F: PTI 混合动力 T36-T44 ====
+# 列: model | 主减速比 | 主输入传递能力 | PTI减速比 | PTI传递能力 | PTI转速 | PTI转向
+# DB 存主减速比 + 主输入传递能力
+for ti in range(36, 45):
+    if ti >= len(tables): continue
+    rows = tables[ti].findall('.//w:tr', NS)
+    if len(rows) < 2 or not header_has_model(rows): continue
+    pending = None
+    for r in rows[1:]:
+        cells = r.findall('.//w:tc', NS)
+        if len(cells) < 3: continue
+        cps = [cell_paragraphs(c) for c in cells]
+        m_text = model_name(cells[0])
+        if m_text:
+            if pending: results.append(pending)
+            pending = {
+                'model': m_text, 'table': ti, 'kind': 'F',
+                'minSpeed': None, 'maxSpeed': None,
+                '_r_paras': list(cps[1]), '_c_paras': list(cps[2]),
+                'thrust': None, 'centerDistance': None,
+                'dimensions': None, 'weight': None,
+            }
+        elif pending is not None:
+            pending['_r_paras'].extend(cps[1])
+            pending['_c_paras'].extend(cps[2])
+    if pending: results.append(pending)
+
 # ==== 后处理: 段对齐展开 ratios/caps ====
 for rec in results:
     flat_r, flat_c = expand_aligned(rec.pop('_r_paras'), rec.pop('_c_paras'))
@@ -179,7 +289,7 @@ os.makedirs(os.path.dirname(out_path), exist_ok=True)
 with open(out_path, 'w') as f:
     json.dump(deduped, f, ensure_ascii=False, indent=2)
 
-print(f'Type A: {sum(1 for r in deduped if r.get("kind")=="A")}')
-print(f'Type B: {sum(1 for r in deduped if r.get("kind")=="B")}')
+for k in ['A','B','C','D','E','F']:
+    print(f'Type {k}: {sum(1 for r in deduped if r.get("kind")==k)}')
 print(f'总计: {len(deduped)} 条')
 print(f'输出: {out_path}')
