@@ -94,9 +94,12 @@ const LoginPage = () => {
               
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
-                  <Form.Label>用户名</Form.Label>
+                  <Form.Label htmlFor="login-username">用户名</Form.Label>
                   <Form.Control
+                    id="login-username"
+                    name="username"
                     type="text"
+                    autoComplete="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     disabled={loading}
@@ -104,11 +107,14 @@ const LoginPage = () => {
                     required
                   />
                 </Form.Group>
-                
+
                 <Form.Group className="mb-4">
-                  <Form.Label>密码</Form.Label>
+                  <Form.Label htmlFor="login-password">密码</Form.Label>
                   <Form.Control
+                    id="login-password"
+                    name="password"
                     type="password"
+                    autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={loading}
