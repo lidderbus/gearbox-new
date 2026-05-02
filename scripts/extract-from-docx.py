@@ -28,6 +28,9 @@ def model_name(c):
 def parse_numbers(s):
     if not s: return []
     s = re.sub(r':1\b', '', s)  # 比率符号 "2.07:1" → "2.07"
+    s = re.sub(r'\([^)]*\)', ' ', s)  # 去括注 "1.109(顺快)" → "1.109"
+    # 修 docx 缺小数点的录入错误: "X Y" → "X.Y" (X 1 位非小数后缀, Y 恰 2 位)
+    s = re.sub(r'(?<![\d.])(\d)\s+(\d{2})(?!\d)', r'\1.\2', s)
     out = []
     for token in re.split(r'\s+', s.strip()):
         if not token: continue

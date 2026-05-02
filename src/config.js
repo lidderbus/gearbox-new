@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 73; // v73: docx 权威源全量校准 — 改用《杭齿厂选型手册.docx》结构化解析 (200 型号覆盖 small+HC+HCD+HCT+HCQ+HCA+MV+DT+GW), 段落对齐展开 ratios↔caps; 撤回 v72 基于 OCR 错误 small-1.json 的 67 处反向修复 (caps 段对齐方向错), 删幽灵 04A (真名 40A), 修 GW*45.49 maxSpeed 1600→1400, HCQ1001 thrust 110→100, HCA138 wt 260→200, MA142 ratios 9→8 (去幻象 5.83) — docx 审计 200/200 全一致, 1075/1075 通过 (2026-05-02)
+export const APP_DATA_VERSION = 75; // v75: docx 解析器加固 (修 10 处缺小数点录入错 + 去括注 + :1 比率符号) + v73/v74 重跑覆写 — Type C/D/E/F 全部一致. **docx audit 311/311 (100%)**: Type A 118 + B 82 + C 35 (HCS/HCTS/HCDS/SGW 双级) + D 26 (HCG/HCAG) + E 7 (2GWH 双输出) + F 43 (PTI 混动). DB 历史 schema bug 全部修正, 1085/1085 通过 (2026-05-02)
 
 export const DEFAULTS = {
     gearbox: {

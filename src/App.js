@@ -17,7 +17,8 @@ import { correctDatabase } from './utils/dataCorrector';
 import { correctPriceData } from './utils/priceManager';
 import { validateDatabase } from './utils/dataValidator';
 import { savePriceHistory, compareAndTrackChanges, getPriceHistory, clearPriceHistory } from './utils/priceHistoryTracker';
-import BatchPriceAdjustment from './components/BatchPriceAdjustment';
+// BatchPriceAdjustment 转 lazy — 仅 admin 触发, 不应进 main bundle
+// import BatchPriceAdjustment from './components/BatchPriceAdjustment';
 import { getGWPackagePriceConfig } from './data/packagePriceConfig';
 import { enhanceGearboxData } from './utils/gearboxDataEnhancer';
 import { useSelectionConfig } from './contexts/SelectionConfigContext';
@@ -29,7 +30,8 @@ import SidebarNav from './components/SidebarNav';
 import { useIsMobile } from './hooks/useIsMobile';
 import { trackPageView, trackFeature } from './utils/analytics';
 import { useInIframe } from './hooks/useInIframe';
-import ComparisonResultModal from './components/ComparisonResultModal';
+// ComparisonResultModal 转 lazy — 仅条件渲染
+// import ComparisonResultModal from './components/ComparisonResultModal';
 import InputParametersTab from './components/InputParametersTab';
 import AppHeader from './components/AppHeader';
 import QuotationEnhancedOptions from './components/QuotationEnhancedOptions';
@@ -45,6 +47,9 @@ import usePriceHandlers from './hooks/usePriceHandlers';
 import useFormHandlers from './hooks/useFormHandlers';
 import useKeyboardShortcuts from './hooks/useKeyboardShortcuts';
 const ShortcutHelpModal = React.lazy(() => import('./components/ShortcutHelpModal'));
+// Bundle 优化: 把 modal 类组件 lazy 化, 减少 main bundle
+const BatchPriceAdjustment = React.lazy(() => import('./components/BatchPriceAdjustment'));
+const ComparisonResultModal = React.lazy(() => import('./components/ComparisonResultModal'));
 
 // === 非import语句 (lazy组件、常量等) ===
 // 性能优化: 非关键组件使用React.lazy懒加载
@@ -1867,14 +1872,18 @@ function App({ appData: initialAppData, setAppData }) {
         />
       </Suspense>
 
-      {/* 批量价格调整对话框 */}
-      <BatchPriceAdjustment
-        show={showBatchPriceAdjustment}
-        onHide={() => setShowBatchPriceAdjustment(false)}
-        onApply={handleBatchPriceAdjustment}
-        theme={theme}
-        colors={colors}
-      />
+      {/* 批量价格调整对话框 — lazy, 仅打开时下载 chunk */}
+      {showBatchPriceAdjustment && (
+        <Suspense fallback={null}>
+          <BatchPriceAdjustment
+            show={showBatchPriceAdjustment}
+            onHide={() => setShowBatchPriceAdjustment(false)}
+            onApply={handleBatchPriceAdjustment}
+            theme={theme}
+            colors={colors}
+          />
+        </Suspense>
+      )}
 
       {/* 系统诊断面板 */}
       {showDiagnosticPanel && (
@@ -1944,15 +1953,17 @@ function App({ appData: initialAppData, setAppData }) {
         </Suspense>
       )}
 
-      {/* 报价单比较对话框 */}
+      {/* 报价单比较对话框 — lazy */}
       {showComparisonModal && comparisonResult && (
-        <ComparisonResultModal
-          show={showComparisonModal}
-          onHide={() => setShowComparisonModal(false)}
-          comparisonResult={comparisonResult}
-          colors={colors}
-          theme={theme}
-        />
+        <Suspense fallback={null}>
+          <ComparisonResultModal
+            show={showComparisonModal}
+            onHide={() => setShowComparisonModal(false)}
+            comparisonResult={comparisonResult}
+            colors={colors}
+            theme={theme}
+          />
+        </Suspense>
       )}
 
       {/* 用户反馈浮动按钮 */}
