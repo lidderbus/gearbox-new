@@ -7336,6 +7336,1774 @@
     ]
   },
   {
+    "model": "GCST15",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1600,
+    "thrust": 270.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 630000,
+    "ratios": [
+      4.46,
+      5.08,
+      5.46,
+      5.96
+    ],
+    "capacities": [
+      1.64,
+      1.64,
+      1.64,
+      1.64
+    ]
+  },
+  {
+    "model": "GCHT15",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1600,
+    "thrust": 270.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 630000,
+    "ratios": [
+      4.46,
+      5.08,
+      5.46,
+      5.96
+    ],
+    "capacities": [
+      1.64,
+      1.64,
+      1.64,
+      1.64
+    ]
+  },
+  {
+    "model": "GCSE15",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1600,
+    "thrust": 300.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 810000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCHE15",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1600,
+    "thrust": 300.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 810000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCS490",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1400,
+    "thrust": 270.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 490000,
+    "ratios": [
+      2.03,
+      2.48,
+      3.09,
+      3.48,
+      3.95
+    ],
+    "capacities": [
+      2.12,
+      2.12,
+      2.12,
+      2.12,
+      2.12
+    ]
+  },
+  {
+    "model": "GCH490",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1400,
+    "thrust": 270.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 490000,
+    "ratios": [
+      2.03,
+      2.48,
+      3.09,
+      3.48,
+      3.95
+    ],
+    "capacities": [
+      2.12,
+      2.12,
+      2.12,
+      2.12,
+      2.12
+    ]
+  },
+  {
+    "model": "GCST20",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1400,
+    "thrust": 300.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 680000,
+    "ratios": [
+      4.5,
+      5.0,
+      5.55,
+      5.95
+    ],
+    "capacities": [
+      2.12,
+      2.12,
+      2.12,
+      2.12
+    ]
+  },
+  {
+    "model": "GCHT20",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1400,
+    "thrust": 300.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 680000,
+    "ratios": [
+      4.5,
+      5.0,
+      5.55,
+      5.95
+    ],
+    "capacities": [
+      2.12,
+      2.12,
+      2.12,
+      2.12
+    ]
+  },
+  {
+    "model": "GCSE20",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1400,
+    "thrust": 350.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 875000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCHE20",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1400,
+    "thrust": 350.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 875000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCS540",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 290.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 540000,
+    "ratios": [
+      1.97,
+      2.47,
+      3.0,
+      3.52,
+      3.95
+    ],
+    "capacities": [
+      2.825,
+      2.825,
+      2.825,
+      2.825,
+      2.825
+    ]
+  },
+  {
+    "model": "GCH540",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 290.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 540000,
+    "ratios": [
+      1.97,
+      2.47,
+      3.0,
+      3.52,
+      3.95
+    ],
+    "capacities": [
+      2.825,
+      2.825,
+      2.825,
+      2.825,
+      2.825
+    ]
+  },
+  {
+    "model": "GCST26",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 360.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 750000,
+    "ratios": [
+      4.58,
+      5.04,
+      5.59,
+      5.95
+    ],
+    "capacities": [
+      2.825,
+      2.825,
+      2.825,
+      2.825
+    ]
+  },
+  {
+    "model": "GCHT26",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 360.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 750000,
+    "ratios": [
+      4.58,
+      5.04,
+      5.59,
+      5.95
+    ],
+    "capacities": [
+      2.825,
+      2.825,
+      2.825,
+      2.825
+    ]
+  },
+  {
+    "model": "GCSE26",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 450.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 960000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCHE26",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 450.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 960000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCS590",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 360.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 590000,
+    "ratios": [
+      1.97,
+      2.47,
+      3.0,
+      3.52,
+      3.95
+    ],
+    "capacities": [
+      3.64,
+      3.64,
+      3.64,
+      3.64,
+      3.64
+    ]
+  },
+  {
+    "model": "GCH590",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 360.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 590000,
+    "ratios": [
+      1.97,
+      2.47,
+      3.0,
+      3.52,
+      3.95
+    ],
+    "capacities": [
+      3.64,
+      3.64,
+      3.64,
+      3.64,
+      3.64
+    ]
+  },
+  {
+    "model": "GCST33",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 540.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 820000,
+    "ratios": [
+      4.54,
+      5.04,
+      5.6,
+      5.95
+    ],
+    "capacities": [
+      3.64,
+      3.64,
+      3.64,
+      3.64
+    ]
+  },
+  {
+    "model": "GCHT33",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 540.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 820000,
+    "ratios": [
+      4.54,
+      5.04,
+      5.6,
+      5.95
+    ],
+    "capacities": [
+      3.64,
+      3.64,
+      3.64,
+      3.64
+    ]
+  },
+  {
+    "model": "GCSE33",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 550.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1055000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCHE33",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 550.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1055000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCS660",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 540.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 668000,
+    "ratios": [
+      2.0,
+      2.54,
+      2.96,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      5.05,
+      5.05,
+      5.05,
+      5.05,
+      5.05
+    ]
+  },
+  {
+    "model": "GCH660",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 540.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 668000,
+    "ratios": [
+      2.0,
+      2.54,
+      2.96,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      5.05,
+      5.05,
+      5.05,
+      5.05,
+      5.05
+    ]
+  },
+  {
+    "model": "GCST44",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 600.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 924000,
+    "ratios": [
+      4.52,
+      5.0,
+      5.57,
+      5.96
+    ],
+    "capacities": [
+      5.05,
+      5.05,
+      5.05,
+      5.05
+    ]
+  },
+  {
+    "model": "GCHT44",
+    "table": 27,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 600.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 924000,
+    "ratios": [
+      4.52,
+      5.0,
+      5.57,
+      5.96
+    ],
+    "capacities": [
+      5.05,
+      5.05,
+      5.05,
+      5.05
+    ]
+  },
+  {
+    "model": "GCS320",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 100.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 320000,
+    "ratios": [
+      1.97,
+      2.52,
+      2.96,
+      3.52,
+      4.0
+    ],
+    "capacities": [
+      0.57,
+      0.57,
+      0.57,
+      0.57,
+      0.57
+    ]
+  },
+  {
+    "model": "GCH320",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 100.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 320000,
+    "ratios": [
+      1.97,
+      2.52,
+      2.96,
+      3.52,
+      4.0
+    ],
+    "capacities": [
+      0.57,
+      0.57,
+      0.57,
+      0.57,
+      0.57
+    ]
+  },
+  {
+    "model": "GCST5",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 120.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 445000,
+    "ratios": [
+      4.5,
+      5.0,
+      5.55,
+      5.95
+    ],
+    "capacities": [
+      0.57,
+      0.57,
+      0.57,
+      0.57
+    ]
+  },
+  {
+    "model": "GCHT5",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 120.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 445000,
+    "ratios": [
+      4.5,
+      5.0,
+      5.55,
+      5.95
+    ],
+    "capacities": [
+      0.57,
+      0.57,
+      0.57,
+      0.57
+    ]
+  },
+  {
+    "model": "GCSE5",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 170.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 570000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCHE5",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 170.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 570000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCS350",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 113.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 350000,
+    "ratios": [
+      2.0,
+      2.56,
+      3.0,
+      3.57,
+      4.05
+    ],
+    "capacities": [
+      0.72,
+      0.72,
+      0.72,
+      0.72,
+      0.72
+    ]
+  },
+  {
+    "model": "GCH350",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 113.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 350000,
+    "ratios": [
+      2.0,
+      2.56,
+      3.0,
+      3.57,
+      4.05
+    ],
+    "capacities": [
+      0.72,
+      0.72,
+      0.72,
+      0.72,
+      0.72
+    ]
+  },
+  {
+    "model": "GCST6",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 170.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 480000,
+    "ratios": [
+      4.5,
+      5.0,
+      5.55,
+      5.95
+    ],
+    "capacities": [
+      0.72,
+      0.72,
+      0.72,
+      0.72
+    ]
+  },
+  {
+    "model": "GCHT6",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 170.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 480000,
+    "ratios": [
+      4.5,
+      5.0,
+      5.55,
+      5.95
+    ],
+    "capacities": [
+      0.72,
+      0.72,
+      0.72,
+      0.72
+    ]
+  },
+  {
+    "model": "GCSE6",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 200.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 615000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCHE6",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 200.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 615000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCS390",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 140.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 390000,
+    "ratios": [
+      2.03,
+      2.48,
+      2.92,
+      3.48,
+      3.95
+    ],
+    "capacities": [
+      0.96,
+      0.96,
+      0.96,
+      0.96,
+      0.96
+    ]
+  },
+  {
+    "model": "GCH390",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 140.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 390000,
+    "ratios": [
+      2.03,
+      2.48,
+      2.92,
+      3.48,
+      3.95
+    ],
+    "capacities": [
+      0.96,
+      0.96,
+      0.96,
+      0.96,
+      0.96
+    ]
+  },
+  {
+    "model": "GCST9",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 220.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 545000,
+    "ratios": [
+      4.5,
+      5.0,
+      5.55,
+      5.95
+    ],
+    "capacities": [
+      0.96,
+      0.96,
+      0.96,
+      0.96
+    ]
+  },
+  {
+    "model": "GCHT9",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 220.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 545000,
+    "ratios": [
+      4.5,
+      5.0,
+      5.55,
+      5.95
+    ],
+    "capacities": [
+      0.96,
+      0.96,
+      0.96,
+      0.96
+    ]
+  },
+  {
+    "model": "GCSE9",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 270.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 700000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCHE9",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1800,
+    "thrust": 270.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 700000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCS410",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1600,
+    "thrust": 175.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 410000,
+    "ratios": [
+      2.0,
+      2.54,
+      2.96,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      1.292,
+      1.292,
+      1.292,
+      1.292,
+      1.292
+    ]
+  },
+  {
+    "model": "GCH410",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1600,
+    "thrust": 175.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 410000,
+    "ratios": [
+      2.0,
+      2.54,
+      2.96,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      1.292,
+      1.292,
+      1.292,
+      1.292,
+      1.292
+    ]
+  },
+  {
+    "model": "GCST11",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1600,
+    "thrust": 220.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 570000,
+    "ratios": [
+      4.52,
+      5.04,
+      5.52,
+      5.95
+    ],
+    "capacities": [
+      1.292,
+      1.292,
+      1.292,
+      1.292
+    ]
+  },
+  {
+    "model": "GCHT11",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1600,
+    "thrust": 220.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 570000,
+    "ratios": [
+      4.52,
+      5.04,
+      5.52,
+      5.95
+    ],
+    "capacities": [
+      1.292,
+      1.292,
+      1.292,
+      1.292
+    ]
+  },
+  {
+    "model": "GCSE11",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1600,
+    "thrust": 270.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 735000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCHE11",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1600,
+    "thrust": 270.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 735000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCS450",
+    "table": 28,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1600,
+    "thrust": 220.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 455000,
+    "ratios": [
+      1.97,
+      2.55,
+      2.93,
+      3.58,
+      4.0
+    ],
+    "capacities": [
+      1.64,
+      1.64,
+      1.64,
+      1.64,
+      1.64
+    ]
+  },
+  {
+    "model": "GCST115",
+    "table": 29,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 650,
+    "thrust": 1400.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1260000,
+    "ratios": [
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      12.063,
+      12.063,
+      12.063,
+      12.063
+    ]
+  },
+  {
+    "model": "GCHT115",
+    "table": 29,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 650,
+    "thrust": 1400.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1260000,
+    "ratios": [
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      12.063,
+      12.063,
+      12.063,
+      12.063
+    ]
+  },
+  {
+    "model": "GCS950",
+    "table": 29,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 650,
+    "thrust": 1000.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 965000,
+    "ratios": [
+      2.0,
+      2.54,
+      2.96,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      14,
+      14,
+      14,
+      14,
+      14
+    ]
+  },
+  {
+    "model": "GCH950",
+    "table": 29,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 650,
+    "thrust": 1000.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 965000,
+    "ratios": [
+      2.0,
+      2.54,
+      2.96,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      14,
+      14,
+      14,
+      14,
+      14
+    ]
+  },
+  {
+    "model": "GCST135",
+    "table": 29,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 650,
+    "thrust": 1400.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1350000,
+    "ratios": [
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      14,
+      14,
+      14,
+      14
+    ]
+  },
+  {
+    "model": "GCHT135",
+    "table": 29,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 650,
+    "thrust": 1400.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1350000,
+    "ratios": [
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      14,
+      14,
+      14,
+      14
+    ]
+  },
+  {
+    "model": "GCS1000",
+    "table": 29,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 800,
+    "thrust": 1400.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1018000,
+    "ratios": [
+      2.0,
+      2.54,
+      2.96,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      17.5,
+      17.5,
+      17.5,
+      17.5,
+      17.5
+    ]
+  },
+  {
+    "model": "GCH1000",
+    "table": 29,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 800,
+    "thrust": 1400.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1018000,
+    "ratios": [
+      2.0,
+      2.54,
+      2.96,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      17.5,
+      17.5,
+      17.5,
+      17.5,
+      17.5
+    ]
+  },
+  {
+    "model": "GCST170",
+    "table": 29,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 800,
+    "thrust": 1400.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1430000,
+    "ratios": [
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      17.5,
+      17.5,
+      17.5,
+      17.5
+    ]
+  },
+  {
+    "model": "GCHT170",
+    "table": 29,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 800,
+    "thrust": 1400.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1430000,
+    "ratios": [
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      17.5,
+      17.5,
+      17.5,
+      17.5
+    ]
+  },
+  {
+    "model": "GCSE44",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 700.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1185000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCHE44",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 700.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1185000,
+    "ratios": [],
+    "capacities": []
+  },
+  {
+    "model": "GCS700B",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 400,
+    "maxSpeed": 1200,
+    "thrust": 450.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 700000,
+    "ratios": [
+      2.0,
+      2.55,
+      3.0,
+      3.52
+    ],
+    "capacities": [
+      4.744,
+      4.744,
+      4.744,
+      4.744
+    ]
+  },
+  {
+    "model": "GCS750",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 300,
+    "maxSpeed": 950,
+    "thrust": 730.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 750000,
+    "ratios": [
+      1.97,
+      2.47,
+      3.0,
+      3.52,
+      3.95
+    ],
+    "capacities": [
+      7.2,
+      7.2,
+      7.2,
+      7.2,
+      7.2
+    ]
+  },
+  {
+    "model": "GCH750",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 300,
+    "maxSpeed": 950,
+    "thrust": 730.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 750000,
+    "ratios": [
+      1.97,
+      2.47,
+      3.0,
+      3.52,
+      3.95
+    ],
+    "capacities": [
+      7.2,
+      7.2,
+      7.2,
+      7.2,
+      7.2
+    ]
+  },
+  {
+    "model": "GCST66",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 300,
+    "maxSpeed": 900,
+    "thrust": 1000.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1064000,
+    "ratios": [
+      4.48,
+      4.96,
+      5.43,
+      6.0
+    ],
+    "capacities": [
+      7.2,
+      7.2,
+      7.2,
+      7.2
+    ]
+  },
+  {
+    "model": "GCHT66",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 300,
+    "maxSpeed": 900,
+    "thrust": 1000.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1064000,
+    "ratios": [
+      4.48,
+      4.96,
+      5.43,
+      6.0
+    ],
+    "capacities": [
+      7.2,
+      7.2,
+      7.2,
+      7.2
+    ]
+  },
+  {
+    "model": "GCS760",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 300,
+    "maxSpeed": 900,
+    "thrust": 750.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 768000,
+    "ratios": [
+      1.94,
+      2.54,
+      3.0,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      8.111,
+      8.111,
+      8.111,
+      8.111,
+      8.111
+    ]
+  },
+  {
+    "model": "GCH760",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 300,
+    "maxSpeed": 900,
+    "thrust": 750.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 768000,
+    "ratios": [
+      1.94,
+      2.54,
+      3.0,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      8.111,
+      8.111,
+      8.111,
+      8.111,
+      8.111
+    ]
+  },
+  {
+    "model": "GCST77",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 300,
+    "maxSpeed": 900,
+    "thrust": 1000.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1100000,
+    "ratios": [
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      8.111,
+      8.111,
+      8.111,
+      8.111
+    ]
+  },
+  {
+    "model": "GCHT77",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 300,
+    "maxSpeed": 900,
+    "thrust": 1000.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1100000,
+    "ratios": [
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      8.111,
+      8.111,
+      8.111,
+      8.111
+    ]
+  },
+  {
+    "model": "GCS850",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 300,
+    "maxSpeed": 800,
+    "thrust": 800.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 855000,
+    "ratios": [
+      1.97,
+      2.47,
+      3.0,
+      3.52,
+      3.95
+    ],
+    "capacities": [
+      9.6,
+      9.6,
+      9.6,
+      9.6,
+      9.6
+    ]
+  },
+  {
+    "model": "GCH850",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 300,
+    "maxSpeed": 800,
+    "thrust": 800.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 855000,
+    "ratios": [
+      1.97,
+      2.47,
+      3.0,
+      3.52,
+      3.95
+    ],
+    "capacities": [
+      9.6,
+      9.6,
+      9.6,
+      9.6,
+      9.6
+    ]
+  },
+  {
+    "model": "GCST91",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 300,
+    "maxSpeed": 800,
+    "thrust": 1000.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1190000,
+    "ratios": [
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      9.6,
+      9.6,
+      9.6,
+      9.6
+    ]
+  },
+  {
+    "model": "GCHT91",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 300,
+    "maxSpeed": 800,
+    "thrust": 1000.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1190000,
+    "ratios": [
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      9.6,
+      9.6,
+      9.6,
+      9.6
+    ]
+  },
+  {
+    "model": "GCS900",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 800,
+    "thrust": 980.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 900000,
+    "ratios": [
+      2.0,
+      2.52,
+      3.08,
+      3.43,
+      4.1
+    ],
+    "capacities": [
+      11.282,
+      11.282,
+      11.282,
+      11.282,
+      11.282
+    ]
+  },
+  {
+    "model": "GCH900",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 800,
+    "thrust": 980.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 900000,
+    "ratios": [
+      2.0,
+      2.52,
+      3.08,
+      3.43,
+      4.1
+    ],
+    "capacities": [
+      11.282,
+      11.282,
+      11.282,
+      11.282,
+      11.282
+    ]
+  },
+  {
+    "model": "GCST108",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 800,
+    "thrust": 1400.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1230000,
+    "ratios": [
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      11.282,
+      11.282,
+      11.282,
+      11.282
+    ]
+  },
+  {
+    "model": "GCHT108",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 800,
+    "thrust": 1400.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 1230000,
+    "ratios": [
+      4.5,
+      5,
+      5.5,
+      6
+    ],
+    "capacities": [
+      11.282,
+      11.282,
+      11.282,
+      11.282
+    ]
+  },
+  {
+    "model": "GCS880",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 650,
+    "thrust": 1000.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 880000,
+    "ratios": [
+      2.0,
+      2.5357,
+      2.96,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      12.063,
+      12.063,
+      12.063,
+      12.063,
+      12.063
+    ]
+  },
+  {
+    "model": "GCH880",
+    "table": 30,
+    "kind": "B",
+    "minSpeed": 200,
+    "maxSpeed": 650,
+    "thrust": 1000.0,
+    "centerDistance": null,
+    "dimensions": null,
+    "weight": 880000,
+    "ratios": [
+      2.0,
+      2.5357,
+      2.96,
+      3.5,
+      3.95
+    ],
+    "capacities": [
+      12.063,
+      12.063,
+      12.063,
+      12.063,
+      12.063
+    ]
+  },
+  {
     "model": "HCS138",
     "table": 22,
     "kind": "C",

@@ -2239,7 +2239,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1800,
+    "weight": 1018000,
     "priceSource": "估算价格",
     "price": 1500000,
     "discountRate": 0.1,
@@ -2302,7 +2302,7 @@ export const completeGearboxData = [
       "工程船",
       "拖船"
     ],
-    "weight": 408,
+    "weight": 320000,
     "inputInterfaces": {
       "sae": [
         "SAE1#14寸"
@@ -2422,6 +2422,7 @@ export const completeGearboxData = [
     "maxSpeed": 1800,
     "ratios": [
       2,
+      2.56,
       3,
       3.57,
       4.05
@@ -2434,6 +2435,7 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
+      0.72,
       0.72,
       0.72,
       0.72,
@@ -2457,7 +2459,7 @@ export const completeGearboxData = [
       "工程船",
       "拖船"
     ],
-    "weight": 454,
+    "weight": 350000,
     "inputInterfaces": {
       "sae": [
         "SAE1#14寸"
@@ -2512,7 +2514,7 @@ export const completeGearboxData = [
       "工程船",
       "拖船"
     ],
-    "weight": 517,
+    "weight": 390000,
     "inputInterfaces": {
       "sae": [
         "SAE1#14寸"
@@ -2568,7 +2570,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 549,
+    "weight": 410000,
     "inputInterfaces": {
       "sae": [
         "SAE0#18寸",
@@ -2621,7 +2623,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 680,
+    "weight": 490000,
     "priceSource": "估算价格",
     "price": 316667,
     "discountRate": 0.1,
@@ -2679,7 +2681,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 764,
+    "weight": 540000,
     "priceSource": "估算价格",
     "price": 358333,
     "discountRate": 0.1,
@@ -2737,7 +2739,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 850,
+    "weight": 590000,
     "priceSource": "估算价格",
     "price": 400000,
     "discountRate": 0.1,
@@ -2795,7 +2797,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 953,
+    "weight": 668000,
     "priceSource": "估算价格",
     "price": 532453,
     "discountRate": 0.1,
@@ -2824,11 +2826,7 @@ export const completeGearboxData = [
       2.47,
       3,
       3.52,
-      3.95,
-      4.48,
-      4.96,
-      5.43,
-      6
+      3.95
     ],
     "maxPower": 7705,
     "minPower": 2433,
@@ -2838,15 +2836,11 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
-      8.111,
-      8.111,
-      8.111,
-      8.111,
-      8.111,
-      8.111,
-      8.111,
-      8.111,
-      8.111
+      7.2,
+      7.2,
+      7.2,
+      7.2,
+      7.2
     ],
     "imageUrl": "/images/gearbox/Advance-GC.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
@@ -2867,7 +2861,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1061,
+    "weight": 750000,
     "inputInterfaces": {
       "sae": [
         "SAE0#18寸",
@@ -2890,6 +2884,7 @@ export const completeGearboxData = [
       1.94,
       2.54,
       3,
+      3.5,
       3.95
     ],
     "maxPower": 7300,
@@ -2900,6 +2895,7 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
+      8.111,
       8.111,
       8.111,
       8.111,
@@ -2924,7 +2920,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1085,
+    "weight": 768000,
     "inputInterfaces": {
       "sae": [
         "SAE0#18寸",
@@ -2968,7 +2964,7 @@ export const completeGearboxData = [
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
     "introduction": "GCH系列齿轮箱是GC系列的重型版本。",
     "image": "/images/gearbox/Advance-GC.webp",
-    "thrust": 750,
+    "thrust": 800,
     "centerDistance": 855,
     "controlType": "气控/电控",
     "rotationDirection": "相反",
@@ -2983,7 +2979,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1200,
+    "weight": 855000,
     "inputInterfaces": {
       "sae": [
         "SAE0#18寸",
@@ -3003,6 +2999,9 @@ export const completeGearboxData = [
     "minSpeed": 200,
     "maxSpeed": 650,
     "ratios": [
+      2,
+      2.5357,
+      2.96,
       3.5,
       3.95
     ],
@@ -3014,6 +3013,9 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
+      12.063,
+      12.063,
+      12.063,
       12.063,
       12.063
     ],
@@ -3036,7 +3038,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1292,
+    "weight": 880000,
     "inputInterfaces": {
       "sae": [
         "SAE0#18寸",
@@ -3054,8 +3056,9 @@ export const completeGearboxData = [
     "model": "GCH900",
     "series": "GCH",
     "minSpeed": 200,
-    "maxSpeed": 900,
+    "maxSpeed": 800,
     "ratios": [
+      2,
       2.52,
       3.08,
       3.43,
@@ -3069,10 +3072,11 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
-      12.063,
-      12.063,
-      12.063,
-      12.063
+      11.282,
+      11.282,
+      11.282,
+      11.282,
+      11.282
     ],
     "imageUrl": "/images/gearbox/Advance-GC.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
@@ -3093,7 +3097,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1366,
+    "weight": 900000,
     "inputInterfaces": {
       "sae": [
         "SAE0#18寸",
@@ -3146,7 +3150,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1605,
+    "weight": 965000,
     "priceSource": "估算价格",
     "price": 1288650,
     "discountRate": 0.1,
@@ -3216,7 +3220,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1042,
+    "weight": 735000,
     "inputInterfaces": {
       "sae": [
         "SAE0#18寸",
@@ -3268,7 +3272,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1141,
+    "weight": 810000,
     "priceSource": "估算价格",
     "price": 773585,
     "discountRate": 0.1,
@@ -3325,7 +3329,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1274,
+    "weight": 875000,
     "priceSource": "估算价格",
     "price": 929755,
     "discountRate": 0.1,
@@ -3382,7 +3386,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1587,
+    "weight": 960000,
     "priceSource": "估算价格",
     "price": 1268712,
     "discountRate": 0.1,
@@ -3439,7 +3443,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1878,
+    "weight": 1055000,
     "priceSource": "估算价格",
     "price": 1611446,
     "discountRate": 0.1,
@@ -3507,7 +3511,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 2152,
+    "weight": 1185000,
     "inputInterfaces": {
       "sae": [
         "SAE0#18寸",
@@ -3537,7 +3541,7 @@ export const completeGearboxData = [
     "thrust": 170,
     "centerDistance": 570,
     "dimensions": "1425×1197×1311",
-    "weight": 816,
+    "weight": 570000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 664820,
     "discountRate": 0.1,
@@ -3583,10 +3587,10 @@ export const completeGearboxData = [
       0.72,
       0.72
     ],
-    "thrust": 170,
+    "thrust": 200,
     "centerDistance": 615,
     "dimensions": "1538×1292×1415",
-    "weight": 883,
+    "weight": 615000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 760805,
     "discountRate": 0.1,
@@ -3635,7 +3639,7 @@ export const completeGearboxData = [
     "thrust": 270,
     "centerDistance": 700,
     "dimensions": "1750×1470×1610",
-    "weight": 995,
+    "weight": 700000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 962000,
     "discountRate": 0.1,
@@ -3672,10 +3676,12 @@ export const completeGearboxData = [
     "model": "GCHT108",
     "series": "GCHT",
     "minSpeed": 200,
-    "maxSpeed": 900,
+    "maxSpeed": 800,
     "ratios": [
-      3.5,
-      3.95
+      4.5,
+      5,
+      5.5,
+      6
     ],
     "maxPower": 9650,
     "minPower": 2413,
@@ -3685,8 +3691,10 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
-      12.063,
-      12.063
+      11.282,
+      11.282,
+      11.282,
+      11.282
     ],
     "imageUrl": "/images/gearbox/Advance-GC.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
@@ -3707,7 +3715,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 2247,
+    "weight": 1230000,
     "inputInterfaces": {
       "sae": [
         "SAE0#18寸",
@@ -3730,9 +3738,7 @@ export const completeGearboxData = [
       4.52,
       5.04,
       5.52,
-      5.95,
-      6.5,
-      8
+      5.95
     ],
     "maxPower": 12800,
     "minPower": 3200,
@@ -3742,12 +3748,10 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
-      8,
-      8,
-      8,
-      8,
-      8,
-      8
+      1.292,
+      1.292,
+      1.292,
+      1.292
     ],
     "imageUrl": "/images/gearbox/Advance-GC.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
@@ -3768,7 +3772,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 816,
+    "weight": 570000,
     "inputInterfaces": {
       "sae": [
         "SAE0#18寸",
@@ -3819,7 +3823,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 2310,
+    "weight": 1260000,
     "priceSource": "估算价格",
     "price": 2228916,
     "discountRate": 0.1,
@@ -3875,7 +3879,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 2500,
+    "weight": 1350000,
     "priceSource": "估算价格",
     "price": 2500000,
     "discountRate": 0.1,
@@ -3931,7 +3935,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 903,
+    "weight": 630000,
     "priceSource": "估算价格",
     "price": 467925,
     "discountRate": 0.1,
@@ -3987,7 +3991,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 2679,
+    "weight": 1430000,
     "priceSource": "估算价格",
     "price": 2648148,
     "discountRate": 0.1,
@@ -4043,7 +4047,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 969,
+    "weight": 680000,
     "priceSource": "估算价格",
     "price": 552830,
     "discountRate": 0.1,
@@ -4099,7 +4103,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1061,
+    "weight": 750000,
     "priceSource": "估算价格",
     "price": 671698,
     "discountRate": 0.1,
@@ -4155,7 +4159,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1154,
+    "weight": 820000,
     "priceSource": "估算价格",
     "price": 790566,
     "discountRate": 0.1,
@@ -4211,7 +4215,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1454,
+    "weight": 924000,
     "priceSource": "估算价格",
     "price": 1125153,
     "discountRate": 0.1,
@@ -4250,7 +4254,7 @@ export const completeGearboxData = [
     "thrust": 120,
     "centerDistance": 445,
     "dimensions": "1113×935×1023",
-    "weight": 606,
+    "weight": 445000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 436445,
     "discountRate": 0.1,
@@ -4303,7 +4307,7 @@ export const completeGearboxData = [
     "thrust": 170,
     "centerDistance": 480,
     "dimensions": "1200×1008×1104",
-    "weight": 664,
+    "weight": 480000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 494720,
     "discountRate": 0.1,
@@ -4340,12 +4344,8 @@ export const completeGearboxData = [
     "model": "GCHT66",
     "series": "GCHT",
     "minSpeed": 300,
-    "maxSpeed": 950,
+    "maxSpeed": 900,
     "ratios": [
-      1.94,
-      2.54,
-      3,
-      3.95,
       4.48,
       4.96,
       5.43,
@@ -4359,14 +4359,10 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
-      8.111,
-      8.111,
-      8.111,
-      8.111,
-      8.111,
-      8.111,
-      8.111,
-      8.111
+      7.2,
+      7.2,
+      7.2,
+      7.2
     ],
     "imageUrl": "/images/gearbox/Advance-GC.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
@@ -4387,7 +4383,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1897,
+    "weight": 1064000,
     "inputInterfaces": {
       "sae": [
         "SAE0#18寸",
@@ -4407,11 +4403,10 @@ export const completeGearboxData = [
     "minSpeed": 300,
     "maxSpeed": 900,
     "ratios": [
-      1.97,
-      2.47,
-      3,
-      3.52,
-      3.95
+      4.5,
+      5,
+      5.5,
+      6
     ],
     "maxPower": 10154,
     "minPower": 3385,
@@ -4421,11 +4416,10 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
-      11.282,
-      11.282,
-      11.282,
-      11.282,
-      11.282
+      8.111,
+      8.111,
+      8.111,
+      8.111
     ],
     "imageUrl": "/images/gearbox/Advance-GC.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
@@ -4446,7 +4440,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1973,
+    "weight": 1100000,
     "inputInterfaces": {
       "sae": [
         "SAE0#18寸",
@@ -4480,7 +4474,7 @@ export const completeGearboxData = [
     "thrust": 220,
     "centerDistance": 545,
     "dimensions": "1363×1145×1254",
-    "weight": 773,
+    "weight": 545000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 614645,
     "discountRate": 0.1,
@@ -4519,10 +4513,10 @@ export const completeGearboxData = [
     "minSpeed": 300,
     "maxSpeed": 800,
     "ratios": [
-      2.52,
-      3.08,
-      3.43,
-      4.1
+      4.5,
+      5,
+      5.5,
+      6
     ],
     "maxPower": 9650,
     "minPower": 3619,
@@ -4532,10 +4526,10 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
-      12.063,
-      12.063,
-      12.063,
-      12.063
+      9.6,
+      9.6,
+      9.6,
+      9.6
     ],
     "imageUrl": "/images/gearbox/Advance-GC.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
@@ -4556,7 +4550,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 2163,
+    "weight": 1190000,
     "inputInterfaces": {
       "sae": [
         "SAE0#18寸",
@@ -4609,7 +4603,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1800,
+    "weight": 1018000,
     "priceSource": "估算价格",
     "price": 1500000,
     "discountRate": 0.1,
@@ -4650,7 +4644,7 @@ export const completeGearboxData = [
     "thrust": 100,
     "centerDistance": 320,
     "dimensions": "800×672×736",
-    "weight": 408,
+    "weight": 320000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 264320,
     "discountRate": 0.1,
@@ -4693,7 +4687,7 @@ export const completeGearboxData = [
     "ratios": [
       2,
       2.56,
-      3.03,
+      3,
       3.57,
       4.05
     ],
@@ -4707,7 +4701,7 @@ export const completeGearboxData = [
     "thrust": 113,
     "centerDistance": 350,
     "dimensions": "875×735×805",
-    "weight": 454,
+    "weight": 350000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 300500,
     "discountRate": 0.1,
@@ -4764,7 +4758,7 @@ export const completeGearboxData = [
     "thrust": 140,
     "centerDistance": 390,
     "dimensions": "975×819×897",
-    "weight": 517,
+    "weight": 390000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 353780,
     "discountRate": 0.1,
@@ -4821,7 +4815,7 @@ export const completeGearboxData = [
     "thrust": 175,
     "centerDistance": 410,
     "dimensions": "1025×861×943",
-    "weight": 549,
+    "weight": 410000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 382580,
     "discountRate": 0.1,
@@ -4879,7 +4873,7 @@ export const completeGearboxData = [
     "thrust": 220,
     "centerDistance": 455,
     "dimensions": "1138×956×1047",
-    "weight": 622,
+    "weight": 455000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 452645,
     "discountRate": 0.1,
@@ -4954,7 +4948,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 680,
+    "weight": 490000,
     "priceSource": "估算价格",
     "price": 316667,
     "discountRate": 0.1,
@@ -5012,7 +5006,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 764,
+    "weight": 540000,
     "priceSource": "估算价格",
     "price": 358333,
     "discountRate": 0.1,
@@ -5070,7 +5064,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 850,
+    "weight": 590000,
     "priceSource": "估算价格",
     "price": 400000,
     "discountRate": 0.1,
@@ -5128,7 +5122,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 953,
+    "weight": 668000,
     "priceSource": "估算价格",
     "price": 532453,
     "discountRate": 0.1,
@@ -5156,9 +5150,7 @@ export const completeGearboxData = [
       2,
       2.55,
       3,
-      3.52,
-      4,
-      4.47
+      3.52
     ],
     "maxPower": 6516,
     "minPower": 2172,
@@ -5168,12 +5160,10 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
-      5.43,
-      5.43,
-      5.43,
-      5.43,
-      5.43,
-      5.43
+      4.744,
+      4.744,
+      4.744,
+      4.744
     ],
     "imageUrl": "/images/gearbox/Advance-GC.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
@@ -5205,7 +5195,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 995
+    "weight": 700000
   },
   {
     "model": "GCS750",
@@ -5229,7 +5219,7 @@ export const completeGearboxData = [
     "thrust": 730,
     "centerDistance": 750,
     "dimensions": "1875×1575×1725",
-    "weight": 1061,
+    "weight": 750000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 1092500,
     "discountRate": 0.1,
@@ -5274,7 +5264,7 @@ export const completeGearboxData = [
       1.94,
       2.54,
       3,
-      3.53,
+      3.5,
       3.95
     ],
     "transmissionCapacityPerRatio": [
@@ -5287,7 +5277,7 @@ export const completeGearboxData = [
     "thrust": 750,
     "centerDistance": 768,
     "dimensions": "1920×1613×1766",
-    "weight": 1085,
+    "weight": 768000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 1141683,
     "discountRate": 0.1,
@@ -5342,10 +5332,10 @@ export const completeGearboxData = [
       9.6,
       9.6
     ],
-    "thrust": 750,
+    "thrust": 800,
     "centerDistance": 855,
     "dimensions": "2138×1796×1966",
-    "weight": 1200,
+    "weight": 855000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 1395845,
     "discountRate": 0.1,
@@ -5387,6 +5377,9 @@ export const completeGearboxData = [
     "minSpeed": 200,
     "maxSpeed": 650,
     "ratios": [
+      2,
+      2.5357,
+      2.96,
       3.5,
       3.95
     ],
@@ -5398,6 +5391,9 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
+      12.063,
+      12.063,
+      12.063,
       12.063,
       12.063
     ],
@@ -5431,14 +5427,15 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1292
+    "weight": 880000
   },
   {
     "model": "GCS900",
     "series": "GCS",
     "minSpeed": 200,
-    "maxSpeed": 900,
+    "maxSpeed": 800,
     "ratios": [
+      2,
       2.52,
       3.08,
       3.43,
@@ -5452,10 +5449,11 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
-      12.063,
-      12.063,
-      12.063,
-      12.063
+      11.282,
+      11.282,
+      11.282,
+      11.282,
+      11.282
     ],
     "imageUrl": "/images/gearbox/Advance-GC.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
@@ -5487,7 +5485,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1366
+    "weight": 900000
   },
   {
     "model": "GCS950",
@@ -5528,7 +5526,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1605,
+    "weight": 965000,
     "priceSource": "估算价格",
     "price": 1288650,
     "discountRate": 0.1,
@@ -5563,7 +5561,7 @@ export const completeGearboxData = [
     "thrust": 270,
     "centerDistance": 735,
     "dimensions": "1838×1544×1690",
-    "weight": 1042,
+    "weight": 735000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 1052405,
     "discountRate": 0.1,
@@ -5637,7 +5635,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1141,
+    "weight": 810000,
     "priceSource": "估算价格",
     "price": 773585,
     "discountRate": 0.1,
@@ -5694,7 +5692,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1274,
+    "weight": 875000,
     "priceSource": "估算价格",
     "price": 929755,
     "discountRate": 0.1,
@@ -5751,7 +5749,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1587,
+    "weight": 960000,
     "priceSource": "估算价格",
     "price": 1268712,
     "discountRate": 0.1,
@@ -5808,7 +5806,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1878,
+    "weight": 1055000,
     "priceSource": "估算价格",
     "price": 1611446,
     "discountRate": 0.1,
@@ -5843,7 +5841,7 @@ export const completeGearboxData = [
     "thrust": 700,
     "centerDistance": 1185,
     "dimensions": "2963×2489×2726",
-    "weight": 2152,
+    "weight": 1185000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 2500000,
     "discountRate": 0.1,
@@ -5895,7 +5893,7 @@ export const completeGearboxData = [
     "thrust": 170,
     "centerDistance": 570,
     "dimensions": "1425×1197×1311",
-    "weight": 816,
+    "weight": 570000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 664820,
     "discountRate": 0.1,
@@ -5943,10 +5941,10 @@ export const completeGearboxData = [
       0.72,
       0.72
     ],
-    "thrust": 170,
+    "thrust": 200,
     "centerDistance": 615,
     "dimensions": "1538×1292×1415",
-    "weight": 883,
+    "weight": 615000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 760805,
     "discountRate": 0.1,
@@ -5997,7 +5995,7 @@ export const completeGearboxData = [
     "thrust": 270,
     "centerDistance": 700,
     "dimensions": "1750×1470×1610",
-    "weight": 995,
+    "weight": 700000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 962000,
     "discountRate": 0.1,
@@ -6036,7 +6034,7 @@ export const completeGearboxData = [
     "model": "GCST108",
     "series": "GCS",
     "minSpeed": 200,
-    "maxSpeed": 900,
+    "maxSpeed": 800,
     "ratios": [
       4.5,
       5,
@@ -6052,7 +6050,7 @@ export const completeGearboxData = [
     "thrust": 1400,
     "centerDistance": 1230,
     "dimensions": "3075×2583×2829",
-    "weight": 2247,
+    "weight": 1230000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 2500000,
     "discountRate": 0.1,
@@ -6108,7 +6106,7 @@ export const completeGearboxData = [
     "thrust": 220,
     "centerDistance": 570,
     "dimensions": "1425×1197×1311",
-    "weight": 816,
+    "weight": 570000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 664820,
     "discountRate": 0.1,
@@ -6181,7 +6179,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 2310,
+    "weight": 1260000,
     "priceSource": "估算价格",
     "price": 2228916,
     "discountRate": 0.1,
@@ -6237,7 +6235,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 2500,
+    "weight": 1350000,
     "priceSource": "估算价格",
     "price": 2500000,
     "discountRate": 0.1,
@@ -6293,7 +6291,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 903,
+    "weight": 630000,
     "priceSource": "估算价格",
     "price": 467925,
     "discountRate": 0.1,
@@ -6349,7 +6347,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 2679,
+    "weight": 1430000,
     "priceSource": "估算价格",
     "price": 2648148,
     "discountRate": 0.1,
@@ -6405,7 +6403,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 969,
+    "weight": 680000,
     "priceSource": "估算价格",
     "price": 552830,
     "discountRate": 0.1,
@@ -6461,7 +6459,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1061,
+    "weight": 750000,
     "priceSource": "估算价格",
     "price": 671698,
     "discountRate": 0.1,
@@ -6517,7 +6515,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1154,
+    "weight": 820000,
     "priceSource": "估算价格",
     "price": 790566,
     "discountRate": 0.1,
@@ -6573,7 +6571,7 @@ export const completeGearboxData = [
       "工程船",
       "军辅船"
     ],
-    "weight": 1454,
+    "weight": 924000,
     "priceSource": "估算价格",
     "price": 1125153,
     "discountRate": 0.1,
@@ -6612,7 +6610,7 @@ export const completeGearboxData = [
     "thrust": 120,
     "centerDistance": 445,
     "dimensions": "1113×935×1023",
-    "weight": 606,
+    "weight": 445000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 436445,
     "discountRate": 0.1,
@@ -6667,7 +6665,7 @@ export const completeGearboxData = [
     "thrust": 170,
     "centerDistance": 480,
     "dimensions": "1200×1008×1104",
-    "weight": 664,
+    "weight": 480000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 494720,
     "discountRate": 0.1,
@@ -6706,7 +6704,7 @@ export const completeGearboxData = [
     "model": "GCST66",
     "series": "GCS",
     "minSpeed": 300,
-    "maxSpeed": 950,
+    "maxSpeed": 900,
     "ratios": [
       4.48,
       4.96,
@@ -6722,7 +6720,7 @@ export const completeGearboxData = [
     "thrust": 1000,
     "centerDistance": 1064,
     "dimensions": "3609×2639×2370",
-    "weight": 1897,
+    "weight": 1064000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 2117773,
     "discountRate": 0.1,
@@ -6764,17 +6762,21 @@ export const completeGearboxData = [
     "minSpeed": 300,
     "maxSpeed": 900,
     "ratios": [
-      4.55,
-      5.56
+      4.5,
+      5,
+      5.5,
+      6
     ],
     "transmissionCapacityPerRatio": [
+      8.111,
+      8.111,
       8.111,
       8.111
     ],
     "thrust": 1000,
     "centerDistance": 1100,
     "dimensions": "1920×1613×1766",
-    "weight": 1973,
+    "weight": 1100000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 2258000,
     "discountRate": 0.1,
@@ -6830,7 +6832,7 @@ export const completeGearboxData = [
     "thrust": 220,
     "centerDistance": 545,
     "dimensions": "1363×1145×1254",
-    "weight": 773,
+    "weight": 545000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 614645,
     "discountRate": 0.1,
@@ -6871,17 +6873,21 @@ export const completeGearboxData = [
     "minSpeed": 300,
     "maxSpeed": 800,
     "ratios": [
-      4.55,
-      5.56
+      4.5,
+      5,
+      5.5,
+      6
     ],
     "transmissionCapacityPerRatio": [
+      9.6,
+      9.6,
       9.6,
       9.6
     ],
     "thrust": 1000,
     "centerDistance": 1190,
     "dimensions": "2975×2499×2737",
-    "weight": 2163,
+    "weight": 1190000,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 2500000,
     "discountRate": 0.1,
