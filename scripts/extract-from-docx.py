@@ -25,6 +25,14 @@ def model_name(c):
     name = re.sub(r'\s*\(.*?\)\s*', '', name)
     return name.strip()
 
+def model_names(c):
+    """单元格内所有 model 名 (T14-T19 多型号行: GWC + GWL 配对)"""
+    out = []
+    for p in cell_paragraphs(c):
+        n = re.sub(r'\s*\(.*?\)\s*', '', p.strip()).strip()
+        if n: out.append(n)
+    return out
+
 def parse_numbers(s):
     if not s: return []
     s = re.sub(r':1\b', '', s)  # 比率符号 "2.07:1" → "2.07"
@@ -88,7 +96,7 @@ tables = root.findall('.//w:tbl', NS)
 results = []
 
 # ==== Type A: 标准单级 8-col ====
-TYPE_A = list(range(1, 12)) + list(range(14, 20)) + list(range(27, 31)) + [33, 34]
+TYPE_A = list(range(1, 12)) + [33, 34]
 
 def header_has_model(rows):
     if not rows: return False
@@ -100,33 +108,36 @@ for ti in TYPE_A:
     rows = tables[ti].findall('.//w:tr', NS)
     if len(rows) < 2: continue
     if not header_has_model(rows): continue
-    pending = None
+    pending_group = []  # 多型号同行共享, 列表
     for r in rows[1:]:
         cells = r.findall('.//w:tc', NS)
         if len(cells) < 8: continue
         cps = [cell_paragraphs(c) for c in cells]
-        model_text = model_name(cells[0])
-        if model_text:
-            if pending: results.append(pending)
+        models = model_names(cells[0])
+        if models:
+            for p in pending_group: results.append(p)
             sm, sx = parse_speed(cell_text(cells[1]))
-            pending = {
-                'model': model_text, 'table': ti, 'kind': 'A',
-                'minSpeed': sm, 'maxSpeed': sx,
-                '_r_paras': list(cps[2]), '_c_paras': list(cps[3]),
-                'thrust': parse_float(cell_text(cells[4])),
-                'centerDistance': parse_int(cell_text(cells[5])),
-                'dimensions': parse_dim(cell_text(cells[6])),
-                'weight': parse_int(cell_text(cells[7])),
-            }
-        elif pending is not None:
-            pending['_r_paras'].extend(cps[2])
-            pending['_c_paras'].extend(cps[3])
-    if pending: results.append(pending)
+            pending_group = []
+            for mt in models:
+                pending_group.append({
+                    'model': mt, 'table': ti, 'kind': 'A',
+                    'minSpeed': sm, 'maxSpeed': sx,
+                    '_r_paras': list(cps[2]), '_c_paras': list(cps[3]),
+                    'thrust': parse_float(cell_text(cells[4])),
+                    'centerDistance': parse_int(cell_text(cells[5])),
+                    'dimensions': parse_dim(cell_text(cells[6])),
+                    'weight': parse_int(cell_text(cells[7])),
+                })
+        elif pending_group:
+            for p in pending_group:
+                p['_r_paras'].extend(cps[2])
+                p['_c_paras'].extend(cps[3])
+    for p in pending_group: results.append(p)
 
 # ==== Type B: 多型号包装 (T20, T21) ====
 # 第一格如 'GWS60.66\nGWK60.66\nGWH60.66\nGWD60.66' = 4 个共享参数模型
 # 重量列 '15\n14\n14\n14' 对应每个模型的吨数
-for ti in [20, 21]:
+for ti in list(range(14, 20)) + [20, 21] + list(range(27, 31)):
     if ti >= len(tables): continue
     rows = tables[ti].findall('.//w:tr', NS)
     if len(rows) < 2: continue

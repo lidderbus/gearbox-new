@@ -5,8 +5,28 @@
  * 2025-12-26: 统一图片数据源，优先使用外形图汇总数据
  */
 
-import React, { useState, useCallback } from 'react';
-import { gearboxDrawings, couplingDrawings } from '../data/outlineDrawings';
+import React, { useState, useCallback, useEffect } from 'react';
+// outlineDrawings.js (132 KB) 改为动态加载 — 不进 main bundle
+// 首屏走 CDN 系列默认图 fallback, 加载完毕后切精确缩略图
+
+// 模块级缓存, 加载一次即可
+let _drawingMapsPromise = null;
+let _drawingMaps = null;
+const loadDrawingMaps = () => {
+  if (_drawingMaps) return Promise.resolve(_drawingMaps);
+  if (!_drawingMapsPromise) {
+    _drawingMapsPromise = import(/* webpackChunkName: "outline-drawings" */ '../data/outlineDrawings')
+      .then(mod => {
+        _drawingMaps = { gearboxDrawings: mod.gearboxDrawings, couplingDrawings: mod.couplingDrawings };
+        return _drawingMaps;
+      })
+      .catch(() => {
+        _drawingMaps = { gearboxDrawings: {}, couplingDrawings: {} };
+        return _drawingMaps;
+      });
+  }
+  return _drawingMapsPromise;
+};
 
 // 图片映射配置 (作为回退方案)
 const CDN_BASE = 'https://omo-oss-image.thefastimg.com/portal-saas/pg2025042513131070105/cms/image';
@@ -141,57 +161,66 @@ function extractSeries(model, type) {
 /**
  * 获取图片URL
  * 优先级: 1.外形图精确匹配 → 2.外形图模糊匹配 → 3.系列默认图片
+ *
+ * @param {string} model
+ * @param {string} type
+ * @param {string} size
+ * @param {object} [drawingMaps] 已加载的 outlineDrawings 数据 (来自 loadDrawingMaps);
+ *                                未提供时跳过 1-4 步直接走系列默认图 (首屏 fallback)
  */
-function getImageUrl(model, type = 'gearbox', size = 'thumbnail') {
+function getImageUrl(model, type = 'gearbox', size = 'thumbnail', drawingMaps = null) {
   if (!model) {
     const defaultImages = type === 'coupling' ? COUPLING_IMAGES['HGTQ'] : GEARBOX_IMAGES['DEFAULT'];
     return defaultImages[size] || defaultImages.thumbnail;
   }
 
-  // 1. 优先从外形图数据获取（精确匹配）
-  const drawingSource = type === 'coupling' ? couplingDrawings : gearboxDrawings;
-  const drawingData = drawingSource[model];
+  if (drawingMaps) {
+    const { gearboxDrawings, couplingDrawings } = drawingMaps;
+    // 1. 优先从外形图数据获取（精确匹配）
+    const drawingSource = type === 'coupling' ? couplingDrawings : gearboxDrawings;
+    const drawingData = drawingSource[model];
 
-  if (drawingData) {
-    if (size === 'large' && drawingData.mainView) return drawingData.mainView;
-    if (size === 'thumbnail' && drawingData.thumbnail) return drawingData.thumbnail;
-    if (size === 'technical' && drawingData.dimensions) return drawingData.dimensions;
-  }
+    if (drawingData) {
+      if (size === 'large' && drawingData.mainView) return drawingData.mainView;
+      if (size === 'thumbnail' && drawingData.thumbnail) return drawingData.thumbnail;
+      if (size === 'technical' && drawingData.dimensions) return drawingData.dimensions;
+    }
 
-  // 2. Fuzzy match: strip trailing letter (HC300A → HC300)
-  const baseModel = model.replace(/[A-Z]$/, '');
-  if (baseModel !== model) {
-    const baseDrawing = drawingSource[baseModel];
-    if (baseDrawing) {
-      if (size === 'large' && baseDrawing.mainView) return baseDrawing.mainView;
-      if (size === 'thumbnail' && baseDrawing.thumbnail) return baseDrawing.thumbnail;
-      if (size === 'technical' && baseDrawing.dimensions) return baseDrawing.dimensions;
+    // 2. Fuzzy match: strip trailing letter (HC300A → HC300)
+    const baseModel = model.replace(/[A-Z]$/, '');
+    if (baseModel !== model) {
+      const baseDrawing = drawingSource[baseModel];
+      if (baseDrawing) {
+        if (size === 'large' && baseDrawing.mainView) return baseDrawing.mainView;
+        if (size === 'thumbnail' && baseDrawing.thumbnail) return baseDrawing.thumbnail;
+        if (size === 'technical' && baseDrawing.dimensions) return baseDrawing.dimensions;
+      }
+    }
+
+    // 3. Strip slash suffix (HC1200/1 → HC1200)
+    const noSlashModel = model.replace(/\/\d+$/, '');
+    if (noSlashModel !== model) {
+      const slashDrawing = drawingSource[noSlashModel];
+      if (slashDrawing) {
+        if (size === 'large' && slashDrawing.mainView) return slashDrawing.mainView;
+        if (size === 'thumbnail' && slashDrawing.thumbnail) return slashDrawing.thumbnail;
+        if (size === 'technical' && slashDrawing.dimensions) return slashDrawing.dimensions;
+      }
+    }
+
+    // 4. Strip trailing letter variants (HCT800A → HCT800)
+    const noLetterVariant = model.replace(/[A-Z]+$/, '');
+    if (noLetterVariant !== model && noLetterVariant !== baseModel) {
+      const variantDrawing = drawingSource[noLetterVariant];
+      if (variantDrawing) {
+        if (size === 'large' && variantDrawing.mainView) return variantDrawing.mainView;
+        if (size === 'thumbnail' && variantDrawing.thumbnail) return variantDrawing.thumbnail;
+        if (size === 'technical' && variantDrawing.dimensions) return variantDrawing.dimensions;
+      }
     }
   }
 
-  // 3. Strip slash suffix (HC1200/1 → HC1200)
-  const noSlashModel = model.replace(/\/\d+$/, '');
-  if (noSlashModel !== model) {
-    const slashDrawing = drawingSource[noSlashModel];
-    if (slashDrawing) {
-      if (size === 'large' && slashDrawing.mainView) return slashDrawing.mainView;
-      if (size === 'thumbnail' && slashDrawing.thumbnail) return slashDrawing.thumbnail;
-      if (size === 'technical' && slashDrawing.dimensions) return slashDrawing.dimensions;
-    }
-  }
-
-  // 4. Strip trailing letter variants (HCT800A → HCT800)
-  const noLetterVariant = model.replace(/[A-Z]+$/, '');
-  if (noLetterVariant !== model && noLetterVariant !== baseModel) {
-    const variantDrawing = drawingSource[noLetterVariant];
-    if (variantDrawing) {
-      if (size === 'large' && variantDrawing.mainView) return variantDrawing.mainView;
-      if (size === 'thumbnail' && variantDrawing.thumbnail) return variantDrawing.thumbnail;
-      if (size === 'technical' && variantDrawing.dimensions) return variantDrawing.dimensions;
-    }
-  }
-
-  // 5. Fall back to series default image
+  // 5. Fall back to series default image (首屏 / 缺数据时走此)
   const series = extractSeries(model, type);
 
   if (type === 'coupling') {
@@ -216,8 +245,18 @@ function ProductThumbnail({
 }) {
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [drawingMaps, setDrawingMaps] = useState(_drawingMaps); // 模块级已加载则同步可用
 
-  const imageUrl = getImageUrl(model, type, 'thumbnail');
+  useEffect(() => {
+    if (drawingMaps) return;
+    let mounted = true;
+    loadDrawingMaps().then(maps => {
+      if (mounted) setDrawingMaps(maps);
+    });
+    return () => { mounted = false; };
+  }, [drawingMaps]);
+
+  const imageUrl = getImageUrl(model, type, 'thumbnail', drawingMaps);
 
   const handleImageLoad = useCallback(() => {
     setIsLoading(false);
@@ -333,13 +372,14 @@ function ProductThumbnail({
 }
 
 /**
- * 获取完整的图片数据（包含多视图）
- * 用于ProductImageModal显示多标签页
+ * 获取完整的图片数据 (异步版本) — 包含多视图, 用于 ProductImageModal
+ * outlineDrawings 数据动态加载 (132 KB, 不在 main bundle)
  */
-function getFullImageData(model, type = 'gearbox') {
+async function getFullImageData(model, type = 'gearbox') {
   if (!model) return null;
 
-  const drawingSource = type === 'coupling' ? couplingDrawings : gearboxDrawings;
+  const maps = await loadDrawingMaps();
+  const drawingSource = type === 'coupling' ? maps.couplingDrawings : maps.gearboxDrawings;
 
   // 精确匹配
   let drawingData = drawingSource[model];

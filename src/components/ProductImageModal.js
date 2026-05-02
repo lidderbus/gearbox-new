@@ -21,9 +21,18 @@ function ProductImageModal({
   const [activeTab, setActiveTab] = useState(initialTab);
   const [imageError, setImageError] = useState({});
   const [isLoading, setIsLoading] = useState({});
+  const [imageData, setImageData] = useState(null);
 
-  // 获取完整图片数据（优先使用外形图汇总数据）
-  const imageData = useMemo(() => getFullImageData(model, type), [model, type]);
+  // getFullImageData 现在是 async (动态加载 outlineDrawings 132 KB)
+  useEffect(() => {
+    let mounted = true;
+    if (!model) { setImageData(null); return; }
+    Promise.resolve(getFullImageData(model, type)).then(data => {
+      if (mounted) setImageData(data);
+    });
+    return () => { mounted = false; };
+  }, [model, type]);
+
   const series = extractSeries(model, type);
 
   // 构建可用的标签页 (基于实际数据)

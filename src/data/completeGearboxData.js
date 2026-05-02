@@ -7062,7 +7062,7 @@ export const completeGearboxData = [
     "model": "GWC28.30",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 2000,
+    "maxSpeed": 900400,
     "ratios": [
       2.06,
       2.51,
@@ -7186,7 +7186,7 @@ export const completeGearboxData = [
     "model": "GWC30.32",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 2000,
+    "maxSpeed": 900400,
     "ratios": [
       2.03,
       2.55,
@@ -7314,7 +7314,7 @@ export const completeGearboxData = [
     "model": "GWC32.35",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 2000,
+    "maxSpeed": 900400,
     "ratios": [
       2.06,
       2.54,
@@ -7450,7 +7450,7 @@ export const completeGearboxData = [
     "model": "GWC36.39",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1900,
+    "maxSpeed": 900400,
     "ratios": [
       1.97,
       2.45,
@@ -7684,7 +7684,7 @@ export const completeGearboxData = [
     "model": "GWC39.41",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1700,
+    "maxSpeed": 800400,
     "ratios": [
       1.98,
       2.47,
@@ -7812,7 +7812,7 @@ export const completeGearboxData = [
     "model": "GWC42.45",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1600,
+    "maxSpeed": 800400,
     "ratios": [
       2,
       2.55,
@@ -7950,7 +7950,7 @@ export const completeGearboxData = [
     "model": "GWC45.49",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1600,
+    "maxSpeed": 700400,
     "ratios": [
       1.97,
       2.47,
@@ -8106,7 +8106,7 @@ export const completeGearboxData = [
     "model": "GWC45.52",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1400,
+    "maxSpeed": 630400,
     "ratios": [
       1.97,
       2.52,
@@ -8280,7 +8280,7 @@ export const completeGearboxData = [
     "model": "GWC49.54",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1400,
+    "maxSpeed": 600400,
     "ratios": [
       1.94,
       2.46,
@@ -8414,7 +8414,7 @@ export const completeGearboxData = [
     "model": "GWC49.59",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1200,
+    "maxSpeed": 550400,
     "ratios": [
       2.03,
       2.49,
@@ -8481,7 +8481,7 @@ export const completeGearboxData = [
     "model": "GWC52.59",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1200,
+    "maxSpeed": 600400,
     "ratios": [
       1.93,
       2.48,
@@ -8617,7 +8617,7 @@ export const completeGearboxData = [
     "model": "GWC52.62",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1200,
+    "maxSpeed": 565400,
     "ratios": [
       2.02,
       2.46,
@@ -8738,32 +8738,18 @@ export const completeGearboxData = [
     "model": "GWC60.66",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1200,
+    "maxSpeed": 600400,
     "ratios": [
       2.01,
       2.5,
       3.07,
-      3.57,
-      4.05,
-      4.48,
-      5.08,
-      5.51,
-      6.12,
-      6.52,
-      6.97
+      3.57
     ],
     "transmissionCapacityPerRatio": [
       10.026,
       8.073,
       6.567,
-      5.645,
-      4.98,
-      4.5,
-      3.973,
-      3.664,
-      3.299,
-      3.06,
-      3
+      5.645
     ],
     "thrust": 450,
     "centerDistance": 450,
@@ -8877,7 +8863,7 @@ export const completeGearboxData = [
     "model": "GWC60.74",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1200,
+    "maxSpeed": 530400,
     "ratios": [
       1.99,
       2.53,
@@ -8993,34 +8979,18 @@ export const completeGearboxData = [
     "model": "GWC63.71",
     "series": "GW",
     "minSpeed": 300,
-    "maxSpeed": 1000,
+    "maxSpeed": 500300,
     "ratios": [
       2.01,
       2.51,
       3.03,
-      3.45,
-      4.11,
-      4.55,
-      5.04,
-      5.47,
-      5.95,
-      6.48,
-      6.96,
-      7.48
+      3.45
     ],
     "transmissionCapacityPerRatio": [
       13.148,
       10.535,
       8.725,
-      7.67,
-      6.45,
-      5.818,
-      5.256,
-      4.837,
-      4.448,
-      4.243,
-      3.954,
-      3.678
+      7.67
     ],
     "thrust": 710,
     "centerDistance": 710,
@@ -9121,32 +9091,18 @@ export const completeGearboxData = [
     "model": "GWC66.75",
     "series": "GW",
     "minSpeed": 300,
-    "maxSpeed": 950,
+    "maxSpeed": 490300,
     "ratios": [
       2.05,
       2.55,
       2.99,
-      3.48,
-      3.95,
-      4.49,
-      4.97,
-      5.51,
-      6.12,
-      6.59,
-      6.95
+      3.48
     ],
     "transmissionCapacityPerRatio": [
       14.406,
       11.582,
       9.9,
-      8.491,
-      7.48,
-      6.59,
-      5.95,
-      5.366,
-      4.831,
-      4.488,
-      4.253
+      8.491
     ],
     "thrust": 730,
     "centerDistance": 730,
@@ -9188,34 +9144,20 @@ export const completeGearboxData = [
     "model": "GWC70.76",
     "series": "GW",
     "minSpeed": 300,
-    "maxSpeed": 950,
+    "maxSpeed": 465300,
     "ratios": [
       2.05,
       2.53,
       3.09,
       3.58,
-      3.95,
-      4.57,
-      5.05,
-      5.58,
-      5.77,
-      6.17,
-      6.54,
-      6.94
+      3.95
     ],
     "transmissionCapacityPerRatio": [
       15.718,
       12.734,
       10.414,
       8.986,
-      8.15,
-      7.039,
-      6.378,
-      5.773,
-      5.562,
-      5.216,
-      4.934,
-      4.5
+      8.15
     ],
     "thrust": 750,
     "centerDistance": 750,
@@ -9259,7 +9201,7 @@ export const completeGearboxData = [
     "model": "GWC70.82",
     "series": "GW",
     "minSpeed": 300,
-    "maxSpeed": 1150,
+    "maxSpeed": 465300,
     "ratios": [
       2.05,
       2.53,
@@ -9318,7 +9260,7 @@ export const completeGearboxData = [
     "model": "GWC70.85",
     "series": "GW",
     "minSpeed": 300,
-    "maxSpeed": 950,
+    "maxSpeed": 425300,
     "ratios": [
       1.98,
       2.45,
@@ -9375,7 +9317,7 @@ export const completeGearboxData = [
     "model": "GWC75.90",
     "series": "GW",
     "minSpeed": 200,
-    "maxSpeed": 925,
+    "maxSpeed": 465200,
     "ratios": [
       2.01,
       2.51,
@@ -9432,7 +9374,7 @@ export const completeGearboxData = [
     "model": "GWC78.88",
     "series": "GW",
     "minSpeed": 300,
-    "maxSpeed": 900,
+    "maxSpeed": 335300,
     "ratios": [
       2.04,
       2.49,
@@ -9566,28 +9508,20 @@ export const completeGearboxData = [
     "model": "GWC80.95",
     "series": "GW",
     "minSpeed": 200,
-    "maxSpeed": 700,
+    "maxSpeed": 350200,
     "ratios": [
       1.98,
       2.49,
       2.94,
       3.46,
-      3.95,
-      4.51,
-      5.03,
-      5.48,
-      5.93
+      3.95
     ],
     "transmissionCapacityPerRatio": [
       28,
       22.2,
       18.81,
       16,
-      14,
-      12.25,
-      11,
-      10.09,
-      9.33
+      14
     ],
     "thrust": 1200,
     "centerDistance": 950,
@@ -9633,7 +9567,7 @@ export const completeGearboxData = [
     "model": "GWC85.100",
     "series": "GW",
     "minSpeed": 150,
-    "maxSpeed": 1425,
+    "maxSpeed": 400200,
     "ratios": [
       1.98,
       2.55,
@@ -10102,9 +10036,7 @@ export const completeGearboxData = [
     "ratios": [
       1.97,
       2.52,
-      2.96,
-      3.52,
-      4
+      2.96
     ],
     "thrust": 100,
     "centerDistance": 100,
@@ -10118,9 +10050,7 @@ export const completeGearboxData = [
     "transmissionCapacityPerRatio": [
       0.57,
       0.57,
-      0.57,
-      0.56,
-      0.52
+      0.57
     ],
     "imageUrl": "/images/gearbox/Advance-GWD.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
@@ -11447,9 +11377,7 @@ export const completeGearboxData = [
     "ratios": [
       1.97,
       2.52,
-      2.96,
-      3.52,
-      4
+      2.96
     ],
     "maxPower": 1026,
     "minPower": 208,
@@ -11461,9 +11389,7 @@ export const completeGearboxData = [
     "transmissionCapacityPerRatio": [
       0.57,
       0.57,
-      0.57,
-      0.56,
-      0.52
+      0.57
     ],
     "imageUrl": "/images/gearbox/Advance-GWH.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
@@ -11582,7 +11508,7 @@ export const completeGearboxData = [
     "imageUrl": "/images/gearbox/Advance-GWH.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
     "introduction": "GW系列渔用齿轮箱是杭州前进齿轮箱集团为拖网渔船设计的专用齿轮箱。除具有倒顺车、减速及承受螺旋桨推力功能外,还具有取力功能,可输出动力带动液压泵、发电机等辅助设备。",
-    "weight": 2250,
+    "weight": 2450,
     "image": "/images/gearbox/Advance-GWH.webp",
     "dimensions": "1645×1331×1060",
     "controlType": "气控/电控",
@@ -12808,9 +12734,7 @@ export const completeGearboxData = [
     "ratios": [
       1.97,
       2.52,
-      2.96,
-      3.52,
-      4
+      2.96
     ],
     "maxPower": 1026,
     "minPower": 208,
@@ -12822,9 +12746,7 @@ export const completeGearboxData = [
     "transmissionCapacityPerRatio": [
       0.57,
       0.57,
-      0.57,
-      0.56,
-      0.52
+      0.57
     ],
     "imageUrl": "/images/gearbox/Advance-GWK.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
@@ -14055,7 +13977,7 @@ export const completeGearboxData = [
     "model": "GWL28.30",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 2000,
+    "maxSpeed": 900400,
     "ratios": [
       2.06,
       2.51,
@@ -14119,7 +14041,7 @@ export const completeGearboxData = [
     "model": "GWL30.32",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 2000,
+    "maxSpeed": 900400,
     "ratios": [
       2.03,
       2.55,
@@ -14183,7 +14105,7 @@ export const completeGearboxData = [
     "model": "GWL32.35",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 2000,
+    "maxSpeed": 900400,
     "ratios": [
       2.06,
       2.54,
@@ -14247,7 +14169,7 @@ export const completeGearboxData = [
     "model": "GWL36.39",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1900,
+    "maxSpeed": 900400,
     "ratios": [
       1.97,
       2.45,
@@ -14311,7 +14233,7 @@ export const completeGearboxData = [
     "model": "GWL39.41",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1700,
+    "maxSpeed": 800400,
     "ratios": [
       1.98,
       2.47,
@@ -14375,7 +14297,7 @@ export const completeGearboxData = [
     "model": "GWL42.45",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1600,
+    "maxSpeed": 800400,
     "ratios": [
       2,
       2.55,
@@ -14439,7 +14361,7 @@ export const completeGearboxData = [
     "model": "GWL45.49",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1600,
+    "maxSpeed": 700400,
     "ratios": [
       1.97,
       2.47,
@@ -14504,7 +14426,7 @@ export const completeGearboxData = [
     "model": "GWL45.52",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1400,
+    "maxSpeed": 630400,
     "ratios": [
       1.97,
       2.52,
@@ -14569,7 +14491,7 @@ export const completeGearboxData = [
     "model": "GWL49.54",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1400,
+    "maxSpeed": 600400,
     "ratios": [
       1.94,
       2.46,
@@ -14634,7 +14556,7 @@ export const completeGearboxData = [
     "model": "GWL49.59",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1200,
+    "maxSpeed": 550400,
     "ratios": [
       2.03,
       2.49,
@@ -14699,7 +14621,7 @@ export const completeGearboxData = [
     "model": "GWL52.59",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1200,
+    "maxSpeed": 600400,
     "ratios": [
       1.93,
       2.48,
@@ -14764,7 +14686,7 @@ export const completeGearboxData = [
     "model": "GWL52.62",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1200,
+    "maxSpeed": 565400,
     "ratios": [
       2.02,
       2.46,
@@ -14833,19 +14755,12 @@ export const completeGearboxData = [
     "model": "GWL60.66",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1200,
+    "maxSpeed": 600400,
     "ratios": [
       2.01,
       2.5,
       3.07,
-      3.57,
-      4.05,
-      4.48,
-      5.08,
-      5.51,
-      6.12,
-      6.52,
-      6.97
+      3.57
     ],
     "thrust": 450,
     "centerDistance": 450,
@@ -14860,14 +14775,7 @@ export const completeGearboxData = [
       10.026,
       8.073,
       6.567,
-      5.645,
-      4.98,
-      4.5,
-      3.973,
-      3.664,
-      3.299,
-      3.06,
-      3
+      5.645
     ],
     "imageUrl": "/images/gearbox/Advance-GWL.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
@@ -14902,7 +14810,7 @@ export const completeGearboxData = [
     "model": "GWL60.74",
     "series": "GW",
     "minSpeed": 400,
-    "maxSpeed": 1200,
+    "maxSpeed": 530400,
     "ratios": [
       1.99,
       2.53,
@@ -14971,19 +14879,12 @@ export const completeGearboxData = [
     "model": "GWL66.75",
     "series": "GW",
     "minSpeed": 300,
-    "maxSpeed": 950,
+    "maxSpeed": 490300,
     "ratios": [
       2.05,
       2.55,
       2.99,
-      3.48,
-      3.95,
-      4.49,
-      4.97,
-      5.51,
-      6.12,
-      6.59,
-      6.95
+      3.48
     ],
     "thrust": 730,
     "centerDistance": 730,
@@ -14998,14 +14899,7 @@ export const completeGearboxData = [
       14.406,
       11.582,
       9.9,
-      8.491,
-      7.48,
-      6.59,
-      5.95,
-      5.366,
-      4.831,
-      4.488,
-      4.253
+      8.491
     ],
     "imageUrl": "/images/gearbox/Advance-GWL.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
@@ -15040,20 +14934,13 @@ export const completeGearboxData = [
     "model": "GWL70.76",
     "series": "GW",
     "minSpeed": 300,
-    "maxSpeed": 950,
+    "maxSpeed": 465300,
     "ratios": [
       2.05,
       2.53,
       3.09,
       3.58,
-      3.95,
-      4.57,
-      5.05,
-      5.58,
-      5.77,
-      6.17,
-      6.54,
-      6.94
+      3.95
     ],
     "thrust": 750,
     "centerDistance": 750,
@@ -15069,14 +14956,7 @@ export const completeGearboxData = [
       12.734,
       10.414,
       8.986,
-      8.15,
-      7.039,
-      6.378,
-      5.773,
-      5.562,
-      5.216,
-      4.934,
-      4.5
+      8.15
     ],
     "imageUrl": "/images/gearbox/Advance-GWL.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
@@ -15113,7 +14993,7 @@ export const completeGearboxData = [
     "model": "GWL70.82",
     "series": "GW",
     "minSpeed": 300,
-    "maxSpeed": 1150,
+    "maxSpeed": 465300,
     "ratios": [
       2.05,
       2.53,
@@ -15174,7 +15054,7 @@ export const completeGearboxData = [
     "model": "GWL70.85",
     "series": "GW",
     "minSpeed": 300,
-    "maxSpeed": 950,
+    "maxSpeed": 425300,
     "ratios": [
       1.98,
       2.45,
@@ -15233,7 +15113,7 @@ export const completeGearboxData = [
     "model": "GWL75.90",
     "series": "GW",
     "minSpeed": 200,
-    "maxSpeed": 925,
+    "maxSpeed": 465200,
     "ratios": [
       2.01,
       2.51,
@@ -15292,7 +15172,7 @@ export const completeGearboxData = [
     "model": "GWL78.88",
     "series": "GW",
     "minSpeed": 300,
-    "maxSpeed": 900,
+    "maxSpeed": 335300,
     "ratios": [
       2.04,
       2.49,
@@ -15359,17 +15239,13 @@ export const completeGearboxData = [
     "model": "GWL80.95",
     "series": "GW",
     "minSpeed": 200,
-    "maxSpeed": 700,
+    "maxSpeed": 350200,
     "ratios": [
       1.98,
       2.49,
       2.94,
       3.46,
-      3.95,
-      4.51,
-      5.03,
-      5.48,
-      5.93
+      3.95
     ],
     "thrust": 1200,
     "maxPower": 9800,
@@ -15384,11 +15260,7 @@ export const completeGearboxData = [
       22.2,
       18.81,
       16,
-      14,
-      12.25,
-      11,
-      10.09,
-      9.33
+      14
     ],
     "imageUrl": "/images/gearbox/Advance-GWL.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
@@ -15426,7 +15298,7 @@ export const completeGearboxData = [
     "model": "GWL85.100",
     "series": "GW",
     "minSpeed": 150,
-    "maxSpeed": 1425,
+    "maxSpeed": 400200,
     "ratios": [
       1.98,
       2.55,
@@ -15667,9 +15539,7 @@ export const completeGearboxData = [
     "ratios": [
       1.97,
       2.52,
-      2.96,
-      3.52,
-      4
+      2.96
     ],
     "maxPower": 1026,
     "minPower": 208,
@@ -15681,9 +15551,7 @@ export const completeGearboxData = [
     "transmissionCapacityPerRatio": [
       0.57,
       0.57,
-      0.57,
-      0.56,
-      0.52
+      0.57
     ],
     "imageUrl": "/images/gearbox/Advance-GWS.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/6456f9b9-ff78-40d7-80f0-c4c8e5b3aac5.png",
