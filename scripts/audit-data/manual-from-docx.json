@@ -2511,7 +2511,7 @@
     ]
   },
   {
-    "model": "MV100A",
+    "model": "MV100A(倾角7°)",
     "table": 10,
     "kind": "A",
     "minSpeed": 1000,
@@ -2538,7 +2538,7 @@
     ]
   },
   {
-    "model": "HCV120",
+    "model": "HCV120(倾角7°)",
     "table": 10,
     "kind": "A",
     "minSpeed": 1000,
@@ -2586,7 +2586,7 @@
     ]
   },
   {
-    "model": "HCA138",
+    "model": "HCA138(倾角7°)",
     "table": 10,
     "kind": "A",
     "minSpeed": 1000,
@@ -2609,6 +2609,23 @@
       0.085,
       0.085,
       0.085,
+      0.085
+    ]
+  },
+  {
+    "model": "HCA138(倾角5°)",
+    "table": 10,
+    "kind": "A",
+    "minSpeed": 1000,
+    "maxSpeed": 2600,
+    "thrust": 25.0,
+    "centerDistance": 183,
+    "dimensions": "530×660×616",
+    "weight": 200,
+    "ratios": [
+      2.95
+    ],
+    "capacities": [
       0.085
     ]
   },
@@ -2655,7 +2672,7 @@
     ]
   },
   {
-    "model": "HCV230",
+    "model": "HCV230(倾角7°)",
     "table": 10,
     "kind": "A",
     "minSpeed": 1000,
@@ -2707,7 +2724,7 @@
     ]
   },
   {
-    "model": "HCA300",
+    "model": "HCA300(倾角10°)",
     "table": 10,
     "kind": "A",
     "minSpeed": 1000,
@@ -2730,7 +2747,7 @@
     ]
   },
   {
-    "model": "HCA301",
+    "model": "HCA301(倾角5°)",
     "table": 10,
     "kind": "A",
     "minSpeed": 1000,
@@ -2753,7 +2770,7 @@
     ]
   },
   {
-    "model": "HCA302",
+    "model": "HCA302(倾角7°)",
     "table": 10,
     "kind": "A",
     "minSpeed": 1000,
@@ -2959,7 +2976,7 @@
     ]
   },
   {
-    "model": "HCA700",
+    "model": "HCA700(倾角8°)",
     "table": 11,
     "kind": "A",
     "minSpeed": 1000,
@@ -2984,7 +3001,7 @@
     ]
   },
   {
-    "model": "HCA701",
+    "model": "HCA701(倾角5°)",
     "table": 11,
     "kind": "A",
     "minSpeed": 1000,
@@ -3020,7 +3037,7 @@
     ]
   },
   {
-    "model": "HCA1000",
+    "model": "HCA1000(倾角10°)",
     "table": 11,
     "kind": "A",
     "minSpeed": 1000,
@@ -3098,7 +3115,7 @@
     ]
   },
   {
-    "model": "HCA1400",
+    "model": "HCA1400(倾角7°)",
     "table": 11,
     "kind": "A",
     "minSpeed": 1600,
@@ -3119,7 +3136,7 @@
     ]
   },
   {
-    "model": "HCA1401",
+    "model": "HCA1401(倾角5°)",
     "table": 11,
     "kind": "A",
     "minSpeed": 1000,
@@ -7391,8 +7408,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 810000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      1.64,
+      1.64,
+      1.64,
+      1.64
+    ]
   },
   {
     "model": "GCHE15",
@@ -7404,8 +7431,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 810000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      1.64,
+      1.64,
+      1.64,
+      1.64
+    ]
   },
   {
     "model": "GCS490",
@@ -7513,8 +7550,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 875000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      2.12,
+      2.12,
+      2.12,
+      2.12
+    ]
   },
   {
     "model": "GCHE20",
@@ -7526,8 +7573,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 875000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      2.12,
+      2.12,
+      2.12,
+      2.12
+    ]
   },
   {
     "model": "GCS540",
@@ -7635,8 +7692,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 960000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      2.825,
+      2.825,
+      2.825,
+      2.825
+    ]
   },
   {
     "model": "GCHE26",
@@ -7648,8 +7715,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 960000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      2.825,
+      2.825,
+      2.825,
+      2.825
+    ]
   },
   {
     "model": "GCS590",
@@ -7757,8 +7834,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 1055000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      3.64,
+      3.64,
+      3.64,
+      3.64
+    ]
   },
   {
     "model": "GCHE33",
@@ -7770,8 +7857,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 1055000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      3.64,
+      3.64,
+      3.64,
+      3.64
+    ]
   },
   {
     "model": "GCS660",
@@ -7975,8 +8072,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 570000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      0.57,
+      0.57,
+      0.57,
+      0.57
+    ]
   },
   {
     "model": "GCHE5",
@@ -7988,8 +8095,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 570000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      0.57,
+      0.57,
+      0.57,
+      0.57
+    ]
   },
   {
     "model": "GCS350",
@@ -8097,8 +8214,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 615000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      0.72,
+      0.72,
+      0.72,
+      0.72
+    ]
   },
   {
     "model": "GCHE6",
@@ -8110,8 +8237,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 615000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      0.72,
+      0.72,
+      0.72,
+      0.72
+    ]
   },
   {
     "model": "GCS390",
@@ -8219,8 +8356,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 700000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      0.96,
+      0.96,
+      0.96,
+      0.96
+    ]
   },
   {
     "model": "GCHE9",
@@ -8232,8 +8379,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 700000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      0.96,
+      0.96,
+      0.96,
+      0.96
+    ]
   },
   {
     "model": "GCS410",
@@ -8341,8 +8498,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 735000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      1.292,
+      1.292,
+      1.292,
+      1.292
+    ]
   },
   {
     "model": "GCHE11",
@@ -8354,8 +8521,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 735000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      1.292,
+      1.292,
+      1.292,
+      1.292
+    ]
   },
   {
     "model": "GCS450",
@@ -8630,8 +8807,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 1185000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      5.05,
+      5.05,
+      5.05,
+      5.05
+    ]
   },
   {
     "model": "GCHE44",
@@ -8643,8 +8830,18 @@
     "centerDistance": null,
     "dimensions": null,
     "weight": 1185000,
-    "ratios": [],
-    "capacities": []
+    "ratios": [
+      6.5,
+      7.0,
+      7.5,
+      8.0
+    ],
+    "capacities": [
+      5.05,
+      5.05,
+      5.05,
+      5.05
+    ]
   },
   {
     "model": "GCS700B",
@@ -10054,7 +10251,7 @@
     ]
   },
   {
-    "model": "HCAG1090",
+    "model": "HCAG1090(倾角8°)",
     "table": 12,
     "kind": "D",
     "minSpeed": 1500,
@@ -10207,7 +10404,7 @@
     ]
   },
   {
-    "model": "HCAM303",
+    "model": "HCAM303(倾角7°)",
     "table": 12,
     "kind": "D",
     "minSpeed": 1000,
@@ -10247,7 +10444,7 @@
     ]
   },
   {
-    "model": "HCAM403",
+    "model": "HCAM403(倾角7°)",
     "table": 12,
     "kind": "D",
     "minSpeed": 1000,
@@ -10393,7 +10590,7 @@
     ]
   },
   {
-    "model": "HCAG3050",
+    "model": "HCAG3050(倾角10°)",
     "table": 12,
     "kind": "D",
     "minSpeed": 1000,
@@ -10433,7 +10630,7 @@
     ]
   },
   {
-    "model": "HCAG5050",
+    "model": "HCAG5050(倾角8°)",
     "table": 12,
     "kind": "D",
     "minSpeed": 1500,
@@ -10550,7 +10747,7 @@
     ]
   },
   {
-    "model": "HCAG7650",
+    "model": "HCAG7650(倾角8°)",
     "table": 13,
     "kind": "D",
     "minSpeed": 1000,
@@ -10604,7 +10801,7 @@
     ]
   },
   {
-    "model": "HCAG9055",
+    "model": "HCAG9055(倾角8°)",
     "table": 13,
     "kind": "D",
     "minSpeed": 1000,
@@ -12166,6 +12363,363 @@
       5.05,
       5.05,
       5.05
+    ]
+  },
+  {
+    "model": "HCL30",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 750,
+    "maxSpeed": 1500,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "345×310×455",
+    "weight": 100,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.031
+    ]
+  },
+  {
+    "model": "HCL30S",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 750,
+    "maxSpeed": 1500,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "345×310×455",
+    "weight": 100,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.031
+    ]
+  },
+  {
+    "model": "HCL30F",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 1500,
+    "maxSpeed": 2500,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "345×310×455",
+    "weight": 100,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.031
+    ]
+  },
+  {
+    "model": "HCL100",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 750,
+    "maxSpeed": 1500,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "570×420×535",
+    "weight": 156,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.105
+    ]
+  },
+  {
+    "model": "HCL100S",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 750,
+    "maxSpeed": 1500,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "570×420×535",
+    "weight": 156,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.105
+    ]
+  },
+  {
+    "model": "HCL100F",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 1500,
+    "maxSpeed": 2500,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "570×420×535",
+    "weight": 156,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.105
+    ]
+  },
+  {
+    "model": "HCL250A",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 750,
+    "maxSpeed": 1000,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "554×425×635",
+    "weight": 210,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.262
+    ]
+  },
+  {
+    "model": "HCL250S",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 750,
+    "maxSpeed": 1000,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "554×425×635",
+    "weight": 210,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.262
+    ]
+  },
+  {
+    "model": "HCL250F",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 1000,
+    "maxSpeed": 2500,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "554×425×635",
+    "weight": 210,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.262
+    ]
+  },
+  {
+    "model": "HCL320",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 500,
+    "maxSpeed": 1000,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "554×425×635",
+    "weight": 210,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.335
+    ]
+  },
+  {
+    "model": "HCL320S",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 500,
+    "maxSpeed": 1000,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "554×425×635",
+    "weight": 210,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.335
+    ]
+  },
+  {
+    "model": "HCL320F",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 1000,
+    "maxSpeed": 2500,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "554×425×635",
+    "weight": 210,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.335
+    ]
+  },
+  {
+    "model": "HCL600",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 750,
+    "maxSpeed": 1000,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "746×560×688",
+    "weight": 450,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.628
+    ]
+  },
+  {
+    "model": "HCL600S",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 750,
+    "maxSpeed": 1000,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "746×560×688",
+    "weight": 450,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.628
+    ]
+  },
+  {
+    "model": "HCL600F",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 1000,
+    "maxSpeed": 1600,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "746×560×688",
+    "weight": 450,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.628
+    ]
+  },
+  {
+    "model": "HCL800",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 750,
+    "maxSpeed": 1000,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "746×560×688",
+    "weight": 450,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.837
+    ]
+  },
+  {
+    "model": "HCL800S",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 750,
+    "maxSpeed": 1000,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "746×560×688",
+    "weight": 450,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.837
+    ]
+  },
+  {
+    "model": "HCL800F",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 1000,
+    "maxSpeed": 1800,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "746×560×688",
+    "weight": 450,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      0.837
+    ]
+  },
+  {
+    "model": "HCL1000",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 750,
+    "maxSpeed": 1000,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "915×800×1005",
+    "weight": 800,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      1.047
+    ]
+  },
+  {
+    "model": "HCL1000S",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 750,
+    "maxSpeed": 1000,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "915×800×1005",
+    "weight": 800,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      1.047
+    ]
+  },
+  {
+    "model": "HCL1000F",
+    "table": 35,
+    "kind": "G",
+    "minSpeed": 1000,
+    "maxSpeed": 1800,
+    "thrust": null,
+    "centerDistance": null,
+    "dimensions": "915×800×1005",
+    "weight": 800,
+    "ratios": [
+      1
+    ],
+    "capacities": [
+      1.047
     ]
   }
 ]

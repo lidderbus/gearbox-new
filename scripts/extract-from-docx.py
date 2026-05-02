@@ -18,18 +18,38 @@ def cell_paragraphs(c):
 def cell_text(c):
     return ' '.join(cell_paragraphs(c))
 
+def _is_annotation(p):
+    """标注段 (倾角X°) 是模型变体, 应附加而非舍弃; 其它如 (顺快) 是单位说明可舍弃"""
+    return p.strip().startswith('(倾角')
+
 def model_name(c):
     paras = cell_paragraphs(c)
     if not paras: return ''
     name = paras[0].strip()
-    name = re.sub(r'\s*\(.*?\)\s*', '', name)
+    # 后续段若是 (倾角...) 则附加为变体后缀
+    for p in paras[1:]:
+        if _is_annotation(p):
+            name += p.strip()
+            break
+    # 移除非倾角的注释 (如 (kN), (mm) 等)
+    name = re.sub(r'\s*\((?!倾角)[^)]*\)\s*', '', name)
     return name.strip()
 
 def model_names(c):
-    """单元格内所有 model 名 (T14-T19 多型号行: GWC + GWL 配对)"""
+    """单元格内所有 model 名 (T14-T19 多型号行: GWC + GWL 配对; 倾角附加)"""
     out = []
-    for p in cell_paragraphs(c):
-        n = re.sub(r'\s*\(.*?\)\s*', '', p.strip()).strip()
+    paras = cell_paragraphs(c)
+    i = 0
+    while i < len(paras):
+        p = paras[i].strip()
+        if not p: i += 1; continue
+        # 后接 (倾角) 段则合并
+        if i+1 < len(paras) and _is_annotation(paras[i+1]):
+            p = p + paras[i+1].strip()
+            i += 2
+        else:
+            i += 1
+        n = re.sub(r'\s*\((?!倾角)[^)]*\)\s*', '', p).strip()
         if n: out.append(n)
     return out
 
@@ -37,7 +57,18 @@ def parse_numbers(s):
     if not s: return []
     s = re.sub(r':1\b', '', s)  # 比率符号 "2.07:1" → "2.07"
     s = re.sub(r'\([^)]*\)', ' ', s)  # 去括注 "1.109(顺快)" → "1.109"
-    # 修 docx 缺小数点的录入错误: "X Y" → "X.Y" (X 1 位非小数后缀, Y 恰 2 位)
+    # 范围 "6.50-8.00" → 按 0.5 步展开 (GCSE/GCHE 名义连续型)
+    def expand_range(m):
+        a, b = float(m.group(1)), float(m.group(2))
+        if b <= a: return m.group(0)
+        out = []
+        v = a
+        while v <= b + 1e-9:
+            out.append(f'{v:.2f}')
+            v += 0.5
+        return ' '.join(out)
+    s = re.sub(r'(\d+(?:\.\d+)?)\s*[-—~]\s*(\d+(?:\.\d+)?)', expand_range, s)
+    # 修 docx 缺小数点的录入错误
     s = re.sub(r'(?<![\d.])(\d)\s+(\d{2})(?!\d)', r'\1.\2', s)
     out = []
     for token in re.split(r'\s+', s.strip()):
@@ -284,6 +315,46 @@ for ti in range(36, 45):
             pending['_c_paras'].extend(cps[2])
     if pending: results.append(pending)
 
+# ==== Type G: HCL 液力离合 T35 (无速比, 仅扭矩+尺寸+重量) ====
+# 列: model | 总成号 | speed | torque | capacity | dim | weight
+# DB 把 base/S/F 三个 variant 都存为独立条目, 共享 dim/weight/caps
+ti = 35
+if ti < len(tables):
+    rows = tables[ti].findall('.//w:tr', NS)
+    if header_has_model(rows):
+        last_base = None
+        last_data = None
+        for r in rows[1:]:
+            cells = r.findall('.//w:tc', NS)
+            if len(cells) < 7: continue
+            cps = [cell_paragraphs(c) for c in cells]
+            base_name = model_name(cells[0])
+            assembly = cell_text(cells[1]).strip()
+            sm, sx = parse_speed(cell_text(cells[2]))
+            cap = parse_float(cell_text(cells[4]))
+            dim = parse_dim(cell_text(cells[5]))
+            wt = parse_int(cell_text(cells[6]))
+            if base_name:
+                last_base = base_name
+                last_data = {'cap': cap, 'dim': dim, 'wt': wt}
+                # base 模型用 base 行的 speed
+                results.append({
+                    'model': base_name, 'table': 35, 'kind': 'G',
+                    'minSpeed': sm, 'maxSpeed': sx,
+                    '_r_paras': ['1'], '_c_paras': [str(cap) if cap else '0'],
+                    'thrust': None, 'centerDistance': None,
+                    'dimensions': dim, 'weight': wt,
+                })
+            # 总成号 (S/F variant) 也加为独立条目
+            if assembly and assembly != base_name and last_data:
+                results.append({
+                    'model': assembly, 'table': 35, 'kind': 'G',
+                    'minSpeed': sm, 'maxSpeed': sx,
+                    '_r_paras': ['1'], '_c_paras': [str(last_data['cap']) if last_data['cap'] else '0'],
+                    'thrust': None, 'centerDistance': None,
+                    'dimensions': last_data['dim'], 'weight': last_data['wt'],
+                })
+
 # ==== 后处理: 段对齐展开 ratios/caps ====
 for rec in results:
     flat_r, flat_c = expand_aligned(rec.pop('_r_paras'), rec.pop('_c_paras'))
@@ -303,7 +374,7 @@ os.makedirs(os.path.dirname(out_path), exist_ok=True)
 with open(out_path, 'w') as f:
     json.dump(deduped, f, ensure_ascii=False, indent=2)
 
-for k in ['A','B','C','D','E','F']:
+for k in ['A','B','C','D','E','F','G']:
     print(f'Type {k}: {sum(1 for r in deduped if r.get("kind")==k)}')
 print(f'总计: {len(deduped)} 条')
 print(f'输出: {out_path}')

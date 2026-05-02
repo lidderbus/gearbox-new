@@ -1,6 +1,6 @@
 // src/config.js
 
-export const APP_DATA_VERSION = 75; // v75: docx 解析器加固 (修 10 处缺小数点录入错 + 去括注 + :1 比率符号) + v73/v74 重跑覆写 — Type C/D/E/F 全部一致. **docx audit 311/311 (100%)**: Type A 118 + B 82 + C 35 (HCS/HCTS/HCDS/SGW 双级) + D 26 (HCG/HCAG) + E 7 (2GWH 双输出) + F 43 (PTI 混动). DB 历史 schema bug 全部修正, 1085/1085 通过 (2026-05-02)
+export const APP_DATA_VERSION = 78; // v78: docx Type G 解析 — 加 T35 HCL 液力离合 21 个 (HCL30/100/250A/320/600/800/1000 + 各 S/F variant). docx 解析 477 模型 (456→477), audit 477/477 完全一致 (100%). DB 590, docx 覆盖 80.8%. 剩 113 模型为 GW G-后缀 25 + HC 旧变体 / 配套衍生 ~88, 不在 2025 docx. 1085/1085 通过 (2026-05-02)
 
 export const DEFAULTS = {
     gearbox: {

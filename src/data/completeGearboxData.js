@@ -3175,13 +3175,9 @@ export const completeGearboxData = [
     "minSpeed": 400,
     "maxSpeed": 1600,
     "ratios": [
-      1.64,
-      1.97,
-      2.55,
-      2.93,
-      3.58,
-      4,
       6.5,
+      7,
+      7.5,
       8
     ],
     "maxPower": 19301,
@@ -3192,14 +3188,10 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
-      12.063,
-      12.063,
-      12.063,
-      12.063,
-      12.063,
-      12.063,
-      12.063,
-      12.063
+      1.292,
+      1.292,
+      1.292,
+      1.292
     ],
     "imageUrl": "/images/gearbox/Advance-GC.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
@@ -3468,12 +3460,9 @@ export const completeGearboxData = [
     "minSpeed": 400,
     "maxSpeed": 1200,
     "ratios": [
-      2,
-      2.55,
-      3,
-      3.52,
-      5.05,
       6.5,
+      7,
+      7.5,
       8
     ],
     "maxPower": 9600,
@@ -3484,13 +3473,10 @@ export const completeGearboxData = [
     "priceSource": "系统估算",
     "source": "杭齿厂选型手册2025版5月版",
     "transmissionCapacityPerRatio": [
-      8,
-      8,
-      8,
-      8,
-      8,
-      8,
-      8
+      5.05,
+      5.05,
+      5.05,
+      5.05
     ],
     "imageUrl": "/images/gearbox/Advance-GC.webp",
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/gearbox-gc.png",
@@ -3532,9 +3518,13 @@ export const completeGearboxData = [
     "maxSpeed": 1800,
     "ratios": [
       6.5,
+      7,
+      7.5,
       8
     ],
     "transmissionCapacityPerRatio": [
+      0.57,
+      0.57,
       0.57,
       0.57
     ],
@@ -3581,9 +3571,13 @@ export const completeGearboxData = [
     "maxSpeed": 1800,
     "ratios": [
       6.5,
+      7,
+      7.5,
       8
     ],
     "transmissionCapacityPerRatio": [
+      0.72,
+      0.72,
       0.72,
       0.72
     ],
@@ -3630,9 +3624,13 @@ export const completeGearboxData = [
     "maxSpeed": 1800,
     "ratios": [
       6.5,
+      7,
+      7.5,
       8
     ],
     "transmissionCapacityPerRatio": [
+      0.96,
+      0.96,
       0.96,
       0.96
     ],
@@ -5552,9 +5550,13 @@ export const completeGearboxData = [
     "maxSpeed": 1600,
     "ratios": [
       6.5,
+      7,
+      7.5,
       8
     ],
     "transmissionCapacityPerRatio": [
+      1.292,
+      1.292,
       1.292,
       1.292
     ],
@@ -5832,9 +5834,13 @@ export const completeGearboxData = [
     "maxSpeed": 1200,
     "ratios": [
       6.5,
+      7,
+      7.5,
       8
     ],
     "transmissionCapacityPerRatio": [
+      5.05,
+      5.05,
       5.05,
       5.05
     ],
@@ -5884,9 +5890,13 @@ export const completeGearboxData = [
     "maxSpeed": 1800,
     "ratios": [
       6.5,
+      7,
+      7.5,
       8
     ],
     "transmissionCapacityPerRatio": [
+      0.57,
+      0.57,
       0.57,
       0.57
     ],
@@ -5935,9 +5945,13 @@ export const completeGearboxData = [
     "maxSpeed": 1800,
     "ratios": [
       6.5,
+      7,
+      7.5,
       8
     ],
     "transmissionCapacityPerRatio": [
+      0.72,
+      0.72,
       0.72,
       0.72
     ],
@@ -5986,9 +6000,13 @@ export const completeGearboxData = [
     "maxSpeed": 1800,
     "ratios": [
       6.5,
+      7,
+      7.5,
       8
     ],
     "transmissionCapacityPerRatio": [
+      0.96,
+      0.96,
       0.96,
       0.96
     ],
@@ -21042,7 +21060,6 @@ export const completeGearboxData = [
     "minSpeed": 1000,
     "maxSpeed": 2300,
     "ratios": [
-      1,
       2.96
     ],
     "thrust": 100,
@@ -21057,7 +21074,6 @@ export const completeGearboxData = [
     "minPower": 600,
     "powerSource": "传动能力计算",
     "transmissionCapacityPerRatio": [
-      0.6,
       0.6
     ],
     "imageUrl": "/images/gearbox/Advance-HCQ1000-HCQ1001-HCQH1000-HCA1000_2_11zon.webp",
@@ -21208,10 +21224,10 @@ export const completeGearboxData = [
     ],
     "transmissionCapacityPerRatio": [
       0.11,
-      0.11,
-      0.11,
-      0.11,
-      0.11,
+      0.085,
+      0.085,
+      0.085,
+      0.085,
       0.085
     ],
     "minSpeed": 1000,
@@ -21728,7 +21744,7 @@ export const completeGearboxData = [
     ],
     "thrust": 40,
     "centerDistance": 267,
-    "dimensions": "560×585×764 (不含支架)",
+    "dimensions": "560×585×764",
     "weight": 370,
     "source": "杭齿厂选型手册2025版5月版",
     "price": 38120,
@@ -21740,7 +21756,7 @@ export const completeGearboxData = [
     "transmissionCapacityPerRatio": [
       0.25,
       0.25,
-      0.235,
+      0.25,
       0.235
     ],
     "imageUrl": "/images/gearbox/Advance-300-301-302_4_11zon.webp",
@@ -22214,8 +22230,8 @@ export const completeGearboxData = [
       2.75,
       2.96
     ],
-    "thrust": 1.403,
-    "centerDistance": 1,
+    "thrust": 135,
+    "centerDistance": 448,
     "dimensions": "1.204",
     "weight": 1300,
     "source": "杭齿厂选型手册2025版5月版",
@@ -22226,13 +22242,13 @@ export const completeGearboxData = [
     "minPower": 1403,
     "powerSource": "传动能力计算",
     "transmissionCapacityPerRatio": [
-      1.403,
-      1.403,
-      1.403,
-      1.403,
-      1.403,
-      1.403,
-      1.403
+      1.204,
+      1.152,
+      1.139,
+      1.139,
+      1.139,
+      1.139,
+      1.139
     ],
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/96c2d20d-b18b-453f-9f72-17ba24c00a57.png",
     "introduction": "HCA系列船用齿轮箱适用于中型船舶推进系统。产品具有换向、减速及承受螺旋桨推力功能。采用液压湿式多片离合器。",
@@ -22312,8 +22328,8 @@ export const completeGearboxData = [
       2.46,
       2.95
     ],
-    "thrust": 1.7381,
-    "centerDistance": 1,
+    "thrust": 225,
+    "centerDistance": 469,
     "dimensions": "1.356",
     "weight": 1570,
     "source": "杭齿厂选型手册2025版5月版",
@@ -22324,9 +22340,9 @@ export const completeGearboxData = [
     "minPower": 1660,
     "powerSource": "传动能力计算",
     "transmissionCapacityPerRatio": [
-      1.759,
-      1.7095,
-      1.66
+      1.356,
+      1.356,
+      1.356
     ],
     "officialImage": "https://omo-oss-image.thefastimg.com/portal-saas/new2023060514535358518/cms/image/96c2d20d-b18b-453f-9f72-17ba24c00a57.png",
     "introduction": "HCA系列船用齿轮箱适用于中型船舶推进系统。产品具有换向、减速及承受螺旋桨推力功能。采用液压湿式多片离合器。",
@@ -33871,10 +33887,10 @@ export const completeGearboxData = [
     ],
     "transmissionCapacityPerRatio": [
       0.1,
-      0.1,
-      0.1,
-      0.1,
       0.09,
+      0.08,
+      0.08,
+      0.08,
       0.08
     ],
     "minSpeed": 1000,
@@ -33902,7 +33918,7 @@ export const completeGearboxData = [
     "powerSource": "传动能力计算",
     "image": "/images/gearbox/Advance-HCQ100-MV100A.webp",
     "thrust": 20,
-    "centerDistance": 127,
+    "centerDistance": 0,
     "dimensions": "485×508×580",
     "controlType": "推拉软轴",
     "rotationDirection": "相反",
@@ -34707,5 +34723,141 @@ export const completeGearboxData = [
         "8-φ11"
       ]
     }
+  },
+  {
+    "model": "HCAG1090(倾角8°)",
+    "series": "HCAG",
+    "minSpeed": 1500,
+    "maxSpeed": 4500,
+    "ratios": [
+      1.57,
+      1.75,
+      1.96,
+      2.5,
+      2.9
+    ],
+    "transmissionCapacityPerRatio": [
+      0.0696,
+      0.0696,
+      0.0696,
+      0.0696,
+      0.06
+    ],
+    "thrust": 16,
+    "centerDistance": 160,
+    "dimensions": "",
+    "weight": 106,
+    "source": "杭齿厂选型手册2025版5月版",
+    "discountRate": 0.1,
+    "priceSource": "系统估算",
+    "maxPower": 313,
+    "minPower": 36,
+    "powerSource": "传动能力计算"
+  },
+  {
+    "model": "HCAM303(倾角7°)",
+    "series": "HCAM",
+    "minSpeed": 1000,
+    "maxSpeed": 2300,
+    "ratios": [
+      1.03,
+      1.16,
+      1.19,
+      1.49
+    ],
+    "transmissionCapacityPerRatio": [
+      0.262,
+      0.26,
+      0.26,
+      0.253
+    ],
+    "thrust": 0,
+    "centerDistance": 180,
+    "dimensions": "",
+    "weight": 290,
+    "source": "杭齿厂选型手册2025版5月版",
+    "discountRate": 0.1,
+    "priceSource": "系统估算",
+    "maxPower": 603,
+    "minPower": 101,
+    "powerSource": "传动能力计算"
+  },
+  {
+    "model": "HCAM403(倾角7°)",
+    "series": "HCAM",
+    "minSpeed": 1000,
+    "maxSpeed": 2300,
+    "ratios": [
+      1.1,
+      1.2,
+      1.51
+    ],
+    "transmissionCapacityPerRatio": [
+      0.315,
+      0.315,
+      0.292
+    ],
+    "thrust": 0,
+    "centerDistance": 199,
+    "dimensions": "",
+    "weight": 390,
+    "source": "杭齿厂选型手册2025版5月版",
+    "discountRate": 0.1,
+    "priceSource": "系统估算",
+    "maxPower": 725,
+    "minPower": 117,
+    "powerSource": "传动能力计算"
+  },
+  {
+    "model": "HCAG3050(倾角10°)",
+    "series": "HCAG",
+    "minSpeed": 1000,
+    "maxSpeed": 2600,
+    "ratios": [
+      1.35,
+      2.03,
+      3
+    ],
+    "transmissionCapacityPerRatio": [
+      0.4664,
+      0.4664,
+      0.46
+    ],
+    "thrust": 50,
+    "centerDistance": 326,
+    "dimensions": "",
+    "weight": 570,
+    "source": "杭齿厂选型手册2025版5月版",
+    "discountRate": 0.1,
+    "priceSource": "系统估算",
+    "maxPower": 1213,
+    "minPower": 184,
+    "powerSource": "传动能力计算"
+  },
+  {
+    "model": "HCAG5050(倾角8°)",
+    "series": "HCAG",
+    "minSpeed": 1500,
+    "maxSpeed": 2500,
+    "ratios": [
+      2.03,
+      2.47,
+      2.96
+    ],
+    "transmissionCapacityPerRatio": [
+      0.6319,
+      0.6319,
+      0.6319
+    ],
+    "thrust": 110,
+    "centerDistance": 369,
+    "dimensions": "",
+    "weight": 870,
+    "source": "杭齿厂选型手册2025版5月版",
+    "discountRate": 0.1,
+    "priceSource": "系统估算",
+    "maxPower": 1580,
+    "minPower": 379,
+    "powerSource": "传动能力计算"
   }
 ];

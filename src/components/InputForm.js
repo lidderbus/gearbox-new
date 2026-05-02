@@ -1,8 +1,9 @@
 // components/InputForm.js
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { Form, Button, Row, Col, Card, Spinner } from 'react-bootstrap';
 import SelectionGuidelines, { HelpTooltip, SeriesCharacteristicsBadge } from './SelectionGuidelines';
-import HybridConfigPanel from './HybridConfigPanel';
+// HybridConfigPanel 改 lazy — 默认 collapsed, 携 28.9KB hybridPropulsionData
+const HybridConfigPanel = lazy(() => import(/* webpackChunkName: "hybrid-config" */ './HybridConfigPanel'));
 import WeightConfigPanel from './WeightConfigPanel';
 import ToleranceConfigPanel from './ToleranceConfigPanel';
 import SmartHintsPanel from './SmartHintsPanel';
@@ -353,13 +354,15 @@ const InputForm = ({
       {setHybridConfig && (
         <Row className="mt-3">
           <Col>
-            <HybridConfigPanel
-              hybridConfig={hybridConfig}
-              setHybridConfig={setHybridConfig}
-              enginePower={engineData.power}
-              colors={colors}
-              collapsed={true}
-            />
+            <Suspense fallback={<div className="text-muted small">加载混合动力面板...</div>}>
+              <HybridConfigPanel
+                hybridConfig={hybridConfig}
+                setHybridConfig={setHybridConfig}
+                enginePower={engineData.power}
+                colors={colors}
+                collapsed={true}
+              />
+            </Suspense>
           </Col>
         </Row>
       )}

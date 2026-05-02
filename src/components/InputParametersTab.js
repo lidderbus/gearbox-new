@@ -6,11 +6,11 @@ import { Row, Col, Form, Button, Card, Spinner, ButtonGroup, Badge, Modal } from
 import { getTemplates, saveTemplate, deleteTemplate, incrementUsage } from '../utils/selectionTemplates';
 import SelectionGuidelines, { HelpTooltip, HCGWorkloadSelector } from './SelectionGuidelines';
 import { PRIME_MOVER_CAPACITY_FACTOR } from '../utils/selectionAlgorithm';
-import HybridConfigPanel from './HybridConfigPanel';
 import ShaftArrangementSelector from './ShaftArrangementSelector';
 import ApplicationScenarioSelector from './ApplicationScenarioSelector';
 
-// 懒加载组件
+// 懒加载组件 — HybridConfigPanel 默认 collapsed, 携带 hybridPropulsionData 28.9KB, 改 lazy 减小 main bundle
+const HybridConfigPanel = lazy(() => import(/* webpackChunkName: "hybrid-config" */ './HybridConfigPanel'));
 const PropulsionConfigSelector = lazy(() => import('./PropulsionConfigSelector'));
 
 // 懒加载组件的加载指示器
@@ -584,7 +584,9 @@ const InputParametersTab = ({
       </Suspense>
 
       <div className="mt-4">
-        <HybridConfigPanel hybridConfig={hybridConfig} setHybridConfig={setHybridConfig} enginePower={engineData.power} colors={colors} collapsed={true} />
+        <Suspense fallback={<div className="text-muted small">加载混合动力面板...</div>}>
+          <HybridConfigPanel hybridConfig={hybridConfig} setHybridConfig={setHybridConfig} enginePower={engineData.power} colors={colors} collapsed={true} />
+        </Suspense>
       </div>
     </Form>
   );
