@@ -17,17 +17,17 @@ const SearchResults = ({
 
   if (searchResults.length === 0) {
     return (
-      <Alert variant="info">
-        <i className="bi bi-info-circle me-2"></i>
+      <Alert variant="info" role="status" aria-live="polite">
+        <i className="bi bi-info-circle me-2" aria-hidden="true"></i>
         未找到匹配 "<strong>{searchKeyword}</strong>" 的图纸
       </Alert>
     );
   }
 
   return (
-    <Card style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+    <Card style={{ backgroundColor: colors.card, borderColor: colors.border }} role="region" aria-live="polite" aria-label="搜索结果">
       <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>
-        <i className="bi bi-list-ul me-2"></i>
+        <i className="bi bi-list-ul me-2" aria-hidden="true"></i>
         搜索结果 ({searchResults.length}项)
       </Card.Header>
       <ListGroup variant="flush">

@@ -30,6 +30,7 @@ import {
   searchDwgFiles,
   getAllDwgSeries
 } from '../data/outlineDrawings';
+import LibraryPermissionBanner from './common/LibraryPermissionBanner';
 // Sub-components
 import {
   StatsCard,
@@ -39,8 +40,13 @@ import {
   RecommendationSection,
   DrawingViewer,
   DwgBrowser,
-  DwgViewer
+  DwgViewer,
+  DrawingExportToolbar,
+  SizeCompareTable,
+  VersionTimeline,
+  DataQualityPanel
 } from './OutlineDrawingQuery/index';
+// completeGearboxData 改为运行时 lazy 加载 (P2: 768KB 数据 chunk 仅在用户进入此页时拉取)
 
 /**
  * 外形图库查询组件
@@ -138,7 +144,9 @@ const OutlineDrawingQuery = ({ colors = {}, theme = 'light' }) => {
           '4': 'dwg',
           '5': 'dashboard',
           '6': 'compare',
-          '7': 'favorites'
+          '7': 'favorites',
+          '8': 'sizeCompare',
+          '9': 'quality'
         };
         if (tabMap[e.key]) {
           e.preventDefault();
@@ -162,7 +170,7 @@ const OutlineDrawingQuery = ({ colors = {}, theme = 'light' }) => {
           const params = new URLSearchParams(queryString);
           const tab = params.get('tab');
 
-          const validTabs = ['browse', 'search', 'recommend', 'dwg', 'dashboard', 'compare', 'favorites'];
+          const validTabs = ['browse', 'search', 'recommend', 'dwg', 'dashboard', 'compare', 'favorites', 'sizeCompare', 'quality'];
           if (tab && validTabs.includes(tab)) {
             setActiveTab(tab);
           }
@@ -203,6 +211,29 @@ const OutlineDrawingQuery = ({ colors = {}, theme = 'light' }) => {
   const gearboxSeries = useMemo(() => getAllGearboxSeries(), []);
   const couplingSeries = useMemo(() => getAllCouplingSeries(), []);
   const dwgSeries = useMemo(() => getAllDwgSeries(), []);
+
+  // A+ 增强：完整型号库（用于尺寸对比、Excel 矩阵、数据质量）
+  // P2: 改运行时 lazy 加载, 避免 768KB 数据进入页面初始 chunk
+  const [allModels, setAllModels] = useState([]);
+  useEffect(() => {
+    let cancelled = false;
+    import(/* webpackChunkName: "complete-gearbox-data" */ '../data/completeGearboxData')
+      .then((mod) => {
+        if (!cancelled) setAllModels(mod.completeGearboxData || []);
+      })
+      .catch((err) => {
+        console.error('OutlineDrawingQuery: 加载完整型号库失败', err);
+      });
+    return () => { cancelled = true; };
+  }, []);
+  const allGearboxes = useMemo(
+    () => allModels.filter((m) => !m.type || m.type === 'gearbox'),
+    [allModels]
+  );
+  const allCouplings = useMemo(
+    () => allModels.filter((m) => m.type === 'coupling'),
+    [allModels]
+  );
 
   // DWG搜索结果
   const dwgSearchResults = useMemo(() => {
@@ -310,8 +341,17 @@ const OutlineDrawingQuery = ({ colors = {}, theme = 'light' }) => {
 
   return (
     <div className="outline-drawing-query">
+      {/* P0-4: 资料库权限横幅 */}
+      <LibraryPermissionBanner scope="外形图库" />
       {/* 统计卡片 */}
       <StatsCard stats={stats} dwgStats={dwgStats} colors={defaultColors} />
+
+      {/* A+ 增强：导出工具栏 — 批量打包 / 规格书 / Excel 矩阵 */}
+      <DrawingExportToolbar
+        selectedDwgFile={selectedDwgFile}
+        allGearboxes={allGearboxes}
+        allCouplings={allCouplings}
+      />
 
       {/* 主标签页 */}
       <Tabs
@@ -475,6 +515,11 @@ const OutlineDrawingQuery = ({ colors = {}, theme = 'light' }) => {
                   colors={defaultColors}
                   theme={theme}
                 />
+                {selectedDwgFile?.model && (
+                  <div className="mt-3">
+                    <VersionTimeline model={selectedDwgFile.model} />
+                  </div>
+                )}
               </Col>
             </Row>
           ) : (
@@ -529,6 +574,34 @@ const OutlineDrawingQuery = ({ colors = {}, theme = 'light' }) => {
             onSelectModel={handleFavoriteSelect}
             dwgTechParams={null}
           />
+        </Tab>
+
+        {/* A+ 增强#3: 尺寸对比 Tab */}
+        <Tab
+          eventKey="sizeCompare"
+          title={
+            <span>
+              <i className="bi bi-arrows-angle-expand me-1" aria-hidden="true"></i>
+              尺寸对比
+              <Badge bg="success" className="ms-1">A+</Badge>
+            </span>
+          }
+        >
+          <SizeCompareTable allModels={allModels} />
+        </Tab>
+
+        {/* A+ 增强#8: 数据质量 Tab */}
+        <Tab
+          eventKey="quality"
+          title={
+            <span>
+              <i className="bi bi-clipboard-data me-1" aria-hidden="true"></i>
+              数据质量
+              <Badge bg="success" className="ms-1">A+</Badge>
+            </span>
+          }
+        >
+          <DataQualityPanel allModels={allModels} />
         </Tab>
       </Tabs>
     </div>

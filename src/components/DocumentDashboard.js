@@ -14,6 +14,9 @@ import {
   importAllDocuments,
 } from '../services/documentStorage';
 import { getAllDocCounts, getDocTypeName } from '../utils/documentNumbering';
+import { useProject } from '../contexts/ProjectContext';
+import { saveVersion, listVersions } from '../services/documentVersionStore';
+import VersionHistoryDrawer from './common/VersionHistoryDrawer';
 
 const DOC_TYPES = [
   { key: 'inquiry', label: '技术询单', icon: 'bi-file-earmark-text', color: '#0d6efd', store: inquiryStore },
@@ -109,6 +112,10 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
   // Document preview state
   const [previewDoc, setPreviewDoc] = useState(null);
   const [previewType, setPreviewType] = useState(null);
+  // P0-1: ProjectID 主线 hook
+  const { currentProjectId, currentProjectName, setCurrentProject, clearCurrentProject } = useProject();
+  // P3-2: 版本历史抽屉
+  const [versionDrawer, setVersionDrawer] = useState({ show: false, type: null, doc: null });
 
   const refresh = useCallback(() => setRefreshKey(k => k + 1), []);
 
@@ -226,29 +233,44 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
   }, [docList, checkedIds, selectedType]);
 
   // 按项目分组的所有文档
+  // P0-1: 优先按 projectId 分组,缺失时回退到 projectName,确保新老数据共存
   const projectGroups = useMemo(() => {
     void refreshKey;
     const groups = {};
     DOC_TYPES.forEach(dt => {
       dt.store.getAll().forEach(doc => {
-        const pName = doc.projectName || '未分配项目';
-        if (!groups[pName]) groups[pName] = { inquiry: [], quotation: [], agreement: [], contract: [] };
-        groups[pName][dt.key].push(doc);
+        const projectKey = doc.projectId || (doc.projectName ? `name:${doc.projectName}` : '未分配项目');
+        if (!groups[projectKey]) {
+          groups[projectKey] = {
+            projectId: doc.projectId || null,
+            projectName: doc.projectName || (projectKey === '未分配项目' ? '未分配项目' : projectKey.replace(/^name:/, '')),
+            inquiry: [], quotation: [], agreement: [], contract: [],
+          };
+        }
+        groups[projectKey][dt.key].push(doc);
+        // 让 projectName 用最新的非空值
+        if (doc.projectName && !groups[projectKey].projectName.startsWith(doc.projectName)) {
+          groups[projectKey].projectName = doc.projectName;
+        }
       });
     });
-    // 排序：有名称的在前，按文档总数降序
     return Object.entries(groups)
-      .map(([name, docs]) => ({
-        name,
-        docs,
-        total: docs.inquiry.length + docs.quotation.length + docs.agreement.length + docs.contract.length,
+      .map(([key, group]) => ({
+        key,
+        name: group.projectName,
+        projectId: group.projectId,
+        docs: { inquiry: group.inquiry, quotation: group.quotation, agreement: group.agreement, contract: group.contract },
+        total: group.inquiry.length + group.quotation.length + group.agreement.length + group.contract.length,
       }))
       .sort((a, b) => {
         if (a.name === '未分配项目') return 1;
         if (b.name === '未分配项目') return -1;
+        // 当前项目置顶
+        if (a.projectId === currentProjectId) return -1;
+        if (b.projectId === currentProjectId) return 1;
         return b.total - a.total;
       });
-  }, [refreshKey]);
+  }, [refreshKey, currentProjectId]);
 
   // 导出项目包
   const handleExportProject = useCallback((project) => {
@@ -280,6 +302,25 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
 
   return (
     <div>
+      {/* P0-1: 当前项目主线指示器 */}
+      {currentProjectId && (
+        <Card className="mb-3" style={{ backgroundColor: cardBg, borderColor: '#0d6efd', borderWidth: 2 }}>
+          <Card.Body className="py-2 px-3 d-flex justify-content-between align-items-center" style={{ color: textColor }}>
+            <div>
+              <i className="bi bi-bookmark-check-fill me-2" style={{ color: '#0d6efd' }}></i>
+              <strong style={{ fontSize: '0.9em' }}>当前项目主线</strong>
+              <span className="ms-2" style={{ fontFamily: 'monospace', fontSize: '0.85em' }}>{currentProjectId}</span>
+              {currentProjectName && <span className="ms-2" style={{ color: mutedColor, fontSize: '0.85em' }}>· {currentProjectName}</span>}
+              <small className="ms-3" style={{ color: mutedColor }}>
+                后续创建的报价/协议/合同将自动归入此项目
+              </small>
+            </div>
+            <Button variant="outline-secondary" size="sm" onClick={clearCurrentProject} title="清除当前项目">
+              <i className="bi bi-x-lg"></i>
+            </Button>
+          </Card.Body>
+        </Card>
+      )}
       {/* 统计卡片 */}
       <Row className="mb-4">
         {DOC_TYPES.map(dt => {
@@ -470,17 +511,22 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
             </Card>
           ) : (
             projectGroups.map(project => {
-              const isExpanded = selectedProject === project.name;
+              const isExpanded = selectedProject === project.key;
+              const isCurrent = project.projectId && project.projectId === currentProjectId;
               return (
-                <Card key={project.name} className="mb-2" style={{ backgroundColor: cardBg, borderColor }}>
+                <Card key={project.key} className="mb-2" style={{ backgroundColor: cardBg, borderColor: isCurrent ? '#0d6efd' : borderColor, borderWidth: isCurrent ? 2 : 1 }}>
                   <Card.Header
                     style={{ backgroundColor: cardBg, borderColor, color: textColor, cursor: 'pointer' }}
-                    onClick={() => setSelectedProject(isExpanded ? null : project.name)}
+                    onClick={() => setSelectedProject(isExpanded ? null : project.key)}
                   >
                     <div className="d-flex justify-content-between align-items-center">
                       <div>
                         <i className={`bi ${isExpanded ? 'bi-folder2-open' : 'bi-folder'} me-2`} style={{ color: '#f0ad4e' }}></i>
                         <strong>{project.name}</strong>
+                        {project.projectId && (
+                          <small className="ms-2" style={{ color: mutedColor, fontFamily: 'monospace' }}>{project.projectId}</small>
+                        )}
+                        {isCurrent && <Badge bg="primary" className="ms-2">当前</Badge>}
                         <Badge bg="secondary" className="ms-2">{project.total}</Badge>
                       </div>
                       <div className="d-flex align-items-center gap-2">
@@ -492,10 +538,20 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
                             </Badge>
                           ) : null;
                         })}
+                        {project.projectId && !isCurrent && (
+                          <Button
+                            variant="outline-primary"
+                            size="sm"
+                            onClick={(e) => { e.stopPropagation(); setCurrentProject(project.projectId, project.name); }}
+                            title="设为当前项目"
+                          >
+                            <i className="bi bi-bookmark-check me-1"></i>设为当前
+                          </Button>
+                        )}
                         <Button
                           variant="outline-success"
                           size="sm"
-                          onClick={(e) => { e.stopPropagation(); handleExportProject(project); }}
+                          onClick={(e) => { e.stopPropagation(); handleExportProject({ name: project.name, docs: project.docs }); }}
                           title="导出项目包"
                         >
                           <i className="bi bi-box-arrow-up me-1"></i>导出
@@ -689,11 +745,47 @@ const DocumentDashboard = ({ colors = {}, theme = 'light', onNavigate }) => {
           )}
         </Modal.Body>
         <Modal.Footer style={{ backgroundColor: cardBg, borderColor }}>
+          {previewDoc && previewType && (
+            <Button
+              variant="outline-info"
+              size="sm"
+              className="me-auto"
+              onClick={() => setVersionDrawer({ show: true, type: previewType, doc: previewDoc })}
+            >
+              <i className="bi bi-clock-history me-1"></i>
+              版本历史 ({listVersions(previewType, previewDoc.id).length})
+            </Button>
+          )}
           <Button variant="secondary" size="sm" onClick={() => { setPreviewDoc(null); setPreviewType(null); }}>
             关闭
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* P3-2: 跨四类文档统一版本历史抽屉 */}
+      <VersionHistoryDrawer
+        show={versionDrawer.show}
+        onHide={() => setVersionDrawer({ show: false, type: null, doc: null })}
+        type={versionDrawer.type}
+        docId={versionDrawer.doc?.id}
+        currentSnapshot={versionDrawer.doc}
+        onSaveVersion={({ comment, author }) => {
+          if (!versionDrawer.doc) return;
+          try {
+            saveVersion({ type: versionDrawer.type, docId: versionDrawer.doc.id, snapshot: versionDrawer.doc, comment, author });
+            refresh();
+          } catch (e) { /* ignore */ }
+        }}
+        onRollback={(snapshot) => {
+          if (!versionDrawer.doc || !versionDrawer.type) return;
+          const t = DOC_TYPES.find(dt => dt.key === versionDrawer.type);
+          if (t) {
+            t.store.save({ ...snapshot, id: versionDrawer.doc.id });
+            refresh();
+            setVersionDrawer({ show: false, type: null, doc: null });
+          }
+        }}
+      />
     </div>
   );
 };

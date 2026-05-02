@@ -15,6 +15,8 @@ import {
   hasUnviewedUpdate,
   batchUpdateVersions,
 } from '../utils/resourceVersionManager';
+import ECOPanel from './library/ECOPanel'; // P2-1
+import AuditLogViewer from './library/AuditLogViewer'; // P3-3
 
 const CATEGORY_LABELS = {
   manuals: { label: '产品说明书', icon: 'bi-book', color: 'primary' },
@@ -337,6 +339,16 @@ function ResourceVersionView({ theme, colors }) {
               )}
             </Card.Body>
           </Card>
+        </Tab>
+
+        {/* P2-1: 工程修订单 (ECO) 流程 */}
+        <Tab eventKey="eco" title={<span><i className="bi bi-arrow-repeat me-1"></i>修订单 ECO</span>}>
+          <ECOPanel defaultResourceType="manual" defaultResourceId="" />
+        </Tab>
+
+        {/* P3-3: 审计日志 */}
+        <Tab eventKey="audit" title={<span><i className="bi bi-shield-check me-1"></i>审计日志</span>}>
+          <AuditLogViewer />
         </Tab>
       </Tabs>
 

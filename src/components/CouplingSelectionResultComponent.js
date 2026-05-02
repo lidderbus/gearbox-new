@@ -39,7 +39,7 @@ const CouplingSelectionResultComponent = ({
     if (hasCover) params.append('cover', hasCover ? '1' : '0');
 
     const url = `/coupling-selection-enhanced.html${params.toString() ? '?' + params.toString() : ''}`;
-    window.open(url, '_blank');
+    window.open(url, '_blank', 'noopener,noreferrer');
   }, [enginePower, engineSpeed, selectedGearbox, engineTorque, workCondition, hasCover]);
 
   // 获取当前联轴器的系列信息

@@ -6,6 +6,7 @@ import { Row, Col, Card, Spinner } from 'react-bootstrap';
 
 // 懒加载组件
 const SelectionHistoryManager = lazy(() => import('./SelectionHistoryManager'));
+const SelectionHistoryTrends = lazy(() => import('./SelectionHistoryTrends'));
 
 // 加载指示器
 const LazyLoadFallback = () => (
@@ -32,6 +33,9 @@ const HistoryTabContent = ({
             <i className="bi bi-clock-history me-2"></i>选型历史记录
           </Card.Header>
           <Card.Body>
+            <Suspense fallback={null}>
+              <SelectionHistoryTrends />
+            </Suspense>
             <Suspense fallback={<LazyLoadFallback />}>
               <SelectionHistoryManager
                 onLoadFromHistory={onLoadHistory}

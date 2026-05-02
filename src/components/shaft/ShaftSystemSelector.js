@@ -1,9 +1,12 @@
 // src/components/shaft/ShaftSystemSelector.js
 // 轴系配件选型界面
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { toast } from '../../utils/toast';
 import { Card, Row, Col, Form, Button, Table, Alert, Badge, Tabs, Tab } from 'react-bootstrap';
+import { useSelectionResult } from '../../contexts/SelectionResultContext';
+import ShaftVibrationPanel from './ShaftVibrationPanel';
+import AlgorithmReferenceCard from '../propulsion/AlgorithmReferenceCard';
 import {
   intermediateBearings,
   thrustBearings,
@@ -21,11 +24,26 @@ import {
 } from '../../utils/shaftSelectionAlgorithm';
 
 const ShaftSystemSelector = ({ colors = {}, theme = 'light', onSystemSelect }) => {
+  // P1-3: 从推进载荷预填(若上游 CPP 已选型)
+  const { propulsionPayload } = useSelectionResult();
   // 输入参数
   const [power, setPower] = useState('');
   const [speed, setSpeed] = useState('');
   const [shaftDiameter, setShaftDiameter] = useState('');
   const [thrust, setThrust] = useState('');
+  const [autoFilled, setAutoFilled] = useState(false);
+
+  // P1-3: 首次挂载时若有上游推进数据,自动预填
+  useEffect(() => {
+    if (propulsionPayload && !power && !speed) {
+      if (propulsionPayload.power) setPower(String(propulsionPayload.power));
+      // 轴系关心的是"轴端"转速,即 outputSpeed (减速后)
+      if (propulsionPayload.outputSpeed) setSpeed(String(Math.round(propulsionPayload.outputSpeed)));
+      else if (propulsionPayload.inputSpeed) setSpeed(String(propulsionPayload.inputSpeed));
+      setAutoFilled(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 选项
   const [bearingType, setBearingType] = useState('');
@@ -265,6 +283,18 @@ const ShaftSystemSelector = ({ colors = {}, theme = 'light', onSystemSelect }) =
 
   return (
     <div className="shaft-system-selector">
+      <AlgorithmReferenceCard module="shaft" colors={colors} />
+      {/* P1-3: 推进数据贯通指示 */}
+      {autoFilled && propulsionPayload && (
+        <Alert variant="info" className="py-2 mb-2" style={{ fontSize: '0.85em' }}>
+          <i className="bi bi-link-45deg me-2"></i>
+          已自动从上游 <strong>{propulsionPayload.source}</strong> 选型 (
+          {propulsionPayload.gearboxModel || '齿轮箱'}, 速比 {propulsionPayload.ratio}) 预填功率/转速。
+          {propulsionPayload.inputTorque && (
+            <span className="ms-2 text-muted">输入扭矩 ≈ {propulsionPayload.inputTorque} N·m</span>
+          )}
+        </Alert>
+      )}
       <Row>
         {/* 左侧：输入面板 */}
         <Col lg={4}>
@@ -540,6 +570,13 @@ const ShaftSystemSelector = ({ colors = {}, theme = 'light', onSystemSelect }) =
               </Card>
             </Tab>
           </Tabs>
+        </Col>
+      </Row>
+
+      {/* P2-3: 三振动校核 (扭振 + 纵振 + 回旋) */}
+      <Row>
+        <Col>
+          <ShaftVibrationPanel colors={colors} theme={theme} />
         </Col>
       </Row>
     </div>

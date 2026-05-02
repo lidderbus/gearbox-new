@@ -1,21 +1,21 @@
 {
   "_meta": {
-    "generatedAt": "2026-04-17T13:38:46.180Z",
+    "generatedAt": "2026-04-29T13:15:47.415Z",
     "marketDataTag": "erp-2026-04",
-    "salesInvoiceCount": 507,
-    "purchaseInvoiceCount": 477,
+    "salesInvoiceCount": 533,
+    "purchaseInvoiceCount": 469,
     "contractCount": 197,
     "enrichedModelCount": 103,
     "hotSellerThreshold": 7
   },
   "records": {
     "16": {
-      "salesCount": 37,
-      "salesRevenue": 135321,
-      "avgSalePrice": 3657,
+      "salesCount": 38,
+      "salesRevenue": 142452,
+      "avgSalePrice": 3749,
       "avgCostPrice": null,
       "realMarginPct": null,
-      "lastSoldDate": "2026-03-30",
+      "lastSoldDate": "2026-04-28",
       "customerCount": 5,
       "topCustomers": [
         "德清县建豪造船",
@@ -29,12 +29,12 @@
       ]
     },
     "26": {
-      "salesCount": 29,
-      "salesRevenue": 121012,
-      "avgSalePrice": 4173,
+      "salesCount": 30,
+      "salesRevenue": 128144,
+      "avgSalePrice": 4271,
       "avgCostPrice": null,
       "realMarginPct": null,
-      "lastSoldDate": "2026-03-30",
+      "lastSoldDate": "2026-04-28",
       "customerCount": 4,
       "topCustomers": [
         "德清县建豪造船",
@@ -62,18 +62,18 @@
       ]
     },
     "135": {
-      "salesCount": 11,
-      "salesRevenue": 135493,
-      "avgSalePrice": 12318,
+      "salesCount": 12,
+      "salesRevenue": 151093,
+      "avgSalePrice": 12591,
       "avgCostPrice": 13648,
-      "realMarginPct": -10.8,
-      "lastSoldDate": "2026-03-16",
+      "realMarginPct": -8.4,
+      "lastSoldDate": "2026-04-03",
       "customerCount": 5,
       "topCustomers": [
         "德清县建豪造船",
         "张家港保税区潍柴产品销售服务",
-        "南通明炜船舶配件",
         "常州金时川工程机械",
+        "南通明炜船舶配件",
         "江苏多力特起重机械制造"
       ],
       "shipTypes": [
@@ -82,12 +82,12 @@
       ]
     },
     "300": {
-      "salesCount": 41,
-      "salesRevenue": 839500,
-      "avgSalePrice": 20476,
+      "salesCount": 42,
+      "salesRevenue": 868455,
+      "avgSalePrice": 20677,
       "avgCostPrice": 18208,
-      "realMarginPct": 11.1,
-      "lastSoldDate": "2026-03-13",
+      "realMarginPct": 11.9,
+      "lastSoldDate": "2026-04-15",
       "customerCount": 10,
       "topCustomers": [
         "上海思腾动力设备",
@@ -191,16 +191,16 @@
       "contractRevenue": 235000
     },
     "120C": {
-      "salesCount": 63,
-      "salesRevenue": 957360,
-      "avgSalePrice": 15196,
+      "salesCount": 69,
+      "salesRevenue": 1063480,
+      "avgSalePrice": 15413,
       "avgCostPrice": 11420,
-      "realMarginPct": 24.8,
-      "lastSoldDate": "2026-03-25",
+      "realMarginPct": 25.9,
+      "lastSoldDate": "2026-04-23",
       "customerCount": 17,
       "topCustomers": [
-        "常州玻璃钢造船厂",
         "德高仕泵业",
+        "常州玻璃钢造船厂",
         "常州潍重船电产品销售服务",
         "上海献航船舶工程",
         "无锡市兴隆船舶"
@@ -248,12 +248,12 @@
       "contractRevenue": 453900
     },
     "HCD400A": {
-      "salesCount": 23,
-      "salesRevenue": 684149,
-      "avgSalePrice": 29746,
+      "salesCount": 24,
+      "salesRevenue": 713104,
+      "avgSalePrice": 29713,
       "avgCostPrice": 29035,
-      "realMarginPct": 2.4,
-      "lastSoldDate": "2026-01-15",
+      "realMarginPct": 2.3,
+      "lastSoldDate": "2026-04-15",
       "customerCount": 6,
       "topCustomers": [
         "常州潍重船电产品销售服务",
@@ -440,19 +440,19 @@
       "contractRevenue": 561816
     },
     "HC400": {
-      "salesCount": 24,
-      "salesRevenue": 656443,
-      "avgSalePrice": 27352,
+      "salesCount": 26,
+      "salesRevenue": 721443,
+      "avgSalePrice": 27748,
       "avgCostPrice": 21425,
-      "realMarginPct": 21.7,
-      "lastSoldDate": "2026-03-25",
-      "customerCount": 8,
+      "realMarginPct": 22.8,
+      "lastSoldDate": "2026-04-08",
+      "customerCount": 9,
       "topCustomers": [
         "本特力船舶科技",
         "上海思腾动力设备",
+        "无锡东方船研高性能船艇工程",
         "江阴潍柴产品销售服务",
-        "德清县建豪造船",
-        "湖北迪周机械"
+        "德清县建豪造船"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -504,12 +504,12 @@
       }
     },
     "BS80": {
-      "salesCount": 90,
-      "salesRevenue": 378000,
+      "salesCount": 120,
+      "salesRevenue": 504000,
       "avgSalePrice": 4200,
       "avgCostPrice": 3434,
       "realMarginPct": 18.2,
-      "lastSoldDate": "2025-12-11",
+      "lastSoldDate": "2026-04-21",
       "customerCount": 1,
       "topCustomers": [
         "上海通庆船舶设备"
@@ -874,14 +874,15 @@
       ]
     },
     "135A": {
-      "salesCount": 1,
-      "salesRevenue": 19000,
-      "avgSalePrice": 19000,
+      "salesCount": 2,
+      "salesRevenue": 38739,
+      "avgSalePrice": 19370,
       "avgCostPrice": 14612,
-      "realMarginPct": 23.1,
-      "lastSoldDate": "2025-09-23",
-      "customerCount": 1,
+      "realMarginPct": 24.6,
+      "lastSoldDate": "2026-04-08",
+      "customerCount": 2,
       "topCustomers": [
+        "湖北迪周机械",
         "义乌市淘派进出口"
       ],
       "shipTypes": [
@@ -959,16 +960,16 @@
       ]
     },
     "HCAM500": {
-      "salesCount": 4,
-      "salesRevenue": 1266000,
-      "avgSalePrice": 316500,
+      "salesCount": 6,
+      "salesRevenue": 1896000,
+      "avgSalePrice": 316000,
       "avgCostPrice": null,
       "realMarginPct": null,
-      "lastSoldDate": "2026-03-11",
+      "lastSoldDate": "2026-04-08",
       "customerCount": 2,
       "topCustomers": [
-        "江苏大津重工",
-        "常州玻璃钢造船厂"
+        "常州玻璃钢造船厂",
+        "江苏大津重工"
       ],
       "shipTypes": [
         "船用齿轮箱"
@@ -977,7 +978,7 @@
       "contractRevenue": 2616000,
       "priceAnomaly": {
         "catalogPrice": 42000,
-        "ratio": 7.54,
+        "ratio": 7.52,
         "hint": "成交均价显著高于目录,可能是套装/服务打包,或目录价偏低待校正"
       }
     },
@@ -1509,6 +1510,40 @@
       "contractQty": 38,
       "contractRevenue": 378968
     },
+    "D300A": {
+      "salesCount": 1,
+      "salesRevenue": 30400,
+      "avgSalePrice": 30400,
+      "avgCostPrice": 24674,
+      "realMarginPct": 18.8,
+      "lastSoldDate": "2026-04-20",
+      "customerCount": 1,
+      "topCustomers": [
+        "福建拓博实业"
+      ],
+      "shipTypes": [
+        "船用齿轮箱"
+      ],
+      "contractQty": 1,
+      "contractRevenue": 30400
+    },
+    "MB270": {
+      "salesCount": 4,
+      "salesRevenue": 85840,
+      "avgSalePrice": 21460,
+      "avgCostPrice": null,
+      "realMarginPct": null,
+      "lastSoldDate": "2026-04-23",
+      "customerCount": 1,
+      "topCustomers": [
+        "常州晟航机电设备"
+      ],
+      "shipTypes": [
+        "船用齿轮箱"
+      ],
+      "contractQty": 4,
+      "contractRevenue": 103472
+    },
     "2LZF": {
       "salesCount": 0,
       "salesRevenue": 0,
@@ -1599,19 +1634,6 @@
       "topCustomers": [],
       "shipTypes": []
     },
-    "D300A": {
-      "salesCount": 0,
-      "salesRevenue": 0,
-      "avgSalePrice": null,
-      "avgCostPrice": 24674,
-      "realMarginPct": null,
-      "lastSoldDate": null,
-      "customerCount": 0,
-      "topCustomers": [],
-      "shipTypes": [],
-      "contractQty": 1,
-      "contractRevenue": 30400
-    },
     "HCAM403P": {
       "salesCount": 0,
       "salesRevenue": 0,
@@ -1689,19 +1711,6 @@
       "shipTypes": [],
       "contractQty": 6,
       "contractRevenue": 277140
-    },
-    "MB270": {
-      "salesCount": 0,
-      "salesRevenue": 0,
-      "avgSalePrice": null,
-      "avgCostPrice": null,
-      "realMarginPct": null,
-      "lastSoldDate": null,
-      "customerCount": 0,
-      "topCustomers": [],
-      "shipTypes": [],
-      "contractQty": 4,
-      "contractRevenue": 103472
     },
     "GWS49.61": {
       "salesCount": 0,

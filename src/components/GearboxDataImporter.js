@@ -1,6 +1,7 @@
 // src/components/GearboxDataImporter.js
 import React, { useState, useRef } from 'react';
 import { Card, Button, Tab, Tabs, Alert, Form, InputGroup, Row, Col, Table, Badge, Modal, Spinner } from 'react-bootstrap';
+import { safeParseGearboxBlob } from '../utils/safeParseGearboxBlob';
 
 /**
  * 前进牌齿轮箱数据导入组件
@@ -67,15 +68,10 @@ function GearboxDataImporter({ onDataUpdate }) {
           const exportMatch = fileContent.match(/export\s+const\s+(\w+)\s*=\s*/);
           if (exportMatch) {
             try {
-              // 安全提取数据：仅取赋值表达式，不执行整个文件
+              // 走 safeParseGearboxBlob, 不再使用 new Function
               const dataStartIdx = exportMatch.index + exportMatch[0].length;
               const dataExpr = fileContent.substring(dataStartIdx).replace(/;\s*(export\b[\s\S]*)?$/, '').trim();
-              // 校验无危险代码模式
-              const dangerousPattern = /\b(eval|Function|import|require|fetch|XMLHttpRequest|setTimeout|setInterval|document\.|window\.)\s*\(/;
-              if (dangerousPattern.test(dataExpr)) {
-                throw new Error('文件包含不安全的代码模式，已拒绝执行');
-              }
-              const result = (new Function('return ' + dataExpr))();
+              const result = safeParseGearboxBlob(dataExpr);
               
               if (result && typeof result === 'object') {
                 setImportedData(result);
@@ -134,15 +130,10 @@ function GearboxDataImporter({ onDataUpdate }) {
       if (match) {
         // 尝试作为JavaScript对象解析
         try {
-          const varName = match[1]; // 提取变量名，例如 advanceGearboxData
-          // 安全提取数据：仅取赋值表达式，不执行整个粘贴内容
+          // 走 safeParseGearboxBlob, 不再使用 new Function
           const dataStartIdx = match.index + match[0].length;
           const dataExpr = pasteContent.substring(dataStartIdx).replace(/;\s*(export\b[\s\S]*)?$/, '').trim();
-          const dangerousPattern = /\b(eval|Function|import|require|fetch|XMLHttpRequest|setTimeout|setInterval|document\.|window\.)\s*\(/;
-          if (dangerousPattern.test(dataExpr)) {
-            throw new Error('粘贴内容包含不安全的代码模式，已拒绝执行');
-          }
-          const result = (new Function('return ' + dataExpr))();
+          const result = safeParseGearboxBlob(dataExpr);
           
           if (result && typeof result === 'object') {
             setImportedData(result);

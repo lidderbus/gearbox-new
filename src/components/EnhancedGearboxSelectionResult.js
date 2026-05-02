@@ -30,6 +30,7 @@ import marketEnrichment from '../data/marketEnrichment.json';
 import { evaluatePTOThermalMargin } from '../utils/ptoThermalMargin';
 import { resolvePackage } from '../utils/packageResolver';
 import { savePackageQuotation } from '../utils/quotationManager';
+import IMOCompliancePanel from './imo/IMOCompliancePanel';
 
 // 导入子组件
 import {
@@ -503,7 +504,7 @@ const EnhancedGearboxSelectionResult = ({
                         <Button
                           variant="outline-info"
                           size="sm"
-                          onClick={() => window.open(getManualInfo(selectedGearbox.model).path, '_blank')}
+                          onClick={() => window.open(getManualInfo(selectedGearbox.model).path, '_blank', 'noopener,noreferrer')}
                           title={getManualInfo(selectedGearbox.model).title}
                         >
                           <i className="bi bi-file-earmark-pdf me-1"></i>
@@ -866,7 +867,7 @@ const EnhancedGearboxSelectionResult = ({
                           <Button
                             variant="outline-info"
                             size="sm"
-                            onClick={() => window.open(getManualInfo(gearbox.model).path, '_blank')}
+                            onClick={() => window.open(getManualInfo(gearbox.model).path, '_blank', 'noopener,noreferrer')}
                             title={getManualInfo(gearbox.model).title}
                           >
                             <i className="bi bi-file-earmark-pdf"></i>
@@ -1189,6 +1190,17 @@ const EnhancedGearboxSelectionResult = ({
               </Col>
             </Row>
           </Tab>
+
+          {/* B4: IMO 合规评估 (EEXI / EEDI / CII) — 选型完成后可对船型/DWT/Vref 做合规评估 */}
+          <Tab eventKey="imo" title={<><i className="bi bi-globe me-1"></i>IMO 合规</>}>
+            <IMOCompliancePanel
+              selectionResult={{
+                engineId: result?.engineId,
+                enginePower: selectedGearbox?.enginePower || result?.enginePower
+              }}
+              colors={colors}
+            />
+          </Tab>
         </Tabs>
           
         {result.warning && (
@@ -1229,7 +1241,7 @@ const EnhancedGearboxSelectionResult = ({
                         key={model}
                         variant={model === selectedGearbox.model ? "info" : "outline-info"}
                         size="sm"
-                        onClick={() => window.open(manual.path, '_blank')}
+                        onClick={() => window.open(manual.path, '_blank', 'noopener,noreferrer')}
                         title={manual.title}
                       >
                         <i className="bi bi-file-earmark-pdf me-1"></i>

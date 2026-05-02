@@ -100,7 +100,7 @@ const OutlineDrawingViewer = ({
     } catch (error) {
       console.error('下载失败:', error);
       // 如果fetch失败，尝试直接打开
-      window.open(drawingData[currentView], '_blank');
+      window.open(drawingData[currentView], '_blank', 'noopener,noreferrer');
     }
   }, [drawingData, currentView, model]);
 
@@ -137,7 +137,7 @@ const OutlineDrawingViewer = ({
             variant="outline-primary"
             size="sm"
             className="mt-2"
-            onClick={() => window.open(getPdfPreviewUrl(dwgFiles[0].filePath), '_blank')}
+            onClick={() => window.open(getPdfPreviewUrl(dwgFiles[0].filePath), '_blank', 'noopener,noreferrer')}
           >
             <i className="bi bi-file-earmark-code me-1"></i>
             查看DWG图纸
@@ -185,7 +185,7 @@ const OutlineDrawingViewer = ({
           <Button
             variant="light"
             size="sm"
-            onClick={() => window.open(previewUrl, '_blank')}
+            onClick={() => window.open(previewUrl, '_blank', 'noopener,noreferrer')}
             title="在新窗口打开"
           >
             <i className="bi bi-box-arrow-up-right"></i>
@@ -483,14 +483,14 @@ const OutlineDrawingViewer = ({
                     <ButtonGroup size="sm">
                       <Button
                         variant="outline-primary"
-                        onClick={() => window.open(getDwgDownloadUrl(file.filePath), '_blank')}
+                        onClick={() => window.open(getDwgDownloadUrl(file.filePath), '_blank', 'noopener,noreferrer')}
                         title="下载DWG文件"
                       >
                         <i className="bi bi-download me-1"></i>下载
                       </Button>
                       <Button
                         variant="outline-success"
-                        onClick={() => window.open(getPdfPreviewUrl(file.filePath), '_blank')}
+                        onClick={() => window.open(getPdfPreviewUrl(file.filePath), '_blank', 'noopener,noreferrer')}
                         title="在ShareCAD中在线预览"
                       >
                         <i className="bi bi-eye me-1"></i>在线预览

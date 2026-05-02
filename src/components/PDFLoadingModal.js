@@ -76,7 +76,7 @@ const PDFLoadingModal = ({ pdf, onClose, colors }) => {
 
         // 延迟打开，让用户看到100%
         setTimeout(() => {
-          window.open(url, '_blank');
+          window.open(url, '_blank', 'noopener,noreferrer');
           // 清理URL，避免内存泄漏
           setTimeout(() => URL.revokeObjectURL(url), 60000);
           onClose();

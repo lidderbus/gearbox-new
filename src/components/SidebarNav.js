@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { Badge } from 'react-bootstrap';
+import { getModuleStatus } from '../services/moduleStatus';
 
 const NAV_GROUPS = [
   {
@@ -24,12 +26,14 @@ const NAV_GROUPS = [
       { key: 'pump-selection', label: '备用泵选型', icon: 'bi-droplet' },
       { key: 'cummins', label: '康明斯配套', icon: 'bi-gear-wide-connected' },
       { key: 'engine-matching', label: '多品牌主机', icon: 'bi-cpu' },
+      { key: 'compatibility-matrix', label: '兼容性矩阵', icon: 'bi-grid-3x3' },
     ],
   },
   {
     label: '文档中心',
     icon: 'bi-file-earmark-text',
     items: [
+      { key: 'doc-field-map', label: '字段映射', icon: 'bi-file-earmark-medical' },
       { key: 'inquiry', label: '技术询单', icon: 'bi-file-earmark-plus' },
       { key: 'quotation', label: '报价单', icon: 'bi-currency-yen' },
       { key: 'agreement', label: '技术协议', icon: 'bi-file-earmark-text' },
@@ -42,6 +46,7 @@ const NAV_GROUPS = [
     label: '推进系统',
     icon: 'bi-compass',
     items: [
+      { key: 'propulsion-hub', label: '系统级匹配 Hub', icon: 'bi-diagram-3', badge: 'NEW' },
       { key: 'cpp', label: '可调桨', icon: 'bi-arrow-repeat' },
       { key: 'azimuth', label: '全回转', icon: 'bi-compass' },
       { key: 'thruster', label: '侧推器', icon: 'bi-arrows-expand' },
@@ -52,6 +57,7 @@ const NAV_GROUPS = [
     label: '资料库',
     icon: 'bi-archive',
     items: [
+      { key: 'library-search', label: '全局检索', icon: 'bi-search' },
       { key: 'drawings', label: '外形图库', icon: 'bi-image' },
       { key: 'manuals', label: '说明书库', icon: 'bi-book' },
       { key: 'templates', label: '协议模板库', icon: 'bi-file-earmark-text' },
@@ -63,18 +69,24 @@ const NAV_GROUPS = [
     ],
   },
   {
-    label: '分析工具',
-    icon: 'bi-activity',
+    label: '工程分析',
+    icon: 'bi-cpu',
     items: [
       { key: 'torsional', label: '扭振分析', icon: 'bi-activity' },
       { key: 'energy', label: '能效分析', icon: 'bi-lightning-charge' },
       { key: 'energy-optimization', label: '能效优化', icon: 'bi-lightning' },
+    ],
+  },
+  {
+    label: '运营分析',
+    icon: 'bi-graph-up-arrow',
+    items: [
       { key: 'statistics', label: '数据统计', icon: 'bi-bar-chart' },
-      { key: 'analytics', label: '使用分析', icon: 'bi-graph-up-arrow' },
       { key: 'trend-analysis', label: '趋势分析', icon: 'bi-graph-up' },
       { key: 'series-overview', label: '系列总览', icon: 'bi-grid-3x3-gap' },
       { key: 'power-ratio-heatmap', label: '覆盖热力图', icon: 'bi-grid-3x2-gap' },
       { key: 'competitor', label: '竞品对比', icon: 'bi-bar-chart-fill' },
+      { key: 'usage-analytics', label: '使用统计', icon: 'bi-bar-chart' },
     ],
   },
   {
@@ -94,8 +106,8 @@ const NAV_GROUPS = [
       { key: 'query', label: '数据查询', icon: 'bi-search' },
       { key: 'product-center', label: '产品中心', icon: 'bi-box-seam' },
       { key: 'history', label: '选型历史', icon: 'bi-clock-history' },
-      { key: 'hcm-selection', label: 'HCM高速', icon: 'bi-speedometer2' },
       { key: 'data-quality', label: '数据质量', icon: 'bi-clipboard-data' },
+      { key: 'data-import', label: '数据导入', icon: 'bi-cloud-upload' },
     ],
   },
   {
@@ -104,6 +116,7 @@ const NAV_GROUPS = [
     items: [
       { key: 'role-management', label: '角色权限', icon: 'bi-people' },
       { key: 'data-backup', label: '数据备份', icon: 'bi-cloud-upload' },
+      { key: 'operation-audit', label: '操作审计日志', icon: 'bi-shield-check' },
       { key: 'api-docs', label: 'API文档', icon: 'bi-code-slash' },
       { key: 'mobile-view', label: '移动端', icon: 'bi-phone' },
     ],
@@ -116,6 +129,17 @@ export default function SidebarNav({ activeTab, onNavigate, collapsed, onToggle,
     const idx = NAV_GROUPS.findIndex((g) => g.items.some((i) => i.key === activeTab));
     return { [idx]: true };
   });
+
+  // 状态徽标:每次 activeTab 变化时重算(因 markVisited 可能更新)
+  const statusMap = useMemo(() => {
+    const map = {};
+    NAV_GROUPS.forEach(g => g.items.forEach(item => {
+      const s = getModuleStatus(item.key);
+      if (s) map[item.key] = s;
+    }));
+    return map;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
   const toggleGroup = (idx) => {
     setExpandedGroups((prev) => ({ ...prev, [idx]: !prev[idx] }));
@@ -232,7 +256,21 @@ export default function SidebarNav({ activeTab, onNavigate, collapsed, onToggle,
                   }}
                 >
                   <i className={`bi ${item.icon}`} style={{ width: 16, textAlign: 'center' }}></i>
-                  <span>{item.label}</span>
+                  <span style={{ flex: 1 }}>{item.label}</span>
+                  {statusMap[item.key] && (
+                    <Badge
+                      bg={statusMap[item.key].color}
+                      title={statusMap[item.key].tooltip}
+                      style={{
+                        fontSize: '0.65rem',
+                        padding: statusMap[item.key].kind === 'ready' ? '0.15em 0.45em' : '0.2em 0.4em',
+                        marginLeft: 'auto',
+                        lineHeight: 1,
+                      }}
+                    >
+                      {statusMap[item.key].label}
+                    </Badge>
+                  )}
                 </div>
               ))}
             </div>

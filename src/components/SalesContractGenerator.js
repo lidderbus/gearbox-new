@@ -40,6 +40,7 @@ const SalesContractGenerator = ({
   const [contract, setContract] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [contractLanguage, setContractLanguage] = useState('zh'); // 'zh' | 'en' | 'bilingual'
 
   // Default delivery date: 3 months from now
   const defaultDeliveryDate = useMemo(() => {
@@ -143,6 +144,7 @@ const SalesContractGenerator = ({
       contractData.packagingFeeArrangement = formData.packagingFee;
       contractData.specialRequirements = formData.specialRequirements || '无';
       contractData.disputeResolution = formData.disputeResolution;
+      contractData.language = contractLanguage;
 
       // Delivery date from form
       if (formData.deliveryDate) {
@@ -159,12 +161,17 @@ const SalesContractGenerator = ({
 
       // Save to document storage
       const contractId = contractData.docNumber || contractData.contractNumber;
+      // P0-1: 接入 ProjectID 主线
+      let currentProjectId = null;
+      try { currentProjectId = sessionStorage.getItem('current_project_id') || null; } catch (e) { /* ignore */ }
       try {
         contractStore.save({
           id: contractId,
           contractNumber: contractData.contractNumber,
           docNumber: contractData.docNumber,
           buyerName: contractData.buyerInfo?.name,
+          projectName: contractData.projectName || contractData.buyerInfo?.projectName,
+          projectId: currentProjectId || undefined,
           totalAmount: contractData.totalAmount,
           model: selectedComponents?.gearbox?.model,
           data: contractData,
@@ -259,6 +266,23 @@ const SalesContractGenerator = ({
           </div>
         </Alert>
       )}
+
+      {/* Language Selection */}
+      <Card className="mb-3" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+        <Card.Header style={{ backgroundColor: colors.headerBg, color: colors.headerText }}>
+          <i className="bi bi-translate me-2"></i>合同语言
+        </Card.Header>
+        <Card.Body>
+          <div className="d-flex gap-4">
+            <Form.Check type="radio" id="lang-zh" label="仅中文" name="contractLang"
+              checked={contractLanguage === 'zh'} onChange={() => setContractLanguage('zh')} />
+            <Form.Check type="radio" id="lang-en" label="仅英文" name="contractLang"
+              checked={contractLanguage === 'en'} onChange={() => setContractLanguage('en')} />
+            <Form.Check type="radio" id="lang-bi" label="中英文对照" name="contractLang"
+              checked={contractLanguage === 'bilingual'} onChange={() => setContractLanguage('bilingual')} />
+          </div>
+        </Card.Body>
+      </Card>
 
       {/* Buyer Info */}
       <Card className="mb-3" style={{ backgroundColor: colors.card, borderColor: colors.border }}>

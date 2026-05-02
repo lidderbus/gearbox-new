@@ -1,6 +1,6 @@
 // src/components/OutlineDrawingQuery/DwgViewer.js
 // DWG file viewer component with preview and fallback handling
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Card, Row, Col, Badge, Button, Alert, Spinner } from 'react-bootstrap';
 import FavoriteButton from './FavoriteButton';
 import { getDwgDownloadUrl, getPdfPreviewUrl } from '../../data/outlineDrawings';
@@ -18,9 +18,25 @@ const DwgViewer = ({
   const [previewStatus, setPreviewStatus] = useState('loading'); // 'loading' | 'loaded' | 'error'
   const [iframeKey, setIframeKey] = useState(0);
 
+  // 安全计算 PDF/DWG 下载链接（路径校验失败返回空串）
+  const pdfUrl = useMemo(
+    () => (selectedDwgFile ? getPdfPreviewUrl(selectedDwgFile.filePath) : ''),
+    [selectedDwgFile]
+  );
+  const downloadUrl = useMemo(
+    () => (selectedDwgFile ? getDwgDownloadUrl(selectedDwgFile.filePath) : ''),
+    [selectedDwgFile]
+  );
+
   // Reset preview status when file changes
+  const filePath = selectedDwgFile?.filePath;
   useEffect(() => {
-    if (selectedDwgFile) {
+    if (filePath) {
+      // 路径校验失败 → 直接走 error 状态，不再启动加载
+      if (!pdfUrl) {
+        setPreviewStatus('error');
+        return undefined;
+      }
       setPreviewStatus('loading');
       setIframeKey(prev => prev + 1);
 
@@ -31,7 +47,8 @@ const DwgViewer = ({
 
       return () => clearTimeout(timer);
     }
-  }, [selectedDwgFile?.filePath]);
+    return undefined;
+  }, [filePath, pdfUrl]);
 
   const handleIframeLoad = useCallback(() => {
     // Note: ShareCAD errors inside iframe cannot be directly detected
@@ -80,6 +97,8 @@ const DwgViewer = ({
             variant="outline-secondary"
             size="sm"
             onClick={onClose}
+            aria-label="关闭DWG详情"
+            title="关闭"
           >
             <i className="bi bi-x"></i>
           </Button>
@@ -144,7 +163,7 @@ const DwgViewer = ({
               <Button
                 variant="outline-primary"
                 size="sm"
-                onClick={() => window.open(getPdfPreviewUrl(selectedDwgFile.filePath), '_blank')}
+                onClick={() => window.open(pdfUrl, '_blank', 'noopener,noreferrer')}
               >
                 <i className="bi bi-box-arrow-up-right me-1"></i>新窗口打开
               </Button>
@@ -200,19 +219,19 @@ const DwgViewer = ({
                   <div className="d-flex flex-column gap-2" style={{ maxWidth: '300px', width: '100%' }}>
                     <Button
                       variant="primary"
-                      onClick={() => window.open(getPdfPreviewUrl(selectedDwgFile.filePath), '_blank')}
+                      onClick={() => window.open(pdfUrl, '_blank', 'noopener,noreferrer')}
                     >
                       <i className="bi bi-file-earmark-pdf me-2"></i>查看PDF版本
                     </Button>
                     <Button
                       variant="outline-primary"
-                      onClick={() => window.open(getDwgDownloadUrl(selectedDwgFile.filePath), '_blank')}
+                      onClick={() => window.open(downloadUrl, '_blank', 'noopener,noreferrer')}
                     >
                       <i className="bi bi-download me-2"></i>下载DWG文件
                     </Button>
                     <Button
                       variant="outline-secondary"
-                      onClick={() => window.open('https://viewer.autodesk.com/', '_blank')}
+                      onClick={() => window.open('https://viewer.autodesk.com/', '_blank', 'noopener,noreferrer')}
                     >
                       <i className="bi bi-box-arrow-up-right me-2"></i>使用Autodesk在线查看器
                     </Button>
@@ -223,28 +242,24 @@ const DwgViewer = ({
                 </div>
               )}
 
-              {/* PDF embed - 使用object元素支持更好的PDF内嵌 */}
-              <object
-                key={iframeKey}
-                data={getPdfPreviewUrl(selectedDwgFile.filePath)}
-                type="application/pdf"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  border: 'none',
-                  display: previewStatus === 'error' ? 'none' : 'block'
-                }}
-                title={`${selectedDwgFile.model} 图纸预览`}
-                onLoad={handleIframeLoad}
-                onError={() => setPreviewStatus('error')}
-              >
-                {/* Fallback for browsers that don't support object */}
-                <embed
-                  src={getPdfPreviewUrl(selectedDwgFile.filePath)}
-                  type="application/pdf"
-                  style={{ width: '100%', height: '100%' }}
+              {/* PDF preview - sandboxed iframe; 浏览器原生 PDF viewer 渲染, 无需 allow-scripts/allow-same-origin */}
+              {pdfUrl && (
+                <iframe
+                  key={iframeKey}
+                  src={pdfUrl}
+                  sandbox="allow-popups allow-popups-to-escape-sandbox"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    border: 'none',
+                    display: previewStatus === 'error' ? 'none' : 'block'
+                  }}
+                  title={`${selectedDwgFile.model} 图纸预览`}
+                  aria-label={`${selectedDwgFile.model} DWG图纸PDF预览`}
+                  onLoad={handleIframeLoad}
+                  onError={() => setPreviewStatus('error')}
                 />
-              </object>
+              )}
             </div>
           </Card.Body>
         </Card>
@@ -254,7 +269,7 @@ const DwgViewer = ({
           <Button
             variant="primary"
             size="lg"
-            onClick={() => window.open(getDwgDownloadUrl(selectedDwgFile.filePath), '_blank')}
+            onClick={() => window.open(downloadUrl, '_blank', 'noopener,noreferrer')}
           >
             <i className="bi bi-download me-2"></i>下载DWG文件
           </Button>

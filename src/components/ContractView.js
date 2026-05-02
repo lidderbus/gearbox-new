@@ -4,16 +4,70 @@ import { Card, Button, Alert, ProgressBar, Row, Col, Table, Spinner } from 'reac
 import { contractExportHelper } from '../utils/contractExporter';
 import { printHtmlContent } from '../utils/pdfExportUtils';
 
+// 合同多语言标签
+const contractLabels = {
+  zh: {
+    title: '销售合同', basicInfo: '合同基本信息', productDetails: '产品明细', terms: '合同条款',
+    contractNo: '合同编号', signDate: '签订日期', buyer: '买方单位', deliveryDate: '交货日期',
+    deliveryPlace: '交货地点', totalAmount: '总金额',
+    no: '序号', productName: '产品名称', spec: '规格型号', unit: '单位', qty: '数量',
+    unitPrice: '单价(元)', amount: '金额', deliveryPeriod: '交货期',
+    subtotal: '合计', totalChinese: '合计人民币（大写）', totalLower: '¥（小写）',
+    clause1: '执行质量标准', clause2: '验收及质量异议期限', clause3: '交货时间',
+    clause4: '交货地点', clause5: '交货方式', clause6: '运输方式', freightSettle: '运费结算',
+    clause7: '包装标准', packFee: '包装费', clause8: '结算方式及期限',
+    clause9: '违约责任', clause9v: '按"民法典"规定条款执行。',
+    clause10: '争议解决', clause11: '其他约定事项或特殊订货要求',
+    clause12: '合同有效期限', validUntil: '自签订日起至', validEnd: '止',
+    clause13: '其他', defaultCopies: '本合同一式两份，双方各持一份。',
+    buyerSeal: '需方（盖章）', sellerSeal: '供方（盖章）',
+    legalRep: '法定代表人或委托代理人（签字）', date: '日期',
+    quarter: (q) => `第${q}季度`, print: '打印合同', exportWord: '导出Word文档', exportPdf: '导出PDF文档',
+    sellerName: '上海前进齿轮经营有限公司',
+  },
+  en: {
+    title: 'Sales Contract', basicInfo: 'Contract Information', productDetails: 'Product Details', terms: 'Contract Terms',
+    contractNo: 'Contract No.', signDate: 'Date', buyer: 'Buyer', deliveryDate: 'Delivery Date',
+    deliveryPlace: 'Delivery Location', totalAmount: 'Total Amount',
+    no: 'No.', productName: 'Product', spec: 'Model/Spec', unit: 'Unit', qty: 'Qty',
+    unitPrice: 'Unit Price (CNY)', amount: 'Amount', deliveryPeriod: 'Delivery',
+    subtotal: 'Total', totalChinese: 'Total Amount (in words)', totalLower: '¥ (in figures)',
+    clause1: 'Quality Standard', clause2: 'Inspection Period', clause3: 'Delivery Date',
+    clause4: 'Delivery Location', clause5: 'Delivery Method', clause6: 'Transport Method', freightSettle: 'Freight Settlement',
+    clause7: 'Packaging Standard', packFee: 'Packaging Fee', clause8: 'Payment Terms',
+    clause9: 'Breach of Contract', clause9v: 'Governed by the Civil Code of the People\'s Republic of China.',
+    clause10: 'Dispute Resolution', clause11: 'Special Requirements',
+    clause12: 'Contract Validity', validUntil: 'From signing date until ', validEnd: '',
+    clause13: 'Others', defaultCopies: 'This contract is made in duplicate, one copy for each party.',
+    buyerSeal: 'Buyer (Seal)', sellerSeal: 'Seller (Seal)',
+    legalRep: 'Legal Representative / Authorized Agent (Signature)', date: 'Date',
+    quarter: (q) => `Q${q}`, print: 'Print', exportWord: 'Export Word', exportPdf: 'Export PDF',
+    sellerName: 'Shanghai Advance Gear Trading Co., Ltd.',
+  },
+};
+
+const getLabels = (lang) => {
+  if (lang === 'bilingual') return { zh: contractLabels.zh, en: contractLabels.en };
+  return contractLabels[lang] || contractLabels.zh;
+};
+
+// 双语文本渲染
+const BiText = ({ zh, en, lang }) => {
+  if (lang === 'bilingual') return <>{zh}<br /><span className="text-muted" style={{ fontSize: '0.9em' }}>{en}</span></>;
+  if (lang === 'en') return <>{en}</>;
+  return <>{zh}</>;
+};
+
 /**
  * 合同视图组件
  * 展示合同内容并提供导出功能
  */
-const ContractView = ({ 
-  contract, 
-  onExportWord = () => {}, 
-  onExportPDF = () => {}, 
-  theme, 
-  colors 
+const ContractView = ({
+  contract,
+  onExportWord = () => {},
+  onExportPDF = () => {},
+  theme,
+  colors
 }) => {
   // 导出状态管理
   const [exportState, setExportState] = useState({
@@ -368,13 +422,25 @@ const ContractView = ({
     );
   }
   
+  const lang = contract.language || 'zh';
+  const L = lang === 'bilingual' ? contractLabels.zh : (contractLabels[lang] || contractLabels.zh);
+  const Le = contractLabels.en;
+  const isBi = lang === 'bilingual';
+  const isEn = lang === 'en';
+  const t = (zhText, enText) => {
+    if (isBi) return `${zhText} / ${enText}`;
+    if (isEn) return enText;
+    return zhText;
+  };
+
   return (
     <div className="contract-view">
       {/* 顶部操作栏 */}
       <div className="contract-actions mb-3 d-flex justify-content-between align-items-center">
         <h3 style={{ color: colors?.headerText }}>
           <i className="bi bi-file-earmark-text me-2"></i>
-          销售合同
+          {t('销售合同', 'Sales Contract')}
+          {(isEn || isBi) && <span className="badge bg-info ms-2" style={{ fontSize: '12px' }}>{isEn ? 'EN' : 'CN/EN'}</span>}
         </h3>
         
         <div>
@@ -429,60 +495,65 @@ const ContractView = ({
       <div className="contract-preview-content">
         <Card className="mb-4" style={{ backgroundColor: colors?.card, borderColor: colors?.border }}>
           <Card.Header style={{ backgroundColor: colors?.headerBg, color: colors?.headerText }}>
-            合同基本信息
+            {t('合同基本信息', 'Contract Information')}
           </Card.Header>
           <Card.Body>
             <Row>
               <Col md={6}>
-                <p><strong>合同编号：</strong> {contract.contractNumber}</p>
-                <p><strong>签订日期：</strong> {contract.contractDate}</p>
-                <p><strong>买方单位：</strong> {contract.buyerInfo?.name}</p>
+                <p><strong>{t('合同编号', 'Contract No.')}：</strong> {contract.contractNumber}</p>
+                <p><strong>{t('签订日期', 'Date')}：</strong> {contract.contractDate}</p>
+                <p><strong>{t('买方单位', 'Buyer')}：</strong> {contract.buyerInfo?.name}</p>
               </Col>
               <Col md={6}>
-                <p><strong>交货日期：</strong> {contract.deliveryDate}</p>
-                <p><strong>交货地点：</strong> {contract.deliveryLocation}</p>
-                <p><strong>总金额：</strong> ¥{contract.totalAmount?.toLocaleString()}</p>
+                <p><strong>{t('交货日期', 'Delivery Date')}：</strong> {contract.deliveryDate}</p>
+                <p><strong>{t('交货地点', 'Delivery Location')}：</strong> {contract.deliveryLocation}</p>
+                <p><strong>{t('总金额', 'Total Amount')}：</strong> ¥{contract.totalAmount?.toLocaleString()}</p>
               </Col>
             </Row>
           </Card.Body>
         </Card>
-        
+
         {/* 产品信息表 */}
         <Card className="mb-4" style={{ backgroundColor: colors?.card, borderColor: colors?.border }}>
           <Card.Header style={{ backgroundColor: colors?.headerBg, color: colors?.headerText }}>
-            产品明细
+            {t('产品明细', 'Product Details')}
           </Card.Header>
           <Card.Body style={{ padding: 0 }}>
             <Table responsive bordered hover style={{ margin: 0 }}>
               <thead style={{ backgroundColor: colors?.headerBg }}>
                 <tr>
-                  <th style={{ width: '5%' }}>序号</th>
-                  <th style={{ width: '20%' }}>产品名称</th>
-                  <th style={{ width: '20%' }}>规格型号</th>
-                  <th style={{ width: '10%' }}>单位</th>
-                  <th style={{ width: '10%' }}>数量</th>
-                  <th style={{ width: '15%' }}>单价(元)</th>
-                  <th style={{ width: '15%' }}>金额</th>
-                  <th style={{ width: '15%' }}>交货期</th>
+                  <th style={{ width: '5%' }}>{t('序号', 'No.')}</th>
+                  <th style={{ width: '20%' }}>{t('产品名称', 'Product')}</th>
+                  <th style={{ width: '20%' }}>{t('规格型号', 'Model/Spec')}</th>
+                  <th style={{ width: '10%' }}>{t('单位', 'Unit')}</th>
+                  <th style={{ width: '10%' }}>{t('数量', 'Qty')}</th>
+                  <th style={{ width: '15%' }}>{t('单价(元)', 'Unit Price (CNY)')}</th>
+                  <th style={{ width: '15%' }}>{t('金额', 'Amount')}</th>
+                  <th style={{ width: '15%' }}>{t('交货期', 'Delivery')}</th>
                 </tr>
               </thead>
               <tbody>
-                {Array.isArray(contract.products) && contract.products.map((product, index) => (
-                  <tr key={`product-${index}`}>
-                    <td style={{ textAlign: 'center' }}>{index + 1}</td>
-                    <td>{product.name || '-'}</td>
-                    <td>{product.model || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>{product.unit || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>{product.quantity || '-'}</td>
-                    <td style={{ textAlign: 'right' }}>{product.unitPrice ? product.unitPrice.toLocaleString() : '-'}</td>
-                    <td style={{ textAlign: 'right' }}>{product.amount ? product.amount.toLocaleString() : '-'}</td>
-                    <td>{product.deliveryQuarter ? `第${product.deliveryQuarter}季度` : '-'}</td>
-                  </tr>
-                ))}
-                
+                {Array.isArray(contract.products) && contract.products.map((product, index) => {
+                  const pNames = { '船用齿轮箱': 'Marine Gearbox', '高弹性联轴器': 'Flexible Coupling', '备用泵': 'Standby Pump' };
+                  const pName = isEn ? (pNames[product.name] || product.name) : isBi ? `${product.name} / ${pNames[product.name] || ''}` : product.name;
+                  const pUnit = isEn ? (product.unit === '台' ? 'set' : product.unit === '只' ? 'pc' : product.unit) : product.unit;
+                  return (
+                    <tr key={`product-${index}`}>
+                      <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                      <td>{pName || '-'}</td>
+                      <td>{product.model || '-'}</td>
+                      <td style={{ textAlign: 'center' }}>{pUnit || '-'}</td>
+                      <td style={{ textAlign: 'center' }}>{product.quantity || '-'}</td>
+                      <td style={{ textAlign: 'right' }}>{product.unitPrice ? product.unitPrice.toLocaleString() : '-'}</td>
+                      <td style={{ textAlign: 'right' }}>{product.amount ? product.amount.toLocaleString() : '-'}</td>
+                      <td>{product.deliveryQuarter ? (isEn ? `Q${product.deliveryQuarter}` : `第${product.deliveryQuarter}季度`) : '-'}</td>
+                    </tr>
+                  );
+                })}
+
                 {/* 合计行 */}
                 <tr style={{ backgroundColor: colors?.headerBg, fontWeight: 'bold' }}>
-                  <td colSpan={6} style={{ textAlign: 'right' }}>合计：</td>
+                  <td colSpan={6} style={{ textAlign: 'right' }}>{t('合计', 'Total')}：</td>
                   <td style={{ textAlign: 'right' }}>{contract.totalAmount ? contract.totalAmount.toLocaleString() : '-'}</td>
                   <td></td>
                 </tr>
@@ -490,56 +561,56 @@ const ContractView = ({
             </Table>
           </Card.Body>
         </Card>
-        
-        {/* 合计金额（中文大写） */}
+
+        {/* 合计金额 */}
         <Card className="mb-4" style={{ backgroundColor: colors?.card, borderColor: colors?.border }}>
           <Card.Body>
             <p className="mb-0">
-              <strong>合计人民币（大写）：</strong> {contract.totalAmountInChinese || ''}
-              <span className="ms-4"><strong>¥（小写）：</strong> {contract.totalAmount ? contract.totalAmount.toLocaleString() : '0'}</span>
+              <strong>{t('合计人民币（大写）', 'Total Amount (in words)')}：</strong> {contract.totalAmountInChinese || ''}
+              <span className="ms-4"><strong>{t('¥（小写）', '¥ (in figures)')}：</strong> {contract.totalAmount ? contract.totalAmount.toLocaleString() : '0'}</span>
             </p>
           </Card.Body>
         </Card>
-        
+
         {/* 合同条款 */}
         <Card className="mb-4" style={{ backgroundColor: colors?.card, borderColor: colors?.border }}>
           <Card.Header style={{ backgroundColor: colors?.headerBg, color: colors?.headerText }}>
-            合同条款
+            {t('合同条款', 'Contract Terms')}
           </Card.Header>
           <Card.Body>
-            <p><strong>1. 执行质量标准：</strong>{contract.executionStandard || '按国家标准'}</p>
-            <p><strong>2. 验收及质量异议期限：</strong>{contract.inspectionPeriod || ''}</p>
-            <p><strong>3. 交货时间：</strong>{contract.deliveryDate || ''}</p>
-            <p><strong>4. 交货地点：</strong>{contract.deliveryLocation || ''}</p>
-            <p><strong>5. 交货方式：</strong>{contract.deliveryMethod || ''}</p>
-            <p><strong>6. 运输方式：</strong>{contract.transportMethod || ''} <strong>运费结算：</strong>{contract.transportFeeArrangement || ''}</p>
-            <p><strong>7. 包装标准：</strong>{contract.packagingStandard || ''} <strong>包装费：</strong>{contract.packagingFeeArrangement || ''}</p>
-            <p><strong>8. 结算方式及期限：</strong>{contract.paymentMethod || ''}</p>
-            <p><strong>9. 违约责任：</strong>按"民法典"规定条款执行。</p>
-            <p><strong>10. 争议解决：</strong>{contract.disputeResolution || ''}</p>
-            <p><strong>11. 其他约定事项或特殊订货要求：</strong>{contract.specialRequirements || '无'}</p>
-            <p><strong>12. 合同有效期限：</strong>自签订日起至{contract.expiryDate || ''}止</p>
-            <p><strong>13. 其他：</strong>{contract.contractCopies || '本合同一式两份，双方各持一份。'}</p>
+            <p><strong>1. {t('执行质量标准', 'Quality Standard')}：</strong>{contract.executionStandard || t('按国家标准', 'Per national standards')}</p>
+            <p><strong>2. {t('验收及质量异议期限', 'Inspection Period')}：</strong>{contract.inspectionPeriod || ''}</p>
+            <p><strong>3. {t('交货时间', 'Delivery Date')}：</strong>{contract.deliveryDate || ''}</p>
+            <p><strong>4. {t('交货地点', 'Delivery Location')}：</strong>{contract.deliveryLocation || ''}</p>
+            <p><strong>5. {t('交货方式', 'Delivery Method')}：</strong>{contract.deliveryMethod || ''}</p>
+            <p><strong>6. {t('运输方式', 'Transport Method')}：</strong>{contract.transportMethod || ''} <strong>{t('运费结算', 'Freight Settlement')}：</strong>{contract.transportFeeArrangement || ''}</p>
+            <p><strong>7. {t('包装标准', 'Packaging Standard')}：</strong>{contract.packagingStandard || ''} <strong>{t('包装费', 'Packaging Fee')}：</strong>{contract.packagingFeeArrangement || ''}</p>
+            <p><strong>8. {t('结算方式及期限', 'Payment Terms')}：</strong>{contract.paymentMethod || ''}</p>
+            <p><strong>9. {t('违约责任', 'Breach of Contract')}：</strong>{t('按"民法典"规定条款执行。', 'Governed by the Civil Code of the People\'s Republic of China.')}</p>
+            <p><strong>10. {t('争议解决', 'Dispute Resolution')}：</strong>{contract.disputeResolution || ''}</p>
+            <p><strong>11. {t('其他约定事项或特殊订货要求', 'Special Requirements')}：</strong>{contract.specialRequirements || t('无', 'None')}</p>
+            <p><strong>12. {t('合同有效期限', 'Contract Validity')}：</strong>{t('自签订日起至', 'From signing date until ')}{contract.expiryDate || ''}{t('止', '')}</p>
+            <p><strong>13. {t('其他', 'Others')}：</strong>{contract.contractCopies || t('本合同一式两份，双方各持一份。', 'This contract is made in duplicate, one copy for each party.')}</p>
           </Card.Body>
         </Card>
-        
+
         {/* 签名区域 */}
         <Card className="mb-4" style={{ backgroundColor: colors?.card, borderColor: colors?.border }}>
           <Card.Body>
             <Row>
               <Col md={6}>
-                <p><strong>需方（盖章）：</strong></p>
+                <p><strong>{t('需方（盖章）', 'Buyer (Seal)')}：</strong></p>
                 <div style={{ height: '80px' }}></div>
-                <p><strong>法定代表人或委托代理人（签字）：</strong></p>
+                <p><strong>{t('法定代表人或委托代理人（签字）', 'Legal Representative / Authorized Agent (Signature)')}：</strong></p>
                 <div style={{ height: '40px' }}></div>
-                <p><strong>日期：</strong></p>
+                <p><strong>{t('日期', 'Date')}：</strong></p>
               </Col>
               <Col md={6}>
-                <p><strong>供方（盖章）：</strong></p>
+                <p><strong>{t('供方（盖章）', 'Seller (Seal)')}：</strong></p>
                 <div style={{ height: '80px' }}></div>
-                <p><strong>法定代表人或委托代理人（签字）：</strong></p>
+                <p><strong>{t('法定代表人或委托代理人（签字）', 'Legal Representative / Authorized Agent (Signature)')}：</strong></p>
                 <div style={{ height: '40px' }}></div>
-                <p><strong>日期：</strong></p>
+                <p><strong>{t('日期', 'Date')}：</strong></p>
               </Col>
             </Row>
           </Card.Body>

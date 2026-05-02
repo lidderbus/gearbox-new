@@ -85,6 +85,16 @@ const PriceWarningBanner = ({ onDismiss, style }) => {
               刷新获取更新
             </Button>
           )}
+          {/* v62: 直达数据库管理 / 价格维护页 */}
+          <Button
+            size="sm"
+            variant={warning.level === 'error' ? 'light' : 'outline-dark'}
+            className="me-2"
+            onClick={() => { window.location.hash = '#/database'; }}
+            title="跳转到数据库管理页 (价格维护)"
+          >
+            <i className="bi bi-tools me-1"></i>立即更新
+          </Button>
           {warning.level === 'warning' && (
             <Button
               size="sm"

@@ -443,6 +443,22 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
           <h5 className="mb-0" style={{ color: colors?.headerText }}>批量选型</h5>
           <div>
             <Button
+              variant="outline-success"
+              size="sm"
+              className="me-2"
+              onClick={() => {
+                const csv = '需求名称,功率(kW),转速(rpm),目标速比,推力(kN,可选),工况类别(I~V)\n主推进1,350,1800,4.5,80,III\n主推进2,250,1500,3.5,,II\n辅机,100,1200,2.5,,I';
+                const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = '批量选型导入模板.csv'; a.click();
+                URL.revokeObjectURL(url);
+              }}
+              title="下载 CSV 模板, Excel/Numbers 可编辑后批量导入"
+            >
+              <i className="bi bi-download me-1"></i>下载模板
+            </Button>
+            <Button
               variant="outline-primary"
               size="sm"
               className="me-2"
@@ -466,6 +482,14 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
             </Alert>
           )}
 
+          {/* v62: 空状态使用引导 - 仅 1 行且全部字段为空时提示 */}
+          {requirements.length === 1 && !requirements[0].motorPower && !requirements[0].motorSpeed && !requirements[0].name && (
+            <Alert variant="info" className="mb-3 py-2">
+              <i className="bi bi-lightbulb me-2"></i>
+              <strong>使用提示</strong>: 直接在下方第 1 行填入功率/转速/速比开始; 或点右上 <kbd>下载模板</kbd> 取 CSV 编辑后用 <kbd>导入数据</kbd> 批量上传; 输入 1 条后可点 📋 复制为新行。
+            </Alert>
+          )}
+
           {/* 需求列表 */}
           <div className="requirements-list mb-4">
             {requirements.map((req, index) => (
@@ -475,7 +499,7 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
                     <Col xs={12} md={2}>
                       <Form.Control
                         size="sm"
-                        placeholder="需求名称"
+                        placeholder="例: 主推进1"
                         value={req.name}
                         onChange={(e) => updateRequirement(req.id, 'name', e.target.value)}
                       />
@@ -484,7 +508,7 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
                       <Form.Control
                         size="sm"
                         type="number"
-                        placeholder="功率 (kW)"
+                        placeholder="功率 350 kW"
                         value={req.motorPower}
                         onChange={(e) => updateRequirement(req.id, 'motorPower', e.target.value)}
                       />
@@ -493,7 +517,7 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
                       <Form.Control
                         size="sm"
                         type="number"
-                        placeholder="转速 (rpm)"
+                        placeholder="转速 1800 rpm"
                         value={req.motorSpeed}
                         onChange={(e) => updateRequirement(req.id, 'motorSpeed', e.target.value)}
                       />
@@ -502,7 +526,7 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
                       <Form.Control
                         size="sm"
                         type="number"
-                        placeholder="速比"
+                        placeholder="速比 4.5"
                         value={req.targetRatio}
                         onChange={(e) => updateRequirement(req.id, 'targetRatio', e.target.value)}
                       />

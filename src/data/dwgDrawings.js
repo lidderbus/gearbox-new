@@ -2228,13 +2228,25 @@ const encodeFilePath = (filePath) => {
   return filePath.split('/').map(segment => segment ? encodeURIComponent(segment) : '').join('/');
 };
 
+// 路径白名单校验：必须以 /drawings/ 开头、以 .dwg/.pdf 结尾、不含 .. 段
+export const isSafeDrawingPath = (filePath) => {
+  if (typeof filePath !== 'string' || filePath.length === 0) return false;
+  if (!filePath.startsWith('/drawings/')) return false;
+  if (filePath.split('/').some(seg => seg === '..')) return false;
+  if (!/\.(dwg|pdf)$/i.test(filePath)) return false;
+  return true;
+};
+
 // 获取DWG下载URL（路径已编码，适合浏览器直接访问）
-export const getDwgDownloadUrl = (filePath) => `${DWG_BASE_URL}${encodeFilePath(filePath)}`;
+export const getDwgDownloadUrl = (filePath) => {
+  if (!isSafeDrawingPath(filePath)) return '';
+  return `${DWG_BASE_URL}${encodeFilePath(filePath)}`;
+};
 
 // 获取PDF预览URL (DWG已转换为PDF)
 // 例如: /drawings/HC船用齿轮箱外形图2017/xxx.dwg -> /drawings/pdf/HC船用齿轮箱外形图2017/xxx.pdf
 export const getPdfPreviewUrl = (filePath) => {
-  // 将 /drawings/xxx.dwg 转换为 /drawings/pdf/xxx.pdf
+  if (!isSafeDrawingPath(filePath)) return '';
   const pdfPath = filePath
     .replace('/drawings/', '/drawings/pdf/')
     .replace(/\.dwg$/i, '.pdf');
@@ -2245,6 +2257,7 @@ export const getPdfPreviewUrl = (filePath) => {
 // 注意：ShareCAD的url参数需要对完整URL做一次encodeURIComponent，
 // 所以这里用原始拼接（不预编码），让encodeURIComponent统一处理
 export const getShareCADPreviewUrl = (filePath) => {
+  if (!isSafeDrawingPath(filePath)) return '';
   const rawUrl = `${DWG_BASE_URL}${filePath}`;
   return `https://sharecad.org/cadframe/load?url=${encodeURIComponent(rawUrl)}`;
 };

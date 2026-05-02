@@ -82,7 +82,7 @@ const DwgCompareView = () => {
       </html>
     `;
 
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open('', '_blank', 'noopener,noreferrer');
     printWindow.document.write(printContent);
     printWindow.document.close();
     printWindow.print();
@@ -234,6 +234,7 @@ const DwgCompareView = () => {
       <div style={{ height: '350px', backgroundColor: '#f5f5f5' }}>
         <iframe
           src={previewUrl}
+          sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
           style={{
             width: '100%',
             height: '100%',
@@ -463,7 +464,7 @@ const DwgCompareView = () => {
                   size="sm"
                   onClick={() => {
                     const file = dataA.files[fileIndexA];
-                    if (file) window.open(getDwgDownloadUrl(file.filePath), '_blank');
+                    if (file) window.open(getDwgDownloadUrl(file.filePath), '_blank', 'noopener,noreferrer');
                   }}
                 >
                   <i className="bi bi-download"></i>
@@ -497,7 +498,7 @@ const DwgCompareView = () => {
                   size="sm"
                   onClick={() => {
                     const file = dataB.files[fileIndexB];
-                    if (file) window.open(getDwgDownloadUrl(file.filePath), '_blank');
+                    if (file) window.open(getDwgDownloadUrl(file.filePath), '_blank', 'noopener,noreferrer');
                   }}
                 >
                   <i className="bi bi-download"></i>

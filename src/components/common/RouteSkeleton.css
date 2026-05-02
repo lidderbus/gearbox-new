@@ -1,0 +1,82 @@
+.route-skeleton {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.route-skeleton__header {
+  margin-bottom: 24px;
+}
+
+.route-skeleton__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.route-skeleton__card {
+  height: 96px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #f0f0f0 0%, #f8f8f8 50%, #f0f0f0 100%);
+  background-size: 200% 100%;
+  animation: route-skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+.route-skeleton__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.route-skeleton__bar {
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 0%, #f8f8f8 50%, #f0f0f0 100%);
+  background-size: 200% 100%;
+  animation: route-skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+.route-skeleton__bar--title {
+  width: 40%;
+  height: 22px;
+  margin-bottom: 12px;
+}
+
+.route-skeleton__bar--subtitle {
+  width: 65%;
+  height: 14px;
+}
+
+.route-skeleton__bar--short {
+  width: 60%;
+}
+
+.route-skeleton__label {
+  display: block;
+  margin-top: 24px;
+  text-align: center;
+  font-size: 13px;
+  color: #888;
+  letter-spacing: 0.5px;
+}
+
+@keyframes route-skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .route-skeleton__card,
+  .route-skeleton__bar {
+    background: linear-gradient(90deg, #2a2a2a 0%, #353535 50%, #2a2a2a 100%);
+    background-size: 200% 100%;
+  }
+  .route-skeleton__label {
+    color: #aaa;
+  }
+}

@@ -1,6 +1,7 @@
 // src/utils/unifiedExporter.js
 // 统一导出工具 — CSV/XLSX/打印 三合一
 import { printHtmlContent } from './pdfExportUtils';
+import { sanitizeHtml } from './sanitize';
 
 const BOM = '\uFEFF';
 
@@ -83,7 +84,7 @@ export function exportPrint({ title, subtitle, content, landscape = false }) {
     </div>
   `;
   const container = document.createElement('div');
-  container.innerHTML = html;
+  container.innerHTML = sanitizeHtml(html);
   document.body.appendChild(container);
   printHtmlContent(container, {
     title,

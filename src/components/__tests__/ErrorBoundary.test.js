@@ -2,6 +2,13 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
+
+// C3: mock Sentry config 让 ErrorBoundary 在 componentDidCatch 时调用可被监控
+jest.mock('../../config/sentry', () => ({
+  captureError: jest.fn()
+}));
+import { captureError as mockedCaptureError } from '../../config/sentry';
+
 import ErrorBoundary from '../ErrorBoundary';
 
 // Mock react-bootstrap components
@@ -193,6 +200,37 @@ describe('ErrorBoundary', () => {
     it('updates state to hasError: true', () => {
       const state = ErrorBoundary.getDerivedStateFromError(new Error('test'));
       expect(state).toEqual({ hasError: true });
+    });
+  });
+
+  describe('Sentry integration (C3)', () => {
+    it('captureError 被调用并附带 componentStack 与 errorBoundary 标记', () => {
+      mockedCaptureError.mockClear();
+      render(
+        <ErrorBoundary>
+          <ThrowError shouldThrow={true} />
+        </ErrorBoundary>
+      );
+      expect(mockedCaptureError).toHaveBeenCalledTimes(1);
+      const [err, ctx] = mockedCaptureError.mock.calls[0];
+      expect(err).toBeInstanceOf(Error);
+      expect(err.message).toMatch(/Test error message/);
+      expect(ctx).toEqual(expect.objectContaining({
+        errorBoundary: 'gearbox-app-root',
+        retryCount: 0
+      }));
+      expect(typeof ctx.componentStack).toBe('string');
+    });
+
+    it('captureError 失败时 ErrorBoundary 仍正常渲染 fallback', () => {
+      mockedCaptureError.mockImplementationOnce(() => { throw new Error('sentry down'); });
+      render(
+        <ErrorBoundary>
+          <ThrowError shouldThrow={true} />
+        </ErrorBoundary>
+      );
+      // 即使 captureError 抛错, UI 仍应进入错误屏 (componentDidCatch try/catch 包裹)
+      expect(screen.getByText('组件渲染出错')).toBeInTheDocument();
     });
   });
 });

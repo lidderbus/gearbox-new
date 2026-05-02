@@ -321,7 +321,6 @@ export const gearboxPriceData = [
 
   // HCD衍生型号 (基于同规格HC/HCD基准 × 系数)
   { model: 'HCD68', basePrice: 9600, discountRate: 0.16, discountedPrice: 8064 },
-  { model: 'HCD400', basePrice: 36000, discountRate: 0.16, discountedPrice: 30240 },
   { model: 'HCD600/2', basePrice: 72720, discountRate: 0.12, discountedPrice: 63994 },
   { model: 'HCD800/2', basePrice: 103320, discountRate: 0.08, discountedPrice: 95054 },
   { model: 'HCD1000/2', basePrice: 107760, discountRate: 0.06, discountedPrice: 101294 },

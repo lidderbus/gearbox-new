@@ -148,11 +148,24 @@ const ScoreBreakdownCard = ({ selectedGearbox, allRecommendations = [], thrustRe
           </div>
           {/* Right: dimension bars */}
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: '0.78rem', fontWeight: 600, marginBottom: 4 }}>
-              <i className="bi bi-bar-chart-fill me-1 text-primary"></i>
-              评分分解
+            <div style={{ fontSize: '0.78rem', fontWeight: 600, marginBottom: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span><i className="bi bi-bar-chart-fill me-1 text-primary"></i>评分分解 <span className="text-muted" style={{ fontWeight: 400, fontSize: '0.7rem' }}>(权重总 100)</span></span>
+              <OverlayTrigger placement="left" overlay={
+                <Tooltip>
+                  综合分由 8 维加权求和:<br/>
+                  性价比 30 · 速比 21 · 容量 12<br/>
+                  系列 9 · 推力 8 · 接口 8 · 轴布置 7 · 打包 5<br/>
+                  各维度按高斯/幂函数曲线计算适配度,<br/>
+                  非简单线性,故标签数字加和与综合分不一致。
+                </Tooltip>
+              }>
+                <i className="bi bi-info-circle text-secondary" style={{ cursor: 'help', fontSize: '0.75rem' }}></i>
+              </OverlayTrigger>
             </div>
             {dims.map(d => <DimBar key={d.key} dim={d} />)}
+            <div style={{ fontSize: '0.65rem', color: '#999', marginTop: 4, paddingTop: 4, borderTop: '1px dashed #e0e0e0' }}>
+              综合分 = Σ (维度权重 × 适配度), 见上方 ⓘ 提示
+            </div>
           </div>
         </div>
       </Card.Body>

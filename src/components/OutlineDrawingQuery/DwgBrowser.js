@@ -39,6 +39,7 @@ const DwgBrowser = ({
             placeholder="搜索DWG文件..."
             value={dwgSearchKeyword}
             onChange={(e) => onSearchChange(e.target.value)}
+            aria-label="搜索DWG文件"
             style={{
               backgroundColor: colors.card,
               color: colors.text,
@@ -49,8 +50,10 @@ const DwgBrowser = ({
             <Button
               variant="outline-secondary"
               onClick={onClearSearch}
+              aria-label="清空DWG搜索"
+              title="清空"
             >
-              <i className="bi bi-x"></i>
+              <i className="bi bi-x" aria-hidden="true"></i>
             </Button>
           )}
         </InputGroup>

@@ -9,6 +9,7 @@ import { enhancedSelectPump, needsStandbyPump } from '../utils/enhancedPumpSelec
 import enhancedCouplingSelection from '../utils/enhancedCouplingSelection';
 import { selectGearbox, autoSelectGearbox } from '../utils/selectionAlgorithm';
 import { trackSelection, trackFeature } from '../utils/analytics';
+import { getIceClassThrustFactor } from '../utils/iceClassThrust';
 
 /**
  * 选型相关处理函数 Hook
@@ -323,11 +324,22 @@ const useSelectionHandlers = ({
       }
 
       // 准备选型参数 - 添加详细日志
+      // UI-接入#2 (2026-04-24): 冰级自动放大推力需求
+      const rawThrust = parseFloat(requirementData.thrustRequirement) || 0;
+      const iceFactor = getIceClassThrustFactor(requirementData.iceClass);
+      const adjustedThrust = rawThrust > 0 ? rawThrust * iceFactor : rawThrust;
+      if (iceFactor > 1 && rawThrust > 0) {
+        logger.log(`冰级 ${requirementData.iceClass}: 推力 ${rawThrust}→${adjustedThrust.toFixed(1)} kN (×${iceFactor})`);
+      }
+
       const selectionParams = {
         power: parseFloat(engineData.power),
         speed: parseFloat(engineData.speed),
         targetRatio: parseFloat(requirementData.targetRatio),
-        thrustRequirement: parseFloat(requirementData.thrustRequirement) || 0,
+        thrustRequirement: adjustedThrust,
+        thrustRequirementRaw: rawThrust,
+        iceClass: requirementData.iceClass || 'none',
+        iceFactor,
         gearboxType: gearboxType,
         application: requirementData.application
       };
@@ -431,6 +443,17 @@ const useSelectionHandlers = ({
         if (result._diagnostics) {
           setSelectionDiagnostics(result._diagnostics);
         }
+      }
+
+      // UI-接入#2 (2026-04-24): 将冰级元数据注入结果 (供 UI 横幅显示)
+      if (result && typeof result === 'object') {
+        result.iceClass = selectionParams.iceClass;
+        result.iceFactor = selectionParams.iceFactor;
+        result.thrustRequirementRaw = selectionParams.thrustRequirementRaw;
+        result.thrustRequirement = selectionParams.thrustRequirement;
+        result.requirementData = { ...requirementData };
+        result.engineData = { ...engineData };
+        result.hybridConfig = hybridConfig;
       }
 
       // 记录原始选型结果

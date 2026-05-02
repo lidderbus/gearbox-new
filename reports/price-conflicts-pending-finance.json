@@ -1,0 +1,259 @@
+{
+  "_meta": {
+    "generatedAt": "2026-04-25T10:28:05.080Z",
+    "sourceReport": "reports/data-drift-20260424.json",
+    "rule": "权威源选定: gearboxPricing.js (主) — 此报告作为财务审签清单, 签字后回填到 src/data/"
+  },
+  "summary": {
+    "total": 30,
+    "tier_high_count": 14,
+    "tier_medium_count": 12,
+    "tier_low_count": 4
+  },
+  "tier_high_pending_finance_signature": [
+    {
+      "model": "2GWH1060",
+      "complete": 280000,
+      "embedded": 850000,
+      "diffPct": "67.1%",
+      "suggestion": "embedded-newer",
+      "delta": 570000
+    },
+    {
+      "model": "GCH390",
+      "complete": 160000,
+      "embedded": 38000,
+      "diffPct": "76.3%",
+      "suggestion": "complete-newer",
+      "delta": 122000
+    },
+    {
+      "model": "GCH750",
+      "complete": 160000,
+      "embedded": 55000,
+      "diffPct": "65.6%",
+      "suggestion": "complete-newer",
+      "delta": 105000
+    },
+    {
+      "model": "GCS1000",
+      "complete": 1500000,
+      "embedded": 85000,
+      "diffPct": "94.3%",
+      "suggestion": "complete-newer",
+      "delta": 1415000
+    },
+    {
+      "model": "GCS320",
+      "complete": 264320,
+      "embedded": 30000,
+      "diffPct": "88.7%",
+      "suggestion": "complete-newer",
+      "delta": 234320
+    },
+    {
+      "model": "GCS540",
+      "complete": 358333,
+      "embedded": 45000,
+      "diffPct": "87.4%",
+      "suggestion": "complete-newer",
+      "delta": 313333
+    },
+    {
+      "model": "GCSE20",
+      "complete": 929755,
+      "embedded": 20000,
+      "diffPct": "97.8%",
+      "suggestion": "complete-newer",
+      "delta": 909755
+    },
+    {
+      "model": "GWC28.30P",
+      "complete": 450000,
+      "embedded": 90000,
+      "diffPct": "80.0%",
+      "suggestion": "complete-newer",
+      "delta": 360000
+    },
+    {
+      "model": "GWC30.32P",
+      "complete": 450000,
+      "embedded": 110000,
+      "diffPct": "75.6%",
+      "suggestion": "complete-newer",
+      "delta": 340000
+    },
+    {
+      "model": "GWC32.35P",
+      "complete": 450000,
+      "embedded": 130000,
+      "diffPct": "71.1%",
+      "suggestion": "complete-newer",
+      "delta": 320000
+    },
+    {
+      "model": "GWC36.39P",
+      "complete": 450000,
+      "embedded": 155000,
+      "diffPct": "65.6%",
+      "suggestion": "complete-newer",
+      "delta": 295000
+    },
+    {
+      "model": "GWC39.41P",
+      "complete": 450000,
+      "embedded": 185000,
+      "diffPct": "58.9%",
+      "suggestion": "complete-newer",
+      "delta": 265000
+    },
+    {
+      "model": "GWC42.45P",
+      "complete": 450000,
+      "embedded": 220000,
+      "diffPct": "51.1%",
+      "suggestion": "complete-newer",
+      "delta": 230000
+    },
+    {
+      "model": "HC1200/1P",
+      "complete": 210000,
+      "embedded": 70000,
+      "diffPct": "66.7%",
+      "suggestion": "complete-newer",
+      "delta": 140000
+    }
+  ],
+  "tier_medium_finance_pick_authoritative": [
+    {
+      "model": "GWC45.49P",
+      "complete": 450000,
+      "embedded": 260000,
+      "diffPct": "42.2%",
+      "suggestion": "complete-newer",
+      "delta": 190000
+    },
+    {
+      "model": "GWC49.54P",
+      "complete": 450000,
+      "embedded": 310000,
+      "diffPct": "31.1%",
+      "suggestion": "complete-newer",
+      "delta": 140000
+    },
+    {
+      "model": "GWC52.59P",
+      "complete": 550000,
+      "embedded": 370000,
+      "diffPct": "32.7%",
+      "suggestion": "complete-newer",
+      "delta": 180000
+    },
+    {
+      "model": "GWC60.66P",
+      "complete": 780000,
+      "embedded": 450000,
+      "diffPct": "42.3%",
+      "suggestion": "complete-newer",
+      "delta": 330000
+    },
+    {
+      "model": "GWC63.71P",
+      "complete": 950000,
+      "embedded": 550000,
+      "diffPct": "42.1%",
+      "suggestion": "complete-newer",
+      "delta": 400000
+    },
+    {
+      "model": "GWS28.30P",
+      "complete": 68875,
+      "embedded": 120800,
+      "diffPct": "43.0%",
+      "suggestion": "embedded-newer",
+      "delta": 51925
+    },
+    {
+      "model": "GWS30.32P",
+      "complete": 86260,
+      "embedded": 135000,
+      "diffPct": "36.1%",
+      "suggestion": "embedded-newer",
+      "delta": 48740
+    },
+    {
+      "model": "GWS32.35P",
+      "complete": 98610,
+      "embedded": 155000,
+      "diffPct": "36.4%",
+      "suggestion": "embedded-newer",
+      "delta": 56390
+    },
+    {
+      "model": "GWS36.39P",
+      "complete": 117610,
+      "embedded": 185000,
+      "diffPct": "36.4%",
+      "suggestion": "embedded-newer",
+      "delta": 67390
+    },
+    {
+      "model": "GWS39.41P",
+      "complete": 146110,
+      "embedded": 210000,
+      "diffPct": "30.4%",
+      "suggestion": "embedded-newer",
+      "delta": 63890
+    },
+    {
+      "model": "GWS42.45P",
+      "complete": 176510,
+      "embedded": 250000,
+      "diffPct": "29.4%",
+      "suggestion": "embedded-newer",
+      "delta": 73490
+    },
+    {
+      "model": "GWS60.66P",
+      "complete": 760000,
+      "embedded": 500000,
+      "diffPct": "34.2%",
+      "suggestion": "complete-newer",
+      "delta": 260000
+    }
+  ],
+  "tier_low_auto_unify_complete_newer": [
+    {
+      "model": "DT4300",
+      "complete": 165500,
+      "embedded": 175000,
+      "diffPct": "5.4%",
+      "suggestion": "embedded-newer",
+      "delta": 9500
+    },
+    {
+      "model": "GWS45.49P",
+      "complete": 262010,
+      "embedded": 290000,
+      "diffPct": "9.7%",
+      "suggestion": "embedded-newer",
+      "delta": 27990
+    },
+    {
+      "model": "GWS49.54P",
+      "complete": 382470,
+      "embedded": 350000,
+      "diffPct": "8.5%",
+      "suggestion": "complete-newer",
+      "delta": 32470
+    },
+    {
+      "model": "GWS52.59P",
+      "complete": 517750,
+      "embedded": 420000,
+      "diffPct": "18.9%",
+      "suggestion": "complete-newer",
+      "delta": 97750
+    }
+  ]
+}

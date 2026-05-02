@@ -1,7 +1,17 @@
 // src/components/DataQuery.js - 完整修改版本
 import React, { useState, useEffect, useMemo } from 'react';
-import { Card, Table, Form, Button, Alert, Row, Col, InputGroup, Pagination } from 'react-bootstrap';
+import { Card, Table, Form, Button, Alert, Row, Col, InputGroup, Pagination, Badge } from 'react-bootstrap';
 import { toast } from '../utils/toast';
+import { isPriceMissing, lookupPriceByModel, formatPrice } from '../utils/priceFormatter';
+
+const renderPriceCell = (item) => {
+  if (!item) return '-';
+  const inline = item.factoryPrice || item.marketPrice || item.price || item.basePrice;
+  if (inline && inline > 0) return formatPrice(inline);
+  const { factoryPrice } = lookupPriceByModel(item.model);
+  if (factoryPrice && factoryPrice > 0) return formatPrice(factoryPrice);
+  return <Badge bg="warning" text="dark" title="此型号暂无公开报价,请联系销售">询价</Badge>;
+};
 
 /**
  * 数据查询组件
@@ -393,7 +403,7 @@ const DataQuery = ({ appData, theme, colors }) => {
                                 <td>{item.maxThrust || item.thrust || '-'}</td>
                                 <td>{item.centerDistance || '-'}</td>
                                 <td>{item.weight || '-'}</td>
-                                <td>{item.price || item.marketPrice || '-'}</td>
+                                <td>{renderPriceCell(item)}</td>
                               </>
                             )}
                             {dataType === 'flexibleCouplings' && (
@@ -401,7 +411,7 @@ const DataQuery = ({ appData, theme, colors }) => {
                                 <td>{item.torque || item.maxTorque || '-'}</td>
                                 <td>{item.maxSpeed || '-'}</td>
                                 <td>{item.weight || '-'}</td>
-                                <td>{item.price || item.marketPrice || '-'}</td>
+                                <td>{renderPriceCell(item)}</td>
                               </>
                             )}
                             {dataType === 'standbyPumps' && (
@@ -410,7 +420,7 @@ const DataQuery = ({ appData, theme, colors }) => {
                                 <td>{item.pressure || '-'}</td>
                                 <td>{item.power || '-'}</td>
                                 <td>{item.weight || '-'}</td>
-                                <td>{item.price || item.marketPrice || '-'}</td>
+                                <td>{renderPriceCell(item)}</td>
                               </>
                             )}
                             <td className="text-center">
@@ -442,7 +452,7 @@ const DataQuery = ({ appData, theme, colors }) => {
                                   <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{item.maxThrust || item.thrust || '-'}</td>
                                   <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{item.centerDistance || '-'}</td>
                                   <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{item.weight || '-'}</td>
-                                  <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{item.price || item.marketPrice || '-'}</td>
+                                  <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{renderPriceCell(item)}</td>
                                 </>
                               )}
                               {dataType === 'flexibleCouplings' && (
@@ -450,7 +460,7 @@ const DataQuery = ({ appData, theme, colors }) => {
                                   <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{item.torque || item.maxTorque || '-'}</td>
                                   <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{item.maxSpeed || '-'}</td>
                                   <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{item.weight || '-'}</td>
-                                  <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{item.price || item.marketPrice || '-'}</td>
+                                  <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{renderPriceCell(item)}</td>
                                 </>
                               )}
                               {dataType === 'standbyPumps' && (
@@ -459,7 +469,7 @@ const DataQuery = ({ appData, theme, colors }) => {
                                   <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{item.pressure || '-'}</td>
                                   <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{item.power || '-'}</td>
                                   <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{item.weight || '-'}</td>
-                                  <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{item.price || item.marketPrice || '-'}</td>
+                                  <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">{renderPriceCell(item)}</td>
                                 </>
                               )}
                               <td rowSpan={ratioAndPowerData.length} className="align-middle text-center">
@@ -623,11 +633,18 @@ const DataQuery = ({ appData, theme, colors }) => {
                     </tr>
                     <tr>
                       <td style={{ backgroundColor: colors?.headerBg, color: colors?.headerText }}>工厂价</td>
-                      <td>{selectedItem.factoryPrice || '-'}</td>
+                      <td>{selectedItem.factoryPrice
+                        ? formatPrice(selectedItem.factoryPrice)
+                        : (() => {
+                            const { factoryPrice } = lookupPriceByModel(selectedItem.model);
+                            return factoryPrice ? formatPrice(factoryPrice) : <Badge bg="warning" text="dark">询价</Badge>;
+                          })()}</td>
                     </tr>
                     <tr>
                       <td style={{ backgroundColor: colors?.headerBg, color: colors?.headerText }}>市场价</td>
-                      <td>{selectedItem.marketPrice || '-'}</td>
+                      <td>{selectedItem.marketPrice
+                        ? formatPrice(selectedItem.marketPrice)
+                        : (isPriceMissing(selectedItem) ? <Badge bg="warning" text="dark">询价</Badge> : '-')}</td>
                     </tr>
                     <tr>
                       <td style={{ backgroundColor: colors?.headerBg, color: colors?.headerText }}>备注</td>

@@ -5,8 +5,10 @@ import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, InputGrou
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { getRecommendedPump, getRecommendedCouplingInfo } from '../data/gearboxMatchingMaps';
 import { calculateFactoryPrice, getStandardDiscountRate } from '../utils/priceManager';
+import { lookupPriceByModel } from '../utils/priceFormatter';
 import { resolveModelAlias } from '../utils/modelAliasResolver';
 import { printHtmlContent } from '../utils/pdfExportUtils';
+import { sanitizeHtml } from '../utils/sanitize';
 import ExportToolbar from './ExportToolbar';
 
 // 合并 embeddedGearboxData 各系列数组
@@ -155,8 +157,14 @@ export default function ReverseSelectionView({ colors, theme }) {
   const pumpInfo = useMemo(() => detail ? getRecommendedPump(detail.model) : null, [detail]);
   const couplingInfo = useMemo(() => detail ? getRecommendedCouplingInfo(detail.model) : null, [detail]);
   const factoryPrice = useMemo(() => {
-    if (!detail?.price) return null;
-    return calculateFactoryPrice({ model: detail.model, basePrice: detail.price, discountRate: detail.discountRate ?? getStandardDiscountRate(detail.model) });
+    if (detail?.price) {
+      return calculateFactoryPrice({ model: detail.model, basePrice: detail.price, discountRate: detail.discountRate ?? getStandardDiscountRate(detail.model) });
+    }
+    if (detail?.model) {
+      const fb = lookupPriceByModel(detail.model).factoryPrice;
+      if (fb) return fb;
+    }
+    return null;
   }, [detail]);
 
   // Export data for ExportToolbar
@@ -258,7 +266,7 @@ export default function ReverseSelectionView({ colors, theme }) {
     `;
 
     const container = document.createElement('div');
-    container.innerHTML = html;
+    container.innerHTML = sanitizeHtml(html);
     document.body.appendChild(container);
     printHtmlContent(container, { title: `反向选型验证报告 - ${detail.model}` });
     setTimeout(() => document.body.removeChild(container), 1000);
@@ -296,6 +304,10 @@ export default function ReverseSelectionView({ colors, theme }) {
           <Alert variant="info" className="py-1 px-2 mb-0 small">
             <i className="bi bi-info-circle me-1"></i>
             显示 {filteredModels.length} / {allModels.length} 个型号
+            {' · '}
+            <span title="本页 HC 仅含名称严格以 HC 开头(且不含 HCD/HCA/HCM/HCQ/HCV/HCX 子前缀)的型号; 首页 HC 数组含全部 HCD/HCT 等变体, 因此首页数字偏大" style={{ cursor: 'help', textDecoration: 'underline dotted' }}>
+              <i className="bi bi-question-circle me-1"></i>口径
+            </span>
           </Alert>
         </Col>
       </Row>
@@ -389,12 +401,12 @@ export default function ReverseSelectionView({ colors, theme }) {
                     <span>重量</span>
                     <span>{detail.weight ? `${detail.weight} kg` : '—'}</span>
                   </ListGroup.Item>
-                  {factoryPrice > 0 && (
-                    <ListGroup.Item className="d-flex justify-content-between py-1">
-                      <span>出厂价</span>
-                      <strong className="text-success">¥{factoryPrice.toLocaleString()}</strong>
-                    </ListGroup.Item>
-                  )}
+                  <ListGroup.Item className="d-flex justify-content-between py-1">
+                    <span>出厂价</span>
+                    {factoryPrice > 0
+                      ? <strong className="text-success">¥{factoryPrice.toLocaleString()}</strong>
+                      : <Badge bg="warning" text="dark" title="此型号暂无公开报价,请联系销售">询价</Badge>}
+                  </ListGroup.Item>
                 </ListGroup>
 
                 <h6>各减速比 — 传递能力 & 适配功率</h6>

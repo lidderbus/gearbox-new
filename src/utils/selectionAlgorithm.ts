@@ -235,6 +235,8 @@ interface AutoSelectRequirements {
   interfaceType?: 'sae' | 'domestic' | '无要求';
   interfaceSpec?: string;
   interfaceFilterMode?: 'prefer' | 'strict';
+  // B1: 多品牌柴油机库追溯 — 选型结果中保留 engineId, 供 IMO 合规 / TCO 计算等下游
+  engineId?: string;
   // 轴布置筛选选项
   shaftArrangement?: ShaftArrangementFilter;
   // 系列特性需求
@@ -257,6 +259,7 @@ interface InternalSelectionResult extends SelectionResult {
   requiredTransferCapacity?: number;
   enginePower?: number;
   engineSpeed?: number;
+  engineId?: string;     // B1: 透传柴油机库 id, 供下游 IMO/TCO
   targetRatio?: number;
   thrustRequirement?: number;
   options?: SelectionOptions;
@@ -1390,9 +1393,19 @@ export const selectGearbox = (
   const scoredGearboxes = matchingGearboxes.map(gearbox => {
     let score = 0;
 
-    // 1. Capacity Margin Score — 钟形曲线，最优点15%（10-20%中心）
+    // 1. Capacity Margin Score — 钟形曲线，最优点随工况系数 K 动态偏移 (P1#2, 2026-04-24)
+    // I类稳定 K=1.3 → optimal 12%;  III类中等 K=1.75 → 15% (默认);  V类剧烈 K=2.25 → 19%
+    // 低工况允许更紧裕度,高工况推动更大裕度,避免"一刀切 15%"
     {
-      const optimalMargin = 15;
+      const wc = String(options.workCondition || '');
+      let workFactorK = 1.75; // III 类中等 默认
+      if (wc.includes('I类')) workFactorK = 1.3;
+      else if (wc.includes('II类')) workFactorK = 1.5;
+      else if (wc.includes('III类')) workFactorK = 1.75;
+      else if (wc.includes('IV类')) workFactorK = 2.0;
+      else if (wc.includes('V类')) workFactorK = 2.25;
+      const kRatio = Math.max(0.8, Math.min(1.3, workFactorK / 1.75));
+      const optimalMargin = 15 * kRatio; // 12..19.5
       const marginDev = (gearbox.capacityMargin - optimalMargin) / 15;
       const capacityFit = Math.exp(-0.8 * marginDev * marginDev);
       score += W_CAPACITY * capacityFit;
@@ -1465,6 +1478,28 @@ export const selectGearbox = (
     } else {
       // 无系列要求时给基础分
       score += W_SERIES * 0.5;
+    }
+
+    // 9. Critical Speed Penalty (P0#6, 2026-04-24) — 扭振共振禁区强制校核
+    // 工作频率落在 [0.8ω_c, 1.2ω_c] 扣 22 分 (共振); 裕度<20% 扣 10 分 (接近临界)
+    // 降低门槛到 engineSpeed > 2000 以覆盖更多船用柴油机工况
+    if (engineSpeed > 2000 || isPTOorPTIEnabled) {
+      const csCheck = performCriticalSpeedCheck({
+        enginePower,
+        engineSpeed,
+        ratio: gearbox.selectedRatio,
+        isPTO: !!isPTOorPTIEnabled
+      });
+      if (csCheck) {
+        (gearbox as any).criticalSpeedCheck = csCheck;
+        if (csCheck.isInForbiddenZone) {
+          score -= 22;
+          logger.log(`齿轮箱 ${gearbox.model} 临界转速禁区: score-22 (${csCheck.recommendation})`);
+        } else if (csCheck.marginPercent < 20) {
+          score -= 10;
+          logger.log(`齿轮箱 ${gearbox.model} 临界转速裕度${csCheck.marginPercent}%: score-10`);
+        }
+      }
     }
 
     gearbox.score = score;
@@ -1972,6 +2007,8 @@ export const autoSelectGearbox = (
     targetRatio: targetRatio,
     thrustRequirement: thrust,
     options: options,
+    // B1: 透传 engineId 供下游 IMO 合规 / TCO / 工况图等
+    engineId: requirements.engineId,
     partialMatchCount: allRecommendations.filter(r => (r as any).isPartialMatch).length,
     _meta: {
       calculationTime: new Date().toISOString(),

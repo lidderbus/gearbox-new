@@ -1,6 +1,6 @@
 // src/components/OutlineDrawingQuery/SearchBox.js
 // Search input with history dropdown
-import React from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import { Card, InputGroup, Form, Button, ListGroup } from 'react-bootstrap';
 
 /**
@@ -21,13 +21,32 @@ const SearchBox = ({
   onClearHistory,
   colors = {}
 }) => {
+  // 用 ref + click-outside 取代 setTimeout(200ms)，避免点击历史项时 onBlur 提前关菜单的竞态
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (!showSearchHistory) return undefined;
+    const handleDocClick = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        onHideHistory();
+      }
+    };
+    document.addEventListener('mousedown', handleDocClick);
+    return () => document.removeEventListener('mousedown', handleDocClick);
+  }, [showSearchHistory, onHideHistory]);
+
+  const handleHistorySelect = useCallback((term) => {
+    onSelectHistory(term);
+    onHideHistory();
+  }, [onSelectHistory, onHideHistory]);
+
   return (
     <Card className="mb-3" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
       <Card.Body>
-        <div style={{ position: 'relative' }}>
+        <div ref={containerRef} style={{ position: 'relative' }}>
           <InputGroup>
             <InputGroup.Text style={{ backgroundColor: colors.headerBg, color: colors.text }}>
-              <i className="bi bi-search"></i>
+              <i className="bi bi-search" aria-hidden="true"></i>
             </InputGroup.Text>
             <Form.Control
               type="text"
@@ -37,7 +56,9 @@ const SearchBox = ({
               onChange={onSearch}
               onKeyDown={onSearchSubmit}
               onFocus={() => searchHistory.length > 0 && onShowHistory()}
-              onBlur={() => setTimeout(onHideHistory, 200)}
+              aria-label="型号搜索"
+              aria-expanded={showSearchHistory}
+              aria-haspopup="listbox"
               style={{
                 backgroundColor: colors.card,
                 color: colors.text,
@@ -48,8 +69,10 @@ const SearchBox = ({
               <Button
                 variant="outline-secondary"
                 onClick={onClear}
+                aria-label="清空搜索"
+                title="清空"
               >
-                <i className="bi bi-x"></i>
+                <i className="bi bi-x" aria-hidden="true"></i>
               </Button>
             )}
           </InputGroup>
@@ -57,6 +80,8 @@ const SearchBox = ({
           {/* Search history dropdown */}
           {showSearchHistory && searchHistory.length > 0 && (
             <div
+              role="listbox"
+              aria-label="搜索历史"
               style={{
                 position: 'absolute',
                 top: '100%',
@@ -71,9 +96,9 @@ const SearchBox = ({
             >
               <div className="d-flex justify-content-between align-items-center p-2 border-bottom" style={{ borderColor: colors.border }}>
                 <small className="text-muted">
-                  <i className="bi bi-clock-history me-1"></i>搜索历史
+                  <i className="bi bi-clock-history me-1" aria-hidden="true"></i>搜索历史
                 </small>
-                <Button variant="link" size="sm" className="p-0 text-danger" onClick={onClearHistory}>
+                <Button variant="link" size="sm" className="p-0 text-danger" onClick={onClearHistory} aria-label="清除全部搜索历史">
                   清除
                 </Button>
               </div>
@@ -82,14 +107,16 @@ const SearchBox = ({
                   <ListGroup.Item
                     key={index}
                     action
-                    onClick={() => onSelectHistory(term)}
+                    role="option"
+                    aria-selected="false"
+                    onMouseDown={(e) => { e.preventDefault(); handleHistorySelect(term); }}
                     style={{
                       backgroundColor: 'transparent',
                       color: colors.text,
                       cursor: 'pointer'
                     }}
                   >
-                    <i className="bi bi-search me-2 text-muted"></i>
+                    <i className="bi bi-search me-2 text-muted" aria-hidden="true"></i>
                     {term}
                   </ListGroup.Item>
                 ))}

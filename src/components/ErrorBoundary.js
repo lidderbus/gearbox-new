@@ -1,10 +1,13 @@
 // src/components/ErrorBoundary.js
 import React from 'react';
 import { Alert, Button } from 'react-bootstrap';
+import { captureError } from '../config/sentry';
 
 /**
  * 错误边界组件
  * 用于捕获子组件中的JavaScript错误并显示备用UI
+ *
+ * C3: 集成 Sentry — componentDidCatch 时调 captureError 上报 (开发环境会被 sentry.beforeSend 过滤掉)
  */
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -28,9 +31,17 @@ class ErrorBoundary extends React.Component {
     // 记录错误信息
     console.error("组件错误被ErrorBoundary捕获:", error, errorInfo);
     this.setState({ error, errorInfo });
-    
-    // 可以在这里将错误信息报告给服务器
-    // logErrorToService(error, errorInfo);
+
+    // C3: 上报到 Sentry (DSN 未配置时静默 fallback console.error)
+    try {
+      captureError(error, {
+        componentStack: errorInfo?.componentStack,
+        retryCount: this.state.retryCount,
+        errorBoundary: 'gearbox-app-root'
+      });
+    } catch (reportErr) {
+      console.warn('Sentry 上报失败:', reportErr);
+    }
   }
   
   handleRetry = () => {

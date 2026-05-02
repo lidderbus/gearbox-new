@@ -257,6 +257,7 @@ const AgreementDrawingSelector = ({
           <Card.Body>
             <iframe
               src={previewUrl}
+              sandbox="allow-popups allow-popups-to-escape-sandbox"
               style={{
                 width: '100%',
                 height: '450px',

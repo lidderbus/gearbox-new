@@ -236,7 +236,7 @@ const GearboxCouplingDetailModal = ({ show, onHide, gearboxModels, seriesName })
                           <Button
                             variant="outline-primary"
                             size="sm"
-                            onClick={() => window.open(img.src, '_blank')}
+                            onClick={() => window.open(img.src, '_blank', 'noopener,noreferrer')}
                           >
                             <i className="bi bi-zoom-in me-1"></i>
                             查看原图
@@ -301,7 +301,7 @@ const GearboxCouplingDetailModal = ({ show, onHide, gearboxModels, seriesName })
           </small>
           <Button
             variant="primary"
-            onClick={() => window.open(previewImage?.src, '_blank')}
+            onClick={() => window.open(previewImage?.src, '_blank', 'noopener,noreferrer')}
           >
             <i className="bi bi-box-arrow-up-right me-1"></i>
             新窗口打开

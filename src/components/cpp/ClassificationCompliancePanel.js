@@ -13,6 +13,7 @@ import {
   classificationRules
 } from '../../utils/classificationCompliance';
 import { IACS_CLASSIFICATION_SOCIETIES } from '../../data/cppSystemData';
+import FormulaProvenance from '../common/FormulaProvenance';
 
 /**
  * 多船级社合规校核面板
@@ -214,6 +215,13 @@ const ClassificationCompliancePanel = ({
         <div style={styles.resultsSection}>
           <div style={styles.sectionTitle}>
             {complianceResult.societyName}校核结果
+            <FormulaProvenance
+              title="多船级社统一校核"
+              formula={'对每个船级社运行: bladeStrength + cavitation + vibration\n限值由 classificationRules[society] 提供 (CCS/DNV/LR/ABS/BV/RINA/NK/KR)\n通过条件: 全部子项 pass=true'}
+              standard="IACS / 各船级社规范"
+              section="参见: classificationCompliance.js classificationRules"
+              notes="不同船级社的最小厚度系数 K1/K2、空泡裕度门限、振动限值各有差异;对比模式下汇总展示"
+            />
           </div>
 
           {/* 总体进度 */}

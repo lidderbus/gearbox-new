@@ -26,7 +26,7 @@ http://47.99.181.195/gearbox-app/
 - 核心数据文件 `completeGearboxData.js` (635KB) 包含全部 696 型号
 - 传递能力公式: `requiredCapacity = power / speed` (kW/(r/min))
 - 联轴器扭矩公式: `T = 9550 * P / n * K` (K=1.5)
-- 208 个型号缺失价格数据，显示时需优雅处理（显示"询价"而非空白）
+- **404 个型号缺失价格数据（真实 69.1%，2026-04-24 经 `scripts/audit-price-coverage.js` 核查；原记录 208 已过时）**，UI 必须走 `src/utils/priceFormatter.js` 的 `getPriceBadge()` / `lookupPriceByModel()` 兜底显示"询价"徽章，勿直接渲染 `¥0` / `undefined`。TOP50 热销中有 19 条无价已生成补录提案 `reports/top50-price-proposal.json`（待财务审核折扣率后合入 `gearboxPriceData`）
 - ESLint 配置在 package.json 中: `react-app` + `react-app/jest`
 
 ## 目录结构

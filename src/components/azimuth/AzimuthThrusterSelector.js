@@ -5,6 +5,7 @@ import React, { useState, useCallback } from 'react';
 import { toast } from '../../utils/toast';
 import { Card, Row, Col, Form, Button, Table, Alert, Badge, Tabs, Tab, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { azimuthThrusters, slewingDrives, azimuthControlSystems } from '../../data/azimuthThrusterData';
+import AlgorithmReferenceCard from '../propulsion/AlgorithmReferenceCard';
 import {
   selectAzimuthThruster,
   selectSlewingDrive,
@@ -13,8 +14,11 @@ import {
   calculateBollardPull,
   calculateRequiredThrust
 } from '../../utils/azimuthSelectionAlgorithm';
+import { useSelectionResult } from '../../contexts/SelectionResultContext';
 
 const AzimuthThrusterSelector = ({ colors = {}, theme = 'light', onSystemSelect }) => {
+  // P1-3: 推进数据载体
+  const { setPropulsionPayload } = useSelectionResult();
   // 输入参数
   const [power, setPower] = useState('');
   const [thrust, setThrust] = useState('');
@@ -94,11 +98,27 @@ const AzimuthThrusterSelector = ({ colors = {}, theme = 'light', onSystemSelect 
       setSelectedThruster(result.system.thruster);
       setSelectedSlewingDrive(result.system.slewingDrive);
       setSelectedControlSystem(result.system.controlSystem);
+      // P1-3: 写入推进载荷
+      try {
+        const powerVal = power ? parseFloat(power) : 0;
+        const thrustVal = thrust ? parseFloat(thrust) : null;
+        setPropulsionPayload({
+          source: 'Azimuth',
+          timestamp: new Date().toISOString(),
+          power: powerVal,
+          thrust: thrustVal,
+          gearboxModel: result.system.thruster?.model || null,
+          propellerDiameter: result.system.thruster?.propellerDiameter || (propellerDiameter ? parseFloat(propellerDiameter) : null),
+          series: series || null,
+          application: application || null,
+          dpLevel,
+        });
+      } catch (e) { /* ignore */ }
       if (onSystemSelect) {
         onSystemSelect(result.system);
       }
     }
-  }, [power, thrust, propellerDiameter, series, application, dpLevel, onSystemSelect]);
+  }, [power, thrust, propellerDiameter, series, application, dpLevel, onSystemSelect, setPropulsionPayload]);
 
   // 重置
   const handleReset = () => {
@@ -215,6 +235,7 @@ const AzimuthThrusterSelector = ({ colors = {}, theme = 'light', onSystemSelect 
 
   return (
     <div className="azimuth-thruster-selector">
+      <AlgorithmReferenceCard module="azimuth" colors={colors} />
       <Row>
         {/* 左侧：输入面板 */}
         <Col lg={4}>

@@ -1,6 +1,9 @@
 // src/contexts/AuthContext.js
-// 安全加固版本 - 2026-01-08
-// 改进: 移除硬编码密码, 使用环境变量哈希验证, AES加密存储
+// 安全加固版本 v2 - 2026-05-02
+// 改进:
+// - PBKDF2 (10万轮) 替代单轮 SHA-256, 抗 GPU 暴破
+// - 删除默认硬编码哈希 fallback, 环境变量缺失则登录失败并明确报错
+// - REACT_APP_AUTH_SALT 强制必填, 与用户名复合派生 salt
 import React, { createContext, useState, useContext, useEffect, useCallback, useRef, useMemo } from 'react';
 import CryptoJS from 'crypto-js';
 import { userRoles } from '../auth/roles';
@@ -11,6 +14,8 @@ const AuthContext = createContext();
 // 安全配置
 const STORAGE_KEY = 'gearbox_auth_session';
 const SESSION_TIMEOUT = 8 * 60 * 60 * 1000; // 8小时会话超时
+const PBKDF2_ITERATIONS = 100000; // 抗 GPU 暴破
+const PBKDF2_KEY_SIZE = 256 / 32; // 256-bit hash, 单位为 32-bit word
 
 // 获取加密密钥 (从环境变量或生成随机密钥)
 const getEncryptionKey = () => {
@@ -46,21 +51,32 @@ const decryptData = (encryptedData) => {
   }
 };
 
-// 计算密码哈希 (SHA-256)
-const hashPassword = (password) => {
-  return CryptoJS.SHA256(password).toString();
+// 计算密码哈希 (PBKDF2-SHA256, 100k 轮 + 用户名复合 salt)
+const hashPassword = (password, username) => {
+  const baseSalt = process.env.REACT_APP_AUTH_SALT;
+  if (!baseSalt) {
+    throw new Error('系统未配置 REACT_APP_AUTH_SALT, 请联系管理员');
+  }
+  // 用户名混入 salt, 防止跨账号哈希复用
+  const salt = `${baseSalt}:${(username || '').trim().toLowerCase()}`;
+  return CryptoJS.PBKDF2(password, salt, {
+    keySize: PBKDF2_KEY_SIZE,
+    iterations: PBKDF2_ITERATIONS,
+    hasher: CryptoJS.algo.SHA256
+  }).toString();
 };
 
-// 用户凭据配置 (从环境变量获取哈希值)
-// 注意: 在 .env.local 中配置 REACT_APP_ADMIN_HASH 和 REACT_APP_USER_HASH
+// 用户凭据配置 — 必须从 .env.production / .env.local 注入哈希
+// 缺失即抛错, 不再有默认 fallback (旧版本 fallback 已于 v2 删除)
 const getUserCredentials = () => {
-  // 默认哈希值 — 生产环境通过 .env.local 环境变量覆盖
-  const defaultAdminHash = '769a098ee73b0a72b7a7b710817464c245b98e4be563a400c9e067f1573ff140';
-  const defaultUserHash = '1a7648bc484b3d9ed9e2226d223a6193d64e5e1fcacd97868adec665fe12b924';
-
+  const adminHash = process.env.REACT_APP_ADMIN_HASH;
+  const userHash = process.env.REACT_APP_USER_HASH;
+  if (!adminHash || !userHash) {
+    throw new Error('系统未配置认证凭据 (REACT_APP_ADMIN_HASH / REACT_APP_USER_HASH), 请联系管理员');
+  }
   return {
     admin: {
-      hash: process.env.REACT_APP_ADMIN_HASH || defaultAdminHash,
+      hash: adminHash,
       userData: {
         id: 1,
         username: 'admin',
@@ -69,7 +85,7 @@ const getUserCredentials = () => {
       }
     },
     user: {
-      hash: process.env.REACT_APP_USER_HASH || defaultUserHash,
+      hash: userHash,
       userData: {
         id: 2,
         username: 'user',
@@ -152,8 +168,8 @@ export const AuthProvider = ({ children }) => {
       throw new Error('用户名和密码不能为空');
     }
 
-    // 计算输入密码的哈希
-    const inputHash = hashPassword(password);
+    // 计算输入密码的哈希 (PBKDF2 + 用户名 salt)
+    const inputHash = hashPassword(password, username);
     const credentials = getUserCredentials();
 
     // 验证凭据 (使用哈希比较)

@@ -16,12 +16,18 @@ import { convertToChinaNum } from './numberConverter';
 
 // 动态加载 jsPDF
 async function loadJsPDF() {
-  const [{ jsPDF }, autotable, fontModule] = await Promise.all([
+  const [{ jsPDF }] = await Promise.all([
     import(/* webpackChunkName: "jspdf" */ 'jspdf'),
     import(/* webpackChunkName: "jspdf-autotable" */ 'jspdf-autotable'),
-    import(/* webpackChunkName: "fonts" */ '../fonts/NotoSansSC-Regular-normal')
   ]);
-  return { jsPDF, NotoSansSCFont: fontModule.default };
+  let NotoSansSCFont = null;
+  try {
+    const fontModule = await import(/* webpackChunkName: "fonts" */ '../fonts/NotoSansSC-Regular-normal');
+    NotoSansSCFont = fontModule.default;
+  } catch (e) {
+    console.warn('中文字体模块未找到，将使用备用字体');
+  }
+  return { jsPDF, NotoSansSCFont };
 }
 
 // 动态加载 docx
@@ -188,12 +194,26 @@ export class PDFExporter extends ExportManager {
 
       // 添加中文字体支持
       try {
-        doc.addFileToVFS('NotoSansSC-Regular-normal.ttf', NotoSansSCFont.font);
-        doc.addFont('NotoSansSC-Regular-normal.ttf', 'NotoSansSC', 'normal');
-        doc.setFont('NotoSansSC');
+        if (NotoSansSCFont && NotoSansSCFont.font) {
+          doc.addFileToVFS('NotoSansSC-Regular-normal.ttf', NotoSansSCFont.font);
+          doc.addFont('NotoSansSC-Regular-normal.ttf', 'NotoSansSC', 'normal');
+          doc.setFont('NotoSansSC');
+        } else {
+          try {
+            const resp = await fetch('/fonts/NotoSansSC-Regular.ttf');
+            if (resp.ok) {
+              const buf = await resp.arrayBuffer();
+              const b64 = btoa(new Uint8Array(buf).reduce((d, b) => d + String.fromCharCode(b), ''));
+              doc.addFileToVFS('NotoSansSC.ttf', b64);
+              doc.addFont('NotoSansSC.ttf', 'NotoSansSC', 'normal');
+              doc.setFont('NotoSansSC');
+            }
+          } catch (e) {
+            console.warn('服务器字体也不可用');
+          }
+        }
       } catch (fontError) {
         this.errorHandler.handleFontLoadingError(fontError);
-        // 继续使用默认字体
       }
       
       // 设置基本样式

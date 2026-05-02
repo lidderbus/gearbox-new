@@ -10,3 +10,7 @@ export { default as RecommendationSection } from './RecommendationSection';
 export { default as DrawingViewer } from './DrawingViewer';
 export { default as DwgBrowser } from './DwgBrowser';
 export { default as DwgViewer } from './DwgViewer';
+export { default as DrawingExportToolbar } from './DrawingExportToolbar';
+export { default as SizeCompareTable } from './SizeCompareTable';
+export { default as VersionTimeline } from './VersionTimeline';
+export { default as DataQualityPanel } from './DataQualityPanel';

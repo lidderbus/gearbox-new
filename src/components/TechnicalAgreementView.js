@@ -7,6 +7,7 @@ import { optimizedHtmlToPdf, printHtmlContent } from '../utils/pdfExportUtils';
 import { needsStandbyPump } from '../utils/enhancedPumpSelection';
 import { agreementStore, relationStore } from '../services/documentStorage';
 import { generateDocNumber } from '../utils/documentNumbering';
+import { sanitizeHtml } from '../utils/sanitize';
 
 /**
  * 技术协议视图组件
@@ -64,6 +65,9 @@ const TechnicalAgreementView = ({
     setError('');
 
     // 保存到 agreementStore 并建立文档溯源链
+    // P0-1: 接入 ProjectID 主线
+    let currentProjectId = null;
+    try { currentProjectId = sessionStorage.getItem('current_project_id') || null; } catch (e) { /* ignore */ }
     try {
       const agreementId = generateDocNumber('agreement');
       agreementStore.save({
@@ -72,6 +76,7 @@ const TechnicalAgreementView = ({
         gearboxModel: selectedComponents?.gearbox?.model,
         customerName: projectInfo?.customerName,
         projectName: projectInfo?.projectName,
+        projectId: currentProjectId || undefined,
         classification: requirementData?.classification,
         power: selectedComponents?.gearbox?.power,
         speed: selectedComponents?.gearbox?.speed,
@@ -211,7 +216,7 @@ const TechnicalAgreementView = ({
     try {
       // 创建一个临时元素用于复制
       const tempElement = document.createElement('div');
-      tempElement.innerHTML = agreement.html;
+      tempElement.innerHTML = sanitizeHtml(agreement.html);
       
       // 获取纯文本
       const plainText = tempElement.textContent || tempElement.innerText;

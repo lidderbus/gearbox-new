@@ -27,9 +27,10 @@
     "file-saver": "2.0.5",
     "fuse.js": "^7.1.0",
     "html2canvas": "^1.4.1",
-    "html2pdf.js": "^0.10.3",
-    "jspdf": "2.5.1",
+    "html2pdf.js": "^0.14.0",
+    "jspdf": "^4.2.1",
     "jspdf-autotable": "3.5.28",
+    "jszip": "^3.10.1",
     "lucide-react": "^1.7.0",
     "papaparse": "^5.5.2",
     "pdfjs-dist": "^5.4.530",
@@ -50,13 +51,21 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "prebuild": "node scripts/check-data-drift.js || true",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron": "electron .",
     "electron:build": "npm run build && electron-builder --win",
     "electron:build:mac": "npm run build && electron-builder --mac",
-    "electron:build:all": "npm run build && electron-builder --win --mac"
+    "electron:build:all": "npm run build && electron-builder --win --mac",
+    "check:data-drift": "node scripts/check-data-drift.js",
+    "check:data-drift:strict": "node scripts/check-data-drift.js --strict",
+    "check:price-coverage": "node scripts/audit-price-coverage.js",
+    "check:bundle-size": "node scripts/check-bundle-size.js",
+    "check:bundle-size:strict": "node scripts/check-bundle-size.js --strict",
+    "check:theme-tokens": "node scripts/audit-theme-tokens.js",
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "build": {
     "appId": "com.gearbox.selector",
@@ -100,8 +109,55 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
-    ]
+      "react-app/jest",
+      "plugin:jsx-a11y/recommended"
+    ],
+    "plugins": [
+      "jsx-a11y"
+    ],
+    "rules": {
+      "jsx-a11y/alt-text": "warn",
+      "jsx-a11y/anchor-has-content": "warn",
+      "jsx-a11y/anchor-is-valid": "warn",
+      "jsx-a11y/aria-activedescendant-has-tabindex": "warn",
+      "jsx-a11y/aria-props": "warn",
+      "jsx-a11y/aria-proptypes": "warn",
+      "jsx-a11y/aria-role": "warn",
+      "jsx-a11y/aria-unsupported-elements": "warn",
+      "jsx-a11y/autocomplete-valid": "warn",
+      "jsx-a11y/click-events-have-key-events": "warn",
+      "jsx-a11y/control-has-associated-label": "warn",
+      "jsx-a11y/heading-has-content": "warn",
+      "jsx-a11y/html-has-lang": "warn",
+      "jsx-a11y/iframe-has-title": "warn",
+      "jsx-a11y/img-redundant-alt": "warn",
+      "jsx-a11y/interactive-supports-focus": "warn",
+      "jsx-a11y/label-has-associated-control": "warn",
+      "jsx-a11y/lang": "warn",
+      "jsx-a11y/media-has-caption": "warn",
+      "jsx-a11y/mouse-events-have-key-events": "warn",
+      "jsx-a11y/no-access-key": "warn",
+      "jsx-a11y/no-autofocus": "warn",
+      "jsx-a11y/no-distracting-elements": "warn",
+      "jsx-a11y/no-interactive-element-to-noninteractive-role": "warn",
+      "jsx-a11y/no-noninteractive-element-interactions": "warn",
+      "jsx-a11y/no-noninteractive-element-to-interactive-role": "warn",
+      "jsx-a11y/no-noninteractive-tabindex": "warn",
+      "jsx-a11y/no-redundant-roles": "warn",
+      "jsx-a11y/no-static-element-interactions": "warn",
+      "jsx-a11y/role-has-required-aria-props": "warn",
+      "jsx-a11y/role-supports-aria-props": "warn",
+      "jsx-a11y/scope": "warn",
+      "jsx-a11y/tabindex-no-positive": "warn",
+      "react/jsx-no-target-blank": "error",
+      "no-restricted-syntax": [
+        "error",
+        {
+          "selector": "CallExpression[callee.object.name='window'][callee.property.name='open'][arguments.length=2][arguments.1.value='_blank']",
+          "message": "window.open(url, '_blank') 必须带第三参数 'noopener,noreferrer' 防 reverse tabnabbing 攻击"
+        }
+      ]
+    }
   },
   "browserslist": {
     "production": [

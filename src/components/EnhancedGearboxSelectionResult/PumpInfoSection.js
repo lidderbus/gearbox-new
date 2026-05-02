@@ -1,10 +1,12 @@
 // src/components/EnhancedGearboxSelectionResult/PumpInfoSection.js
 // 备用泵信息展示组件
+// UI-接入#1 (2026-04-24): NPSH 汽蚀风险预警
 import React from 'react';
 import { Table, Badge, Alert } from 'react-bootstrap';
 import EquipmentInfoCard from '../EquipmentInfoCard';
 import ValidationWarnings from './ValidationWarnings';
 import { formatPrice } from '../../utils/priceFormatter';
+import { evaluatePumpNPSHRisk } from '../../utils/pumpNPSHAdvisor';
 
 /**
  * 备用泵信息展示组件
@@ -15,6 +17,9 @@ const PumpInfoSection = ({
   needsPumpFlag,
   selectedGearbox,
   validation,
+  inputSpeed,       // 主机转速 (用于 NPSH 评估)
+  ratio,            // 减速比 (用于 NPSH 评估)
+  temperature,      // 工作温度 (用于 NPSH 评估)
   colors = {}
 }) => {
   // 检查是否需要备用泵
@@ -51,6 +56,16 @@ const PumpInfoSection = ({
   // 判断是否为电动泵 (DT系列专用)
   const isElectricPump = pumpResult.type === 'electric' || pumpResult.series === '2CYA';
   const isDTGearbox = selectedGearbox?.model?.startsWith('DT');
+
+  // NPSH 汽蚀风险评估 (UI-接入#1)
+  const npshRisk = evaluatePumpNPSHRisk({
+    pump: pumpResult,
+    inputSpeed: Number(inputSpeed) || 0,
+    ratio: Number(ratio) || Number(selectedGearbox?.selectedRatio) || 1,
+    temperature: Number(temperature) || 30
+  });
+  const riskVariant = npshRisk.risk === 'high' ? 'danger' : npshRisk.risk === 'medium' ? 'warning' : 'success';
+  const riskLabel = npshRisk.risk === 'high' ? '高风险' : npshRisk.risk === 'medium' ? '中等风险' : '低风险';
 
   return (
     <div className="pump-section">
@@ -140,6 +155,40 @@ const PumpInfoSection = ({
 
       {/* 备用泵设备信息卡 */}
       <EquipmentInfoCard type="pump" data={pumpResult} />
+
+      {/* NPSH 汽蚀风险评估 (UI-接入#1) */}
+      {(npshRisk.risk !== 'low' || npshRisk.warnings.length > 0) && (
+        <Alert variant={riskVariant} className="mt-2 mb-2">
+          <div className="d-flex align-items-center mb-1">
+            <i className={`bi ${npshRisk.risk === 'high' ? 'bi-exclamation-octagon-fill' : 'bi-droplet-half'} me-2`}></i>
+            <strong>NPSH 汽蚀风险: </strong>
+            <Badge bg={riskVariant} className="ms-2">{riskLabel}</Badge>
+          </div>
+          {npshRisk.warnings.length > 0 && (
+            <ul className="mb-1 mt-1 ps-3" style={{ fontSize: '0.82rem' }}>
+              {npshRisk.warnings.map((w, i) => <li key={i}>{w}</li>)}
+            </ul>
+          )}
+          {npshRisk.recommendations.length > 0 && (
+            <>
+              <div className="small text-muted mt-1"><strong>安装建议:</strong></div>
+              <ul className="mb-0 mt-0 ps-3" style={{ fontSize: '0.78rem' }}>
+                {npshRisk.recommendations.map((r, i) => <li key={i}>{r}</li>)}
+              </ul>
+            </>
+          )}
+          <div className="small text-muted mt-2">
+            评估参数: 输入转速 {npshRisk.factors.inputSpeed} rpm · 输出转速 {npshRisk.factors.outputSpeed} rpm
+            · 泵压 {npshRisk.factors.pressure} MPa · 温度 {npshRisk.factors.temperature}°C
+          </div>
+        </Alert>
+      )}
+      {npshRisk.risk === 'low' && npshRisk.warnings.length === 0 && (
+        <div className="small text-muted mt-1">
+          <i className="bi bi-check-circle me-1 text-success"></i>
+          NPSH 风险低 (输入转速 {npshRisk.factors.inputSpeed} rpm / 泵压 {npshRisk.factors.pressure} MPa / 温度 {npshRisk.factors.temperature}°C)
+        </div>
+      )}
 
       {/* DT系列特殊说明 */}
       {isDTGearbox && isElectricPump && (

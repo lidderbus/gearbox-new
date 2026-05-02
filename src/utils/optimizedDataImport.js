@@ -12,18 +12,30 @@ async function loadXLSX() {
   return xlsxModule;
 }
 
+// 文件大小上限 (50 MB) — 防止用户拖入过大文件导致浏览器 OOM
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
+// 扩展名白名单
+const ALLOWED_EXTENSIONS = ['json', 'xlsx', 'xls'];
+
 // 主导入函数，用于处理各种格式的数据文件
 export const importData = async (file) => {
   try {
+    if (!file) {
+      throw new Error('未选择文件');
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      const mb = (file.size / 1024 / 1024).toFixed(1);
+      throw new Error(`文件过大 (${mb} MB)，超过 50 MB 上限。请拆分后重试。`);
+    }
     const fileExtension = file.name.split('.').pop().toLowerCase();
-    
-    // 根据文件扩展名选择处理方法
+    if (!ALLOWED_EXTENSIONS.includes(fileExtension)) {
+      throw new Error(`不支持的文件格式: ${fileExtension}。允许: ${ALLOWED_EXTENSIONS.join(', ')}`);
+    }
+
     if (fileExtension === 'json') {
       return await importDataFromJson(file);
-    } else if (['xlsx', 'xls'].includes(fileExtension)) {
-      return await importDataFromExcel(file);
     } else {
-      throw new Error(`不支持的文件格式: ${fileExtension}`);
+      return await importDataFromExcel(file);
     }
   } catch (error) {
     console.error('数据导入错误:', error);

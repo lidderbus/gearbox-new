@@ -35,6 +35,8 @@ import AppHeader from './components/AppHeader';
 import QuotationEnhancedOptions from './components/QuotationEnhancedOptions';
 import SelectionResultTab from './components/SelectionResultTab';
 import HistoryTabContent from './components/HistoryTabContent';
+import ErrorBoundary from './components/ErrorBoundary';
+import { SkeletonCard } from './components/Skeleton';
 import useQuotationHandlers from './hooks/useQuotationHandlers';
 import useExportHandlers from './hooks/useExportHandlers';
 import useHistoryHandlers from './hooks/useHistoryHandlers';
@@ -68,6 +70,7 @@ const CPPSelectionView = lazy(() => import('./components/cpp/CPPSelectionView'))
 const AzimuthThrusterSelector = lazy(() => import('./components/azimuth/AzimuthThrusterSelector'));
 const ThrusterSelector = lazy(() => import('./components/thruster/ThrusterSelector'));
 const ShaftSystemSelector = lazy(() => import('./components/shaft/ShaftSystemSelector'));
+const PropulsionMatchingHub = lazy(() => import('./components/propulsion/PropulsionMatchingHub')); // P1-1
 const CompetitorComparisonView = lazy(() => import('./components/competitor/CompetitorComparisonView'));
 const CumminsMatchingView = lazy(() => import('./components/CumminsMatchingView'));
 
@@ -124,6 +127,11 @@ const CustomerPortal = lazy(() => import('./components/CustomerPortal'));
 const DataBackupView = lazy(() => import('./components/DataBackupView'));
 const MobileOptimization = lazy(() => import('./components/MobileOptimization'));
 const ApiDocumentation = lazy(() => import('./components/ApiDocumentation'));
+const OperationAuditLogView = lazy(() => import('./components/OperationAuditLogView'));
+const CompatibilityMatrixView = lazy(() => import('./components/CompatibilityMatrixView'));
+const LibrarySearchView = lazy(() => import('./components/LibrarySearchView'));
+const DocumentFieldMapView = lazy(() => import('./components/DocumentFieldMapView'));
+const CommandPalette = lazy(() => import('./components/CommandPalette'));
 
 // 产品系列可视化 (2026-04-07新增)
 const SeriesOverviewDashboard = lazy(() => import('./components/SeriesOverviewDashboard'));
@@ -131,6 +139,12 @@ const PowerRatioHeatmap = lazy(() => import('./components/PowerRatioHeatmap'));
 
 // 数据质量仪表盘 (E8)
 const DataQualityDashboard = lazy(() => import('./components/DataQualityDashboard'));
+
+// v52增强: 选型漏斗/历史趋势/数据导入/使用统计
+const SelectionFunnelChart = lazy(() => import('./components/SelectionFunnelChart'));
+const SelectionHistoryTrends = lazy(() => import('./components/SelectionHistoryTrends'));
+const DataImportTool = lazy(() => import('./components/DataImportTool'));
+const UsageAnalytics = lazy(() => import('./components/UsageAnalytics'));
 
 // 首次使用引导 (lazy loaded - only on first visit)
 const OnboardingGuide = lazy(() => import('./components/OnboardingGuide'));
@@ -140,11 +154,10 @@ const QuotationOptionsModal = lazy(() => import('./components/QuotationOptionsMo
 const CustomQuotationItemModal = lazy(() => import('./components/CustomQuotationItemModal'));
 const QuotationHistoryModal = lazy(() => import('./components/QuotationHistoryModal'));
 
-// 懒加载组件的加载指示器
+// 懒加载组件的加载指示器 — 使用骨架屏代替 Spinner, 改善 LCP 主观体感
 const LazyLoadFallback = () => (
-  <div className="d-flex justify-content-center align-items-center py-5">
-    <Spinner animation="border" variant="primary" />
-    <span className="ms-2">加载中...</span>
+  <div className="py-3" role="status" aria-live="polite">
+    <SkeletonCard lines={4} style={{ marginBottom: 12 }} />
   </div>
 );
 
@@ -270,10 +283,18 @@ function App({ appData: initialAppData, setAppData }) {
   // 技术协议特殊订货要求 - 用于与合同同步
   const [agreementSpecialRequirements, setAgreementSpecialRequirements] = useState('');
   const [activeTab, setActiveTabRaw] = useState('home');
+  const [paletteOpen, setPaletteOpen] = useState(false);
   const tabToPathRef = useRef({});
   const setActiveTab = useCallback((tab) => {
     setActiveTabRaw(tab);
     trackPageView(tab);
+    // 模块状态徽标:记录访问时间(只对首页以外的模块计入"已用")
+    if (tab && tab !== 'home') {
+      try {
+        // 动态 import 避免循环依赖与首屏开销
+        import('./services/moduleStatus').then(m => m.markVisited(tab)).catch(() => {});
+      } catch (e) { /* ignore */ }
+    }
     // Reverse sync: update URL hash when tab changes
     const path = tabToPathRef.current[tab];
     if (path) {
@@ -397,18 +418,62 @@ function App({ appData: initialAppData, setAppData }) {
     '/torsional': 'torsional',
     '/energy': 'energy',
     '/statistics': 'statistics',
-    '/analytics': 'analytics',
+    '/analytics': 'usage-analytics',
     '/competitor': 'competitor',
     '/query': 'query',
     '/product-center': 'product-center',
     '/history': 'history',
-    '/hcm-selection': 'hcm-selection',
+    // /hcm-selection 深链:跳产品中心并预选 HCM Tab(2026-04-29 IA 重组)
+    '/hcm-selection': 'product-center',
     '/cpp': 'cpp',
     '/azimuth': 'azimuth',
     '/thruster': 'thruster',
     '/shaft': 'shaft',
+    '/propulsion-hub': 'propulsion-hub', // P1-1
+    '/propulsion-matching': 'propulsion-hub',
     '/inventory': 'inventory',
     '/receivables': 'receivables',
+    // v60: 路由直达补全 — 报告 #5 所有侧栏项支持 hash URL 直达
+    '/smart-search': 'smart-search',
+    '/intelligent-search': 'smart-search',
+    '/reverse': 'reverse',
+    '/multi-condition': 'multi-condition',
+    '/overall-solution': 'overall-solution',
+    '/system-solution': 'system-solution',
+    '/series-overview': 'series-overview',
+    '/power-ratio-heatmap': 'power-ratio-heatmap',
+    '/coupling': 'coupling',
+    '/high-elastic': 'high-elastic',
+    '/engine-matching': 'engine-matching',
+    '/technical-inquiry': 'technical-inquiry',
+    '/doc-pack': 'doc-pack',
+    '/torsional-calc': 'torsional-calc',
+    '/azimuth-thruster': 'azimuth-thruster',
+    '/bow-thruster': 'bow-thruster',
+    '/shaft-design': 'shaft-design',
+    '/drawing-library': 'drawing-library',
+    '/manual-library': 'manual-library',
+    '/template-library': 'template-library',
+    '/matching-cases': 'matching-cases',
+    '/installation-guide': 'installation-guide',
+    '/standards': 'standards',
+    '/data-versions': 'data-versions',
+    '/param-comparison': 'param-comparison',
+    '/torsional-analysis': 'torsional-analysis',
+    '/efficiency-analysis': 'efficiency-analysis',
+    '/efficiency-optimization': 'efficiency-optimization',
+    '/usage-analysis': 'usage-analysis',
+    '/trend-analysis': 'trend-analysis',
+    '/competitor-comparison': 'competitor-comparison',
+    '/project-tracking': 'project-tracking',
+    '/customer-inquiry': 'customer-inquiry',
+    '/after-sales': 'after-sales',
+    '/classification-society': 'classification-society',
+    '/audit-log': 'operation-audit',
+    '/operation-audit': 'operation-audit',
+    '/compatibility-matrix': 'compatibility-matrix',
+    '/library-search': 'library-search',
+    '/doc-field-map': 'doc-field-map',
   }), []);
 
   const tabToPath = useMemo(() => {
@@ -427,18 +492,58 @@ function App({ appData: initialAppData, setAppData }) {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '') || '/';
+      // /hcm-selection 深链:在切到 product-center 前预设 HCM Tab
+      if (hash === '/hcm-selection') {
+        try { sessionStorage.setItem('product_center_preset', 'hcm'); } catch (e) { /* ignore */ }
+      }
       const tab = pathToTab[hash];
       if (tab) {
         setActiveTabRaw(tab);
       }
     };
 
+    // P0#1 (2026-04-24): RelaxationSuggestions "修改参数" 按钮触发此事件
+    const handleSwitchToInput = (e) => {
+      setActiveTabRaw('input');
+      const fieldId = e?.detail?.fieldId;
+      if (fieldId) {
+        setTimeout(() => {
+          const el = document.getElementById(fieldId);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            try { el.focus(); } catch (err) { /* ignore */ }
+          }
+        }, 400);
+      }
+    };
+
     // Initial sync on mount
     handleHashChange();
 
+    // Cmd+K / Ctrl+K → open command palette
+    const handlePaletteShortcut = (e) => {
+      const mod = e.metaKey || e.ctrlKey;
+      if (mod && (e.key === 'k' || e.key === 'K')) {
+        // 跳过表单输入场景中的 ctrl+k(避免误伤 contentEditable 等)
+        const tag = document.activeElement?.tagName;
+        const isEditing = document.activeElement?.isContentEditable;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || isEditing) {
+          // 仍允许在输入框内打开(很多 app 都这么做),但允许字段保留焦点状态
+        }
+        e.preventDefault();
+        setPaletteOpen(prev => !prev);
+      }
+    };
+
     // Listen for hash changes (browser back/forward)
     window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('gearbox:switchToInput', handleSwitchToInput);
+    window.addEventListener('keydown', handlePaletteShortcut);
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('gearbox:switchToInput', handleSwitchToInput);
+      window.removeEventListener('keydown', handlePaletteShortcut);
+    };
   }, [pathToTab]);
 
   useEffect(() => {
@@ -743,13 +848,15 @@ function App({ appData: initialAppData, setAppData }) {
   const {
     handleGenerateQuotation,
     generateQuotationWithOptions,
+    handleGenerateFullPackage,
     handleAddCustomQuotationItem,
     handleRemoveQuotationItem,
     handleSaveQuotation,
     handleLoadSavedQuotation,
     handleCompareQuotations,
     handleUpdateQuotationPrices,
-    handleExportQuotation
+    handleExportQuotation,
+    handleApplyStrategy
   } = useQuotationHandlers({
     selectedComponents,
     selectionResult,
@@ -852,6 +959,7 @@ function App({ appData: initialAppData, setAppData }) {
         />
       )}
       <Container fluid className="app-container">
+      <ErrorBoundary>
         {!inIframe && (
           <AppHeader
             user={user}
@@ -971,10 +1079,18 @@ function App({ appData: initialAppData, setAppData }) {
               onCouplingSelection={handleCouplingSelection}
               onGenerateQuotation={handleGenerateQuotation}
               onGenerateAgreement={handleGenerateAgreement}
+              onGenerateFullPackage={handleGenerateFullPackage}
               onSelectGearbox={() => handleSelectGearbox()}
               colors={colors}
               theme={theme}
             />
+          </Tab>
+
+          {/* 文档字段映射可视化 — 6 类文档 schema 总览 */}
+          <Tab eventKey="doc-field-map" title={<span><i className="bi bi-file-earmark-medical me-1"></i>字段映射</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <DocumentFieldMapView onNavigate={setActiveTab} colors={colors} />
+            </Suspense>
           </Tab>
 
           <Tab eventKey="inquiry" title={<span><i className="bi bi-file-earmark-plus me-1"></i>技术询单</span>}>
@@ -1000,12 +1116,14 @@ function App({ appData: initialAppData, setAppData }) {
                         <Suspense fallback={<LazyLoadFallback />}>
                           <QuotationView
                             quotation={quotation}
+                            projectInfo={projectInfo}
                             onExport={handleExportQuotation}
                             onGenerateAgreement={handleGenerateAgreement}
                             onAddCustomItem={() => setShowCustomItemModal(true)}
                             onRemoveItem={handleRemoveQuotationItem}
                             onUpdatePrices={handleUpdateQuotationPrices}
                             onSave={handleSaveQuotation}
+                            onApplyStrategy={handleApplyStrategy}
                             colors={colors}
                             theme={theme}
                           />
@@ -1299,6 +1417,13 @@ function App({ appData: initialAppData, setAppData }) {
             </Row>
           </Tab>
 
+          {/* 资料库全局检索 — 跨 5 类资料源统一搜索 */}
+          <Tab eventKey="library-search" title={<span><i className="bi bi-search me-1"></i>全局检索</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <LibrarySearchView colors={colors} />
+            </Suspense>
+          </Tab>
+
           <Tab eventKey="drawings" title={<span><i className="bi bi-image me-1"></i>外形图库</span>}>
             <Row>
               <Col>
@@ -1404,6 +1529,17 @@ function App({ appData: initialAppData, setAppData }) {
           </Tab>
 
           {/* 新增推进系统模块 */}
+          {/* P1-1: 推进系统级匹配 Hub — 船型/排水量/航速/吃水 联动求解 */}
+          <Tab eventKey="propulsion-hub" title={<span><i className="bi bi-diagram-3 me-1"></i>推进 Hub</span>}>
+            <Row>
+              <Col>
+                <Suspense fallback={<LazyLoadFallback />}>
+                  <PropulsionMatchingHub colors={colors} theme={theme} />
+                </Suspense>
+              </Col>
+            </Row>
+          </Tab>
+
           <Tab eventKey="cpp" title={<span><i className="bi bi-arrow-repeat me-1"></i>可调桨</span>}>
             <Row>
               <Col>
@@ -1612,6 +1748,13 @@ function App({ appData: initialAppData, setAppData }) {
             </Suspense>
           </Tab>
 
+          {/* 配套兼容性矩阵 — 主机×齿轮箱 / 齿轮箱×联轴器 / 齿轮箱×备用泵 三表速览 */}
+          <Tab eventKey="compatibility-matrix" title={<span><i className="bi bi-grid-3x3 me-1"></i>兼容性矩阵</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <CompatibilityMatrixView colors={colors} />
+            </Suspense>
+          </Tab>
+
           {/* Phase 3: 标准法规知识库 */}
           <Tab eventKey="standards-library" title={<span><i className="bi bi-bookmark-check me-1"></i>标准法规</span>}>
             <Suspense fallback={<LazyLoadFallback />}>
@@ -1636,7 +1779,7 @@ function App({ appData: initialAppData, setAppData }) {
           {/* 项目追踪 */}
           <Tab eventKey="project-tracker" title={<span><i className="bi bi-kanban me-1"></i>项目追踪</span>}>
             <Suspense fallback={<LazyLoadFallback />}>
-              <ProjectTracker colors={colors} theme={theme} />
+              <ProjectTracker colors={colors} theme={theme} onNavigate={setActiveTab} />
             </Suspense>
           </Tab>
 
@@ -1675,6 +1818,13 @@ function App({ appData: initialAppData, setAppData }) {
             </Suspense>
           </Tab>
 
+          {/* 操作审计日志 — 统一中心(资料库审计 + 价格历史 + 导入历史) */}
+          <Tab eventKey="operation-audit" title={<span><i className="bi bi-shield-check me-1"></i>操作审计日志</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <OperationAuditLogView userRole={user?.role || userRoles.USER} colors={colors} />
+            </Suspense>
+          </Tab>
+
           {/* API文档 */}
           <Tab eventKey="api-docs" title={<span><i className="bi bi-code-slash me-1"></i>API文档</span>}>
             <Suspense fallback={<LazyLoadFallback />}>
@@ -1689,10 +1839,33 @@ function App({ appData: initialAppData, setAppData }) {
             </Suspense>
           </Tab>
 
+          {/* 数据导入工具 */}
+          <Tab eventKey="data-import" title={<span><i className="bi bi-cloud-upload me-1"></i>数据导入</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <DataImportTool />
+            </Suspense>
+          </Tab>
+
+          {/* 使用统计 */}
+          <Tab eventKey="usage-analytics" title={<span><i className="bi bi-bar-chart me-1"></i>使用统计</span>}>
+            <Suspense fallback={<LazyLoadFallback />}>
+              <UsageAnalytics />
+            </Suspense>
+          </Tab>
+
         </Tabs>
       </div>
       </div>
       )}
+
+      {/* 全局命令面板 — Cmd+K / Ctrl+K 触发 */}
+      <Suspense fallback={null}>
+        <CommandPalette
+          show={paletteOpen}
+          onHide={() => setPaletteOpen(false)}
+          onNavigate={setActiveTab}
+        />
+      </Suspense>
 
       {/* 批量价格调整对话框 */}
       <BatchPriceAdjustment
@@ -1793,6 +1966,7 @@ function App({ appData: initialAppData, setAppData }) {
       <Suspense fallback={null}>
         <OnboardingGuide />
       </Suspense>
+      </ErrorBoundary>
       </Container>
     </div>
     </SelectionResultProvider>

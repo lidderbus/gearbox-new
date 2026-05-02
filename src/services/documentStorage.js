@@ -119,6 +119,16 @@ const createDocStore = (storageKey) => ({
   },
 
   /**
+   * 按项目ID过滤文档 (P0-1: ProjectID 主线)
+   * @param {string} projectId
+   * @returns {Array}
+   */
+  getByProjectId(projectId) {
+    if (!projectId) return [];
+    return safeRead(storageKey).filter(item => item.projectId === projectId);
+  },
+
+  /**
    * 获取文档总数
    * @returns {number}
    */
@@ -184,6 +194,65 @@ export const relationStore = {
 };
 
 /**
+ * 列出所有已知项目 (P0-1)
+ * 聚合 4 类文档,以 projectId 为主键,projectName 为后备
+ * @returns {Array<{projectId: string, projectName: string, total: number, latestDate: string, counts: {inquiry,quotation,agreement,contract}}>}
+ */
+export const listAllProjects = () => {
+  const stores = [
+    { key: 'inquiry', store: inquiryStore },
+    { key: 'quotation', store: quotationStore },
+    { key: 'agreement', store: agreementStore },
+    { key: 'contract', store: contractStore },
+  ];
+  const map = new Map();
+  stores.forEach(({ key, store }) => {
+    store.getAll().forEach(doc => {
+      const projectId = doc.projectId || `legacy:${doc.projectName || '未分配'}`;
+      if (!map.has(projectId)) {
+        map.set(projectId, {
+          projectId,
+          projectName: doc.projectName || (projectId.startsWith('legacy:') ? projectId.replace('legacy:', '') : projectId),
+          total: 0,
+          latestDate: '',
+          counts: { inquiry: 0, quotation: 0, agreement: 0, contract: 0 },
+        });
+      }
+      const entry = map.get(projectId);
+      entry.counts[key] += 1;
+      entry.total += 1;
+      const docDate = doc.updatedAt || doc.createdAt || '';
+      if (docDate > entry.latestDate) entry.latestDate = docDate;
+      if (doc.projectName && !entry.projectName) entry.projectName = doc.projectName;
+    });
+  });
+  return Array.from(map.values()).sort((a, b) => (b.latestDate || '').localeCompare(a.latestDate || ''));
+};
+
+/**
+ * 获取一个项目下所有文档 (P0-1)
+ * @param {string} projectId
+ * @returns {{inquiry:Array, quotation:Array, agreement:Array, contract:Array}}
+ */
+export const getProjectDocuments = (projectId) => ({
+  inquiry: inquiryStore.getByProjectId(projectId),
+  quotation: quotationStore.getByProjectId(projectId),
+  agreement: agreementStore.getByProjectId(projectId),
+  contract: contractStore.getByProjectId(projectId),
+});
+
+/**
+ * 从询单编号派生项目编号: TI-2026-0001 → PRJ-2026-0001
+ * @param {string} inquiryId
+ * @returns {string|null}
+ */
+export const deriveProjectIdFromInquiry = (inquiryId) => {
+  if (!inquiryId) return null;
+  if (inquiryId.startsWith('PRJ-')) return inquiryId;
+  return inquiryId.replace(/^TI-/, 'PRJ-');
+};
+
+/**
  * 获取所有文档的统计信息
  */
 export const getDocumentStats = () => ({
@@ -236,4 +305,7 @@ export default {
   getDocumentStats,
   exportAllDocuments,
   importAllDocuments,
+  listAllProjects,
+  getProjectDocuments,
+  deriveProjectIdFromInquiry,
 };

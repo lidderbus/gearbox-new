@@ -9,6 +9,7 @@
  */
 
 import { getStandard } from '../data/torsionalStandardsDB';
+import { sanitizeHtml } from './sanitize';
 
 // ============================================================
 // 主入口
@@ -552,7 +553,7 @@ export async function generateProfessionalReport(reportData, options = {}) {
     try {
       const html2pdf = (await import('html2pdf.js')).default;
       const element = document.createElement('div');
-      element.innerHTML = html;
+      element.innerHTML = sanitizeHtml(html);
       document.body.appendChild(element);
 
       await html2pdf().set({
@@ -571,7 +572,7 @@ export async function generateProfessionalReport(reportData, options = {}) {
     }
   }
 
-  const printWindow = window.open('', '_blank');
+  const printWindow = window.open('', '_blank', 'noopener,noreferrer');
   printWindow.document.write(html);
   printWindow.document.close();
   printWindow.print();

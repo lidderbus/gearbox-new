@@ -1,8 +1,8 @@
 // src/components/ProductCenter/ProductCenter.js
 // 产品中心主组件
 
-import React, { useState, useMemo } from 'react';
-import { Container, Row, Col, Alert } from 'react-bootstrap';
+import React, { useState, useMemo, useEffect, lazy, Suspense } from 'react';
+import { Container, Row, Col, Alert, Tabs, Tab, Spinner } from 'react-bootstrap';
 import FilterPanel from './FilterPanel';
 import ProductGrid from './ProductGrid';
 import ProductDetail from './ProductDetail';
@@ -10,6 +10,8 @@ import CompareDrawer from './CompareDrawer';
 import CompareView from './CompareView';
 import ExportDialog from './ExportDialog';
 import { useProductFilter } from './useProductFilter';
+
+const HCMSelectionModule = lazy(() => import('../HCMSelectionModule'));
 
 const ProductCenter = ({
   gearboxData = [],
@@ -65,6 +67,34 @@ const ProductCenter = ({
   const [showCompare, setShowCompare] = useState(false);
   const [showExport, setShowExport] = useState(false);
 
+  // 顶部视图切换:全部产品 / HCM 高速专区
+  // 通过 sessionStorage `product_center_preset` 接收侧栏深链(/hcm-selection)的预设
+  const [activeView, setActiveView] = useState(() => {
+    try {
+      const preset = sessionStorage.getItem('product_center_preset');
+      if (preset === 'hcm') {
+        sessionStorage.removeItem('product_center_preset');
+        return 'hcm';
+      }
+    } catch (e) { /* ignore */ }
+    return 'all';
+  });
+
+  // 也支持组件挂载后 preset 才被设置(异步路由场景)
+  useEffect(() => {
+    const handler = () => {
+      try {
+        const preset = sessionStorage.getItem('product_center_preset');
+        if (preset === 'hcm') {
+          sessionStorage.removeItem('product_center_preset');
+          setActiveView('hcm');
+        }
+      } catch (e) { /* ignore */ }
+    };
+    window.addEventListener('hashchange', handler);
+    return () => window.removeEventListener('hashchange', handler);
+  }, []);
+
   // 查看详情
   const handleViewDetail = (product) => {
     setSelectedProduct(product);
@@ -110,36 +140,51 @@ const ProductCenter = ({
 
   return (
     <Container fluid className="py-3" style={{ paddingBottom: compareList.length > 0 ? '80px' : '20px' }}>
-      <Row>
-        {/* 左侧筛选面板 */}
-        <Col lg={3} md={4} className="mb-3">
-          <FilterPanel
-            filters={filters}
-            updateFilter={updateFilter}
-            resetFilters={resetFilters}
-            seriesCounts={seriesCounts}
-            totalCount={totalCount}
-            filteredCount={filteredProducts.length}
-            colors={colors}
-            theme={theme}
-          />
-        </Col>
+      <Tabs
+        activeKey={activeView}
+        onSelect={(k) => setActiveView(k || 'all')}
+        className="mb-3"
+        mountOnEnter
+      >
+        <Tab eventKey="all" title={<span><i className="bi bi-box-seam me-1"></i>全部产品</span>}>
+          <Row>
+            {/* 左侧筛选面板 */}
+            <Col lg={3} md={4} className="mb-3">
+              <FilterPanel
+                filters={filters}
+                updateFilter={updateFilter}
+                resetFilters={resetFilters}
+                seriesCounts={seriesCounts}
+                totalCount={totalCount}
+                filteredCount={filteredProducts.length}
+                colors={colors}
+                theme={theme}
+              />
+            </Col>
 
-        {/* 右侧产品列表 */}
-        <Col lg={9} md={8}>
-          <ProductGrid
-            products={filteredProducts}
-            onViewDetail={handleViewDetail}
-            onToggleCompare={toggleCompare}
-            isInCompare={isInCompare}
-            sortBy={filters.sortBy}
-            onSortChange={handleSortChange}
-            onExport={handleExport}
-            colors={colors}
-            theme={theme}
-          />
-        </Col>
-      </Row>
+            {/* 右侧产品列表 */}
+            <Col lg={9} md={8}>
+              <ProductGrid
+                products={filteredProducts}
+                onViewDetail={handleViewDetail}
+                onToggleCompare={toggleCompare}
+                isInCompare={isInCompare}
+                sortBy={filters.sortBy}
+                onSortChange={handleSortChange}
+                onExport={handleExport}
+                colors={colors}
+                theme={theme}
+              />
+            </Col>
+          </Row>
+        </Tab>
+
+        <Tab eventKey="hcm" title={<span><i className="bi bi-speedometer2 me-1"></i>HCM 高速专区</span>}>
+          <Suspense fallback={<div className="text-center py-5"><Spinner animation="border" /></div>}>
+            <HCMSelectionModule />
+          </Suspense>
+        </Tab>
+      </Tabs>
 
       {/* 底部对比栏 */}
       <CompareDrawer

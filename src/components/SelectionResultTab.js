@@ -30,6 +30,7 @@ const SelectionResultTab = ({
   onCouplingSelection,
   onGenerateQuotation,
   onGenerateAgreement,
+  onGenerateFullPackage,
   onSelectGearbox,
   colors,
   theme
@@ -51,6 +52,7 @@ const SelectionResultTab = ({
           onSelectGearbox={onGearboxSelection}
           onGenerateQuotation={onGenerateQuotation}
           onGenerateAgreement={onGenerateAgreement}
+          onGenerateFullPackage={onGenerateFullPackage}
           colors={colors}
           theme={theme}
           propulsionConfig={{

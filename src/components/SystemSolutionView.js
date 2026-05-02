@@ -1,17 +1,59 @@
 // src/components/SystemSolutionView.js
 // 系统级整体方案推荐：根据船型/用途推荐齿轮箱+联轴器+备用泵完整方案
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, ListGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { getRecommendedPump, getRecommendedCouplingInfo } from '../data/gearboxMatchingMaps';
 import { calculateFactoryPrice, getStandardDiscountRate } from '../utils/priceManager';
 import { printHtmlContent } from '../utils/pdfExportUtils';
+import { sanitizeHtml } from '../utils/sanitize';
 import ExportToolbar from './ExportToolbar';
+import { flexibleCouplings } from '../data/flexibleCouplings';
+import { standbyPumps } from '../data/standbyPumps';
 
 let embeddedData = [];
 try {
   const raw = require('../data/embeddedData').embeddedGearboxData || {};
   Object.keys(raw).forEach(k => { if (Array.isArray(raw[k])) embeddedData = embeddedData.concat(raw[k]); });
 } catch(e) {}
+
+// v63: BOM 价格反查 — 联轴器 / 备用泵 价格表索引化
+const _couplingPriceMap = (() => {
+  const map = {};
+  (flexibleCouplings || []).forEach(c => {
+    if (c && c.model) map[c.model.toUpperCase()] = c.factoryPrice || c.basePrice || c.price || 0;
+  });
+  return map;
+})();
+
+const _pumpPriceMap = (() => {
+  const map = {};
+  (standbyPumps || []).forEach(p => {
+    if (p && p.model) map[p.model.toUpperCase()] = p.factoryPrice || p.basePrice || p.price || 0;
+  });
+  return map;
+})();
+
+function lookupCouplingPrice(model) {
+  if (!model) return 0;
+  return _couplingPriceMap[String(model).toUpperCase()] || 0;
+}
+
+function lookupPumpPrice(model) {
+  if (!model) return 0;
+  return _pumpPriceMap[String(model).toUpperCase()] || 0;
+}
+
+// v63: 备用泵需求判定 — 大型齿轮箱/带离合器/CPP 必须配; 否则可选
+function judgePumpRequirement(item, propConfig) {
+  const model = (item.model || '').toUpperCase();
+  const lubrication = (item.lubrication || item.coolingType || '').toLowerCase();
+  // 强制要求: GW系列(高速齿轮)/带离合器(HCD)/CPP/可调桨/大型 (功率推算>1500kW)
+  if (lubrication.includes('forced') || lubrication.includes('强制') || lubrication.includes('压力')) return { required: true, reason: '强制润滑系统必须配备用泵' };
+  if (model.startsWith('GW') || model.startsWith('GC')) return { required: true, reason: 'GW/GC 系列高速齿轮箱必须配备用泵' };
+  if (propConfig && propConfig.cpp) return { required: true, reason: '可调桨系统应急保护需要备用泵' };
+  if (model.startsWith('HCD')) return { required: true, reason: 'HCD 带离合器系列推荐配备用泵' };
+  return { required: false, reason: '小型自润滑齿轮箱无需备用泵 (船东选配)' };
+}
 
 const VESSEL_TYPES = [
   { value: 'cargo', label: '散货船', powerRange: [500, 3000], seriesPrefer: ['HC', 'HCD'], icon: 'bi-box-seam' },
@@ -80,9 +122,10 @@ function generateSolution(vesselType, propulsion, power, speed, customVesselObj)
     const maxCap = caps.length ? Math.max(...caps) : 0;
     const margin = ((maxCap / requiredCap - 1) * 100);
 
-    // 配套设备
-    const pump = getRecommendedPump(model);
-    const coupling = getRecommendedCouplingInfo(model);
+    // 配套设备 (修正: pump 是字符串, coupling 是 {prefix, specific})
+    const pumpModel = getRecommendedPump(model);
+    const couplingInfo = getRecommendedCouplingInfo(model);
+    const couplingModel = couplingInfo?.specific || couplingInfo?.prefix || null;
 
     // 价格
     const price = item.price || 0;
@@ -99,9 +142,13 @@ function generateSolution(vesselType, propulsion, power, speed, customVesselObj)
       ratioCount: (Array.isArray(item.ratios) ? item.ratios : []).length,
       weight: item.weight || item.dryWeight || null,
       thrust: item.thrust || null,
+      lubrication: item.lubrication || item.coolingType || null,
       factoryPrice,
-      pump: pump?.model || pump?.pump || null,
-      coupling: coupling?.model || coupling?.coupling || null,
+      pump: pumpModel,
+      pumpPrice: lookupPumpPrice(pumpModel),
+      coupling: couplingModel,
+      couplingPrice: lookupCouplingPrice(couplingModel),
+      _raw: item,
     };
   }).filter(c => c.margin >= 5 && c.margin <= 150)
     .sort((a, b) => a.margin - b.margin)
@@ -121,15 +168,79 @@ function generateSolution(vesselType, propulsion, power, speed, customVesselObj)
   };
 }
 
+// v63: 完整 BOM 四象限报价
+const CONTROL_RATIO = 0.08;   // 控制系统 = 齿轮箱 8%
+const SERVICE_RATIO = 0.05;   // 安装+售后 = (齿+联+泵+控) 5%
+
 function buildCostBreakdown(solution) {
   if (!solution || solution.gearboxOptions.length === 0) return null;
   const top = solution.gearboxOptions[0];
   const cnt = solution.propConfig.count;
+
+  const pumpJudge = judgePumpRequirement(top._raw || top, solution.propConfig);
+
+  // ① 齿轮箱主机
   const gearboxUnit = top.factoryPrice || 0;
-  const couplingUnit = 0; // coupling price not available in mapping data
-  const pumpUnit = 0;
-  const singleTotal = gearboxUnit + couplingUnit + pumpUnit;
-  return { gearboxUnit, couplingUnit, pumpUnit, singleTotal, setCount: cnt, grandTotal: singleTotal * cnt, model: top.model };
+  const gearboxTotal = gearboxUnit * cnt;
+
+  // ② 推进系统 (联轴器 + 备用泵; CPP 桨预留)
+  const couplingUnit = top.couplingPrice || 0;
+  const couplingTotal = couplingUnit * cnt;
+  const pumpUnit = pumpJudge.required ? (top.pumpPrice || 0) : 0;
+  const pumpTotal = pumpUnit * cnt;
+  const cppPlaceholder = solution.propConfig.cpp;  // CPP 桨需询价
+  const propulsionTotal = couplingTotal + pumpTotal;
+
+  // ③ 控制系统 (估算)
+  const controlUnit = gearboxUnit > 0 ? Math.round(gearboxUnit * CONTROL_RATIO) : 0;
+  const controlTotal = controlUnit * cnt;
+
+  // ④ 安装售后 (估算)
+  const subTotalForService = gearboxTotal + propulsionTotal + controlTotal;
+  const serviceTotal = subTotalForService > 0 ? Math.round(subTotalForService * SERVICE_RATIO) : 0;
+
+  const grandTotal = gearboxTotal + propulsionTotal + controlTotal + serviceTotal;
+
+  return {
+    model: top.model,
+    setCount: cnt,
+    pumpJudge,
+    cppPlaceholder,
+    quadrants: {
+      mainEngine: {
+        title: '① 齿轮箱主机',
+        items: [{ name: top.model, unit: gearboxUnit, qty: cnt, total: gearboxTotal, note: gearboxUnit > 0 ? '出厂价' : '询价' }],
+        total: gearboxTotal,
+        confidence: gearboxUnit > 0 ? 'high' : 'unknown',
+      },
+      propulsion: {
+        title: '② 推进系统',
+        items: [
+          ...(top.coupling ? [{ name: '联轴器 ' + top.coupling, unit: couplingUnit, qty: cnt, total: couplingTotal, note: couplingUnit > 0 ? '配套价' : '询价' }] : []),
+          ...(pumpJudge.required && top.pump ? [{ name: '备用泵 ' + top.pump, unit: pumpUnit, qty: cnt, total: pumpTotal, note: pumpUnit > 0 ? '配套价' : '询价' }] : []),
+          ...(cppPlaceholder ? [{ name: 'CPP 可调桨系统', unit: 0, qty: cnt, total: 0, note: '询价 (按桨径定制)' }] : []),
+        ],
+        total: propulsionTotal,
+        confidence: (couplingUnit > 0 || pumpUnit > 0) ? 'medium' : 'low',
+      },
+      control: {
+        title: '③ 控制系统',
+        items: [{ name: '推进监控+操纵台 (估算)', unit: controlUnit, qty: cnt, total: controlTotal, note: `齿轮箱价 × ${(CONTROL_RATIO * 100).toFixed(0)}%` }],
+        total: controlTotal,
+        confidence: 'estimate',
+      },
+      service: {
+        title: '④ 安装+售后',
+        items: [{ name: '安装调试+保修 2 年 (估算)', unit: serviceTotal, qty: 1, total: serviceTotal, note: `小计 × ${(SERVICE_RATIO * 100).toFixed(0)}%` }],
+        total: serviceTotal,
+        confidence: 'estimate',
+      },
+    },
+    grandTotal,
+    // 向后兼容字段
+    gearboxUnit, couplingUnit, pumpUnit,
+    singleTotal: gearboxUnit + couplingUnit + pumpUnit,
+  };
 }
 
 function buildExportHtml(solution) {
@@ -149,8 +260,14 @@ function buildExportHtml(solution) {
 <table style="width:100%;border-collapse:collapse;margin-bottom:16px;font-size:13px">
 <tr style="background:#2563eb;color:#fff">${['排名','型号','系列','最大能力','余量','推力','重量','出厂价','联轴器','备用泵'].map(h=>`<th style="${hd}">${h}</th>`).join('')}</tr>
 ${top3.map(modelRow).join('')}</table>
-${cost && cost.gearboxUnit > 0 ? `<h4>三、费用估算 (${cost.model})</h4>
-<table style="width:60%;border-collapse:collapse;margin-bottom:16px">${paramRow('齿轮箱单台', '¥' + cost.gearboxUnit.toLocaleString())}${paramRow('数量', cost.setCount + ' 台')}<tr style="font-weight:bold"><td style="${td};background:#e0f2fe">齿轮箱合计</td><td style="${td};text-align:right;background:#e0f2fe">¥${cost.grandTotal.toLocaleString()}</td></tr></table>` : ''}
+${cost && cost.gearboxUnit > 0 ? `<h4>三、BOM 整体方案报价 (${cost.model} × ${cost.setCount}台)</h4>
+<table style="width:100%;border-collapse:collapse;margin-bottom:8px;font-size:13px">
+<tr style="background:#1e40af;color:#fff"><th style="${hd}">象限</th><th style="${hd}">名称</th><th style="${hd}">单价(¥)</th><th style="${hd}">数量</th><th style="${hd}">小计(¥)</th><th style="${hd}">备注</th></tr>
+${Object.values(cost.quadrants).flatMap(q => q.items.length === 0 ? [`<tr><td style="${hd}" colspan="6"><i>${q.title}: 无配套数据</i></td></tr>`] : q.items.map((it, i) => `<tr${i === 0 ? ' style="background:#f0f9ff"' : ''}><td style="${hd}">${i === 0 ? q.title : ''}</td><td style="${hd}">${it.name}</td><td style="${hd};text-align:right">${it.unit > 0 ? it.unit.toLocaleString() : '询价'}</td><td style="${hd};text-align:center">${it.qty}</td><td style="${hd};text-align:right">${it.total > 0 ? it.total.toLocaleString() : '询价'}</td><td style="${hd};color:#666;font-size:12px">${it.note}</td></tr>`)).join('')}
+<tr style="font-weight:bold;background:#dcfce7;font-size:14px"><td style="${hd}" colspan="4">合计 (含估算)</td><td style="${hd};text-align:right">¥ ${cost.grandTotal.toLocaleString()}</td><td style="${hd};font-size:11px">未含税/运输/海关</td></tr>
+</table>
+<p style="color:#666;font-size:11px;margin:8px 0">备用泵需求: ${cost.pumpJudge.required ? '✓ 需要' : '✗ 不强制需要'} — ${cost.pumpJudge.reason}</p>
+<p style="color:#999;font-size:11px;margin:0">控制系统按齿轮箱价 8% / 安装售后按小计 5% 估算, 实际报价以合同为准</p>` : ''}
 <p style="color:#999;font-size:11px;margin-top:24px;border-top:1px solid #eee;padding-top:8px">杭州前进齿轮箱集团 - 齿轮箱选型系统自动生成</p></div>`;
 }
 
@@ -199,7 +316,7 @@ export default function SystemSolutionView({ colors, theme }) {
   const handleExport = useCallback(() => {
     if (!solution) return;
     const div = document.createElement('div');
-    div.innerHTML = buildExportHtml(solution);
+    div.innerHTML = sanitizeHtml(buildExportHtml(solution));
     document.body.appendChild(div);
     printHtmlContent(div, { title: `方案报告-${solution.vessel.label}-${solution.power}kW` });
     setTimeout(() => document.body.removeChild(div), 1000);
@@ -231,7 +348,7 @@ export default function SystemSolutionView({ colors, theme }) {
     <Container fluid className="py-3">
       <Row className="mb-3">
         <Col><h5><i className="bi bi-diagram-3 me-2"></i>整体方案推荐</h5>
-          <small className="text-muted">根据船型、推进方式和功率，自动推荐齿轮箱+联轴器+备用泵完整方案 ({embeddedData.length}型号)</small>
+          <small className="text-muted">根据船型、推进方式和功率，自动推荐齿轮箱+联轴器+备用泵完整方案 (索引 {embeddedData.length} 型号 / 数据库 638 含 PTO/滑动轴承变体)</small>
         </Col>
       </Row>
 
@@ -346,6 +463,20 @@ export default function SystemSolutionView({ colors, theme }) {
                         <span>齿轮箱估价</span><strong className="text-success">&yen;{solution.totalPriceEst.toLocaleString()}</strong>
                       </ListGroup.Item>
                     )}
+                    {costInfo && costInfo.pumpJudge && (
+                      <ListGroup.Item className="d-flex justify-content-between py-1" title={costInfo.pumpJudge.reason}>
+                        <span>备用泵需求</span>
+                        {costInfo.pumpJudge.required
+                          ? <Badge bg="warning" text="dark">✓ 需要</Badge>
+                          : <Badge bg="light" text="dark">✗ 选配</Badge>}
+                      </ListGroup.Item>
+                    )}
+                    {costInfo && costInfo.grandTotal > 0 && (
+                      <ListGroup.Item className="d-flex justify-content-between py-1 bg-success bg-opacity-10">
+                        <span><strong>BOM 总价</strong></span>
+                        <strong className="text-success">&yen;{costInfo.grandTotal.toLocaleString()}</strong>
+                      </ListGroup.Item>
+                    )}
                   </ListGroup>
                 </Col>
                 <Col md={9}>
@@ -384,31 +515,57 @@ export default function SystemSolutionView({ colors, theme }) {
 
           {costInfo && costInfo.gearboxUnit > 0 && (
             <Card className="mb-3 border-info">
-              <Card.Header className="bg-info bg-opacity-10"><i className="bi bi-calculator me-1"></i>费用对比 ({costInfo.model})</Card.Header>
-              <Card.Body className="py-2">
-                <Row>
-                  <Col md={4}>
-                    <div className="text-center p-2 border rounded">
-                      <div className="text-muted small">齿轮箱单台</div>
-                      <div className="fs-5 fw-bold">&yen;{costInfo.gearboxUnit.toLocaleString()}</div>
-                    </div>
-                  </Col>
-                  {costInfo.setCount > 1 && (
-                    <Col md={4}>
-                      <div className="text-center p-2 border rounded bg-warning bg-opacity-10">
-                        <div className="text-muted small">双机合计 ({costInfo.setCount}台)</div>
-                        <div className="fs-5 fw-bold text-warning">&yen;{costInfo.grandTotal.toLocaleString()}</div>
-                      </div>
-                    </Col>
-                  )}
-                  <Col md={costInfo.setCount > 1 ? 4 : 8}>
-                    <div className="small text-muted mt-1">
-                      <div><i className="bi bi-dot"></i>齿轮箱: &yen;{costInfo.gearboxUnit.toLocaleString()} x {costInfo.setCount}</div>
-                      <div><i className="bi bi-dot"></i>联轴器: 以实际���套为准</div>
-                      <div><i className="bi bi-dot"></i>备用泵: 以实际配套为准</div>
-                    </div>
-                  </Col>
+              <Card.Header className="bg-info bg-opacity-10 d-flex justify-content-between align-items-center">
+                <span><i className="bi bi-grid-3x3-gap me-1"></i>BOM 四象限报价 — {costInfo.model} × {costInfo.setCount} 台</span>
+                <span className="fs-5 fw-bold text-success">合计 &yen;{costInfo.grandTotal.toLocaleString()}</span>
+              </Card.Header>
+              <Card.Body className="py-3">
+                <Row className="g-3">
+                  {Object.entries(costInfo.quadrants).map(([key, q]) => {
+                    const confColor = q.confidence === 'high' ? 'success' : q.confidence === 'medium' ? 'info' : q.confidence === 'estimate' ? 'warning' : 'secondary';
+                    const confLabel = q.confidence === 'high' ? '准确' : q.confidence === 'medium' ? '配套价' : q.confidence === 'estimate' ? '估算' : '询价';
+                    return (
+                      <Col md={6} key={key}>
+                        <div className="border rounded p-3 h-100" style={{ borderColor: colors?.border }}>
+                          <div className="d-flex justify-content-between align-items-center mb-2">
+                            <h6 className="mb-0" style={{ color: colors?.text }}>{q.title}</h6>
+                            <Badge bg={confColor}>{confLabel}</Badge>
+                          </div>
+                          {q.items.length === 0 ? (
+                            <div className="text-muted small fst-italic">无配套数据</div>
+                          ) : (
+                            <Table size="sm" borderless className="mb-2">
+                              <tbody>
+                                {q.items.map((it, i) => (
+                                  <tr key={i}>
+                                    <td style={{ fontSize: '0.85rem' }}>{it.name}</td>
+                                    <td className="text-end" style={{ fontSize: '0.85rem', whiteSpace: 'nowrap' }}>
+                                      {it.unit > 0 ? `¥${it.unit.toLocaleString()} × ${it.qty}` : <span className="text-warning">询价</span>}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </Table>
+                          )}
+                          <div className="d-flex justify-content-between border-top pt-2">
+                            <small className="text-muted">{q.items[0]?.note || ''}</small>
+                            <strong className={`text-${confColor}`}>
+                              {q.total > 0 ? `¥${q.total.toLocaleString()}` : '—'}
+                            </strong>
+                          </div>
+                        </div>
+                      </Col>
+                    );
+                  })}
                 </Row>
+                <div className="mt-3 pt-2 border-top small text-muted">
+                  <i className="bi bi-info-circle me-1"></i>
+                  备用泵: <strong>{costInfo.pumpJudge.required ? '需要' : '选配'}</strong> ({costInfo.pumpJudge.reason}){' · '}
+                  控制 8% / 售后 5% 为行业估算系数, 实际以合同为准 · 未含税/运输/海关
+                  <OverlayTrigger placement="top" overlay={<Tooltip>四象限置信度: 准确=数据库出厂价 · 配套价=查表得 · 估算=按比例 · 询价=需联系销售</Tooltip>}>
+                    <i className="bi bi-question-circle ms-1" style={{ cursor: 'help' }}></i>
+                  </OverlayTrigger>
+                </div>
               </Card.Body>
             </Card>
           )}

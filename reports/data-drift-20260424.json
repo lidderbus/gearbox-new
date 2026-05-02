@@ -1,0 +1,258 @@
+{
+  "_meta": {
+    "generatedAt": "2026-04-24T11:24:56.589Z",
+    "strict": false
+  },
+  "counts": {
+    "complete": 585,
+    "embedded": 628,
+    "missingInEmbedded": 0,
+    "missingInComplete": 43,
+    "conflicts": 45
+  },
+  "missingInEmbedded": [],
+  "missingInComplete": [
+    "135A",
+    "HCW800",
+    "HCW1400",
+    "HCL320A",
+    "HCD1200/1",
+    "HCDS600/1",
+    "HCTS2700/1",
+    "GWC49.59A (带 PTO)",
+    "GWC52.59A (滑动轴承)",
+    "GWC60.66A (滑动轴承)",
+    "GWC60.74B (带 PTO)",
+    "GWC63.71 (带 PTO)",
+    "GWC70.76C (带 PTO)",
+    "GWC70.85A (带 PTO)",
+    "GWC75.90 (带 PTO)",
+    "GWC78.88A (带 PTO)",
+    "HCM70",
+    "HCM160",
+    "HCM250",
+    "HCM435",
+    "HCM600",
+    "HCM1250",
+    "HCM2400",
+    "HCM3400",
+    "HCM306",
+    "HCM500",
+    "HCM1801",
+    "HCAM90",
+    "HCAM250",
+    "HCAM1800"
+  ],
+  "conflicts": [
+    {
+      "model": "2GWH1060",
+      "field": "price",
+      "complete": 280000,
+      "embedded": 850000,
+      "diffPct": "67.1%"
+    },
+    {
+      "model": "DT4300",
+      "field": "price",
+      "complete": 165500,
+      "embedded": 175000,
+      "diffPct": "5.4%"
+    },
+    {
+      "model": "GCH390",
+      "field": "price",
+      "complete": 160000,
+      "embedded": 38000,
+      "diffPct": "76.3%"
+    },
+    {
+      "model": "GCH750",
+      "field": "price",
+      "complete": 160000,
+      "embedded": 55000,
+      "diffPct": "65.6%"
+    },
+    {
+      "model": "GCS1000",
+      "field": "price",
+      "complete": 1500000,
+      "embedded": 85000,
+      "diffPct": "94.3%"
+    },
+    {
+      "model": "GCS320",
+      "field": "price",
+      "complete": 264320,
+      "embedded": 30000,
+      "diffPct": "88.7%"
+    },
+    {
+      "model": "GCS540",
+      "field": "price",
+      "complete": 358333,
+      "embedded": 45000,
+      "diffPct": "87.4%"
+    },
+    {
+      "model": "GCSE20",
+      "field": "price",
+      "complete": 929755,
+      "embedded": 20000,
+      "diffPct": "97.8%"
+    },
+    {
+      "model": "GWC28.30P",
+      "field": "price",
+      "complete": 450000,
+      "embedded": 90000,
+      "diffPct": "80.0%"
+    },
+    {
+      "model": "GWC30.32P",
+      "field": "price",
+      "complete": 450000,
+      "embedded": 110000,
+      "diffPct": "75.6%"
+    },
+    {
+      "model": "GWC32.35P",
+      "field": "price",
+      "complete": 450000,
+      "embedded": 130000,
+      "diffPct": "71.1%"
+    },
+    {
+      "model": "GWC36.39P",
+      "field": "price",
+      "complete": 450000,
+      "embedded": 155000,
+      "diffPct": "65.6%"
+    },
+    {
+      "model": "GWC39.41P",
+      "field": "price",
+      "complete": 450000,
+      "embedded": 185000,
+      "diffPct": "58.9%"
+    },
+    {
+      "model": "GWC42.45P",
+      "field": "price",
+      "complete": 450000,
+      "embedded": 220000,
+      "diffPct": "51.1%"
+    },
+    {
+      "model": "GWC45.49P",
+      "field": "price",
+      "complete": 450000,
+      "embedded": 260000,
+      "diffPct": "42.2%"
+    },
+    {
+      "model": "GWC49.54P",
+      "field": "price",
+      "complete": 450000,
+      "embedded": 310000,
+      "diffPct": "31.1%"
+    },
+    {
+      "model": "GWC52.59P",
+      "field": "price",
+      "complete": 550000,
+      "embedded": 370000,
+      "diffPct": "32.7%"
+    },
+    {
+      "model": "GWC60.66P",
+      "field": "price",
+      "complete": 780000,
+      "embedded": 450000,
+      "diffPct": "42.3%"
+    },
+    {
+      "model": "GWC63.71P",
+      "field": "price",
+      "complete": 950000,
+      "embedded": 550000,
+      "diffPct": "42.1%"
+    },
+    {
+      "model": "GWS28.30P",
+      "field": "price",
+      "complete": 68875,
+      "embedded": 120800,
+      "diffPct": "43.0%"
+    },
+    {
+      "model": "GWS30.32P",
+      "field": "price",
+      "complete": 86260,
+      "embedded": 135000,
+      "diffPct": "36.1%"
+    },
+    {
+      "model": "GWS32.35P",
+      "field": "price",
+      "complete": 98610,
+      "embedded": 155000,
+      "diffPct": "36.4%"
+    },
+    {
+      "model": "GWS36.39P",
+      "field": "price",
+      "complete": 117610,
+      "embedded": 185000,
+      "diffPct": "36.4%"
+    },
+    {
+      "model": "GWS39.41P",
+      "field": "price",
+      "complete": 146110,
+      "embedded": 210000,
+      "diffPct": "30.4%"
+    },
+    {
+      "model": "GWS42.45P",
+      "field": "price",
+      "complete": 176510,
+      "embedded": 250000,
+      "diffPct": "29.4%"
+    },
+    {
+      "model": "GWS45.49P",
+      "field": "price",
+      "complete": 262010,
+      "embedded": 290000,
+      "diffPct": "9.7%"
+    },
+    {
+      "model": "GWS49.54P",
+      "field": "price",
+      "complete": 382470,
+      "embedded": 350000,
+      "diffPct": "8.5%"
+    },
+    {
+      "model": "GWS52.59P",
+      "field": "price",
+      "complete": 517750,
+      "embedded": 420000,
+      "diffPct": "18.9%"
+    },
+    {
+      "model": "GWS60.66P",
+      "field": "price",
+      "complete": 760000,
+      "embedded": 500000,
+      "diffPct": "34.2%"
+    },
+    {
+      "model": "HC1200/1P",
+      "field": "price",
+      "complete": 210000,
+      "embedded": 70000,
+      "diffPct": "66.7%"
+    }
+  ]
+}

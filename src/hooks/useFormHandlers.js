@@ -32,17 +32,22 @@ const useFormHandlers = ({
     const optionalNonNeg = ['thrustRequirement', 'temperature'];
 
     if (requiredPos.includes(fieldName)) {
-      // Pristine: empty field shows no validation feedback
-      if (value === '' || value === null || value === undefined || value === 0) return 'valid';
+      // Pristine: empty field shows no validation feedback (但 0/负数 必须报错, 不再视为 valid)
+      if (value === '' || value === null || value === undefined) return 'valid';
       if (isNaN(numValue) || numValue <= 0) return 'invalid';
-      if ((fieldName === 'enginePower' && numValue > 5000) ||
-          (fieldName === 'engineSpeed' && numValue > 3000) ||
-          (fieldName === 'targetRatio' && numValue > 20)) return 'warning';
+      // v60 阈值校准 (报告 #4): 之前阈值远超工程常用上限, 误报正常工况
+      // 功率: 范围 50-3500 kW → 警告 > 2500 kW (近上限 70%)
+      // 转速: 范围 750-2200 r/min → 警告 > 2200 r/min (超上限才报)
+      // 减速比: 范围 1.5-10 → 警告 > 8 (近上限 80%)
+      if ((fieldName === 'enginePower' && numValue > 2500) ||
+          (fieldName === 'engineSpeed' && numValue > 2200) ||
+          (fieldName === 'targetRatio' && numValue > 8)) return 'warning';
     }
 
     if (optionalNonNeg.includes(fieldName)) {
         if (value !== '' && value !== null && (isNaN(numValue) || numValue < 0)) return 'invalid';
-        if (fieldName === 'thrustRequirement' && numValue > 1000) return 'warning';
+        // v60 阈值校准: 推力 80 kN 不应报警, 主流船用上限 ~150 kN
+        if (fieldName === 'thrustRequirement' && numValue > 150) return 'warning';
         if (fieldName === 'temperature' && (numValue < -20 || numValue > 60)) return 'warning';
     }
 

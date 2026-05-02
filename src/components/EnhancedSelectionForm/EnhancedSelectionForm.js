@@ -19,6 +19,7 @@ import TechRequirementsSection from './TechRequirementsSection';
 import QualityRequirementsSection from './QualityRequirementsSection';
 import ReferenceSection from './ReferenceSection';
 import OutputRequirementsSection from './OutputRequirementsSection';
+import QuickByVesselType from './QuickByVesselType';
 
 // 主题颜色配置
 const getThemeColors = (theme) => {
@@ -789,6 +790,17 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
               updateField={updateField}
               colors={colors}
               theme={theme}
+            />
+
+            {/* B3: 按船型快速选型 — 选 Capesize/VLCC/Tug 等自动带入功率/转速/速比 */}
+            <QuickByVesselType
+              colors={colors}
+              onApply={(defaults) => {
+                if (defaults.motorPower) updateField('motorPower', defaults.motorPower);
+                if (defaults.motorSpeed) updateField('motorSpeed', defaults.motorSpeed);
+                if (defaults.targetRatio) updateField('targetRatio', defaults.targetRatio);
+                if (defaults.vesselType) updateField('vesselType', defaults.vesselType);
+              }}
             />
 
             {/* 主机信息 */}

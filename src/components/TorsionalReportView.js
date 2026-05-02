@@ -176,9 +176,9 @@ export default function TorsionalReportView({ colors, theme }) {
                 <td><Badge bg="primary">{r.gearbox}</Badge></td><td className="small">{r.date}</td>
                 <td><Badge bg={r.status==='已完成'?'success':'warning'}>{r.status}</Badge></td>
                 <td>
-                  <Button size="sm" variant="outline-primary" className="me-1" title="下载" onClick={() => handleDL(r)}><i className="bi bi-download"/></Button>
-                  <Button size="sm" variant="outline-secondary" className="me-1" title="查看" onClick={() => setModal(r)}><i className="bi bi-eye"/></Button>
-                  <Button size="sm" variant="outline-danger" title="删除" onClick={() => handleDel(r.id)}><i className="bi bi-trash"/></Button>
+                  <Button size="sm" variant="outline-primary" className="me-1" title="下载" aria-label="下载报告" onClick={() => handleDL(r)}><i className="bi bi-download"/></Button>
+                  <Button size="sm" variant="outline-secondary" className="me-1" title="查看" aria-label="查看报告" onClick={() => setModal(r)}><i className="bi bi-eye"/></Button>
+                  <Button size="sm" variant="outline-danger" title="删除" aria-label="删除报告" onClick={() => handleDel(r.id)}><i className="bi bi-trash"/></Button>
                 </td></tr>)}</tbody>
             </Table>)}
           </Card.Body></Card></Col>

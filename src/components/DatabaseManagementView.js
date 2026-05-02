@@ -412,7 +412,7 @@ const DatabaseManagementView = ({ appData = {}, setAppData = () => {} }) => {
   }, []);
 
   const openCouplingSelectionPage = () => {
-    window.open('/coupling-selection-enhanced.html', '_blank');
+    window.open('/coupling-selection-enhanced.html', '_blank', 'noopener,noreferrer');
   };
 
   return (

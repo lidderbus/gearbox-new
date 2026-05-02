@@ -20,6 +20,7 @@ import { adaptEnhancedData } from './dataAdapter'; // 确保导入路径正确
 // import { standbyPumps } from '../data/standbyPumps';
 import { fixAccessories, ensureGearboxNumericFields } from './fixAccessories'; // <--- 导入新修复函数
 import { APP_DATA_VERSION } from '../config'; // 假设 APP_DATA_VERSION 在 config.js 中定义
+import { mergeMarketEnrichment } from './marketEnrichmentMerge'; // P1#1 ERP 市场富化合并
 
 // Import price management tools
 import {
@@ -428,6 +429,14 @@ export const loadAndRepairData = async (options = {}) => {
           if (allRepairWarnings.length > 0) { logWarn("repair.js: Total repair warnings:", allRepairWarnings); }
     }
 
+
+    // P1#1 (2026-04-24): 合并 ERP marketEnrichment 到运行时数据
+    try {
+      const mergeStat = mergeMarketEnrichment(adaptedData);
+      logger.log(`repair.js: ERP 市场数据已合并, 命中率 ${mergeStat.hit}/${mergeStat.total}`);
+    } catch (mergeErr) {
+      logWarn('repair.js: marketEnrichment 合并失败 (忽略, 不阻塞启动)', mergeErr);
+    }
 
     onProgress?.('saving data');
     // 8. Update Version and Save to localStorage

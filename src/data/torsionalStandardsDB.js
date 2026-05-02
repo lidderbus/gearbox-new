@@ -203,6 +203,59 @@ export const STANDARDS_DATABASE = {
     },
     taperRatios: ['1:12', '1:15', '1:20'],
     defaultTaper: '1:15'
+  },
+
+  // P0-3: IACS UR M51 — Unified Requirements 国际公约统一要求
+  // 参考: IACS UR M51 (Rev.1, 2008) "Type Approval Certification of Crankshafts for Marine Diesel Engines"
+  //       配套 UR M53 "Calculation of Crankshafts for I.C. Engines" 与 UR M68 (扭振)
+  IACS_UR_M51: {
+    code: 'IACS_UR_M51',
+    name: 'IACS UR M51',
+    fullName: 'IACS Unified Requirements M51 — Marine Diesel Engine Crankshaft Torsional Vibration',
+    region: 'International',
+    type: 'unified',
+    notes: '所有 IACS 成员船级社(CCS/DNV/LR/ABS/BV/RINA/NK/KR/PRS/CRS/IRS) 的统一要求基线',
+    shaftFormula: {
+      formula: 'd = F × K × [Ne × 560 / ne / (Rm + 160)]^(1/3)',
+      coefficients: {
+        F: { propellerShaft: 100, intermediateShaft: 95, thrustShaft: 100 },
+        K: { propellerShaft: 1.26, intermediateShaft: 1.0, thrustShaft: 1.0, sealingSection: 1.15 },
+        materialFactor: { stainlessSteel: 0.9, carbonSteel: 1.0 }
+      }
+    },
+    flangeRequirements: { thicknessRatio: 0.2, radiusRatio: 0.08 },
+    bearingRequirements: { sternBearingLength: 2.0, bracketBearingLength: 4.0 },
+    torsionalVibration: {
+      // M51 §3.2.2 — 共振避让带宽
+      forbiddenZone: { min: 0.85, max: 1.05 },
+      // M51 §3.2.3 — 持续工作转速边界裕度 ≥ 5%; 短时通过裕度 ≥ 10%
+      operatingMargin: 0.05,
+      transientMargin: 0.10,
+      dampingMethod: 'standard',
+      analysisRequired: true,
+      // M51 §4.1 — 应力限值表 (普通船用钢, Rm 单位 N/mm²)
+      // continuous (持续运行) 和 transient (短时通过限速带) 两套限值
+      allowableStress: {
+        intermediate: {
+          formula: 'tau_c = 18 + Rm/36',         // 持续应力 (N/mm²)
+          transientFormula: 'tau_t = 1.7 × tau_c',
+          transientFactor: 1.7,
+          continuousLimitMPa: 55,                 // 典型材料下界
+          transientLimitMPa: 90,                  // 典型材料下界
+        },
+        propeller: {
+          formula: 'tau_c = 18 × sqrt(560/(Rm+160)) + Rm/48',
+          transientFormula: 'tau_t = 1.7 × tau_c',
+          transientFactor: 1.7,
+          continuousLimitMPa: 55,
+          transientLimitMPa: 90,
+        }
+      },
+      // M51 §4.2 — 当与 M53 (曲轴疲劳) 联用时,应同步校核
+      coupledChecks: ['UR M53 crankshaft fatigue', 'UR M68 main thrust bearing'],
+    },
+    taperRatios: ['1:12', '1:15', '1:20'],
+    defaultTaper: '1:12'
   }
 };
 

@@ -1,15 +1,37 @@
 // src/components/EnhancedSelectionForm/EngineInfoSection.js
-// 主机信息区块组件
+// 主机信息区块组件 — B1 接入多品牌柴油机库智能选择 (2026-05-02)
 
-import React from 'react';
-import { Card, Form, Row, Col, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import React, { useMemo, useState } from 'react';
+import { Card, Form, Row, Col, OverlayTrigger, Tooltip, Badge } from 'react-bootstrap';
 import { FORM_OPTIONS } from './useEnhancedSelectionForm';
+import {
+  searchEngines,
+  toFormFields,
+  getEngineById
+} from '../../utils/engineDatabaseUtils';
+import { marineEngines } from '../../data/marineEngineDatabase';
 
 const HelpTip = ({ text }) => (
   <OverlayTrigger placement="top" overlay={<Tooltip>{text}</Tooltip>}>
     <i className="bi bi-info-circle ms-1" style={{ cursor: 'pointer', color: '#6c757d', fontSize: '0.85em' }}></i>
   </OverlayTrigger>
 );
+
+// 把 datalist option 文本反向解析为 engineId, 因为 datalist 选中只回传 value 文本
+const buildOptionLabel = (e) => `${e.brand} ${e.model} · ${e.ratedPower_kW}kW @ ${e.ratedSpeed_rpm}rpm`;
+const optionToId = (text) => {
+  if (!text) return null;
+  const match = marineEngines.find(e => buildOptionLabel(e) === text);
+  return match ? match.id : null;
+};
+
+const TierBadgeColor = {
+  IMO_Tier_III: 'success',
+  IMO_Tier_II: 'primary',
+  IMO_Tier_I: 'secondary',
+  CCNR_II: 'info',
+  EU_Stage_V: 'success'
+};
 
 /**
  * 主机信息区块
@@ -28,12 +50,87 @@ const EngineInfoSection = ({
     borderColor: colors.inputBorder || '#ced4da'
   };
 
+  // 智能选择 datalist — B1
+  const [quickSearchInput, setQuickSearchInput] = useState('');
+  const datalistOptions = useMemo(() => {
+    const results = searchEngines(quickSearchInput, { maxResults: 30 });
+    return results.map(e => ({
+      id: e.id,
+      label: buildOptionLabel(e),
+      tier: e.emissionTier,
+      confidence: e.confidence
+    }));
+  }, [quickSearchInput]);
+
+  const handleQuickSelect = (text) => {
+    setQuickSearchInput(text);
+    const id = optionToId(text);
+    if (!id) return;
+    const engine = getEngineById(id);
+    if (!engine) return;
+    const fields = toFormFields(engine);
+    Object.keys(fields).forEach((key) => {
+      if (fields[key] !== undefined && fields[key] !== null) {
+        updateField(key, fields[key]);
+      }
+    });
+  };
+
+  const selectedEngine = useMemo(() => getEngineById(formData.engineId), [formData.engineId]);
+
   return (
     <Card className="mb-4" style={{ backgroundColor: colors.card || '#fff', borderColor: colors.border || '#dee2e6' }}>
       <Card.Header style={{ backgroundColor: colors.headerBg || '#f8f9fa', color: colors.headerText || '#212529' }}>
         <strong>主机信息</strong>
       </Card.Header>
       <Card.Body>
+        {/* B1: 多品牌柴油机库智能选择 — 选中后自动填充功率/转速/扭矩等 */}
+        <Row className="mb-3 pb-2" style={{ borderBottom: `1px dashed ${colors.border || '#dee2e6'}` }}>
+          <Col md={12}>
+            <Form.Label className="fw-bold text-success">
+              <i className="bi bi-lightning-charge me-1"></i>
+              智能型号选择 (按品牌/型号关键字)
+              <HelpTip text="选中柴油机后自动填充功率/转速/扭矩/排放等级。数据来源: 厂商 Project Guide + 船级社公开 EIAPP" />
+            </Form.Label>
+          </Col>
+          <Col md={9}>
+            <Form.Control
+              type="text"
+              list="engine-quick-options"
+              value={quickSearchInput}
+              onChange={(e) => handleQuickSelect(e.target.value)}
+              placeholder="输入关键字: MAN / Wartsila / 6L20 / 潍柴 ..."
+              style={inputStyle}
+              aria-label="智能型号选择"
+            />
+            <datalist id="engine-quick-options">
+              {datalistOptions.map(opt => (
+                <option key={opt.id} value={opt.label} />
+              ))}
+            </datalist>
+            <Form.Text className="text-muted">
+              库内 {marineEngines.length} 型号 · 选中后下方品牌/型号/功率/转速会自动填充
+            </Form.Text>
+          </Col>
+          <Col md={3}>
+            {selectedEngine && (
+              <div style={{ fontSize: '0.85em' }}>
+                <Badge bg={TierBadgeColor[selectedEngine.emissionTier] || 'secondary'} className="me-1">
+                  {selectedEngine.emissionTier?.replace('IMO_', '') || ''}
+                </Badge>
+                <Badge bg={selectedEngine.confidence === 'A' ? 'success' : 'warning'}>
+                  数据 {selectedEngine.confidence}
+                </Badge>
+                {selectedEngine.eiapp?.issuer && (
+                  <div className="mt-1 text-muted">
+                    EIAPP: {selectedEngine.eiapp.issuer}
+                  </div>
+                )}
+              </div>
+            )}
+          </Col>
+        </Row>
+
         <Row>
           <Col md={6}>
             <Form.Group className="mb-3">

@@ -9,6 +9,7 @@ import { SelectionConfigProvider } from './contexts/SelectionConfigContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './utils/serviceWorkerRegistration';
+import FatalScreen from './components/FatalScreen';
 
 // Sentry 错误监控
 import { initSentry } from './config/sentry';
@@ -55,7 +56,8 @@ const Root = () => {
 
       } catch (error) {
         console.error("Root: 数据加载失败", error);
-        setLoadingError(error.message);
+        // A4: 把完整 error (含 details) 传给 FatalScreen, 让工程师能定位
+        setLoadingError(error);
         setLoadingStatus('error');
       }
     };
@@ -90,17 +92,9 @@ const Root = () => {
     );
   }
 
-  // 错误状态UI
+  // 错误状态UI - A4 投产硬阻断: 显示明细+复制详情+联系管理员
   if (loadingStatus === 'error') {
-    return (
-      <div className="error-container">
-        <h2>应用启动失败</h2>
-        <p>错误详情: {loadingError}</p>
-        <button className="reload-button" onClick={() => window.location.reload()}>
-          重新加载
-        </button>
-      </div>
-    );
+    return <FatalScreen error={loadingError} onRetry={() => window.location.reload()} />;
   }
 
   // 正常渲染应用
@@ -119,9 +113,34 @@ const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 root.render(<Root />);
 
-// Web Vitals 性能监控
+// Web Vitals 性能监控 — P3: localStorage breadcrumb + 生产级 poor 警告
+const VITALS_BUFFER_KEY = 'web_vitals_recent';
+const VITALS_BUFFER_MAX = 50;
+
+function appendVitalToBuffer(metric) {
+  try {
+    const raw = localStorage.getItem(VITALS_BUFFER_KEY);
+    const buf = raw ? JSON.parse(raw) : [];
+    buf.push({
+      name: metric.name,
+      value: Math.round(metric.value * 1000) / 1000,
+      rating: metric.rating,
+      ts: Date.now(),
+      url: window.location.pathname
+    });
+    // 截断最近 N 条
+    const trimmed = buf.slice(-VITALS_BUFFER_MAX);
+    localStorage.setItem(VITALS_BUFFER_KEY, JSON.stringify(trimmed));
+  } catch (_) {
+    // localStorage 满或被禁用时静默
+  }
+}
+
 reportWebVitals((metric) => {
-  // 发送到 Google Analytics (如果已配置)
+  // 1. localStorage breadcrumb — 即使无 Sentry/GA 也能本地查诊断
+  appendVitalToBuffer(metric);
+
+  // 2. Google Analytics (如已配置)
   if (window.gtag) {
     window.gtag('event', metric.name, {
       event_category: 'Web Vitals',
@@ -131,16 +150,27 @@ reportWebVitals((metric) => {
     });
   }
 
-  // 发送到 Sentry 作为自定义测量 (如果已配置)
+  // 3. Sentry 自定义测量 (如已配置)
   if (process.env.REACT_APP_SENTRY_DSN) {
     import('@sentry/react').then((Sentry) => {
       Sentry.setMeasurement(metric.name, metric.value, metric.name === 'CLS' ? '' : 'millisecond');
+      // poor 级别上升为 breadcrumb (生产环境可见)
+      if (metric.rating === 'poor') {
+        Sentry.addBreadcrumb({
+          category: 'web-vitals',
+          level: 'warning',
+          message: `${metric.name} poor: ${Math.round(metric.value)}`,
+          data: { name: metric.name, value: metric.value, id: metric.id, url: window.location.pathname }
+        });
+      }
     }).catch(() => {});
   }
 
-  // 开发环境下输出到控制台
+  // 4. 控制台输出: 开发全部 + 生产 poor
   if (process.env.NODE_ENV === 'development') {
     console.log(`[Web Vitals] ${metric.name}:`, Math.round(metric.value), metric.rating);
+  } else if (metric.rating === 'poor') {
+    console.warn(`[Web Vitals] ${metric.name} = ${Math.round(metric.value)} (poor)`);
   }
 });
 

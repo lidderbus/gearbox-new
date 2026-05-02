@@ -1,11 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Card, Badge, Row, Col } from 'react-bootstrap';
 import { getPricingStrategy } from '../utils/smartPricingEngine';
 import { formatPrice } from '../utils/priceFormatter';
 
-const SmartPricingCard = ({ model, basePrice, quantity = 1, customerName = '' }) => {
+const SmartPricingCard = ({ model, basePrice, quantity = 1, customerName = '', onSelectStrategy }) => {
+  const [selectedIndex, setSelectedIndex] = useState(null);
   const strategy = useMemo(() => {
     if (!model || !basePrice) return null;
+    setSelectedIndex(null);
     return getPricingStrategy(model, basePrice, quantity, customerName);
   }, [model, basePrice, quantity, customerName]);
 
@@ -47,22 +49,52 @@ const SmartPricingCard = ({ model, basePrice, quantity = 1, customerName = '' })
           </div>
         )}
 
-        <div className="mb-2"><small className="text-muted fw-bold">报价策略对比:</small></div>
-        {strategy.strategies.map((s, i) => (
-          <div key={i} className={`d-flex align-items-center p-2 mb-1 rounded ${s.recommended ? 'bg-success bg-opacity-10 border border-success' : 'bg-light'}`}>
-            <div style={{ flex: 1 }}>
-              <div className="d-flex align-items-center gap-2">
-                <strong className="small">{s.name}</strong>
-                {s.recommended && <Badge bg="success" pill style={{ fontSize: '10px' }}>推荐</Badge>}
+        <div className="mb-2"><small className="text-muted fw-bold">报价策略对比<span className="text-primary">（点击选择）</span>:</small></div>
+        {strategy.strategies.map((s, i) => {
+          const isSelected = selectedIndex === i;
+          const isRecommended = s.recommended && selectedIndex === null;
+          return (
+            <div
+              key={i}
+              onClick={() => {
+                setSelectedIndex(i);
+                if (onSelectStrategy) {
+                  onSelectStrategy({ name: s.name, discount: s.discount, price: s.price });
+                }
+              }}
+              style={{ cursor: 'pointer', transition: 'all 0.2s' }}
+              className={`d-flex align-items-center p-2 mb-1 rounded ${
+                isSelected
+                  ? 'bg-primary bg-opacity-10 border border-primary border-2'
+                  : isRecommended
+                    ? 'bg-success bg-opacity-10 border border-success'
+                    : 'bg-light border border-transparent'
+              }`}
+            >
+              <div className="me-2">
+                <div style={{
+                  width: 18, height: 18, borderRadius: '50%',
+                  border: isSelected ? '2px solid #0d6efd' : '2px solid #adb5bd',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                  {isSelected && <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#0d6efd' }} />}
+                </div>
               </div>
-              <div className="text-muted" style={{ fontSize: '11px' }}>{s.desc}</div>
+              <div style={{ flex: 1 }}>
+                <div className="d-flex align-items-center gap-2">
+                  <strong className="small">{s.name}</strong>
+                  {s.recommended && <Badge bg="success" pill style={{ fontSize: '10px' }}>推荐</Badge>}
+                  {isSelected && <Badge bg="primary" pill style={{ fontSize: '10px' }}>已选</Badge>}
+                </div>
+                <div className="text-muted" style={{ fontSize: '11px' }}>{s.desc}</div>
+              </div>
+              <div className="text-end">
+                <div className={`fw-bold ${isSelected ? 'text-primary' : ''}`}>{formatPrice(s.price)}</div>
+                <div className="text-muted" style={{ fontSize: '11px' }}>下浮{s.discount}%</div>
+              </div>
             </div>
-            <div className="text-end">
-              <div className="fw-bold">{formatPrice(s.price)}</div>
-              <div className="text-muted" style={{ fontSize: '11px' }}>下浮{s.discount}%</div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
 
         {strategy.historicalDiscount.count > 0 && (
           <div className="mt-3 p-2 bg-light rounded">

@@ -4,6 +4,7 @@
 import React, { useState, useCallback } from 'react';
 import { toast } from '../../utils/toast';
 import { Card, Row, Col, Form, Button, Table, Alert, Badge, Tabs, Tab } from 'react-bootstrap';
+import AlgorithmReferenceCard from '../propulsion/AlgorithmReferenceCard';
 import {
   electricThrusters,
   hydraulicThrusters,
@@ -269,6 +270,7 @@ const ThrusterSelector = ({ colors = {}, theme = 'light', onSystemSelect }) => {
 
   return (
     <div className="thruster-selector">
+      <AlgorithmReferenceCard module="thruster" colors={colors} />
       <Row>
         {/* 左侧：输入面板 */}
         <Col lg={4}>

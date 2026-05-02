@@ -3,6 +3,7 @@
 
 import React, { useMemo } from 'react';
 import { checkBladeStrength, checkCavitation } from '../../utils/cppHydrodynamics';
+import FormulaProvenance from '../common/FormulaProvenance';
 
 /**
  * CCS规范校核结果面板
@@ -181,6 +182,13 @@ const CCSCompliancePanel = ({
         <div style={styles.section}>
           <div style={styles.sectionTitle}>
             叶片强度校核
+            <FormulaProvenance
+              title="叶片最小厚度"
+              formula={'t_min(0.35R) = K1 · √(P / (n · D · σ_allow))\nt_min(0.60R) = K2 · √(P / (n · D · σ_allow))\nK1, K2 — 截面系数 (CCS 表 3.5.2.1)\nσ_allow — 材料许用应力'}
+              standard="CCS《钢质海船入级规范》"
+              section="第 3 篇 第 5 章 §5.2"
+              notes="叶片在 0.35R 和 0.60R 截面厚度需≥规范最小厚度;裕度 ≥ 5%"
+            />
             <span style={{
               ...styles.statusTag,
               background: strengthResult.pass ? '#d4edda' : '#f8d7da',
@@ -236,6 +244,14 @@ const CCSCompliancePanel = ({
         <div style={styles.section}>
           <div style={styles.sectionTitle}>
             空泡校核
+            <FormulaProvenance
+              title="空泡数 σ 与临界空泡数"
+              formula={'σ = (p_a + ρ·g·h - p_v) / (0.5·ρ·V_R²)\nV_R = √(V_a² + (0.7π·n·D)²)\nBurrill 临界空泡数 σ_cr 由 Burrill 图查得 (与桨叶载荷系数 τ_c 相关)\n安全裕度 = (σ - σ_cr · 1.15) / σ_cr · 100%'}
+              standard="Burrill (1943) / CCS《钢质海船入级规范》"
+              section="第 3 篇 第 6 章 §6.3"
+              notes="ρ = 1025 kg/m³ (海水); V_R 为 0.7R 处合速度; 裕度 ≥ 0% 通过, ≥15% 推荐"
+              doi="https://doi.org/10.3940/rina.iimech.1943.038"
+            />
             <span style={{
               ...styles.statusTag,
               background: cavitationResult.pass ? '#d4edda' : '#f8d7da',

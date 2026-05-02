@@ -3,58 +3,20 @@
  * 齿轮箱数据合并工具
  * 此工具用于将OCR解析的数据与更新的embeddednew.js数据合并到现有系统
  */
+import { safeExtractAndParse } from './safeParseGearboxBlob';
 
 /**
- * 从字符串中提取JavaScript对象
+ * 从字符串中提取JavaScript对象 (走 safeParseGearboxBlob, 不再使用 new Function)
  * @param {string} content 包含JavaScript代码的字符串
  * @param {string} objectName 要提取的对象名称 (如 'embeddedGearboxData')
  * @returns {Object|null} 提取的对象或null
  */
 function extractObjectFromString(content, objectName) {
-  try {
-    // 寻找对象定义的起始位置
-    const startPattern = new RegExp(`(export\\s+)?const\\s+${objectName}\\s*=\\s*\\{`);
-    const match = content.match(startPattern);
-    
-    if (!match) {
-      console.error(`找不到对象定义: ${objectName}`);
-      return null;
-    }
-    
-    const startPos = match.index;
-    let braceCount = 1;
-    let endPos = startPos + match[0].length;
-    
-    // 查找匹配的大括号以确定对象结束位置
-    while (braceCount > 0 && endPos < content.length) {
-      const char = content[endPos];
-      if (char === '{') braceCount++;
-      else if (char === '}') braceCount--;
-      endPos++;
-    }
-    
-    if (braceCount !== 0) {
-      console.error('无法找到对象的结束位置');
-      return null;
-    }
-    
-    // 提取完整的对象定义
-    const objectCode = content.substring(startPos, endPos);
-    
-    // 安全提取：仅取赋值表达式部分
-    const assignMatch = objectCode.match(new RegExp(`(?:export\\s+)?(?:const|let|var)\\s+${objectName}\\s*=\\s*`));
-    if (!assignMatch) return null;
-    const dataExpr = objectCode.substring(assignMatch.index + assignMatch[0].length).replace(/;\s*$/, '').trim();
-    // 校验无危险代码模式
-    const dangerousPattern = /\b(eval|Function|import|require|fetch|XMLHttpRequest|setTimeout|setInterval|document\.|window\.)\s*\(/;
-    if (dangerousPattern.test(dataExpr)) {
-      throw new Error('数据包含不安全的代码模式');
-    }
-    return (new Function('return ' + dataExpr))();
-  } catch (error) {
-    console.error('从字符串中提取对象时出错:', error);
-    return null;
+  const result = safeExtractAndParse(content, objectName);
+  if (!result) {
+    console.error(`找不到对象定义或解析失败: ${objectName}`);
   }
+  return result;
 }
 
 /**

@@ -1,7 +1,7 @@
 // src/components/ApiDocumentation.js
 // API文档 - 系统接口与数据结构文档
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, Badge, ListGroup, Accordion, Table } from 'react-bootstrap';
+import { Container, Row, Col, Card, Badge, ListGroup, Accordion, Table, Alert } from 'react-bootstrap';
 
 const API_SECTIONS = [
   {
@@ -94,6 +94,22 @@ export default function ApiDocumentation({ colors, theme }) {
           <small className="text-muted">系统核心函数接口与数据结构说明</small>
         </Col>
       </Row>
+
+      {/* 部署形态说明 — 本系统为纯前端 SPA,无对外 REST API */}
+      <Alert variant="info" className="py-2 mb-3" style={{ fontSize: '0.88rem' }}>
+        <div className="d-flex align-items-start">
+          <i className="bi bi-info-circle-fill me-2 mt-1" style={{ fontSize: '1rem' }}></i>
+          <div>
+            <strong>部署形态</strong> — 本系统为 React 18 单页应用(SPA)+ Electron 桌面包,
+            <strong>不暴露对外 REST API</strong>。所有数据通过 <code>localStorage</code> /
+            <code>IndexedDB</code> 在浏览器本地持久化。
+            <br />
+            下方"接口列表"为<strong>内部数据结构与函数 API 文档</strong>,供二次开发(IDE 自动补全、
+            调用关系追踪、数据建模)与同事协作参考。
+            如需对外 OpenAPI/Swagger,请先部署后端服务并生成 spec(当前 repo 中无 <code>openapi.yaml</code>)。
+          </div>
+        </div>
+      </Alert>
 
       <Row>
         <Col md={8}>

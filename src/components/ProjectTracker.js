@@ -4,6 +4,7 @@ import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Modal, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { trackFeature } from '../utils/analytics';
 import ExportToolbar from './ExportToolbar';
+import { getProjectDocuments } from '../services/documentStorage';
 
 // ── 常量 ──
 const STORAGE_KEY = 'gearbox_projects';
@@ -113,7 +114,35 @@ const exportCSV = (rows) => {
 const emptyForm = () => ({ name: '', customer: '', gearbox: '', amount: '', salesman: '', note: '' });
 
 // ── Component ──
-export default function ProjectTracker({ colors, theme }) {
+// 把项目 ID(PJ-2026-001) 与文档 projectId(PRJ-2026-...) 都尝试一遍,兼容两种命名
+const lookupRelatedDocs = (project) => {
+  const candidates = new Set();
+  if (project.id) {
+    candidates.add(project.id);
+    candidates.add(project.id.replace(/^PJ-/, 'PRJ-'));
+    candidates.add(project.id.replace(/^PJ-/, 'TI-'));
+  }
+  if (project.name) candidates.add(`legacy:${project.name}`);
+  const merged = { inquiry: [], quotation: [], agreement: [], contract: [] };
+  candidates.forEach(pid => {
+    const docs = getProjectDocuments(pid);
+    Object.keys(merged).forEach(k => {
+      docs[k].forEach(d => {
+        if (!merged[k].some(existing => existing.id === d.id)) merged[k].push(d);
+      });
+    });
+  });
+  return merged;
+};
+
+const DOC_TYPE_META = {
+  inquiry: { label: '技术询单', icon: 'bi-file-earmark-plus', color: 'primary', tabKey: 'inquiry' },
+  quotation: { label: '报价单', icon: 'bi-currency-yen', color: 'success', tabKey: 'quotation' },
+  agreement: { label: '技术协议', icon: 'bi-file-earmark-text', color: 'info', tabKey: 'agreement' },
+  contract: { label: '销售合同', icon: 'bi-file-earmark-ruled', color: 'warning', tabKey: 'contract' },
+};
+
+export default function ProjectTracker({ colors, theme, onNavigate }) {
   const [projects, setProjects] = useState(loadProjects);
   const [statusFilter, setStatusFilter] = useState('all');
   const [search, setSearch] = useState('');
@@ -400,28 +429,34 @@ export default function ProjectTracker({ colors, theme }) {
                         </OverlayTrigger>
                       </td>
                     </tr>
-                    {/* Expanded timeline */}
-                    {isExpanded && Array.isArray(p.statusHistory) && p.statusHistory.length > 0 && (
+                    {/* Expanded panel:状态历史 + 关联文档 */}
+                    {isExpanded && (
                       <tr>
                         <td colSpan={9} className="bg-light px-4 py-2">
-                          <div className="d-flex align-items-center flex-wrap gap-1">
-                            <small className="text-muted me-2"><i className="bi bi-clock-history me-1"></i>状态历史:</small>
-                            {p.statusHistory.map((h, i) => {
-                              const hs = STATUS_MAP[h.status];
-                              return (
-                                <React.Fragment key={i}>
-                                  {i > 0 && <i className="bi bi-arrow-right text-muted mx-1"></i>}
-                                  <Badge bg={hs?.color || 'secondary'} className="py-1">
-                                    {hs?.label || h.status}
-                                    <span className="ms-1 fw-normal" style={{ fontSize: '0.7rem' }}>
-                                      {h.time ? new Date(h.time).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' }) : ''}
-                                    </span>
-                                  </Badge>
-                                </React.Fragment>
-                              );
-                            })}
-                          </div>
-                          {p.note && <div className="mt-1"><small className="text-muted"><i className="bi bi-sticky me-1"></i>备注: {p.note}</small></div>}
+                          {Array.isArray(p.statusHistory) && p.statusHistory.length > 0 && (
+                            <div className="d-flex align-items-center flex-wrap gap-1 mb-2">
+                              <small className="text-muted me-2"><i className="bi bi-clock-history me-1"></i>状态历史:</small>
+                              {p.statusHistory.map((h, i) => {
+                                const hs = STATUS_MAP[h.status];
+                                return (
+                                  <React.Fragment key={i}>
+                                    {i > 0 && <i className="bi bi-arrow-right text-muted mx-1"></i>}
+                                    <Badge bg={hs?.color || 'secondary'} className="py-1">
+                                      {hs?.label || h.status}
+                                      <span className="ms-1 fw-normal" style={{ fontSize: '0.7rem' }}>
+                                        {h.time ? new Date(h.time).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' }) : ''}
+                                      </span>
+                                    </Badge>
+                                  </React.Fragment>
+                                );
+                              })}
+                            </div>
+                          )}
+
+                          {/* 关联文档 — 跨 inquiry/quotation/agreement/contract 4 类聚合 */}
+                          <RelatedDocsPanel project={p} onNavigate={onNavigate} />
+
+                          {p.note && <div className="mt-2"><small className="text-muted"><i className="bi bi-sticky me-1"></i>备注: {p.note}</small></div>}
                         </td>
                       </tr>
                     )}
@@ -466,3 +501,74 @@ export default function ProjectTracker({ colors, theme }) {
     </Container>
   );
 }
+
+// 关联文档面板 — 显示该项目下 inquiry/quotation/agreement/contract 4 类文档
+// 跳转前把 sessionStorage.current_project_id 设为项目 ID,让下游 quotation/agreement/contract 保存时自动归档
+const RelatedDocsPanel = ({ project, onNavigate }) => {
+  const docs = useMemo(() => lookupRelatedDocs(project), [project]);
+  const totalCount = ['inquiry', 'quotation', 'agreement', 'contract']
+    .reduce((s, k) => s + (docs[k]?.length || 0), 0);
+
+  const navigateWithProject = (tabKey) => {
+    try {
+      sessionStorage.setItem('current_project_id', project.id);
+      if (project.name) sessionStorage.setItem('current_project_name', project.name);
+    } catch (e) { /* ignore */ }
+    if (onNavigate) onNavigate(tabKey);
+  };
+
+  return (
+    <div>
+      <div className="d-flex align-items-center flex-wrap gap-2 mb-1">
+        <small className="text-muted me-1">
+          <i className="bi bi-files me-1"></i>关联文档:
+        </small>
+        {totalCount === 0 ? (
+          <small className="text-muted">
+            <i className="bi bi-info-circle me-1"></i>暂无 — 可点击下方按钮新建,会自动挂入此项目
+          </small>
+        ) : (
+          ['inquiry', 'quotation', 'agreement', 'contract'].map(k => {
+            const meta = DOC_TYPE_META[k];
+            const list = docs[k] || [];
+            if (list.length === 0) return null;
+            return (
+              <Button
+                key={k}
+                size="sm"
+                variant={`outline-${meta.color}`}
+                onClick={() => navigateWithProject(meta.tabKey)}
+                style={{ fontSize: '0.78rem', padding: '0.15em 0.5em' }}
+                title={`已有 ${list.length} 份${meta.label},点击查看`}
+              >
+                <i className={`bi ${meta.icon} me-1`}></i>
+                {meta.label}
+                <Badge bg={meta.color} className="ms-1">{list.length}</Badge>
+              </Button>
+            );
+          })
+        )}
+      </div>
+      {/* 快捷新建 — 始终展示,点击会先设 sessionStorage 项目 ID,新文档保存时自动归档 */}
+      <div className="d-flex align-items-center flex-wrap gap-2">
+        <small className="text-muted me-1">
+          <i className="bi bi-plus-circle me-1"></i>新建到此项目:
+        </small>
+        {['inquiry', 'quotation', 'agreement', 'contract'].map(k => {
+          const meta = DOC_TYPE_META[k];
+          return (
+            <Button
+              key={k}
+              size="sm"
+              variant="link"
+              onClick={() => navigateWithProject(meta.tabKey)}
+              style={{ fontSize: '0.78rem', padding: 0, textDecoration: 'none' }}
+            >
+              <i className={`bi ${meta.icon} me-1 text-${meta.color}`}></i>{meta.label}
+            </Button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};

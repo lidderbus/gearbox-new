@@ -5,6 +5,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { toast } from '../../utils/toast';
 import { Card, Row, Col, Form, Button, Table, Alert, Badge, Tabs, Tab, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { cppGearboxes, cppPropellers, oilDistributors, cppHydraulicUnits, vesselTypes, CAVITATION_PREVENTION_TECHNOLOGIES, cppModelNameMapping, getRealModelNames } from '../../data/cppSystemData';
+import AlgorithmReferenceCard from '../propulsion/AlgorithmReferenceCard';
 import {
   selectCPPGearbox,
   selectCPPPropeller,
@@ -24,8 +25,11 @@ import ClassificationCompliancePanel from './ClassificationCompliancePanel';
 import EnergyEfficiencyPanel from './EnergyEfficiencyPanel';
 import SmartMonitoringPanel from './SmartMonitoringPanel';
 import { exportHtmlContentToPDF } from '../../utils/pdfExportUtils';
+import { useSelectionResult } from '../../contexts/SelectionResultContext';
 
 const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
+  // P1-3: 推进数据载体 — 选型完成后写入,供 Shaft/Torsional/Document 读取
+  const { setPropulsionPayload } = useSelectionResult();
   // 输入参数
   const [power, setPower] = useState('');
   const [speed, setSpeed] = useState('');
@@ -208,11 +212,31 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
       setSelectedPropeller(result.system.propeller);
       setSelectedOilDistributor(result.system.oilDistributor);
       setSelectedHydraulicUnit(result.system.hydraulicUnit);
+      // P1-3: 写入推进载荷,供 Shaft/Torsional/Document 自动读取
+      const inputSpeedRpm = speedVal;
+      const outputSpeedRpm = ratioVal > 0 ? speedVal / ratioVal : speedVal;
+      const torqueNm = inputSpeedRpm > 0 ? (powerVal * 1000 * 60) / (2 * Math.PI * inputSpeedRpm) : 0;
+      try {
+        setPropulsionPayload({
+          source: 'CPP',
+          timestamp: new Date().toISOString(),
+          power: powerVal,
+          inputSpeed: inputSpeedRpm,
+          outputSpeed: outputSpeedRpm,
+          ratio: ratioVal,
+          inputTorque: Math.round(torqueNm),
+          gearboxModel: result.system.gearbox?.model || null,
+          propellerModel: result.system.propeller?.model || null,
+          propellerDiameter: result.system.propeller?.diameterRange?.[1] || (propellerDiameter ? parseFloat(propellerDiameter) : null),
+          bladeCount: result.system.propeller?.bladeCount?.[0] || null,
+          series: series || null,
+        });
+      } catch (e) { /* ignore */ }
       if (onSystemSelect) {
         onSystemSelect(result.system);
       }
     }
-  }, [power, speed, targetRatio, series, propellerDiameter, onSystemSelect]);
+  }, [power, speed, targetRatio, series, propellerDiameter, onSystemSelect, setPropulsionPayload]);
 
   // 重置
   const handleReset = () => {
@@ -746,6 +770,7 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
 
   return (
     <div className="cpp-selection-view">
+      <AlgorithmReferenceCard module="cpp" colors={colors} />
       <Row>
         {/* 左侧：输入面板 */}
         <Col lg={4}>

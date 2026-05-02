@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Container, Row, Col, Card, Table, Button, Badge, Form,
-  Modal, Alert, InputGroup, Tabs, Tab, ProgressBar
+  Modal, Alert, InputGroup, Tabs, Tab, ProgressBar, Pagination
 } from 'react-bootstrap';
 import {
   InventoryOwnership,
@@ -104,6 +104,19 @@ const InventoryManagement = ({ colors = {}, theme = 'light' }) => {
       return matchSearch && matchOwnership && matchCategory;
     });
   }, [inventory, searchTerm, filterOwnership, filterCategory]);
+
+  // 分页 (P2: 防 DOM 节点爆炸 — 200+ 行库存平滑滚动)
+  const PAGE_SIZE = 25;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.max(1, Math.ceil(filteredInventory.length / PAGE_SIZE));
+  const paginatedInventory = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredInventory.slice(start, start + PAGE_SIZE);
+  }, [filteredInventory, currentPage]);
+  // 过滤变化时重置到第一页
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filterOwnership, filterCategory]);
 
   // 负数库存项目
   const negativeStockItems = useMemo(() =>
@@ -410,7 +423,7 @@ const InventoryManagement = ({ colors = {}, theme = 'light' }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredInventory.map(item => (
+            {paginatedInventory.map(item => (
               <tr key={item.id} className={item.quantity < 0 ? 'table-danger' : ''}>
                 <td><code>{item.sku}</code></td>
                 <td>{item.name}</td>
@@ -456,6 +469,20 @@ const InventoryManagement = ({ colors = {}, theme = 'light' }) => {
             ))}
           </tbody>
         </Table>
+        {filteredInventory.length > PAGE_SIZE && (
+          <div className="d-flex justify-content-between align-items-center mt-2">
+            <small className="text-muted">
+              显示 {(currentPage - 1) * PAGE_SIZE + 1}-{Math.min(currentPage * PAGE_SIZE, filteredInventory.length)} / 共 {filteredInventory.length}
+            </small>
+            <Pagination size="sm" className="mb-0">
+              <Pagination.First onClick={() => setCurrentPage(1)} disabled={currentPage === 1} />
+              <Pagination.Prev onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} />
+              <Pagination.Item active>{currentPage} / {totalPages}</Pagination.Item>
+              <Pagination.Next onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} />
+              <Pagination.Last onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages} />
+            </Pagination>
+          </div>
+        )}
       </Card.Body>
     </Card>
   );

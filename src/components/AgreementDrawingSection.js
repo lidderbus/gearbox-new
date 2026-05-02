@@ -6,7 +6,8 @@ import {
   gearboxDwgDrawings,
   couplingDwgDrawings,
   getDwgDownloadUrl,
-  getPdfPreviewUrl
+  getPdfPreviewUrl,
+  getShareCADPreviewUrl
 } from '../data/outlineDrawings';
 
 /**
@@ -109,6 +110,7 @@ const AgreementDrawingSection = ({
   const [selectedDrawing, setSelectedDrawing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [previewError, setPreviewError] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   // 获取齿轮箱外形图
   const gearboxDrawingsResult = useMemo(() => {
@@ -135,16 +137,27 @@ const AgreementDrawingSection = ({
   //   return dwgSeriesInfo[series] || { name: series, description: '未知系列' };
   // }, [couplingModel]);
 
-  // 处理预览
+  // 处理预览 — 先尝试PDF，不可用则回退ShareCAD
   const handlePreview = useCallback((drawing) => {
     setLoading(true);
     setPreviewError(null);
     setSelectedDrawing(drawing);
+    setPreviewUrl(null);
 
-    // 模拟加载延迟
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
+    const pdfUrl = getPdfPreviewUrl(drawing.filePath);
+    fetch(pdfUrl, { method: 'HEAD', mode: 'cors' })
+      .then(res => {
+        if (res.ok) {
+          setPreviewUrl(pdfUrl);
+        } else {
+          setPreviewUrl(getShareCADPreviewUrl(drawing.filePath));
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setPreviewUrl(getShareCADPreviewUrl(drawing.filePath));
+        setLoading(false);
+      });
 
     onDrawingSelect(drawing);
   }, [onDrawingSelect]);
@@ -152,7 +165,7 @@ const AgreementDrawingSection = ({
   // 处理下载
   const handleDownload = useCallback((drawing) => {
     const downloadUrl = getDwgDownloadUrl(drawing.filePath);
-    window.open(downloadUrl, '_blank');
+    window.open(downloadUrl, '_blank', 'noopener,noreferrer');
   }, []);
 
   // 渲染单个外形图项
@@ -236,7 +249,9 @@ const AgreementDrawingSection = ({
       );
     }
 
-    const previewUrl = getPdfPreviewUrl(selectedDrawing.filePath);
+    if (!previewUrl) return null;
+
+    const isShareCAD = previewUrl.includes('sharecad.org');
 
     return (
       <div>
@@ -247,13 +262,14 @@ const AgreementDrawingSection = ({
           <Button
             variant="link"
             size="sm"
-            onClick={() => window.open(previewUrl, '_blank')}
+            onClick={() => window.open(previewUrl, '_blank', 'noopener,noreferrer')}
           >
             <i className="bi bi-arrows-fullscreen me-1"></i>全屏预览
           </Button>
         </div>
         <iframe
           src={previewUrl}
+          sandbox={isShareCAD ? "allow-scripts allow-popups allow-popups-to-escape-sandbox" : "allow-popups allow-popups-to-escape-sandbox"}
           style={{
             width: '100%',
             height: '400px',
@@ -264,7 +280,7 @@ const AgreementDrawingSection = ({
         />
         <div className="mt-2 text-muted small">
           <i className="bi bi-info-circle me-1"></i>
-          使用 ShareCAD 在线预览DWG文件
+          {isShareCAD ? '通过 ShareCAD 在线预览DWG文件（PDF版本不可用）' : 'PDF预览'}
         </div>
       </div>
     );

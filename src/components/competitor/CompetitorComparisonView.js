@@ -18,6 +18,7 @@ import TCOCalculator from './TCOCalculator';
 import MarketSegmentView from './MarketSegmentView';
 import DataFreshnessIndicator from './DataFreshnessIndicator';
 import CompetitorDrawingCatalog from './CompetitorDrawingCatalog';
+import ParametricCompareView from './ParametricCompareView';
 import {
   selectCompetitorProducts,
   findEquivalentCompetitors,
@@ -571,6 +572,14 @@ const CompetitorComparisonView = ({
           title={<span><i className="bi bi-file-earmark-pdf me-2"></i>竞品外形图</span>}
         >
           <CompetitorDrawingCatalog colors={colors} />
+        </Tab>
+
+        {/* Tab 8: B2 参数级三方对比 (杭齿 ↔ ZF/Reintjes/Twin Disc/Masson/Kanzaki) */}
+        <Tab
+          eventKey="parametric"
+          title={<span><i className="bi bi-bar-chart me-2"></i>参数级三方对比</span>}
+        >
+          <ParametricCompareView colors={colors} />
         </Tab>
       </Tabs>
     </Container>

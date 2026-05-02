@@ -7,6 +7,12 @@ import React, { useState, useMemo } from 'react';
 import { Card, Row, Col, Form, InputGroup, Button, Table, Badge, Alert, Tabs, Tab } from 'react-bootstrap';
 import { technicalAgreementTemplates, getCategories, searchTemplates, getTemplatesByCategory } from '../data/technicalAgreementTemplates';
 import ClauseKnowledgeBase from './ClauseKnowledgeBase';
+import LibraryPermissionBanner from './common/LibraryPermissionBanner';
+import { useLibraryPermissions } from '../hooks/useLibraryPermissions';
+import { useAuth } from '../contexts/AuthContext';
+import { useProject } from '../contexts/ProjectContext';
+import { logAudit } from '../services/auditLog';
+import { protectedDownload } from '../utils/pdfWatermark';
 
 /**
  * 技术协议模板库组件
@@ -15,6 +21,9 @@ import ClauseKnowledgeBase from './ClauseKnowledgeBase';
 const TemplateLibrary = ({ colors, theme }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
+  const { canDownload } = useLibraryPermissions(); // P0-4
+  const { user } = useAuth(); // P2-2
+  const { currentProjectId } = useProject(); // P2-2
 
   // 获取所有分类
   const categories = useMemo(() => getCategories(), []);
@@ -36,18 +45,43 @@ const TemplateLibrary = ({ colors, theme }) => {
   }, [activeCategory, searchTerm]);
 
   // 打开模板 (PDF直接浏览器打开, DOC/DOCX触发下载)
+  // P0-4: 下载权限拦截 + P2-2: 审计 + 水印
   const openTemplate = (template) => {
+    if (!canDownload) {
+      try {
+        logAudit('permission_deny', {
+          resourceType: 'template',
+          resourceId: template.model || template.id,
+          userId: user?.username,
+          userRole: user?.role,
+        });
+      } catch (e) { /* ignore */ }
+      window.alert('您当前角色无下载权限,请联系管理员升级 (EDITOR/ADMIN)');
+      return;
+    }
     const baseUrl = window.location.origin;
     const fullUrl = `${baseUrl}${template.path}`;
-    if (template.type === 'pdf') {
-      window.open(fullUrl, '_blank');
-    } else {
-      const a = document.createElement('a');
-      a.href = fullUrl;
-      a.download = template.filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+    try {
+      protectedDownload(fullUrl, template.filename || `${template.model || 'template'}.${template.type || 'doc'}`, {
+        resourceType: 'template',
+        resourceId: template.model || template.id,
+        userId: user?.username,
+        userName: user?.name || user?.username,
+        userRole: user?.role,
+        projectId: currentProjectId,
+      });
+    } catch (e) {
+      // 兜底
+      if (template.type === 'pdf') {
+        window.open(fullUrl, '_blank', 'noopener,noreferrer');
+      } else {
+        const a = document.createElement('a');
+        a.href = fullUrl;
+        a.download = template.filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
     }
   };
 
@@ -82,6 +116,9 @@ const TemplateLibrary = ({ colors, theme }) => {
   };
 
   return (
+    <>
+      {/* P0-4: 资料库权限横幅 */}
+      <LibraryPermissionBanner scope="协议模板库" />
     <Card className="shadow-sm" style={{ backgroundColor: colors?.card, borderColor: colors?.border }}>
       <Card.Header style={{ backgroundColor: colors?.headerBg, color: colors?.headerText }}>
         <div className="d-flex justify-content-between align-items-center">
@@ -295,6 +332,7 @@ const TemplateLibrary = ({ colors, theme }) => {
         </Card>
       </Card.Body>
     </Card>
+    </>
   );
 };
 

@@ -2,6 +2,7 @@
 // 标准法规知识库：海事相关标准规范快速检索
 import React, { useState, useMemo } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, InputGroup, ListGroup, Tab, Tabs } from 'react-bootstrap';
+import LibraryPermissionBanner from './common/LibraryPermissionBanner';
 
 const STANDARDS_DATA = [
   // 国际标准
@@ -75,14 +76,66 @@ const STANDARDS_DATA = [
 const CATEGORIES = ['全部', '齿轮', '振动', '噪声', '船用', '船级社', '环保', '安全', '质量', '轴承', '材料', '润滑'];
 const ORGS = ['全部', 'IMO', 'ISO', 'GB', 'CB', 'AGMA', 'API', 'IEC', 'ASTM', 'EU', 'CCS', 'DNV', 'BV', 'LR', 'ABS', 'NK', 'KR', 'RS', 'RINA'];
 
+// P2-2: 三层结构分类 — 国际公约 → 船级社 → 国标行标 → 行业标准
+const TIER_DEFINITIONS = {
+  international: {
+    label: '国际 (IMO/IACS/ISO)',
+    icon: 'bi-globe2',
+    color: 'primary',
+    orgs: ['IMO', 'ISO', 'IEC', 'EU'],
+    note: 'IMO 公约、IACS 统一要求、ISO/IEC 国际标准、EU 法规',
+  },
+  classification: {
+    label: '船级社 (CCS/DNV/LR/ABS/BV/RINA/NK/KR/RS)',
+    icon: 'bi-patch-check',
+    color: 'success',
+    orgs: ['CCS', 'DNV', 'LR', 'ABS', 'BV', 'RINA', 'NK', 'KR', 'RS'],
+    note: 'IACS 9 大成员船级社入级规范',
+  },
+  national: {
+    label: '国标 / 行标 (GB / CB)',
+    icon: 'bi-bank',
+    color: 'warning',
+    orgs: ['GB', 'CB'],
+    note: '中国国家标准 (GB) 与船舶行业标准 (CB)',
+  },
+  industry: {
+    label: '行业 (AGMA / API / ASTM)',
+    icon: 'bi-gear-wide',
+    color: 'secondary',
+    orgs: ['AGMA', 'API', 'ASTM'],
+    note: '美国齿轮制造商协会 / 美国石油协会 / 美国材料试验协会',
+  },
+};
+
+const classifyTier = (org) => {
+  for (const [key, def] of Object.entries(TIER_DEFINITIONS)) {
+    if (def.orgs.includes(org)) return key;
+  }
+  return 'industry';
+};
+
 export default function StandardsLibrary({ colors, theme }) {
   const [search, setSearch] = useState('');
   const [filterCategory, setFilterCategory] = useState('全部');
   const [filterOrg, setFilterOrg] = useState('全部');
+  const [filterTier, setFilterTier] = useState('all'); // P2-2
   const [selectedStd, setSelectedStd] = useState(null);
+
+  // P2-2: 各层级条目计数
+  const tierCounts = useMemo(() => {
+    const counts = { all: STANDARDS_DATA.length };
+    Object.keys(TIER_DEFINITIONS).forEach(t => { counts[t] = 0; });
+    STANDARDS_DATA.forEach(s => {
+      const t = classifyTier(s.org);
+      counts[t] = (counts[t] || 0) + 1;
+    });
+    return counts;
+  }, []);
 
   const filtered = useMemo(() => {
     return STANDARDS_DATA.filter(s => {
+      if (filterTier !== 'all' && classifyTier(s.org) !== filterTier) return false; // P2-2
       if (filterCategory !== '全部' && s.category !== filterCategory) return false;
       if (filterOrg !== '全部' && s.org !== filterOrg) return false;
       if (search) {
@@ -91,16 +144,57 @@ export default function StandardsLibrary({ colors, theme }) {
       }
       return true;
     });
-  }, [search, filterCategory, filterOrg]);
+  }, [search, filterCategory, filterOrg, filterTier]);
 
   return (
     <Container fluid className="py-3">
+      {/* P0-4: 资料库权限横幅 */}
+      <LibraryPermissionBanner scope="标准法规库" />
       <Row className="mb-3">
         <Col>
           <h5><i className="bi bi-bookmark-check me-2"></i>标准法规知识库</h5>
           <small className="text-muted">船用齿轮箱相关国际标准、国标、船级社规范快速检索</small>
         </Col>
       </Row>
+
+      {/* P2-2: 三层结构导航 */}
+      <Row className="mb-2 g-2">
+        <Col xs={12} sm={6} md={2}>
+          <Card
+            className={`text-center ${filterTier === 'all' ? 'border-dark border-2' : ''}`}
+            style={{ cursor: 'pointer' }}
+            onClick={() => setFilterTier('all')}
+          >
+            <Card.Body className="py-2">
+              <i className="bi bi-grid d-block" style={{ fontSize: '1.2rem' }}></i>
+              <strong>{tierCounts.all}</strong> <small className="d-block">全部</small>
+            </Card.Body>
+          </Card>
+        </Col>
+        {Object.entries(TIER_DEFINITIONS).map(([key, def]) => (
+          <Col xs={12} sm={6} md={2} key={key}>
+            <Card
+              className={`text-center ${filterTier === key ? `border-${def.color} border-2` : ''}`}
+              style={{ cursor: 'pointer' }}
+              onClick={() => setFilterTier(filterTier === key ? 'all' : key)}
+              title={def.note}
+            >
+              <Card.Body className="py-2">
+                <i className={`bi ${def.icon} d-block text-${def.color}`} style={{ fontSize: '1.2rem' }}></i>
+                <strong>{tierCounts[key] || 0}</strong>
+                <small className="d-block">{def.label.split(' ')[0]}</small>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+
+      {filterTier !== 'all' && (
+        <Alert variant="light" className="py-2 mb-3 small">
+          <i className={`bi ${TIER_DEFINITIONS[filterTier]?.icon} me-2`}></i>
+          <strong>{TIER_DEFINITIONS[filterTier]?.label}</strong> — {TIER_DEFINITIONS[filterTier]?.note}
+        </Alert>
+      )}
 
       <Row className="mb-3">
         <Col md={4}>
@@ -141,16 +235,25 @@ export default function StandardsLibrary({ colors, theme }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {filtered.map(s => (
-                      <tr key={s.id} style={{ cursor: 'pointer' }} className={selectedStd?.id === s.id ? 'table-primary' : ''} onClick={() => setSelectedStd(s)}>
-                        <td><strong>{s.name}</strong></td>
-                        <td><Badge bg="outline-primary" text="primary" className="border">{s.org}</Badge></td>
-                        <td><Badge bg="secondary">{s.category}</Badge></td>
-                        <td className="small">{s.desc}</td>
-                        <td>{s.year}</td>
-                        <td><Badge bg="success">{s.status}</Badge></td>
-                      </tr>
-                    ))}
+                    {filtered.map(s => {
+                      const tier = classifyTier(s.org);
+                      const tierDef = TIER_DEFINITIONS[tier];
+                      return (
+                        <tr key={s.id} style={{ cursor: 'pointer' }} className={selectedStd?.id === s.id ? 'table-primary' : ''} onClick={() => setSelectedStd(s)}>
+                          <td><strong>{s.name}</strong></td>
+                          <td>
+                            <Badge bg={tierDef?.color || 'secondary'} className="me-1" style={{ fontSize: '0.65em' }} title={tierDef?.label}>
+                              <i className={`bi ${tierDef?.icon}`}></i>
+                            </Badge>
+                            <span>{s.org}</span>
+                          </td>
+                          <td><Badge bg="secondary">{s.category}</Badge></td>
+                          <td className="small">{s.desc}</td>
+                          <td>{s.year}</td>
+                          <td><Badge bg="success">{s.status}</Badge></td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </Table>
               </div>

@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import { Modal, Row, Col, Tab, Tabs, Table, Badge, Button, Card } from 'react-bootstrap';
+import { lookupPriceByModel, isPriceMissing } from '../../utils/priceFormatter';
 
 // 系列颜色映射
 const SERIES_COLORS = {
@@ -105,20 +106,38 @@ const ProductDetail = ({
             {/* 价格信息 */}
             <Card className="mb-3" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
               <Card.Body>
-                <div className="d-flex justify-content-between mb-2">
-                  <span>市场价:</span>
-                  <span className="fw-bold text-danger" style={{ fontSize: '1.2rem' }}>
-                    {formatPrice(product.marketPrice || product.displayPrice)}
-                  </span>
-                </div>
-                {product.factoryPrice && (
-                  <div className="d-flex justify-content-between mb-2">
-                    <span>出厂价:</span>
-                    <span className="fw-bold text-success">
-                      {formatPrice(product.factoryPrice)}
-                    </span>
-                  </div>
-                )}
+                {(() => {
+                  const inlineMarket = product.marketPrice || product.displayPrice;
+                  const inlineFactory = product.factoryPrice;
+                  const missing = isPriceMissing(product);
+                  const fallback = missing ? null : lookupPriceByModel(product.model).factoryPrice;
+                  if (missing) {
+                    return (
+                      <div className="d-flex justify-content-between mb-2">
+                        <span>价格:</span>
+                        <Badge bg="warning" text="dark" title="此型号暂无公开报价,请联系销售">询价</Badge>
+                      </div>
+                    );
+                  }
+                  return (
+                    <>
+                      <div className="d-flex justify-content-between mb-2">
+                        <span>市场价:</span>
+                        <span className="fw-bold text-danger" style={{ fontSize: '1.2rem' }}>
+                          {formatPrice(inlineMarket || (fallback && Math.round(fallback * 1.1)))}
+                        </span>
+                      </div>
+                      {(inlineFactory || fallback) && (
+                        <div className="d-flex justify-content-between mb-2">
+                          <span>出厂价:</span>
+                          <span className="fw-bold text-success">
+                            {formatPrice(inlineFactory || fallback)}
+                          </span>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
                 {product.discountRate && (
                   <div className="d-flex justify-content-between">
                     <span>折扣率:</span>

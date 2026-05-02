@@ -1,0 +1,206 @@
+{
+  "counts": {
+    "pricingEntries": 246,
+    "completeGearboxDataModels": 585,
+    "embeddedGearboxDataModels": 628,
+    "marketEnrichmentRecords": 103
+  },
+  "table1_missingPrice": {
+    "completeWithoutPrice": 404,
+    "completeWithoutPriceRate": "69.1%",
+    "embeddedWithoutPrice": 438,
+    "embeddedWithoutPriceRate": "69.7%",
+    "embeddedWithoutInlinePrice": 149,
+    "samplesComplete": [
+      "06",
+      "16A",
+      "26",
+      "2GWH1060",
+      "2GWH1830",
+      "2GWH3140",
+      "2GWH400",
+      "2GWH4100",
+      "2GWH5410",
+      "2GWH600",
+      "2GWH7050",
+      "2GWH800",
+      "2GWH9250",
+      "DT10000",
+      "GC1000"
+    ],
+    "samplesEmbedded": [
+      "HCN120",
+      "HC400P",
+      "HC600P",
+      "HC1600P",
+      "HC2000P",
+      "HC2700P",
+      "HCD400P",
+      "HCD600P",
+      "HCD800P",
+      "HCD1400P",
+      "HCD1600P",
+      "HCD2000P",
+      "HCD2700P",
+      "HCT400P",
+      "HCT600P"
+    ]
+  },
+  "table2_topSellersNoPrice": {
+    "top50Checked": 50,
+    "top50NoPriceCount": 19,
+    "top50NoPriceRate": "38.0%",
+    "top50NoPrice": [
+      {
+        "model": "BS80",
+        "salesCount": 90,
+        "salesRevenue": 378000,
+        "avgSalePrice": 4200,
+        "lastSoldDate": "2025-12-11"
+      },
+      {
+        "model": "16",
+        "salesCount": 37,
+        "salesRevenue": 135321,
+        "avgSalePrice": 3657,
+        "lastSoldDate": "2026-03-30"
+      },
+      {
+        "model": "HCAM403",
+        "salesCount": 37,
+        "salesRevenue": 4454012,
+        "avgSalePrice": 120379,
+        "lastSoldDate": "2026-03-30"
+      },
+      {
+        "model": "26",
+        "salesCount": 29,
+        "salesRevenue": 121012,
+        "avgSalePrice": 4173,
+        "lastSoldDate": "2026-03-30"
+      },
+      {
+        "model": "HCM250",
+        "salesCount": 16,
+        "salesRevenue": 1248000,
+        "avgSalePrice": 78000,
+        "lastSoldDate": "2025-11-13"
+      },
+      {
+        "model": "MA125",
+        "salesCount": 9,
+        "salesRevenue": 58434,
+        "avgSalePrice": 6493,
+        "lastSoldDate": "2026-03-30"
+      },
+      {
+        "model": "MA142",
+        "salesCount": 9,
+        "salesRevenue": 44334,
+        "avgSalePrice": 4926,
+        "lastSoldDate": "2025-12-28"
+      },
+      {
+        "model": "HGTHT4.5",
+        "salesCount": 8,
+        "salesRevenue": 41400,
+        "avgSalePrice": 5175,
+        "lastSoldDate": "2025-11-17"
+      },
+      {
+        "model": "HCD2001",
+        "salesCount": 8,
+        "salesRevenue": 2040000,
+        "avgSalePrice": 255000,
+        "lastSoldDate": "2025-06-27"
+      },
+      {
+        "model": "HCL600P",
+        "salesCount": 4,
+        "salesRevenue": 106000,
+        "avgSalePrice": 26500,
+        "lastSoldDate": "2025-10-27"
+      },
+      {
+        "model": "HCAM500",
+        "salesCount": 4,
+        "salesRevenue": 1266000,
+        "avgSalePrice": 316500,
+        "lastSoldDate": "2026-03-11"
+      },
+      {
+        "model": "HCL250F",
+        "salesCount": 4,
+        "salesRevenue": 90000,
+        "avgSalePrice": 22500,
+        "lastSoldDate": "2026-03-13"
+      },
+      {
+        "model": "LG7.6",
+        "salesCount": 3,
+        "salesRevenue": 1310,
+        "avgSalePrice": 437,
+        "lastSoldDate": "2025-07-24"
+      },
+      {
+        "model": "HCAM250",
+        "salesCount": 3,
+        "salesRevenue": 360000,
+        "avgSalePrice": 120000,
+        "lastSoldDate": "2025-05-20"
+      },
+      {
+        "model": "MA100",
+        "salesCount": 2,
+        "salesRevenue": 9881,
+        "avgSalePrice": 4940,
+        "lastSoldDate": "2026-03-30"
+      },
+      {
+        "model": "HCLN4300",
+        "salesCount": 2,
+        "salesRevenue": 1045000,
+        "avgSalePrice": 522500,
+        "lastSoldDate": "2025-12-25"
+      },
+      {
+        "model": "16A",
+        "salesCount": 2,
+        "salesRevenue": 14468,
+        "avgSalePrice": 7234,
+        "lastSoldDate": "2025-11-20"
+      },
+      {
+        "model": "HCF450",
+        "salesCount": 2,
+        "salesRevenue": 14600,
+        "avgSalePrice": 7300,
+        "lastSoldDate": "2025-10-27"
+      },
+      {
+        "model": "HCM403",
+        "salesCount": 2,
+        "salesRevenue": 216000,
+        "avgSalePrice": 108000,
+        "lastSoldDate": "2025-10-27"
+      }
+    ]
+  },
+  "table3_gwVariants": {
+    "allGwUnique": 224,
+    "gwWithSuffix": 9,
+    "gwSuffixPriced": 0,
+    "gwSuffixMissingRate": "100.0%",
+    "unpriced": [
+      "GWC49.59A (带 PTO)",
+      "GWC52.59A (滑动轴承)",
+      "GWC60.66A (滑动轴承)",
+      "GWC60.74B (带 PTO)",
+      "GWC63.71 (带 PTO)",
+      "GWC70.76C (带 PTO)",
+      "GWC70.85A (带 PTO)",
+      "GWC75.90 (带 PTO)",
+      "GWC78.88A (带 PTO)"
+    ]
+  }
+}

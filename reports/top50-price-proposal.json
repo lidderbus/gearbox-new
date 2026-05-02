@@ -1,0 +1,309 @@
+{
+  "_meta": {
+    "generatedAt": "2026-04-23T22:55:33.597Z",
+    "markup": 0.1,
+    "count": 20
+  },
+  "proposals": [
+    {
+      "model": "BS80",
+      "salesCount": 90,
+      "salesRevenue": 378000,
+      "avgSalePrice": 4200,
+      "customerCount": 1,
+      "lastSoldDate": "2025-12-11",
+      "proposal": {
+        "basePrice": 4242,
+        "discountRate": 0.1,
+        "discountedPrice": 3818,
+        "factoryPrice": 3818,
+        "note": "反推自 avgSalePrice ¥4200 (近 90 台均价),按 markup 10% + 折扣 10% 估算"
+      }
+    },
+    {
+      "model": "300",
+      "salesCount": 41,
+      "salesRevenue": 839500,
+      "avgSalePrice": 20476,
+      "customerCount": 10,
+      "lastSoldDate": "2026-03-13",
+      "proposal": {
+        "basePrice": 22161,
+        "discountRate": 0.16,
+        "discountedPrice": 18615,
+        "factoryPrice": 18615,
+        "note": "反推自 avgSalePrice ¥20476 (近 41 台均价),按 markup 10% + 折扣 16% 估算"
+      }
+    },
+    {
+      "model": "16",
+      "salesCount": 37,
+      "salesRevenue": 135321,
+      "avgSalePrice": 3657,
+      "customerCount": 5,
+      "lastSoldDate": "2026-03-30",
+      "proposal": {
+        "basePrice": 3694,
+        "discountRate": 0.1,
+        "discountedPrice": 3325,
+        "factoryPrice": 3325,
+        "note": "反推自 avgSalePrice ¥3657 (近 37 台均价),按 markup 10% + 折扣 10% 估算"
+      }
+    },
+    {
+      "model": "HCAM403",
+      "salesCount": 37,
+      "salesRevenue": 4454012,
+      "avgSalePrice": 120379,
+      "customerCount": 4,
+      "lastSoldDate": "2026-03-30",
+      "proposal": {
+        "basePrice": 130280,
+        "discountRate": 0.16,
+        "discountedPrice": 109435,
+        "factoryPrice": 109435,
+        "note": "反推自 avgSalePrice ¥120379 (近 37 台均价),按 markup 10% + 折扣 16% 估算"
+      }
+    },
+    {
+      "model": "26",
+      "salesCount": 29,
+      "salesRevenue": 121012,
+      "avgSalePrice": 4173,
+      "customerCount": 4,
+      "lastSoldDate": "2026-03-30",
+      "proposal": {
+        "basePrice": 4216,
+        "discountRate": 0.1,
+        "discountedPrice": 3794,
+        "factoryPrice": 3794,
+        "note": "反推自 avgSalePrice ¥4173 (近 29 台均价),按 markup 10% + 折扣 10% 估算"
+      }
+    },
+    {
+      "model": "HCM250",
+      "salesCount": 16,
+      "salesRevenue": 1248000,
+      "avgSalePrice": 78000,
+      "customerCount": 1,
+      "lastSoldDate": "2025-11-13",
+      "proposal": {
+        "basePrice": 84415,
+        "discountRate": 0.16,
+        "discountedPrice": 70909,
+        "factoryPrice": 70909,
+        "note": "反推自 avgSalePrice ¥78000 (近 16 台均价),按 markup 10% + 折扣 16% 估算"
+      }
+    },
+    {
+      "model": "MA125",
+      "salesCount": 9,
+      "salesRevenue": 58434,
+      "avgSalePrice": 6493,
+      "customerCount": 3,
+      "lastSoldDate": "2026-03-30",
+      "proposal": {
+        "basePrice": 6559,
+        "discountRate": 0.1,
+        "discountedPrice": 5903,
+        "factoryPrice": 5903,
+        "note": "反推自 avgSalePrice ¥6493 (近 9 台均价),按 markup 10% + 折扣 10% 估算"
+      }
+    },
+    {
+      "model": "MA142",
+      "salesCount": 9,
+      "salesRevenue": 44334,
+      "avgSalePrice": 4926,
+      "customerCount": 4,
+      "lastSoldDate": "2025-12-28",
+      "proposal": {
+        "basePrice": 4976,
+        "discountRate": 0.1,
+        "discountedPrice": 4478,
+        "factoryPrice": 4478,
+        "note": "反推自 avgSalePrice ¥4926 (近 9 台均价),按 markup 10% + 折扣 10% 估算"
+      }
+    },
+    {
+      "model": "HGTHT4.5",
+      "salesCount": 8,
+      "salesRevenue": 41400,
+      "avgSalePrice": 5175,
+      "customerCount": 3,
+      "lastSoldDate": "2025-11-17",
+      "proposal": {
+        "basePrice": 5228,
+        "discountRate": 0.1,
+        "discountedPrice": 4705,
+        "factoryPrice": 4705,
+        "note": "反推自 avgSalePrice ¥5175 (近 8 台均价),按 markup 10% + 折扣 10% 估算"
+      }
+    },
+    {
+      "model": "HCD2001",
+      "salesCount": 8,
+      "salesRevenue": 2040000,
+      "avgSalePrice": 255000,
+      "customerCount": 1,
+      "lastSoldDate": "2025-06-27",
+      "proposal": {
+        "basePrice": 275974,
+        "discountRate": 0.16,
+        "discountedPrice": 231818,
+        "factoryPrice": 231818,
+        "note": "反推自 avgSalePrice ¥255000 (近 8 台均价),按 markup 10% + 折扣 16% 估算"
+      }
+    },
+    {
+      "model": "HCL600P",
+      "salesCount": 4,
+      "salesRevenue": 106000,
+      "avgSalePrice": 26500,
+      "customerCount": 1,
+      "lastSoldDate": "2025-10-27",
+      "proposal": {
+        "basePrice": 27376,
+        "discountRate": 0.12,
+        "discountedPrice": 24091,
+        "factoryPrice": 24091,
+        "note": "反推自 avgSalePrice ¥26500 (近 4 台均价),按 markup 10% + 折扣 12% 估算"
+      }
+    },
+    {
+      "model": "HCAM500",
+      "salesCount": 4,
+      "salesRevenue": 1266000,
+      "avgSalePrice": 316500,
+      "customerCount": 2,
+      "lastSoldDate": "2026-03-11",
+      "proposal": {
+        "basePrice": 342532,
+        "discountRate": 0.16,
+        "discountedPrice": 287727,
+        "factoryPrice": 287727,
+        "note": "反推自 avgSalePrice ¥316500 (近 4 台均价),按 markup 10% + 折扣 16% 估算"
+      }
+    },
+    {
+      "model": "HCL250F",
+      "salesCount": 4,
+      "salesRevenue": 90000,
+      "avgSalePrice": 22500,
+      "customerCount": 1,
+      "lastSoldDate": "2026-03-13",
+      "proposal": {
+        "basePrice": 23244,
+        "discountRate": 0.12,
+        "discountedPrice": 20455,
+        "factoryPrice": 20455,
+        "note": "反推自 avgSalePrice ¥22500 (近 4 台均价),按 markup 10% + 折扣 12% 估算"
+      }
+    },
+    {
+      "model": "LG7.6",
+      "salesCount": 3,
+      "salesRevenue": 1310,
+      "avgSalePrice": 437,
+      "customerCount": 3,
+      "lastSoldDate": "2025-07-24",
+      "proposal": {
+        "basePrice": 441,
+        "discountRate": 0.1,
+        "discountedPrice": 397,
+        "factoryPrice": 397,
+        "note": "反推自 avgSalePrice ¥437 (近 3 台均价),按 markup 10% + 折扣 10% 估算"
+      }
+    },
+    {
+      "model": "HCAM250",
+      "salesCount": 3,
+      "salesRevenue": 360000,
+      "avgSalePrice": 120000,
+      "customerCount": 1,
+      "lastSoldDate": "2025-05-20",
+      "proposal": {
+        "basePrice": 129870,
+        "discountRate": 0.16,
+        "discountedPrice": 109091,
+        "factoryPrice": 109091,
+        "note": "反推自 avgSalePrice ¥120000 (近 3 台均价),按 markup 10% + 折扣 16% 估算"
+      }
+    },
+    {
+      "model": "MA100",
+      "salesCount": 2,
+      "salesRevenue": 9881,
+      "avgSalePrice": 4940,
+      "customerCount": 2,
+      "lastSoldDate": "2026-03-30",
+      "proposal": {
+        "basePrice": 4990,
+        "discountRate": 0.1,
+        "discountedPrice": 4491,
+        "factoryPrice": 4491,
+        "note": "反推自 avgSalePrice ¥4940 (近 2 台均价),按 markup 10% + 折扣 10% 估算"
+      }
+    },
+    {
+      "model": "HCLN4300",
+      "salesCount": 2,
+      "salesRevenue": 1045000,
+      "avgSalePrice": 522500,
+      "customerCount": 1,
+      "lastSoldDate": "2025-12-25",
+      "proposal": {
+        "basePrice": 539773,
+        "discountRate": 0.12,
+        "discountedPrice": 475000,
+        "factoryPrice": 475000,
+        "note": "反推自 avgSalePrice ¥522500 (近 2 台均价),按 markup 10% + 折扣 12% 估算"
+      }
+    },
+    {
+      "model": "16A",
+      "salesCount": 2,
+      "salesRevenue": 14468,
+      "avgSalePrice": 7234,
+      "customerCount": 1,
+      "lastSoldDate": "2025-11-20",
+      "proposal": {
+        "basePrice": 7307,
+        "discountRate": 0.1,
+        "discountedPrice": 6576,
+        "factoryPrice": 6576,
+        "note": "反推自 avgSalePrice ¥7234 (近 2 台均价),按 markup 10% + 折扣 10% 估算"
+      }
+    },
+    {
+      "model": "HCF450",
+      "salesCount": 2,
+      "salesRevenue": 14600,
+      "avgSalePrice": 7300,
+      "customerCount": 1,
+      "lastSoldDate": "2025-10-27",
+      "proposal": {
+        "basePrice": 7900,
+        "discountRate": 0.16,
+        "discountedPrice": 6636,
+        "factoryPrice": 6636,
+        "note": "反推自 avgSalePrice ¥7300 (近 2 台均价),按 markup 10% + 折扣 16% 估算"
+      }
+    },
+    {
+      "model": "HCM403",
+      "salesCount": 2,
+      "salesRevenue": 216000,
+      "avgSalePrice": 108000,
+      "customerCount": 1,
+      "lastSoldDate": "2025-10-27",
+      "proposal": {
+        "basePrice": 116883,
+        "discountRate": 0.16,
+        "discountedPrice": 98182,
+        "factoryPrice": 98182,
+        "note": "反推自 avgSalePrice ¥108000 (近 2 台均价),按 markup 10% + 折扣 16% 估算"
+      }
+    }
+  ]
+}

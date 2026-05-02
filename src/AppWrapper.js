@@ -12,6 +12,8 @@ import DatabaseManagementView from './components/DatabaseManagementView'; // Imp
 // import DarkModeProvider from './contexts/DarkModeContext'; // Assuming DarkModeProvider is needed
 // import { flexibleCouplings } from './data/flexibleCouplings'; // Not needed here
 import { useIsMobile } from './hooks/useIsMobile';
+import RouteSkeleton from './components/common/RouteSkeleton';
+import { ProjectProvider } from './contexts/ProjectContext';
 
 const MobileApp = React.lazy(() => import('./components/mobile/MobileApp'));
 
@@ -70,7 +72,7 @@ const AppContent = ({ appData, setAppData }) => {
         element={
           userIsAuthenticated ? (
             showMobile ? (
-              <React.Suspense fallback={<div className="loading-container"><div className="loading-spinner"></div><p>加载移动端...</p></div>}>
+              <React.Suspense fallback={<RouteSkeleton label="正在加载移动版" />}>
                 <MobileApp
                   user={currentUser || user}
                   onLogout={logout}
@@ -110,9 +112,11 @@ const AppWrapper = ({ initialData, setAppData }) => {
     <AuthProvider>
       {/* Assuming DarkModeProvider wraps AuthProvider */}
       {/* <DarkModeProvider> */}
-        <Router basename="/gearbox-app">
-          <AppContent appData={initialData} setAppData={setAppData} />
-        </Router>
+        <ProjectProvider>
+          <Router basename="/gearbox-app">
+            <AppContent appData={initialData} setAppData={setAppData} />
+          </Router>
+        </ProjectProvider>
       {/* </DarkModeProvider> */}
     </AuthProvider>
   );

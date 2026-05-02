@@ -111,7 +111,7 @@ const CompetitorPdfViewer = ({
               <Button
                 variant="outline-primary"
                 size="sm"
-                onClick={() => window.open(pdfUrl, '_blank')}
+                onClick={() => window.open(pdfUrl, '_blank', 'noopener,noreferrer')}
               >
                 <i className="bi bi-box-arrow-up-right me-1"></i>新窗口打开
               </Button>
@@ -119,7 +119,7 @@ const CompetitorPdfViewer = ({
                 <Button
                   variant="outline-info"
                   size="sm"
-                  onClick={() => window.open(selectedCatalog.sourceUrl, '_blank')}
+                  onClick={() => window.open(selectedCatalog.sourceUrl, '_blank', 'noopener,noreferrer')}
                 >
                   <i className="bi bi-link-45deg me-1"></i>原始来源
                 </Button>
@@ -159,11 +159,11 @@ const CompetitorPdfViewer = ({
                   <h5 className="mt-3" style={{ color: colors.text }}>PDF预览加载失败</h5>
                   <p className="text-muted text-center mb-3">可能是文件较大或网络问题，请尝试新窗口打开</p>
                   <div className="d-flex flex-column gap-2" style={{ maxWidth: '300px', width: '100%' }}>
-                    <Button variant="primary" onClick={() => window.open(pdfUrl, '_blank')}>
+                    <Button variant="primary" onClick={() => window.open(pdfUrl, '_blank', 'noopener,noreferrer')}>
                       <i className="bi bi-box-arrow-up-right me-2"></i>新窗口打开PDF
                     </Button>
                     {selectedCatalog.sourceUrl && (
-                      <Button variant="outline-primary" onClick={() => window.open(selectedCatalog.sourceUrl, '_blank')}>
+                      <Button variant="outline-primary" onClick={() => window.open(selectedCatalog.sourceUrl, '_blank', 'noopener,noreferrer')}>
                         <i className="bi bi-link-45deg me-2"></i>访问原始来源
                       </Button>
                     )}

@@ -163,6 +163,7 @@ const ThumbnailCard = ({ model, files, type, onSelect, onToggleFavorite, isSelec
           <iframe
             ref={iframeRef}
             src={previewUrl}
+            sandbox="allow-scripts"
             style={{
               width: '100%',
               height: '100%',
@@ -402,7 +403,7 @@ const DwgThumbnailGrid = ({ onSelectFile }) => {
       if (item && item.files.length > 0) {
         // 延迟下载避免浏览器阻止
         setTimeout(() => {
-          window.open(getDwgDownloadUrl(item.files[0].filePath), '_blank');
+          window.open(getDwgDownloadUrl(item.files[0].filePath), '_blank', 'noopener,noreferrer');
         }, index * 500);
       }
     });

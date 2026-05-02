@@ -1,0 +1,24 @@
+// 建议追加到 src/data/gearboxPricing.js 的 gearboxPriceData 数组
+// 生成于 2026-04-23T22:55:33.598Z
+// 审核后请由人工确认每条折扣率是否准确
+
+  { model: 'BS80', basePrice: 4242, discountRate: 0.1, discountedPrice: 3818 },  // TOP50 补录 ¥4200×90台
+  { model: '300', basePrice: 22161, discountRate: 0.16, discountedPrice: 18615 },  // TOP50 补录 ¥20476×41台
+  { model: '16', basePrice: 3694, discountRate: 0.1, discountedPrice: 3325 },  // TOP50 补录 ¥3657×37台
+  { model: 'HCAM403', basePrice: 130280, discountRate: 0.16, discountedPrice: 109435 },  // TOP50 补录 ¥120379×37台
+  { model: '26', basePrice: 4216, discountRate: 0.1, discountedPrice: 3794 },  // TOP50 补录 ¥4173×29台
+  { model: 'HCM250', basePrice: 84415, discountRate: 0.16, discountedPrice: 70909 },  // TOP50 补录 ¥78000×16台
+  { model: 'MA125', basePrice: 6559, discountRate: 0.1, discountedPrice: 5903 },  // TOP50 补录 ¥6493×9台
+  { model: 'MA142', basePrice: 4976, discountRate: 0.1, discountedPrice: 4478 },  // TOP50 补录 ¥4926×9台
+  { model: 'HGTHT4.5', basePrice: 5228, discountRate: 0.1, discountedPrice: 4705 },  // TOP50 补录 ¥5175×8台
+  { model: 'HCD2001', basePrice: 275974, discountRate: 0.16, discountedPrice: 231818 },  // TOP50 补录 ¥255000×8台
+  { model: 'HCL600P', basePrice: 27376, discountRate: 0.12, discountedPrice: 24091 },  // TOP50 补录 ¥26500×4台
+  { model: 'HCAM500', basePrice: 342532, discountRate: 0.16, discountedPrice: 287727 },  // TOP50 补录 ¥316500×4台
+  { model: 'HCL250F', basePrice: 23244, discountRate: 0.12, discountedPrice: 20455 },  // TOP50 补录 ¥22500×4台
+  { model: 'LG7.6', basePrice: 441, discountRate: 0.1, discountedPrice: 397 },  // TOP50 补录 ¥437×3台
+  { model: 'HCAM250', basePrice: 129870, discountRate: 0.16, discountedPrice: 109091 },  // TOP50 补录 ¥120000×3台
+  { model: 'MA100', basePrice: 4990, discountRate: 0.1, discountedPrice: 4491 },  // TOP50 补录 ¥4940×2台
+  { model: 'HCLN4300', basePrice: 539773, discountRate: 0.12, discountedPrice: 475000 },  // TOP50 补录 ¥522500×2台
+  { model: '16A', basePrice: 7307, discountRate: 0.1, discountedPrice: 6576 },  // TOP50 补录 ¥7234×2台
+  { model: 'HCF450', basePrice: 7900, discountRate: 0.16, discountedPrice: 6636 },  // TOP50 补录 ¥7300×2台
+  { model: 'HCM403', basePrice: 116883, discountRate: 0.16, discountedPrice: 98182 },  // TOP50 补录 ¥108000×2台

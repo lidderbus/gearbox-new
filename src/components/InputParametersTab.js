@@ -8,6 +8,7 @@ import SelectionGuidelines, { HelpTooltip, HCGWorkloadSelector } from './Selecti
 import { PRIME_MOVER_CAPACITY_FACTOR } from '../utils/selectionAlgorithm';
 import HybridConfigPanel from './HybridConfigPanel';
 import ShaftArrangementSelector from './ShaftArrangementSelector';
+import ApplicationScenarioSelector from './ApplicationScenarioSelector';
 
 // 懒加载组件
 const PropulsionConfigSelector = lazy(() => import('./PropulsionConfigSelector'));
@@ -63,6 +64,7 @@ const InputParametersTab = ({
   const [userTemplates, setUserTemplates] = useState(() => getTemplates());
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [templateName, setTemplateName] = useState('');
+  const [showScenarioSelector, setShowScenarioSelector] = useState(false);
 
   // Persist core params to localStorage for cross-mode data retention
   const WIZARD_STORAGE_KEY = 'selection_wizard_params';
@@ -142,9 +144,27 @@ const InputParametersTab = ({
     </div>
   );
 
+  // Missing-fields hint (shown when required step-1 fields are empty)
+  const missingFieldsHint = () => {
+    if (currentStep !== 1) return null;
+    const miss = [];
+    if (!(engineData.power > 0)) miss.push('主机功率');
+    if (!(engineData.speed > 0)) miss.push('主机转速');
+    if (!(requirementData.targetRatio > 0)) miss.push('目标减速比');
+    if (miss.length === 0) return null;
+    return (
+      <div className="alert alert-warning py-2 px-3 mb-2" style={{ fontSize: '0.85rem' }}>
+        <i className="bi bi-exclamation-circle me-2"></i>
+        请填写必填项: <strong>{miss.join('、')}</strong>
+      </div>
+    );
+  };
+
   // Navigation buttons for wizard
   const WizardNav = () => (
-    <div className="d-flex justify-content-between mt-4">
+    <>
+    {missingFieldsHint()}
+    <div className="d-flex justify-content-between mt-2">
       <div>
         {currentStep > 1 && (
           <Button variant="outline-secondary" onClick={() => setCurrentStep(currentStep - 1)}>
@@ -189,6 +209,7 @@ const InputParametersTab = ({
         )}
       </div>
     </div>
+    </>
   );
 
   // --- Step content blocks (reused in both modes) ---
@@ -231,6 +252,22 @@ const InputParametersTab = ({
   const applyPreset = (p) => {
     handleEngineDataChange({ power: String(p.power), speed: String(p.speed) });
     handleRequirementDataChange({ targetRatio: String(p.ratio), thrustRequirement: p.thrust ? String(p.thrust) : '' });
+  };
+
+  // 应用 ApplicationScenarioSelector 的场景预设 (23 种船型)
+  const applyScenarioPreset = (params) => {
+    const engineUpdate = {};
+    if (params.motorPower != null) engineUpdate.power = String(params.motorPower);
+    if (params.motorSpeed != null) engineUpdate.speed = String(params.motorSpeed);
+    if (Object.keys(engineUpdate).length) handleEngineDataChange(engineUpdate);
+
+    const reqUpdate = {};
+    if (params.targetRatio != null) reqUpdate.targetRatio = String(params.targetRatio);
+    if (params.thrust != null) reqUpdate.thrustRequirement = params.thrust ? String(params.thrust) : '';
+    if (params.workCondition) reqUpdate.workCondition = params.workCondition;
+    if (params.temperature != null) reqUpdate.temperature = String(params.temperature);
+    if (params.application) reqUpdate.application = params.application;
+    if (Object.keys(reqUpdate).length) handleRequirementDataChange(reqUpdate);
   };
 
   // --- 用户自定义模板 ---
@@ -282,6 +319,9 @@ const InputParametersTab = ({
         {PRESETS.map(p => (
           <Badge key={p.label} bg="outline-primary" text="primary" className="border" style={{cursor:'pointer', fontSize:'12px'}} onClick={() => applyPreset(p)}>{p.label}</Badge>
         ))}
+        <Button variant="outline-info" size="sm" onClick={() => setShowScenarioSelector(true)} style={{fontSize:'12px', padding:'2px 8px'}}>
+          <i className="bi bi-grid-3x3-gap me-1"></i>更多船型 (23种)
+        </Button>
         <Button variant="outline-secondary" size="sm" onClick={() => setShowSaveModal(true)} style={{fontSize:'12px', padding:'2px 8px'}}>
           <i className="bi bi-bookmark-plus me-1"></i>保存当前
         </Button>
@@ -307,8 +347,13 @@ const InputParametersTab = ({
       <Form.Group className="mb-3" controlId="enginePower">
         <Form.Label style={{ color: colors.text }}>主机功率 (kW) <span className="text-danger">*</span> <HelpTooltip id="power-tip" content="传递能力 = 功率 ÷ 转速 (kW/r·min⁻¹)" /></Form.Label>
         <Form.Control type="number" value={engineData.power} onChange={(e) => handleEngineDataChange({ power: e.target.value })} placeholder="例如: 350" min="1" step="any" required style={{...inputStyles, ...focusStyles}} className={`${getValidationClassName(getFieldValidationState('enginePower', engineData.power))}`} />
-        <div className="form-feedback invalid">请输入有效的主机功率 (大于0)</div>
-        <div className="form-feedback warning">功率值较大，请确认是否正确</div>
+        {getFieldValidationState('enginePower', engineData.power) === 'invalid' && (
+          <Form.Text className="text-danger d-block"><i className="bi bi-x-circle me-1"></i>主机功率必须大于 0 kW</Form.Text>
+        )}
+        {getFieldValidationState('enginePower', engineData.power) === 'warning' && (
+          <Form.Text className="text-warning d-block"><i className="bi bi-exclamation-triangle me-1"></i>功率超过常见上限 2500 kW, 请确认</Form.Text>
+        )}
+        <div className="field-info">常见船用柴油机功率范围: 50-3500 kW</div>
         {warningFor('power').map((w, i) => (
           <Form.Text key={i} className={`text-${w.variant}`}><i className="bi bi-lightbulb me-1"></i>{w.msg}</Form.Text>
         ))}
@@ -316,8 +361,12 @@ const InputParametersTab = ({
       <Form.Group className="mb-3" controlId="engineSpeed">
         <Form.Label style={{ color: colors.text }}>主机转速 (r/min) <span className="text-danger">*</span> <HelpTooltip id="speed-tip" content="发动机额定转速，齿轮箱输入转速范围需覆盖此值" /></Form.Label>
         <Form.Control type="number" value={engineData.speed} onChange={(e) => handleEngineDataChange({ speed: e.target.value })} placeholder="例如: 1800" min="1" step="any" required style={{...inputStyles, ...focusStyles}} className={`${getValidationClassName(getFieldValidationState('engineSpeed', engineData.speed))}`} />
-        <div className="form-feedback invalid">请输入有效的主机转速 (大于0)</div>
-        <div className="form-feedback warning">转速值较高，请确认是否正确</div>
+        {getFieldValidationState('engineSpeed', engineData.speed) === 'invalid' && (
+          <Form.Text className="text-danger d-block"><i className="bi bi-x-circle me-1"></i>主机转速必须大于 0 r/min</Form.Text>
+        )}
+        {getFieldValidationState('engineSpeed', engineData.speed) === 'warning' && (
+          <Form.Text className="text-warning d-block"><i className="bi bi-exclamation-triangle me-1"></i>转速超过常见上限 2200 r/min, 请确认</Form.Text>
+        )}
         <div className="field-info">常见柴油机转速范围: 750-2200 r/min</div>
         {warningFor('speed').map((w, i) => (
           <Form.Text key={i} className={`text-${w.variant}`}><i className="bi bi-lightbulb me-1"></i>{w.msg}</Form.Text>
@@ -354,18 +403,48 @@ const InputParametersTab = ({
       <Form.Group className="mb-3" controlId="targetRatio">
         <Form.Label style={{ color: colors.text }}>目标减速比 <span className="text-danger">*</span> <HelpTooltip id="ratio-tip" content="减速比 = 输入转速 ÷ 输出转速，减速比越大输出扭矩越大" /></Form.Label>
         <Form.Control type="number" value={requirementData.targetRatio} onChange={(e) => handleRequirementDataChange({ targetRatio: e.target.value })} placeholder="例如: 4.5" min="0.1" step="any" required style={{...inputStyles, ...focusStyles}} className={`${getValidationClassName(getFieldValidationState('targetRatio', requirementData.targetRatio))}`} />
-        <div className="form-feedback invalid">请输入有效的目标减速比 (大于0)</div>
-        <div className="form-feedback warning">减速比较大，请确认是否正确</div>
+        {getFieldValidationState('targetRatio', requirementData.targetRatio) === 'invalid' && (
+          <Form.Text className="text-danger d-block"><i className="bi bi-x-circle me-1"></i>目标减速比必须大于 0</Form.Text>
+        )}
+        {getFieldValidationState('targetRatio', requirementData.targetRatio) === 'warning' && (
+          <Form.Text className="text-warning d-block"><i className="bi bi-exclamation-triangle me-1"></i>减速比超过常见上限 8, 请确认</Form.Text>
+        )}
         <div className="field-info">常见减速比范围: 1.5-10</div>
         {warningFor('ratio').map((w, i) => (
           <Form.Text key={i} className={`text-${w.variant}`}><i className="bi bi-lightbulb me-1"></i>{w.msg}</Form.Text>
         ))}
       </Form.Group>
+      <Form.Group className="mb-3" controlId="iceClass">
+        <Form.Label style={{ color: colors.text }}>
+          冰级要求 (可选) <HelpTooltip id="ice-tip" content="冰区航行项目:推力需求将自动按等级放大 (1.0-1.7×), 以覆盖冰块冲击峰值载荷" />
+        </Form.Label>
+        <Form.Select
+          value={requirementData.iceClass || 'none'}
+          onChange={(e) => handleRequirementDataChange({ iceClass: e.target.value })}
+          style={{...inputStyles, ...focusStyles}}
+        >
+          <option value="none">无冰级要求</option>
+          <option value="ICE-3">ICE-3 (轻冰区, 推力 ×1.1)</option>
+          <option value="ICE-2">ICE-2 (中冰区, 推力 ×1.2)</option>
+          <option value="ICE-1">ICE-1 (重冰区, 推力 ×1.35)</option>
+          <option value="ICE-1A SUPER">ICE-1A SUPER (波罗的海极冰, 推力 ×1.5)</option>
+          <option value="PC7">PC7 (极地夏季, 推力 ×1.5)</option>
+          <option value="PC6">PC6 (极地薄一年冰, 推力 ×1.5)</option>
+          <option value="PC5">PC5 (极地中一年冰, 推力 ×1.7)</option>
+          <option value="PC4">PC4 (极地厚一年冰, 推力 ×1.7)</option>
+          <option value="PC3">PC3 (极地多年冰, 推力 ×1.7)</option>
+        </Form.Select>
+        <div className="field-info">CCS / IACS URI 2 冰级规范, 冰区项目需选择以确保推力裕度</div>
+      </Form.Group>
       <Form.Group className="mb-3" controlId="thrustRequirement">
         <Form.Label style={{ color: colors.text }}>推力要求 (kN, 可选)</Form.Label>
         <Form.Control type="number" value={requirementData.thrustRequirement} onChange={(e) => handleRequirementDataChange({ thrustRequirement: e.target.value })} placeholder="留空则不强制匹配推力" min="0" step="any" style={{...inputStyles, ...focusStyles}} className={`${getValidationClassName(getFieldValidationState('thrustRequirement', requirementData.thrustRequirement))}`} />
-        <div className="form-feedback invalid">推力必须为0或正数（留空表示不限制）</div>
-        <div className="form-feedback warning">推力值较大，请确认是否正确</div>
+        {getFieldValidationState('thrustRequirement', requirementData.thrustRequirement) === 'invalid' && (
+          <Form.Text className="text-danger d-block"><i className="bi bi-x-circle me-1"></i>推力必须为 0 或正数 (留空表示不限制)</Form.Text>
+        )}
+        {getFieldValidationState('thrustRequirement', requirementData.thrustRequirement) === 'warning' && (
+          <Form.Text className="text-warning d-block"><i className="bi bi-exclamation-triangle me-1"></i>推力超过常见上限 150 kN, 请确认</Form.Text>
+        )}
         <div className="field-info">更高的推力要求会限制可选齿轮箱型号</div>
         {warningFor('thrust').map((w, i) => (
           <Form.Text key={i} className={`text-${w.variant}`}><i className="bi bi-lightbulb me-1"></i>{w.msg}</Form.Text>
@@ -410,6 +489,21 @@ const InputParametersTab = ({
           <Button size="sm" variant="secondary" onClick={() => setShowSaveModal(false)}>取消</Button>
           <Button size="sm" variant="primary" onClick={handleSaveTemplate} disabled={!templateName.trim()}>保存</Button>
         </Modal.Footer>
+      </Modal>
+
+      {/* 应用场景预设弹窗 (23 种船型) */}
+      <Modal show={showScenarioSelector} onHide={() => setShowScenarioSelector(false)} size="xl" centered>
+        <Modal.Header closeButton>
+          <Modal.Title className="fs-6">
+            <i className="bi bi-grid-3x3-gap me-2"></i>选择船舶类型 (一键填充全部参数)
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+          <ApplicationScenarioSelector
+            onApplyPreset={applyScenarioPreset}
+            onClose={() => setShowScenarioSelector(false)}
+          />
+        </Modal.Body>
       </Modal>
     </Form>
   );

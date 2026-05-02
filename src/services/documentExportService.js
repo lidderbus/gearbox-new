@@ -151,7 +151,7 @@ export const exportToWord = (htmlContent, options = {}) => {
  */
 export const printDocument = (element, options = {}) => {
   const { title = '打印预览' } = options;
-  const printWindow = window.open('', '_blank');
+  const printWindow = window.open('', '_blank', 'noopener,noreferrer');
   if (!printWindow) {
     logger.warn('无法打开打印窗口，请检查弹窗拦截设置');
     return false;

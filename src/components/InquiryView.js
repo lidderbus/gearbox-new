@@ -2,10 +2,13 @@
 // 技术询单管理 - 客户技术需求收集与跟踪
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, InputGroup } from 'react-bootstrap';
-import { inquiryStore } from '../services/documentStorage';
+import { inquiryStore, deriveProjectIdFromInquiry } from '../services/documentStorage';
 import { generateDocNumber } from '../utils/documentNumbering';
 import { trackFeature } from '../utils/analytics';
 import ExportToolbar from './ExportToolbar';
+import { useProject } from '../contexts/ProjectContext';
+import { saveVersion } from '../services/documentVersionStore';
+import VersionHistoryDrawer from './common/VersionHistoryDrawer';
 
 const STATUSES = [
   { key: 'new', label: '新建', color: 'info' },
@@ -40,16 +43,37 @@ export default function InquiryView({ colors, theme }) {
   const [form, setForm] = useState(EMPTY_FORM);
   const [search, setSearch] = useState('');
   const [msg, setMsg] = useState(null);
+  const [versionDrawer, setVersionDrawer] = useState({ show: false, inq: null }); // P1-4
+  const { setCurrentProject, refresh: refreshProjects } = useProject();
 
   // Load data on mount, seed if empty
+  // P0-1: 旧种子数据若无 projectId, 派生回填(基于询单 ID)
   useEffect(() => {
     let data = inquiryStore.getAll();
     if (data.length === 0) {
-      SEED_DATA.forEach(d => inquiryStore.save({ ...d }));
+      SEED_DATA.forEach(d => {
+        const projectId = deriveProjectIdFromInquiry(d.id);
+        const projectName = d.projectName || `${d.customer || ''}-${d.shipType || ''}`.trim() || projectId;
+        inquiryStore.save({ ...d, projectId, projectName });
+      });
       data = inquiryStore.getAll();
+    } else {
+      // 增量回填: 老数据缺 projectId 字段
+      const needsBackfill = data.filter(d => !d.projectId);
+      if (needsBackfill.length > 0) {
+        needsBackfill.forEach(d => {
+          inquiryStore.save({
+            ...d,
+            projectId: deriveProjectIdFromInquiry(d.id),
+            projectName: d.projectName || `${d.customer || ''}-${d.shipType || ''}`.trim() || deriveProjectIdFromInquiry(d.id),
+          });
+        });
+        data = inquiryStore.getAll();
+      }
     }
     setInquiries(data);
-  }, []);
+    refreshProjects();
+  }, [refreshProjects]);
 
   const reload = useCallback(() => setInquiries(inquiryStore.getAll()), []);
 
@@ -86,14 +110,18 @@ export default function InquiryView({ colors, theme }) {
     if (!form.customer.trim()) return flash('请填写客户单位名称', 'danger');
     if (!form.power || Number(form.power) <= 0) return flash('请填写有效的主机功率', 'danger');
     const docNumber = generateDocNumber('inquiry');
-    const doc = { ...form, id: docNumber, status: 'new' };
+    // P0-1: 询单创建即建立项目主线
+    const projectId = deriveProjectIdFromInquiry(docNumber);
+    const projectName = `${form.customer.trim()}-${form.shipType || ''}`.trim() || projectId;
+    const doc = { ...form, id: docNumber, status: 'new', projectId, projectName };
     inquiryStore.save(doc);
-    trackFeature('inquiry_create', { id: docNumber, customer: form.customer });
+    trackFeature('inquiry_create', { id: docNumber, customer: form.customer, projectId });
     setForm(EMPTY_FORM);
     setShowForm(false);
     reload();
-    flash(`询单 ${docNumber} 已保存`);
-  }, [form, reload, flash]);
+    refreshProjects();
+    flash(`询单 ${docNumber} 已保存,项目 ${projectId} 已建立`);
+  }, [form, reload, flash, refreshProjects]);
 
   const handleStatusChange = useCallback((id, newStatus) => {
     const item = inquiryStore.getById(id);
@@ -126,10 +154,13 @@ export default function InquiryView({ colors, theme }) {
     try {
       sessionStorage.setItem('source_inquiry_id', inq.id);
     } catch (e2) { /* ignore storage errors */ }
-    trackFeature('inquiry_to_selection', { id: inq.id, model: inq.model });
+    // P0-1: 切换到该询单的项目主线,后续报价/协议/合同自动归档此项目
+    const projectId = inq.projectId || deriveProjectIdFromInquiry(inq.id);
+    setCurrentProject(projectId, inq.projectName || `${inq.customer || ''}-${inq.shipType || ''}`.trim() || projectId);
+    trackFeature('inquiry_to_selection', { id: inq.id, model: inq.model, projectId });
     // Navigate to the input parameters tab
     window.location.hash = '#/input';
-  }, []);
+  }, [setCurrentProject]);
 
   // Export data for ExportToolbar
   const getExportData = useCallback(() => {
@@ -274,6 +305,9 @@ export default function InquiryView({ colors, theme }) {
                           <i className="bi bi-gear"></i>
                         </Button>
                       )}
+                      <Button size="sm" variant="outline-info" className="me-1" title="版本历史" onClick={() => setVersionDrawer({ show: true, inq })}>
+                        <i className="bi bi-clock-history"></i>
+                      </Button>
                       <Button size="sm" variant="outline-danger" title="删除" onClick={() => handleDelete(inq.id)}>
                         <i className="bi bi-trash"></i>
                       </Button>
@@ -285,6 +319,31 @@ export default function InquiryView({ colors, theme }) {
           </div>
         </Card.Body>
       </Card>
+
+      {/* P1-4: 版本历史抽屉 */}
+      <VersionHistoryDrawer
+        show={versionDrawer.show}
+        onHide={() => setVersionDrawer({ show: false, inq: null })}
+        type="inquiry"
+        docId={versionDrawer.inq?.id}
+        currentSnapshot={versionDrawer.inq}
+        onSaveVersion={({ comment, author }) => {
+          if (!versionDrawer.inq) return;
+          try {
+            saveVersion({ type: 'inquiry', docId: versionDrawer.inq.id, snapshot: versionDrawer.inq, comment, author });
+            flash(`已为 ${versionDrawer.inq.id} 保存新版本`);
+          } catch (e) {
+            flash('保存版本失败: ' + e.message, 'danger');
+          }
+        }}
+        onRollback={(snapshot) => {
+          if (!versionDrawer.inq) return;
+          inquiryStore.save({ ...snapshot, id: versionDrawer.inq.id }); // 保持 id 不变
+          reload();
+          setVersionDrawer({ show: false, inq: null });
+          flash(`已回滚 ${versionDrawer.inq.id} 到历史版本`);
+        }}
+      />
     </Container>
   );
 }

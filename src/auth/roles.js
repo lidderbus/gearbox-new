@@ -29,7 +29,12 @@ export const permissions = {
   // 高级功能权限
   BATCH_OPERATIONS: 'batch_operations',
   VIEW_ANALYTICS: 'view_analytics',
-  EXPORT_REPORTS: 'export_reports'
+  EXPORT_REPORTS: 'export_reports',
+
+  // P0-4: 资料库权限 (外形图库/说明书库/协议模板库/标准法规库)
+  LIBRARY_READ: 'library.read',         // 浏览预览
+  LIBRARY_DOWNLOAD: 'library.download', // 下载原件
+  LIBRARY_PUBLISH: 'library.publish',   // 发布新版本/上传
 };
 
 // 导出默认角色
@@ -42,7 +47,8 @@ export const rolePermissions = {
     permissions.PERFORM_SELECTION,
     permissions.VIEW_QUOTATION,
     permissions.VIEW_AGREEMENT,
-    permissions.EXPORT_FILES
+    permissions.EXPORT_FILES,
+    permissions.LIBRARY_READ,
   ],
   [userRoles.EDITOR]: [
     permissions.VIEW_GEARBOX_DATA,
@@ -52,7 +58,9 @@ export const rolePermissions = {
     permissions.EXPORT_FILES,
     permissions.EDIT_GEARBOX_DATA,
     permissions.EDIT_PRICE_DATA,
-    permissions.BATCH_OPERATIONS
+    permissions.BATCH_OPERATIONS,
+    permissions.LIBRARY_READ,
+    permissions.LIBRARY_DOWNLOAD,
   ],
   [userRoles.ADMIN]: [
     permissions.VIEW_GEARBOX_DATA,
@@ -66,7 +74,10 @@ export const rolePermissions = {
     permissions.MANAGE_USERS,
     permissions.MANAGE_DATABASE,
     permissions.VIEW_ANALYTICS,
-    permissions.EXPORT_REPORTS
+    permissions.EXPORT_REPORTS,
+    permissions.LIBRARY_READ,
+    permissions.LIBRARY_DOWNLOAD,
+    permissions.LIBRARY_PUBLISH,
   ],
   [userRoles.SUPER_ADMIN]: [
     permissions.VIEW_GEARBOX_DATA,
@@ -81,7 +92,10 @@ export const rolePermissions = {
     permissions.MANAGE_DATABASE,
     permissions.SYSTEM_SETTINGS,
     permissions.VIEW_ANALYTICS,
-    permissions.EXPORT_REPORTS
+    permissions.EXPORT_REPORTS,
+    permissions.LIBRARY_READ,
+    permissions.LIBRARY_DOWNLOAD,
+    permissions.LIBRARY_PUBLISH,
   ]
 };
 

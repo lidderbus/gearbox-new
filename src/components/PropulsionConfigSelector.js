@@ -240,15 +240,17 @@ const PropulsionConfigSelector = ({
           </Col>
         </Row>
 
-        {/* Rotation conflict modal */}
+        {/* Rotation conflict modal — 强制 ack, Esc/backdrop 不关闭 */}
         <Modal
           show={!!rotationWarning && !rotationAcknowledged}
+          onHide={() => setRotationAcknowledged(true)}
           backdrop="static"
           keyboard={false}
           centered
+          aria-labelledby="rotation-conflict-title"
         >
           <Modal.Header className="bg-danger text-white">
-            <Modal.Title>
+            <Modal.Title id="rotation-conflict-title">
               <i className="bi bi-exclamation-triangle-fill me-2"></i>
               旋向冲突
             </Modal.Title>

@@ -625,9 +625,22 @@ export const calculateHydrodynamics = (params) => {
 // ============================================
 
 /**
- * 计算空泡数 sigma
+ * 计算空泡数 sigma 并进行空泡裕度校核
+ *
+ * 公式来源 (P0-2 公式溯源):
+ *   σ = (p_a + ρ·g·h - p_v) / (0.5·ρ·V_R²)
+ *   V_R = √(V_a² + (π·n·D)²)  — 0.7R 处合速度近似
+ *   通过条件: σ > σ_cr · 1.15  (15% 安全裕度)
+ *
+ * 参考文献:
+ *   - Burrill L.C. (1943) "On Propeller Theory in Light of Developments in
+ *     Boundary Layer Research", Trans. NEC Inst. Eng. Shipbuilders, Vol.60.
+ *     DOI: https://doi.org/10.3940/rina.iimech.1943.038
+ *   - CCS《钢质海船入级规范》第 3 篇 第 6 章 §6.3 (空泡性能要求)
+ *   - ITTC Recommended Procedures 7.5-02-03-03.1 (Cavitation Inception Tests)
+ *
  * @param {Object} params - 计算参数
- * @returns {Object} 空泡校核结果
+ * @returns {Object} 空泡校核结果 {sigma, pass, margin, ...}
  */
 export const checkCavitation = (params) => {
   const {
@@ -677,7 +690,16 @@ export const checkCavitation = (params) => {
 
 /**
  * CCS钢质海船入级规范 - 桨叶厚度校核
- * 计算0.35R和0.60R截面最小厚度
+ *
+ * 公式来源 (P0-2 公式溯源):
+ *   t/D ≥ K × (P / (n² × D⁴ × Z × σ_f))^0.4
+ *   K_0.35R = 0.12  K_0.60R = 0.08  (CCS 表 3.5.2.1 简化系数)
+ *   σ_f — 材料许用疲劳应力 (NAB / Mn-Bronze / SS 等)
+ *
+ * 参考规范:
+ *   - CCS《钢质海船入级规范》第 3 篇 第 6 章 §6.2 (桨叶厚度要求)
+ *   - 各船级社等效条款见 utils/classificationCompliance.js classificationRules
+ *
  * @param {Object} params - 计算参数
  * @returns {Object} 强度校核结果
  */

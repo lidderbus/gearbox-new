@@ -1,5 +1,117 @@
 // src/data/priceDiscount.js
 // 价格折扣计算和管理
+// 支持双报价模式: 内部进价(采购成本) / 外部报价(销售定价)
+
+/**
+ * ═══════════════════════════════════════════════════════
+ * 双报价模式说明 (2026-04-12)
+ * ═══════════════════════════════════════════════════════
+ *
+ * 模式A — 内部进价 (采购成本价)
+ *   计算: basePrice × (1 - 下浮率) = 出厂价/进价
+ *   用途: 内部核算、采购审批、利润分析、成本控制
+ *   判断依据: 公司采购齿轮箱的真实成本
+ *     - 有正式采购合同或框架协议的 → 按协议价(进价)
+ *     - 批量采购(≥3台同型号) → 进价可再下浮2-5%
+ *     - 非标/定制品 → 以供应商报价为准
+ *
+ * 模式B — 外部报价 (销售定价)
+ *   计算: 出厂价 × 加价率(10%-20%) = 市场报价
+ *   用途: 对外报价、签合同、客户沟通
+ *   判断依据: 给客户的含利润售价
+ *     - 标准产品(HC/GW/DT) → 出厂价 × 110%-115%
+ *     - 统一售价产品(HCM/HCQ/HCA) → 固定价格，不可下浮
+ *     - 竞争性投标 → 可适当降低加价率至105%
+ *     - 老客户复购 → 可给予额外2-3%优惠
+ *     - 紧急订单/非标改制 → 加价率可上浮至120%
+ * ═══════════════════════════════════════════════════════
+ */
+
+// 报价模式常量
+export const PRICE_MODE = {
+  INTERNAL: 'internal',  // 内部进价(采购成本)
+  EXTERNAL: 'external',  // 外部报价(销售定价)
+};
+
+// 当前报价模式 (默认外部报价, 可通过 setPriceMode 切换)
+let _currentPriceMode = PRICE_MODE.EXTERNAL;
+
+export function getPriceMode() { return _currentPriceMode; }
+export function setPriceMode(mode) {
+  if (mode === PRICE_MODE.INTERNAL || mode === PRICE_MODE.EXTERNAL) {
+    _currentPriceMode = mode;
+    // 持久化到 localStorage
+    try { localStorage.setItem('gearbox_price_mode', mode); } catch {}
+  }
+}
+
+// 启动时从 localStorage 恢复
+try {
+  const saved = typeof localStorage !== 'undefined' && localStorage.getItem('gearbox_price_mode');
+  if (saved === PRICE_MODE.INTERNAL || saved === PRICE_MODE.EXTERNAL) _currentPriceMode = saved;
+} catch {}
+
+// 系列加价率映射 (外部报价时使用)
+export const markupRateMap = {
+  'HCM': 1.20,   // HCM统一售价系列, 加价20%
+  'HCQ': 1.20,   // HCQ统一售价系列
+  'HCA': 1.20,   // HCA统一售价系列
+  'HCV': 1.15,   // HCV系列
+  'DT': 1.18,    // DT大功率系列, 加价18%
+  'GWC': 1.15,   // GW系列, 加价15%
+  'GWS': 1.15,
+  'GWD': 1.15,
+  'GWH': 1.15,
+  'GWL': 1.15,
+  'GWK': 1.15,
+  'SGW': 1.15,
+  'HC1000': 1.15, // 大型HC, 加价15%
+  'HC1200': 1.15,
+  'HC1400': 1.15,
+  'HC1600': 1.15,
+  'HC2000': 1.15,
+  'HC2700': 1.15,
+  'HC': 1.12,     // 标准HC系列, 加价12%
+  'HCD': 1.12,
+  'HCT': 1.12,
+  'HCW': 1.12,
+  'HCL': 1.12,
+  'MB': 1.12,
+  'default': 1.10, // 默认加价10%
+};
+
+/**
+ * 根据型号获取加价率 (外部报价模式)
+ */
+export function getMarkupRate(model) {
+  if (!model) return markupRateMap['default'];
+  for (let i = 7; i >= 2; i--) {
+    if (model.length >= i) {
+      const prefix = model.substring(0, i);
+      if (markupRateMap[prefix]) return markupRateMap[prefix];
+    }
+  }
+  if (model.startsWith('GW')) return 1.15;
+  if (model.startsWith('DT')) return 1.18;
+  if (model.startsWith('HC')) return 1.12;
+  return markupRateMap['default'];
+}
+
+/**
+ * 根据当前报价模式获取显示价格
+ * @returns {{ displayPrice, priceLabel, factoryPrice, marketPrice, mode }}
+ */
+export function getPriceByMode(product) {
+  const factoryPrice = calculateFactoryPrice(product);
+  const markup = getMarkupRate(product?.model);
+  const marketPrice = Math.round(factoryPrice * markup);
+  const mode = _currentPriceMode;
+
+  if (mode === PRICE_MODE.INTERNAL) {
+    return { displayPrice: factoryPrice, priceLabel: '进价(出厂价)', factoryPrice, marketPrice, mode };
+  }
+  return { displayPrice: marketPrice, priceLabel: '报价(含利润)', factoryPrice, marketPrice, mode };
+}
 
 // 内联定义折扣率映射表，避免外部依赖
 const discountRateMap = {

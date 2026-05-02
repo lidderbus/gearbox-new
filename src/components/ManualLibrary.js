@@ -8,6 +8,12 @@ import { Card, Row, Col, Form, InputGroup, Button, Table, Badge, Alert, Tabs, Ta
 import { getAllManuals, getManualInfo } from '../data/gearboxManuals';
 import PDFLoadingModal from './PDFLoadingModal';
 import PDFPreviewModal from './PDFPreviewModal';
+import LibraryPermissionBanner from './common/LibraryPermissionBanner';
+import { useLibraryPermissions } from '../hooks/useLibraryPermissions';
+import { useAuth } from '../contexts/AuthContext';
+import { useProject } from '../contexts/ProjectContext';
+import { logAudit } from '../services/auditLog';
+import { protectedDownload } from '../utils/pdfWatermark';
 
 /**
  * 说明书库组件
@@ -21,6 +27,9 @@ const ManualLibrary = ({ colors, theme }) => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [loadingPdf, setLoadingPdf] = useState(null); // 正在加载的PDF
   const [previewPdf, setPreviewPdf] = useState(null); // 预览的PDF
+  const { canDownload } = useLibraryPermissions(); // P0-4
+  const { user } = useAuth(); // P2-2 审计
+  const { currentProjectId } = useProject(); // P2-2 水印
 
   // URL参数解析 - 支持从外部链接直接搜索
   useEffect(() => {
@@ -87,13 +96,38 @@ const ManualLibrary = ({ colors, theme }) => {
 
   // 打开说明书
   // 小文件直接打开，大文件显示下载进度
+  // P0-4: 下载权限拦截 + P2-2: 审计 + 水印伴随
   const openManual = (manual) => {
-    if (!isLargeFile(manual)) {
-      // 小文件直接打开
-      window.open(manual.path, '_blank');
-    } else {
-      // 大文件显示进度弹窗
-      setLoadingPdf(manual);
+    if (!canDownload) {
+      try {
+        logAudit('permission_deny', {
+          resourceType: 'manual',
+          resourceId: manual.model || manual.path,
+          userId: user?.username,
+          userRole: user?.role,
+          detail: '尝试下载但无 LIBRARY_DOWNLOAD 权限',
+        });
+      } catch (e) { /* ignore */ }
+      window.alert('您当前角色无下载权限,请联系管理员升级 (EDITOR/ADMIN)');
+      return;
+    }
+    // 审计 + 水印伴随文件
+    try {
+      protectedDownload(manual.path, (manual.model || 'manual') + (manual.fileFormat ? `.${manual.fileFormat}` : '.pdf'), {
+        resourceType: 'manual',
+        resourceId: manual.model || manual.path,
+        userId: user?.username,
+        userName: user?.name || user?.username,
+        userRole: user?.role,
+        projectId: currentProjectId,
+      });
+    } catch (e) {
+      // 兜底: 旧路径
+      if (!isLargeFile(manual)) {
+        window.open(manual.path, '_blank', 'noopener,noreferrer');
+      } else {
+        setLoadingPdf(manual);
+      }
     }
   };
 
@@ -110,6 +144,9 @@ const ManualLibrary = ({ colors, theme }) => {
   };
 
   return (
+    <>
+      {/* P0-4: 资料库权限横幅 */}
+      <LibraryPermissionBanner scope="说明书库" />
     <Card className="shadow-sm" style={{ backgroundColor: colors?.card, borderColor: colors?.border }}>
       <Card.Header style={{ backgroundColor: colors?.headerBg, color: colors?.headerText }}>
         <div className="d-flex justify-content-between align-items-center">
@@ -330,6 +367,7 @@ const ManualLibrary = ({ colors, theme }) => {
         />
       </Card.Body>
     </Card>
+    </>
   );
 };
 

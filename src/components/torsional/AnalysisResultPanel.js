@@ -6,6 +6,8 @@ import React from 'react';
 import { Card, Alert, Row, Col, Badge } from 'react-bootstrap';
 import CriticalSpeedTable from './CriticalSpeedTable';
 import TorsionalChart from './TorsionalChart';
+import FormulaProvenance from '../common/FormulaProvenance';
+import { getStandard } from '../../data/torsionalStandardsDB';
 
 const AnalysisResultPanel = ({ result, colors = {}, theme = 'light' }) => {
   if (!result) {
@@ -53,15 +55,49 @@ const AnalysisResultPanel = ({ result, colors = {}, theme = 'light' }) => {
         </Alert>
       )}
 
-      {/* 总体状态 */}
-      <Alert variant={isValid ? 'success' : 'danger'} className="mb-3">
-        <strong>校核结果: </strong>
-        {isValid ? (
-          <Badge bg="success">通过 - 工作转速已避开所有临界转速共振区间</Badge>
-        ) : (
-          <Badge bg="danger">未通过 - 存在共振风险，请调整工作转速或轴系参数</Badge>
-        )}
-      </Alert>
+      {/* 总体状态 + 当前选用规范溯源 (P0-2 / P0-3) */}
+      {(() => {
+        const stdCode = result.standardCode;
+        const std = stdCode ? getStandard(stdCode) : null;
+        const tv = std?.torsionalVibration;
+        const isM51 = stdCode === 'IACS_UR_M51';
+        return (
+          <Alert variant={isValid ? 'success' : 'danger'} className="mb-3">
+            <strong>校核结果: </strong>
+            {isValid ? (
+              <Badge bg="success">通过 - 工作转速已避开所有临界转速共振区间</Badge>
+            ) : (
+              <Badge bg="danger">未通过 - 存在共振风险，请调整工作转速或轴系参数</Badge>
+            )}
+            {std && (
+              <span className="ms-2" style={{ fontSize: '0.78em', color: '#666' }}>
+                依据 <strong>{std.name}</strong>
+                {isM51 && ' (IACS 统一要求)'}
+                <FormulaProvenance
+                  title={isM51 ? 'IACS UR M51 扭振校核' : '扭振共振避让校核'}
+                  formula={
+                    `共振避让带宽: ${tv?.forbiddenZone ? `${tv.forbiddenZone.min}–${tv.forbiddenZone.max} × n_cr` : '0.85–1.05 × n_cr'}\n` +
+                    `工作裕度: ε ≥ ${tv?.operatingMargin ?? 0.10} (continuous)` +
+                    (tv?.transientMargin ? ` / ε ≥ ${tv.transientMargin} (transient)` : '') +
+                    `\n中间轴许用应力: ${tv?.allowableStress?.intermediate?.formula || 'tau_c = 18 + Rm/36'}` +
+                    (tv?.allowableStress?.intermediate?.continuousLimitMPa
+                      ? `\n应力限值参考: τ_c ≈ ${tv.allowableStress.intermediate.continuousLimitMPa} MPa, τ_t ≈ ${tv.allowableStress.intermediate.transientLimitMPa} MPa`
+                      : '')
+                  }
+                  standard={std.fullName}
+                  section={isM51 ? 'UR M51 §3.2 / §4.1' : (std.code.startsWith('CCS') ? 'CCS 第 3 篇 第 3 章' : '见规范条文')}
+                  notes={
+                    isM51
+                      ? '所有 IACS 成员船级社(CCS/DNV/LR/ABS/BV/RINA/NK/KR) 共同认可的统一基线;通常与 UR M53(曲轴疲劳)、UR M68(止推) 协同校核。'
+                      : '临界转速由 Holzer 法或传递矩阵法求解;ε 定义为转速差与临界转速之比。'
+                  }
+                  placement="left"
+                />
+              </span>
+            )}
+          </Alert>
+        );
+      })()}
 
       {/* 系统特性卡片 */}
       <Card className="mb-3" style={cardStyle}>
