@@ -1,7 +1,7 @@
 // src/components/EnhancedGearboxSelectionResult.js
 import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
 import { toast } from '../utils/toast';
-import { Card, Row, Col, Table, Badge, Button, Tabs, Tab, Alert, Form, ListGroup } from 'react-bootstrap';
+import { Card, Row, Col, Table, Badge, Button, Tabs, Tab, Alert, Form, ListGroup, Spinner } from 'react-bootstrap';
 import { ResponsiveContainer, PieChart, Pie, Tooltip, Legend } from 'recharts';
 import { needsStandbyPump } from '../utils/enhancedPumpSelection';
 import { validateGearbox, validateCoupling, validatePump } from '../utils/dataValidator';
@@ -30,7 +30,6 @@ import marketEnrichment from '../data/marketEnrichment.json';
 import { evaluatePTOThermalMargin } from '../utils/ptoThermalMargin';
 import { resolvePackage } from '../utils/packageResolver';
 import { savePackageQuotation } from '../utils/quotationManager';
-import IMOCompliancePanel from './imo/IMOCompliancePanel';
 
 // 导入子组件
 import {
@@ -42,6 +41,9 @@ import {
   PriceComparisonChart,
   PerformanceChart
 } from './EnhancedGearboxSelectionResult/index';
+
+// IMOCompliancePanel 转 lazy: 拉走 cppSystemData(49KB) + energyEfficiencyCompliance + imoComplianceEngine
+const IMOCompliancePanel = lazy(() => import(/* webpackChunkName: "imo-compliance" */ './imo/IMOCompliancePanel'));
 
 const HOT_THRESHOLD = (marketEnrichment && marketEnrichment._meta && marketEnrichment._meta.hotSellerThreshold) || 7;
 
@@ -1193,13 +1195,17 @@ const EnhancedGearboxSelectionResult = ({
 
           {/* B4: IMO 合规评估 (EEXI / EEDI / CII) — 选型完成后可对船型/DWT/Vref 做合规评估 */}
           <Tab eventKey="imo" title={<><i className="bi bi-globe me-1"></i>IMO 合规</>}>
-            <IMOCompliancePanel
-              selectionResult={{
-                engineId: result?.engineId,
-                enginePower: selectedGearbox?.enginePower || result?.enginePower
-              }}
-              colors={colors}
-            />
+            {activeTab === 'imo' && (
+              <Suspense fallback={<div className="text-center p-4"><Spinner animation="border" size="sm" className="me-2" />加载 IMO 合规模块...</div>}>
+                <IMOCompliancePanel
+                  selectionResult={{
+                    engineId: result?.engineId,
+                    enginePower: selectedGearbox?.enginePower || result?.enginePower
+                  }}
+                  colors={colors}
+                />
+              </Suspense>
+            )}
           </Tab>
         </Tabs>
           
