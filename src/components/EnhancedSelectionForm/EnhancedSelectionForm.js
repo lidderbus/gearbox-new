@@ -7,6 +7,8 @@ import { Container, Row, Col, Button, Alert, Card, Spinner, Modal, Table, Badge 
 import { useEnhancedSelectionForm } from './useEnhancedSelectionForm';
 import { loadJsPDF } from '../../utils/dynamicImports';
 import { autoSelectGearbox, selectPTOClutch } from '../../utils/selectionAlgorithm';
+import { inferPropellerType, COPILOT_RULES } from '../../utils/copilotRules';
+import { recommendCoupling, recommendPump } from '../../services/copilotDataLoader';
 import { initialData } from '../../data/initialData';
 import { formatPriceWithFallback } from '../../utils/priceFormatter';
 import { submitInquiry } from '../../api/inquiryApi';
@@ -91,6 +93,25 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
   const [selectionResult, setSelectionResult] = useState(null);
   // 选型计算中状态
   const [isCalculating, setIsCalculating] = useState(false);
+  // Copilot 配套推荐 (顶推齿轮箱的官方联轴器+泵, 异步加载)
+  const [auxRecommend, setAuxRecommend] = React.useState({ coupling: null, pump: null });
+
+  // 当 selectionResult 顶推变化时, 异步取联轴器/泵 (走 copilotDataLoader 三级优先级)
+  React.useEffect(() => {
+    const top = selectionResult?.recommendations?.[0];
+    const model = top?.gearbox?.model || top?.model;
+    if (!model) {
+      setAuxRecommend({ coupling: null, pump: null });
+      return;
+    }
+    const power = parseFloat(formData.enginePower) || 0;
+    const speed = parseFloat(formData.engineSpeed) || 0;
+    const cd = top?.gearbox?.centerDistance || top?.centerDistance;
+    Promise.all([
+      recommendCoupling(model, power, speed, 1.5).catch(() => ({ coupling: null, source: 'none' })),
+      recommendPump(model, cd).catch(() => ({ pump: null, source: 'none' })),
+    ]).then(([c, p]) => setAuxRecommend({ coupling: c, pump: p }));
+  }, [selectionResult, formData.enginePower, formData.engineSpeed]);
 
   // 处理选型计算
   const handleCalculateSelection = () => {
@@ -113,12 +134,25 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
         return arr;
       })();
 
+      // Copilot 对齐: 桨型自动推断 (船型 + 功率 → CPP/FPP)
+      // 集装箱/散货/LNG/油船/海工/客滚/工程船 → CPP, 渔船/拖船/工作船 → FPP
+      // ≥8MW 自动倾向 CPP. "其他" / "公务船" / "货船" 不推断, 保持原行为
+      const inferredPropeller = inferPropellerType(
+        formData.shipType ? [formData.shipType] : [],
+        parseFloat(enginePower)
+      );
+
+      // Copilot 对齐: 4 项硬约束 — 仅在 form 显式开启时启用
+      const thrustNum = formData.thrust && formData.thrust !== '无要求'
+        ? parseFloat(formData.thrust) : 0;
+      const society = formData.classification?.society;
+
       // 构建选型需求
       const requirements = {
         motorPower: parseFloat(enginePower),
         motorSpeed: parseFloat(engineSpeed),
         targetRatio: parseFloat(ratio),
-        thrust: formData.thrust && formData.thrust !== '无要求' ? parseFloat(formData.thrust) : 0,
+        thrust: thrustNum,
         ratioTolerance: 0.1, // 10% 速比容差
         marginLimit: 0.5,     // 50% 余量限制
         // 接口筛选选项
@@ -126,7 +160,16 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
         interfaceSpec: formData.interfaceSpec || '',
         interfaceFilterMode: formData.interfaceFilterMode || 'prefer',
         // 轴布置筛选选项
-        shaftArrangement: arrangementFilter
+        shaftArrangement: arrangementFilter,
+        // Copilot 对齐: 桨型推断结果 (非空才硬筛 GC*/DT*)
+        seriesRequirements: inferredPropeller
+          ? { propellerType: inferredPropeller }
+          : undefined,
+        // Copilot 对齐 4 硬约束 (仅在 form toggle 开启时下传, 老用户无影响)
+        twinEngine: !!formData.twinEngine,
+        gearType: formData.gearType || null,
+        minThrust: formData.strictThrust && thrustNum > 0 ? thrustNum : 0,
+        classification: formData.strictClassification && society ? society : undefined,
       };
 
       // 调用自动选型
@@ -996,6 +1039,39 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
                         <i className="bi bi-check-circle-fill text-success me-1"></i>
                         选型结果 ({selectionResult.recommendations.length}个)
                       </h6>
+
+                      {/* Copilot 规则溯源 chip 行 */}
+                      {(() => {
+                        const diag = selectionResult._diagnostics || {};
+                        const inferred = diag.inferredPropellerType;
+                        const isDirect = diag.isDirectModelHit;
+                        const exclusions = diag.copilotExclusions || {};
+                        const exclusionEntries = Object.entries(exclusions).filter(([, n]) => n > 0);
+                        if (!inferred && !isDirect && exclusionEntries.length === 0) return null;
+                        return (
+                          <div className="mb-2 d-flex flex-wrap gap-1" style={{ fontSize: '0.78em' }}>
+                            {isDirect && <Badge bg="primary">直接型号 fast path</Badge>}
+                            {inferred && <Badge bg="info">推断桨型: {inferred}</Badge>}
+                            {exclusionEntries.map(([rule, n]) => {
+                              const labelMap = {
+                                [COPILOT_RULES.PROP_CPP]: 'CPP 排除',
+                                [COPILOT_RULES.PROP_FPP]: 'FPP 排除',
+                                [COPILOT_RULES.TWIN_2GWH]: '双机硬筛',
+                                [COPILOT_RULES.GEAR_DUAL_SPEED]: '双速硬筛',
+                                [COPILOT_RULES.GEAR_HIGH_SPEED]: '高速硬筛',
+                                [COPILOT_RULES.THRUST_MIN]: '推力硬筛',
+                                [COPILOT_RULES.CERT_MATCH]: '船级社硬筛',
+                              };
+                              return (
+                                <Badge key={rule} bg="secondary" title={rule}>
+                                  {labelMap[rule] || rule}: {n}
+                                </Badge>
+                              );
+                            })}
+                          </div>
+                        );
+                      })()}
+
                       <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
                         {selectionResult.recommendations.slice(0, 5).map((rec, index) => (
                           <Card
@@ -1016,10 +1092,46 @@ const EnhancedSelectionForm = ({ theme = 'light', colors: propColors }) => {
                                 <div>系列: {rec.gearbox?.series || rec.series}</div>
                                 <div>速比: {rec.matchedRatio || rec.ratio}</div>
                                 <div>余量: {((rec.capacityMargin || 0) * 100).toFixed(1)}%</div>
-                                {rec.gearbox?.price && (
-                                  <div>参考价: ¥{rec.gearbox.price.toLocaleString()}</div>
-                                )}
+                                <div>参考价: {formatPriceWithFallback(rec.gearbox || rec)}</div>
                               </div>
+
+                              {/* Copilot 配套推荐 (仅顶推显示, 三级优先级: 官方映射→扭矩公式→经验估算) */}
+                              {index === 0 && (auxRecommend.coupling?.coupling || auxRecommend.pump?.pump) && (
+                                <div className="mt-2 pt-2" style={{ borderTop: `1px dashed ${colors.border || '#dee2e6'}`, fontSize: '0.85em' }}>
+                                  {auxRecommend.coupling?.coupling && (
+                                    <div className="mb-1">
+                                      <i className="bi bi-link-45deg me-1"></i>
+                                      <strong>联轴器:</strong> {auxRecommend.coupling.coupling.model}
+                                      {auxRecommend.coupling.coupling.torque && (
+                                        <span className="text-muted ms-1">({auxRecommend.coupling.coupling.torque} kN·m)</span>
+                                      )}
+                                      <Badge bg={auxRecommend.coupling.source === 'official' ? 'success' : 'warning'} className="ms-1" style={{ fontSize: '0.72em' }}>
+                                        {auxRecommend.coupling.source === 'official' ? '官方映射'
+                                          : auxRecommend.coupling.source === 'torque-formula' ? '扭矩公式'
+                                          : '兜底'}
+                                      </Badge>
+                                    </div>
+                                  )}
+                                  {auxRecommend.pump?.pump && (
+                                    <div>
+                                      <i className="bi bi-droplet-fill me-1"></i>
+                                      <strong>备用泵:</strong> {auxRecommend.pump.pump.model}
+                                      {auxRecommend.pump.pump.flow && (
+                                        <span className="text-muted ms-1">({auxRecommend.pump.pump.flow} L/min)</span>
+                                      )}
+                                      <Badge bg={
+                                        auxRecommend.pump.source === 'official' ? 'success'
+                                          : auxRecommend.pump.source === 'applicable-gearbox' ? 'info'
+                                          : 'warning'
+                                      } className="ms-1" style={{ fontSize: '0.72em' }}>
+                                        {auxRecommend.pump.source === 'official' ? '官方映射'
+                                          : auxRecommend.pump.source === 'applicable-gearbox' ? '适配清单'
+                                          : '中心距经验'}
+                                      </Badge>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
                             </Card.Body>
                           </Card>
                         ))}

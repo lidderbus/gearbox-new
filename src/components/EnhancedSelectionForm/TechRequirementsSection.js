@@ -44,6 +44,22 @@ const TechRequirementsSection = ({
                 placeholder="无要求 或 具体数值 (kN)"
                 style={inputStyle}
               />
+              {/* Copilot 对齐: 推力硬筛 toggle, 默认关 (软评分), 开启后小于推力的型号被排除 */}
+              {formData.thrust && formData.thrust !== '无要求' && (
+                <Form.Check
+                  className="mt-2"
+                  type="switch"
+                  id="strict-thrust-switch"
+                  label={
+                    <span style={{ fontSize: '0.85em' }}>
+                      严格推力下限 (硬筛, 小于 {formData.thrust} kN 直接排除)
+                      <HelpTip text="默认关闭走软评分(推力不足仅扣分但保留候选)。开启后所有推力低于此值的齿轮箱被直接排除, 与 Copilot 行为一致" />
+                    </span>
+                  }
+                  checked={!!formData.strictThrust}
+                  onChange={(e) => updateField('strictThrust', e.target.checked)}
+                />
+              )}
             </Form.Group>
           </Col>
 

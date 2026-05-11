@@ -6368,6 +6368,7 @@ describe('平滑评分曲线验证', () => {
     test('余量对称性: 10%和20%偏离最优相同距离应比非对称组合更接近', () => {
       // 注: 即使容量评分对称(10.98 vs 10.98)，pricePerCapacity不同导致成本评分有差异
       // 所以测试两个对称点的分差 < 15%余量(最优)与30%余量(远离)的分差
+      // 显式走 legacy profile (W_CAPACITY=12), 与本测试的硬编码常数一致
       const gearboxes = [
         makeGearboxWithMargin('HC-M10', 10),
         makeGearboxWithMargin('HC-M15', 15),
@@ -6375,7 +6376,7 @@ describe('平滑评分曲线验证', () => {
         makeGearboxWithMargin('HC-M30', 30),
       ];
       const mockData = createMockData(gearboxes);
-      const result = selectGearbox(200, 1500, 2.5, 0, 'HC', mockData);
+      const result = selectGearbox(200, 1500, 2.5, 0, 'HC', mockData, { scoringProfile: 'legacy' });
       expect(result.success).toBe(true);
 
       const scores = {};

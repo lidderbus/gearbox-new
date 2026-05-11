@@ -10,10 +10,9 @@
  */
 
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-// 性能优化: 改为动态导入
-// import completeGearboxData from '../data/completeGearboxData';
 import { getMatchingCasesByGearbox } from '../data/hcmEngineMatching';
 import { gearboxToCouplingPrefixMap } from '../data/gearboxMatchingMaps';
+import { recommendCoupling as recommendCopilotCoupling, recommendPump as recommendCopilotPump } from '../services/copilotDataLoader';
 
 // 提取HCM系列数据 (现在接受data参数)
 const getHCMGearboxes = (completeGearboxData) => {
@@ -27,6 +26,14 @@ const getHCMGearboxes = (completeGearboxData) => {
       g.model.startsWith('HCRM')
     )
   );
+};
+
+// 兼容历史数据: 倾角值优先取 g.angle 字段, 缺失时从 model 字符串 "(倾角N°)" 解析
+const getAngle = (g) => {
+  if (!g) return 0;
+  if (g.angle != null) return g.angle;
+  const m = g.model && g.model.match(/\(倾角(\d+)°\)/);
+  return m ? parseInt(m[1], 10) : 0;
 };
 
 // 主机品牌列表
@@ -74,6 +81,10 @@ const HCMSelectionModule = () => {
   const [selectedGearbox, setSelectedGearbox] = useState(null);
   const [showCases, setShowCases] = useState(false);
 
+  // Copilot 配套推荐 (官方映射 + 扭矩公式 fallback)
+  const [copilotAux, setCopilotAux] = useState({ coupling: null, pump: null });
+  const [auxError, setAuxError] = useState(null);
+
   // 性能优化: 动态加载数据
   const [completeGearboxData, setCompleteGearboxData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -115,7 +126,7 @@ const HCMSelectionModule = () => {
     // 按倾角过滤
     if (inputs.angleFilter !== 'all') {
       const targetAngle = parseInt(inputs.angleFilter);
-      results = results.filter(g => (g.angle || 0) === targetAngle);
+      results = results.filter(g => getAngle(g) === targetAngle);
     }
 
     // 按ZF对标过滤
@@ -179,6 +190,34 @@ const HCMSelectionModule = () => {
     if (!selectedGearbox) return [];
     return getMatchingCasesByGearbox(selectedGearbox.model);
   }, [selectedGearbox]);
+
+  // Copilot 配套推荐: selectedGearbox 切换时异步加载官方联轴器+泵
+  useEffect(() => {
+    if (!selectedGearbox?.model) {
+      setCopilotAux({ coupling: null, pump: null });
+      setAuxError(null);
+      return;
+    }
+    let cancelled = false;
+    const power = parseFloat(inputs.power) || 0;
+    const speed = parseFloat(inputs.speed) || 0;
+    const cd = selectedGearbox.centerDistance || selectedGearbox.cd || 0;
+    setAuxError(null);
+    Promise.all([
+      recommendCopilotCoupling(selectedGearbox.model, power, speed, 1.5),
+      recommendCopilotPump(selectedGearbox.model, cd),
+    ])
+      .then(([coupling, pump]) => {
+        if (!cancelled) setCopilotAux({ coupling, pump });
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setCopilotAux({ coupling: null, pump: null });
+          setAuxError('配套数据加载失败，可重新选择型号或检查网络');
+        }
+      });
+    return () => { cancelled = true; };
+  }, [selectedGearbox, inputs.power, inputs.speed]);
 
   // 处理输入变化
   const handleInputChange = useCallback((e) => {
@@ -408,7 +447,7 @@ const HCMSelectionModule = () => {
                       )}
                     </td>
                     <td style={styles.td}>
-                      {g.angle ? `${g.angle}°` : '0°'}
+                      {getAngle(g) ? `${getAngle(g)}°` : '0°'}
                     </td>
                     <td style={styles.td}>
                       {g.totalWeight || g.weight || '-'}kg
@@ -477,7 +516,7 @@ const HCMSelectionModule = () => {
                   <div><strong>传递能力:</strong> {selectedGearbox.capacity?.toFixed(4)} kW/(r/min)</div>
                   <div><strong>减速比:</strong> {selectedGearbox.ratios?.join(', ')}</div>
                   <div><strong>转速范围:</strong> {selectedGearbox.inputSpeedRange?.join('-')} rpm</div>
-                  <div><strong>倾角:</strong> {selectedGearbox.angle || 0}°</div>
+                  <div><strong>倾角:</strong> {getAngle(selectedGearbox)}°</div>
                   <div><strong>重量:</strong> {selectedGearbox.totalWeight || selectedGearbox.weight} kg</div>
                   <div><strong>ZF对标:</strong> {selectedGearbox.zfEquivalent || '无'}</div>
                   <div><strong>控制方式:</strong> {selectedGearbox.controlType}</div>
@@ -491,6 +530,72 @@ const HCMSelectionModule = () => {
                 {selectedGearbox.applications && (
                   <div style={{ marginTop: '8px' }}>
                     <strong>应用场景:</strong> {selectedGearbox.applications.join(', ')}
+                  </div>
+                )}
+
+                {/* Copilot 配套加载错误提示 */}
+                {auxError && (
+                  <div style={{
+                    marginTop: '12px',
+                    padding: '8px 12px',
+                    background: '#fff2e8',
+                    border: '1px solid #ffbb96',
+                    borderRadius: '6px',
+                    fontSize: '12px',
+                    color: '#ad4e00'
+                  }}>
+                    ⚠️ {auxError}
+                  </div>
+                )}
+
+                {/* Copilot 官方配套推荐 (联轴器 + 备用泵) */}
+                {(copilotAux.coupling || copilotAux.pump) && (
+                  <div style={{
+                    marginTop: '12px',
+                    padding: '10px 12px',
+                    background: '#f0f9ff',
+                    border: '1px solid #91d5ff',
+                    borderRadius: '6px'
+                  }}>
+                    <div style={{ fontWeight: 600, color: '#0050b3', marginBottom: '6px', fontSize: '13px' }}>
+                      Copilot 官方配套推荐
+                    </div>
+                    {copilotAux.coupling && (
+                      <div style={{ fontSize: '12px', marginBottom: '4px' }}>
+                        <strong>高弹联轴器:</strong> {copilotAux.coupling.model}
+                        {copilotAux.coupling.torque ? ` · ${copilotAux.coupling.torque} N·m` : ''}
+                        {copilotAux.coupling.maxSpeed ? ` · ${copilotAux.coupling.maxSpeed} rpm` : ''}
+                        <span style={{
+                          marginLeft: '6px',
+                          padding: '1px 6px',
+                          borderRadius: '3px',
+                          fontSize: '10px',
+                          background: copilotAux.coupling.source === 'official_map' ? '#52c41a' : '#fa8c16',
+                          color: '#fff'
+                        }}>
+                          {copilotAux.coupling.source === 'official_map' ? '官方映射' : '扭矩公式'}
+                        </span>
+                      </div>
+                    )}
+                    {copilotAux.pump && (
+                      <div style={{ fontSize: '12px' }}>
+                        <strong>备用泵:</strong> {copilotAux.pump.model}
+                        {copilotAux.pump.flow ? ` · ${copilotAux.pump.flow} L/min` : ''}
+                        {copilotAux.pump.motorPower ? ` · 电机 ${copilotAux.pump.motorPower} kW` : ''}
+                        <span style={{
+                          marginLeft: '6px',
+                          padding: '1px 6px',
+                          borderRadius: '3px',
+                          fontSize: '10px',
+                          background: copilotAux.pump.source === 'official_map' ? '#52c41a'
+                            : copilotAux.pump.source === 'applicable_lookup' ? '#1890ff' : '#fa8c16',
+                          color: '#fff'
+                        }}>
+                          {copilotAux.pump.source === 'official_map' ? '官方映射'
+                            : copilotAux.pump.source === 'applicable_lookup' ? '适配清单' : '中心距经验'}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

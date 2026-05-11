@@ -4,7 +4,7 @@
  * 提供可配置的评分权重、应用场景容差、预设配置
  */
 
-// ========== 默认评分权重 ==========
+// ========== 默认评分权重 (legacy profile) ==========
 export const DEFAULT_SCORING_WEIGHTS = {
   costEffectiveness: 30,       // 性价比权重 (含TCO生命周期成本因子)
   ratioMatch: 21,              // 速比匹配权重
@@ -15,6 +15,52 @@ export const DEFAULT_SCORING_WEIGHTS = {
   seriesCapabilityFit: 9,      // 系列特性适配权重
   interfaceMatch: 8            // 接口匹配权重 (原硬编码，现纳入统一体系)
 };
+
+// ========== Copilot 对齐评分权重 ==========
+// 对齐 gearbox-copilot.html 评分公式: 减速比 35 / 余量 30 / 容量完整性 15 / 应用 8 / 船级社 6 / CPP +2
+// SPA 维度映射: ratioMatch=减速比, capacityMargin=余量, costEffectiveness=容量完整性(降权重), classificationMatch(新增船级社 6)
+// 总和 100, ratioMatch=30 (≈Copilot 35) / capacityMargin=25 (≈Copilot 30 含 cert=6 拆解到独立维度后)
+export const COPILOT_SCORING_WEIGHTS = {
+  costEffectiveness: 18,       // 性价比降权 (Copilot 原本不含此维度, 保留 18 作底盘)
+  ratioMatch: 30,              // 减速比贴合 — Copilot 核心
+  capacityMargin: 25,          // 余量合理 — Copilot 核心
+  thrustSatisfy: 3,            // 推力满足: Copilot 走硬筛, 评分降权
+  specialPackage: 3,           // 特价打包: 锦上添花, 降权
+  shaftMatch: 4,               // 轴布置: Copilot 不打分, SPA 保留低权重
+  seriesCapabilityFit: 9,      // 系列特性适配
+  interfaceMatch: 8            // 接口匹配
+  // 总和: 18+30+25+3+3+4+9+8 = 100 (船级社加分独立计算 +6 不计入此 100)
+};
+
+// ========== Copilot 严格对齐评分权重 (二轮再评测 R1) ==========
+// 完全复刻 gearbox-copilot.html 5 维公式: 减速比 35 / 余量 30 / 容量完整性 15 / 应用 8 / 船级社 6 = 94
+// 余 6 分留给 SPA 无对应的 fallback 维度 (interfaceMatch), 不引入 Copilot 没有的 cost/shaft 维度
+// 用法: 调用方传 scoringProfile='copilot-strict' 启用; 默认仍 'copilot' (与 Copilot 同向但保留 cost 兜底)
+export const COPILOT_STRICT_SCORING_WEIGHTS = {
+  costEffectiveness: 0,        // Copilot 严格模式: 不打分
+  ratioMatch: 35,              // 减速比贴合 — Copilot 原值
+  capacityMargin: 30,          // 余量合理 — Copilot 原值
+  thrustSatisfy: 0,            // 严格模式: Copilot 走硬筛, 评分不计
+  specialPackage: 0,           // Copilot 无此维度
+  shaftMatch: 0,               // Copilot 无此维度
+  seriesCapabilityFit: 8,      // 系列/应用 — Copilot 原值
+  interfaceMatch: 6,           // 兜底底盘 (Copilot 实际是 dataCompleteness 15, SPA 无完全对应, 此处给低权)
+  classificationMatch: 6,      // 船级社 — Copilot 原值, 独立维度参与
+  dataCompleteness: 15         // 容量完整性 — Copilot 原值
+  // 主流维度合计: 35+30+8+6+6+15 = 100 (cost/thrust/package/shaft = 0)
+};
+
+// ========== Scoring profile 切换 ==========
+// 默认 'copilot' (新行为, 对齐 Copilot 选型质量 + 保留 cost 兜底)
+// 'copilot-strict' (二轮再评测加, 完全复刻 Copilot HTML 5 维 100 分公式)
+// 'legacy' fallback (旧 1144 测试用例所期望的排序, 测试可手动切回)
+export const SCORING_PROFILE = 'copilot';
+
+export function getScoringWeightsByProfile(profile = SCORING_PROFILE) {
+  if (profile === 'legacy') return { ...DEFAULT_SCORING_WEIGHTS };
+  if (profile === 'copilot-strict') return { ...COPILOT_STRICT_SCORING_WEIGHTS };
+  return { ...COPILOT_SCORING_WEIGHTS };
+}
 
 // ========== 预设配置 ==========
 export const PRESET_CONFIGURATIONS = {
@@ -80,7 +126,7 @@ export const APPLICATION_TOLERANCES = {
     tolerances: {
       maxRatioDiffPercent: 10,
       maxCapacityMargin: 50,
-      minCapacityMargin: 10
+      minCapacityMargin: 0
     }
   },
   auxiliary: {
@@ -90,7 +136,7 @@ export const APPLICATION_TOLERANCES = {
     tolerances: {
       maxRatioDiffPercent: 10,
       maxCapacityMargin: 30,
-      minCapacityMargin: 10
+      minCapacityMargin: 0
     }
   },
   special: {
@@ -110,7 +156,7 @@ export const APPLICATION_TOLERANCES = {
     tolerances: {
       maxRatioDiffPercent: 10,
       maxCapacityMargin: 40,
-      minCapacityMargin: 10
+      minCapacityMargin: 0
     }
   },
   workboat: {
@@ -120,7 +166,7 @@ export const APPLICATION_TOLERANCES = {
     tolerances: {
       maxRatioDiffPercent: 15,
       maxCapacityMargin: 80,
-      minCapacityMargin: 10
+      minCapacityMargin: 0
     }
   },
   hybrid: {
@@ -136,10 +182,11 @@ export const APPLICATION_TOLERANCES = {
 };
 
 // ========== 默认容差设置 ==========
+// 手册传递能力已含安全系数：minCapacityMargin=0 表示"齿轮箱能力 ≥ 所需能力即合格"
 export const DEFAULT_TOLERANCES = {
   maxRatioDiffPercent: 10,
   maxCapacityMargin: 50,
-  minCapacityMargin: 10
+  minCapacityMargin: 0
 };
 
 // ========== 排序阈值配置 ==========
@@ -273,14 +320,6 @@ export function calculateAdaptiveTolerances(applicationId, inputParams = {}) {
     );
   }
 
-  // 低速应用：收紧余量要求
-  if (speed && speed < 500) {
-    tolerances.minCapacityMargin = Math.max(
-      tolerances.minCapacityMargin,
-      10
-    );
-  }
-
   // 高减速比：放宽容差
   if (ratio && ratio > 5) {
     tolerances.maxRatioDiffPercent = Math.min(
@@ -328,6 +367,10 @@ export function getApplicationById(applicationId) {
 
 export default {
   DEFAULT_SCORING_WEIGHTS,
+  COPILOT_SCORING_WEIGHTS,
+  COPILOT_STRICT_SCORING_WEIGHTS,
+  SCORING_PROFILE,
+  getScoringWeightsByProfile,
   PRESET_CONFIGURATIONS,
   APPLICATION_TOLERANCES,
   DEFAULT_TOLERANCES,

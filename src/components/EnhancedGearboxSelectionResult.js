@@ -17,19 +17,22 @@ import { getPriceMode, setPriceMode, PRICE_MODE } from '../data/priceDiscount';
 import MarginIndicator from './selection/MarginIndicator';
 import RecommendationReasonCard from './selection/RecommendationReasonCard';
 import CapacityCalculationCard from './selection/CapacityCalculationCard';
+import StructuralFormFilter from './selection/StructuralFormFilter';
+import { getGwSubSeries, GW_SUB_SERIES_META, GW_SUB_SERIES_LIST } from '../utils/gwStructuralForm';
 import RelaxationSuggestions from './selection/RelaxationSuggestions';
 import DataCompletenessCard from './selection/DataCompletenessCard';
 import ScoreBreakdownCard from './selection/ScoreBreakdownCard';
 import MiniScoreBar from './selection/MiniScoreBar';
 import NearMatchBanner from './selection/NearMatchBanner';
+import CopilotRulesChips from './EnhancedGearboxSelectionResult/CopilotRulesChips';
 import { exportSelectionSummary } from '../utils/selectionSummaryExport';
 import { calculatePowerRange, extractSeriesFromModel } from '../utils/gearboxDataEnhancer';
 import EquipmentInfoCard from './EquipmentInfoCard';
-import SelectionComparisonCharts from './SelectionComparisonCharts';
 import marketEnrichment from '../data/marketEnrichment.json';
 import { evaluatePTOThermalMargin } from '../utils/ptoThermalMargin';
 import { resolvePackage } from '../utils/packageResolver';
 import { savePackageQuotation } from '../utils/quotationManager';
+import { recommendCoupling as recommendCopilotCoupling, recommendPump as recommendCopilotPump } from '../services/copilotDataLoader';
 
 // 导入子组件
 import {
@@ -45,13 +48,16 @@ import {
 // IMOCompliancePanel 转 lazy: 拉走 cppSystemData(49KB) + energyEfficiencyCompliance + imoComplianceEngine
 const IMOCompliancePanel = lazy(() => import(/* webpackChunkName: "imo-compliance" */ './imo/IMOCompliancePanel'));
 
+// SelectionComparisonCharts 走 lazy: 它把 echarts (~1MB) 拉进主包, 仅"可视化对比"Tab 需要
+const SelectionComparisonCharts = lazy(() => import(/* webpackChunkName: "selection-comparison-charts" */ './SelectionComparisonCharts'));
+
 const HOT_THRESHOLD = (marketEnrichment && marketEnrichment._meta && marketEnrichment._meta.hotSellerThreshold) || 7;
 
 // 懒加载选型漏斗图
 const SelectionFunnelChart = lazy(() => import('./SelectionFunnelChart'));
 
-// 懒加载3D预览组件
-const Gearbox3DPreview = lazy(() => import('./Gearbox3DPreview'));
+// 懒加载3D预览组件 (拉 three.js + react-three/fiber ~905KB)
+const Gearbox3DPreview = lazy(() => import(/* webpackChunkName: "three-3d-preview" */ './Gearbox3DPreview'));
 
 // 动态导入选型报告生成器（避免bundle膨胀）
 const loadReportGenerator = () => import('../utils/selectionReportGenerator');
@@ -77,6 +83,8 @@ const EnhancedGearboxSelectionResult = ({
   const [comparisonMode, setComparisonMode] = useState(false);
   const [comparedGearboxes, setComparedGearboxes] = useState([]);
   const [showLowScore, setShowLowScore] = useState(false);
+  // GW 子系列结构形式过滤（空数组 = 不限制）
+  const [structuralFilter, setStructuralFilter] = useState([]);
   const [selectedAccessories, setSelectedAccessories] = useState({
     coupling: null,
     pump: null
@@ -152,7 +160,7 @@ const EnhancedGearboxSelectionResult = ({
         coupling: couplingResult
       }));
     }
-    
+
     if (pumpResult && pumpResult.success) {
       setSelectedAccessories(prev => ({
         ...prev,
@@ -160,6 +168,25 @@ const EnhancedGearboxSelectionResult = ({
       }));
     }
   }, [couplingResult, pumpResult]);
+
+  // Copilot 官方配套推荐 (复用 copilotDataLoader, 86 联轴器映射 + 50 泵映射 + 兜底链)
+  // 优先级: 官方映射 → 扭矩公式 / applicableGearbox 反查 → 中心距经验 → null
+  const [copilotAux, setCopilotAux] = useState({ coupling: null, pump: null });
+  useEffect(() => {
+    const top = result?.recommendations?.[selectedIndex] || result?.recommendations?.[0];
+    const model = top?.gearbox?.model || top?.model;
+    if (!model) {
+      setCopilotAux({ coupling: null, pump: null });
+      return;
+    }
+    const power = result?.enginePower || top?.gearbox?.power || top?.power || 0;
+    const speed = result?.engineSpeed || 1500;
+    const cd = top?.gearbox?.centerDistance || top?.centerDistance;
+    Promise.all([
+      recommendCopilotCoupling(model, power, speed, 1.5).catch(() => ({ coupling: null, source: 'none' })),
+      recommendCopilotPump(model, cd).catch(() => ({ pump: null, source: 'none' })),
+    ]).then(([c, p]) => setCopilotAux({ coupling: c, pump: p }));
+  }, [result, selectedIndex]);
 
   // Mobile/Tablet responsive layout
   const { isMobile, isTablet } = useIsMobile();
@@ -567,7 +594,6 @@ const EnhancedGearboxSelectionResult = ({
                   power={result.enginePower}
                   speed={result.engineSpeed}
                   gearboxCapacity={selectedGearbox.selectedCapacity}
-                  workCondition={result.workCondition}
                 />
                 <Table striped bordered style={{ backgroundColor: colors?.card || 'white', color: colors?.text || '#333', borderColor: colors?.border || '#ddd' }}>
                   <tbody>
@@ -805,14 +831,30 @@ const EnhancedGearboxSelectionResult = ({
               </Col>
               <Col md={6}>
                 {(() => {
-                  const others = recommendations
+                  const allOthers = recommendations
                     .map((gearbox, index) => ({ gearbox, index }))
                     .filter(({ index }) => index !== selectedIndex);
+
+                  // GW 子系列计数（基于 allOthers，过滤前），供 chip 显示数量
+                  const subSeriesCounts = GW_SUB_SERIES_LIST.reduce((acc, sub) => {
+                    acc[sub] = allOthers.filter(({ gearbox }) => getGwSubSeries(gearbox.model) === sub).length;
+                    return acc;
+                  }, {});
+                  const hasGwCandidates = Object.values(subSeriesCounts).some((c) => c > 0);
+
+                  // 应用结构形式过滤（仅 GW 受影响，非 GW 直通）
+                  const others = structuralFilter.length === 0
+                    ? allOthers
+                    : allOthers.filter(({ gearbox }) => {
+                        const sub = getGwSubSeries(gearbox.model);
+                        return !sub || structuralFilter.includes(sub);
+                      });
+
                   const highScore = others.filter(({ gearbox }) => (gearbox.score || 0) >= 60).slice(0, 10);
                   const lowScore = others.filter(({ gearbox }) => (gearbox.score || 0) < 60).slice(0, 10);
 
                   // v62: 无备选时显示占位, 不再展示空表头 (0/0)
-                  if (others.length === 0) {
+                  if (allOthers.length === 0) {
                     return (
                       <Card className="mb-3" style={{ backgroundColor: colors?.card, borderColor: colors?.border }}>
                         <Card.Body className="text-center text-muted py-3">
@@ -823,7 +865,10 @@ const EnhancedGearboxSelectionResult = ({
                     );
                   }
 
-                  const renderRow = ({ gearbox, index }) => (
+                  const renderRow = ({ gearbox, index }) => {
+                    const gwSub = getGwSubSeries(gearbox.model);
+                    const gwMeta = gwSub ? GW_SUB_SERIES_META[gwSub] : null;
+                    return (
                     <tr key={gearbox.model + index} className={gearbox.isPartialMatch ? 'table-warning' : ''}>
                       <td>
                         {gearbox.model}
@@ -836,7 +881,14 @@ const EnhancedGearboxSelectionResult = ({
                         <DataCompletenessBadge gearbox={gearbox} className="ms-1" size="sm" />
                       </td>
                       <td><MiniScoreBar gearbox={gearbox} width={60} /></td>
-                      <td>{gearbox.series || extractSeriesFromModel(gearbox.model)}</td>
+                      <td>
+                        {gearbox.series || extractSeriesFromModel(gearbox.model)}
+                        {gwMeta && (
+                          <Badge bg="info" className="ms-1" title={gwMeta.desc} style={{ fontSize: '0.7rem' }}>
+                            {gwMeta.bucket}
+                          </Badge>
+                        )}
+                      </td>
                       <td>
                         {gearbox.selectedRatio?.toFixed(2) || gearbox.ratio?.toFixed(2) || '-'}
                         {gearbox.ratioDiffPercent && (
@@ -877,43 +929,77 @@ const EnhancedGearboxSelectionResult = ({
                         )}
                       </td>
                     </tr>
-                  );
+                    );
+                  };
 
+                  const totalShown = highScore.length + (showLowScore ? lowScore.length : 0);
                   return (
                     <>
-                      <h5 style={{ color: colors?.headerText || '#333' }}>其他推荐齿轮箱 ({Math.min(recommendations.length - 1, 10)}/{recommendations.length - 1})</h5>
-                      <div className="table-responsive">
-                        <Table striped bordered hover size="sm" style={{ backgroundColor: colors?.card || 'white', color: colors?.text || '#333', borderColor: colors?.border || '#ddd' }}>
-                          <thead>
-                            <tr>
-                              <th>型号</th>
-                              <th>评分</th>
-                              <th>系列</th>
-                              <th>减速比</th>
-                              <th>传递能力</th>
-                              <th>操作</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {highScore.map(renderRow)}
-                            {showLowScore && lowScore.map(renderRow)}
-                          </tbody>
-                        </Table>
-                        {lowScore.length > 0 && (
+                      <h5 style={{ color: colors?.headerText || '#333' }}>
+                        其他推荐齿轮箱 ({Math.min(others.length, 10)}/{others.length}
+                        {structuralFilter.length > 0 && ` · 已过滤 ${allOthers.length - others.length}`})
+                      </h5>
+                      {hasGwCandidates && (
+                        <Card className="mb-2" style={{ backgroundColor: colors?.card || '#fafafa', borderColor: colors?.border || '#e0e0e0' }}>
+                          <Card.Body className="py-2 px-3">
+                            <StructuralFormFilter
+                              value={structuralFilter}
+                              onChange={setStructuralFilter}
+                              counts={subSeriesCounts}
+                              compact={false}
+                              title="GW 子系列结构形式过滤"
+                            />
+                          </Card.Body>
+                        </Card>
+                      )}
+                      {others.length === 0 && structuralFilter.length > 0 && (
+                        <Alert variant="info" className="py-2">
+                          <i className="bi bi-info-circle me-2"></i>
+                          当前结构形式筛选下无候选齿轮箱
                           <Button
-                            variant="outline-secondary"
+                            variant="link"
                             size="sm"
-                            className="mb-2"
-                            onClick={() => setShowLowScore(!showLowScore)}
+                            className="p-0 ms-2"
+                            onClick={() => setStructuralFilter([])}
                           >
-                            <i className={`bi bi-chevron-${showLowScore ? 'up' : 'down'} me-1`}></i>
-                            {showLowScore ? '收起低匹配度候选' : `展开 ${lowScore.length} 个低匹配度候选 (评分<60)`}
+                            清除筛选
                           </Button>
-                        )}
-                        {recommendations.length - 1 > 10 && (
-                          <small className="text-muted d-block">显示前10个推荐，共{recommendations.length - 1}个可选型号</small>
-                        )}
-                      </div>
+                        </Alert>
+                      )}
+                      {others.length > 0 && (
+                        <div className="table-responsive">
+                          <Table striped bordered hover size="sm" style={{ backgroundColor: colors?.card || 'white', color: colors?.text || '#333', borderColor: colors?.border || '#ddd' }}>
+                            <thead>
+                              <tr>
+                                <th>型号</th>
+                                <th>评分</th>
+                                <th>系列</th>
+                                <th>减速比</th>
+                                <th>传递能力</th>
+                                <th>操作</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {highScore.map(renderRow)}
+                              {showLowScore && lowScore.map(renderRow)}
+                            </tbody>
+                          </Table>
+                          {lowScore.length > 0 && (
+                            <Button
+                              variant="outline-secondary"
+                              size="sm"
+                              className="mb-2"
+                              onClick={() => setShowLowScore(!showLowScore)}
+                            >
+                              <i className={`bi bi-chevron-${showLowScore ? 'up' : 'down'} me-1`}></i>
+                              {showLowScore ? '收起低匹配度候选' : `展开 ${lowScore.length} 个低匹配度候选 (评分<60)`}
+                            </Button>
+                          )}
+                          {others.length > 10 && (
+                            <small className="text-muted d-block">显示前 {totalShown} 个推荐, 共 {others.length} 个可选型号</small>
+                          )}
+                        </div>
+                      )}
                     </>
                   );
                 })()}
@@ -923,6 +1009,34 @@ const EnhancedGearboxSelectionResult = ({
           
           {/* 联轴器信息标签页 */}
           <Tab eventKey="coupling" title="高弹联轴器">
+            {/* Copilot 官方推荐 (映射 86 条 + 扭矩公式兜底) */}
+            {copilotAux.coupling?.coupling && (
+              <Alert variant="light" className="mb-2" style={{ borderLeft: '4px solid #28a745' }}>
+                <div className="d-flex justify-content-between align-items-start flex-wrap">
+                  <div>
+                    <i className="bi bi-stars text-success me-2"></i>
+                    <strong>Copilot 官方推荐:</strong> {copilotAux.coupling.coupling.model}
+                    {copilotAux.coupling.coupling.torque != null && (
+                      <span className="text-muted ms-2">扭矩 {copilotAux.coupling.coupling.torque} kN·m</span>
+                    )}
+                    {copilotAux.coupling.coupling.maxSpeed != null && (
+                      <span className="text-muted ms-2">最高转速 {copilotAux.coupling.coupling.maxSpeed} rpm</span>
+                    )}
+                    {copilotAux.coupling.coupling.weight != null && (
+                      <span className="text-muted ms-2">重量 {copilotAux.coupling.coupling.weight} kg</span>
+                    )}
+                    {copilotAux.coupling.coupling.price != null && (
+                      <span className="text-muted ms-2">参考价 {formatPrice(copilotAux.coupling.coupling.price)}</span>
+                    )}
+                  </div>
+                  <Badge bg={copilotAux.coupling.source === 'official' ? 'success' : 'warning'} style={{ fontSize: '0.78em' }}>
+                    {copilotAux.coupling.source === 'official' ? '官方映射 (杭齿手册)'
+                      : copilotAux.coupling.source === 'torque-formula' ? '扭矩公式兜底 (T=9.55·P/n·K)'
+                      : '兜底'}
+                  </Badge>
+                </div>
+              </Alert>
+            )}
             <CouplingInfoSection
               couplingResult={couplingResult}
               options={result.options}
@@ -934,6 +1048,42 @@ const EnhancedGearboxSelectionResult = ({
 
           {/* 备用泵标签页 */}
           <Tab eventKey="pump" title="备用泵">
+            {/* Copilot 官方推荐 (映射 50 条 + applicableGearbox 反查 + 中心距经验) */}
+            {copilotAux.pump?.pump && (
+              <Alert variant="light" className="mb-2" style={{ borderLeft: '4px solid #28a745' }}>
+                <div className="d-flex justify-content-between align-items-start flex-wrap">
+                  <div>
+                    <i className="bi bi-stars text-success me-2"></i>
+                    <strong>Copilot 官方推荐:</strong> {copilotAux.pump.pump.model}
+                    {copilotAux.pump.pump.flow != null && (
+                      <span className="text-muted ms-2">流量 {copilotAux.pump.pump.flow} L/min</span>
+                    )}
+                    {copilotAux.pump.pump.pressure != null && (
+                      <span className="text-muted ms-2">压力 {copilotAux.pump.pump.pressure} MPa</span>
+                    )}
+                    {copilotAux.pump.pump.motorPower != null && (
+                      <span className="text-muted ms-2">电机 {copilotAux.pump.pump.motorPower} kW</span>
+                    )}
+                    {copilotAux.pump.pump.price != null && (
+                      <span className="text-muted ms-2">参考价 {formatPrice(copilotAux.pump.pump.price)}</span>
+                    )}
+                  </div>
+                  <Badge
+                    bg={
+                      copilotAux.pump.source === 'official' ? 'success'
+                        : copilotAux.pump.source === 'applicable-gearbox' ? 'info'
+                        : 'warning'
+                    }
+                    style={{ fontSize: '0.78em' }}
+                  >
+                    {copilotAux.pump.source === 'official' ? '官方映射 (杭齿手册)'
+                      : copilotAux.pump.source === 'applicable-gearbox' ? '适配清单反查'
+                      : copilotAux.pump.source === 'center-distance' ? '中心距经验'
+                      : '兜底'}
+                  </Badge>
+                </div>
+              </Alert>
+            )}
             <PumpInfoSection
               pumpResult={pumpResult}
               needsPumpFlag={needsPumpFlag}
@@ -989,13 +1139,13 @@ const EnhancedGearboxSelectionResult = ({
 
           {/* 可视化对比标签页 */}
           <Tab eventKey="charts" title="可视化对比">
-            <SelectionComparisonCharts
-              recommendations={recommendations}
-              theme={theme}
-              colors={colors}
-              targetRatio={result.targetRatio}
-            />
-            <Suspense fallback={null}>
+            <Suspense fallback={<div className="text-center p-4"><Spinner animation="border" size="sm" /> 加载图表...</div>}>
+              <SelectionComparisonCharts
+                recommendations={recommendations}
+                theme={theme}
+                colors={colors}
+                targetRatio={result.targetRatio}
+              />
               <SelectionFunnelChart result={result} />
             </Suspense>
           </Tab>
@@ -1155,9 +1305,9 @@ const EnhancedGearboxSelectionResult = ({
                         )}
                         <tr className="table-info">
                           <td><strong>总价格</strong></td>
-                          <td><strong>{((selectedGearbox.marketPrice || 0) + 
-                                      (couplingResult?.marketPrice || 0) + 
-                                      (needsPumpFlag ? (pumpResult?.marketPrice || 0) : 0)).toLocaleString()} 元</strong></td>
+                          <td><strong>{formatPrice((selectedGearbox.marketPrice || 0) +
+                                      (couplingResult?.marketPrice || 0) +
+                                      (needsPumpFlag ? (pumpResult?.marketPrice || 0) : 0))}</strong></td>
                         </tr>
                       </tbody>
                     </Table>
@@ -1376,6 +1526,8 @@ const EnhancedGearboxSelectionResult = ({
       <Card.Body>
         {/* 近似匹配横幅 — 选型未完全成功时显示 */}
         <NearMatchBanner result={result} recommendations={recommendations} />
+        {/* Phase 3 规则溯源 — Copilot 9 硬约束触发标签 + 自动推断 + 评分模式 */}
+        <CopilotRulesChips diagnostics={result?._diagnostics} />
         {/* 添加备用泵需求提示 */}
         <Alert variant={needsPumpFlag ? "primary" : "info"} className="mb-3">
           <i className="bi bi-info-circle me-2"></i>

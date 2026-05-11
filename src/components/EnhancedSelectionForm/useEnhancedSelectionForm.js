@@ -42,6 +42,11 @@ const getDefaultFormData = () => ({
   enginePower: "",            // 主机功率 (kW)
   engineSpeed: "",            // 主机转速 (rpm)
   ratio: "",                  // 速比
+  // Copilot 对齐: 4 项硬约束字段 (默认 false/null, 不影响老用户)
+  twinEngine: false,          // 双机并车 (启用时仅推荐 2GWH 系列)
+  gearType: "",               // 齿轮形式: '' (默认) | '双速' (DT 系列) | '高速' (HCG/HCAG/HCQ)
+  strictThrust: false,        // 推力下限硬筛 (true 时 thrust 字段升级为 minThrust 硬过滤)
+  strictClassification: false,// 船级社硬筛 (true 时仅返回含该船级社证书的型号)
 
   // === 船检要求 ===
   classification: {

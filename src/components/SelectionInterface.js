@@ -4,6 +4,7 @@ import { autoSelectGearbox } from '../utils/selectionAlgorithm';
 import { formatPrice } from '../utils/dataHelpers';
 import { saveSelectionToHistory } from '../utils/selectionHistory';
 import { initialData } from '../data/initialData';
+import { inferPropellerType } from '../utils/copilotRules';
 
 const SelectionInterface = () => {
   // 用户输入状态
@@ -17,7 +18,14 @@ const SelectionInterface = () => {
     weightLimit: "", // 重量限制 (可选)
     workCondition: "III类:扭矩变化中等", // 工作条件
     temperature: "30", // 工作温度
-    safetyFactor: "1.2" // 安全系数
+    safetyFactor: "1.2", // 安全系数
+    // Copilot 对齐 4 项硬约束 (默认全关, 不影响老用户)
+    shipType: "", // 船型 (用于桨型自动推断, 留空=不推断)
+    twinEngine: false, // 双机并车 (仅 2GWH)
+    gearType: "", // 齿轮形式: '' | '双速' | '高速'
+    strictThrust: false, // 推力下限硬筛 (开启后 thrust 升级为 minThrust)
+    classificationSociety: "", // 船级社 (CCS/DNV/BV/LR/ABS)
+    strictClassification: false // 船级社硬筛
   });
 
   // 选型结果状态
@@ -60,16 +68,32 @@ const SelectionInterface = () => {
       }
       
       // 转换输入为数字
+      const thrustNum = requirements.thrust ? parseFloat(requirements.thrust) : 0;
+      const power = parseFloat(requirements.motorPower);
+      // Copilot 桨型自动推断 (仅 shipType 填了才触发)
+      const inferredPropeller = requirements.shipType
+        ? inferPropellerType([requirements.shipType], power)
+        : null;
+
       const numericRequirements = {
         ...requirements,
-        motorPower: parseFloat(requirements.motorPower),
+        motorPower: power,
         motorSpeed: parseFloat(requirements.motorSpeed),
         targetRatio: parseFloat(requirements.targetRatio),
-        thrust: requirements.thrust ? parseFloat(requirements.thrust) : 0,
+        thrust: thrustNum,
         budget: requirements.budget ? parseFloat(requirements.budget) : 0,
         weightLimit: requirements.weightLimit ? parseFloat(requirements.weightLimit) : 0,
         temperature: parseFloat(requirements.temperature || 30),
-        safetyFactor: parseFloat(requirements.safetyFactor || 1.2)
+        safetyFactor: parseFloat(requirements.safetyFactor || 1.2),
+        // Copilot 4 硬约束 (仅 toggle 开启时下传)
+        twinEngine: !!requirements.twinEngine,
+        gearType: requirements.gearType || null,
+        minThrust: requirements.strictThrust && thrustNum > 0 ? thrustNum : 0,
+        classification: requirements.strictClassification && requirements.classificationSociety
+          ? requirements.classificationSociety : undefined,
+        seriesRequirements: inferredPropeller
+          ? { propellerType: inferredPropeller }
+          : undefined
       };
       
       // 根据选择的齿轮箱类型执行选型
@@ -138,7 +162,13 @@ const SelectionInterface = () => {
       weightLimit: "",
       workCondition: "III类:扭矩变化中等",
       temperature: "30",
-      safetyFactor: "1.2"
+      safetyFactor: "1.2",
+      shipType: "",
+      twinEngine: false,
+      gearType: "",
+      strictThrust: false,
+      classificationSociety: "",
+      strictClassification: false
     });
     setSelectionResult(null);
     setError(null);
@@ -292,7 +322,84 @@ const SelectionInterface = () => {
                 step="1"
               />
             </div>
-            
+
+            {/* Copilot 高级硬筛 (默认全关, 开启后行为对齐 gearbox-copilot.html) */}
+            <fieldset style={{ border: '1px dashed #c5c5c5', padding: '8px 12px', margin: '8px 0' }}>
+              <legend style={{ fontSize: '0.85em', padding: '0 6px' }}>Copilot 高级硬筛 (可选)</legend>
+              <div className="form-group">
+                <label>船型 (用于桨型自动推断):</label>
+                <select name="shipType" value={requirements.shipType} onChange={handleInputChange}>
+                  <option value="">-- 留空: 不推断 --</option>
+                  <option value="集装箱船">集装箱船 → CPP</option>
+                  <option value="油轮">油轮 → CPP</option>
+                  <option value="散货船">散货 → CPP</option>
+                  <option value="LNG船">LNG → CPP</option>
+                  <option value="工程船">工程船 → CPP</option>
+                  <option value="渔船">渔船 → FPP</option>
+                  <option value="拖轮">拖轮 → FPP</option>
+                  <option value="游艇">游艇 → FPP</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>齿轮形式:</label>
+                <select name="gearType" value={requirements.gearType} onChange={handleInputChange}>
+                  <option value="">默认 (不限)</option>
+                  <option value="双速">双速 (DT 系列)</option>
+                  <option value="高速">高速 (HCG/HCAG/HCQ/HCM/HCAM/HCV/HCVG)</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>
+                  <input
+                    type="checkbox"
+                    name="twinEngine"
+                    checked={requirements.twinEngine}
+                    onChange={(e) => setRequirements({ ...requirements, twinEngine: e.target.checked })}
+                  />
+                  &nbsp;双机并车 (仅推荐 2GWH 系列)
+                </label>
+              </div>
+              {requirements.thrust && (
+                <div className="form-group">
+                  <label>
+                    <input
+                      type="checkbox"
+                      name="strictThrust"
+                      checked={requirements.strictThrust}
+                      onChange={(e) => setRequirements({ ...requirements, strictThrust: e.target.checked })}
+                    />
+                    &nbsp;严格推力下限 (硬筛, 推力 &lt; {requirements.thrust} kN 直接排除)
+                  </label>
+                </div>
+              )}
+              <div className="form-group">
+                <label>
+                  <input
+                    type="checkbox"
+                    name="strictClassification"
+                    checked={requirements.strictClassification}
+                    onChange={(e) => setRequirements({ ...requirements, strictClassification: e.target.checked })}
+                  />
+                  &nbsp;船级社硬筛
+                </label>
+                {requirements.strictClassification && (
+                  <select
+                    name="classificationSociety"
+                    value={requirements.classificationSociety}
+                    onChange={handleInputChange}
+                    style={{ marginLeft: '8px' }}
+                  >
+                    <option value="">-- 选择 --</option>
+                    <option value="CCS">CCS</option>
+                    <option value="DNV">DNV</option>
+                    <option value="BV">BV</option>
+                    <option value="LR">LR</option>
+                    <option value="ABS">ABS</option>
+                  </select>
+                )}
+              </div>
+            </fieldset>
+
             <div className="button-group">
               <button type="submit" disabled={loading} className="primary-button">
                 {loading ? '选型中...' : '开始选型'}

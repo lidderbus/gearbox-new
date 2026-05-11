@@ -4,6 +4,8 @@
 import { logger } from '../config/logging';
 import {
   DEFAULT_SCORING_WEIGHTS,
+  COPILOT_SCORING_WEIGHTS,
+  COPILOT_STRICT_SCORING_WEIGHTS,
   DEFAULT_TOLERANCES,
   SORTING_THRESHOLDS
 } from '../config/selectionConfig';
@@ -25,7 +27,18 @@ import { selectFlexibleCoupling, selectStandbyPump, fixCouplingTorque } from './
 import { getGWPackagePriceConfig, checkPackageMatch } from '../data/packagePriceConfig';
 import { deriveShaftArrangement, matchesShaftArrangement } from '../config/shaftArrangementConfig';
 import { matchesSeriesRequirements } from '../config/seriesCapabilityConfig';
+import { matchesStructuralFilter } from './gwStructuralForm';
 import { performCriticalSpeedCheck } from './criticalSpeedCheck';
+import {
+  applyCopilotHardConstraints,
+  inferPropellerType,
+  isCPPGearbox,
+  findDirectModel,
+  COPILOT_RULES,
+  type CopilotRuleId,
+  type CopilotExclusionStats,
+  type CopilotConstraintInput,
+} from './copilotRules';
 
 // 导入类型定义
 import type {
@@ -109,6 +122,15 @@ interface SelectionOptions {
     needsHighThrust?: boolean;
     propellerType?: 'FPP' | 'CPP' | null;
   };
+  // GW 子系列结构形式过滤（仅对 GW 系列生效；空数组或缺省 = 不限制）
+  gwStructuralFilter?: string[];
+  // Copilot 对齐硬约束 (任一未指定即不触发该约束)
+  twinEngine?: boolean;                       // 双机并车 → 仅 2GWH
+  gearType?: '双速' | '高速' | null;          // 双速 → DT, 高速 → HCG/HCAG/HCQ
+  minThrust?: number;                         // 推力下限 kN, 硬筛
+  classification?: string;                    // CCS/DNV/LR/BV/ABS/KR/NK/RINA, 硬匹配
+  autoInferPropellerType?: boolean;           // true 时根据 application 自动推断 CPP/FPP
+  scoringProfile?: 'copilot' | 'legacy' | 'copilot-strict';      // 评分公式切换 (默认 copilot, 'copilot-strict' 严格复刻 Copilot HTML 5 维)
 }
 
 /**
@@ -247,6 +269,17 @@ interface AutoSelectRequirements {
     needsHighThrust?: boolean;
     propellerType?: 'FPP' | 'CPP' | null;
   };
+  // GW 子系列结构形式过滤（仅对 GW 系列生效；空数组或缺省 = 不限制）
+  gwStructuralFilter?: string[];
+  // Copilot 对齐硬约束
+  twinEngine?: boolean;
+  gearType?: '双速' | '高速' | null;
+  minThrust?: number;
+  classification?: string;
+  autoInferPropellerType?: boolean;
+  scoringProfile?: 'copilot' | 'legacy' | 'copilot-strict';
+  // 直接型号 fast path: 命中后跳过工况筛选直接返回
+  directModelQuery?: string;
 }
 
 /**
@@ -275,6 +308,11 @@ interface InternalSelectionResult extends SelectionResult {
       minCapacityMargin: number;
     };
     rejectionReasons: RejectionReasons;
+    copilotExclusions?: Partial<Record<CopilotRuleId, number>>;  // Copilot 9 硬约束排除统计
+    appliedRules?: CopilotRuleId[];  // 实际触发的规则 ID
+    inferredPropellerType?: 'CPP' | 'FPP' | null;  // 自动推断结果 (autoInferPropellerType=true 时填充)
+    isDirectModelHit?: boolean;  // 直接型号 fast path 是否命中
+    scoringProfile?: 'copilot' | 'legacy' | 'copilot-strict';
     nearMatchCount: number;
     totalScanned: number;
     totalMatched: number;
@@ -767,6 +805,30 @@ export const selectGearbox = (
     seriesCapabilityMismatch: 0    // 系列特性不匹配
   };
 
+  // --- Copilot 对齐硬约束输入 (任一字段未指定则不触发该约束) ---
+  // 推断桨型: autoInferPropellerType=true 且 seriesRequirements.propellerType 未显式指定时
+  let effectivePropellerType: 'CPP' | 'FPP' | null | undefined =
+    options.seriesRequirements?.propellerType ?? null;
+  if (options.autoInferPropellerType && !effectivePropellerType) {
+    const appField = options.application;
+    const inferred = inferPropellerType(
+      appField ? [appField] : [],
+      enginePower
+    );
+    if (inferred) {
+      effectivePropellerType = inferred;
+      logger.log(`Copilot 规则 ${COPILOT_RULES.PROP_INFER}: 推断桨型 ${inferred} (来自应用=${appField || '无'}, 功率=${enginePower}kW)`);
+    }
+  }
+  const copilotConstraints: CopilotConstraintInput = {
+    propellerType: effectivePropellerType ?? null,
+    twinEngine: options.twinEngine,
+    gearType: options.gearType ?? null,
+    minThrust: options.minThrust,
+    classification: options.classification,
+  };
+  const copilotExclusions: CopilotExclusionStats = {};
+
   // --- 接口筛选参数 ---
   const { interfaceType, interfaceSpec, interfaceFilterMode = 'prefer' } = options;
   const hasInterfaceRequirement = interfaceType && interfaceType !== '无要求' && interfaceSpec;
@@ -778,7 +840,7 @@ export const selectGearbox = (
   const configTolerances = options.tolerances || DEFAULT_TOLERANCES;
   const MAX_RATIO_DIFF_PERCENT = configTolerances.maxRatioDiffPercent || 25;
   const MAX_CAPACITY_MARGIN = isPTOorPTIEnabled ? 500 : (configTolerances.maxCapacityMargin || 50);
-  const MIN_CAPACITY_MARGIN = configTolerances.minCapacityMargin || 10;
+  const MIN_CAPACITY_MARGIN = configTolerances.minCapacityMargin ?? 0;
 
   // 近似匹配列表
   let nearMatches: NearMatch[] = [];
@@ -799,6 +861,27 @@ export const selectGearbox = (
 
     let failureReason: string | null = null;
 
+    // ============================================================
+    // Copilot 对齐 9 条硬约束 (CPP/FPP/双机/双速/高速/推力/船级社)
+    // 源: gearbox-copilot.html:1241-1265, 移植 src/utils/copilotRules.ts
+    // ============================================================
+    {
+      const c = applyCopilotHardConstraints(gearbox, copilotConstraints);
+      if (!c.pass) {
+        DEBUG_LOG(`Copilot 硬约束排除 ${gearbox.model}: ${c.reason}`);
+        if (c.rejectedRule) {
+          copilotExclusions[c.rejectedRule] = (copilotExclusions[c.rejectedRule] || 0) + 1;
+        }
+        // 复用现有 rejectionReasons 桶, 让 UI 提示链路保持一致
+        if (c.rejectedRule === COPILOT_RULES.THRUST_MIN) {
+          rejectionReasons.thrustInsufficient++;
+        } else {
+          rejectionReasons.seriesCapabilityMismatch++;
+        }
+        continue;
+      }
+    }
+
     // 系列特性过滤（替代旧的离合器硬编码过滤）
     // 向后兼容: hasClutch → seriesRequirements.needsClutch
     const effectiveSeriesReqs = options.seriesRequirements || (
@@ -817,6 +900,16 @@ export const selectGearbox = (
       // 保存匹配分数供后续评分使用
       (gearbox as any)._seriesCapScore = capMatch.score;
       (gearbox as any)._seriesCapReasons = capMatch.reasons;
+    }
+
+    // GW 子系列结构形式过滤（仅对 GW 系列生效；非 GW 直通）
+    if (options.gwStructuralFilter && options.gwStructuralFilter.length > 0) {
+      if (!matchesStructuralFilter(gearbox.model, options.gwStructuralFilter)) {
+        DEBUG_LOG(`Skipping ${gearbox.model}: GW 结构形式不在过滤集 [${options.gwStructuralFilter.join(',')}]`);
+        rejectionReasons.seriesCapabilityMismatch++;
+        failureReason = `GW 结构形式过滤: 不在 [${options.gwStructuralFilter.join(', ')}] 集合内`;
+        continue;
+      }
     }
 
     // Check speed range
@@ -1208,7 +1301,14 @@ export const selectGearbox = (
   logger.log(`${gearboxType} 系列找到 ${matchingGearboxes.length} 个初步匹配的齿轮箱`);
 
   // --- 可配置评分权重 (提前声明，近似匹配和正选评分共用) ---
-  const scoringWeights = options.scoringWeights || DEFAULT_SCORING_WEIGHTS;
+  // 优先级: options.scoringWeights (调用方显式传) > scoringProfile (legacy/copilot/copilot-strict) > 默认 Copilot
+  const scoringWeights = options.scoringWeights || (
+    options.scoringProfile === 'legacy'
+      ? DEFAULT_SCORING_WEIGHTS
+      : options.scoringProfile === 'copilot-strict'
+        ? COPILOT_STRICT_SCORING_WEIGHTS
+        : COPILOT_SCORING_WEIGHTS  // 默认 'copilot' (含未指定情形)
+  );
   const W_COST = scoringWeights.costEffectiveness || 30;
   const W_RATIO = scoringWeights.ratioMatch || 21;
   const W_CAPACITY = scoringWeights.capacityMargin || 12;
@@ -1699,6 +1799,9 @@ export const selectGearbox = (
         minCapacityMargin: MIN_CAPACITY_MARGIN
       },
       rejectionReasons: rejectionReasons,
+      copilotExclusions: copilotExclusions,
+      inferredPropellerType: effectivePropellerType ?? null,
+      scoringProfile: options.scoringProfile,
       nearMatchCount: nearMatches.length,
       totalScanned: gearboxes.length,
       totalMatched: matchingGearboxes.length
@@ -1784,6 +1887,90 @@ export const autoSelectGearbox = (
   logger.debug("flexibleCouplings 数据:", appData?.flexibleCouplings?.length || 0, "条记录");
   if (appData?.flexibleCouplings && appData.flexibleCouplings.length > 0) {
     logger.debug("flexibleCouplings 示例:", appData.flexibleCouplings[0]);
+  }
+
+  // ============================================================
+  // Copilot 对齐: 直接型号 fast path (R-DIRECT-MODEL)
+  // 命中后跳过工况筛选直接返回该型号 (减速比若指定取最接近)
+  // 源: gearbox-copilot.html:1203-1232
+  // ============================================================
+  if (requirements.directModelQuery && typeof requirements.directModelQuery === 'string') {
+    // 收集全部齿轮箱用于 model 扫描
+    const allGearboxes: Gearbox[] = [];
+    const seriesKeys: (keyof AppData)[] = [
+      'hcGearboxes', 'gwGearboxes', 'hcmGearboxes', 'dtGearboxes',
+      'hcqGearboxes', 'gcGearboxes', 'hcaGearboxes', 'hcvGearboxes',
+      'hcxGearboxes', 'mvGearboxes', 'otherGearboxes'
+    ];
+    for (const k of seriesKeys) {
+      const arr = appData[k] as Gearbox[] | undefined;
+      if (Array.isArray(arr)) allGearboxes.push(...arr);
+    }
+    const hit = findDirectModel(requirements.directModelQuery, allGearboxes);
+    if (hit) {
+      logger.log(`Copilot 规则 ${COPILOT_RULES.DIRECT_MODEL}: 直接型号命中 ${hit.model} (query=${requirements.directModelQuery})`);
+      // Copilot 行为: 跳过工况筛选, 直接返回该型号 + 选最近的 ratio + 计算容量/余量
+      // 源: gearbox-copilot.html:1203-1232
+      const ratios = Array.isArray(hit.ratios) ? hit.ratios.filter((r: any) => typeof r === 'number' && r > 0) : [];
+      let bestIdx = 0;
+      if (targetRatio && ratios.length > 0) {
+        let minDiff = Infinity;
+        ratios.forEach((r: number, i: number) => {
+          const d = Math.abs(r - targetRatio);
+          if (d < minDiff) { minDiff = d; bestIdx = i; }
+        });
+      }
+      const selectedRatio = ratios[bestIdx] || (ratios[0] || 1);
+      const tcpr = (hit as any).transmissionCapacityPerRatio as number[] | undefined;
+      const transferArr = Array.isArray(hit.transferCapacity) ? hit.transferCapacity : undefined;
+      let selectedCapacity = 0;
+      if (Array.isArray(tcpr) && tcpr[bestIdx] != null) selectedCapacity = tcpr[bestIdx];
+      else if (transferArr && transferArr[bestIdx] != null) selectedCapacity = transferArr[bestIdx] as number;
+      const required = motorSpeed > 0 ? motorPower / motorSpeed : 0;
+      const margin = selectedCapacity > 0 && required > 0
+        ? ((selectedCapacity - required) / required) * 100
+        : 0;
+      const ratioDiffPercent = targetRatio > 0
+        ? (Math.abs(selectedRatio - targetRatio) / targetRatio) * 100
+        : 0;
+      const thrustMet = (hit.thrust ?? 0) >= (thrust || 0);
+      const directRec: any = {
+        ...hit,
+        selectedRatio,
+        selectedCapacity,
+        capacityMargin: margin,
+        ratioDiffPercent,
+        thrustMet,
+        score: 100,
+        ratio: selectedRatio,
+        engineTorque: required > 0 ? motorPower * 9550 / motorSpeed : 0,
+        warnings: ['直接型号查询 — 已跳过工况筛选, 显示该型号详情 + 配套'],
+        reason: `用户指定型号 ${hit.model}${targetRatio ? ` (减速比 ${selectedRatio} 最接近 ${targetRatio})` : ''}`,
+      };
+      const directResult: AutoSelectResult = {
+        success: true,
+        recommendations: [directRec],
+        message: `直接型号查询: ${hit.model}`,
+        engineTorque: required > 0 ? motorPower * 9550 / motorSpeed : 0,
+        requiredTransferCapacity: required,
+        gearboxTypeUsed: typeof hit.series === 'string' ? hit.series : 'OTHER',
+        enginePower: motorPower,
+        engineSpeed: motorSpeed,
+        targetRatio: targetRatio,
+        thrustRequirement: thrust || 0,
+        _diagnostics: {
+          scoringWeights: COPILOT_SCORING_WEIGHTS,
+          tolerances: { maxRatioDiffPercent: 100, maxCapacityMargin: 1000, minCapacityMargin: -100 },
+          rejectionReasons: { speedRange: 0, ratioOutOfRange: 0, capacityTooLow: 0, capacityTooHigh: 0, thrustInsufficient: 0, interfaceMismatch: 0, shaftMismatch: 0, seriesCapabilityMismatch: 0 },
+          isDirectModelHit: true,
+          appliedRules: [COPILOT_RULES.DIRECT_MODEL],
+          nearMatchCount: 0,
+          totalScanned: allGearboxes.length,
+          totalMatched: 1,
+        } as any,
+      };
+      return directResult;
+    }
   }
 
   // Define types to check (SGW 包含在 gwGearboxes 中，已覆盖)

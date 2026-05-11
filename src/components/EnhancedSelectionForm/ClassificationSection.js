@@ -100,6 +100,20 @@ const ClassificationSection = ({
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </Form.Select>
+              {/* Copilot 对齐: 严格船级社硬筛 toggle, 默认关 */}
+              <Form.Check
+                className="mt-2"
+                type="switch"
+                id="strict-classification-switch"
+                label={
+                  <span style={{ fontSize: '0.85em' }}>
+                    严格船级社匹配 (硬筛, 仅返回含 {classification.society || 'CCS'} 证书的型号)
+                    <HelpTip text="默认关闭, 船级社仅作偏好评分。开启后不含此证书的齿轮箱被直接排除, 与 Copilot 行为一致。注: LR/ABS/KR/NK/RINA 当前数据覆盖率为 0, 选这些时硬筛将返回空" />
+                  </span>
+                }
+                checked={!!formData.strictClassification}
+                onChange={(e) => updateField('strictClassification', e.target.checked)}
+              />
             </Form.Group>
           </Col>
         </Row>

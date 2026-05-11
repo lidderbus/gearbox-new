@@ -4,6 +4,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { Card, Button, Table, Form, Row, Col, Badge, Spinner, Alert, Modal, ProgressBar } from 'react-bootstrap';
 import { autoSelectGearbox } from '../utils/selectionAlgorithm';
+import { inferPropellerType } from '../utils/copilotRules';
 import { saveSelectionToHistory } from '../utils/selectionHistory';
 import { initialData } from '../data/initialData';
 import { formatPrice } from '../utils/priceCalculator';
@@ -24,7 +25,21 @@ const DEFAULT_REQUIREMENT = {
   workCondition: 'III类:扭矩变化中等',
   temperature: '30',
   safetyFactor: '1.2',
-  notes: ''
+  notes: '',
+  // 单行可选: 船型 (用于桨型自动推断, 留空则不推断)
+  shipType: ''
+};
+
+/**
+ * 全局 Copilot 硬约束默认值 (应用到全部需求行, 默认全关)
+ */
+const DEFAULT_COPILOT_OPTIONS = {
+  twinEngine: false,
+  gearType: '',
+  strictThrust: false,
+  strictClassification: false,
+  classification: 'CCS',
+  enableInferPropeller: false
 };
 
 /**
@@ -52,6 +67,9 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
   const [showImportModal, setShowImportModal] = useState(false);
   const [importText, setImportText] = useState('');
   const [error, setError] = useState(null);
+  // Copilot 全局硬约束 (应用到全部需求行)
+  const [copilotOptions, setCopilotOptions] = useState({ ...DEFAULT_COPILOT_OPTIONS });
+  const [showCopilotPanel, setShowCopilotPanel] = useState(false);
 
   /**
    * 生成唯一ID
@@ -103,14 +121,29 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
    * 执行单个选型
    */
   const performSingleSelection = useCallback(async (requirement) => {
+    const power = parseFloat(requirement.motorPower) || 0;
+    const thrustNum = parseFloat(requirement.thrust) || 0;
+    // Copilot 桨型自动推断 (仅 enableInferPropeller=true 且 row 填了 shipType 时触发)
+    const inferredPropeller = copilotOptions.enableInferPropeller && requirement.shipType
+      ? inferPropellerType([requirement.shipType], power)
+      : null;
     const numericReq = {
       ...requirement,
-      motorPower: parseFloat(requirement.motorPower) || 0,
+      motorPower: power,
       motorSpeed: parseFloat(requirement.motorSpeed) || 0,
       targetRatio: parseFloat(requirement.targetRatio) || 0,
-      thrust: parseFloat(requirement.thrust) || 0,
+      thrust: thrustNum,
       temperature: parseFloat(requirement.temperature) || 30,
-      safetyFactor: parseFloat(requirement.safetyFactor) || 1.2
+      safetyFactor: parseFloat(requirement.safetyFactor) || 1.2,
+      // Copilot 全局硬约束 (从 copilotOptions 透传, 默认全关 → 不影响老 batch)
+      twinEngine: !!copilotOptions.twinEngine,
+      gearType: copilotOptions.gearType || null,
+      minThrust: copilotOptions.strictThrust && thrustNum > 0 ? thrustNum : 0,
+      classification: copilotOptions.strictClassification && copilotOptions.classification
+        ? copilotOptions.classification : undefined,
+      seriesRequirements: inferredPropeller
+        ? { propellerType: inferredPropeller }
+        : requirement.seriesRequirements
     };
 
     try {
@@ -170,7 +203,7 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
         timestamp: new Date().toISOString()
       };
     }
-  }, []);
+  }, [copilotOptions]);
 
   /**
    * 执行批量选型
@@ -489,6 +522,97 @@ const BatchSelectionView = ({ onSelectionComplete, colors, theme }) => {
               <strong>使用提示</strong>: 直接在下方第 1 行填入功率/转速/速比开始; 或点右上 <kbd>下载模板</kbd> 取 CSV 编辑后用 <kbd>导入数据</kbd> 批量上传; 输入 1 条后可点 📋 复制为新行。
             </Alert>
           )}
+
+          {/* Copilot 全局硬约束面板 (应用到全部需求行) */}
+          <Card className="mb-3" style={{ backgroundColor: colors?.card, borderColor: colors?.border }}>
+            <Card.Header
+              className="py-2 d-flex justify-content-between align-items-center"
+              style={{ cursor: 'pointer', backgroundColor: colors?.headerBg, color: colors?.headerText }}
+              onClick={() => setShowCopilotPanel(v => !v)}
+            >
+              <div>
+                <i className="bi bi-stars me-2"></i>
+                <strong>Copilot 高级硬筛</strong> <small className="text-muted">应用到全部需求行</small>
+                {(copilotOptions.twinEngine || copilotOptions.gearType || copilotOptions.strictThrust || copilotOptions.strictClassification || copilotOptions.enableInferPropeller) && (
+                  <Badge bg="info" className="ms-2" style={{ fontSize: '0.7em' }}>已启用</Badge>
+                )}
+              </div>
+              <i className={`bi bi-chevron-${showCopilotPanel ? 'up' : 'down'}`}></i>
+            </Card.Header>
+            {showCopilotPanel && (
+              <Card.Body className="py-2" style={{ color: colors?.text }}>
+                <Row className="g-2">
+                  <Col xs={12} md={6} lg={3}>
+                    <Form.Check
+                      type="switch"
+                      id="batch-twin-engine"
+                      label="双机并车 (仅 2GWH)"
+                      checked={copilotOptions.twinEngine}
+                      onChange={(e) => setCopilotOptions(o => ({ ...o, twinEngine: e.target.checked }))}
+                    />
+                  </Col>
+                  <Col xs={12} md={6} lg={3}>
+                    <Form.Label className="small mb-1">齿轮形式</Form.Label>
+                    <Form.Select
+                      size="sm"
+                      value={copilotOptions.gearType}
+                      onChange={(e) => setCopilotOptions(o => ({ ...o, gearType: e.target.value }))}
+                    >
+                      <option value="">默认 (不限)</option>
+                      <option value="双速">双速 (DT)</option>
+                      <option value="高速">高速 (HCG/HCAG/HCQ/HCM/HCAM/HCV/HCVG)</option>
+                    </Form.Select>
+                  </Col>
+                  <Col xs={12} md={6} lg={3}>
+                    <Form.Check
+                      type="switch"
+                      id="batch-strict-thrust"
+                      label="推力下限硬筛 (按行 thrust)"
+                      checked={copilotOptions.strictThrust}
+                      onChange={(e) => setCopilotOptions(o => ({ ...o, strictThrust: e.target.checked }))}
+                    />
+                  </Col>
+                  <Col xs={12} md={6} lg={3}>
+                    <Form.Check
+                      type="switch"
+                      id="batch-infer-prop"
+                      label="桨型自动推断 (需行内 shipType)"
+                      checked={copilotOptions.enableInferPropeller}
+                      onChange={(e) => setCopilotOptions(o => ({ ...o, enableInferPropeller: e.target.checked }))}
+                    />
+                  </Col>
+                  <Col xs={12} md={6} lg={3}>
+                    <Form.Check
+                      type="switch"
+                      id="batch-strict-class"
+                      label="船级社硬筛"
+                      checked={copilotOptions.strictClassification}
+                      onChange={(e) => setCopilotOptions(o => ({ ...o, strictClassification: e.target.checked }))}
+                    />
+                  </Col>
+                  {copilotOptions.strictClassification && (
+                    <Col xs={12} md={6} lg={3}>
+                      <Form.Label className="small mb-1">船级社</Form.Label>
+                      <Form.Select
+                        size="sm"
+                        value={copilotOptions.classification}
+                        onChange={(e) => setCopilotOptions(o => ({ ...o, classification: e.target.value }))}
+                      >
+                        <option value="CCS">CCS</option>
+                        <option value="DNV">DNV</option>
+                        <option value="BV">BV</option>
+                        <option value="LR">LR</option>
+                        <option value="ABS">ABS</option>
+                      </Form.Select>
+                    </Col>
+                  )}
+                </Row>
+                <div className="text-muted mt-2" style={{ fontSize: '0.78em' }}>
+                  注: 默认全部关闭, 不影响老批量。开启后所有需求行受同等硬约束。
+                </div>
+              </Card.Body>
+            )}
+          </Card>
 
           {/* 需求列表 */}
           <div className="requirements-list mb-4">

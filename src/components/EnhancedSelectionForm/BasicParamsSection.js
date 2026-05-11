@@ -143,6 +143,40 @@ const BasicParamsSection = ({
             </Form.Group>
           </Col>
         </Row>
+
+        {/* Copilot 对齐: 双机并车 + 齿轮形式 (硬约束, 默认关闭不影响老用户) */}
+        <Row>
+          <Col md={6}>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                双机并车 <HelpTip text="勾选后仅推荐 2GWH 系列(双机并联齿轮箱)。适用于双主机驱动单桨的工况，如大型集装箱船、油轮等" />
+              </Form.Label>
+              <Form.Check
+                type="switch"
+                id="twin-engine-switch"
+                label={formData.twinEngine ? '✓ 启用 — 仅推荐 2GWH 系列' : '关闭 (默认所有系列可选)'}
+                checked={!!formData.twinEngine}
+                onChange={(e) => updateField('twinEngine', e.target.checked)}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                齿轮形式 <HelpTip text="双速: DT 系列 (低速大扭矩 + 高速)，常用于工程船绞车驱动。高速: HCG/HCAG/HCQ 系列，适用 ≥1500 rpm 的高速发动机/快艇" />
+              </Form.Label>
+              <Form.Select
+                value={formData.gearType || ''}
+                onChange={(e) => updateField('gearType', e.target.value)}
+                style={inputStyle}
+              >
+                <option value="">默认 (不限制)</option>
+                <option value="双速">双速 (DT 系列硬筛)</option>
+                <option value="高速">高速 (HCG/HCAG/HCQ 硬筛)</option>
+              </Form.Select>
+            </Form.Group>
+          </Col>
+        </Row>
       </Card.Body>
     </Card>
   );
