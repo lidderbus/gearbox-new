@@ -15,6 +15,16 @@ const CouplingTechnicalParams = ({
   colors = {}
 }) => {
   const [activeTab, setActiveTab] = useState('technical');
+  // 2026-05-20: 内部模式 — 显示代理商 D/W 价 + 弹性体/弹性板备件
+  // 触发: URL ?internal=1 或 localStorage.gearbox_internal_mode='1'
+  const [internalMode] = useState(() => {
+    try {
+      const urlFlag = new URLSearchParams(window.location.search).get('internal') === '1';
+      const lsFlag = window.localStorage.getItem('gearbox_internal_mode') === '1';
+      if (urlFlag) window.localStorage.setItem('gearbox_internal_mode', '1');
+      return urlFlag || lsFlag;
+    } catch (_e) { return false; }
+  });
 
   if (!coupling) {
     return null;
@@ -155,8 +165,11 @@ const CouplingTechnicalParams = ({
     <Table bordered hover size="sm">
       <tbody>
         <tr>
-          <td width="30%"><strong>基准价格</strong></td>
-          <td>{coupling.basePrice?.toLocaleString() || coupling.price?.toLocaleString()} 元</td>
+          <td width="30%"><strong>基准价格 (对外报价)</strong></td>
+          <td>
+            {coupling.basePrice?.toLocaleString() || coupling.price?.toLocaleString()} 元
+            {coupling._priceEstimated && <Badge bg="warning" className="ms-2">估算</Badge>}
+          </td>
         </tr>
         <tr>
           <td><strong>折扣率</strong></td>
@@ -170,9 +183,66 @@ const CouplingTechnicalParams = ({
           <td><strong>市场价</strong></td>
           <td className="fw-bold text-danger">{coupling.marketPrice?.toLocaleString()} 元</td>
         </tr>
+        {internalMode && coupling.priceD != null && (
+          <>
+            <tr style={{ background: 'rgba(220,38,38,0.08)' }}>
+              <td colSpan={2} className="fw-bold" style={{ color: '#dc2626' }}>
+                🔒 内部受控 · 代理商成套价 (不得对外提供)
+              </td>
+            </tr>
+            <tr>
+              <td><strong>代理商 D 型成套价</strong></td>
+              <td>{coupling.priceD?.toLocaleString()} 元</td>
+            </tr>
+            <tr>
+              <td><strong>代理商 W 型成套价</strong></td>
+              <td>{coupling.priceW?.toLocaleString()} 元</td>
+            </tr>
+            {coupling._pdfSource && (
+              <tr>
+                <td><strong>价格来源</strong></td>
+                <td className="text-muted small">{coupling._pdfSource}</td>
+              </tr>
+            )}
+          </>
+        )}
       </tbody>
     </Table>
   );
+
+  // 渲染备件信息 (仅 internalMode)
+  const renderSparePartsInfo = () => {
+    const sp = coupling.spareParts;
+    if (!sp) return <div className="text-muted small">无备件价格数据</div>;
+    return (
+      <>
+        <div className="alert alert-danger py-2 small mb-2">
+          🔒 内部受控 · 弹性体/弹性板维修件代理商价, 不得对外提供
+        </div>
+        <Table bordered hover size="sm">
+          <thead>
+            <tr>
+              <th>备件</th>
+              <th>代理商价 (元/组)</th>
+              <th>重量 (kg/组)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>弹性体</strong></td>
+              <td>{sp.elastomer?.price?.toLocaleString() ?? '—'}</td>
+              <td>{sp.elastomer?.weight ?? '—'}</td>
+            </tr>
+            <tr>
+              <td><strong>弹性板</strong></td>
+              <td>{sp.elasticPlate?.price?.toLocaleString() ?? '—'}</td>
+              <td>{sp.elasticPlate?.weight ?? '—'}</td>
+            </tr>
+          </tbody>
+        </Table>
+      </>
+    );
+  };
 
   // 渲染计算过程（增强版5步详解）
   const renderCalculationProcess = () => {
@@ -351,6 +421,11 @@ const CouplingTechnicalParams = ({
           <Tab eventKey="price" title="价格信息">
             {renderPriceInfo()}
           </Tab>
+          {internalMode && coupling.spareParts && (
+            <Tab eventKey="spareParts" title="🔒 备件 (内部)">
+              {renderSparePartsInfo()}
+            </Tab>
+          )}
           <Tab eventKey="calculation" title="计算过程">
             {calculationDetails ? renderCalculationProcess() : (
               <p className="text-muted">暂无计算过程数据</p>

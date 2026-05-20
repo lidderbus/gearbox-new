@@ -39,6 +39,17 @@ const CouplingSelector = ({
   const [selectionResult, setSelectionResult] = useState(null);
   const [activeTab, setActiveTab] = useState('parameters');
   const [selectedCouplingIndex, setSelectedCouplingIndex] = useState(0);
+  // 2026-05-20: 内部模式 — 显示代理商 D/W 价 + 弹性体/弹性板备件价
+  // 触发: URL ?internal=1 或 localStorage.gearbox_internal_mode='1'
+  // 数据来自 PDF 内部受控价格表, 默认不对外暴露
+  const [internalMode] = useState(() => {
+    try {
+      const urlFlag = new URLSearchParams(window.location.search).get('internal') === '1';
+      const lsFlag = window.localStorage.getItem('gearbox_internal_mode') === '1';
+      if (urlFlag) window.localStorage.setItem('gearbox_internal_mode', '1');
+      return urlFlag || lsFlag;
+    } catch (_e) { return false; }
+  });
 
   // 工况选项
   const workConditionOptions = [
@@ -434,8 +445,13 @@ const CouplingSelector = ({
                 <Table bordered size="sm" responsive style={{ color: colors.text }}>
                   <tbody>
                     <tr>
-                      <td style={{ width: '40%', fontWeight: 'bold' }}>基础价格</td>
-                      <td>{safeNumberFormat(selectedCoupling.basePrice)} 元</td>
+                      <td style={{ width: '40%', fontWeight: 'bold' }}>基础价格 (对外报价)</td>
+                      <td>
+                        {safeNumberFormat(selectedCoupling.basePrice)} 元
+                        {selectedCoupling._priceEstimated && (
+                          <Badge bg="warning" className="ms-2">估算</Badge>
+                        )}
+                      </td>
                     </tr>
                     <tr>
                       <td style={{ fontWeight: 'bold' }}>折扣率</td>
@@ -449,9 +465,60 @@ const CouplingSelector = ({
                       <td style={{ fontWeight: 'bold' }}>市场价格</td>
                       <td>{safeNumberFormat(selectedCoupling.marketPrice)} 元</td>
                     </tr>
+                    {internalMode && selectedCoupling.priceD != null && (
+                      <>
+                        <tr style={{ background: 'rgba(220,38,38,0.08)' }}>
+                          <td colSpan={2} style={{ fontWeight: 'bold', color: '#dc2626' }}>
+                            🔒 内部受控 · 代理商成套价 (不得对外提供)
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style={{ fontWeight: 'bold' }}>代理商 D 型成套价</td>
+                          <td>{safeNumberFormat(selectedCoupling.priceD)} 元</td>
+                        </tr>
+                        <tr>
+                          <td style={{ fontWeight: 'bold' }}>代理商 W 型成套价</td>
+                          <td>{safeNumberFormat(selectedCoupling.priceW)} 元</td>
+                        </tr>
+                        {selectedCoupling._pdfSource && (
+                          <tr>
+                            <td style={{ fontWeight: 'bold' }}>价格来源</td>
+                            <td style={{ fontSize: '0.85rem', color: '#6b7280' }}>{selectedCoupling._pdfSource}</td>
+                          </tr>
+                        )}
+                      </>
+                    )}
                   </tbody>
                 </Table>
               </Tab>
+              {internalMode && selectedCoupling.spareParts && (
+                <Tab eventKey="spareParts" title="🔒 备件 (内部)">
+                  <Alert variant="danger" className="py-2 small">
+                    内部受控 · 弹性体/弹性板维修件代理商价, 不得对外提供
+                  </Alert>
+                  <Table bordered size="sm" responsive style={{ color: colors.text }}>
+                    <thead>
+                      <tr>
+                        <th>备件</th>
+                        <th>代理商价 (元/组)</th>
+                        <th>重量 (kg/组)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style={{ fontWeight: 'bold' }}>弹性体</td>
+                        <td>{safeNumberFormat(selectedCoupling.spareParts.elastomer?.price)}</td>
+                        <td>{selectedCoupling.spareParts.elastomer?.weight ?? '—'}</td>
+                      </tr>
+                      <tr>
+                        <td style={{ fontWeight: 'bold' }}>弹性板</td>
+                        <td>{safeNumberFormat(selectedCoupling.spareParts.elasticPlate?.price)}</td>
+                        <td>{selectedCoupling.spareParts.elasticPlate?.weight ?? '—'}</td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </Tab>
+              )}
               <Tab eventKey="scoring" title="评分细则">
                 <Table bordered size="sm" responsive style={{ color: colors.text }}>
                   <tbody>

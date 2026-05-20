@@ -595,7 +595,12 @@ export const flexibleCouplings = [
     factoryPrice: 26100,
     packagePrice: 26100,
     marketPrice: 29659.09,
-    notes: "标准通用型"
+    notes: "标准通用型",
+    priceD: 11000,
+    priceW: 10000,
+    spareParts: { elastomer: { price: 4100, weight: 33 }, elasticPlate: { price: 1300, weight: 4.8 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
   },
   {
     model: "HGT1220",
@@ -609,7 +614,12 @@ export const flexibleCouplings = [
     factoryPrice: 29700,
     packagePrice: 29700,
     marketPrice: 33750.00,
-    notes: "标准通用型"
+    notes: "标准通用型",
+    priceD: 13000,
+    priceW: 12000,
+    spareParts: { elastomer: { price: 4600, weight: 38 }, elasticPlate: { price: 1400, weight: 5.7 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
   },
   {
     model: "HGT1620",
@@ -623,7 +633,12 @@ export const flexibleCouplings = [
     factoryPrice: 34200,
     packagePrice: 34200,
     marketPrice: 38863.64,
-    notes: "标准通用型"
+    notes: "标准通用型",
+    priceD: 15400,
+    priceW: 14400,
+    spareParts: { elastomer: { price: 5000, weight: 46 }, elasticPlate: { price: 1600, weight: 6.9 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
   },
   {
     model: "HGT2020",
@@ -637,7 +652,12 @@ export const flexibleCouplings = [
     factoryPrice: 40500,
     packagePrice: 40500,
     marketPrice: 46022.73,
-    notes: "标准通用型"
+    notes: "标准通用型",
+    priceD: 18500,
+    priceW: 17600,
+    spareParts: { elastomer: { price: 5500, weight: 57 }, elasticPlate: { price: 1750, weight: 7.5 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
   },
   {
     model: "HGT2520",
@@ -651,7 +671,12 @@ export const flexibleCouplings = [
     factoryPrice: 46800,
     packagePrice: 46800,
     marketPrice: 53181.82,
-    notes: "标准通用型"
+    notes: "标准通用型",
+    priceD: 22000,
+    priceW: 20000,
+    spareParts: { elastomer: { price: 6100, weight: 73 }, elasticPlate: { price: 1950, weight: 9 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
   },
   {
     model: "HGT3020",
@@ -665,7 +690,12 @@ export const flexibleCouplings = [
     factoryPrice: 58500,
     packagePrice: 58500,
     marketPrice: 66477.27,
-    notes: "标准通用型"
+    notes: "标准通用型",
+    priceD: 25000,
+    priceW: 23500,
+    spareParts: { elastomer: { price: 7200, weight: 93 }, elasticPlate: { price: 2300, weight: 10.8 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
   },
   {
     model: "HGT4020",
@@ -679,7 +709,12 @@ export const flexibleCouplings = [
     factoryPrice: 73800,
     packagePrice: 73800,
     marketPrice: 83863.64,
-    notes: "标准通用型"
+    notes: "标准通用型",
+    priceD: 29500,
+    priceW: 28000,
+    spareParts: { elastomer: { price: 8800, weight: 114 }, elasticPlate: { price: 2600, weight: 12.9 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
   },
   {
     model: "HGT5020",
@@ -693,7 +728,12 @@ export const flexibleCouplings = [
     factoryPrice: 88200,
     packagePrice: 88200,
     marketPrice: 100227.27,
-    notes: "标准通用型"
+    notes: "标准通用型",
+    priceD: 37400,
+    priceW: 36000,
+    spareParts: { elastomer: { price: 11400, weight: 141 }, elasticPlate: { price: 3000, weight: 15.3 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
   },
   {
     model: "HGT6320",
@@ -707,7 +747,12 @@ export const flexibleCouplings = [
     factoryPrice: 108000,
     packagePrice: 108000,
     marketPrice: 122727.27,
-    notes: "标准通用型"
+    notes: "标准通用型",
+    priceD: 47000,
+    priceW: 45000,
+    spareParts: { elastomer: { price: 14300, weight: 174 }, elasticPlate: { price: 3950, weight: 17.7 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
   },
   {
     model: "HGT8020",
@@ -721,7 +766,12 @@ export const flexibleCouplings = [
     factoryPrice: 135000,
     packagePrice: 135000,
     marketPrice: 153409.09,
-    notes: "标准通用型"
+    notes: "标准通用型",
+    priceD: 58000,
+    priceW: 55600,
+    spareParts: { elastomer: { price: 17500, weight: 220 }, elasticPlate: { price: 4600, weight: 27 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
   },
   {
     model: "HGT10020",
@@ -735,7 +785,12 @@ export const flexibleCouplings = [
     factoryPrice: 162000,
     packagePrice: 162000,
     marketPrice: 184090.91,
-    notes: "标准通用型"
+    notes: "标准通用型",
+    priceD: 71500,
+    priceW: 68000,
+    spareParts: { elastomer: { price: 21000, weight: 282 }, elasticPlate: { price: 4950, weight: 31.2 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
   },
   {
     model: "HGT12520",
@@ -749,7 +804,12 @@ export const flexibleCouplings = [
     factoryPrice: 193500,
     packagePrice: 193500,
     marketPrice: 219886.36,
-    notes: "标准通用型"
+    notes: "标准通用型",
+    priceD: 85800,
+    priceW: 82000,
+    spareParts: { elastomer: { price: 25000, weight: 324 }, elasticPlate: { price: 5000, weight: 27.6 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
   },
   {
     model: "HGT16020",
@@ -763,7 +823,12 @@ export const flexibleCouplings = [
     factoryPrice: 234000,
     packagePrice: 234000,
     marketPrice: 265909.09,
-    notes: "标准通用型"
+    notes: "标准通用型",
+    priceD: 118000,
+    priceW: 112000,
+    spareParts: { elastomer: { price: 35000, weight: 444 }, elasticPlate: { price: 7900, weight: 44 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
   },
    { // Added missing HGT20020 based on matching map entry
     model: "HGT20020",
@@ -777,7 +842,12 @@ export const flexibleCouplings = [
     factoryPrice: 270000,
     packagePrice: 270000,
     marketPrice: 306818.18,
-    notes: ""
+    notes: "",
+    priceD: 154000,
+    priceW: 146000,
+    spareParts: { elastomer: { price: 48000, weight: 543 }, elasticPlate: { price: 15000, weight: 53 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
    },
    { // Added missing HGT25020 based on matching map entry
     model: "HGT25020",
@@ -791,7 +861,72 @@ export const flexibleCouplings = [
     factoryPrice: 315000,
     packagePrice: 315000,
     marketPrice: 357954.55,
-    notes: ""
+    notes: "",
+    priceD: 195000,
+    priceW: 185000,
+    spareParts: { elastomer: { price: 61000, weight: 688 }, elasticPlate: { price: 19000, weight: 61 } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true
+   },
+   { // 2026-05-20 新增, PDF 大扭矩型 (对外报价由 D 型 × 2.0 估算, 老板核定后落定)
+    model: "HGT31520",
+    torque: 315,
+    maxTorque: 787.5,
+    maxSpeed: 400,
+    weight: null,
+    price: 528000,
+    basePrice: 528000,
+    discountRate: 0.10,
+    factoryPrice: 475200,
+    packagePrice: 475200,
+    marketPrice: 539986,
+    priceD: 264000,
+    priceW: 247000,
+    spareParts: { elastomer: { price: 82000, weight: null }, elasticPlate: { price: 27500, weight: null } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true,
+    _priceEstimated: true,
+    notes: "大扭矩型 (PDF 新录)"
+   },
+   { // 2026-05-20 新增, PDF 大扭矩型 (对外报价由 D 型 × 2.0 估算, 老板核定后落定)
+    model: "HGT40020",
+    torque: 400,
+    maxTorque: 1000,
+    maxSpeed: 400,
+    weight: 6700,
+    price: 700000,
+    basePrice: 700000,
+    discountRate: 0.10,
+    factoryPrice: 630000,
+    packagePrice: 630000,
+    marketPrice: 715890,
+    priceD: 350000,
+    priceW: 330000,
+    spareParts: { elastomer: { price: 110000, weight: null }, elasticPlate: { price: 36000, weight: null } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true,
+    _priceEstimated: true,
+    notes: "大扭矩型 (PDF 新录)"
+   },
+   { // 2026-05-20 新增, PDF 大扭矩型 (对外报价由 D 型 × 2.0 估算, 老板核定后落定)
+    model: "HGT50020",
+    torque: 500,
+    maxTorque: 1250,
+    maxSpeed: 400,
+    weight: 6700,
+    price: 780000,
+    basePrice: 780000,
+    discountRate: 0.10,
+    factoryPrice: 702000,
+    packagePrice: 702000,
+    marketPrice: 797706,
+    priceD: 390000,
+    priceW: 360000,
+    spareParts: { elastomer: { price: 123000, weight: null }, elasticPlate: { price: 36000, weight: null } },
+    _pdfSource: "2026 杭州前进价格表",
+    _confidential: true,
+    _priceEstimated: true,
+    notes: "大扭矩型 (PDF 新录)"
    },
 
   // HGT-ZB系列 - 标准通用型 (带罩壳)
