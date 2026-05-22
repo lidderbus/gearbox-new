@@ -153,7 +153,37 @@ const ProductGrid = ({
         <div className="text-center py-5">
           <i className="bi bi-inbox display-1 text-muted"></i>
           <p className="mt-3 text-muted">没有找到符合条件的产品</p>
-          <p className="small text-muted">请尝试调整筛选条件</p>
+          <p className="small text-muted mb-3">请尝试调整筛选条件 — 或本需求可能超出现役产品包络:</p>
+          {/* 2026-05-13: 超包络询单三 CTA */}
+          <div className="d-flex flex-wrap justify-content-center gap-2">
+            <Button
+              variant="primary"
+              size="sm"
+              href="/customer-inquiry/CI-2026-axial-compressor-shanghai.html"
+              target="_blank"
+              title="工业大功率/高速/增速箱 工程定制询价 (推荐路径)"
+            >
+              <i className="bi bi-send-fill me-1"></i> 工程定制询价
+            </Button>
+            <Button
+              variant="outline-info"
+              size="sm"
+              href="/gearbox-copilot.html"
+              target="_blank"
+              title="AI 选型 Copilot 自然语言查询 (识别工业增速箱 / 超包络场景)"
+            >
+              <i className="bi bi-stars me-1"></i> AI 选型 Copilot
+            </Button>
+            <Button
+              variant="outline-success"
+              size="sm"
+              href="/sales-pipeline-monitor.html#industrial-leads"
+              target="_blank"
+              title="销售工作台 · 工业定制线索池 · 48h SLA"
+            >
+              <i className="bi bi-people-fill me-1"></i> 联系销售归口
+            </Button>
+          </div>
         </div>
       )}
 

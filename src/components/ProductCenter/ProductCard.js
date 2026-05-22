@@ -121,6 +121,18 @@ const ProductCard = ({
         >
           {product.seriesLabel}
         </Badge>
+        {/* V81: 历史型号徽章 */}
+        {product._isLegacy && (
+          <Badge
+            bg="warning"
+            text="dark"
+            className="position-absolute"
+            style={{ top: '8px', right: '8px', fontSize: '0.65rem' }}
+            title="不在 2025-05 PDF 选型手册, 仅备件订货可选"
+          >
+            <i className="bi bi-clock-history me-1"></i>历史
+          </Badge>
+        )}
       </div>
 
       <Card.Body className="p-2" onClick={() => onViewDetail(product)}>

@@ -24,12 +24,14 @@ export const SERIES_CONFIG = [
 ];
 
 // 默认筛选条件
+// 2026-05-13: ratioRange 下限解锁到 0.5 (允许增速比 < 1 查询 HCG1400/HCA701 等 3 个增速型号);
+// powerRange 默认仍为 [0, 3000] 保持现状, 但 ProductGrid EmptyState 会在无匹配时提示"工业增速箱定制询价"通道
 const DEFAULT_FILTERS = {
   searchText: '',
   series: [],           // 选中的系列key
   powerRange: [0, 3000],
   speedRange: [0, 4000],
-  ratioRange: [1, 10],
+  ratioRange: [0.5, 20],
   interfaceType: '全部', // '全部' | 'sae' | 'domestic'
   interfaceSpec: '',
   priceRange: [0, 500000],

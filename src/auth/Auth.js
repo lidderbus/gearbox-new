@@ -2,33 +2,10 @@
 import { SHA256 } from 'crypto-js';
 import { userRoles, hasPermission as checkPermission } from './roles';
 
-// 内存中的用户数组
-let users = [
-  {
-    id: 1,
-    username: 'admin',
-    // 密码: Gbox@2024!
-    passwordHash: '95e02caa27467e7f0cef1173f4c9ec3c2ca1248c51fce9ea9c79ecd5a73e841f',
-    role: userRoles.ADMIN,
-    name: '系统管理员',
-    department: '技术部',
-    lastLogin: null,
-    createdAt: new Date().toISOString(),
-    active: true
-  },
-  {
-    id: 2,
-    username: 'user',
-    // 密码: User@2024!
-    passwordHash: '0e6d3ce3e3bebc9c80eb62711b0bdf12b21590b4b447fb85a8b1c1079aed4867',
-    role: userRoles.USER,
-    name: '普通用户',
-    department: '销售部',
-    lastLogin: null,
-    createdAt: new Date().toISOString(),
-    active: true
-  }
-];
+// 内存中的用户数组. 默认凭据已移除 (2026-05-14 安全清理).
+// 真实登录走 src/contexts/AuthContext.js (PBKDF2 + REACT_APP_*_HASH 环境变量).
+// 本文件仅用于 UserManagementView 子用户 CRUD, 首次访问从空列表开始.
+let users = [];
 
 // 存储工具
 export const saveUsers = () => {

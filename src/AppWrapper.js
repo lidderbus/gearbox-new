@@ -6,16 +6,14 @@ import { userRoles } from './auth/roles';
 import App from './App';
 import LoginPage from './components/LoginPage';
 import './AppWrapper.css';
-// import { loadAndRepairData } from './utils/repair'; // Moved loading outside
-import UserManagementView from './components/UserManagementView'; // Import UserManagementView
-import DatabaseManagementView from './components/DatabaseManagementView'; // Import DatabaseManagementView
-// import DarkModeProvider from './contexts/DarkModeContext'; // Assuming DarkModeProvider is needed
-// import { flexibleCouplings } from './data/flexibleCouplings'; // Not needed here
 import { useIsMobile } from './hooks/useIsMobile';
 import RouteSkeleton from './components/common/RouteSkeleton';
 import { ProjectProvider } from './contexts/ProjectContext';
 
-const MobileApp = React.lazy(() => import('./components/mobile/MobileApp'));
+// 管理员路由 lazy: UserManagementView + DatabaseManagementView (含 PriceMaintenanceTool 15KB + GearboxDataImporter 15KB) 总计 ~50KB+ 仅 admin 可见
+const UserManagementView = React.lazy(() => import(/* webpackChunkName: "admin-user-mgmt" */ './components/UserManagementView'));
+const DatabaseManagementView = React.lazy(() => import(/* webpackChunkName: "admin-database-mgmt" */ './components/DatabaseManagementView'));
+const MobileApp = React.lazy(() => import(/* webpackChunkName: "mobile-app" */ './components/mobile/MobileApp'));
 
 
 const AppContent = ({ appData, setAppData }) => {
@@ -59,11 +57,19 @@ const AppContent = ({ appData, setAppData }) => {
   return (
     <Routes>
       <Route path="/login" element={userIsAuthenticated ? <Navigate to="/" replace /> : <LoginPage />} />
-      {/* Protected admin routes */}
+      {/* Protected admin routes (lazy: 仅 admin 角色访问 /users 或 /database 时才下载) */}
       {isAdmin && (
          <>
-           <Route path="/users" element={<UserManagementView appData={appData} setAppData={setAppData} />} />
-           <Route path="/database" element={<DatabaseManagementView appData={appData} setAppData={setAppData} />} />
+           <Route path="/users" element={
+             <React.Suspense fallback={<RouteSkeleton label="加载用户管理" />}>
+               <UserManagementView appData={appData} setAppData={setAppData} />
+             </React.Suspense>
+           } />
+           <Route path="/database" element={
+             <React.Suspense fallback={<RouteSkeleton label="加载数据库管理" />}>
+               <DatabaseManagementView appData={appData} setAppData={setAppData} />
+             </React.Suspense>
+           } />
          </>
       )}
       {/* Main application route */}

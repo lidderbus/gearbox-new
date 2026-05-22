@@ -191,14 +191,14 @@ const FilterPanel = ({
           {/* 减速比范围 */}
           <Accordion.Item eventKey="3">
             <Accordion.Header>
-              <i className="bi bi-gear me-2"></i>减速比范围
+              <i className="bi bi-gear me-2"></i>减速比范围 (含增速)
             </Accordion.Header>
             <Accordion.Body>
               <div className="d-flex gap-2 align-items-center">
                 <Form.Control
                   type="number"
                   step="0.1"
-                  placeholder="最小 (如1.5)"
+                  placeholder="最小 (如0.5增速 / 1.5减速)"
                   value={filters.ratioRange[0]}
                   onChange={(e) => updateFilter('ratioRange', [Number(e.target.value), filters.ratioRange[1]])}
                   style={inputStyle}
@@ -214,6 +214,11 @@ const FilterPanel = ({
                   style={inputStyle}
                   size="sm"
                 />
+              </div>
+              <div className="small text-muted mt-2">
+                <i className="bi bi-info-circle me-1"></i>
+                输入 &lt; 1 可筛选增速型号 (HCG1400 / HCA701 等 3 个, max 8.88 MW).
+                工业大功率增速箱 (≥20 MW) 需走<a href="/customer-inquiry/CI-2026-axial-compressor-shanghai.html" target="_blank" className="ms-1">工程定制询价</a>.
               </div>
             </Accordion.Body>
           </Accordion.Item>

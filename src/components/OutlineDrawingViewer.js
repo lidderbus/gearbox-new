@@ -4,6 +4,7 @@
 import React, { useState, useCallback, useRef, useMemo } from 'react';
 import { Modal, Button, ButtonGroup, Card, Badge, Row, Col, Alert, Tabs, Tab, ListGroup } from 'react-bootstrap';
 import { getDwgDownloadUrl, getPdfPreviewUrl, getDwgFilesForModel } from '../data/outlineDrawings';
+import { toast } from '../utils/toast';
 
 /**
  * 外形图查看器组件
@@ -88,6 +89,7 @@ const OutlineDrawingViewer = ({
 
     try {
       const response = await fetch(drawingData[currentView]);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -99,8 +101,9 @@ const OutlineDrawingViewer = ({
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('下载失败:', error);
-      // 如果fetch失败，尝试直接打开
-      window.open(drawingData[currentView], '_blank', 'noopener,noreferrer');
+      // 资源不存在: 提示用户而不是跳到 404 页
+      setImageError(prev => ({ ...prev, [currentView]: true }));
+      toast.warning(`${model} 的图纸尚未上传，请联系技术部门`);
     }
   }, [drawingData, currentView, model]);
 

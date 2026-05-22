@@ -35,7 +35,7 @@ import { useInIframe } from './hooks/useInIframe';
 import InputParametersTab from './components/InputParametersTab';
 import AppHeader from './components/AppHeader';
 import QuotationEnhancedOptions from './components/QuotationEnhancedOptions';
-import SelectionResultTab from './components/SelectionResultTab';
+import SelectionResultTab, { prefetchSelectionResultChunks } from './components/SelectionResultTab';
 import HistoryTabContent from './components/HistoryTabContent';
 import ErrorBoundary from './components/ErrorBoundary';
 import { SkeletonCard } from './components/Skeleton';
@@ -92,8 +92,9 @@ const ManualLibrary = lazy(() => import('./components/ManualLibrary'));
 // 技术协议模板库 - 历史技术协议模板 (2026-01-22新增)
 const TemplateLibrary = lazy(() => import('./components/TemplateLibrary'));
 
-// 首页Dashboard (2026-02-18新增)
-const HomeView = lazy(() => import('./components/HomeView'));
+// 首页 Dashboard — 用户登录第一眼必看, 提取工厂函数供 idle prefetch
+const importHomeView = () => import(/* webpackChunkName: "home-view" */ './components/HomeView');
+const HomeView = lazy(importHomeView);
 
 // 上海公司审计整改模块 (2026-01-15新增)
 const InventoryManagement = lazy(() => import('./components/InventoryManagement'));
@@ -227,6 +228,23 @@ function App({ appData: initialAppData, setAppData }) {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // 必经路径 chunk 预加载: App mount 后 idle 时拉取 home-view + selection-result-main + coupling-result
+  // 用户点击 Tab 时已在 webpack 缓存, 无 chunk 加载延迟
+  useEffect(() => {
+    const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1500));
+    const handle = idle(() => {
+      try {
+        importHomeView();
+        prefetchSelectionResultChunks();
+      } catch (_) { /* ignore prefetch failures, lazy fallback 仍生效 */ }
+    });
+    return () => {
+      if (window.cancelIdleCallback && typeof handle === 'number') {
+        window.cancelIdleCallback(handle);
+      }
+    };
+  }, []);
+
   // 选型配置 - 可配置权重和容差
   const { getEffectiveConfig } = useSelectionConfig();
 
@@ -267,6 +285,8 @@ function App({ appData: initialAppData, setAppData }) {
     shaftArrangement: { axisAlignment: 'any', offsetDirection: 'any' },
     // 离合器需求
     hasClutch: null,   // null=不限, true=需要带离合器, false=不需要离合器
+    // GW 子系列结构形式过滤（仅 GW / auto 模式生效；空数组 = 不限制）
+    gwStructuralFilter: [],
   });
   const [projectInfo, setProjectInfo] = useState({
     projectName: '',
@@ -495,6 +515,24 @@ function App({ appData: initialAppData, setAppData }) {
   }, [tabToPath]);
 
   useEffect(() => {
+    // 2026-05-12: query 参数路由协同 — Copilot/ERP 跨链路跳转可用 ?focus=HC1200&tab=cpp
+    // 优先级: ?tab > #hash; ?focus 写入 sessionStorage 由 ProductCenter 接收
+    const applyQueryParams = () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const focus = params.get('focus');
+        const tab = params.get('tab');
+        if (focus) {
+          sessionStorage.setItem('product_center_focus', focus);
+          // ?focus 不显式写 ?tab 时, 默认跳产品中心
+          if (!tab && !window.location.hash) setActiveTabRaw('product-center');
+        }
+        if (tab && pathToTab['/' + tab]) {
+          setActiveTabRaw(pathToTab['/' + tab]);
+        }
+      } catch (e) { /* ignore — query 路由是增强, 失败不影响主流程 */ }
+    };
+
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '') || '/';
       // /hcm-selection 深链:在切到 product-center 前预设 HCM Tab
@@ -522,8 +560,9 @@ function App({ appData: initialAppData, setAppData }) {
       }
     };
 
-    // Initial sync on mount
+    // Initial sync on mount: 先 hash 后 query, query 优先级更高 (覆盖 hash 默认)
     handleHashChange();
+    applyQueryParams();
 
     // Cmd+K / Ctrl+K → open command palette
     const handlePaletteShortcut = (e) => {

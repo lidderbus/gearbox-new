@@ -6,6 +6,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Row, Col, Badge, Button, Spinner } from 'react-bootstrap';
 import { getCompetitorPdfUrl } from '../../data/competitorDrawings';
+import { assetExists } from '../../utils/assetExists';
 
 const CompetitorPdfViewer = ({
   selectedCatalog,
@@ -21,12 +22,19 @@ const CompetitorPdfViewer = ({
     if (selectedCatalog) {
       setPreviewStatus('loading');
       setObjectKey(prev => prev + 1);
+      // HEAD 探测: 资源不存在时立即切到 error 状态, 不再等 10 秒 timeout
+      const url = getCompetitorPdfUrl(selectedCatalog.filePath);
+      let cancelled = false;
+      assetExists(url).then(ok => {
+        if (cancelled) return;
+        if (!ok) setPreviewStatus('error');
+      });
       const timer = setTimeout(() => {
         setPreviewStatus(prev => prev === 'loading' ? 'error' : prev);
       }, 10000);
-      return () => clearTimeout(timer);
+      return () => { cancelled = true; clearTimeout(timer); };
     }
-  }, [selectedCatalog?.id]);
+  }, [selectedCatalog?.id, selectedCatalog?.filePath]);
 
   const handleLoad = useCallback(() => {
     setPreviewStatus('loaded');
@@ -111,7 +119,9 @@ const CompetitorPdfViewer = ({
               <Button
                 variant="outline-primary"
                 size="sm"
-                onClick={() => window.open(pdfUrl, '_blank', 'noopener,noreferrer')}
+                disabled={previewStatus === 'error'}
+                title={previewStatus === 'error' ? '资源不可用，请走"原始来源"' : ''}
+                onClick={() => previewStatus !== 'error' && window.open(pdfUrl, '_blank', 'noopener,noreferrer')}
               >
                 <i className="bi bi-box-arrow-up-right me-1"></i>新窗口打开
               </Button>
@@ -156,12 +166,13 @@ const CompetitorPdfViewer = ({
                   zIndex: 10, padding: '20px'
                 }}>
                   <i className="bi bi-exclamation-triangle" style={{ fontSize: '48px', color: '#ffc107' }}></i>
-                  <h5 className="mt-3" style={{ color: colors.text }}>PDF预览加载失败</h5>
-                  <p className="text-muted text-center mb-3">可能是文件较大或网络问题，请尝试新窗口打开</p>
+                  <h5 className="mt-3" style={{ color: colors.text }}>PDF资源不可用</h5>
+                  <p className="text-muted text-center mb-3">
+                    {selectedCatalog.sourceUrl
+                      ? '本地副本未上传，可访问原始厂商页面'
+                      : '本地副本未上传，请联系技术部门补传'}
+                  </p>
                   <div className="d-flex flex-column gap-2" style={{ maxWidth: '300px', width: '100%' }}>
-                    <Button variant="primary" onClick={() => window.open(pdfUrl, '_blank', 'noopener,noreferrer')}>
-                      <i className="bi bi-box-arrow-up-right me-2"></i>新窗口打开PDF
-                    </Button>
                     {selectedCatalog.sourceUrl && (
                       <Button variant="outline-primary" onClick={() => window.open(selectedCatalog.sourceUrl, '_blank', 'noopener,noreferrer')}>
                         <i className="bi bi-link-45deg me-2"></i>访问原始来源

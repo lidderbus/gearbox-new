@@ -38,6 +38,7 @@ build.tar.gz
 # Backup files
 *.bak
 *.bak.*
+*.bak-*
 *.backup
 
 # Legacy tests

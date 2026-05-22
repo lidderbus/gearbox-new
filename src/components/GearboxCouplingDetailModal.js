@@ -68,6 +68,9 @@ const GearboxCouplingDetailModal = ({ show, onHide, gearboxModels, seriesName })
 
   // 图片预览状态
   const [previewImage, setPreviewImage] = useState(null);
+  // 跟踪每张图片的加载失败状态（key=img.src），失败时禁用"查看原图"避免跳到 404
+  const [brokenImages, setBrokenImages] = useState({});
+  const markBroken = (src) => setBrokenImages(prev => prev[src] ? prev : { ...prev, [src]: true });
 
   // 接口类型表格组件
   const InterfaceTable = ({ items, type }) => {
@@ -196,36 +199,41 @@ const GearboxCouplingDetailModal = ({ show, onHide, gearboxModels, seriesName })
                 title={`技术图纸 (${techImages.length})`}
               >
                 <Row className="mt-3 g-3">
-                  {techImages.map((img, idx) => (
+                  {techImages.map((img, idx) => {
+                    const isBroken = !!brokenImages[img.src];
+                    return (
                     <Col md={6} key={idx}>
                       <Card className="h-100 shadow-sm">
-                        <Card.Img
-                          variant="top"
-                          src={img.src}
-                          style={{
-                            cursor: 'zoom-in',
-                            maxHeight: '200px',
-                            objectFit: 'contain',
-                            backgroundColor: '#f8f9fa'
-                          }}
-                          onClick={() => setPreviewImage(img)}
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextSibling.style.display = 'flex';
-                          }}
-                        />
-                        <div
-                          style={{
-                            display: 'none',
-                            height: '200px',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: '#f8f9fa',
-                            color: '#6c757d'
-                          }}
-                        >
-                          <i className="bi bi-image fs-1"></i>
-                        </div>
+                        {isBroken ? (
+                          <div
+                            style={{
+                              display: 'flex',
+                              height: '200px',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexDirection: 'column',
+                              backgroundColor: '#f8f9fa',
+                              color: '#6c757d',
+                              gap: '4px'
+                            }}
+                          >
+                            <i className="bi bi-image fs-1"></i>
+                            <small>原图资源未上传</small>
+                          </div>
+                        ) : (
+                          <Card.Img
+                            variant="top"
+                            src={img.src}
+                            style={{
+                              cursor: 'zoom-in',
+                              maxHeight: '200px',
+                              objectFit: 'contain',
+                              backgroundColor: '#f8f9fa'
+                            }}
+                            onClick={() => setPreviewImage(img)}
+                            onError={() => markBroken(img.src)}
+                          />
+                        )}
                         <Card.Body className="py-2">
                           <Card.Title style={{ fontSize: '0.9rem' }}>
                             {img.title}
@@ -236,15 +244,18 @@ const GearboxCouplingDetailModal = ({ show, onHide, gearboxModels, seriesName })
                           <Button
                             variant="outline-primary"
                             size="sm"
-                            onClick={() => window.open(img.src, '_blank', 'noopener,noreferrer')}
+                            disabled={isBroken}
+                            title={isBroken ? '原图资源未上传，请联系技术部门' : ''}
+                            onClick={() => !isBroken && window.open(img.src, '_blank', 'noopener,noreferrer')}
                           >
                             <i className="bi bi-zoom-in me-1"></i>
-                            查看原图
+                            {isBroken ? '原图未上传' : '查看原图'}
                           </Button>
                         </Card.Body>
                       </Card>
                     </Col>
-                  ))}
+                    );
+                  })}
                 </Row>
               </Tab>
             )}
@@ -292,6 +303,7 @@ const GearboxCouplingDetailModal = ({ show, onHide, gearboxModels, seriesName })
                 maxHeight: '80vh',
                 objectFit: 'contain'
               }}
+              onError={() => previewImage && markBroken(previewImage.src)}
             />
           )}
         </Modal.Body>
@@ -301,7 +313,8 @@ const GearboxCouplingDetailModal = ({ show, onHide, gearboxModels, seriesName })
           </small>
           <Button
             variant="primary"
-            onClick={() => window.open(previewImage?.src, '_blank', 'noopener,noreferrer')}
+            disabled={!!(previewImage && brokenImages[previewImage.src])}
+            onClick={() => previewImage && !brokenImages[previewImage.src] && window.open(previewImage.src, '_blank', 'noopener,noreferrer')}
           >
             <i className="bi bi-box-arrow-up-right me-1"></i>
             新窗口打开

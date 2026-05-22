@@ -4,6 +4,7 @@
 import React, { useMemo } from 'react';
 import { Card, Row, Col, Button, Badge, OverlayTrigger, Tooltip, ProgressBar } from 'react-bootstrap';
 import { lookupPriceByModel } from '../utils/priceFormatter';
+import { OFFICIAL_SELECTION_MANUAL, getOfficialManualUrl } from '../data/gearboxManuals';
 
 const HomeView = ({ appData, colors, theme, onNavigate, selectionHistory = [] }) => {
   // Calculate data overview stats
@@ -132,6 +133,19 @@ const HomeView = ({ appData, colors, theme, onNavigate, selectionHistory = [] })
             <kbd style={{ fontSize: '0.72rem' }}>⌘ K</kbd> <span className="text-muted mx-1">/</span> <kbd style={{ fontSize: '0.72rem' }}>Ctrl K</kbd>
             <span className="ms-2">一键搜索任意模块、项目、资料(50+ 模块、1700+ 资料项)</span>
           </small>
+          {/* 2026-05-22: 官方 2025-05 选型手册 快速入口 */}
+          <div className="mt-3">
+            <Button
+              variant="outline-primary"
+              size="sm"
+              onClick={() => window.open(getOfficialManualUrl(), '_blank', 'noopener,noreferrer')}
+              title={`${OFFICIAL_SELECTION_MANUAL.title} · ${OFFICIAL_SELECTION_MANUAL.pages} 页 · ${OFFICIAL_SELECTION_MANUAL.fileSize}`}
+            >
+              <i className="bi bi-file-earmark-pdf me-1"></i>
+              📖 {OFFICIAL_SELECTION_MANUAL.version} 官方选型手册
+              <Badge bg="secondary" className="ms-2" style={{ fontSize: '0.65rem' }}>{OFFICIAL_SELECTION_MANUAL.pages} 页</Badge>
+            </Button>
+          </div>
         </Card.Body>
       </Card>
 

@@ -3,17 +3,21 @@
 // 功能: 浏览、搜索、查看齿轮箱产品说明书
 // 更新时间: 2026-01-20
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, Suspense, lazy } from 'react';
 import { Card, Row, Col, Form, InputGroup, Button, Table, Badge, Alert, Tabs, Tab } from 'react-bootstrap';
-import { getAllManuals, getManualInfo } from '../data/gearboxManuals';
+import { getAllManuals, getManualInfo, OFFICIAL_SELECTION_MANUAL, getOfficialManualUrl } from '../data/gearboxManuals';
 import PDFLoadingModal from './PDFLoadingModal';
-import PDFPreviewModal from './PDFPreviewModal';
 import LibraryPermissionBanner from './common/LibraryPermissionBanner';
 import { useLibraryPermissions } from '../hooks/useLibraryPermissions';
 import { useAuth } from '../contexts/AuthContext';
 import { useProject } from '../contexts/ProjectContext';
 import { logAudit } from '../services/auditLog';
 import { protectedDownload } from '../utils/pdfWatermark';
+import { assetExists } from '../utils/assetExists';
+import { toast } from '../utils/toast';
+
+// PDFPreviewModal 拉 pdfjs-dist (~416KB), 仅在用户点击"预览"时才加载
+const PDFPreviewModal = lazy(() => import(/* webpackChunkName: "pdfjs-preview" */ './PDFPreviewModal'));
 
 /**
  * 说明书库组件
@@ -97,7 +101,7 @@ const ManualLibrary = ({ colors, theme }) => {
   // 打开说明书
   // 小文件直接打开，大文件显示下载进度
   // P0-4: 下载权限拦截 + P2-2: 审计 + 水印伴随
-  const openManual = (manual) => {
+  const openManual = async (manual) => {
     if (!canDownload) {
       try {
         logAudit('permission_deny', {
@@ -111,6 +115,14 @@ const ManualLibrary = ({ colors, theme }) => {
       window.alert('您当前角色无下载权限,请联系管理员升级 (EDITOR/ADMIN)');
       return;
     }
+    // HEAD 探测: 资源不存在时友好提示, 不再跳到 404
+    setLoadingPdf(manual);
+    const exists = await assetExists(manual.path);
+    setLoadingPdf(null);
+    if (!exists) {
+      toast.warning(`说明书《${manual.title || manual.model}》尚未上传，请联系技术部门`);
+      return;
+    }
     // 审计 + 水印伴随文件
     try {
       protectedDownload(manual.path, (manual.model || 'manual') + (manual.fileFormat ? `.${manual.fileFormat}` : '.pdf'), {
@@ -122,7 +134,6 @@ const ManualLibrary = ({ colors, theme }) => {
         projectId: currentProjectId,
       });
     } catch (e) {
-      // 兜底: 旧路径
       if (!isLargeFile(manual)) {
         window.open(manual.path, '_blank', 'noopener,noreferrer');
       } else {
@@ -159,6 +170,41 @@ const ManualLibrary = ({ colors, theme }) => {
       </Card.Header>
 
       <Card.Body>
+        {/* 2026-05-22: 官方 2025-05 选型手册 主推卡 (跟 35 个产品 PDF 区分) */}
+        <Alert
+          variant="primary"
+          className="mb-4 d-flex align-items-center justify-content-between"
+          style={{
+            background: 'linear-gradient(135deg, rgba(79,195,247,0.10), rgba(167,139,250,0.06))',
+            border: '1px solid rgba(79,195,247,0.4)',
+            color: colors?.text || '#0c4a6e'
+          }}
+        >
+          <div>
+            <div style={{ fontWeight: 600, fontSize: '1.05rem', marginBottom: '4px' }}>
+              <i className="bi bi-bookmark-star-fill me-2" style={{ color: '#0284c7' }}></i>
+              {OFFICIAL_SELECTION_MANUAL.title}
+              <Badge bg="info" className="ms-2">{OFFICIAL_SELECTION_MANUAL.version}</Badge>
+            </div>
+            <div style={{ fontSize: '0.82rem', opacity: 0.85 }}>
+              {OFFICIAL_SELECTION_MANUAL.subtitle} · {OFFICIAL_SELECTION_MANUAL.publisher} · {OFFICIAL_SELECTION_MANUAL.fileSize}
+            </div>
+            <div style={{ fontSize: '0.75rem', opacity: 0.7, marginTop: '4px' }}>
+              9 系列章节: 中小功率 p1 / 轻型高速 p19 / GW p27 / 双速 p35 / GC p41 / 2GWH p45 / 电推 p47 / HCL p49 / 混合动力 p50
+            </div>
+          </div>
+          <div className="d-flex gap-2">
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => window.open(getOfficialManualUrl(), '_blank', 'noopener,noreferrer')}
+              title="新 tab 打开官方 PDF 第 1 页"
+            >
+              <i className="bi bi-file-earmark-pdf me-1"></i> 打开总手册
+            </Button>
+          </div>
+        </Alert>
+
         {/* 搜索和筛选 */}
         <Row className="mb-4">
           <Col md={6}>
@@ -358,13 +404,17 @@ const ManualLibrary = ({ colors, theme }) => {
           colors={colors}
         />
 
-        {/* PDF首页预览弹窗 */}
-        <PDFPreviewModal
-          pdf={previewPdf}
-          onClose={() => setPreviewPdf(null)}
-          onOpenFull={openManual}
-          colors={colors}
-        />
+        {/* PDF首页预览弹窗 (lazy: 仅 previewPdf 非空时才挂载, 触发 pdfjs chunk 下载) */}
+        {previewPdf && (
+          <Suspense fallback={null}>
+            <PDFPreviewModal
+              pdf={previewPdf}
+              onClose={() => setPreviewPdf(null)}
+              onOpenFull={openManual}
+              colors={colors}
+            />
+          </Suspense>
+        )}
       </Card.Body>
     </Card>
     </>

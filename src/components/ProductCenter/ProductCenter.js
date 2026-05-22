@@ -2,7 +2,7 @@
 // 产品中心主组件
 
 import React, { useState, useMemo, useEffect, lazy, Suspense } from 'react';
-import { Container, Row, Col, Alert, Tabs, Tab, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Alert, Tabs, Tab, Spinner, Form, Badge } from 'react-bootstrap';
 import FilterPanel from './FilterPanel';
 import ProductGrid from './ProductGrid';
 import ProductDetail from './ProductDetail';
@@ -10,6 +10,7 @@ import CompareDrawer from './CompareDrawer';
 import CompareView from './CompareView';
 import ExportDialog from './ExportDialog';
 import { useProductFilter } from './useProductFilter';
+import { legacyGearboxData } from '../../data/legacyData.js';
 
 const HCMSelectionModule = lazy(() => import('../HCMSelectionModule'));
 
@@ -19,18 +20,22 @@ const ProductCenter = ({
   theme = 'light',
   onNavigateToQuotation
 }) => {
-  // 将所有系列数据合并为单一数组
-  const allProducts = useMemo(() => {
+  // 历史型号显示开关 (V81: 默认仅显示 PDF 收录的主型号)
+  const [includeLegacy, setIncludeLegacy] = useState(false);
+
+  // 主数据 (PDF 2025-05 收录, 自动从 embeddedData)
+  const mainProducts = useMemo(() => {
     if (Array.isArray(gearboxData)) {
       return gearboxData;
     }
 
-    // 如果是对象格式 (各系列分组)，则合并
     const products = [];
     const seriesArrays = [
       'hcGearboxes', 'hcmGearboxes', 'hcdGearboxes',
       'gwGearboxes', 'gcGearboxes', 'dtGearboxes',
-      'gcsGearboxes', 'othersGearboxes'
+      'gcsGearboxes', 'othersGearboxes',
+      'hcaGearboxes', 'hcqGearboxes', 'hcvGearboxes', 'hcxGearboxes',
+      'mvGearboxes', 'hcmMatchingCases'
     ];
 
     for (const key of seriesArrays) {
@@ -39,13 +44,20 @@ const ProductCenter = ({
       }
     }
 
-    // 如果有 gearboxes 数组
     if (Array.isArray(gearboxData.gearboxes)) {
       products.push(...gearboxData.gearboxes);
     }
 
     return products;
   }, [gearboxData]);
+
+  // 全部 (含 legacy)
+  const allProducts = useMemo(() => {
+    if (!includeLegacy) return mainProducts;
+    // 给 legacy 型号加 _isLegacy 标记
+    const legacyMarked = legacyGearboxData.map(p => ({ ...p, _isLegacy: true }));
+    return [...mainProducts, ...legacyMarked];
+  }, [mainProducts, includeLegacy]);
 
   // 使用筛选Hook
   const {
@@ -95,6 +107,33 @@ const ProductCenter = ({
     return () => window.removeEventListener('hashchange', handler);
   }, []);
 
+  // 2026-05-12: ?focus=HC1200 支持 — 跨链路跳转预定位 + 打开详情弹窗
+  // 由 App.js 的 applyQueryParams() 写入 sessionStorage 'product_center_focus'
+  useEffect(() => {
+    if (!allProducts.length) return; // 等数据加载
+    let focusModel = null;
+    try { focusModel = sessionStorage.getItem('product_center_focus'); } catch (e) { /* ignore */ }
+    if (!focusModel) return;
+    const norm = focusModel.toUpperCase().trim();
+    const hit = allProducts.find(p => {
+      const m = (p.model || '').toUpperCase().trim();
+      return m === norm || m.replace(/\s+/g, '') === norm.replace(/\s+/g, '');
+    });
+    if (hit) {
+      setSelectedProduct(hit);
+      setShowDetail(true);
+      console.log('[ProductCenter] focus 命中', { input: focusModel, model: hit.model, isLegacy: !!hit._isLegacy });
+    } else {
+      // 不撒谎: 找不到时给真相
+      console.warn('[ProductCenter] focus 未命中', {
+        input: focusModel, normalized: norm,
+        mainCount: mainProducts.length, legacyAvailable: !includeLegacy ? '关闭中,试着打开"包含历史型号"' : '已开启',
+        suggest: '检查型号拼写, 或打开 includeLegacy 试试'
+      });
+    }
+    try { sessionStorage.removeItem('product_center_focus'); } catch (e) { /* ignore */ }
+  }, [allProducts, mainProducts.length, includeLegacy]);
+
   // 查看详情
   const handleViewDetail = (product) => {
     setSelectedProduct(product);
@@ -140,6 +179,30 @@ const ProductCenter = ({
 
   return (
     <Container fluid className="py-3" style={{ paddingBottom: compareList.length > 0 ? '80px' : '20px' }}>
+      {/* V81: 数据范围概览 + 历史型号切换 */}
+      <div className="d-flex justify-content-between align-items-center mb-3 p-3"
+           style={{ background: theme === 'dark' ? '#2a2a2a' : '#f8f9fa', borderRadius: 8, gap: 12, flexWrap: 'wrap' }}>
+        <div>
+          <strong style={{ fontSize: '15px' }}>
+            <i className="bi bi-database me-2" style={{ color: '#0d6efd' }}></i>
+            产品数据 V80 (PDF 2025-05 版同步)
+          </strong>
+          <div style={{ fontSize: '12px', color: theme === 'dark' ? '#aaa' : '#6c757d', marginTop: 4 }}>
+            主数据 <Badge bg="primary">{mainProducts.length}</Badge> 个
+            (PDF 收录) · 历史型号 <Badge bg="secondary">{legacyGearboxData.length}</Badge> 个 (备件订货专用)
+            {includeLegacy && <Badge bg="warning" text="dark" className="ms-2">显示中: 全部 {allProducts.length} 个</Badge>}
+          </div>
+        </div>
+        <Form.Check
+          type="switch"
+          id="include-legacy-switch"
+          label={<span><i className="bi bi-clock-history me-1"></i>包含历史型号</span>}
+          checked={includeLegacy}
+          onChange={(e) => setIncludeLegacy(e.target.checked)}
+          style={{ fontSize: '14px' }}
+        />
+      </div>
+
       <Tabs
         activeKey={activeView}
         onSelect={(k) => setActiveView(k || 'all')}

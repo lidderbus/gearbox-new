@@ -78,10 +78,15 @@ const ProductDetail = ({
           borderColor: colors.border
         }}
       >
-        <Modal.Title className="d-flex align-items-center gap-2">
+        <Modal.Title className="d-flex align-items-center gap-2 flex-wrap">
           <Badge bg={seriesColor}>{product.seriesLabel}</Badge>
           <span>{product.model}</span>
           <span className="text-muted small ms-2">船用齿轮箱</span>
+          {product._isLegacy && (
+            <Badge bg="warning" text="dark" title="不在 2025-05 PDF 选型手册, 仅备件订货可选">
+              <i className="bi bi-clock-history me-1"></i>历史型号
+            </Badge>
+          )}
         </Modal.Title>
       </Modal.Header>
 
@@ -161,6 +166,18 @@ const ProductDetail = ({
               <Button variant="outline-success" onClick={() => onGenerateQuotation(product)}>
                 <i className="bi bi-file-earmark-text me-2"></i>
                 生成报价单
+              </Button>
+              <Button
+                variant="outline-info"
+                onClick={() => window.open(
+                  `/gearbox-copilot.html?q=${encodeURIComponent((product.model || '') + ' 选型')}`,
+                  '_blank',
+                  'noopener'
+                )}
+                title="问 AI 选型 Copilot — 自然语言解释/对比/分享给客户"
+              >
+                <i className="bi bi-stars me-2"></i>
+                问 AI Copilot
               </Button>
             </div>
           </Col>
