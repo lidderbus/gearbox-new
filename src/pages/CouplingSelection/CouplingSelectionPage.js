@@ -15,8 +15,8 @@ import { ClassificationType } from '../../utils/classificationCertificates';
 import { UnitsLanguageProvider, UnitsLanguageToggle } from '../../contexts/UnitsLanguageContext';
 
 // 懒加载可视化组件（较大的依赖）
-const CouplingCharts = lazy(() => import('./CouplingCharts'));
-const Coupling3DPreview = lazy(() => import('./Coupling3DPreview'));
+const CouplingCharts = lazy(() => import(/* webpackChunkName: "coupling-charts-echarts" */ './CouplingCharts'));
+const Coupling3DPreview = lazy(() => import(/* webpackChunkName: "three-coupling-preview" */ './Coupling3DPreview'));
 
 // 懒加载占位符
 const ChartLoadingFallback = () => (

@@ -70,8 +70,16 @@ const GearboxComparisonView = ({
   const displayData = isManualMode ? manualModels : recommendations;
 
   // Get capacity margin status
-  const getCapacityMarginStatus = (margin) => {
+  const getCapacityMarginStatus = (margin, isNearMatch) => {
+    if (isNearMatch) {
+      // 近似匹配 (容量缺口): margin 可能为负
+      if (typeof margin === 'number' && margin < 0) {
+        return { text: `不足${margin.toFixed(1)}%`, color: 'danger' };
+      }
+      return { text: '余量不足候选', color: 'danger' };
+    }
     if (margin === undefined || margin === null) return { text: '-', color: 'secondary' };
+    if (margin < 0) return { text: `不足${margin.toFixed(1)}%`, color: 'danger' };
     if (margin <= 5) return { text: '偏小', color: 'warning' };
     if (margin <= 15) return { text: '合适', color: 'success' };
     if (margin <= 30) return { text: '良好', color: 'primary' };
@@ -237,7 +245,7 @@ const GearboxComparisonView = ({
             </thead>
             <tbody>
               {displayData.map((gearbox, index) => {
-                const marginStatus = getCapacityMarginStatus(gearbox.capacityMargin);
+                const marginStatus = getCapacityMarginStatus(gearbox.capacityMargin, gearbox._isNearMatch);
                 const isExpanded = expandedRow === index;
 
                 return (
@@ -266,9 +274,19 @@ const GearboxComparisonView = ({
                       )}
                       <td>
                         <strong>{gearbox.model}</strong>
+                        {gearbox._isNearMatch && (
+                          <Badge bg="warning" text="dark" className="ms-1" style={{ fontSize: '0.7rem' }}>
+                            近似匹配
+                          </Badge>
+                        )}
                         <span style={{ marginLeft: '5px', color: colors.muted, fontSize: '0.8rem' }}>
                           {isExpanded ? '▼' : '▶'}
                         </span>
+                        {gearbox._isNearMatch && gearbox.failureReason && (
+                          <div style={{ fontSize: '0.7rem', color: '#d32f2f', marginTop: '2px' }}>
+                            {gearbox.failureReason}
+                          </div>
+                        )}
                       </td>
                       <td><Badge bg="secondary">{gearbox.series}</Badge></td>
                       {visibleColumns.ratio && (
@@ -283,7 +301,11 @@ const GearboxComparisonView = ({
                         </td>
                       )}
                       {visibleColumns.capacityMargin && (
-                        <td>{gearbox.capacityMargin ? `${safeNumberFormat(gearbox.capacityMargin, 1)}%` : '-'}</td>
+                        <td style={typeof gearbox.capacityMargin === 'number' && gearbox.capacityMargin < 0 ? { color: '#d32f2f', fontWeight: 600 } : {}}>
+                          {typeof gearbox.capacityMargin === 'number'
+                            ? `${safeNumberFormat(gearbox.capacityMargin, 1)}%`
+                            : '-'}
+                        </td>
                       )}
                       {visibleColumns.thrust && <td>{gearbox.thrust || '-'}</td>}
                       {visibleColumns.weight && <td>{gearbox.weight || '-'}</td>}

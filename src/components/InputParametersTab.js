@@ -8,6 +8,7 @@ import SelectionGuidelines, { HelpTooltip, HCGWorkloadSelector } from './Selecti
 import { PRIME_MOVER_CAPACITY_FACTOR } from '../utils/selectionAlgorithm';
 import ShaftArrangementSelector from './ShaftArrangementSelector';
 import ApplicationScenarioSelector from './ApplicationScenarioSelector';
+import StructuralFormFilter from './selection/StructuralFormFilter';
 
 // 懒加载组件 — HybridConfigPanel 默认 collapsed, 携带 hybridPropulsionData 28.9KB, 改 lazy 减小 main bundle
 const HybridConfigPanel = lazy(() => import(/* webpackChunkName: "hybrid-config" */ './HybridConfigPanel'));
@@ -540,6 +541,29 @@ const InputParametersTab = ({
             colors={colors}
             gearboxType={gearboxType}
           />
+        </Form.Group>
+      )}
+
+      {/* GW 子系列结构形式预选 - GW和auto模式下显示 */}
+      {(gearboxType === 'GW' || gearboxType === 'auto') && (
+        <Form.Group className="mb-4" controlId="gwStructuralFilter">
+          <Form.Label style={{ color: colors.text, fontWeight: 500 }}>
+            GW 子系列结构形式 <Badge bg="secondary">可选</Badge>
+          </Form.Label>
+          <StructuralFormFilter
+            value={requirementData.gwStructuralFilter || []}
+            onChange={(subSeries) => handleRequirementDataChange({ gwStructuralFilter: subSeries })}
+            compact={false}
+            title="勾选后仅返回选中子系列, 不勾 = 全部"
+          />
+          <div className="field-info mt-1">
+            6 个 GW 子系列结构差异:
+            <strong> GWC/GWL</strong> 同中心 (输入输出在同一轴线) ·
+            <strong> GWS/GWK</strong> 垂直异中心 ·
+            <strong> GWH</strong> 水平异中心 ·
+            <strong> GWD</strong> 角向异中心。
+            带"L/K"后缀为无倒顺版本 (CPP 变距桨场景)。
+          </div>
         </Form.Group>
       )}
 

@@ -3,25 +3,16 @@
 import React from 'react';
 import { Card, ProgressBar } from 'react-bootstrap';
 
-const CapacityCalculationCard = ({ power, speed, gearboxCapacity, workCondition }) => {
+const CapacityCalculationCard = ({ power, speed, gearboxCapacity }) => {
   const required = power && speed && speed > 0 ? power / speed : 0;
   if (!required || !gearboxCapacity) return null;
 
   const margin = ((gearboxCapacity - required) / required) * 100;
   const marginRounded = Math.round(margin * 10) / 10;
 
-  // Work condition multiplier info
-  const conditionInfo = {
-    'I类 (轻载)': { range: '0.8-1.0', desc: '平稳负载，如发电机组' },
-    'II类 (中载)': { range: '1.0-1.2', desc: '一般工况，如商船推进' },
-    'III类 (重载)': { range: '1.2-1.5', desc: '冲击负载，如拖轮/渔船' }
-  };
-  const currentCondition = conditionInfo[workCondition] || conditionInfo['II类 (中载)'];
-
-  // Color based on margin
+  // 手册传递能力已含安全系数：齿轮箱能力 ≥ 所需能力即满足要求；不再叠加联轴器 K 因子的"推荐余量"
   let variant = 'success';
-  if (marginRounded < 5) variant = 'danger';
-  else if (marginRounded > 40) variant = 'warning';
+  if (marginRounded < 0) variant = 'danger';
 
   // Cap progress bar at 100%
   const progressValue = Math.min(Math.max(marginRounded, 0), 100);
@@ -52,12 +43,10 @@ const CapacityCalculationCard = ({ power, speed, gearboxCapacity, workCondition 
             label={`${marginRounded}%`}
           />
         </div>
-        {currentCondition && (
-          <small className="text-muted d-block mt-1">
-            <i className="bi bi-info-circle me-1"></i>
-            {workCondition || 'II类 (中载)'}: 推荐余量 {currentCondition.range}倍 — {currentCondition.desc}
-          </small>
-        )}
+        <small className="text-muted d-block mt-1">
+          <i className="bi bi-info-circle me-1"></i>
+          齿轮箱能力 ≥ 所需能力即满足要求（手册传递能力已含安全系数）
+        </small>
       </Card.Body>
     </Card>
   );

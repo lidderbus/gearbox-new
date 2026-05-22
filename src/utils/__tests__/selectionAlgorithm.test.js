@@ -6600,3 +6600,118 @@ describe('平滑评分曲线验证', () => {
     });
   });
 });
+
+// ============= primeType (原动机类型) DT 系列硬过滤 =============
+// 修复: /gearbox-app#/comparison 选 735kW/1350rpm/2.5:1 + 原动机=柴油机 时, DT1400 (电推) 不该入选
+describe('primeType → DT 系列硬过滤', () => {
+  const hcGearbox = createMockGearbox({
+    model: 'HC600', series: 'HC',
+    ratios: [2.5], transferCapacity: [0.6],
+    inputSpeedRange: [1000, 2200]
+  });
+  const dtGearbox = createMockGearbox({
+    model: 'DT1400', series: 'DT',
+    ratios: [2.5], transferCapacity: [0.8],
+    inputSpeedRange: [1000, 2200]
+  });
+  const mockData = createMockData([hcGearbox, dtGearbox]);
+
+  test('primeType=diesel 柴油机模式应排除 DT 系列', () => {
+    const result = selectGearbox(700, 1350, 2.5, 0, 'DT', mockData, { primeType: 'diesel' });
+    const dtCount = result.recommendations.filter(r => r.model.startsWith('DT')).length;
+    expect(dtCount).toBe(0);
+  });
+
+  test('primeType=electric 电动机模式应仅保留 DT 系列', () => {
+    const result = selectGearbox(700, 1350, 2.5, 0, 'HC', mockData, { primeType: 'electric' });
+    const nonDt = result.recommendations.filter(r => !r.model.startsWith('DT'));
+    expect(nonDt.length).toBe(0);
+  });
+
+  test('primeType=none/未设置 不过滤 (回归保护)', () => {
+    const r1 = selectGearbox(700, 1350, 2.5, 0, 'DT', mockData, { primeType: 'none' });
+    const r2 = selectGearbox(700, 1350, 2.5, 0, 'DT', mockData);
+    expect(r1.recommendations.length).toBeGreaterThan(0);
+    expect(r2.recommendations.length).toBeGreaterThan(0);
+  });
+
+  // 2026-05-21 PDF Ct 数据校准: HCQ700 在 2.5:1 真实 Ct=0.58 (PDF 第 21 页),
+  // 不是 docx 误提取的 0.49. 735/1350=0.5444 < 0.58 应满足 → 主推荐 (非近似匹配)
+  test('HCQ700 @ 2.5:1 PDF 校准后 735kW/1350rpm 应进主推荐 (不再误判余量不足)', () => {
+    const hcq700 = createMockGearbox({
+      model: 'HCQ700', series: 'HCQ',
+      ratios: [1.3, 1.51, 1.75, 2, 2.25, 2.5, 2.78, 2.96],
+      transferCapacity: [0.58, 0.58, 0.58, 0.58, 0.58, 0.58, 0.514, 0.49],
+      inputSpeedRange: [1000, 2500],
+      thrust: 90
+    });
+    const data = createMockData([hcq700]);
+    const result = autoSelectGearbox(
+      { motorPower: 735, motorSpeed: 1350, targetRatio: 2.5, thrust: 0 },
+      data,
+      { primeType: 'diesel' }
+    );
+    const inMain = (result.recommendations || []).some(r => r.model === 'HCQ700');
+    expect(inMain).toBe(true);
+  });
+
+  // 2026-05-21 PDF 校准: HCQ700 @ 2.78:1 真实 Ct=0.514, 需求 0.544, 容量不足 → 不在主推荐
+  test('HCQ700 @ 2.78:1 PDF Ct=0.514 < 需求 0.544 → 不在主推荐', () => {
+    const hcq700 = createMockGearbox({
+      model: 'HCQ700', series: 'HCQ',
+      ratios: [1.3, 1.51, 1.75, 2, 2.25, 2.5, 2.78, 2.96],
+      transferCapacity: [0.58, 0.58, 0.58, 0.58, 0.58, 0.58, 0.514, 0.49],
+      inputSpeedRange: [1000, 2500],
+      thrust: 90
+    });
+    const gcGearbox = createMockGearbox({
+      model: 'GC52.59', series: 'GC',
+      ratios: [2.78], transferCapacity: [0.6],
+      inputSpeedRange: [1000, 2200]
+    });
+    const data = createMockData([hcq700, gcGearbox]);
+    const result = autoSelectGearbox(
+      { motorPower: 735, motorSpeed: 1350, targetRatio: 2.78, thrust: 0 },
+      data,
+      { primeType: 'diesel' }
+    );
+    // 仅断言: 不被错判进主推荐 (其余: nearMatches 行为依赖系列内 success=false 分支返回结构, 另案跟进)
+    const mainRecs = (result.recommendations || []).filter(r => !(r._isNearMatch));
+    const inMainAsPass = mainRecs.some(r => r.model === 'HCQ700' && !(r.isPartialMatch));
+    expect(inMainAsPass).toBe(false);
+  });
+
+  // 2026-05-21 PDF Ct 数据契约: 5 个关键修复模型 ratios+capacities 长度对齐 + 首 Ct 跨多 ratio
+  test('PDF Ct 修复契约: HCQ700/HCQH700/HCQ138/HC1200/HCT2700 真实 caps[0..N] 不再被 1-ratio 错位', () => {
+    // 用真实 src/data 加载 (而非 mock), 验证 patch 已生效
+    const { embeddedGearboxData } = require('../../data/embeddedData');
+    const findModel = (m) => {
+      for (const arr of Object.values(embeddedGearboxData)) {
+        if (Array.isArray(arr)) {
+          const hit = arr.find(g => g.model === m);
+          if (hit) return hit;
+        }
+      }
+      return null;
+    };
+
+    const hcq700 = findModel('HCQ700');
+    expect(hcq700).not.toBeNull();
+    expect(hcq700.transferCapacity[0]).toBe(0.58); // 1.30
+    expect(hcq700.transferCapacity[5]).toBe(0.58); // 2.50 — 关键修复
+    expect(hcq700.transferCapacity[6]).toBe(0.514); // 2.78
+    expect(hcq700.transferCapacity[7]).toBe(0.49); // 2.96
+
+    const hcqh700 = findModel('HCQH700');
+    expect(hcqh700.transferCapacity[5]).toBe(0.58);
+
+    const hcq138 = findModel('HCQ138');
+    expect(hcq138.transferCapacity[4]).toBe(0.11); // 2.48 应为 0.11 不是 0.098
+
+    const hc1200 = findModel('HC1200');
+    expect(hc1200.transferCapacity[7]).toBe(1.03); // 第 8 个 ratio 应仍是 1.03
+
+    const hct2700 = findModel('HCT2700');
+    expect(hct2700.transferCapacity[6]).toBe(2.1); // 第 7 个 ratio 应仍是 2.1
+  });
+});

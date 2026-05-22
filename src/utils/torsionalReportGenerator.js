@@ -551,7 +551,7 @@ export async function generateProfessionalReport(reportData, options = {}) {
 
   if (typeof window !== 'undefined') {
     try {
-      const html2pdf = (await import('html2pdf.js')).default;
+      const html2pdf = (await import(/* webpackChunkName: "html2pdf" */ 'html2pdf.js')).default;
       const element = document.createElement('div');
       element.innerHTML = sanitizeHtml(html);
       document.body.appendChild(element);

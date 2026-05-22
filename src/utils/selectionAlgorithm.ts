@@ -121,6 +121,7 @@ interface SelectionOptions {
     preferConcentric?: boolean | null;
     needsHighThrust?: boolean;
     propellerType?: 'FPP' | 'CPP' | null;
+    engineType?: 'diesel' | 'electric' | 'none' | null;
   };
   // GW 子系列结构形式过滤（仅对 GW 系列生效；空数组或缺省 = 不限制）
   gwStructuralFilter?: string[];
@@ -268,6 +269,7 @@ interface AutoSelectRequirements {
     preferConcentric?: boolean | null;
     needsHighThrust?: boolean;
     propellerType?: 'FPP' | 'CPP' | null;
+    engineType?: 'diesel' | 'electric' | 'none' | null;
   };
   // GW 子系列结构形式过滤（仅对 GW 系列生效；空数组或缺省 = 不限制）
   gwStructuralFilter?: string[];
@@ -288,6 +290,8 @@ interface AutoSelectRequirements {
 interface InternalSelectionResult extends SelectionResult {
   flexibleCoupling?: CouplingMatchResult | null;
   standbyPump?: PumpMatchResult | null;
+  // 系列内"近似匹配候选" (容量缺/推力不足等), 与 recommendations 平行, 即使系列内有主推荐也保留供上层展示
+  nearMatches?: SelectionRecommendation[];
   engineTorque?: number;
   requiredTransferCapacity?: number;
   enginePower?: number;
@@ -325,6 +329,8 @@ interface InternalSelectionResult extends SelectionResult {
 interface AutoSelectResult extends InternalSelectionResult {
   recommendedType?: string;
   partialMatchCount?: number;
+  // 跨系列"近似匹配候选": 容量缺口/推力不足等, 不进主推荐, 供对比页"余量不足候选"展示
+  nearMatches?: SelectionRecommendation[];
   allResults?: InternalSelectionResult[];
   _meta?: {
     calculationTime: string;
@@ -884,12 +890,17 @@ export const selectGearbox = (
 
     // 系列特性过滤（替代旧的离合器硬编码过滤）
     // 向后兼容: hasClutch → seriesRequirements.needsClutch
-    const effectiveSeriesReqs = options.seriesRequirements || (
-      (options as any).hasClutch != null
-        ? { needsClutch: (options as any).hasClutch }
-        : null
-    );
-    if (effectiveSeriesReqs) {
+    // 新增: primeType (diesel/electric/none) → seriesRequirements.engineType, 用于 DT 电推系列硬过滤
+    const baseSeriesReqs = options.seriesRequirements || {};
+    const effectiveSeriesReqs: any = { ...baseSeriesReqs };
+    if ((options as any).hasClutch != null && baseSeriesReqs.needsClutch == null) {
+      effectiveSeriesReqs.needsClutch = (options as any).hasClutch;
+    }
+    const optPrimeType = (options as any).primeType;
+    if (optPrimeType && optPrimeType !== 'none' && !baseSeriesReqs.engineType) {
+      effectiveSeriesReqs.engineType = optPrimeType;
+    }
+    if (Object.keys(effectiveSeriesReqs).length > 0) {
       const capMatch = matchesSeriesRequirements(gearbox.model, effectiveSeriesReqs);
       if (!capMatch.matched) {
         DEBUG_LOG(`Skipping ${gearbox.model}: 系列特性不匹配 - ${capMatch.reasons.join('; ')}`);
@@ -1738,8 +1749,61 @@ export const selectGearbox = (
     return aOptimalMargin - bOptimalMargin;
   });
 
-  // --- Prepare result ---
-  const recommendations = scoredGearboxes;
+  // 2026-05-12: 过余量降权 — 当存在 sweet spot (10-30%) 时, >40% 余量降 8 分
+  const hasSweetSpot = scoredGearboxes.some(g => g.capacityMargin >= 10 && g.capacityMargin <= 30);
+  if (hasSweetSpot) {
+    scoredGearboxes.forEach(g => {
+      if (g.capacityMargin > 40) {
+        (g as any)._overSpec = true;
+        g.score = Math.max(0, (g.score || 0) - 8);
+      }
+    });
+    scoredGearboxes.sort((a, b) => (b.score || 0) - (a.score || 0));
+  }
+
+  // 2026-05-12: GW 同结构家族去重 — 同 (核心数字+变体后缀 P/A/B) 仅留最优 suffix (C>S>L>H>K>D>Q)
+  // 评分相近 (≤2) 时按 suffix 优先级取, 评分悬殊以分数为准
+  if (gearboxType === 'GW') {
+    const GW_SUFFIX_PRIORITY: Record<string, number> = { C: 1, S: 2, L: 3, H: 4, K: 5, D: 6, Q: 7 };
+    const familyMap = new Map<string, any>();
+    const familyAlternatives = new Map<string, string[]>();
+    for (const g of scoredGearboxes) {
+      const fm = (g.model || '').match(/^GW([CDHKLSQ])(\d+(?:\.\d+)?)([AB]?P?)$/);
+      if (!fm) continue; // 非标准 GW 子家族 (如 2GWH 双机并车) 不去重
+      const familyKey = fm[2] + (fm[3] || '');
+      const suffix = fm[1];
+      const existing = familyMap.get(familyKey);
+      if (!existing) {
+        familyMap.set(familyKey, g);
+      } else {
+        const existingSuffix = (existing.model || '').match(/^GW([CDHKLSQ])/)?.[1] || '';
+        const existingPriority = GW_SUFFIX_PRIORITY[existingSuffix] || 99;
+        const currentPriority = GW_SUFFIX_PRIORITY[suffix] || 99;
+        const scoreDiff = (g.score || 0) - (existing.score || 0);
+        const winnerIsCurrent =
+          scoreDiff > 2 || (Math.abs(scoreDiff) <= 2 && currentPriority < existingPriority);
+        if (winnerIsCurrent) {
+          const alts = familyAlternatives.get(familyKey) || [];
+          alts.push(existing.model);
+          (existing as any)._gwDeduped = true;
+          familyAlternatives.set(familyKey, alts);
+          familyMap.set(familyKey, g);
+        } else {
+          const alts = familyAlternatives.get(familyKey) || [];
+          alts.push(g.model);
+          (g as any)._gwDeduped = true;
+          familyAlternatives.set(familyKey, alts);
+        }
+      }
+    }
+    familyMap.forEach((g, key) => {
+      const alts = familyAlternatives.get(key);
+      if (alts && alts.length > 0) (g as any)._gwSiblings = alts;
+    });
+  }
+
+  // --- Prepare result (过滤 GW 去重型号) ---
+  const recommendations = scoredGearboxes.filter(g => !(g as any)._gwDeduped);
   const topRecommendation = recommendations.length > 0 ? recommendations[0] : null;
 
   let finalCouplingResult: CouplingMatchResult | null = null;
@@ -1781,6 +1845,8 @@ export const selectGearbox = (
       power: enginePower,
       speed: engineSpeed
     } as SelectionRecommendation)),
+    // 即使系列内有主推荐, 仍 surface nearMatches 给上层 (autoSelectGearbox) 跨系列展示"余量不足候选"
+    nearMatches: nearMatches as unknown as SelectionRecommendation[],
     flexibleCoupling: finalCouplingResult,
     standbyPump: finalPumpResult,
     engineTorque: engineTorque_Nm,
@@ -1994,6 +2060,9 @@ export const autoSelectGearbox = (
   logger.log('将搜索以下齿轮箱类型:', availableTypes);
 
   let allRecommendations: SelectionRecommendation[] = [];
+  // 跨系列收集"近似匹配候选" — 容量缺口或推力不足等 partial match, 不按 score 阈值过滤
+  // 用于在对比页底部"余量不足候选"展示, 不污染主推荐
+  const allNearMatches: SelectionRecommendation[] = [];
   const allResults: InternalSelectionResult[] = [];
 
   // 1. Run selection for each available type
@@ -2017,6 +2086,19 @@ export const autoSelectGearbox = (
         ? { needsClutch: (options as any).hasClutch }
         : null
     );
+
+    // 不论 success 与否, 都收集系列内 nearMatches (容量缺/推力不足等 partial match)
+    // 关键: 系列内有主推荐时, 旧逻辑会丢弃 nearMatches; 现在 surface 出来给对比页"余量不足候选"展示
+    if (result.nearMatches && result.nearMatches.length > 0) {
+      result.nearMatches.forEach(nm => {
+        (nm as any).originalType = type;
+        (nm as any)._isNearMatch = true;
+        if (!(nm as any).failureReason) {
+          (nm as any).failureReason = '近似匹配 (容量或推力余量不足)';
+        }
+        allNearMatches.push(nm);
+      });
+    }
 
     if (result.success && result.recommendations.length > 0) {
       logger.log(`${type} 系列找到 ${result.recommendations.length} 个推荐`);
@@ -2071,6 +2153,7 @@ export const autoSelectGearbox = (
         if (topPartialMatches.length > 0) {
           allRecommendations.push(...topPartialMatches);
         }
+        // 注: 该系列的 nearMatches 已在 forEach 入口的 result.nearMatches 块统一收集, 此处不再重复
       }
     }
   });
@@ -2178,11 +2261,37 @@ export const autoSelectGearbox = (
 
   const finalPumpResult = selectStandbyPump(bestOverallGearbox.model, appData.standbyPumps);
 
+  // 去重 allNearMatches:
+  // (a) 已经在主 recommendations 里的不重复列入
+  // (b) 同 model 多次出现取容量缺口最小的那条
+  const mainModelSet = new Set(allRecommendations.map(r => r.model));
+  const dedupNearMap = new Map<string, SelectionRecommendation>();
+  for (const nm of allNearMatches) {
+    if (!nm.model || mainModelSet.has(nm.model)) continue;
+    const existing = dedupNearMap.get(nm.model);
+    if (!existing) {
+      dedupNearMap.set(nm.model, nm);
+    } else {
+      const eMargin = typeof existing.capacityMargin === 'number' ? existing.capacityMargin : -100;
+      const nMargin = typeof nm.capacityMargin === 'number' ? nm.capacityMargin : -100;
+      if (nMargin > eMargin) dedupNearMap.set(nm.model, nm);
+    }
+  }
+  const nearMatchesFiltered = Array.from(dedupNearMap.values())
+    .sort((a, b) => {
+      // 容量缺口小的优先 (margin 越大越好, 越接近 0 越好)
+      const aMargin = typeof a.capacityMargin === 'number' ? a.capacityMargin : -100;
+      const bMargin = typeof b.capacityMargin === 'number' ? b.capacityMargin : -100;
+      return bMargin - aMargin;
+    })
+    .slice(0, 10);
+
   // 5. Build the final result object
   const finalResult: AutoSelectResult = {
     success: true,
     message: `自动选型完成，最佳推荐来自 ${bestType} 系列。`,
     recommendations: allRecommendations,
+    nearMatches: nearMatchesFiltered,
     flexibleCoupling: finalCouplingResult as unknown as CouplingMatchResult,
     standbyPump: finalPumpResult as unknown as PumpMatchResult,
     engineTorque: engineTorque_Nm,

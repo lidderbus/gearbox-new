@@ -16,8 +16,8 @@ import {
   calculateAdaptiveTolerances
 } from '../config/selectionConfig';
 
-// localStorage key
-const STORAGE_KEY = 'gearbox_selection_config';
+// localStorage key（v2: minCapacityMargin 默认从 10 → 0，强制旧 localStorage 重置）
+const STORAGE_KEY = 'gearbox_selection_config_v2';
 
 // 初始状态
 const initialState = {

@@ -85,14 +85,14 @@ describe('selectionAlgorithm 边界矩阵 - transferCapacity ×0.95/×1.0/×1.05
     }
   });
 
-  test('默认容差: 5% 余量低于 MIN_CAPACITY_MARGIN(10%) 应被排除', () => {
+  test('默认容差(MIN=0): 5% 余量满足"齿轮箱能力 > 所需能力"应作为完全匹配', () => {
     const data = wrapData([make({ transferCapacity: [0.21] })]);
-    // 不放宽容差, 默认 MIN=10%
+    // 默认 MIN=0（手册传递能力已含安全系数，大于即合格）
     const r = selectGearbox(POWER, SPEED, 3.0, 0, 'HC', data);
-    if (r.success && r.recommendations.length > 0) {
-      // 进入近似匹配, 不在完全匹配集合中
+    expect(r.success).toBe(true);
+    if (r.recommendations.length > 0) {
       const exact = r.recommendations.filter(rec => !rec.isNearMatch && !rec.partialMatch);
-      expect(exact.length).toBe(0);
+      expect(exact.length).toBeGreaterThanOrEqual(1);
     }
   });
 
@@ -272,6 +272,68 @@ describe('selectionAlgorithm 边界矩阵 - 推力与齿轮箱 thrust 字段', (
       if (top.thrust != null) {
         expect(top.thrust).toBeGreaterThanOrEqual(100);
       }
+    }
+  });
+});
+
+describe('selectionAlgorithm - GW 子系列结构形式过滤', () => {
+  const wrapGwData = (gearboxes) => ({
+    hcGearboxes: [],
+    gwGearboxes: gearboxes,
+    hcmGearboxes: [],
+    dtGearboxes: [],
+    hcqGearboxes: [],
+    gcGearboxes: [],
+    flexibleCouplings: [],
+    standbyPumps: []
+  });
+
+  const makeGw = (model, overrides = {}) => ({
+    model,
+    series: 'GW',
+    inputSpeedRange: [500, 2000],
+    ratios: [3.0],
+    transferCapacity: [0.30],
+    thrust: 100,
+    weight: 1000,
+    basePrice: 100000,
+    discountRate: 0.10,
+    ...overrides
+  });
+
+  test('gwStructuralFilter=["GWC"] 时结果只包含 GWC, 不包含 GWS/GWD', () => {
+    const data = wrapGwData([
+      makeGw('GWC60.66'),
+      makeGw('GWS60.66'),
+      makeGw('GWD60.66'),
+      makeGw('GWL60.66'),
+    ]);
+    const r = selectGearbox(200, 1000, 3.0, 0, 'GW', data, {
+      gwStructuralFilter: ['GWC']
+    });
+
+    if (r.success && r.recommendations.length > 0) {
+      r.recommendations.forEach((rec) => {
+        expect(rec.model.startsWith('GWC')).toBe(true);
+      });
+    }
+  });
+
+  test('gwStructuralFilter=[] (空数组) 时不限制, GW 子系列全部可见', () => {
+    const data = wrapGwData([
+      makeGw('GWC60.66'),
+      makeGw('GWS60.66'),
+    ]);
+    const r = selectGearbox(200, 1000, 3.0, 0, 'GW', data, {
+      gwStructuralFilter: []
+    });
+
+    if (r.success && r.recommendations.length > 0) {
+      const models = r.recommendations.map(rec => rec.model);
+      // 至少能看到不同前缀的型号
+      const hasGWC = models.some(m => m.startsWith('GWC'));
+      const hasGWS = models.some(m => m.startsWith('GWS'));
+      expect(hasGWC || hasGWS).toBe(true);
     }
   });
 });

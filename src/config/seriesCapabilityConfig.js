@@ -131,6 +131,25 @@ export function matchesSeriesRequirements(model, requirements) {
     };
   }
 
+  // 原动机类型 → 电推/非电推匹配 (硬过滤)
+  // diesel: 柴油机原动机, 排除 DT 等电推专用系列
+  // electric: 电动机原动机, 仅允许电推专用系列 (DT)
+  // none / undefined: 不过滤
+  if (requirements.engineType === 'diesel' && cap.isElectricDrive) {
+    return {
+      matched: false,
+      reasons: [`${cap.prefix}系列电推专用，不适配柴油机原动机`],
+      score: 0
+    };
+  }
+  if (requirements.engineType === 'electric' && !cap.isElectricDrive) {
+    return {
+      matched: false,
+      reasons: [`${cap.prefix}系列非电推（有离合/有倒顺），不适配电动机原动机`],
+      score: 0
+    };
+  }
+
   // --- 软评分 ---
 
   // 离合匹配评分

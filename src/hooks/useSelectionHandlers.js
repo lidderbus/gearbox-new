@@ -400,7 +400,9 @@ const useSelectionHandlers = ({
             shaftArrangement: shaftFilter,
             // 系列特性需求（替代旧的 hasClutch）
             seriesRequirements,
-            hasClutch: requirementData.hasClutch
+            hasClutch: requirementData.hasClutch,
+            // GW 子系列结构形式过滤（仅 GW 受影响, 非 GW 候选直通）
+            gwStructuralFilter: requirementData.gwStructuralFilter
           },
           appDataState
         );
@@ -435,7 +437,9 @@ const useSelectionHandlers = ({
             shaftArrangement: shaftFilter,
             // 系列特性需求（替代旧的 hasClutch）
             seriesRequirements,
-            hasClutch: requirementData.hasClutch
+            hasClutch: requirementData.hasClutch,
+            // GW 子系列结构形式过滤（指定系列模式下，对非 GW 系列调用是 no-op）
+            gwStructuralFilter: requirementData.gwStructuralFilter
           }
         );
 
