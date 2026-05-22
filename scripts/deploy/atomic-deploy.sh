@@ -111,6 +111,15 @@ build_project() {
         exit 1
     fi
     echo -e "${GREEN}✓ 单元测试通过${NC}"
+
+    # 2026-05-21 新增: PDF Ct 数据契约检查 — 任何 Type A 错位即阻止部署
+    echo -e "${YELLOW}[2.5/5] PDF Ct 数据契约审计...${NC}"
+    if ! node scripts/audit-ct-pdf-vs-db.js --ci; then
+        echo -e "${RED}✗ PDF Ct 数据契约不通过 — 中止部署${NC}" >&2
+        echo -e "${YELLOW}  详见 audit-reports/ct-discrepancy-*.csv${NC}" >&2
+        exit 1
+    fi
+    echo -e "${GREEN}✓ PDF Ct 数据契约通过${NC}"
 }
 
 verify_build_artifacts() {

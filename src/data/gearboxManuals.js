@@ -436,4 +436,72 @@ export function getAllManuals() {
   return result;
 }
 
+/**
+ * 2026-05-22: 官方 2025-05 选型手册 (32 页总册)
+ * 与 erp-dashboard /docs/manuals/ 共享部署位置 (绝对路径 /docs/...)
+ * 区别于上方 35 个产品级 PDF (单型号说明书): 这本是全 9 系列的官方选型手册
+ *
+ * 数据来源: 杭州前进齿轮箱集团股份有限公司 2025-05 官方选型手册
+ * 章节页码: 经 pdftotext -layout 校验, 1-based
+ */
+export const OFFICIAL_SELECTION_MANUAL = {
+  path: '/docs/manuals/%E6%9D%AD%E9%BD%BF%E5%8E%82%E9%80%89%E5%9E%8B%E6%89%8B%E5%86%8C2025%E7%89%885%E6%9C%88%E7%89%88.pdf',
+  filename: '杭齿厂选型手册2025版5月版.pdf',
+  title: '杭齿前进 2025-05 官方选型手册',
+  subtitle: '9 大系列原始参数表 · 32 页',
+  version: '2025-05',
+  pages: 32,
+  fileSize: '17.6MB',
+  publisher: '杭州前进齿轮箱集团股份有限公司',
+  publishDate: '2025-05',
+  // 9 大章节 → 1-based 起始页码 (pdftotext -layout 校验)
+  chapterPages: {
+    '中小功率': 1,
+    '中小功率系列': 1,
+    '轻型高速': 19,
+    '轻型高速系列': 19,
+    'GW': 27,
+    'GW族系': 27,
+    'GW族系系列': 27,
+    '双速': 35,
+    '船用双速系列': 35,
+    'GC': 41,
+    'GC配变距桨': 41,
+    'GC配变距桨系列': 41,
+    '2GWH': 45,
+    '2GWH双机并车系列': 45,
+    '电推': 47,
+    '电推系列': 47,
+    '电推系列系列': 47,
+    'HCL': 49,
+    'HCL液压离合器系列': 49,
+    '混合动力': 50,
+    '混合动力系列': 50
+  }
+};
+
+/**
+ * 按 series_code 或 series 字符串查官方手册章节起始页
+ * @param {string} series - 系列代号 (HC/GW/GC/DT/HCL...) 或全名
+ * @returns {number|null} 1-based 页码, 找不到返回 null
+ */
+export function getOfficialManualPage(series) {
+  if (!series) return null;
+  const map = OFFICIAL_SELECTION_MANUAL.chapterPages;
+  if (map[series] != null) return map[series];
+  for (const key of Object.keys(map)) {
+    if (series.indexOf(key) === 0) return map[key];
+  }
+  return null;
+}
+
+/**
+ * 拼接带 #page 锚的 PDF URL
+ * @param {number|null} page - 1-based 页码; null 跳首页
+ */
+export function getOfficialManualUrl(page) {
+  const base = OFFICIAL_SELECTION_MANUAL.path;
+  return page ? `${base}#page=${page}` : base;
+}
+
 export default gearboxManuals;

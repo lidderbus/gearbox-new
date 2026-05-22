@@ -97,6 +97,15 @@ build_project() {
         npm install
     fi
 
+    if [ -f scripts/audit-ct-pdf-vs-db.js ]; then
+        echo -e "${YELLOW}▶ PDF Ct 对账 (audit-ct-pdf-vs-db.js --ci)...${NC}"
+        if ! node scripts/audit-ct-pdf-vs-db.js --ci; then
+            echo -e "${RED}✗ PDF Ct 对账失败 (Type A/B 错位)。修复 src/data/completeGearboxData.js 后重试。${NC}"
+            exit 1
+        fi
+        echo -e "${GREEN}✓ PDF Ct 对账通过${NC}"
+    fi
+
     CI=false npm run build
 
     if [ $? -eq 0 ]; then

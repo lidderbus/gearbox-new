@@ -1,0 +1,12 @@
+{
+  "stats": {
+    "typeA": 0,
+    "typeB": 0,
+    "typeC": 0
+  },
+  "diffs": {
+    "typeA": [],
+    "typeB": [],
+    "typeC": []
+  }
+}
