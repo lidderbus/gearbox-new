@@ -4,6 +4,7 @@ import { useSwipeable } from 'react-swipeable';
 import { Collapse } from 'react-bootstrap';
 import './SwipeableResultCards.css';
 import { calculatePowerRange } from '../../utils/gearboxDataEnhancer';
+import { formatPriceWithFallback } from '../../utils/priceFormatter';
 
 /**
  * Swipeable result cards for mobile view
@@ -264,12 +265,10 @@ const SwipeableResultCards = ({
                             <span className="detail-row-label">重量</span>
                             <span className="detail-row-value">{gearbox.weight || '-'} kg</span>
                           </div>
-                          {gearbox.price && (
-                            <div className="detail-row">
-                              <span className="detail-row-label">参考价格</span>
-                              <span className="detail-row-value">¥{gearbox.price.toLocaleString()}</span>
-                            </div>
-                          )}
+                          <div className="detail-row">
+                            <span className="detail-row-label">参考价格</span>
+                            <span className="detail-row-value">{formatPriceWithFallback(gearbox)}</span>
+                          </div>
                         </div>
                       </div>
                     </Collapse>

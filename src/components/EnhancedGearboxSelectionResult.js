@@ -12,11 +12,13 @@ import { DataCompletenessBadge } from './selection/GearboxScorer';
 import { useIsMobile } from '../hooks/useIsMobile';
 import SwipeableResultCards from './responsive/SwipeableResultCards';
 import { getManualInfo } from '../data/gearboxManuals';
+// 2026-05-23 BUG FIX: P2-11 实际应改这个 Enhanced 组件 (SelectionResultTab dynamic-import 用), 而非 dead-code GearboxSelectionResult
+import { modelPdfPage, isExactModelPage, MANUAL_PDF_URL } from '../utils/pdfAnchor';
 import { formatPrice, getDisplayPrice, getPriceModeLabel, isPriceMissing, getPriceBadge } from '../utils/priceFormatter';
 import { getPriceMode, setPriceMode, PRICE_MODE } from '../data/priceDiscount';
 import MarginIndicator from './selection/MarginIndicator';
 import RecommendationReasonCard from './selection/RecommendationReasonCard';
-import CapacityCalculationCard from './selection/CapacityCalculationCard';
+import SelectionBasisCard from './selection/SelectionBasisCard';
 import StructuralFormFilter from './selection/StructuralFormFilter';
 import { getGwSubSeries, GW_SUB_SERIES_META, GW_SUB_SERIES_LIST } from '../utils/gwStructuralForm';
 import RelaxationSuggestions from './selection/RelaxationSuggestions';
@@ -275,7 +277,7 @@ const EnhancedGearboxSelectionResult = ({
         '减速比偏差(%)': gearbox.ratioDiffPercent || 0,
         '推力(kN)': gearbox.thrust || 0,
         '重量(kg)': gearbox.weight || 0,
-        '价格(元)': gearbox.marketPrice || 0,
+        '价格(元)': getDisplayPrice(gearbox) || 0,
         ...metrics,
         isSelected: gearbox.model === selectedGearbox.model,
         // 添加备用泵需求判断
@@ -527,7 +529,7 @@ const EnhancedGearboxSelectionResult = ({
                         </Badge>
                       )}
                     </h5>
-                    <div className="d-flex align-items-center gap-2">
+                    <div className="d-flex align-items-center gap-2 flex-wrap">
                       <small style={{ color: '#666' }}>点击图片查看大图和技术图纸</small>
                       {getManualInfo(selectedGearbox.model) && (
                         <Button
@@ -540,6 +542,24 @@ const EnhancedGearboxSelectionResult = ({
                           查看说明书
                         </Button>
                       )}
+                      {/* 2026-05-23 P2-11 真实接入: 跳官方 2025-05 选型手册对应章节 (32 页 PDF) */}
+                      {(() => {
+                        const pg = modelPdfPage(selectedGearbox.model, selectedGearbox.series_code || selectedGearbox.series);
+                        if (!pg) return null;
+                        const exact = isExactModelPage(selectedGearbox.model);
+                        return (
+                          <Button
+                            variant="outline-warning"
+                            size="sm"
+                            onClick={() => window.open(MANUAL_PDF_URL + '#page=' + pg, '_blank', 'noopener,noreferrer')}
+                            title={exact ? `跳官方 2025-05 选型手册 ${selectedGearbox.model} 精确页 p${pg}` : `跳官方 2025-05 选型手册 章节起始页 p${pg}`}
+                          >
+                            <i className="bi bi-bookmark-check me-1"></i>
+                            官方手册 p{pg}
+                            {exact && <span style={{ background: 'rgba(52,211,153,0.25)', color: '#059669', fontSize: '0.7em', padding: '0 4px', borderRadius: 4, marginLeft: 4 }}>✓</span>}
+                          </Button>
+                        );
+                      })()}
                     </div>
                   </div>
                 </div>
@@ -590,10 +610,9 @@ const EnhancedGearboxSelectionResult = ({
                   targetRatio={result.targetRatio}
                 />
                 <DataCompletenessCard gearbox={selectedGearbox} />
-                <CapacityCalculationCard
-                  power={result.enginePower}
-                  speed={result.engineSpeed}
-                  gearboxCapacity={selectedGearbox.selectedCapacity}
+                <SelectionBasisCard
+                  selectedGearbox={selectedGearbox}
+                  result={result}
                 />
                 <Table striped bordered style={{ backgroundColor: colors?.card || 'white', color: colors?.text || '#333', borderColor: colors?.border || '#ddd' }}>
                   <tbody>

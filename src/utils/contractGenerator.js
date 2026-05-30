@@ -6,6 +6,7 @@ import { saveAs } from 'file-saver';
 // import { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, HeadingLevel, AlignmentType, WidthType, BorderStyle } from 'docx';
 // import NotoSansSCFont from '../fonts/NotoSansSC-Regular-normal';
 import { convertToChinaNum } from './numberConverter'; // 假设你有一个数字转中文的工具
+import { genDocNumber } from './documentNumber';
 
 // 动态加载 jsPDF
 async function loadJsPDF() {
@@ -48,7 +49,7 @@ export const generateContract = (selectionResult, projectInfo, selectedComponent
 
   const { gearbox, coupling, pump } = selectedComponents;
   const date = new Date();
-  const contractNumber = `SH${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
+  const contractNumber = genDocNumber('contract', date);
   
   // 计算交付日期（默认为3个月后）
   const deliveryDate = new Date(date);

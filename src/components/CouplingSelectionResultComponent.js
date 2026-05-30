@@ -4,6 +4,7 @@ import { Card, Row, Col, Table, Badge, Button, Alert, ProgressBar } from 'react-
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { getSeriesInfo, getSeriesImages } from '../data/couplingSeriesInfo';
 import { getMatchingGearboxes } from '../data/couplingGearboxMatching';
+import { formatPriceWithFallback } from '../utils/priceFormatter';
 
 /**
  * 联轴器选型结果组件 - 增强版
@@ -182,7 +183,7 @@ const CouplingSelectionResultComponent = ({
                     </tr>
                     <tr>
                       <td>价格</td>
-                      <td>{(couplingResult.marketPrice || 0).toLocaleString()} 元</td>
+                      <td>{formatPriceWithFallback(couplingResult)}</td>
                     </tr>
                     {couplingResult.score && (
                       <tr>

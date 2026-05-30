@@ -6,6 +6,7 @@ import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recha
 import ProductThumbnail from '../ProductThumbnail';
 import EquipmentInfoCard from '../EquipmentInfoCard';
 import ValidationWarnings from './ValidationWarnings';
+import { formatPriceWithFallback } from '../../utils/priceFormatter';
 
 /**
  * 高弹联轴器信息展示组件
@@ -98,7 +99,7 @@ const CouplingInfoSection = ({
               </tr>
               <tr>
                 <td>价格</td>
-                <td>{(couplingResult.marketPrice || 0).toLocaleString()} 元</td>
+                <td>{formatPriceWithFallback(couplingResult)}</td>
               </tr>
             </tbody>
           </Table>

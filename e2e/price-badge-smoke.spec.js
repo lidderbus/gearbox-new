@@ -53,11 +53,12 @@ test.describe.configure({ mode: 'serial' });
 test.setTimeout(90000);
 
 test.describe('v59 询价徽章烟测', () => {
-  test('版本号: asset-manifest 含 main.45b12a10.js', async ({ request }) => {
+  test('版本号: asset-manifest 含有效 main.<hash>.js (pattern, 不再钉死单一 hash)', async ({ request }) => {
     const resp = await request.get('./asset-manifest.json');
     expect(resp.ok()).toBeTruthy();
     const data = await resp.json();
-    expect(data.files['main.js']).toContain('main.45b12a10.js');
+    // 钉死具体 hash 会在每次构建后失效; 改为校验存在有效的 main.<hash>.js 引用
+    expect(data.files['main.js']).toMatch(/main\.[a-f0-9]+\.js/);
   });
 
   test('登录可达主页', async ({ page }) => {

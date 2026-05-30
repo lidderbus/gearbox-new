@@ -7,6 +7,7 @@
 // import { saveAs } from 'file-saver';
 // import * as XLSX from 'xlsx';
 import { loadXLSX, loadJsPDF, loadFileSaver } from './dynamicImports';
+import { genDocNumber } from './documentNumber';
 import { getGWPackagePriceConfig, checkPackageMatch } from '../data/packagePriceConfig';
 import { getPriceMode, PRICE_MODE } from '../data/priceDiscount';
 // 导入增强版备用泵需求判断函数
@@ -118,7 +119,7 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
     const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     const expiryDate = new Date(today); expiryDate.setDate(today.getDate() + finalOptions.validityDays);
     const formattedExpiryDate = `${expiryDate.getFullYear()}-${String(expiryDate.getMonth() + 1).padStart(2, '0')}-${String(expiryDate.getDate()).padStart(2, '0')}`;
-    const quotationNumber = `Q-${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(Math.floor(Math.random() * 10000)).toString().padStart(4, '0')}`;
+    const quotationNumber = genDocNumber('quotation', today);
 
     const items = [];
     let calculatedTotalAmount = 0;
@@ -894,8 +895,25 @@ export async function exportQuotationToPDF(quotation, filename = '报价单') {
     // 创建PDF文档
     const doc = new jsPDF('p', 'mm', 'a4');
     
-    // 设置字体
-    doc.setFont('helvetica', 'normal');
+    // 注册中文字体(NotoSansSC), 避免报价单 PDF 中文乱码; 加载失败则回退默认字体
+    let zhFontReady = false;
+    try {
+        const fontModule = await import(/* webpackChunkName: "fonts" */ '../fonts/NotoSansSC-Regular-normal');
+        const NotoSansSCFont = fontModule && fontModule.default;
+        if (NotoSansSCFont && NotoSansSCFont.font) {
+            doc.addFileToVFS('NotoSansSC-Regular-normal.ttf', NotoSansSCFont.font);
+            doc.addFont('NotoSansSC-Regular-normal.ttf', 'NotoSansSC', 'normal');
+            doc.addFont('NotoSansSC-Regular-normal.ttf', 'NotoSansSC', 'bold');
+            doc.setFont('NotoSansSC');
+            zhFontReady = true;
+        }
+    } catch (e) {
+        console.warn('[quotationGenerator] 中文字体未加载, 报价单 PDF 中文可能乱码, 已回退默认字体', e);
+    }
+    if (!zhFontReady) {
+        doc.setFont('helvetica', 'normal');
+    }
+    const pdfFont = zhFontReady ? 'NotoSansSC' : 'helvetica';
     
     // 标题
     doc.setFontSize(20);
@@ -972,6 +990,7 @@ export async function exportQuotationToPDF(quotation, filename = '报价单') {
         startY: 85,
         theme: 'grid',
         styles: {
+            font: pdfFont,
             fontSize: 9,
             cellPadding: 2
         },
@@ -994,6 +1013,8 @@ export async function exportQuotationToPDF(quotation, filename = '报价单') {
     
     // 表格结束后的Y坐标
     const finalY = doc.lastAutoTable.finalY || 180;
+    // autoTable 可能重置字体, 重新指定中文字体, 防止后续中文(大写金额/报价说明)乱码
+    doc.setFont(pdfFont);
     
     // 大写金额
     doc.setFontSize(10);

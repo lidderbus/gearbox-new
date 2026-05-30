@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { Card, Badge, Row, Col } from 'react-bootstrap';
+import { getDisplayPrice } from '../../utils/priceFormatter';
 
 /**
  * Get margin rating info
@@ -30,11 +31,13 @@ const getRatioRating = (diffPercent) => {
 /**
  * Get price rank among all recommendations
  */
-const getPriceRank = (price, allRecommendations) => {
+const getPriceRank = (gearbox, allRecommendations) => {
+  // 走 getDisplayPrice 统一兜底(含 GW 公式/去后缀反查),避免有价型号被误判为"询价"
+  const price = getDisplayPrice(gearbox);
   if (!price || price <= 0) return { text: '询价', bg: 'secondary', desc: '暂无价格数据' };
   const prices = allRecommendations
-    .filter(r => r.marketPrice > 0)
-    .map(r => r.marketPrice)
+    .map(r => getDisplayPrice(r))
+    .filter(p => p > 0)
     .sort((a, b) => a - b);
   if (prices.length === 0) return { text: '-', bg: 'secondary', desc: '无可比数据' };
   const rank = prices.findIndex(p => p >= price) + 1;
@@ -90,7 +93,7 @@ const RecommendationReasonCard = ({ selectedGearbox, allRecommendations = [], ta
 
   const marginInfo = getMarginRating(selectedGearbox.capacityMargin);
   const ratioInfo = getRatioRating(selectedGearbox.ratioDiffPercent);
-  const priceInfo = getPriceRank(selectedGearbox.marketPrice, allRecommendations);
+  const priceInfo = getPriceRank(selectedGearbox, allRecommendations);
   const thrustInfo = getThrustRating(selectedGearbox);
   const overallInfo = getOverallRating(selectedGearbox.score);
   const scenario = getScenarioSuggestion(selectedGearbox);

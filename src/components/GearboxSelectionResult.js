@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import { Card, Row, Col, Table, Badge, Button, Tabs, Tab, Alert } from 'react-bootstrap';
 import GearboxVisualization from './GearboxVisualization'; // 导入可视化组件
 import RelaxationSuggestions from './selection/RelaxationSuggestions';
+// 2026-05-23 P2-11: 杭齿 2025-05 选型手册 PDF 锚点
+import { modelPdfPage, isExactModelPage, MANUAL_PDF_URL } from '../utils/pdfAnchor';
+import { formatPriceWithFallback } from '../utils/priceFormatter';
 
 const GearboxSelectionResult = ({ 
   result, 
@@ -68,7 +71,31 @@ const GearboxSelectionResult = ({
           <Tab eventKey="details" title="详细参数">
             <Row>
               <Col md={6}>
-                <h5 style={{ color: colors?.headerText || '#333' }}>选中齿轮箱: {selectedGearbox.model}</h5>
+                <h5 style={{ color: colors?.headerText || '#333' }}>
+                  选中齿轮箱: {selectedGearbox.model}
+                  {/* 2026-05-23 P2-11: 跳官方 2025-05 选型手册对应章节 */}
+                  {(() => {
+                    const pg = modelPdfPage(selectedGearbox.model, selectedGearbox.series_code || selectedGearbox.series);
+                    if (!pg) return null;
+                    const exact = isExactModelPage(selectedGearbox.model);
+                    return (
+                      <a
+                        href={MANUAL_PDF_URL + '#page=' + pg}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={exact ? `跳官方 2025-05 选型手册 ${selectedGearbox.model} 精确页 p${pg}` : `跳官方 2025-05 选型手册 章节起始页 p${pg}`}
+                        style={{
+                          marginLeft: 10, fontSize: '0.7em', padding: '2px 8px',
+                          background: 'rgba(202,138,4,0.15)', color: '#a16207',
+                          border: '1px solid rgba(202,138,4,0.4)', borderRadius: 5,
+                          textDecoration: 'none', verticalAlign: 'middle'
+                        }}
+                      >
+                        📖 手册 p{pg}{exact && <span style={{ background: 'rgba(52,211,153,0.25)', color: '#059669', fontSize: '0.85em', padding: '0 4px', borderRadius: 4, marginLeft: 3 }}>✓</span>}
+                      </a>
+                    );
+                  })()}
+                </h5>
                 <Table striped bordered style={{ backgroundColor: colors?.card || 'white', color: colors?.text || '#333', borderColor: colors?.border || '#ddd' }}>
                   <tbody>
                     <tr>
@@ -152,7 +179,7 @@ const GearboxSelectionResult = ({
                     </tr>
                     <tr>
                       <td>价格</td>
-                      <td>{(selectedGearbox.marketPrice || 0).toLocaleString()} 元</td>
+                      <td>{formatPriceWithFallback(selectedGearbox)}</td>
                     </tr>
                     {/* 输入接口信息 */}
                     {selectedGearbox.inputInterfaces && (

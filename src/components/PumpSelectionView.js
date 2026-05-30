@@ -19,7 +19,7 @@ import {
   getPumpCategories,
   getPumpSeriesInfo
 } from '../utils/pumpSelectionAlgorithm';
-import { formatPrice } from '../utils/priceFormatter';
+import { formatPrice, formatPriceWithFallback } from '../utils/priceFormatter';
 import GenericComparisonTable from './common/GenericComparisonTable';
 import {
   UnitsLanguageProvider,
@@ -294,7 +294,7 @@ const PumpSelectionViewInner = ({
               </tr>
               <tr>
                 <td>市场价</td>
-                <td className="text-danger fw-bold">{(pump.marketPrice || 0).toLocaleString()} 元</td>
+                <td className="text-danger fw-bold">{formatPriceWithFallback(pump)}</td>
               </tr>
               {pump.matchInfo && (
                 <tr>

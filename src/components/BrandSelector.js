@@ -154,7 +154,7 @@ const BrandDetailPanel = ({ brandId, themeColors = {} }) => {
             <Row className="mt-1">
               <Col xs={12}>
                 <Badge bg="info" style={{ fontSize: '0.7rem' }}>
-                  数据状态: {config.dataSource === 'estimated' ? '待完善' : '部分导入'}
+                  数据状态: {config.dataSource === 'estimated' ? '估算参数' : '部分数据'}
                 </Badge>
               </Col>
             </Row>
