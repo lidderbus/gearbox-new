@@ -66,6 +66,21 @@ const CompetitorComparisonView = ({
     }
   }, []);
 
+  // 2026-05-31 P1: 联动主选型结果 — 选完型切到竞品对比, 自动带入推荐型号+减速比并查对标竞品
+  // (旧版收 selectionResult prop 却从不用, 用户被迫重新输参/重选杭齿型号)
+  useEffect(() => {
+    if (selectedHangchi) return; // 不覆盖用户已有选择
+    const recs = selectionResult?.success && Array.isArray(selectionResult.recommendations)
+      ? selectionResult.recommendations : null;
+    if (!recs || recs.length === 0) return;
+    const top = recs[0];
+    const r = top.selectedRatio || top.ratio;
+    if (r && !ratio) setRatio(String(typeof r === 'number' ? r.toFixed(2) : r));
+    const match = hangchiData.find(p => p.model === top.model);
+    if (match) handleHangchiSelect(match);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectionResult, hangchiData]);
+
   // 杭齿产品系列列表
   const hangchiSeriesList = useMemo(() => {
     const seriesSet = new Set();
