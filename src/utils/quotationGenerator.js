@@ -200,7 +200,17 @@ export const generateQuotation = (selectionResult, projectInfo, selectedComponen
     
     // 生成齿轮箱项目
     let gearboxRemarks = `速比: ${gearbox.ratio?.toFixed(2) ?? gearbox.selectedRatio?.toFixed(2) ?? 'N/A'}`;
-    
+
+    // 2026-05-31 P1: 报价附选型工程依据 — 让价格有技术绑定 (功率/转速/传递能力余量)
+    const basisParts = [];
+    const _power = gearbox.power ?? selectionResult?.power ?? selectionResult?.requirements?.power;
+    const _speed = gearbox.inputSpeed ?? selectionResult?.speed ?? selectionResult?.requirements?.speed
+        ?? (Array.isArray(gearbox.inputSpeedRange) ? gearbox.inputSpeedRange.join('-') : undefined);
+    if (_power != null) basisParts.push(`功率 ${_power}kW`);
+    if (_speed != null) basisParts.push(`转速 ${_speed}r/min`);
+    if (gearbox.capacityMargin != null) basisParts.push(`传递能力余量 ${Number(gearbox.capacityMargin).toFixed(0)}%`);
+    if (basisParts.length) gearboxRemarks += ` | 选型依据: ${basisParts.join(', ')}`;
+
     // 添加特殊打包价格说明
     if (usingSpecialPackagePrice) {
         gearboxRemarks += ` (采用市场常规打包价)`;
