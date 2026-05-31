@@ -90,7 +90,7 @@ const REFERENCES = {
       { code: 'IACS UR M70', title: 'Steering Gear / Propulsion Steering', usage: '全回转操舵性能要求' },
       { code: 'BV NR 467 Pt C Ch 1', title: 'Machinery — Azimuth Thrusters', usage: 'BV 入级全回转规范' },
     ],
-    note: '系泊推力(Bollard Pull)按 IMO/SOLAS 要求计算,实现见 calculateBollardPull()。',
+    note: '系泊推力(Bollard Pull)优先取型号样本实测值;样本缺失时按行业经验 ~0.13 kN/kW 估算(非 IMO/SOLAS 公式)。所需推力按风载+流载估算。',
   },
   'thruster': {
     standards: [

@@ -163,7 +163,14 @@ const AzimuthThrusterSelector = ({ colors = {}, theme = 'light', onSystemSelect 
                   <tr><td>类型</td><td>{thruster.type === 'z-drive' ? 'Z形传动' : thruster.type === 'l-drive' ? 'L形传动' : '电驱动吊舱'}</td></tr>
                   <tr><td>功率范围</td><td>{thruster.powerRange?.join(' - ')} kW</td></tr>
                   <tr><td>连续推力</td><td>{thruster.thrust?.continuous} kN</td></tr>
-                  <tr><td>系泊推力</td><td><strong>{thruster.thrust?.bollard} kN</strong></td></tr>
+                  {/* 2026-05-31 P1: 系泊推力优先样本值, 缺失时用 calculateBollardPull 经验估算并诚实标注 */}
+                  <tr><td>系泊推力</td><td>
+                    {thruster.thrust?.bollard != null
+                      ? <strong>{thruster.thrust.bollard} kN</strong>
+                      : (thruster.powerRange?.[1]
+                          ? <span><strong>≈{calculateBollardPull(thruster.powerRange[1], thruster.type).toFixed(0)} kN</strong> <Badge bg="secondary">经验估算</Badge></span>
+                          : '—')}
+                  </td></tr>
                   <tr><td>螺旋桨直径</td><td>{thruster.propellerDiameter?.join(' - ')} m</td></tr>
                 </tbody>
               </Table>

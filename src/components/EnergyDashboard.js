@@ -618,6 +618,18 @@ const EnergyDashboard = ({
       </Card.Header>
 
       <Card.Body>
+        {/* 2026-05-31 P1: 显示能效分析所基于的所选齿轮箱, 避免与选型脱节 */}
+        {gearbox && (gearbox.model || gearbox.gearbox?.model) && (
+          <Alert variant="light" className="py-2 mb-3 border">
+            <small>
+              <i className="bi bi-gear me-1"></i>
+              本能效分析基于所选齿轮箱 <strong>{gearbox.model || gearbox.gearbox?.model}</strong>
+              {(gearbox.efficiency || gearbox.gearbox?.efficiency) &&
+                <span>，传动效率 <strong>{(((gearbox.efficiency || gearbox.gearbox?.efficiency) * 100)).toFixed(1)}%</strong></span>}
+              <span className="text-muted ms-2">(传动损耗影响实际推进能耗；EEXI/CII 以主机功率与航速为基准)</span>
+            </small>
+          </Alert>
+        )}
         {/* 输入参数区 */}
         <Row className="mb-4">
           <Col md={12}>
