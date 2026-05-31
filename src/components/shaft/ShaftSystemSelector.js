@@ -22,6 +22,8 @@ import {
   selectSternTubeSeal,
   selectShaftCoupling
 } from '../../utils/shaftSelectionAlgorithm';
+// 2026-05-31 P1: 接入 CCS 规范轴径公式 (此前已存在且有单测, 但 UI 只用粗略估算)
+import { calculateBasicShaftDiameter } from '../../utils/shaftCalculations';
 
 const ShaftSystemSelector = ({ colors = {}, theme = 'light', onSystemSelect }) => {
   // P1-3: 从推进载荷预填(若上游 CPP 已选型)
@@ -59,6 +61,7 @@ const ShaftSystemSelector = ({ colors = {}, theme = 'light', onSystemSelect }) =
 
   // 计算值显示
   const [calculatedDiameter, setCalculatedDiameter] = useState(null);
+  const [ccsDiameter, setCcsDiameter] = useState(null); // 2026-05-31 P1: CCS 规范轴径
   const [calculatedTorque, setCalculatedTorque] = useState(null);
 
   // 浏览模式
@@ -85,6 +88,15 @@ const ShaftSystemSelector = ({ colors = {}, theme = 'light', onSystemSelect }) =
     const diameter = estimateShaftDiameter(parseFloat(power), parseFloat(speed));
     setShaftDiameter(diameter.toString());
     setCalculatedDiameter(diameter);
+
+    // 2026-05-31 P1: 同时按 CCS 规范公式计算 (材料 Rm 默认 600 MPa 船用碳钢, 艉轴/柴油机)
+    try {
+      const ccs = calculateBasicShaftDiameter({ power: parseFloat(power), speed: parseFloat(speed), Rm: 600, shaftType: 'stern', powerSourceType: 'diesel' });
+      setCcsDiameter(ccs);
+    } catch (e) {
+      console.warn('[ShaftSelector] CCS 轴径计算失败', e);
+      setCcsDiameter(null);
+    }
 
     // 同时计算扭矩
     const torque = calculateShaftTorque(parseFloat(power), parseFloat(speed));
@@ -162,12 +174,24 @@ const ShaftSystemSelector = ({ colors = {}, theme = 'light', onSystemSelect }) =
             <Col md={4}>
               <Alert variant="info" className="py-2 mb-2">
                 <small>
-                  <strong>计算轴径</strong><br/>
+                  <strong>估算轴径</strong><br/>
                   <span style={{fontSize: '1.2em'}}>{calculatedDiameter} mm</span><br/>
-                  <span className="text-muted">d = C×(P/n)<sup>1/3</sup></span>
+                  <span className="text-muted">d = C×(P/n)<sup>1/3</sup> (粗估)</span>
                 </small>
               </Alert>
             </Col>
+            {/* 2026-05-31 P1: CCS 规范轴径 (材料/轴型/动力源相关, 更权威) */}
+            {ccsDiameter && (
+              <Col md={4}>
+                <Alert variant="success" className="py-2 mb-2">
+                  <small>
+                    <strong>CCS 规范轴径</strong> <Badge bg="success">规范</Badge><br/>
+                    <span style={{fontSize: '1.2em'}}>{ccsDiameter.diameter} mm</span><br/>
+                    <span className="text-muted" title={ccsDiameter.formula}>艉轴·柴油机·Rm=600MPa (默认)</span>
+                  </small>
+                </Alert>
+              </Col>
+            )}
             <Col md={4}>
               <Alert variant="info" className="py-2 mb-2">
                 <small>
