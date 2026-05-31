@@ -92,9 +92,17 @@ export default function RoleManagement({ colors, theme }) {
     <Container fluid className="py-3">
       <Row className="mb-3">
         <Col><h5><i className="bi bi-shield-lock me-2"></i>角色权限管理</h5>
-          <small className="text-muted">管理用户角色与功能模块访问权限 (数据自动保存)</small>
+          <small className="text-muted">规划用户角色与功能模块访问权限 (配置自动保存)</small>
         </Col>
       </Row>
+
+      {/* 2026-05-31 P0: 本页配置目前仅作权限规划草拟, 尚未接入系统登录鉴权; 加诚实说明避免误以为是生效开关 */}
+      <Alert variant="info" className="py-2">
+        <i className="bi bi-info-circle me-2"></i>
+        本页用于<strong>规划/草拟</strong>角色与模块权限方案，配置保存在本机；
+        <strong>实际登录鉴权与菜单可见性由系统认证模块控制</strong>，本页开关暂不直接生效。
+        如需正式启用基于角色的访问控制，请联系系统管理员对接认证模块。
+      </Alert>
 
       <Row>
         {/* Left: Role list */}

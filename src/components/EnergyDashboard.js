@@ -450,7 +450,7 @@ const EnergyDashboard = ({
     // EEDI计算
     const eediParams = {
       mainEnginePower: enginePower,
-      mainEngineSFC: SFC_REFERENCE.mainEngine.medium,
+      mainEngineSFC: SFC_REFERENCE.mainEngine.mediumSpeed,
       fuelType,
       capacity: parseFloat(capacity),
       speed: parseFloat(speed),
@@ -464,7 +464,7 @@ const EnergyDashboard = ({
     // CII计算 — 基于实际燃油消耗计算年度CO2，不使用EEDI反推
     const ciiAnnualFuelForCO2 = calculateFuelConsumption({
       power: enginePower,
-      sfc: SFC_REFERENCE.mainEngine.medium,
+      sfc: SFC_REFERENCE.mainEngine.mediumSpeed,
       hours: parseFloat(annualHours),
       loadFactor: 0.75
     });
@@ -481,7 +481,7 @@ const EnergyDashboard = ({
     // 燃油消耗 — 使用 calculateFuelConsumption 接收对象参数并返回吨数
     const annualFuel = calculateFuelConsumption({
       power: enginePower,
-      sfc: SFC_REFERENCE.mainEngine.medium,
+      sfc: SFC_REFERENCE.mainEngine.mediumSpeed,
       hours: parseFloat(annualHours),
       loadFactor: 0.75
     });

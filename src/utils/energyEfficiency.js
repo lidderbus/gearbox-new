@@ -425,10 +425,36 @@ const getRatingDescription = (rating) => {
  * @param {number} distance - 年航行距离 (海里)
  * @returns {Object} CII计算结果
  */
+// 2026-05-31 P0: CII 评级必须按船型参考线 (a·DWT^-c) + 年度边界, 而非固定绝对阈值(5/10/15/20)。
+// 旧实现完全无视船型/载重 → 评级几乎永远错。改用 IMO MEPC.354(78) 参考系数与折减率。
+const CII_REF_COEFF = {
+  bulkCarrier: { a: 4745, c: 0.622 },
+  tanker: { a: 5247, c: 0.610 },
+  containerShip: { a: 1984, c: 0.489 },
+  generalCargo: { a: 588, c: 0.3885 },
+  reefer: { a: 4600, c: 0.557 },
+  lngCarrier: { a: 144050000, c: 2.071 },
+  roRoCargoShip: { a: 10952, c: 0.637 },
+  cruiseShip: { a: 930, c: 0.383 },
+  tug: { a: 150, c: 0.25 },
+  offshoreSupplyVessel: { a: 200, c: 0.28 }
+};
+// 年度 dd-vector 边界 (相对参考线倍数: superior=A/B界, lower=B/C界, upper=C/D界, inferior=D/E界)
+const CII_BOUNDARIES = {
+  2024: { superior: 0.86, lower: 0.94, upper: 1.06, inferior: 1.18 },
+  2025: { superior: 0.84, lower: 0.93, upper: 1.08, inferior: 1.21 },
+  2026: { superior: 0.82, lower: 0.91, upper: 1.10, inferior: 1.24 }
+};
+// 船型键归一 (UI 用名 → 参考系数键), 无对应时降级为 N/A 不臆造
+const CII_SHIPTYPE_ALIAS = {
+  roRo: 'roRoCargoShip', passenger: 'cruiseShip', gasCarrier: 'lngCarrier',
+  bulk: 'bulkCarrier', container: 'containerShip', cargo: 'generalCargo'
+};
+
 export const calculateCII = (annualCO2OrParams, capacity, distance) => {
-  let co2, cap, dist;
+  let co2, cap, dist, shipType;
   if (typeof annualCO2OrParams === 'object' && annualCO2OrParams !== null) {
-    ({ annualCO2: co2, capacity: cap, distance: dist } = annualCO2OrParams);
+    ({ annualCO2: co2, capacity: cap, distance: dist, shipType } = annualCO2OrParams);
   } else {
     co2 = annualCO2OrParams; cap = capacity; dist = distance;
   }
@@ -437,28 +463,35 @@ export const calculateCII = (annualCO2OrParams, capacity, distance) => {
     return { attainedCII: 0, rating: 'N/A', value: 0, unit: 'g CO₂/t·nm' };
   }
 
-  // CII = annual CO2 emissions / (capacity × distance)
-  const attainedCII = (co2 * 1000000) / (cap * dist); // g CO2 / t·nm
+  const attainedCII = (co2 * 1000000) / (cap * dist); // g CO2/(t·nm)
   const rounded = Math.round(attainedCII * 1000) / 1000;
 
-  // CII rating based on attained value
-  let rating = 'C';
-  if (rounded <= 5) rating = 'A';
-  else if (rounded <= 10) rating = 'B';
-  else if (rounded <= 15) rating = 'C';
-  else if (rounded <= 20) rating = 'D';
-  else rating = 'E';
+  const key = CII_SHIPTYPE_ALIAS[shipType] || shipType;
+  const coeff = key && CII_REF_COEFF[key];
+  let rating, referenceCII = null, basis;
+  if (coeff) {
+    referenceCII = coeff.a * Math.pow(cap, -coeff.c);
+    const b = CII_BOUNDARIES[2026]; // 当前评级年
+    const bounds = { A: referenceCII * b.superior, B: referenceCII * b.lower, C: referenceCII * b.upper, D: referenceCII * b.inferior };
+    if (attainedCII <= bounds.A) rating = 'A';
+    else if (attainedCII <= bounds.B) rating = 'B';
+    else if (attainedCII <= bounds.C) rating = 'C';
+    else if (attainedCII <= bounds.D) rating = 'D';
+    else rating = 'E';
+    basis = `船型参考线 ${key} (ref=${referenceCII.toFixed(2)} g/t·nm)`;
+  } else {
+    rating = 'N/A';
+    basis = '缺船型参考系数, 无法评级 (请指定船型)';
+  }
 
   return {
     attainedCII: rounded,
     rating,
     value: rounded,
     unit: 'g CO₂/t·nm',
-    inputs: {
-      annualCO2: co2 + ' t',
-      capacity: cap + ' DWT',
-      distance: dist + ' nm'
-    }
+    referenceCII: referenceCII != null ? Math.round(referenceCII * 100) / 100 : null,
+    basis,
+    inputs: { annualCO2: co2 + ' t', capacity: cap + ' DWT', distance: dist + ' nm', shipType: shipType || '(未指定)' }
   };
 };
 

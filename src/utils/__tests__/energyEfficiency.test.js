@@ -205,18 +205,35 @@ describe('evaluateEEDICompliance', () => {
 // CII calculation
 // ============================================================
 describe('calculateCII', () => {
-  test('calculates CII from positional args', () => {
+  // 2026-05-31 P0: CII \u8bc4\u7ea7\u6539\u4e3a\u8239\u578b\u53c2\u8003\u7ebf (a\u00b7DWT^-c) \u800c\u975e\u56fa\u5b9a\u9608\u503c; \u65e0\u8239\u578b\u5219\u8bda\u5b9e\u8fd4\u56de N/A
+  test('computes attained CII from positional args', () => {
     const result = calculateCII(5000, 50000, 100000);
     expect(result.attainedCII).toBeGreaterThan(0);
     expect(result.unit).toBe('g CO\u2082/t\u00b7nm');
     // 5000 * 1e6 / (50000 * 100000) = 1.0
     expect(result.attainedCII).toBeCloseTo(1.0, 2);
-    expect(result.rating).toBe('A'); // <= 5
   });
 
-  test('calculates CII from object params', () => {
-    const result = calculateCII({ annualCO2: 5000, capacity: 50000, distance: 100000 });
-    expect(result.attainedCII).toBeCloseTo(1.0, 2);
+  test('returns N/A rating when ship type missing (no fabrication)', () => {
+    const result = calculateCII(5000, 50000, 100000);
+    expect(result.rating).toBe('N/A');
+    expect(result.basis).toMatch(/\u8239\u578b/);
+  });
+
+  test('rating is ship-type aware (same attained CII \u2192 different reference line)', () => {
+    const bulk = calculateCII({ annualCO2: 5000, capacity: 50000, distance: 100000, shipType: 'bulkCarrier' });
+    const tanker = calculateCII({ annualCO2: 5000, capacity: 50000, distance: 100000, shipType: 'tanker' });
+    expect(bulk.attainedCII).toBeCloseTo(tanker.attainedCII, 2);   // \u540c\u5b9e\u9645 CII
+    expect(bulk.referenceCII).toBeGreaterThan(0);
+    expect(tanker.referenceCII).toBeGreaterThan(0);
+    expect(bulk.referenceCII).not.toBe(tanker.referenceCII);        // \u4f46\u53c2\u8003\u7ebf\u4e0d\u540c
+    expect(['A', 'B', 'C', 'D', 'E']).toContain(bulk.rating);
+  });
+
+  test('ship-type alias resolves (roRo \u2192 roRoCargoShip)', () => {
+    const r = calculateCII({ annualCO2: 5000, capacity: 30000, distance: 100000, shipType: 'roRo' });
+    expect(r.referenceCII).toBeGreaterThan(0);
+    expect(['A', 'B', 'C', 'D', 'E']).toContain(r.rating);
   });
 
   test('returns N/A for zero capacity', () => {
@@ -230,9 +247,9 @@ describe('calculateCII', () => {
     expect(result.rating).toBe('N/A');
   });
 
-  test('high CII gets poor rating', () => {
-    // 100000 * 1e6 / (10000 * 10000) = 1000 => rating E
-    const result = calculateCII(100000, 10000, 10000);
+  test('high attained CII gets poor rating for given ship type', () => {
+    // \u6781\u9ad8\u6392\u653e\u5f3a\u5ea6 \u2192 \u8fdc\u8d85\u53c2\u8003\u7ebf \u2192 E
+    const result = calculateCII({ annualCO2: 100000, capacity: 10000, distance: 10000, shipType: 'bulkCarrier' });
     expect(result.rating).toBe('E');
   });
 });

@@ -3,12 +3,16 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, ListGroup, ProgressBar } from 'react-bootstrap';
 
+// 2026-05-31 P0: keyPattern 必须与各模块真实写入键一致, 否则"成功备份"实为空。
+// 已核实修正: 价格历史 priceHistory→gearbox_price_history (priceHistoryTracker.PRICE_HISTORY_KEY);
+//            项目数据 projects→gearbox_projects (ProjectTracker.STORAGE_KEY)。
+// 合同数据: 本 App 的 ContractView 不落 localStorage(合同存 QuoteDB/IndexedDB), 故标注待 IndexedDB 导出覆盖。
 const DATA_SOURCES = [
   { key: 'quotations', label: '报价数据', storage: 'localStorage', keyPattern: 'gearbox_quotations', icon: 'bi-receipt' },
-  { key: 'contracts', label: '合同数据', storage: 'localStorage', keyPattern: 'contractData', icon: 'bi-file-earmark-text' },
-  { key: 'projects', label: '项目数据', storage: 'localStorage', keyPattern: 'projects', icon: 'bi-kanban' },
+  { key: 'contracts', label: '合同数据 (存于 QuoteDB)', storage: 'IndexedDB', keyPattern: 'QuoteDB', icon: 'bi-file-earmark-text' },
+  { key: 'projects', label: '项目数据', storage: 'localStorage', keyPattern: 'gearbox_projects', icon: 'bi-kanban' },
   { key: 'selection_history', label: '选型历史', storage: 'localStorage', keyPattern: 'selectionHistory', icon: 'bi-clock-history' },
-  { key: 'price_history', label: '价格变更记录', storage: 'localStorage', keyPattern: 'priceHistory', icon: 'bi-currency-yuan' },
+  { key: 'price_history', label: '价格变更记录', storage: 'localStorage', keyPattern: 'gearbox_price_history', icon: 'bi-currency-yuan' },
   { key: 'quotedb', label: '报价数据库(IndexedDB)', storage: 'IndexedDB', keyPattern: 'QuoteDB', icon: 'bi-database' },
   { key: 'settings', label: '系统设置', storage: 'localStorage', keyPattern: 'gearbox_settings', icon: 'bi-gear' },
 ];
