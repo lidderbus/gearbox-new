@@ -26,30 +26,32 @@ import {
 export const findEquivalentCompetitors = (hangchiModel) => {
   if (!hangchiModel) return [];
 
-  // 直接匹配
-  const directMatches = competitorProducts.filter(
-    p => p.equivalentHangchi === hangchiModel
+  // 2026-05-31 P0 修复: 旧版用 `p.equivalentHangchi === hangchiModel` 直接比较, 但数据里 243 条
+  // equivalentHangchi 全是数组 → === 恒 false → 回退到"按型号数字 ±30% 瞎配"的伪匹配。
+  // 改为数组感知精确匹配 (与 competitorData.js 权威版一致), 命中 curated 对标映射。
+  const direct = competitorProducts.filter(p =>
+    p.equivalentHangchi &&
+    (Array.isArray(p.equivalentHangchi)
+      ? p.equivalentHangchi.includes(hangchiModel)
+      : p.equivalentHangchi === hangchiModel)
   );
+  if (direct.length > 0) return direct;
 
-  // 如果没有直接匹配，尝试模糊匹配
-  if (directMatches.length === 0) {
-    // 提取型号中的数字部分
-    const powerMatch = hangchiModel.match(/\d+/);
-    if (powerMatch) {
-      const powerLevel = parseInt(powerMatch[0]);
-      return competitorProducts.filter(p => {
-        const compPowerMatch = p.model.match(/\d+/);
-        if (compPowerMatch) {
-          const compPower = parseInt(compPowerMatch[0]);
-          // 功率级别相近 (±30%)
-          return Math.abs(compPower - powerLevel) / powerLevel <= 0.3;
-        }
-        return false;
-      });
+  // 仅当 curated 映射无命中时, 才退化到功率级近似 (±30%), 并标注来源
+  const powerMatch = hangchiModel.match(/\d+/);
+  if (powerMatch) {
+    const powerLevel = parseInt(powerMatch[0], 10);
+    if (powerLevel > 0) {
+      return competitorProducts
+        .filter(p => {
+          const m = (p.model || '').match(/\d+/);
+          if (!m) return false;
+          return Math.abs(parseInt(m[0], 10) - powerLevel) / powerLevel <= 0.3;
+        })
+        .map(p => ({ ...p, _approxMatch: true }));
     }
   }
-
-  return directMatches;
+  return [];
 };
 
 /**

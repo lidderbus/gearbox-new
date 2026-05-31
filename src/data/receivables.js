@@ -129,19 +129,35 @@ export const calculateAgingDays = (invoiceDate) => {
 };
 
 /**
- * 计算坏账计提金额 (按审计标准)
- * 1-2年: 20%
- * 3年以上: 100%
+ * 坏账计提比率 — 单一口径 (账龄分析法, 2026-05-31 P0 统一)
+ * 旧问题: KPI 卡用 3 档(0/20/100%), 明细表用 4 档(5/20/50/100%), 同页两套总额矛盾。
+ * 现统一为 4 档 (按账龄天数), KPI 与明细共用。
+ */
+export const PROVISION_RATES = [
+  { key: 'current',    label: '1年以内', minDays: 0,    maxDays: 365,      rate: 0.05, variant: 'success' },
+  { key: 'oneToTwo',   label: '1-2年',   minDays: 365,  maxDays: 730,      rate: 0.20, variant: 'warning' },
+  { key: 'twoToThree', label: '2-3年',   minDays: 730,  maxDays: 1095,     rate: 0.50, variant: 'info' },
+  { key: 'overThree',  label: '3年以上', minDays: 1095, maxDays: Infinity, rate: 1.00, variant: 'danger' }
+];
+
+/** 按账龄天数取计提比率 */
+export const getProvisionRateByDays = (days) => {
+  const bucket = PROVISION_RATES.find(b => days >= b.minDays && days < b.maxDays);
+  return bucket ? bucket.rate : 0;
+};
+
+/** 按账龄天数计提坏账金额 (单一口径) */
+export const calculateProvisionByDays = (amount, days) => amount * getProvisionRateByDays(days);
+
+/**
+ * 计算坏账计提金额 — 按账龄类别 (兼容旧调用, 内部走单一口径天数表)
  */
 export const calculateProvision = (amount, aging) => {
-  switch (aging) {
-    case AgingCategory.ONE_TO_TWO:
-      return amount * 0.2;
-    case AgingCategory.OVER_THREE:
-      return amount * 1.0;
-    default:
-      return 0;
-  }
+  // 类别 → 代表性天数, 再走统一比率表
+  const repDays = aging === AgingCategory.CURRENT ? 100
+    : aging === AgingCategory.ONE_TO_TWO ? 500
+    : 1200; // OVER_THREE 及其它视为 3 年以上
+  return calculateProvisionByDays(amount, repDays);
 };
 
 /**
@@ -318,15 +334,16 @@ export const calculateReceivablesStats = (receivables) => {
     stats.totalBalance += item.balance;
 
     const aging = calculateAging(item.invoiceDate);
+    // 2026-05-31 P0: 计提走单一口径 (按账龄天数 4 档), 与明细表一致
+    const agingDays = calculateAgingDays(item.invoiceDate);
+    stats.totalProvision += calculateProvisionByDays(item.balance, agingDays);
 
     if (aging === AgingCategory.CURRENT) {
       stats.currentBalance += item.balance;
     } else if (aging === AgingCategory.ONE_TO_TWO) {
       stats.oneToTwoBalance += item.balance;
-      stats.totalProvision += item.balance * 0.2;
     } else {
       stats.overThreeBalance += item.balance;
-      stats.totalProvision += item.balance;
     }
 
     if (item.status === CollectionStatus.OVERDUE || item.status === CollectionStatus.IN_COLLECTION) {

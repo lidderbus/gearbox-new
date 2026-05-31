@@ -14,6 +14,7 @@ import {
   calculateAging,
   calculateAgingDays,
   calculateProvision,
+  PROVISION_RATES,
   initialReceivables,
   calculateReceivablesStats,
   getReceivablesNeedingCollection,
@@ -107,21 +108,12 @@ const ReceivablesManagement = ({ colors = {}, theme = 'light' }) => {
   const customerSummary = useMemo(() =>
     summarizeByCustomer(receivables), [receivables]);
 
-  // 坏账计提明细
+  // 坏账计提明细 — 2026-05-31 P0: 复用 receivables.PROVISION_RATES 单一口径, 与 KPI 卡一致
   const provisionDetail = useMemo(() => {
-    const categories = [
-      { key: 'current', label: '1年以内', rate: 0.05, variant: 'success' },
-      { key: 'oneToTwo', label: '1-2年', rate: 0.20, variant: 'warning' },
-      { key: 'twoToThree', label: '2-3年', rate: 0.50, variant: 'info' },
-      { key: 'overThree', label: '3年以上', rate: 1.00, variant: 'danger' }
-    ];
-    const result = categories.map(cat => {
+    const result = PROVISION_RATES.map(cat => {
       const items = receivables.filter(r => {
         const days = calculateAgingDays(r.invoiceDate);
-        if (cat.key === 'current') return days < 365;
-        if (cat.key === 'oneToTwo') return days >= 365 && days < 730;
-        if (cat.key === 'twoToThree') return days >= 730 && days < 1095;
-        return days >= 1095;
+        return days >= cat.minDays && days < cat.maxDays;
       });
       const amount = items.reduce((sum, r) => sum + r.balance, 0);
       return { ...cat, count: items.length, amount, provision: amount * cat.rate };

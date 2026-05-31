@@ -684,6 +684,19 @@ const EnhancedGearboxSelectionResult = ({
                       <td>输入转速</td>
                       <td>{result.engineSpeed || selectedGearbox.inputSpeed} r/min</td>
                     </tr>
+                    {/* 2026-05-31 P1: 输出(螺旋桨)轴转速 — 船用减速齿轮箱最关键派生量 */}
+                    {(() => {
+                      const inSpd = result.engineSpeed || selectedGearbox.inputSpeed;
+                      const r = selectedGearbox.selectedRatio
+                        || (Array.isArray(selectedGearbox.ratios) ? selectedGearbox.ratios[0] : selectedGearbox.ratio);
+                      const out = (inSpd && r) ? (inSpd / r) : null;
+                      return out ? (
+                        <tr>
+                          <td>输出(螺旋桨)转速</td>
+                          <td><strong>{out.toFixed(0)} r/min</strong> <small className="text-muted">= 输入 {inSpd} ÷ 减速比 {Number(r).toFixed(2)}</small></td>
+                        </tr>
+                      ) : null;
+                    })()}
                     <tr>
                       <td>减速比</td>
                       <td>
@@ -734,6 +747,13 @@ const EnhancedGearboxSelectionResult = ({
                         )}
                       </td>
                     </tr>
+                    {/* 2026-05-31 P1: 中心距 — 数据全覆盖, 影响布置/对中, 应展示 */}
+                    {(selectedGearbox.centerDistance || selectedGearbox.center_distance) && (
+                      <tr>
+                        <td>中心距</td>
+                        <td>{selectedGearbox.centerDistance || selectedGearbox.center_distance} mm</td>
+                      </tr>
+                    )}
                     <tr>
                       <td>重量</td>
                       <td>{selectedGearbox.weight || '-'} kg</td>

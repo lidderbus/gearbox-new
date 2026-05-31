@@ -33,12 +33,15 @@ export function getFlexibleCouplings() {
 /**
  * 工况选项配置
  */
+// 2026-05-31 P0 修复: value 必须与 couplingWorkFactorMap 键完全一致, 否则 getWorkFactor 全部回退 default
+// (旧 value "I类:扭矩稳定" 等 5 键里只有 III 类匹配 → 其余 4 档塌缩成单一默认 K, 标签 K 也是错的)
+// 标签 K 按厂家/JB·CCS 双模式如实标 (默认厂家模式)
 export const WORK_CONDITIONS = [
-  { value: "I类:扭矩稳定", label: "I类: 扭矩稳定 (K=1.3)", factor: 1.3 },
-  { value: "II类:扭矩变化较小", label: "II类: 扭矩变化较小 (K=1.5)", factor: 1.5 },
-  { value: "III类:扭矩变化中等", label: "III类: 扭矩变化中等 (K=1.75)", factor: 1.75 },
-  { value: "IV类:扭矩变化较大", label: "IV类: 扭矩变化较大 (K=2.0)", factor: 2.0 },
-  { value: "V类:扭矩变化剧烈", label: "V类: 扭矩变化剧烈 (K=2.25)", factor: 2.25 }
+  { value: "I类:扭矩变化很小", label: "I类: 扭矩变化很小 (厂家K=1.0 / JB·CCS=1.3)", factor: 1.0 },
+  { value: "II类:扭矩变化小", label: "II类: 扭矩变化小 (厂家K=1.2 / JB·CCS=1.75)", factor: 1.2 },
+  { value: "III类:扭矩变化中等", label: "III类: 扭矩变化中等 (厂家K=1.4 / JB·CCS=2.5)", factor: 1.4 },
+  { value: "IV类:扭矩变化大", label: "IV类: 扭矩变化大 (厂家K=1.6 / JB·CCS=2.75)", factor: 1.6 },
+  { value: "V类:扭矩变化很大", label: "V类: 扭矩变化很大 (厂家K=1.8 / JB·CCS=3.0)", factor: 1.8 }
 ];
 
 /**
@@ -60,7 +63,7 @@ export const QUICK_TEMPLATES = [
     power: 350,
     speed: 1500,
     gearbox: 'HCM400A',
-    condition: 'IV类:扭矩变化较大',
+    condition: 'IV类:扭矩变化大',
     temperature: 35
   },
   {
@@ -69,7 +72,7 @@ export const QUICK_TEMPLATES = [
     power: 800,
     speed: 1200,
     gearbox: 'HCD800A',
-    condition: 'II类:扭矩变化较小',
+    condition: 'II类:扭矩变化小',
     temperature: 30
   },
   {

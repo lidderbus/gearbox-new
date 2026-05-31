@@ -75,6 +75,14 @@ export default function CertificationView({ colors, theme }) {
         </Col>
       </Row>
 
+      {/* 2026-05-31 P0: 认证矩阵为示意框架, 加常驻免责声明, 避免冒充真实持证状态 */}
+      <Alert variant="warning" className="mb-3 py-2">
+        <i className="bi bi-exclamation-triangle-fill me-2"></i>
+        <strong>认证状态为示意框架</strong>，仅供了解杭齿各系列的船级社认证覆盖思路。
+        具体「型号 × 船级社」的实际持证情况、证书号与有效期，<strong>以杭齿质量部最新有效证书为准</strong>；
+        投标 / 技术协议前请向质量部核实。
+      </Alert>
+
       <Tabs activeKey={activeTab} onSelect={setActiveTab} className="mb-3">
         <Tab eventKey="status" title="认证状态">
           <Card>

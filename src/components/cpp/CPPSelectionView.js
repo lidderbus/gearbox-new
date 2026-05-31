@@ -72,6 +72,13 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
     };
   }, [vesselType]);
 
+  // 2026-05-31: 船型中文名 → cppHydrodynamics 伴流系数键 (vesselWakeCoefficients 用英文键)
+  // 旧代码把中文名/Va 直接喂引擎, 而引擎按 vesselType 英文键查表并自行从 shipSpeed 反算 Va → 全部静默回退
+  const VESSEL_WAKE_KEY = {
+    '拖轮': 'tug', '渔船': 'fishingTrawler', '工程船': 'workboat', 'PSV': 'psv',
+    'AHTS': 'ahts', '挖泥船': 'dredger', '客船': 'ferry', '货船': 'cargo'
+  };
+
   // 计算水动力分析结果
   const hydrodynamicsResult = useMemo(() => {
     if (!selectedGearbox || !selectedPropeller || !power || !speed) return null;
@@ -80,29 +87,34 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
     const speedVal = parseFloat(speed);
     const D = propellerDiameter ? parseFloat(propellerDiameter) : (selectedPropeller.diameterRange?.[1] || 3.0);
     const Vs = vesselSpeed ? parseFloat(vesselSpeed) : 12; // 默认12节
-    const depth = propellerDepth ? parseFloat(propellerDepth) : 3;
-
-    // 计算进速 Va = Vs * (1 - w)
-    const w = currentVesselType.wakeCoefficient;
-    const Va = Vs * 0.5144 * (1 - w); // knots to m/s
-
-    const outputSpeed = speedVal / (selectedGearbox.selectedRatio || selectedGearbox.ratios?.[0] || 3);
-    const n = outputSpeed / 60; // rps
+    const gearRatio = selectedGearbox.selectedRatio || selectedGearbox.ratios?.[0] || 3;
+    const wakeKey = VESSEL_WAKE_KEY[vesselType] || 'workboat';
 
     try {
-      return calculateHydrodynamics({
+      // 2026-05-31 P0 修复: 用引擎真实签名调用 (engineSpeed/gearRatio/shipSpeed/vesselType/bladeGeometry)
+      // 旧代码传 {speed, Va, wakeField, propellerData} 全被解构成 undefined → propellerRPM=NaN → 整页水动力失效
+      const r = calculateHydrodynamics({
         power: powerVal,
-        speed: outputSpeed,
+        engineSpeed: speedVal,
+        gearRatio,
         propellerDiameter: D,
-        Va,
-        wakeField: { w },
-        propellerData: selectedPropeller
+        shipSpeed: Vs * 0.5144, // knots → m/s (引擎内部再 ×(1-w) 得 Va)
+        vesselType: wakeKey,
+        bladeGeometry: selectedPropeller.bladeGeometry
       });
+      if (!r) return null;
+      // 引擎返回嵌套结构, UI 读扁平字段 → 此处摊平 (含 N→kN 单位换算)
+      return {
+        J: r.coefficients?.J, KT: r.coefficients?.KT, KQ: r.coefficients?.KQ, eta0: r.coefficients?.eta0,
+        thrust: r.performance?.thrustKN, torque: r.performance?.torqueKNm,
+        absorbedPower: r.performance?.absorbedPower, Va: r.intermediate?.Va,
+        _raw: r
+      };
     } catch (e) {
       console.error('Hydrodynamics calculation error:', e);
       return null;
     }
-  }, [selectedGearbox, selectedPropeller, power, speed, propellerDiameter, vesselSpeed, currentVesselType]);
+  }, [selectedGearbox, selectedPropeller, power, speed, propellerDiameter, vesselSpeed, vesselType]);
 
   // 计算推进效率
   const efficiencyResult = useMemo(() => {
@@ -131,13 +143,17 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
     if (!selectedGearbox || !selectedPropeller) return null;
 
     const D = propellerDiameter ? parseFloat(propellerDiameter) : (selectedPropeller.diameterRange?.[1] || 3.0);
-    const outputSpeed = parseFloat(speed) / (selectedGearbox.selectedRatio || selectedGearbox.ratios?.[0] || 3);
+    const wakeKey = VESSEL_WAKE_KEY[vesselType] || 'workboat';
 
+    // 2026-05-31 P0 修复: analyzeOperatingPoints 解构 {power,engineSpeed,gearRatio,propellerDiameter,vesselType,bladeGeometry}
+    // 旧代码传 {gearbox,propeller,propellerSpeed} 全被忽略 → 各工况 NaN
     const systemConfig = {
-      gearbox: selectedGearbox,
-      propeller: selectedPropeller,
+      power: parseFloat(power),
+      engineSpeed: parseFloat(speed),
+      gearRatio: selectedGearbox.selectedRatio || selectedGearbox.ratios?.[0] || 3,
       propellerDiameter: D,
-      propellerSpeed: outputSpeed
+      vesselType: wakeKey,
+      bladeGeometry: selectedPropeller.bladeGeometry
     };
 
     try {
@@ -146,7 +162,7 @@ const CPPSelectionView = ({ colors = {}, theme = 'light', onSystemSelect }) => {
       console.error('Operating points analysis error:', e);
       return null;
     }
-  }, [selectedGearbox, selectedPropeller, propellerDiameter, speed]);
+  }, [selectedGearbox, selectedPropeller, propellerDiameter, speed, power, vesselType]);
 
   // EEDI估算
   const eediResult = useMemo(() => {
