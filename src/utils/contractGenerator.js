@@ -291,17 +291,20 @@ export const exportContractToPDF = async (contract, filename = 'contract') => {
     let y = tableHeight + 25;
     doc.text(`1. 执行质量标准：${contract.executionStandard || '按国家标准'}`, 25, y); y += 5;
     doc.text(`2. 验收及提出质量异议期限：${contract.inspectionPeriod || ''}`, 25, y); y += 5;
-    doc.text(`3. 交货时间：${contract.deliveryDate || ''}`, 25, y); y += 5;
-    doc.text(`4. 交货地点：${contract.deliveryLocation || ''}`, 25, y); y += 5;
-    doc.text(`5. 交货方式：${contract.deliveryMethod || ''}`, 25, y); y += 5;
-    doc.text(`6. 运输方式：${contract.transportMethod || ''} 运费结算：${contract.transportFeeArrangement || ''}`, 25, y); y += 5;
-    doc.text(`7. 包装标准：${contract.packagingStandard || ''} 包装费：${contract.packagingFeeArrangement || ''}`, 25, y); y += 5;
-    doc.text(`8. 结算方式及期限：${contract.paymentMethod || ''}`, 25, y); y += 5;
-    doc.text(`9. 违约责任：按"民法典"规定条款执行。`, 25, y); y += 5;
-    doc.text(`10. ${contract.disputeResolution || ''}`, 25, y); y += 5;
-    doc.text(`11. 其他约定事项或特殊订货要求：${contract.specialRequirements || '无'}`, 25, y); y += 5;
-    doc.text(`12. 合同有效期限：自签订日起至${contract.expiryDate || ''}止`, 25, y); y += 5;
-    doc.text(`13. ${contract.contractCopies || '本合同一式两份，双方各持一份。'}`, 25, y); y += 15;
+    // 2026-05-31 P1: 补质保期(三包)与发票约定 — 中国船机销售合同核心必备条款
+    doc.text(`3. 质量保证(三包)：${contract.warrantyPeriod || '自产品验收合格之日起12个月或累计运行2000小时(以先到者为准)，非人为故障免费保修。'}`, 25, y); y += 5;
+    doc.text(`4. 交货时间：${contract.deliveryDate || ''}`, 25, y); y += 5;
+    doc.text(`5. 交货地点：${contract.deliveryLocation || ''}`, 25, y); y += 5;
+    doc.text(`6. 交货方式：${contract.deliveryMethod || ''}`, 25, y); y += 5;
+    doc.text(`7. 运输方式：${contract.transportMethod || ''} 运费结算：${contract.transportFeeArrangement || ''}`, 25, y); y += 5;
+    doc.text(`8. 包装标准：${contract.packagingStandard || ''} 包装费：${contract.packagingFeeArrangement || ''}`, 25, y); y += 5;
+    doc.text(`9. 结算方式及期限：${contract.paymentMethod || ''}`, 25, y); y += 5;
+    doc.text(`10. 发票：${contract.invoiceClause || '卖方按合同金额向买方开具增值税专用发票，税率按国家现行规定执行。'}`, 25, y); y += 5;
+    doc.text(`11. 违约责任：按"民法典"规定条款执行。`, 25, y); y += 5;
+    doc.text(`12. ${contract.disputeResolution || ''}`, 25, y); y += 5;
+    doc.text(`13. 其他约定事项或特殊订货要求：${contract.specialRequirements || '无'}`, 25, y); y += 5;
+    doc.text(`14. 合同有效期限：自签订日起至${contract.expiryDate || ''}止`, 25, y); y += 5;
+    doc.text(`15. ${contract.contractCopies || '本合同一式两份，双方各持一份。'}`, 25, y); y += 15;
 
     // 签名区域
     if (y > doc.internal.pageSize.getHeight() - 60) {
@@ -594,17 +597,20 @@ export const exportContractToWord = async (contract, filename = 'contract') => {
             new Paragraph({ text: '合同条款：', bold: true }),
             new Paragraph({ text: `1. 执行质量标准：${contract.executionStandard || '按国家标准'}` }),
             new Paragraph({ text: `2. 验收及提出质量异议期限：${contract.inspectionPeriod || ''}` }),
-            new Paragraph({ text: `3. 交货时间：${contract.deliveryDate || ''}` }),
-            new Paragraph({ text: `4. 交货地点：${contract.deliveryLocation || ''}` }),
-            new Paragraph({ text: `5. 交货方式：${contract.deliveryMethod || ''}` }),
-            new Paragraph({ text: `6. 运输方式：${contract.transportMethod || ''} 运费结算：${contract.transportFeeArrangement || ''}` }),
-            new Paragraph({ text: `7. 包装标准：${contract.packagingStandard || ''} 包装费：${contract.packagingFeeArrangement || ''}` }),
-            new Paragraph({ text: `8. 结算方式及期限：${contract.paymentMethod || ''}` }),
-            new Paragraph({ text: `9. 违约责任：按"民法典"规定条款执行。` }),
-            new Paragraph({ text: `10. ${contract.disputeResolution || ''}` }),
-            new Paragraph({ text: `11. 其他约定事项或特殊订货要求：${contract.specialRequirements || '无'}` }),
-            new Paragraph({ text: `12. 合同有效期限：自签订日起至${contract.expiryDate || ''}止` }),
-            new Paragraph({ text: `13. ${contract.contractCopies || '本合同一式两份，双方各持一份。'}` }),
+            // 2026-05-31 P1: 补质保期(三包)与发票约定 — 中国船机销售合同核心必备条款
+            new Paragraph({ text: `3. 质量保证(三包)：${contract.warrantyPeriod || '自产品验收合格之日起12个月或累计运行2000小时(以先到者为准)，非人为故障免费保修。'}` }),
+            new Paragraph({ text: `4. 交货时间：${contract.deliveryDate || ''}` }),
+            new Paragraph({ text: `5. 交货地点：${contract.deliveryLocation || ''}` }),
+            new Paragraph({ text: `6. 交货方式：${contract.deliveryMethod || ''}` }),
+            new Paragraph({ text: `7. 运输方式：${contract.transportMethod || ''} 运费结算：${contract.transportFeeArrangement || ''}` }),
+            new Paragraph({ text: `8. 包装标准：${contract.packagingStandard || ''} 包装费：${contract.packagingFeeArrangement || ''}` }),
+            new Paragraph({ text: `9. 结算方式及期限：${contract.paymentMethod || ''}` }),
+            new Paragraph({ text: `10. 发票：${contract.invoiceClause || '卖方按合同金额向买方开具增值税专用发票，税率按国家现行规定执行。'}` }),
+            new Paragraph({ text: `11. 违约责任：按"民法典"规定条款执行。` }),
+            new Paragraph({ text: `12. ${contract.disputeResolution || ''}` }),
+            new Paragraph({ text: `13. 其他约定事项或特殊订货要求：${contract.specialRequirements || '无'}` }),
+            new Paragraph({ text: `14. 合同有效期限：自签订日起至${contract.expiryDate || ''}止` }),
+            new Paragraph({ text: `15. ${contract.contractCopies || '本合同一式两份，双方各持一份。'}` }),
             
             // 签名区域
             new Paragraph({

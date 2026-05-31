@@ -136,6 +136,9 @@ export const selectCouplingStandalone = (params) => {
     temperature = 30,
     hasCover = false,
     needDetachable = false,
+    // 2026-05-31 P1: 原动机系数 — 船用联轴器默认柴油机(1.5), 旧版漏传→恒按 none(1.0) 选小
+    // (联轴器扭矩 T=9550·P/n·K·原动机系数, 非齿轮箱选型, 与"手册已含安全系数"口径无冲突)
+    primeType = 'diesel',
     torsionalInputs = null   // M1: 用户填写的扭振输入
   } = params;
 
@@ -159,13 +162,14 @@ export const selectCouplingStandalone = (params) => {
     recommendations: gearboxModel ? [{ model: gearboxModel }] : [{ model: 'GENERIC' }]
   };
 
-  // 调用增强版选型算法 (传入workFactorMode)
+  // 调用增强版选型算法 (传入workFactorMode + 原动机系数)
   const result = enhancedCouplingSelection(mockGearboxResult, getFlexibleCouplings(), {
     workCondition,
     workFactorMode,
     temperature,
     hasCover,
-    needDetachable
+    needDetachable,
+    primeType   // 2026-05-31 P1: 传原动机系数 (默认柴油机 1.5)
   });
 
   // M1: 给每个候选附加 1-DOF 扭振估算 (k 来自候选的动态扭转刚度)
