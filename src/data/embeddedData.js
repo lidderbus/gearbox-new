@@ -3584,6 +3584,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "HCD1000/2",
+      "dimensions": "1082×1280×1345",
       "ratios": [
         2.04,
         2.52,
@@ -3660,6 +3661,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "HCD2000/2",
+      "dimensions": "1600×1620×1645",
       "ratios": [
         2.04,
         2.52,
@@ -3846,6 +3848,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "HCD800/2",
+      "dimensions": "1056×1280×1341",
       "ratios": [
         2.04,
         2.52,
@@ -3938,6 +3941,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "HCDS1600",
+      "dimensions": "1246×1500×1750",
       "inputSpeedRange": [
         500,
         1650
@@ -4222,6 +4226,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "HCG1220",
+      "dimensions": "405×270×340",
       "inputSpeedRange": [
         1500,
         4500
@@ -4254,6 +4259,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "HCG1280-1",
+      "dimensions": "420×292×365",
       "inputSpeedRange": [
         1500,
         3600
@@ -4288,6 +4294,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "HCG1305-3",
+      "dimensions": "465×310×388",
       "inputSpeedRange": [
         1500,
         3000
@@ -4490,6 +4497,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "HCG5050",
+      "dimensions": "1020×680×850",
       "inputSpeedRange": [
         1500,
         2500
@@ -8084,6 +8092,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GWC80.95",
+      "dimensions": "3300×3100×2300",
       "inputSpeedRange": [
         200,
         1150
@@ -8125,6 +8134,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GWC85.100",
+      "dimensions": "3800×3500×2600",
       "inputSpeedRange": [
         150,
         1800
@@ -14831,6 +14841,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCH1000",
+      "dimensions": "2545×2138×2341",
       "inputSpeedRange": [
         200,
         800
@@ -14960,6 +14971,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCH490",
+      "dimensions": "1225×1029×1127",
       "inputSpeedRange": [
         400,
         1400
@@ -14990,6 +15002,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCH540",
+      "dimensions": "1350×1134×1242",
       "inputSpeedRange": [
         400,
         1200
@@ -15020,6 +15033,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCH590",
+      "dimensions": "1475×1239×1357",
       "inputSpeedRange": [
         400,
         1200
@@ -15050,6 +15064,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCH660",
+      "dimensions": "1650×1386×1518",
       "inputSpeedRange": [
         400,
         1200
@@ -15212,6 +15227,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCH950",
+      "dimensions": "2413×2027×2220",
       "inputSpeedRange": [
         200,
         650
@@ -15273,6 +15289,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHE15",
+      "dimensions": "2025×1701×1863",
       "inputSpeedRange": [
         400,
         1600
@@ -15302,6 +15319,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHE20",
+      "dimensions": "1700×1428×1564",
       "inputSpeedRange": [
         400,
         1400
@@ -15331,6 +15349,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHE26",
+      "dimensions": "2400×2016×2208",
       "inputSpeedRange": [
         400,
         1200
@@ -15360,6 +15379,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHE33",
+      "dimensions": "2638×2216×2427",
       "inputSpeedRange": [
         400,
         1200
@@ -15420,6 +15440,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHE5",
+      "dimensions": "1425×1197×1311",
       "inputSpeedRange": [
         400,
         1800
@@ -15451,6 +15472,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHE6",
+      "dimensions": "1538×1292×1415",
       "inputSpeedRange": [
         400,
         1800
@@ -15482,6 +15504,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHE9",
+      "dimensions": "1750×1470×1610",
       "inputSpeedRange": [
         400,
         1800
@@ -15575,6 +15598,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHT115",
+      "dimensions": "3150×2646×2898",
       "inputSpeedRange": [
         200,
         650
@@ -15603,6 +15627,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHT135",
+      "dimensions": "3375×2835×3105",
       "inputSpeedRange": [
         200,
         650
@@ -15631,6 +15656,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHT15",
+      "dimensions": "1575×1323×1449",
       "inputSpeedRange": [
         400,
         1600
@@ -15659,6 +15685,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHT170",
+      "dimensions": "3575×3003×3289",
       "inputSpeedRange": [
         200,
         800
@@ -15687,6 +15714,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHT20",
+      "dimensions": "1700×1428×1564",
       "inputSpeedRange": [
         400,
         1400
@@ -15715,6 +15743,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHT26",
+      "dimensions": "1875×1575×1725",
       "inputSpeedRange": [
         400,
         1200
@@ -15743,6 +15772,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHT33",
+      "dimensions": "2050×1722×1886",
       "inputSpeedRange": [
         400,
         1200
@@ -15771,6 +15801,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHT44",
+      "dimensions": "2310×1940×2125",
       "inputSpeedRange": [
         400,
         1200
@@ -15799,6 +15830,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHT5",
+      "dimensions": "1113×935×1023",
       "inputSpeedRange": [
         400,
         1800
@@ -15830,6 +15862,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHT6",
+      "dimensions": "1200×1008×1104",
       "inputSpeedRange": [
         400,
         1800
@@ -15924,6 +15957,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCHT9",
+      "dimensions": "1363×1145×1254",
       "inputSpeedRange": [
         400,
         1800
@@ -15986,6 +16020,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCS350",
+      "dimensions": "875×735×805",
       "inputSpeedRange": [
         400,
         1800
@@ -16019,6 +16054,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCS390",
+      "dimensions": "975×819×897",
       "inputSpeedRange": [
         400,
         1800
@@ -16052,6 +16088,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCS410",
+      "dimensions": "1025×861×943",
       "inputSpeedRange": [
         400,
         1600
@@ -16085,6 +16122,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCS450",
+      "dimensions": "1138×956×1047",
       "inputSpeedRange": [
         400,
         1600
@@ -16118,6 +16156,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCS490",
+      "dimensions": "1225×1029×1127",
       "inputSpeedRange": [
         400,
         1400
@@ -16148,6 +16187,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCS590",
+      "dimensions": "1475×1239×1357",
       "inputSpeedRange": [
         400,
         1200
@@ -16178,6 +16218,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCS660",
+      "dimensions": "1650×1386×1518",
       "inputSpeedRange": [
         400,
         1200
@@ -16239,6 +16280,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCS750",
+      "dimensions": "1875×1575×1725",
       "inputSpeedRange": [
         300,
         950
@@ -16272,6 +16314,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCS760",
+      "dimensions": "1920×1613×1766",
       "inputSpeedRange": [
         300,
         900
@@ -16305,6 +16348,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCS850",
+      "dimensions": "2138×1796×1966",
       "inputSpeedRange": [
         300,
         800
@@ -16404,6 +16448,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCS950",
+      "dimensions": "2413×2027×2220",
       "inputSpeedRange": [
         200,
         650
@@ -16434,6 +16479,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCSE11",
+      "dimensions": "1838×1544×1690",
       "inputSpeedRange": [
         400,
         1600
@@ -16465,6 +16511,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCSE15",
+      "dimensions": "2025×1701×1863",
       "inputSpeedRange": [
         400,
         1600
@@ -16494,6 +16541,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCSE26",
+      "dimensions": "2400×2016×2208",
       "inputSpeedRange": [
         400,
         1200
@@ -16523,6 +16571,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCSE33",
+      "dimensions": "2638×2216×2427",
       "inputSpeedRange": [
         400,
         1200
@@ -16552,6 +16601,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCSE44",
+      "dimensions": "2963×2489×2726",
       "inputSpeedRange": [
         400,
         1200
@@ -16583,6 +16633,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCSE5",
+      "dimensions": "1425×1197×1311",
       "inputSpeedRange": [
         400,
         1800
@@ -16614,6 +16665,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCSE6",
+      "dimensions": "1538×1292×1415",
       "inputSpeedRange": [
         400,
         1800
@@ -16645,6 +16697,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCSE9",
+      "dimensions": "1750×1470×1610",
       "inputSpeedRange": [
         400,
         1800
@@ -16676,6 +16729,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST108",
+      "dimensions": "3075×2583×2829",
       "inputSpeedRange": [
         200,
         800
@@ -16707,6 +16761,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST11",
+      "dimensions": "1425×1197×1311",
       "inputSpeedRange": [
         400,
         1600
@@ -16738,6 +16793,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST115",
+      "dimensions": "3150×2646×2898",
       "inputSpeedRange": [
         200,
         650
@@ -16766,6 +16822,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST135",
+      "dimensions": "3375×2835×3105",
       "inputSpeedRange": [
         200,
         650
@@ -16794,6 +16851,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST15",
+      "dimensions": "1575×1323×1449",
       "inputSpeedRange": [
         400,
         1600
@@ -16822,6 +16880,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST170",
+      "dimensions": "3575×3003×3289",
       "inputSpeedRange": [
         200,
         800
@@ -16850,6 +16909,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST20",
+      "dimensions": "1700×1428×1564",
       "inputSpeedRange": [
         400,
         1400
@@ -16878,6 +16938,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST26",
+      "dimensions": "1875×1575×1725",
       "inputSpeedRange": [
         400,
         1200
@@ -16906,6 +16967,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST33",
+      "dimensions": "2050×1722×1886",
       "inputSpeedRange": [
         400,
         1200
@@ -16934,6 +16996,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST44",
+      "dimensions": "2310×1940×2125",
       "inputSpeedRange": [
         400,
         1200
@@ -16962,6 +17025,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST5",
+      "dimensions": "1113×935×1023",
       "inputSpeedRange": [
         400,
         1800
@@ -16993,6 +17057,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST6",
+      "dimensions": "1200×1008×1104",
       "inputSpeedRange": [
         400,
         1800
@@ -17056,6 +17121,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST77",
+      "dimensions": "1920×1613×1766",
       "inputSpeedRange": [
         300,
         900
@@ -17087,6 +17153,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST9",
+      "dimensions": "1363×1145×1254",
       "inputSpeedRange": [
         400,
         1800
@@ -17118,6 +17185,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "GCST91",
+      "dimensions": "2975×2499×2737",
       "inputSpeedRange": [
         300,
         800
@@ -18570,6 +18638,7 @@ export const embeddedGearboxData = {
   "otherGearboxes": [
     {
       "model": "2GWH1830",
+      "dimensions": "1688×1968×1710",
       "inputSpeedRange": [
         400,
         2000
@@ -18653,6 +18722,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "2GWH4100",
+      "dimensions": "2291×2240×1290",
       "inputSpeedRange": [
         400,
         1600
@@ -18694,6 +18764,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "2GWH5410",
+      "dimensions": "2445×2560×2215",
       "inputSpeedRange": [
         400,
         1600
@@ -18735,6 +18806,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "2GWH7050",
+      "dimensions": "2645×3809×1740",
       "inputSpeedRange": [
         400,
         2000
@@ -18776,6 +18848,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "2GWH9250",
+      "dimensions": "2876×3441×1970",
       "inputSpeedRange": [
         400,
         2000
@@ -18817,6 +18890,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "SGW30.32",
+      "dimensions": "1433×1200×888",
       "inputSpeedRange": [
         400,
         870
@@ -18844,6 +18918,7 @@ export const embeddedGearboxData = {
     },
     {
       "model": "SGW32.35",
+      "dimensions": "1405×1240×920",
       "inputSpeedRange": [
         400,
         760

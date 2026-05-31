@@ -313,8 +313,9 @@ function main() {
         console.log(`  ${key}: +${count}`);
     }
 
-    // 4.5 同步已有模型的 transferCapacity (用 completeGearboxData 权威数据覆盖)
+    // 4.5 同步已有模型的 transferCapacity + 外形尺寸/重量 (用 completeGearboxData 权威数据覆盖)
     let syncCount = 0;
+    let dimSyncCount = 0;
     const completeMap = new Map(completeData.map(item => [item.model, item]));
     for (const [collKey, arr] of Object.entries(collections)) {
         for (const embedded of arr) {
@@ -337,9 +338,19 @@ function main() {
             if (complete.minSpeed != null && complete.maxSpeed != null) {
                 embedded.inputSpeedRange = [complete.minSpeed, complete.maxSpeed];
             }
+            // 2026-05-31 修复: 回填外形尺寸/重量 — 旧版只同步传递能力, 已有模型的 dimensions/weight
+            // 若缺失则永不从主数据补 → embedded 比 complete 少 164 个型号的外形尺寸
+            if (complete.dimensions && !embedded.dimensions) {
+                embedded.dimensions = complete.dimensions;
+                dimSyncCount++;
+            }
+            if (complete.weight != null && embedded.weight == null) {
+                embedded.weight = complete.weight;
+            }
         }
     }
     console.log(`\n同步已有模型传递能力: ${syncCount} 个更新`);
+    console.log(`回填外形尺寸: ${dimSyncCount} 个型号`);
 
     // 5. 统计最终结果
     let totalFinal = 0;
