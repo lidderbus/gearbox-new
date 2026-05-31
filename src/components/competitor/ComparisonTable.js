@@ -47,6 +47,22 @@ const ComparisonTable = ({
       : {};
   };
 
+  // 2026-05-31 P1: 传递能力格式化 — transferCapacity 实为每档位数组, 旧版 parseFloat(数组) 只取首档误导
+  // 优先 matchedCapacity 标量(选定档位), 否则按数组给范围
+  const fmtCapacity = (p) => {
+    if (!p) return '-';
+    if (typeof p.matchedCapacity === 'number') return p.matchedCapacity.toFixed(3);
+    const tc = p.transmissionCapacityPerRatio || p.transferCapacity;
+    if (Array.isArray(tc) && tc.length) {
+      const nums = tc.map(Number).filter(n => !isNaN(n));
+      if (!nums.length) return '-';
+      const lo = Math.min(...nums), hi = Math.max(...nums);
+      return lo === hi ? lo.toFixed(3) : `${lo.toFixed(3)}~${hi.toFixed(3)}`;
+    }
+    const n = parseFloat(tc);
+    return isNaN(n) ? '-' : n.toFixed(3);
+  };
+
   // 渲染优势标记
   const renderAdvantageTag = (isAdvantage, text) => {
     if (!showAdvantages || !isAdvantage) return null;
@@ -224,13 +240,13 @@ const ComparisonTable = ({
               <small className="text-muted d-block">kW/(r/min)</small>
             </td>
             <td style={getAdvantageStyle(competitorAdvantages.some(a => a.capacityAdvantage?.isAdvantage))}>
-              {typeof hangchiProduct.transferCapacity === 'number' ? hangchiProduct.transferCapacity.toFixed(3) : (parseFloat(hangchiProduct.transferCapacity) || '-')}
+              {fmtCapacity(hangchiProduct)}
               {competitorAdvantages.some(a => a.capacityAdvantage?.isAdvantage) &&
                 renderAdvantageTag(true, '领先')}
             </td>
             {competitors.map((comp, idx) => (
               <td key={comp.model}>
-                {typeof comp.transferCapacity === 'number' ? comp.transferCapacity.toFixed(3) : (parseFloat(comp.transferCapacity) || '-')}
+                {fmtCapacity(comp)}
               </td>
             ))}
           </tr>
