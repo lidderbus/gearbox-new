@@ -11,7 +11,7 @@ const STANDARDS_DATA = [
   { id: 'ISO-6336', name: 'ISO 6336', org: 'ISO', category: '齿轮', desc: '直齿和斜齿圆柱齿轮承载能力计算', year: 2019, status: '现行' },
   { id: 'ISO-8579', name: 'ISO 8579-1', org: 'ISO', category: '振动', desc: '齿轮箱验收规范—振动', year: 2002, status: '现行' },
   { id: 'ISO-9001', name: 'ISO 9001', org: 'ISO', category: '质量', desc: '质量管理体系要求', year: 2015, status: '现行' },
-  { id: 'ISO-10816', name: 'ISO 10816-1', org: 'ISO', category: '振动', desc: '机器振动评价标准', year: 1995, status: '现行' },
+  { id: 'ISO-10816', name: 'ISO 10816-1', org: 'ISO', category: '振动', desc: '机器振动评价标准 (已被 ISO 20816 替代)', year: 1995, status: '已替代' },
   { id: 'ISO-81400', name: 'ISO 81400-4', org: 'ISO', category: '齿轮', desc: '风力发电机组齿轮箱设计和规范', year: 2006, status: '现行' },
   // 国标
   { id: 'GB-T-3480', name: 'GB/T 3480', org: 'GB', category: '齿轮', desc: '直齿轮和斜齿轮承载能力计算方法', year: 2016, status: '现行' },
@@ -71,6 +71,9 @@ const STANDARDS_DATA = [
   // 环保补充
   { id: 'IMO-GHG', name: 'IMO Initial GHG Strategy', org: 'IMO', category: '环保', desc: '船舶温室气体减排初始战略（2050净零目标）', year: 2023, status: '现行' },
   { id: 'EU-MRV', name: 'EU MRV Regulation', org: 'EU', category: '环保', desc: '欧盟船舶CO₂排放监测、报告和核查', year: 2024, status: '现行' },
+  // 2026-05-31: 补 2024-2025 重大新规 (评估缺漏)
+  { id: 'EU-ETS-MAR', name: 'EU ETS (Maritime)', org: 'EU', category: '环保', desc: '欧盟碳排放交易体系纳入海运 (2024-01-01 起, ≥5000GT 须为 CO₂ 排放购买配额)', year: 2024, status: '现行' },
+  { id: 'EU-FuelEU', name: 'FuelEU Maritime', org: 'EU', category: '环保', desc: '欧盟船用燃料温室气体强度法规 (2025-01-01 生效, 逐年收紧 GHG 强度限值, 推动替代燃料)', year: 2025, status: '现行' },
 ];
 
 const CATEGORIES = ['全部', '齿轮', '振动', '噪声', '船用', '船级社', '环保', '安全', '质量', '轴承', '材料', '润滑'];

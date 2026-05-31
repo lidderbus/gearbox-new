@@ -56,9 +56,11 @@ const TCOCalculator = ({ hangchiProduct, competitors = [], colors }) => {
     const downtime = [tcoResults.hangchiTCO.downtimeCost / 10000];
 
     tcoResults.comparisons.forEach(c => {
+      // 2026-05-31 P1: 缺价竞品不进 TCO 柱状图(否则近零柱误导"竞品几乎免费")
+      if (c.comparable === false || c.priceMissing) return;
       const name = (getManufacturerInfo(c.competitor.manufacturer)?.shortName || c.competitor.manufacturer) + ' ' + c.competitor.model;
       categories.push(name);
-      purchase.push(c.competitor.totalTCO ? c.competitor.purchaseCost / 10000 : 0);
+      purchase.push(c.competitor.purchaseCost / 10000);
       maintenance.push(c.competitor.maintenanceCost / 10000);
       overhaul.push(c.competitor.overhaulCost / 10000);
       spareParts.push(c.competitor.sparePartsCost / 10000);
@@ -199,10 +201,22 @@ const TCOCalculator = ({ hangchiProduct, competitors = [], colors }) => {
         {/* 节省金额汇总 */}
         <Row className="mb-4">
           {tcoResults?.comparisons.map(c => {
+            const compName = (getManufacturerInfo(c.competitor.manufacturer)?.shortName || c.competitor.manufacturer) + ' ' + c.competitor.model;
+            // 2026-05-31 P1: 竞品缺价 → 不算节省/回本(否则坍缩近零反向误导), 显示"缺价无法对比"
+            if (c.comparable === false || c.priceMissing) {
+              return (
+                <Col key={c.competitor.model} md={Math.min(6, Math.floor(12 / tcoResults.comparisons.length))}>
+                  <Alert variant="secondary" className="text-center py-2">
+                    <small className="d-block text-muted">vs {compName}</small>
+                    <div className="fw-bold text-muted"><i className="bi bi-dash-circle me-1"></i>竞品缺价</div>
+                    <small className="d-block text-muted">无参考价，TCO 不可对比</small>
+                  </Alert>
+                </Col>
+              );
+            }
             const savings = c.savings || 0;
             const savingsPercent = c.savingsPercent || 0;
             const isAdvantage = savings > 0;
-            const compName = (getManufacturerInfo(c.competitor.manufacturer)?.shortName || c.competitor.manufacturer) + ' ' + c.competitor.model;
             return (
               <Col key={c.competitor.model} md={Math.min(6, Math.floor(12 / tcoResults.comparisons.length))}>
                 <Alert variant={isAdvantage ? 'success' : 'warning'} className="text-center py-2">

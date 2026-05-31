@@ -153,7 +153,7 @@ export const certificateRequirements = {
   },
 
   [ClassificationType.DNV]: {
-    name: 'DNV-GL',
+    name: 'DNV',
     shortName: 'DNV',
     society: 'DNV',
     certificates: [
@@ -365,7 +365,7 @@ export const getClassificationDescription = (classificationType) => {
     [ClassificationType.CCS_NON_ENTRY]: 'CCS非入级认证，无需现场检验',
     [ClassificationType.CCS_FISHING]: 'CCS远洋渔船认证',
     [ClassificationType.ZY_FISHING]: '渔业船舶检验局认证，适用于国内渔船',
-    [ClassificationType.DNV]: 'DNV-GL认证，国际通用，适用于欧洲航线',
+    [ClassificationType.DNV]: 'DNV 认证 (原 DNV-GL, 2021 更名)，国际通用，适用于欧洲航线',
     [ClassificationType.LR]: '劳氏船级社认证，国际通用',
     [ClassificationType.ABS]: '美国船级社认证，适用于美洲航线',
     [ClassificationType.BV]: '法国船级社认证',
@@ -470,7 +470,7 @@ export const getClassificationOptions = () => {
     {
       group: '国外船检',
       options: [
-        { value: ClassificationType.DNV, label: 'DNV-GL (挪威/德国)' },
+        { value: ClassificationType.DNV, label: 'DNV (挪威, 原 DNV-GL)' },
         { value: ClassificationType.LR, label: 'LR 劳氏 (英国)' },
         { value: ClassificationType.ABS, label: 'ABS (美国)' },
         { value: ClassificationType.BV, label: 'BV (法国)' },

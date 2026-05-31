@@ -184,6 +184,8 @@ export function calculateTCO(product, config = {}) {
     downtimeCost:     Math.round(downtimeCost),
     totalTCO:         Math.round(totalTCO),
     annualTCO:        Math.round(annualTCO),
+    // 2026-05-31 P1: 缺价标记 — 价格为 0/缺失时整个 TCO 坍缩为近零, 不能据此算"节省/回本"
+    priceMissing:     !(price > 0),
     breakdown
   };
 }
@@ -204,6 +206,19 @@ export function compareTCO(hangchiProduct, competitorProduct, config = {}) {
   const hangchi    = calculateTCO(hangchiProduct, config);
   const competitor = calculateTCO(competitorProduct, config);
 
+  // 2026-05-31 P1: 竞品缺价 → 其 TCO 坍缩近零, 不能据此算节省/回本, 标记 comparable=false
+  if (competitor.priceMissing) {
+    return {
+      hangchi,
+      competitor,
+      comparable: false,
+      priceMissing: true,
+      savings: null,
+      savingsPercent: null,
+      breakEvenYear: null
+    };
+  }
+
   const savings = competitor.totalTCO - hangchi.totalTCO;
   const savingsPercent =
     competitor.totalTCO > 0
@@ -223,6 +238,7 @@ export function compareTCO(hangchiProduct, competitorProduct, config = {}) {
   return {
     hangchi,
     competitor,
+    comparable: true,
     savings:        Math.round(savings),
     savingsPercent: Math.round(savingsPercent * 100) / 100, // 2 decimal places
     breakEvenYear

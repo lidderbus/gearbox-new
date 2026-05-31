@@ -55,7 +55,7 @@ export const classificationRules = {
 
   DNV: {
     code: 'DNV',
-    name: 'DNV-GL',
+    name: 'DNV',
     fullName: 'Det Norske Veritas Germanischer Lloyd',
     rulesVersion: 'DNV Rules July 2025',
     bladeStrengthMethod: 'DNV_JULY_2025',
