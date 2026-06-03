@@ -51,7 +51,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "prebuild": "node scripts/check-data-drift.js || true",
+    "prebuild": "node scripts/check-data-drift.js --strict",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
