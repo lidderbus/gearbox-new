@@ -16,6 +16,7 @@ import { needsStandbyPump } from './utils/enhancedPumpSelection';
 import { correctDatabase } from './utils/dataCorrector';
 import { correctPriceData } from './utils/priceManager';
 import { validateDatabase } from './utils/dataValidator';
+import { parseSpecPrefill, SPEC_PREFILL_KEY } from './utils/specPrefill';
 import { savePriceHistory, compareAndTrackChanges, getPriceHistory, clearPriceHistory } from './utils/priceHistoryTracker';
 // BatchPriceAdjustment 转 lazy — 仅 admin 触发, 不应进 main bundle
 // import BatchPriceAdjustment from './components/BatchPriceAdjustment';
@@ -526,6 +527,16 @@ function App({ appData: initialAppData, setAppData }) {
           sessionStorage.setItem('product_center_focus', focus);
           // ?focus 不显式写 ?tab 时, 默认跳产品中心
           if (!tab && !window.location.hash) setActiveTabRaw('product-center');
+        }
+        // A2 (2026-06-03) 参数透传: copilot/中枢 跳转携带 ?power=&speed=&ratio= (+可选 prop/application)
+        //   → 预填选型输入页, 销售在 copilot 的工况一键带到 app 工程深度选型, 不必重录。
+        //   解析逻辑抽到 parseSpecPrefill (纯函数, 见 utils/specPrefill.js + 单测);
+        //   InputParametersTab 挂载时读 sessionStorage 'selection_prefill' → applyScenarioPreset。
+        const prefill = parseSpecPrefill(params);
+        if (prefill) {
+          try { sessionStorage.setItem(SPEC_PREFILL_KEY, JSON.stringify(prefill)); } catch (e) { /* ignore */ }
+          // 无显式 tab/focus 时默认进选型输入页 (focus 优先级更高, 上面已处理)
+          if (!tab && !focus && !window.location.hash) setActiveTabRaw('input');
         }
         if (tab && pathToTab['/' + tab]) {
           setActiveTabRaw(pathToTab['/' + tab]);

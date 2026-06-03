@@ -271,6 +271,23 @@ const InputParametersTab = ({
     if (Object.keys(reqUpdate).length) handleRequirementDataChange(reqUpdate);
   };
 
+  // A2 (2026-06-03) 参数透传: 消费 App.js 从 URL ?power=&speed=&ratio= 写入的 sessionStorage 预填.
+  //   copilot/中枢 跳来时一次性回填工况, 复用 applyScenarioPreset; 读后即清, 避免再次进页残留.
+  //   key 'selection_prefill' 与 utils/specPrefill.js SPEC_PREFILL_KEY 一致 (此处保留字面量避免新增 import 依赖).
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem('selection_prefill');
+      if (!raw) return;
+      sessionStorage.removeItem('selection_prefill');
+      const p = JSON.parse(raw);
+      if (p && (p.motorPower != null || p.motorSpeed != null || p.targetRatio != null)) {
+        applyScenarioPreset(p);
+        console.log('[InputParametersTab] A2 参数透传预填:', p);
+      }
+    } catch (e) { console.warn('[InputParametersTab] selection_prefill 解析失败:', e && e.message); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // --- 用户自定义模板 ---
   const handleSaveTemplate = () => {
     if (!templateName.trim()) return;
@@ -325,6 +342,22 @@ const InputParametersTab = ({
         </Button>
         <Button variant="outline-secondary" size="sm" onClick={() => setShowSaveModal(true)} style={{fontSize:'12px', padding:'2px 8px'}}>
           <i className="bi bi-bookmark-plus me-1"></i>保存当前
+        </Button>
+        {/* C 强项外扩 (2026-06-03): 跳 AI 选型副驾 (copilot) — 复用其知识库(标准/安装/故障/保养)+自然语言/AI.
+            带当前工况为 ?q= (copilot 自动预填+选型); copilot 强项 (知识/售后情报) 反哺 app 工程选型用户。 */}
+        <Button variant="outline-info" size="sm" title="打开 AI 选型副驾 — 自然语言/知识库(标准·安装·故障·保养)/售后情报, 自动带入当前工况"
+          onClick={() => {
+            const pw = parseFloat(engineData.power), sp = parseFloat(engineData.speed), rt = parseFloat(requirementData.targetRatio);
+            const parts = [];
+            if (Number.isFinite(pw)) parts.push(`主机 ${pw}kW`);
+            if (Number.isFinite(sp)) parts.push(`${sp}rpm`);
+            if (Number.isFinite(rt)) parts.push(`减速比 ${rt}`);
+            const q = parts.join(' ');
+            const url = '/gearbox-copilot.html' + (q ? ('?q=' + encodeURIComponent(q)) : '');
+            window.open(url, '_blank', 'noopener');
+          }}
+          style={{fontSize:'12px', padding:'2px 8px'}}>
+          <i className="bi bi-robot me-1"></i>AI 副驾/知识库
         </Button>
       </div>
       {userTemplates.length > 0 && (

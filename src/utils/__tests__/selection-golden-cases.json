@@ -1,0 +1,493 @@
+{
+  "_meta": {
+    "generator": "scripts/gen-selection-golden.js",
+    "capturedFrom": "http://localhost:8899/gearbox-copilot.html",
+    "copilotGearboxCount": 501,
+    "note": "copilot 真实 R7 引擎输出 (ground truth). app 端 copilotGolden.test.js 据此断言一致性. copilot 引擎变更后重跑刷新.",
+    "cases": 12
+  },
+  "cases": [
+    {
+      "id": "G01",
+      "desc": "1500kW 1500rpm 4:1 定距桨 通用主推",
+      "q": "主机 1500kW 1500rpm 减速比 4 定距桨",
+      "parsed": {
+        "power": 1500,
+        "speed": 1500,
+        "targetRatio": 4,
+        "application": [],
+        "propellerType": "FPP",
+        "series": null,
+        "twinEngine": false,
+        "directModel": null
+      },
+      "totalCandidates": 501,
+      "isDirectModel": false,
+      "softMode": false,
+      "conversation": null,
+      "top": [
+        {
+          "rank": 1,
+          "model": "HC2400",
+          "ratio": 4,
+          "score": 88,
+          "margin": 80
+        },
+        {
+          "rank": 2,
+          "model": "GWC36.39",
+          "ratio": 3.95,
+          "score": 88,
+          "margin": 2
+        },
+        {
+          "rank": 3,
+          "model": "GWC39.41",
+          "ratio": 4.05,
+          "score": 90,
+          "margin": 40
+        }
+      ]
+    },
+    {
+      "id": "G02",
+      "desc": "800kW 1000rpm 5:1 定距桨 中功率",
+      "q": "主机 800kW 1000转 减速比 5 定距桨",
+      "parsed": {
+        "power": 800,
+        "speed": 1000,
+        "targetRatio": 5,
+        "application": [],
+        "propellerType": "FPP",
+        "series": null,
+        "twinEngine": false,
+        "directModel": null
+      },
+      "totalCandidates": 501,
+      "isDirectModel": false,
+      "softMode": false,
+      "conversation": null,
+      "top": [
+        {
+          "rank": 1,
+          "model": "GWC42.45",
+          "ratio": 5,
+          "score": 94,
+          "margin": 81
+        },
+        {
+          "rank": 2,
+          "model": "HC2400",
+          "ratio": 4.56,
+          "score": 88,
+          "margin": 98
+        },
+        {
+          "rank": 3,
+          "model": "GWC36.39",
+          "ratio": 5.01,
+          "score": 88,
+          "margin": 1
+        }
+      ]
+    },
+    {
+      "id": "G03",
+      "desc": "600kW 1000rpm 3:1 定距桨 (B1 价格主导重排敏感)",
+      "q": "主机 600kW 1000rpm 减速比 3 定距桨",
+      "parsed": {
+        "power": 600,
+        "speed": 1000,
+        "targetRatio": 3,
+        "application": [],
+        "propellerType": "FPP",
+        "series": null,
+        "twinEngine": false,
+        "directModel": null
+      },
+      "totalCandidates": 501,
+      "isDirectModel": false,
+      "softMode": false,
+      "conversation": null,
+      "top": [
+        {
+          "rank": 1,
+          "model": "HCA1000(倾角10°)",
+          "ratio": 2.96,
+          "score": 84,
+          "margin": 0
+        },
+        {
+          "rank": 2,
+          "model": "HCD800",
+          "ratio": 3,
+          "score": 85,
+          "margin": 20
+        },
+        {
+          "rank": 3,
+          "model": "HCD1000/2",
+          "ratio": 3.04,
+          "score": 87,
+          "margin": 23
+        }
+      ]
+    },
+    {
+      "id": "G04",
+      "desc": "350kW 1500rpm 3:1 定距桨 小功率",
+      "q": "主机 350kW 1500rpm 减速比 3 定距桨",
+      "parsed": {
+        "power": 350,
+        "speed": 1500,
+        "targetRatio": 3,
+        "application": [],
+        "propellerType": "FPP",
+        "series": null,
+        "twinEngine": false,
+        "directModel": null
+      },
+      "totalCandidates": 501,
+      "isDirectModel": false,
+      "softMode": false,
+      "conversation": null,
+      "top": [
+        {
+          "rank": 1,
+          "model": "HC500",
+          "ratio": 2.86,
+          "score": 89,
+          "margin": 71
+        },
+        {
+          "rank": 2,
+          "model": "GWS28.30",
+          "ratio": 3,
+          "score": 92,
+          "margin": 89
+        },
+        {
+          "rank": 3,
+          "model": "HC300",
+          "ratio": 3,
+          "score": 84,
+          "margin": 10
+        }
+      ]
+    },
+    {
+      "id": "G05",
+      "desc": "2000kW 750rpm 5.5:1 定距桨 大功率",
+      "q": "主机 2000kW 750rpm 减速比 5.5 定距桨",
+      "parsed": {
+        "power": 2000,
+        "speed": 750,
+        "targetRatio": 5.5,
+        "application": [],
+        "propellerType": "FPP",
+        "series": null,
+        "twinEngine": false,
+        "directModel": null
+      },
+      "totalCandidates": 501,
+      "isDirectModel": false,
+      "softMode": false,
+      "conversation": null,
+      "top": [
+        {
+          "rank": 1,
+          "model": "GWC70.82",
+          "ratio": 5.04,
+          "score": 86,
+          "margin": 169
+        },
+        {
+          "rank": 2,
+          "model": "GWC60.74",
+          "ratio": 4.5,
+          "score": 88,
+          "margin": 97
+        },
+        {
+          "rank": 3,
+          "model": "GWC63.71",
+          "ratio": 5.04,
+          "score": 92,
+          "margin": 97
+        }
+      ]
+    },
+    {
+      "id": "G06",
+      "desc": "1200kW 1500rpm 4.5:1 定距桨",
+      "q": "主机 1200kW 1500rpm 减速比 4.5 定距桨",
+      "parsed": {
+        "power": 1200,
+        "speed": 1500,
+        "targetRatio": 4.5,
+        "application": [],
+        "propellerType": "FPP",
+        "series": null,
+        "twinEngine": false,
+        "directModel": null
+      },
+      "totalCandidates": 501,
+      "isDirectModel": false,
+      "softMode": false,
+      "conversation": null,
+      "top": [
+        {
+          "rank": 1,
+          "model": "HC2400",
+          "ratio": 4.56,
+          "score": 90,
+          "margin": 98
+        },
+        {
+          "rank": 2,
+          "model": "GWC36.39",
+          "ratio": 4.4,
+          "score": 88,
+          "margin": 14
+        },
+        {
+          "rank": 3,
+          "model": "GWC39.41",
+          "ratio": 4.48,
+          "score": 90,
+          "margin": 58
+        }
+      ]
+    },
+    {
+      "id": "G07",
+      "desc": "HC1200 直接型号查询",
+      "q": "HC1200 选型",
+      "parsed": {
+        "power": 1000,
+        "speed": 1500,
+        "targetRatio": 3.75,
+        "application": [],
+        "propellerType": null,
+        "series": "HC",
+        "twinEngine": false,
+        "directModel": "HC1200"
+      },
+      "totalCandidates": 1,
+      "isDirectModel": true,
+      "softMode": false,
+      "conversation": null,
+      "top": [
+        {
+          "rank": 1,
+          "model": "HC1200",
+          "ratio": 1.6,
+          "score": 100,
+          "margin": 55
+        }
+      ]
+    },
+    {
+      "id": "G08",
+      "desc": "GWC42.45 直接型号查询",
+      "q": "GWC42.45 选型",
+      "parsed": {
+        "power": 1000,
+        "speed": 1500,
+        "targetRatio": 3.75,
+        "application": [],
+        "propellerType": null,
+        "series": "GW",
+        "twinEngine": false,
+        "directModel": "GWC42.45"
+      },
+      "totalCandidates": 1,
+      "isDirectModel": true,
+      "softMode": false,
+      "conversation": null,
+      "top": [
+        {
+          "rank": 1,
+          "model": "GWC42.45",
+          "ratio": 2,
+          "score": 100,
+          "margin": 443
+        }
+      ]
+    },
+    {
+      "id": "G09",
+      "desc": "1000kW 1000rpm 配可调桨 CPP",
+      "q": "主机 1000kW 1000rpm 减速比 4 可调桨",
+      "parsed": {
+        "power": 1000,
+        "speed": 1000,
+        "targetRatio": 4,
+        "application": [],
+        "propellerType": "CPP",
+        "series": null,
+        "twinEngine": false,
+        "directModel": null
+      },
+      "totalCandidates": 501,
+      "isDirectModel": false,
+      "softMode": false,
+      "conversation": null,
+      "top": [
+        {
+          "rank": 1,
+          "model": "GCH410",
+          "ratio": 3.95,
+          "score": 87,
+          "margin": 29
+        },
+        {
+          "rank": 2,
+          "model": "GCH490",
+          "ratio": 3.95,
+          "score": 88,
+          "margin": 112
+        },
+        {
+          "rank": 3,
+          "model": "GCS490",
+          "ratio": 3.95,
+          "score": 88,
+          "margin": 112
+        }
+      ]
+    },
+    {
+      "id": "G10",
+      "desc": "500kW 1500rpm 拖船 定距桨",
+      "q": "主机 500kW 1500rpm 减速比 3 拖船 定距桨",
+      "parsed": {
+        "power": 500,
+        "speed": 1500,
+        "targetRatio": 3,
+        "application": [
+          "拖船"
+        ],
+        "propellerType": "FPP",
+        "series": null,
+        "twinEngine": false,
+        "directModel": null
+      },
+      "totalCandidates": 501,
+      "isDirectModel": false,
+      "softMode": false,
+      "conversation": null,
+      "top": [
+        {
+          "rank": 1,
+          "model": "GWC28.30",
+          "ratio": 3.08,
+          "score": 88,
+          "margin": 73
+        },
+        {
+          "rank": 2,
+          "model": "HC500",
+          "ratio": 2.86,
+          "score": 82,
+          "margin": 20
+        },
+        {
+          "rank": 3,
+          "model": "HC600A",
+          "ratio": 3,
+          "score": 85,
+          "margin": 47
+        }
+      ]
+    },
+    {
+      "id": "G11",
+      "desc": "450kW 2100rpm 渔船 HC 系列 定距桨",
+      "q": "主机 450kW 2100rpm HC系列 渔船 定距桨",
+      "parsed": {
+        "power": 450,
+        "speed": 2100,
+        "targetRatio": 5.25,
+        "application": [
+          "渔船"
+        ],
+        "propellerType": "FPP",
+        "series": "HC",
+        "twinEngine": false,
+        "directModel": null
+      },
+      "totalCandidates": 501,
+      "isDirectModel": false,
+      "softMode": false,
+      "conversation": null,
+      "top": [
+        {
+          "rank": 1,
+          "model": "HC1200/1",
+          "ratio": 5.25,
+          "score": 79,
+          "margin": 278
+        },
+        {
+          "rank": 2,
+          "model": "HC1200/1P",
+          "ratio": 5,
+          "score": 83,
+          "margin": 189
+        },
+        {
+          "rank": 3,
+          "model": "HC350-1",
+          "ratio": 3.68,
+          "score": 70,
+          "margin": 20
+        }
+      ]
+    },
+    {
+      "id": "G12",
+      "desc": "3000kW 600rpm 散货船大箱 定距桨",
+      "q": "主机 3000kW 600rpm 减速比 5 散货船 定距桨",
+      "parsed": {
+        "power": 3000,
+        "speed": 600,
+        "targetRatio": 5,
+        "application": [
+          "散货船"
+        ],
+        "propellerType": "FPP",
+        "series": null,
+        "twinEngine": false,
+        "directModel": null
+      },
+      "totalCandidates": 501,
+      "isDirectModel": false,
+      "softMode": false,
+      "conversation": null,
+      "top": [
+        {
+          "rank": 1,
+          "model": "GWS66.106",
+          "ratio": 4.96,
+          "score": 89,
+          "margin": 44
+        },
+        {
+          "rank": 2,
+          "model": "GWS70.111",
+          "ratio": 5.04,
+          "score": 92,
+          "margin": 62
+        },
+        {
+          "rank": 3,
+          "model": "GWC70.82",
+          "ratio": 4.57,
+          "score": 88,
+          "margin": 58
+        }
+      ]
+    }
+  ]
+}

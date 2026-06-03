@@ -16872,7 +16872,7 @@ export const completeGearboxData = [
     "price": 150000,
     "discountRate": 0.06,
     "source": "杭齿厂选型手册2025版5月版",
-    "maxPower": 2079,
+    "maxPower": 2128,
     "minPower": 450,
     "powerSource": "传动能力计算",
     "couplingConfig": {
@@ -17061,7 +17061,7 @@ export const completeGearboxData = [
     "price": 27200,
     "discountRate": 0.1,
     "priceSource": "2026官方统一售价",
-    "maxPower": 288,
+    "maxPower": 323,
     "minPower": 87,
     "powerSource": "传动能力计算",
     "transmissionCapacityPerRatio": [
@@ -29107,7 +29107,8 @@ export const completeGearboxData = [
     "weight": 106,
     "source": "杭齿厂选型手册2025版5月版",
     "discountRate": 0.1,
-    "priceSource": "系统估算",
+    "price": 600000,
+    "priceSource": "copilot回填(2026-06-03,出处待CFO核实)",
     "maxPower": 313,
     "minPower": 36,
     "powerSource": "传动能力计算"
@@ -29135,7 +29136,8 @@ export const completeGearboxData = [
     "weight": 290,
     "source": "杭齿厂选型手册2025版5月版",
     "discountRate": 0.1,
-    "priceSource": "系统估算",
+    "price": 240000,
+    "priceSource": "copilot回填(2026-06-03,出处待CFO核实)",
     "maxPower": 603,
     "minPower": 101,
     "powerSource": "传动能力计算"
@@ -29161,7 +29163,8 @@ export const completeGearboxData = [
     "weight": 390,
     "source": "杭齿厂选型手册2025版5月版",
     "discountRate": 0.1,
-    "priceSource": "系统估算",
+    "price": 50000,
+    "priceSource": "copilot回填(2026-06-03,出处待CFO核实)",
     "maxPower": 725,
     "minPower": 117,
     "powerSource": "传动能力计算"
@@ -29187,7 +29190,8 @@ export const completeGearboxData = [
     "weight": 570,
     "source": "杭齿厂选型手册2025版5月版",
     "discountRate": 0.1,
-    "priceSource": "系统估算",
+    "price": 600000,
+    "priceSource": "copilot回填(2026-06-03,出处待CFO核实)",
     "maxPower": 1213,
     "minPower": 184,
     "powerSource": "传动能力计算"
@@ -29213,7 +29217,8 @@ export const completeGearboxData = [
     "weight": 870,
     "source": "杭齿厂选型手册2025版5月版",
     "discountRate": 0.1,
-    "priceSource": "系统估算",
+    "price": 600000,
+    "priceSource": "copilot回填(2026-06-03,出处待CFO核实)",
     "maxPower": 1580,
     "minPower": 379,
     "powerSource": "传动能力计算"

@@ -106,6 +106,15 @@ build_project() {
         echo -e "${GREEN}✓ PDF Ct 对账通过${NC}"
     fi
 
+    # B3 (2026-06-03) 型号库跨系统对账 — completeGearboxData.js ↔ copilot products.json.
+    # 非阻塞报告: 每次 app 部署前显示与 copilot 库的价格/功率/减速比漂移, 防两库再发散。
+    # 如需硬门控(漂移即阻断), 把下方改为带 --ci 并在失败时 exit 1。
+    RECON="/Users/lidder/erp-dashboard/scripts/reconcile-gearbox-libraries.js"
+    if [ -f "$RECON" ]; then
+        echo -e "${YELLOW}▶ B3 型号库对账 (vs copilot products.json, 非阻塞)...${NC}"
+        node "$RECON" || echo -e "${YELLOW}⚠ 对账存在漂移 (见上), 非阻塞放行; 如需阻断改 --ci${NC}"
+    fi
+
     CI=false npm run build
 
     if [ $? -eq 0 ]; then

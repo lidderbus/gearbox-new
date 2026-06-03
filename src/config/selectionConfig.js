@@ -16,38 +16,45 @@ export const DEFAULT_SCORING_WEIGHTS = {
   interfaceMatch: 8            // 接口匹配权重 (原硬编码，现纳入统一体系)
 };
 
-// ========== Copilot 对齐评分权重 ==========
-// 对齐 gearbox-copilot.html 评分公式: 减速比 35 / 余量 30 / 容量完整性 15 / 应用 8 / 船级社 6 / CPP +2
-// SPA 维度映射: ratioMatch=减速比, capacityMargin=余量, costEffectiveness=容量完整性(降权重), classificationMatch(新增船级社 6)
-// 总和 100, ratioMatch=30 (≈Copilot 35) / capacityMargin=25 (≈Copilot 30 含 cert=6 拆解到独立维度后)
+// ========== Copilot 对齐评分权重 (R7 v2 性价比优先, 2026-06-03 对齐) ==========
+// 对齐 gearbox-copilot.html 现行 R7 v2 (2026-05-28 起): "传递能力满足则价格便宜优先".
+// Copilot R7 核心三维 价格:减速比:余量 = scorePriceValue 18 : scoreRatio 15 : scoreMargin 8.
+//   (旧注释"减速比35/余量30"= Copilot 历史 R6 公式, 2026-05-28 已被 R7 取代 → 本处随之更新)
+// SPA 维度映射: costEffectiveness=单位容量价格归一(W_COST, 见 selectionAlgorithm.ts:1657 才是真正的"价格"维度),
+//   ratioMatch=减速比, capacityMargin=余量(钟形曲线). 其余 thrust/package/shaft/series/interface 为 SPA
+//   专有维度, Copilot 走硬筛或无对应, 沿用低权不动.
+// 调权法: 固定 SPA 专有维度 (thrust3+package3+shaft4+series9+interface8=27), 剩余 73 分按 Copilot
+//   18:15:8 比例分配 → cost 32 / ratio 27 / capacity 14 (cost 主导, 余量明显降权, 复现 R7 性价比优先).
 export const COPILOT_SCORING_WEIGHTS = {
-  costEffectiveness: 18,       // 性价比降权 (Copilot 原本不含此维度, 保留 18 作底盘)
-  ratioMatch: 30,              // 减速比贴合 — Copilot 核心
-  capacityMargin: 25,          // 余量合理 — Copilot 核心
+  costEffectiveness: 32,       // 性价比/单位容量价格 — R7 主导维度 (原 R6 对齐时仅 18)
+  ratioMatch: 27,              // 减速比贴合 (原 30, 略降, 对齐 Copilot ratio 退居第二)
+  capacityMargin: 14,          // 余量合理 — R7 余量降权 (原 25 → 14, 复现 margin 8→低权)
   thrustSatisfy: 3,            // 推力满足: Copilot 走硬筛, 评分降权
   specialPackage: 3,           // 特价打包: 锦上添花, 降权
   shaftMatch: 4,               // 轴布置: Copilot 不打分, SPA 保留低权重
   seriesCapabilityFit: 9,      // 系列特性适配
   interfaceMatch: 8            // 接口匹配
-  // 总和: 18+30+25+3+3+4+9+8 = 100 (船级社加分独立计算 +6 不计入此 100)
+  // 总和: 32+27+14+3+3+4+9+8 = 100 (船级社加分独立计算 +6 不计入此 100)
 };
 
-// ========== Copilot 严格对齐评分权重 (二轮再评测 R1) ==========
-// 完全复刻 gearbox-copilot.html 5 维公式: 减速比 35 / 余量 30 / 容量完整性 15 / 应用 8 / 船级社 6 = 94
-// 余 6 分留给 SPA 无对应的 fallback 维度 (interfaceMatch), 不引入 Copilot 没有的 cost/shaft 维度
-// 用法: 调用方传 scoringProfile='copilot-strict' 启用; 默认仍 'copilot' (与 Copilot 同向但保留 cost 兜底)
+// ========== Copilot 严格对齐评分权重 (R7 v2 严格复刻) ==========
+// "最贴近 Copilot R7" 档: 只保留 Copilot 真有的核心维度, SPA 专有维度 (thrust/package/shaft) 全 0.
+// R7 核心 价格:减速比:余量 = 18:15:8, 按算法实读维度 (cost/ratio/capacity/series/interface) 归一到 100.
+//   价格 35 / 减速比 30 / 余量 16 / 系列 12 / 接口 7 (cost 主导, 复现 R7 性价比优先).
+// 注: classificationMatch/dataCompleteness 当前 selectionAlgorithm.ts 不消费 (保留键位备未来扩展, 不影响打分).
+// 用法: 调用方传 scoringProfile='copilot-strict' 启用; 默认仍 'copilot'.
 export const COPILOT_STRICT_SCORING_WEIGHTS = {
-  costEffectiveness: 0,        // Copilot 严格模式: 不打分
-  ratioMatch: 35,              // 减速比贴合 — Copilot 原值
-  capacityMargin: 30,          // 余量合理 — Copilot 原值
+  costEffectiveness: 35,       // 价格 — Copilot R7 #1 维度 (原 R6 严格档为 0, R7 起价格主导故置首)
+  ratioMatch: 30,              // 减速比贴合
+  capacityMargin: 16,          // 余量合理 — R7 降权
   thrustSatisfy: 0,            // 严格模式: Copilot 走硬筛, 评分不计
   specialPackage: 0,           // Copilot 无此维度
   shaftMatch: 0,               // Copilot 无此维度
-  seriesCapabilityFit: 8,      // 系列/应用 — Copilot 原值
-  interfaceMatch: 6,           // 兜底底盘 (Copilot 实际是 dataCompleteness 15, SPA 无完全对应, 此处给低权)
-  classificationMatch: 6,      // 船级社 — Copilot 原值, 独立维度参与
-  dataCompleteness: 15         // 容量完整性 — Copilot 原值
-  // 主流维度合计: 35+30+8+6+6+15 = 100 (cost/thrust/package/shaft = 0)
+  seriesCapabilityFit: 12,     // 系列/应用
+  interfaceMatch: 7,           // 兜底底盘
+  classificationMatch: 6,      // 船级社 (保留键位, 当前算法未消费)
+  dataCompleteness: 15         // 数据完整性 (保留键位, 当前算法未消费)
+  // 实读维度合计: cost35+ratio30+capacity16+series12+interface7 = 100 (thrust/package/shaft = 0)
 };
 
 // ========== Scoring profile 切换 ==========

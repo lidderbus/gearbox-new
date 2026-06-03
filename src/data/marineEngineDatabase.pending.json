@@ -1,0 +1,30 @@
+{
+  "_meta": {
+    "purpose": "P0 发动机库待录入脚手架 — 真实型号身份已填, 规格字段留 null 待补真实一手/船级社数据. 不被 marineEngineDatabase.js 导入 (避免空发动机污染匹配). 数据补齐后由 build-merge-pending-engines.js 校验合入主库.",
+    "createdAt": "2026-06-03",
+    "status": "pending-data",
+    "current": "主库 marineEngineDatabase.js 已录 15/50 P0; 本文件列待补型号身份",
+    "requiredFields": ["cylinders", "displacement_L", "ratedPower_kW", "ratedSpeed_rpm", "powerRange", "speedRange", "torqueCurve", "emissionTier", "fuel", "weight_kg", "dimensions", "applicationTypes", "dataSource", "confidence", "lastVerified"],
+    "rule": "禁止臆造数值; 每条须 dataSource(出处) + confidence(A厂商一手/B船级社/C行业聚合) + lastVerified(核对日期)",
+    "note": "下方 17 条来自主库行 513-515 待补清单的具名型号; 凑足 35 的其余型号身份待业务确认后追加 (合计可达 15+17=32, 余 18 待确认)"
+  },
+  "pending": [
+    { "id": "man-l23-30h", "brand": "MAN", "series": "L23/30H", "model": "L23/30H", "_needs": "all-specs", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "wartsila-w34", "brand": "Wartsila", "series": "W34", "model": "W34", "_needs": "all-specs", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "wartsila-w46", "brand": "Wartsila", "series": "W46", "model": "W46", "_needs": "all-specs", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "mtu-8000", "brand": "MTU", "series": "8000", "model": "16V8000 M71", "_needs": "all-specs", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "cummins-k19", "brand": "Cummins", "series": "K19", "model": "KTA19-M", "_needs": "all-specs", "_bridge": "cumminsMatchingData.js", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "cummins-k38", "brand": "Cummins", "series": "K38", "model": "KTA38-M", "_needs": "all-specs", "_bridge": "cumminsMatchingData.js", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "cummins-k50", "brand": "Cummins", "series": "K50", "model": "KTA50-M", "_needs": "all-specs", "_bridge": "cumminsMatchingData.js", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "cat-3508", "brand": "CAT", "series": "3508", "model": "3508B", "_needs": "all-specs", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "cat-c32", "brand": "CAT", "series": "C32", "model": "C32 ACERT", "_needs": "all-specs", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "yanmar-6n260", "brand": "Yanmar", "series": "N260", "model": "6N260", "_needs": "all-specs", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "mitsubishi-s6r", "brand": "Mitsubishi", "series": "S6R", "model": "S6R-MPTA", "_needs": "all-specs", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "mitsubishi-s16r", "brand": "Mitsubishi", "series": "S16R", "model": "S16R-MPTA", "_needs": "all-specs", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "doosan-v158", "brand": "Doosan", "series": "V158", "model": "V158TI", "_needs": "all-specs", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "doosan-v222", "brand": "Doosan", "series": "V222", "model": "V222TI", "_needs": "all-specs", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "weichai-8170", "brand": "潍柴", "series": "8170", "model": "8170ZC", "_needs": "all-specs", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "yuchai-yc6cl", "brand": "玉柴", "series": "YC6CL", "model": "YC6CL", "_needs": "all-specs", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null },
+    { "id": "shangchai-sc9d", "brand": "上柴", "series": "SC9D", "model": "SC9D", "_needs": "all-specs", "ratedPower_kW": null, "ratedSpeed_rpm": null, "dataSource": null, "confidence": null, "lastVerified": null }
+  ]
+}
